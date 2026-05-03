@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Coreshift — Project Kanbans</title>
+    <meta name="description" content="Live kanban boards for active Coreshift projects." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📋%3C/text%3E%3C/svg%3E" />
+    <style>
+      :root {
+        --bg: #fafaf9;
+        --card: #ffffff;
+        --ink: #18181b;
+        --ink-muted: #71717a;
+        --ink-subtle: #a1a1aa;
+        --border: #e4e4e7;
+        --accent: #2563eb;
+        --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+        --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+        --radius: 10px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0a0a;
+          --card: #18181b;
+          --ink: #fafafa;
+          --ink-muted: #a1a1aa;
+          --ink-subtle: #71717a;
+          --border: #27272a;
+          --accent: #3b82f6;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 880px; margin: 0 auto; padding: 64px 24px 80px; }
+      header { margin-bottom: 32px; }
+      h1 {
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0 0 8px;
+      }
+      .subtitle { color: var(--ink-muted); font-size: 15px; margin: 0; max-width: 56ch; }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      a.project-card {
+        display: block;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 22px 24px;
+        text-decoration: none;
+        color: inherit;
+        box-shadow: var(--shadow);
+        transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+      }
+      a.project-card:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--ink-subtle);
+      }
+      .project-name {
+        font-size: 18px;
+        font-weight: 700;
+        margin: 0 0 4px;
+        letter-spacing: -0.01em;
+      }
+      .project-tagline {
+        font-size: 13px;
+        color: var(--ink-muted);
+        margin: 0 0 10px;
+      }
+      .project-meta {
+        font-size: 12px;
+        color: var(--ink-subtle);
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .project-meta a { color: var(--accent); text-decoration: none; }
+      .project-meta a:hover { text-decoration: underline; }
+      footer {
+        margin-top: 48px;
+        font-size: 12px;
+        color: var(--ink-subtle);
+      }
+      footer a { color: var(--ink-muted); text-decoration: underline; text-underline-offset: 3px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <h1>Coreshift — Project Kanbans</h1>
+        <p class="subtitle">Live build status for active Coreshift projects. Each board is the source of truth for that project's progress.</p>
+      </header>
+
+      <div class="grid">
+        <a class="project-card" href="./digital-architect/">
+          <p class="project-name">DigitalArchitect</p>
+          <p class="project-tagline">Coreshift internal tool for Growth Partners — productizes the DigitalArchitect® audit methodology.</p>
+          <div class="project-meta">
+            <span>Coreshift × Growth Partners</span>
+            <a href="https://github.com/CoreshiftHQNZ/digital-architect" target="_blank" rel="noopener">repo →</a>
+          </div>
+        </a>
+      </div>
+
+      <footer>
+        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a>
+      </footer>
+    </div>
+  </body>
+</html>

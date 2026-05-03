@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>DigitalArchitect — Build Kanban</title>
+    <meta name="description" content="Live build status for the DigitalArchitect internal tool — Coreshift × Growth Partners." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📐%3C/text%3E%3C/svg%3E" />
+    <style>
+      :root {
+        --bg: #fafaf9;
+        --card: #ffffff;
+        --ink: #18181b;
+        --ink-muted: #71717a;
+        --ink-subtle: #a1a1aa;
+        --border: #e4e4e7;
+        --done: #059669;
+        --doing: #d97706;
+        --next: #2563eb;
+        --back: #475569;
+        --back-bg: #f1f5f9;
+        --ricky: #7c3aed;
+        --ricky-bg: #f5f3ff;
+        --ricky-border: #ddd6fe;
+        --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+        --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+        --radius: 10px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0a0a;
+          --card: #18181b;
+          --ink: #fafafa;
+          --ink-muted: #a1a1aa;
+          --ink-subtle: #71717a;
+          --border: #27272a;
+          --done: #10b981;
+          --doing: #f59e0b;
+          --next: #3b82f6;
+          --back: #94a3b8;
+          --back-bg: #0f172a;
+          --ricky: #a78bfa;
+          --ricky-bg: #1e1b4b;
+          --ricky-border: #312e81;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 1400px; margin: 0 auto; padding: 32px 24px 80px; }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0 0 4px;
+      }
+      .subtitle { color: var(--ink-muted); font-size: 14px; margin: 0; }
+      .meta { text-align: right; font-size: 13px; color: var(--ink-muted); }
+      .meta a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+      .meta a:hover { color: var(--ink); }
+
+      h2.section-title {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink-muted);
+        margin: 0 0 12px;
+      }
+
+      .progress {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        box-shadow: var(--shadow);
+      }
+      .progress-bars {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .pbar { font-size: 12px; }
+      .pbar-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+        color: var(--ink-muted);
+      }
+      .pbar-label strong { color: var(--ink); font-weight: 600; }
+      .pbar-track { height: 6px; background: var(--back-bg); border-radius: 999px; overflow: hidden; }
+      .pbar-fill { height: 100%; background: var(--done); border-radius: 999px; transition: width 200ms ease; }
+      .pbar.active .pbar-fill { background: var(--doing); }
+      .pbar.future .pbar-fill { background: var(--ink-subtle); opacity: 0.3; }
+
+      .ricky-panel {
+        background: var(--ricky-bg);
+        border: 1px solid var(--ricky-border);
+        border-radius: var(--radius);
+        padding: 22px 24px;
+        margin-bottom: 28px;
+      }
+      .ricky-panel-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .ricky-panel-head h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .ricky-panel-head .badge {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        background: var(--ricky);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 999px;
+      }
+      .ricky-panel p.intro { font-size: 14px; color: var(--ink-muted); margin: 0 0 18px; }
+      .ricky-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+      @media (max-width: 740px) { .ricky-grid { grid-template-columns: 1fr; } }
+      .ricky-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px 18px;
+      }
+      .ricky-section h3 {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 0 0 4px;
+        color: var(--ricky);
+      }
+      .ricky-section .helper { font-size: 12px; color: var(--ink-muted); margin: 0 0 14px; }
+      .task {
+        border-top: 1px solid var(--border);
+        padding: 14px 0;
+      }
+      .task:first-of-type { border-top: 0; padding-top: 4px; }
+      .task:last-of-type { padding-bottom: 4px; }
+      .task .task-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 0 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .task .task-title::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--ricky);
+        flex-shrink: 0;
+      }
+      .ricky-section.later .task .task-title::before { background: var(--ink-subtle); }
+      .task .task-body {
+        font-size: 13px;
+        color: var(--ink-muted);
+        margin: 0;
+        line-height: 1.5;
+        padding-left: 16px;
+      }
+      .task .task-body code {
+        font-size: 12px;
+        background: var(--back-bg);
+        padding: 1px 6px;
+        border-radius: 4px;
+        color: var(--ink);
+      }
+      .task .task-when {
+        font-size: 11px;
+        color: var(--ink-subtle);
+        font-weight: 500;
+        margin-left: auto;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .task .task-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: var(--ricky);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        margin-top: 6px;
+        margin-left: 16px;
+      }
+
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      .chip {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: var(--back-bg);
+        color: var(--back);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .chip.m0 { background: #fce7f3; color: #be185d; }
+      .chip.m1 { background: #ede9fe; color: #6d28d9; }
+      .chip.m2 { background: #e0e7ff; color: #3730a3; }
+      .chip.m3 { background: #cffafe; color: #155e75; }
+      .chip.m4 { background: #ccfbf1; color: #115e59; }
+      .chip.ext { background: var(--back-bg); color: var(--back); }
+      @media (prefers-color-scheme: dark) {
+        .chip.m0 { background: #500724; color: #f9a8d4; }
+        .chip.m1 { background: #2e1065; color: #c4b5fd; }
+        .chip.m2 { background: #1e1b4b; color: #a5b4fc; }
+        .chip.m3 { background: #083344; color: #67e8f9; }
+        .chip.m4 { background: #042f2e; color: #5eead4; }
+      }
+
+      .board {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+      }
+      @media (max-width: 1100px) { .board { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 640px)  { .board { grid-template-columns: 1fr; } .progress-bars { grid-template-columns: repeat(2, 1fr); } }
+
+      .col {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .col-head {
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .col-head .dot { width: 8px; height: 8px; border-radius: 999px; margin-right: 8px; }
+      .col-title {
+        font-weight: 600;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: flex;
+        align-items: center;
+      }
+      .col-count {
+        font-size: 12px;
+        color: var(--ink-muted);
+        background: var(--back-bg);
+        padding: 2px 8px;
+        border-radius: 999px;
+        min-width: 24px;
+        text-align: center;
+      }
+      .col.done .dot { background: var(--done); }
+      .col.doing .dot { background: var(--doing); }
+      .col.next .dot { background: var(--next); }
+      .col.back .dot { background: var(--back); }
+
+      .col-body {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: calc(100vh - 280px);
+        overflow-y: auto;
+      }
+
+      .card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 14px;
+        transition: transform 80ms ease, box-shadow 120ms ease;
+      }
+      .card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+      .card-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+      .card-id {
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--ink-muted);
+      }
+      .card-date { font-size: 11px; color: var(--ink-subtle); margin-left: auto; }
+      .card-title { font-size: 14px; font-weight: 500; margin: 0 0 4px; line-height: 1.4; }
+      .card-note { font-size: 12px; color: var(--ink-muted); margin: 0; line-height: 1.45; }
+      .card.ext { background: transparent; border-style: dashed; }
+      .card.ext .card-id::before { content: '⚙ '; }
+
+      .phases {
+        margin-top: 40px;
+        padding: 18px 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 12px;
+        line-height: 1.7;
+        white-space: pre;
+        overflow-x: auto;
+        color: var(--ink-muted);
+      }
+      .phases strong { color: var(--ink); font-weight: 600; }
+
+      footer {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--ink-subtle);
+        text-align: center;
+      }
+      footer a { color: var(--ink-muted); text-decoration: underline; text-underline-offset: 3px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div>
+          <h1>DigitalArchitect — Build Kanban</h1>
+          <p class="subtitle">Coreshift × Growth Partners · live build status</p>
+        </div>
+        <div class="meta">
+          Last updated <strong>2026-05-04</strong><br />
+          <a href="https://github.com/CoreshiftHQNZ/digital-architect" target="_blank" rel="noopener">repo</a> ·
+          <a href="https://github.com/CoreshiftHQNZ/digital-architect/blob/main/docs/foundation-plan.md" target="_blank" rel="noopener">plan</a>
+        </div>
+      </header>
+
+      <section class="progress">
+        <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Build phases</div>
+        <div class="progress-bars">
+          <div class="pbar"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar"><div class="pbar-label"><strong>M1</strong> Project loading</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M2</strong> DA engine</div><div class="pbar-track"><div class="pbar-fill" style="width: 95%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M3</strong> Client dashboard</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Polish + GrowthCast</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+        </div>
+      </section>
+
+      <!-- Ricky's tasks: front-and-centre -->
+      <section class="ricky-panel">
+        <div class="ricky-panel-head">
+          <h2>Ricky&rsquo;s tasks</h2>
+          <span class="badge">Action items</span>
+        </div>
+        <p class="intro">
+          Things that need a human (you) to click through a sign-up flow or paste credentials. Nothing here is technical. <strong>Don&rsquo;t worry about the &ldquo;Later&rdquo; column</strong> — Claude will tell you when each one becomes time-sensitive.
+        </p>
+
+        <div class="ricky-grid">
+          <div class="ricky-section">
+            <h3>Do now</h3>
+            <p class="helper">M2 engine done (9-section deliverable, real GSC + GA4 + work-items). M3.0 + M3.3 + M3.5 + M3.7 + DWD shipped. Storepro access is now live via domain-wide delegation — benchmark run is unblocked with no per-client onboarding.</p>
+
+            <div class="task">
+              <p class="task-title">🚀 Run the benchmark DA on Storepro <span class="task-when">~30 min · the validation moment · UNBLOCKED</span></p>
+              <p class="task-body">
+                Storepro GA4 + GSC are now reachable via the <code>access@growthpartners.co.nz</code> impersonation path (DWD shipped 30 Apr — see the M3.7b card). Fire a fresh DA run from the project page. Should take 25–40 min (full pipeline: keyword research, categorisation, SERP, AI-search, GSC + GA4 sync, site audit, all 8 synthesis sections, work-items generation, PDF render). Open the GP team&rsquo;s actual Storepro deliverable side-by-side and judge: where does ours match, where does it miss, where does it find things the human analyst missed? That side-by-side is the brief for the next milestone choices.<br/><br/>
+                Heads-up: if anything fails mid-run, the Inngest dashboard at <code>localhost:8288</code> shows which step + the error. We&rsquo;ve hardened most paths but a fresh full run is the real proof.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">🔐 Rotate exposed credentials <span class="task-when">after benchmark — 15 min</span></p>
+              <p class="task-body">
+                Several secrets pasted into chat history during the build: Supabase service role, DataForSEO password, Anthropic / OpenAI / Perplexity / Gemini / xAI keys, PSI key, service-account private key. None are publicly exposed — only inside the Anthropic conversation log. Once the benchmark run is in the bag, rotate each: regenerate in its provider console → update <code>.env.local</code> + Railway env vars → delete old key. Don&rsquo;t do this <em>before</em> the benchmark since rotating the SA private key would temporarily break the DWD impersonation flow until the new key is wired up.
+              </p>
+            </div>
+          </div>
+
+          <div class="ricky-section later">
+            <h3>Later — heads-up only</h3>
+            <p class="helper">Each becomes time-sensitive when its milestone starts. I&rsquo;ll prompt you. No action required now.</p>
+
+            <div class="task">
+              <p class="task-title">Asana OAuth app + workspace handover <span class="task-when">M3.4 starts</span></p>
+              <p class="task-body">
+                For pushing approved work_items into Asana so GP staff work from their existing tool. Two ways: (a) register an OAuth app in Asana developer console (preferred — per-user auth, multi-team), or (b) generate a Personal Access Token from a GP admin account (faster, single-team only). Plus confirm the Asana team / project hierarchy that DA tasks should land in. Pick one, paste credentials back to me.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">Postmark sign-up + sender domain verify <span class="task-when">when client emails start mattering</span></p>
+              <p class="task-body">
+                For DA-complete + weekly digest + change-alert emails. <a class="task-link" style="display:inline" href="https://account.postmarkapp.com/sign_up" target="_blank" rel="noopener">Sign up</a> → verify <code>digitalarchitect.co.nz</code> as a sending domain (DNS records — you control them via Cloudflare) → grab the server token → paste back as <code>POSTMARK_SERVER_TOKEN</code>. Pipeline already gracefully no-ops without it; adding it just turns notifications on.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">Cloudflare wildcard DNS for client subdomains <span class="task-when">M3.1 starts</span></p>
+              <p class="task-body">
+                Add wildcard <code>*.digitalarchitect.co.nz</code> A or CNAME pointing to Railway production, so each client gets <code>storepro.digitalarchitect.co.nz</code>, etc. I can do this for you via the Cloudflare MCP if you grant access — otherwise the manual flow is in Cloudflare → DNS → Add record.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">Decide on the Storepro pricing / contract for DA</p>
+              <p class="task-body">
+                Foundation decisions said DA = $10k NZD with 10% margin (~$9k NZD spend headroom). Once we have a benchmark output to show GP, finalise: do they sell DA to Storepro at the same price? Same scope? What&rsquo;s the contract pattern (one-off DA → optional Growth Plan)? Inputs to this would be: how the benchmark output reads, the actual cost-per-run we&rsquo;re seeing, and what GP wants to commit to.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">Sentry auth token <span class="task-when">prod releases</span></p>
+              <p class="task-body">
+                Optional. Makes production stack traces readable in Sentry by uploading source maps on deploy. Get from <a class="task-link" style="display:inline" href="https://growth-partners-oe.sentry.io/settings/auth-tokens/" target="_blank" rel="noopener">Sentry → Auth tokens</a>, scopes <code>project:releases</code> + <code>org:read</code>. Without it Sentry still captures errors — they&rsquo;re just minified. Skip until a real prod incident makes it pay off.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">Schedule a 30-min walk-through with the GP team <span class="task-when">after benchmark run</span></p>
+              <p class="task-body">
+                Once we have the Storepro benchmark deliverable in hand, walk the GP team through the app + the output. Calibrate which sections they want sharpened, which to drop, which they&rsquo;d add. That session is the brief for M2.5b polish (review-screen approval workflow, edit-before-export, etc.).
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <h2 class="section-title">Build board</h2>
+
+      <div class="legend">
+        <span class="chip m0">M0 Foundation</span>
+        <span class="chip m1">M1 Project loading</span>
+        <span class="chip m2">M2 DA engine</span>
+        <span class="chip m3">M3 Client dashboard</span>
+        <span class="chip m4">M4 Polish</span>
+        <span class="chip ext">⚙ Setup / external</span>
+      </div>
+
+      <div class="board">
+        <!-- Backlog (now leftmost) -->
+        <section class="col back">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Backlog</div>
+            <div class="col-count">16</div>
+          </div>
+          <div class="col-body">
+            <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">PMK</span></div><h3 class="card-title">Postmark account</h3><p class="card-note">For DA-complete + weekly digest emails. Pipeline gracefully no-ops without the token.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2.5b</span></div><h3 class="card-title">Internal review screen v2 — section approval workflow</h3><p class="card-note">Per-section approve / reject / edit-before-export. Side-by-side &ldquo;client says vs data shows&rdquo; view. Brief in the M2.5a screen + the work-items panel; this layer adds the explicit GP sign-off + edit history before a PDF is finalised.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3.4</span></div><h3 class="card-title">GP work-management UI in the app (replaces Asana sync)</h3><p class="card-note">Decision 2026-04-30: scrap Asana sync. GP team will work natively in the app. The GP portal needs full work-management UX: assigned-to, due-date editor, kanban move-between-columns, comments / activity log, completion checkmark with optional &ldquo;completed by&rdquo; metadata. The <code>work_items</code> table already supports the lifecycle; this just adds richer UI on the GP project pages. <code>external_provider</code> + <code>external_ref</code> stay for future tracker integration if a client demands one.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3.5b</span></div><h3 class="card-title">Competitor delta poller (Cloudflare Worker)</h3><p class="card-note">Sibling to the M3.5 work-item probe runner. Different shape — long-running site crawls of each client&rsquo;s named competitors, deduping URLs against <code>competitor_content_deltas</code>. Cloudflare Worker is the right runtime here (cron + scheduled fetch + small persistent state).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3.6</span></div><h3 class="card-title">Auto-ticker — competitor activity + market news + hobby</h3><p class="card-note">The morning-coffee surprise-and-delight stream. Sources: M3.5 competitor deltas, news search for client&rsquo;s industry, and CEO hobby content (auto-found + GP-curated). Renders in the dashboard ticker.</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">PROD</span></div><h3 class="card-title">Production cutover (Railway prod + Cloudflare DNS for *.digitalarchitect.co.nz)</h3><p class="card-note">When we onboard the first paying client tenant: spin up Railway prod service connected to <code>main</code> branch, add custom domains <code>app.digitalarchitect.co.nz</code> + <code>*.digitalarchitect.co.nz</code>, get CNAME targets, add DNS records (we already have a CF token with DNS:Edit). Plus consider splitting Supabase to a separate <code>digital-architect-prod</code> project for Auth/Storage isolation.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1.5</span></div><h3 class="card-title">Google Drive folder watcher (deferred)</h3><p class="card-note">Drag-drop covers ingestion 95% — Drive watcher deferred until GP says they want it. Schema + UI hooks already in place.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4.5</span></div><h3 class="card-title">Live UI — automatic state updates without refresh</h3><p class="card-note">App-wide real-time updates: file processing status pills, DA-run progress + section findings appearing as they land, ticker items, task completions. Likely Supabase Realtime subscriptions on the relevant tables + per-page loading skeletons during transitions. Removes the &ldquo;refresh to see what&rsquo;s happening&rdquo; UX friction.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4.4</span></div><h3 class="card-title">Admin — API usage + cost dashboard</h3><p class="card-note">Per-supplier (Anthropic, OpenAI, DataForSEO, Peec, Postmark, Inngest, Supabase, Sentry) usage and cost roll-up with per-DA-run breakdown. Internal-only screen at <code>admin.digitalarchitect.co.nz/usage</code>; pulls from each provider&rsquo;s billing API where one exists, otherwise tracks per-call costs at the wrapper level.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4.1</span></div><h3 class="card-title">GrowthCast model</h3><p class="card-note">Conservative / Moderate / Aggressive 3-year forecast from rankings + leads + sales.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4.2</span></div><h3 class="card-title">Surprise-and-delight ticker</h3></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4.3</span></div><h3 class="card-title">PDF template redesign</h3></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4.6</span></div><h3 class="card-title">Tier 3 — Competitor content strategy analysis</h3><p class="card-note">GP&rsquo;s deliverable identifies the top 20% of competitor content driving 80% of their traffic, then maps those topics into the content roadmap. Needs DataForSEO Domain Analytics or Ahrefs API. Tackle after GSC/GA4 to avoid context-switching cost.</p></article>
+          </div>
+        </section>
+
+        <!-- Up Next -->
+        <section class="col next">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Up next</div>
+            <div class="col-count">2</div>
+          </div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip ext">validate</span><span class="card-id">BENCH</span></div><h3 class="card-title">Storepro benchmark DA run</h3><p class="card-note">SA access now live via DWD (M3.7b) — no per-client onboarding step needed. Fire a fresh DA run on staging against storepro.co.nz, then compare side-by-side with GP&rsquo;s actual Storepro deliverable. The benchmark is the validation that the whole stack works end-to-end against real client data and the brief for M2.5b polish + M3.4 GP-UI shape.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3.4</span></div><h3 class="card-title">GP work-management UI in the app</h3><p class="card-note">Now that Asana is scrapped, the GP portal needs richer work-management: assigned-to, due-date editor, comments, completion attestation. Built on the existing <code>work_items</code> lifecycle.</p></article>
+          </div>
+        </section>
+
+        <!-- In Progress -->
+        <section class="col doing">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>In progress</div>
+            <div class="col-count">0</div>
+          </div>
+          <div class="col-body">
+          </div>
+        </section>
+
+        <!-- Done (now rightmost) -->
+        <section class="col done">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Done</div>
+            <div class="col-count">36</div>
+          </div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3.7b</span><span class="card-date">30 Apr</span></div><h3 class="card-title">Domain-wide delegation — primary auth path for GSC + GA4</h3><p class="card-note"><strong>Pivot</strong> from M3.7&rsquo;s per-client OAuth flow to <strong>domain-wide delegation</strong>. The SA now impersonates <code>access@growthpartners.co.nz</code> via DWD, and that user already has admin on every GP-managed client&rsquo;s GA4 + GSC. Result: <strong>zero per-client onboarding</strong> — no client emails to send, no consent screens to walk through, no Connect-with-Google clicks. Pipeline calls the same Google APIs as before; bearer tokens just come from a JWT subject-impersonation flow instead of direct SA auth. New: <code>googleImpersonatedClient()</code> + <code>bearerAuthHeaderImpersonated()</code> in <code>lib/google/auth.ts</code>; <code>gscBearer()</code> + <code>ga4Bearer()</code> try DWD first, fall back to direct SA bearer when <code>GOOGLE_IMPERSONATE_SUBJECT</code> isn&rsquo;t set. M3.7&rsquo;s OAuth code stays as the legacy/fallback path for any future client outside GP&rsquo;s Workspace. Setup cost: one-time add of the SA&rsquo;s client ID to GP Workspace admin → Security → API controls → Manage Domain Wide Delegation, scoped to <code>webmasters.readonly</code> + <code>analytics.readonly</code>. Verified live with Storepro property.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3.7</span><span class="card-date">30 Apr</span></div><h3 class="card-title">Self-serve OAuth flow for client GA4 + GSC grants <em>(superseded by M3.7b — kept as fallback)</em></h3><p class="card-note">Originally shipped to replace &ldquo;send the SA email + walk client through GA4/GSC user-management UI&rdquo; with one-click Connect-with-Google buttons. Built because Google added a UI restriction in 2026 that hard-validates user emails against the Google Account directory and rejects <code>*.iam.gserviceaccount.com</code> addresses with &ldquo;This email doesn&rsquo;t match a Google Account.&rdquo; Admin API still accepts SAs as access-binding subjects — just the UI blocks. <strong>Same-day pivot:</strong> realised <code>access@growthpartners.co.nz</code> already has admin on every GP-managed client property, so DWD impersonation removes the per-client OAuth dance entirely (M3.7b). The OAuth code stays in place as a fallback for any future client whose GA4/GSC isn&rsquo;t under GP&rsquo;s admin reach. Code shipped: <code>lib/google/oauth.ts</code> (URL builder + state JWT + code exchange), <code>lib/google/grant-access.ts</code> (GA4 grant via Admin API; GSC verify since Search Console removed user-add from the API), API routes <code>/api/integrations/connect</code> + <code>/api/integrations/callback</code>, <code>ConnectedAccountsPanel</code> with status-aware buttons. OAuth client User Type set to Internal (locked to growthpartners.co.nz workspace, skips Google&rsquo;s verification queue). Plus a Railway-specific deploy fix: <code>publicOrigin(request)</code> uses <code>x-forwarded-host</code> headers so callback redirects don&rsquo;t resolve to the container&rsquo;s <code>0.0.0.0:8080</code> internal listen address. Built with three sub-agents in parallel (~77s + 71s + 148s).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3.3</span><span class="card-date">30 Apr</span></div><h3 class="card-title">Client dashboard layout — Work / Results / A·C·T</h3><p class="card-note">CEO-facing surface. Reads the substrate from M2 + M3.0 + M3.5 + Tier 2 through one round-trip via <code>lib/dashboard/queries.ts</code>. Three sections: <strong>Work board</strong> (3-col kanban — Up next / In progress / Done last 30d — grouped by category with priority dots; cards prefer the latest measurement over expected impact once shipped, so &ldquo;Up next&rdquo; advertises the promise and &ldquo;Done&rdquo; shows the actual movement); <strong>Results vs benchmark</strong> (Recharts: organic search performance line chart with dual y-axes from GA4 byMonth + AI-search visibility bar chart per snapshot + last-90d top GSC queries table; each card has an empty-state placeholder prompting to connect the missing data source); <strong>A·C·T metrics</strong> (Awareness · Consideration · Transaction funnel sourced from <code>metrics_snapshots</code> with live GSC/GA4 fallback). Plus a top-of-page ticker with kind chips softened for client-facing tone (hobby → For you, gp_curated → From GP). Built with two background sub-agents in parallel (~145s + 65s wall) against typed shapes in <code>lib/dashboard/types.ts</code>; main thread did the data layer + integration. Production build verified at 115 kB for the dashboard route.</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">deploy</span><span class="card-id">RW</span><span class="card-date">30 Apr</span></div><h3 class="card-title">Railway staging deploy — live + auto-deploying</h3><p class="card-note">First real production-shape deploy. <code>https://digital-architect-staging.up.railway.app</code> auto-deploys on every push to <code>staging</code> branch via Railway↔GitHub. Took 7 build attempts to crack — all because Railway sets <code>NODE_ENV=production</code> at install time, so anything Next.js needs at <strong>build time</strong> (typescript / postcss / tailwind / @types/* / turbo) had to be moved from devDependencies to dependencies. CI didn't catch this because GitHub Actions doesn&rsquo;t default to NODE_ENV=production. Plus Supabase Auth URL config patched (via Management API + the new <code>~/bin/da-supabase-token</code> keychain helper) so OAuth callback lands on the staging URL instead of localhost. Branch flow re-established: <code>dev → staging → main</code> all in sync. Production env stays cold until first real client onboarding.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3.1+2</span><span class="card-date">30 Apr</span></div><h3 class="card-title">Wildcard subdomain routing + client-CEO password auth</h3><p class="card-note">Two tightly-coupled milestones shipped together. Middleware extended: detects subdomain (prod <code>{tenant}.digitalarchitect.co.nz</code> + dev <code>{tenant}.localhost:3000</code> — browsers resolve <code>*.localhost</code> with no <code>/etc/hosts</code> edits), resolves tenant via cached DB lookup, rewrites to <code>/client/{subdomain}/*</code> route group, gates with JWT cookie. Per-tenant shared password (CEO + team) — bcrypt hash on <code>client_orgs.password_hash</code>, JWT session signed via <code>jose</code> with HS256 + scoped to subdomain (no Domain attr = automatic cross-tenant isolation). New routes: <code>/client/[subdomain]/login</code>, <code>/client/[subdomain]/page.tsx</code> (placeholder dashboard), <code>/api/client/signout</code>. New GP-side admin: <em>Client Access</em> panel on each project page shows live + dev URLs + password status pill + inline set/reset form. Smoke-tested: bcrypt hash+verify ✓, JWT mint+verify ✓, tampered token rejected ✓, short-password validation throws ✓. Foundation for M3.3 dashboard.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3.5</span><span class="card-date">30 Apr</span></div><h3 class="card-title">Measurement worker — auto-probe dispatcher + window measurements</h3><p class="card-note">Closes the third loop (&ldquo;did it work?&rdquo;). Three Inngest functions: (1) daily probe runner — for each active work_item with an <code>auto_probe</code> spec, runs the probe and on pass advances status by one rung (approved → in_progress → done → verified); (2) baseline capturer — event-triggered when status flips to in_progress, captures current value of <code>expected_impact.metric</code> as the baseline + writes a windowDays=0 measurement row; (3) measurement sweeper — daily cron, finds items completed ~30/60/90 days ago and captures a measurement at that window with delta-vs-baseline. Six probe kinds wired (page_exists / schema_present / psi_metric / serp_rank / gsc_query_position) + two skipped on the daily cadence (ai_search_cited via monthly snapshot, manual via human review). All 10 smoke-test scenarios pass against storepro.co.nz. <strong>Architecture deviation:</strong> chose Inngest over the original Cloudflare Worker spec — shares types with the rest of the pipeline, reuses GSC/GA4/SERP/PSI clients, durable per-step retries, existing precedent in monthlyAiSearchSnapshot. Cloudflare still slated for the competitor-delta poller (different shape).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3.0</span><span class="card-date">30 Apr</span></div><h3 class="card-title">Work-items lifecycle — the keystone</h3><p class="card-note">Substrate for &ldquo;send work to GP / receive done / measure if it worked.&rdquo; Every DA opportunity, IA page, content roadmap entry, audit fix, FAQ Q, agentic action + brand format now becomes a first-class <code>work_items</code> row with: status lifecycle (proposed → approved → in_progress → done → verified → cancelled / blocked), expected_impact hypothesis (metric / lift / window), auto_probe spec for verification (page_exists / schema_present / psi_metric / serp_rank / ai_search_cited / gsc_query_position / manual), tags + priority + effort + due-date. New pipeline step <code>generate-work-items</code> emits 30–80 seeds per DA run. New review-screen panel: cards grouped by category (content / technical / strategy / agentic / brand), per-status counts, Approve / Edit (inline form) / Reject (with reason) / Bulk-approve-by-category. Server actions enforce status-transition guards. Plus <code>work_item_measurements</code> table for the per-item baseline → +30/+60/+90d series that powers the &ldquo;did it work?&rdquo; loop. Two agents built lib/work-items/ + GP review UI in parallel; main thread handled schema + pipeline integration.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2.9</span><span class="card-date">29 Apr</span></div><h3 class="card-title">Tier 2 — GSC + GA4 via service account</h3><p class="card-note">Closes the biggest remaining gap vs the GP Storepro deliverable. Service-account auth pattern (no per-client OAuth flow / consent screens / token refresh): GP staff sends each client a one-line instruction to add <code>da-service@&hellip;</code> as a viewer in their GSC + GA4 properties. Pipeline now syncs (a) GSC last-90-day clicks/impressions/CTR/avg-pos + top queries / pages / countries / devices, and (b) GA4 organic-channel sessions/users/conversions/lead-rate over last 12 months + monthly trend + top organic landing pages + source/medium splits. Status row in <code>project_integrations</code> tracks per-project connection state (connected / no_access / no_match / error) and shows on the project screen with a &ldquo;Refresh connection status&rdquo; button. New PDF page &ldquo;Performance Snapshot&rdquo; renders the raw numbers with no LLM call. Synthesis prompts now reference real rankings + real lead-rate when grounding SWOT / opportunities / IA / content / agentic / brand sections.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2.8e</span><span class="card-date">29 Apr</span></div><h3 class="card-title">SEO Audit Checklist — 10-section graded scorecard</h3><p class="card-note">Mirrors GP&rsquo;s Storepro-style audit: Tech SEO, Site architecture, Internal links, Metadata &amp; images, Desktop &amp; mobile loading, Content issues, Schema markup, Web design UI/UX, Inbound links, Algorithmic penalties. Each rubric scored 0–max with A–F grades. PSI + on-page crawl + DataForSEO Backlinks feed the rubrics; heuristic-only sections are flagged for GP review. Renders as a dedicated &ldquo;Technical SEO audit&rdquo; PDF page with overall grade pill + per-section commentary + must-fix-now / needs-planning / nice-to-have prioritisation.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2.8d</span><span class="card-date">29 Apr</span></div><h3 class="card-title">PageSpeed Insights API integration</h3><p class="card-note">Lighthouse scores (perf / accessibility / best-practices / SEO) + Core Web Vitals (LCP / CLS / INP / TTFB / FCP) for desktop &amp; mobile, fed into the audit checklist. Soft-fails when no key set — pipeline keeps running. <strong>Needs Ricky to add <code>PAGESPEED_API_KEY</code></strong> (anonymous calls hit shared IP quota).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2.8c</span><span class="card-date">29 Apr</span></div><h3 class="card-title">Multi-dim keyword categorisation (3 → 14 dim)</h3><p class="card-note">Sonnet 4.6 batched categorisation over the top 200 keywords across GP&rsquo;s 14 dimensions: intent, category, sub-category, configuration, weight, quality, condition/availability, usage, price, material, NZ location, AU location, audience, journey stage. Categorised data persists on <code>keywords.categories</code>, feeds the per-category visibility split, and surfaces in synthesis prompts.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2.8b</span><span class="card-date">29 Apr</span></div><h3 class="card-title">PAA mining + FAQ section</h3><p class="card-note">Captures &ldquo;People Also Ask&rdquo; questions from every SERP query, stored on <code>serp_snapshots.paa_questions</code>. New &ldquo;FAQ&rdquo; synthesis section themes 30+ buyer questions into publishable Q&amp;A — doubles as on-site FAQ + answer-engine source content. Plus seasonality (12-month volumes) captured per keyword and surfaced in the synthesis context.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2.8a</span><span class="card-date">29 Apr</span></div><h3 class="card-title">Per-category Visibility Score split</h3><p class="card-note">Closes a major gap vs GP&rsquo;s actual deliverable: instead of one blended visibility number, computes the volume-weighted Visibility Score <em>per category</em> (e.g. &ldquo;Pallet Racking 67% / Mezzanine 12% / Workbenches 4%&rdquo;) for the client + top competitors. Far more actionable than a single number.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2.2</span><span class="card-date">29 Apr</span></div><h3 class="card-title">In-house AI-search visibility engine</h3><p class="card-note">Replaces Peec AI (no annual lock-in, ~50% cost savings, native pipeline integration). 5 engines: Perplexity sonar-pro, OpenAI gpt-5-mini + web_search, Claude + web_search_20250305, Gemini 2.5-flash googleSearch grounding, Grok 4-fast Live Search. Persisted prompt list per project for stable monthly deltas.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2.1</span><span class="card-date">29 Apr</span></div><h3 class="card-title">DataForSEO — keyword research + SERP + competitor discovery</h3><p class="card-note">Real empirical data layer. Per run: ~8 LLM seeds → keyword_ideas (top 500 keywords with volume / intent / KD / monthly seasonality / serp features) → SERP organic for top 30 (now also extracting PAA + related searches) → volume-weighted Visibility Score per competitor. Synthesis sections reference real keywords + domains in output.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2.7</span><span class="card-date">29 Apr</span></div><h3 class="card-title">DA-complete email via Postmark</h3><p class="card-note">Triggering GP user gets a clean transactional email with the review URL when a run finishes. Graceful no-op until POSTMARK_SERVER_TOKEN is set.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2.6</span><span class="card-date">29 Apr</span></div><h3 class="card-title">Templated PDF deliverable</h3><p class="card-note">8-page PDF (cover + 7 synthesis sections) auto-rendered after each succeeded run. @react-pdf/renderer — no Chromium dep. Download button on the review screen, signed-URL gated.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2.4</span><span class="card-date">29 Apr</span></div><h3 class="card-title">LLM synthesis — 6 sections</h3><p class="card-note">Brief / SWOT / Opportunities / IA / Content roadmap / Agentic / Brand. Each step uses Claude Opus 4.7 with tool-use for typed JSON. Bespoke renderer per section in the review screen.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2.5a</span><span class="card-date">29 Apr</span></div><h3 class="card-title">Internal review screen v1</h3><p class="card-note">/projects/[id]/da/[runId] — status header, in-flight banner, error rendering, dedicated section components. Polish + approval workflow continues in M2.5b.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2.3</span><span class="card-date">29 Apr</span></div><h3 class="card-title">DA pipeline backbone</h3><p class="card-note">Run-DA button + da/run.requested event + multi-step durable Inngest workflow with try/finally status flips. Loads project context, synthesises a project brief end-to-end.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1.4</span><span class="card-date">29 Apr</span></div><h3 class="card-title">KB chat — grounded RAG with streaming</h3><p class="card-note">"Ask anything about this client" — pgvector cosine search over project_chunks → top 6 excerpts → Claude Sonnet 4.6 streamed via @ai-sdk/react. Source filenames cited inline.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1.3</span><span class="card-date">29 Apr</span></div><h3 class="card-title">Auto-extract client_assumptions</h3><p class="card-note">Claude tool-use pulls 8 categories (competitors / products / audiences / priorities / pain points / differentiators / geographies / CEO hobbies) with verbatim quotes + confidence scores. Idempotent on retry.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1.2</span><span class="card-date">29 Apr</span></div><h3 class="card-title">File processing — Whisper / vision / PDF / docx</h3><p class="card-note">Real extraction shipped: audio → Whisper, images → Sonnet vision OCR, PDF/docx/text/markdown handled. Chunking + 3072-dim embeddings into pgvector. Each step durable in Inngest.</p></article>
+            <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">Sentry</span><span class="card-date">29 Apr</span></div><h3 class="card-title">Sentry wired — error monitoring + tracing + replay</h3><p class="card-note">All three runtimes (browser/server/edge) instrumented. OpenAI + Anthropic auto-instrumented for AI Monitoring.</p></article>
+            <article class="card ext"><div class="card-head"><span class="chip ext">verified</span><span class="card-id">M1.0✓</span><span class="card-date">29 Apr</span></div><h3 class="card-title">Sign-in flow verified end-to-end</h3><p class="card-note">Ricky tested at <code>localhost:3000</code> — Google SSO → /projects → create project → sign-out all working.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1.1</span><span class="card-date">29 Apr</span></div><h3 class="card-title">File ingestion plumbing</h3><p class="card-note">Storage bucket + drag-drop UI + Inngest <code>file/uploaded</code> event firing end-to-end.</p></article>
+            <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">Inngest</span><span class="card-date">29 Apr</span></div><h3 class="card-title">Inngest account + keys</h3></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1.0</span><span class="card-date">28 Apr</span></div><h3 class="card-title">Auth + project shell</h3><p class="card-note">Google SSO restricted to <code>@growthpartners.co.nz</code>, gp_users mirror, /projects list / new / detail.</p></article>
+            <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">OAuth</span><span class="card-date">28 Apr</span></div><h3 class="card-title">Google OAuth client + Supabase Auth</h3></article>
+            <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">LLM</span><span class="card-date">28 Apr</span></div><h3 class="card-title">Anthropic + OpenAI keys</h3></article>
+            <article class="card"><div class="card-head"><span class="chip m0">M0</span><span class="card-id">M0</span><span class="card-date">28 Apr</span></div><h3 class="card-title">Foundation scaffold</h3><p class="card-note">pnpm + Turborepo monorepo, Next.js 15, shadcn/ui, CI/CD green.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">M0</span><span class="card-id">M0</span><span class="card-date">28 Apr</span></div><h3 class="card-title">Supabase schema applied</h3><p class="card-note">18 tables across tenants / projects / DA / dashboard. pgvector enabled. RLS deny-all default.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">M0</span><span class="card-id">M0</span><span class="card-date">28 Apr</span></div><h3 class="card-title">GitHub setup</h3><p class="card-note">Branch protection on main, environments, CI green.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">M0</span><span class="card-id">M0</span><span class="card-date">28 Apr</span></div><h3 class="card-title">Legacy v1 archived</h3><p class="card-note">Preserved on <code>legacy/v1-railway-monorepo</code> branch.</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">docs</span><span class="card-id">📚</span><span class="card-date">28 Apr</span></div><h3 class="card-title">Methodology IP captured</h3><p class="card-note">Pitch deck + Mermed + Janssen sources structured under <code>docs/methodology/</code>.</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">docs</span><span class="card-id">📚</span><span class="card-date">29 Apr</span></div><h3 class="card-title">Foundation plan + brief + decisions log</h3></article>
+          </div>
+        </section>
+      </div>
+
+      <div class="phases" aria-label="Roadmap">
+<strong>M0</strong>  Foundation              ████████████████  done
+<strong>M1</strong>  Phase 1 — Project Loading ████████████████  done (M1.5 deferred)
+<strong>M2</strong>  Phase 2 — DA engine
+   ├─ M2.1  DataForSEO          ████████████████  done
+   ├─ M2.2  AI-search engine    ████████████████  done (in-house)
+   ├─ M2.3  Pipeline backbone   ████████████████  done
+   ├─ M2.4  6 synthesis sections████████████████  done (now 8 + perf snapshot)
+   ├─ M2.5a Review screen v1    ████████████████  done
+   ├─ M2.5b Review screen v2    ░░░░░░░░░░░░░░░░  backlog
+   ├─ M2.6  PDF deliverable     ████████████████  done
+   ├─ M2.7  Postmark email      ████████████████  done (no-op without token)
+   ├─ M2.8  Tier 1 enrichment   ████████████████  done (per-cat vis · seasonality · PAA · 14-dim · PSI · audit)
+   └─ M2.9  Tier 2 GSC + GA4    ████████████████  done (service account)
+<strong>M3</strong>  Phase 3 — Client dashboard
+   ├─ M3.0  Work-items lifecycle████████████████  done (keystone)
+   ├─ M3.1  Subdomain routing   ████████████████  done (with M3.2)
+   ├─ M3.2  Client-CEO auth     ████████████████  done (with M3.1)
+   ├─ M3.5  Measurement worker  ████████████████  done (auto-probe + window measurements)
+   ├─ M3.3  Dashboard layout    ████████████████  done (Work / Results / A·C·T)
+   ├─ M3.7  Self-serve OAuth    ████████████████  done (GA4 grant + GSC verify)
+   ├─ M3.4  GP work-mgmt UI     ░░░░░░░░░░░░░░░░  upcoming (replaces Asana sync)
+   ├─ M3.5b Competitor delta    ░░░░░░░░░░░░░░░░  upcoming (Cloudflare Worker)
+   └─ M3.6  Auto-ticker         ░░░░░░░░░░░░░░░░  upcoming
+<strong>M4</strong>  Polish + GrowthCast        ░░░░░░░░░░░░░░░░  backlog
+      </div>
+
+      <footer>
+        Updated by Claude as work lands.
+        Questions → ask Ricky. Source: <a href="https://github.com/CoreshiftHQNZ/digital-architect/blob/main/docs/site/index.html" target="_blank" rel="noopener">/docs/site/index.html</a>.
+      </footer>
+    </div>
+  </body>
+</html>
