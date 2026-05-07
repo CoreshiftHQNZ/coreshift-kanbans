@@ -391,13 +391,19 @@
         <div class="ricky-grid">
           <div class="ricky-section">
             <h3>Do now</h3>
-            <p class="helper">M2 engine done. M3.0 + M3.3 + M3.5 + M3.7 + DWD shipped. Today: M3.7c + M3.7d fixes + M3.8 verify panel + M3.9 resilience refactor (per-call AI search, step heartbeat, Sentry). First Storepro benchmark died at the ai-search-snapshot step — root cause fixed in M3.9. Ready to retry.</p>
+            <p class="helper">🎯 First clean end-to-end DA run ✓ — Storepro benchmark complete (47 min, 10 sections, 215 work_items, PDF rendered). Customer dashboard live at <code>storepro.staging.digitalarchitect.co.nz</code>. Side-by-side reading vs GP&rsquo;s actual Storepro deliverable + GP team walkthrough are the next moves.</p>
 
             <div class="task">
-              <p class="task-title">🚀 Run the benchmark DA on Storepro <span class="task-when">~30 min · the validation moment · UNBLOCKED</span></p>
+              <p class="task-title">📖 Read the Storepro deliverable side-by-side with GP&rsquo;s actual <span class="task-when">~45 min · the brief-for-everything-next moment</span></p>
               <p class="task-body">
-                Storepro GA4 + GSC are reachable via the <code>access@growthpartners.co.nz</code> impersonation path (DWD). The Connected Accounts panel for the Storepro project now shows both providers as &ldquo;Connected&rdquo;. Fire a fresh DA run from the project page — should take 25–40 min (full pipeline: keyword research, categorisation, SERP, AI-search, GSC + GA4 sync, site audit, all 8 synthesis sections, work-items generation, PDF render). Open the GP team&rsquo;s actual Storepro deliverable side-by-side and judge: where does ours match, where does it miss, where does it find things the human analyst missed? That side-by-side is the brief for the next milestone choices.<br/><br/>
-                Heads-up: if anything fails mid-run, the Inngest dashboard at <code>localhost:8288</code> shows which step + the error.
+                The <a class="task-link" style="display:inline" href="https://digital-architect-staging.up.railway.app/projects/bbf42771-0dc5-498a-aa28-321b5b4b8a4b/da/d0ef9677-93da-4ffe-be20-14816f229346" target="_blank" rel="noopener">review screen for run d0ef9677</a> has all 10 sections + 215 work_items + the PDF. Open the GP team&rsquo;s actual Storepro deliverable next to it. For each section: <em>where does ours match · where does it miss · where does it find things the human analyst missed</em>. That comparison is the brief for M2.5b (review screen polish) + M3.4 (GP work-management UI) + tells us which sections are good enough vs need sharpening.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">📅 Schedule the 30-min walk-through with the GP team <span class="task-when">~5 min to schedule · then 30 min</span></p>
+              <p class="task-body">
+                Was on the &ldquo;Later&rdquo; list, now triggered. Walk GP through the app + the Storepro output. Calibrate which sections they want sharpened, which to drop, which they&rsquo;d add. Their feedback is the actual brief for M2.5b polish.
               </p>
             </div>
 
@@ -501,7 +507,7 @@
             <div class="col-count">2</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip ext">validate</span><span class="card-id">BENCH</span></div><h3 class="card-title">Storepro benchmark DA run</h3><p class="card-note">SA access now live via DWD (M3.7b) — no per-client onboarding step needed. Fire a fresh DA run on staging against storepro.co.nz, then compare side-by-side with GP&rsquo;s actual Storepro deliverable. The benchmark is the validation that the whole stack works end-to-end against real client data and the brief for M2.5b polish + M3.4 GP-UI shape.</p></article>
+            <article class="card ext"><div class="card-head"><span class="chip ext">verified</span><span class="card-id">BENCH✓</span><span class="card-date">7 May</span></div><h3 class="card-title">Storepro benchmark DA run — first clean end-to-end ✓</h3><p class="card-note">Run <code>d0ef9677</code> succeeded in <strong>~47 min</strong> after the M3.9 resilience refactor. Output: <strong>10/10 synthesis findings</strong> (brief, SWOT, opportunities, IA, content, agentic, brand, performance snapshot, site audit, FAQ), <strong>125 ai_search_runs</strong> (clean 5×25, zero retry overshoot), <strong>215 work_items</strong>, GSC + GA4 snapshots, site audit, PDF rendered. Heartbeat tracked us live through every step transition; no failures, no retries, no container blips. Customer dashboard at <code>storepro.staging.digitalarchitect.co.nz</code> now populated with real data. Side-by-side review against GP&rsquo;s actual Storepro deliverable is the brief for M2.5b polish + M3.4 GP-UI shape.</p></article>
             <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3.4</span></div><h3 class="card-title">GP work-management UI in the app</h3><p class="card-note">Now that Asana is scrapped, the GP portal needs richer work-management: assigned-to, due-date editor, comments, completion attestation. Built on the existing <code>work_items</code> lifecycle.</p></article>
           </div>
         </section>
