@@ -9,6 +9,7 @@ Live kanban boards for active Coreshift projects, served as a single GitHub Page
 ```
 /                          Landing page — list of projects
 /digital-architect/        DA build kanban
+/sentinel/                 Sentinel internal ops platform (KeyContent today)
 ```
 
 Each project gets its own subdirectory with an `index.html`. Add a new project by creating the directory + linking it from the root `index.html`.

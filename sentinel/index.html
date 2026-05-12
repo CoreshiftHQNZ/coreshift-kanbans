@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coreshift HQ Ops — Kanban</title>
+  <style>
+    :root {
+      --navy: #0F1E3D;
+      --navy-deep: #081530;
+      --navy-soft: #1A2A4F;
+      --teal: #14B8A6;
+      --teal-dark: #0D9488;
+      --teal-light: #CCFBF1;
+      --amber: #F59E0B;
+      --amber-light: #FEF3C7;
+      --red: #DC2626;
+      --red-light: #FEE2E2;
+      --green: #10B981;
+      --green-light: #D1FAE5;
+      --purple: #8B5CF6;
+      --purple-light: #EDE9FE;
+      --blue: #3B82F6;
+      --blue-light: #DBEAFE;
+      --indigo: #6366F1;
+      --indigo-light: #E0E7FF;
+      --pink: #EC4899;
+      --pink-light: #FCE7F3;
+      --gray: #64748B;
+      --gray-light: #E2E8F0;
+      --gray-lighter: #F1F5F9;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #475569;
+      --text-soft: #94A3B8;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 14px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    header.page-head {
+      background: var(--navy);
+      color: #FFFFFF;
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--navy-deep);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .page-head-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .page-brand { display: flex; align-items: center; gap: 14px; }
+    .brand-mark {
+      width: 36px; height: 36px;
+      background: var(--teal);
+      color: var(--navy);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 18px;
+    }
+    .brand-title {
+      font-size: 18px; font-weight: 700; letter-spacing: -0.01em;
+    }
+    .brand-sub {
+      font-size: 11px; color: var(--teal);
+      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .page-meta {
+      font-size: 12px; color: #8EA5C8;
+      display: flex; gap: 24px; flex-wrap: wrap;
+    }
+    .page-meta strong { color: #FFFFFF; font-weight: 600; }
+
+    /* Main layout */
+    .page-main {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 32px 32px 48px;
+    }
+
+    /* Section headings */
+    .section-head {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 16px;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: -8px 0 16px;
+    }
+    .section-sub code {
+      background: var(--gray-lighter);
+      border: 1px solid var(--gray-light);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 12px;
+      color: var(--navy);
+    }
+
+    /* Hero */
+    .hero {
+      margin-bottom: 48px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .hero-eyebrow {
+      color: var(--teal-dark);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      margin-bottom: 14px;
+    }
+    .hero-title {
+      color: var(--navy);
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin: 0 0 12px;
+    }
+    .hero-tagline {
+      color: var(--teal-dark);
+      font-size: 22px;
+      font-style: italic;
+      font-weight: 500;
+      margin: 0 0 16px;
+      line-height: 1.35;
+    }
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 17px;
+      line-height: 1.5;
+      max-width: 880px;
+      margin: 0;
+    }
+    .hero-phase-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .phase-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 13px;
+    }
+    .phase-pill-label {
+      color: var(--text-soft);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .phase-pill-value {
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .phase-pill-date {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 4px;
+    }
+    .phase-pill-milestone {
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+    .phase-pill-milestone .phase-pill-label { color: var(--teal); }
+    .phase-pill-milestone .phase-pill-value { color: #FFFFFF; }
+    .phase-pill-milestone .phase-pill-date { color: #CADCFC; }
+
+    /* Goals */
+    .goals { margin-bottom: 40px; }
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .goal-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 24px;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .goal-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .goal-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .goal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .goal-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Phases */
+    .phases { margin-bottom: 40px; }
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .phase-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .phase-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .phase-card.phase-done       { border-top: 4px solid var(--green); }
+    .phase-card.phase-in-progress{ border-top: 4px solid var(--amber); }
+    .phase-card.phase-planned    { border-top: 4px solid var(--blue); }
+    .phase-card.phase-future     { border-top: 4px solid var(--gray); opacity: 0.88; }
+    .phase-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .phase-marker {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .phase-card.phase-done .phase-marker        { background: var(--green); }
+    .phase-card.phase-in-progress .phase-marker { background: var(--amber); }
+    .phase-status-pill {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .phase-status-done        { background: var(--green-light); color: #065F46; }
+    .phase-status-in-progress { background: var(--amber-light); color: #B45309; }
+    .phase-status-planned     { background: var(--blue-light); color: #1D4ED8; }
+    .phase-status-future      { background: var(--gray-light); color: var(--gray); }
+    .phase-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 2px;
+      letter-spacing: -0.01em;
+    }
+    .phase-subtitle {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+    .phase-window {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+    .phase-desc {
+      font-size: 12.5px;
+      color: var(--text);
+      line-height: 1.5;
+      margin: 0 0 12px;
+    }
+    .phase-deliverables {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-top: 1px solid var(--gray-light);
+      padding-top: 10px;
+    }
+    .phase-deliverables li {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      padding: 3px 0 3px 14px;
+      position: relative;
+    }
+    .phase-deliverables li::before {
+      content: "•";
+      position: absolute;
+      left: 4px;
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    /* Status strip */
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 20px 8px;
+    }
+    .status-stat {
+      text-align: center;
+      padding: 8px 12px;
+      border-right: 1px solid var(--gray-light);
+    }
+    .status-stat:last-child { border-right: none; }
+    .status-num {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+    .status-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-top: 8px;
+    }
+    .status-done .status-num        { color: var(--green); }
+    .status-in-progress .status-num { color: var(--amber); }
+    .status-blocked .status-num     { color: var(--red); }
+    .status-this-week .status-num   { color: var(--blue); }
+    .status-backlog .status-num     { color: var(--gray); }
+
+    /* Links */
+    .links { margin-bottom: 40px; }
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+    }
+    .link-card:hover {
+      box-shadow: 0 4px 14px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+      border-color: var(--teal);
+    }
+    .link-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .link-text { flex: 1; }
+    .link-title {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+    .link-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .link-arrow {
+      color: var(--teal);
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Roles */
+    .roles { margin-bottom: 40px; }
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .role-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+    .role-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .role-text { flex: 1; }
+    .role-name {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .role-person {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 6px;
+      font-size: 13px;
+    }
+    .role-verbs {
+      font-size: 12px;
+      color: var(--text-soft);
+      font-weight: 500;
+    }
+
+    /* Recently shipped */
+    .recent { margin-bottom: 40px; }
+    .recent-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+    .recent-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+    }
+    .recent-check {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .recent-text { flex: 1; min-width: 0; }
+    .recent-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+    .recent-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    /* Board section */
+    .board-section { margin-top: 8px; }
+
+    /* Kanban board */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(280px, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .column {
+      background: var(--gray-lighter);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--gray-light);
+    }
+    .col-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 4px 4px 12px;
+      border-bottom: 2px solid transparent;
+    }
+    .col-head h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.02em;
+    }
+    .col-count {
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--gray-light);
+    }
+
+    /* Column accents */
+    .col-done .col-head        { border-bottom-color: var(--green); }
+    .col-in-progress .col-head { border-bottom-color: var(--amber); }
+    .col-blocked .col-head     { border-bottom-color: var(--red); }
+    .col-this-week .col-head   { border-bottom-color: var(--blue); }
+    .col-backlog .col-head     { border-bottom-color: var(--gray); }
+
+    .col-done .col-count        { color: var(--green); border-color: var(--green-light); }
+    .col-in-progress .col-count { color: #B45309; border-color: var(--amber-light); }
+    .col-blocked .col-count     { color: var(--red); border-color: var(--red-light); }
+    .col-this-week .col-count   { color: #1D4ED8; border-color: var(--blue-light); }
+    .col-backlog .col-count     { color: var(--gray); border-color: var(--gray-light); }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 12px 14px;
+      border: 1px solid var(--gray-light);
+      box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04);
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+    }
+    .card-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 4px 0;
+    }
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 12.5px;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+    .empty {
+      color: var(--text-soft);
+      font-size: 12px;
+      text-align: center;
+      padding: 16px 0;
+      font-style: italic;
+    }
+
+    /* Tags */
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .tag-shipped     { background: var(--green-light); color: #065F46; }
+    .tag-phase-0     { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-phase-1     { background: var(--blue-light); color: #1D4ED8; }
+    .tag-phase-2     { background: var(--purple-light); color: #6D28D9; }
+    .tag-phase-3     { background: var(--pink-light); color: #BE185D; }
+    .tag-phase-4     { background: var(--indigo-light); color: #4338CA; }
+    .tag-deliverable { background: var(--green-light); color: #047857; }
+    .tag-playbook    { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-milestone   { background: #FEE2E2; color: #991B1B; }
+    .tag-infra       { background: var(--amber-light); color: #B45309; }
+    .tag-ops         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-recurring   { background: var(--gray-light); color: var(--gray); }
+    .tag-blocked     { background: var(--red-light); color: var(--red); }
+    .tag-est         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-neutral     { background: var(--gray-light); color: var(--text-muted); }
+
+    /* Footer */
+    footer.page-foot {
+      padding: 16px 32px 32px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+    footer.page-foot a {
+      color: var(--teal-dark);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(13, 148, 136, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .board { grid-template-columns: repeat(3, minmax(280px, 1fr)); }
+      .links-grid { grid-template-columns: 1fr; }
+      .recent-list { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 1300px) {
+      .phases-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 1100px) {
+      .goals-grid { grid-template-columns: 1fr; }
+      .roles-grid { grid-template-columns: 1fr; }
+      .phases-grid { grid-template-columns: repeat(2, 1fr); }
+      .status-strip { grid-template-columns: repeat(2, 1fr); }
+      .status-stat { border-right: none; border-bottom: 1px solid var(--gray-light); }
+      .status-stat:nth-last-child(-n+2) { border-bottom: none; }
+    }
+    @media (max-width: 700px) {
+      .phases-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .page-main { padding: 24px 16px 32px; }
+      .board { grid-template-columns: 1fr; }
+      header.page-head { padding: 16px; }
+      .hero-title { font-size: 32px; }
+      .hero-tagline { font-size: 17px; }
+      .hero-desc { font-size: 15px; }
+    }
+
+    /* Print */
+    @media print {
+      header.page-head { background: var(--card); color: var(--navy); border-bottom: 2px solid var(--gray-light); position: static; }
+      .brand-mark { background: var(--navy); color: #FFFFFF; }
+      .brand-title, .page-meta strong { color: var(--navy); }
+      .page-meta, .brand-sub { color: var(--text-muted); }
+      .board { grid-template-columns: repeat(2, 1fr); padding: 16px; }
+      .column { break-inside: avoid; background: var(--card); border: 1px solid var(--gray-light); }
+      .card:hover { transform: none; box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04); }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="page-head-inner">
+      <div class="page-brand">
+        <div class="brand-mark">🛡</div>
+        <div>
+          <div class="brand-title">Coreshift HQ Ops</div>
+          <div class="brand-sub">Operations Dashboard</div>
+        </div>
+      </div>
+      <div class="page-meta">
+        <div><strong>42%</strong> complete</div>
+        <div><strong>22</strong>/53 cards done</div>
+        <div>Updated <strong>2026-05-12 22:22 UTC</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-main">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">INTERNAL · LIVE OPS DASHBOARD</div>
+      <h1 class="hero-title">Coreshift HQ Ops</h1>
+      <p class="hero-tagline">How we run apps. Five plays. One deliberate system.</p>
+      <p class="hero-desc">An internal operating system for catching bugs before users do, shipping fixes in hours, and scaling to every Coreshift HQ app. Built once for KeyContent. Cloned in an afternoon for every app after.</p>
+      <div class="hero-phase-row">
+        <div class="phase-pill">
+          <span class="phase-pill-label">Current phase</span>
+          <span class="phase-pill-value">Phase 1 · Week 1 — Foundation</span>
+        </div>
+        <div class="phase-pill phase-pill-milestone">
+          <span class="phase-pill-label">Next milestone</span>
+          <span class="phase-pill-value">CEO Pitch <span class="phase-pill-date">Monday, May 18, 2026</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOALS -->
+    <section class="goals">
+      <h2 class="section-head">The Three Goals</h2>
+      <div class="goals-grid">
+        
+        <div class="goal-card">
+          <div class="goal-icon">🎯</div>
+          <div class="goal-title">Catch bugs before users do</div>
+          <div class="goal-desc">Sentry + the in-app widget surface issues automatically — no more &#39;thanks for letting us know&#39; emails.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">⚡</div>
+          <div class="goal-title">Ship fixes in hours, not days</div>
+          <div class="goal-desc">Brief Claude Code → review the preview → merge → done. Triage takes 10 min/day.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">🌐</div>
+          <div class="goal-title">Scale to every Coreshift HQ app</div>
+          <div class="goal-desc">One playbook, cloned per app. Built right means built once.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASES -->
+    <section class="phases">
+      <h2 class="section-head">Development & Production Phases</h2>
+      <p class="section-sub">Where the project has been, where it is now, and where it's going. Each phase delivers value on its own — no big-bang.</p>
+      <div class="phases-grid">
+        
+        <div class="phase-card phase-done">
+          <div class="phase-card-head">
+            <div class="phase-marker">0</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
+          </div>
+          <div class="phase-title">Phase 0 <span class="phase-subtitle">Foundation Widget</span></div>
+          <div class="phase-window">Shipped May 11</div>
+          <p class="phase-desc">The user-facing piece: a Report Issue widget. Authenticated users submit Bug / Suggestion / Question reports with optional screenshot.</p>
+          <ul class="phase-deliverables">
+            <li>In-app floating button on every authenticated page</li><li>Type selector (Bug / Suggestion / Question)</li><li>Screenshot upload to Supabase Storage</li><li>Postmark email to operator with full context</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-in-progress">
+          <div class="phase-card-head">
+            <div class="phase-marker">1</div>
+            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+          </div>
+          <div class="phase-title">Phase 1 <span class="phase-subtitle">Maintenance Ops Rollout</span></div>
+          <div class="phase-window">5 weeks · Week 1 active</div>
+          <p class="phase-desc">Wrap monitoring, alerting, triage, and workflow around the widget. Foundational infrastructure that every Coreshift HQ app will inherit.</p>
+          <ul class="phase-deliverables">
+            <li>Week 1: GitHub Issues + Sentry error monitoring</li><li>Week 2: Better Stack uptime + public status page</li><li>Week 3: User Channel (Phase 0 covers this) ✓</li><li>Week 4: Triage workflow + briefing templates</li><li>Week 5: In-repo documentation</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">2</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">Phase 2 <span class="phase-subtitle">Widget Enhancements</span></div>
+          <div class="phase-window">Post-pitch · 3-4 weeks</div>
+          <p class="phase-desc">Same widget grows new outputs without a frontend rewrite. From email-only to a full triage pipeline with persistent storage.</p>
+          <ul class="phase-deliverables">
+            <li>bug_reports table in Supabase</li><li>Auto-create GitHub Issues from each report</li><li>Auto-reply to users on resolution</li><li>User-facing &quot;My past reports&quot; view</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">3</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">Phase 3 <span class="phase-subtitle">Scale to Other Apps</span></div>
+          <div class="phase-window">When App #2 launches</div>
+          <p class="phase-desc">Apply the same playbook to the next Coreshift HQ app. The app_id field is already plumbed through — cloning takes an afternoon.</p>
+          <ul class="phase-deliverables">
+            <li>PLAYBOOK-cloning-to-new-app.md</li><li>First clone to App #2</li><li>Federated Sentry org + Better Stack workspace</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-future">
+          <div class="phase-card-head">
+            <div class="phase-marker">4</div>
+            <div class="phase-status-pill phase-status-future">Future</div>
+          </div>
+          <div class="phase-title">Phase 4 <span class="phase-subtitle">Sentinel</span></div>
+          <div class="phase-window">When at 2-3 apps</div>
+          <p class="phase-desc">The unified internal ops dashboard. One queue aggregating every app&#39;s bug reports, alerts, and triage state. Internal-only.</p>
+          <ul class="phase-deliverables">
+            <li>Centralized vs federated architecture decision</li><li>Sentinel web app — triage queue + filters</li><li>Cross-app analytics + trend detection</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATUS STRIP -->
+    <section class="status-strip">
+      <div class="status-stat status-done">
+        <div class="status-num">22</div>
+        <div class="status-label">Done</div>
+      </div>
+      <div class="status-stat status-in-progress">
+        <div class="status-num">2</div>
+        <div class="status-label">In Progress</div>
+      </div>
+      <div class="status-stat status-blocked">
+        <div class="status-num">1</div>
+        <div class="status-label">Blocked</div>
+      </div>
+      <div class="status-stat status-this-week">
+        <div class="status-num">7</div>
+        <div class="status-label">This Week</div>
+      </div>
+      <div class="status-stat status-backlog">
+        <div class="status-num">21</div>
+        <div class="status-label">Backlog</div>
+      </div>
+    </section>
+
+    <!-- KEY ARTIFACTS / QUICK LINKS -->
+    <section class="links">
+      <h2 class="section-head">Key Artifacts</h2>
+      <div class="links-grid">
+        
+        <a class="link-card" href="ops-playbook.html" target="_blank" rel="noopener">
+          <div class="link-icon">📖</div>
+          <div class="link-text">
+            <div class="link-title">Operations Playbook</div>
+            <div class="link-desc">Five HOW-WE-DO plays in a single styled viewer</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="roadmap.html" target="_blank" rel="noopener">
+          <div class="link-icon">🗺</div>
+          <div class="link-text">
+            <div class="link-title">Detailed Roadmap</div>
+            <div class="link-desc">Multi-phase plan, every task, every blocker</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://staging.keycontent.ai" target="_blank" rel="noopener">
+          <div class="link-icon">🚀</div>
+          <div class="link-text">
+            <div class="link-title">Live on Staging</div>
+            <div class="link-desc">Phase 0 widget shipped May 11 — visit and try it</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ROLES -->
+    <section class="roles">
+      <h2 class="section-head">Who's Involved</h2>
+      <div class="roles-grid">
+        
+        <div class="role-card">
+          <div class="role-avatar">A</div>
+          <div class="role-text">
+            <div class="role-name">Operator <span class="role-person">Abe</span></div>
+            <div class="role-verbs">Triage · brief · verify</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-avatar">C</div>
+          <div class="role-text">
+            <div class="role-name">Implementer <span class="role-person">Claude Code</span></div>
+            <div class="role-verbs">Read · code · ship</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-avatar">T</div>
+          <div class="role-text">
+            <div class="role-name">The Tools <span class="role-person">Sentry · Better Stack · Cloudflare · Supabase</span></div>
+            <div class="role-verbs">Watch · alert · record</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECENTLY SHIPPED -->
+    
+    <section class="recent">
+      <h2 class="section-head">Recently Shipped</h2>
+      <div class="recent-list">
+        
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Report Issue widget V1</div>
+            <div class="recent-desc">Live on staging.keycontent.ai with Bug / Suggestion / Question types, screenshot upload, and type-aware placeholders</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Postmark rewire</div>
+            <div class="recent-desc">Edge Function migrated from Resend to Postmark with verified sender</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">app_id field</div>
+            <div class="recent-desc">Forward-compatible field for the Sentinel multi-app vision</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">CEO Pitch Deck</div>
+            <div class="recent-desc">14 slides including the &quot;P0–P3, Elevated&quot; elevation slide</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">HTML Ops Playbook</div>
+            <div class="recent-desc">Single-file viewer for the 5 HOW-WE-DO docs</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">ROADMAP.md</div>
+            <div class="recent-desc">Master rollout plan with Sentinel future state baked in</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KANBAN BOARD -->
+    <section class="board-section">
+      <h2 class="section-head">Live Rollout Board</h2>
+      <p class="section-sub">Every task across every phase. Updated by editing <code>KANBAN.md</code> and running <code>update-kanban.cmd</code>.</p>
+      <div class="board">
+        
+    <section class="column col-done">
+      <header class="col-head">
+        <h2>✅ Done</h2>
+        <span class="col-count">22</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Report Issue widget V1</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Live on staging.keycontent.ai with Bug / Suggestion / Question types, screenshot upload, and type-aware placeholders</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Postmark rewire</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Edge Function migrated from Resend to Postmark with verified sender</div>
+      </div>
+      <div class="card">
+        <div class="card-title">app_id field</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Forward-compatible field for the Sentinel multi-app vision</div>
+      </div>
+      <div class="card">
+        <div class="card-title">CEO Pitch Deck</div>
+        <div class="card-tags"><span class="tag tag-deliverable">deliverable</span></div>
+        <div class="card-desc">14 slides including the &quot;P0–P3, Elevated&quot; elevation slide</div>
+      </div>
+      <div class="card">
+        <div class="card-title">HTML Ops Playbook</div>
+        <div class="card-tags"><span class="tag tag-deliverable">deliverable</span></div>
+        <div class="card-desc">Single-file viewer for the 5 HOW-WE-DO docs</div>
+      </div>
+      <div class="card">
+        <div class="card-title">ROADMAP.md</div>
+        <div class="card-tags"><span class="tag tag-deliverable">deliverable</span></div>
+        <div class="card-desc">Master rollout plan with Sentinel future state baked in</div>
+      </div>
+      <div class="card">
+        <div class="card-title">HOW-WE-DO-PRIORITY.md</div>
+        <div class="card-tags"><span class="tag tag-playbook">playbook</span></div>
+        <div class="card-desc">P0–P3 + user-impact narrative + blast radius elevation</div>
+      </div>
+      <div class="card">
+        <div class="card-title">HOW-WE-DO-PR-REVIEWS.md</div>
+        <div class="card-tags"><span class="tag tag-playbook">playbook</span></div>
+        <div class="card-desc">Behavior-based, code-free review checklist</div>
+      </div>
+      <div class="card">
+        <div class="card-title">HOW-WE-DO-INCIDENTS.md</div>
+        <div class="card-tags"><span class="tag tag-playbook">playbook</span></div>
+        <div class="card-desc">Incident runbook with the 1 AM Rule</div>
+      </div>
+      <div class="card">
+        <div class="card-title">HOW-WE-DO-DEPLOYS.md</div>
+        <div class="card-tags"><span class="tag tag-playbook">playbook</span></div>
+        <div class="card-desc">Three rules: staging, rollback, gradual</div>
+      </div>
+      <div class="card">
+        <div class="card-title">HOW-WE-DO-BUG-REPORTS.md</div>
+        <div class="card-tags"><span class="tag tag-playbook">playbook</span></div>
+        <div class="card-desc">Codifies the Phase 0 widget pipeline</div>
+      </div>
+      <div class="card">
+        <div class="card-title">HOW-WE-DO-APP-AUDITS.md</div>
+        <div class="card-tags"><span class="tag tag-playbook">playbook</span></div>
+        <div class="card-desc">Onboarding gate + quarterly re-audit checklist. Captures the first KeyContent audit inline</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Register APP-AUDITS in playbook renderer</div>
+        <div class="card-tags"><span class="tag tag-neutral">tooling</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">PLAY 6 now renders in ops-playbook.html (73.4 KB)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">HIBP password protection</div>
+        <div class="card-tags"><span class="tag tag-neutral">audit</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">get_advisors</span></div>
+        <div class="card-desc">Enabled on staging + prod. `get_advisors` confirms no more leaked-password warnings</div>
+      </div>
+      <div class="card">
+        <div class="card-title">GitHub labels</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">13 new labels (P0-P3, radius:*, status types) live in the repo</div>
+      </div>
+      <div class="card">
+        <div class="card-title">GitHub issue templates</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Bug / Feature / Question YAML forms merged via PR #70</div>
+      </div>
+      <div class="card">
+        <div class="card-title">GitHub project board</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">KeyContent Triage with auto-add workflow</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentry projects</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">keycontent-frontend + keycontent-backend created and named</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentry secrets (Supabase staging)</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">SENTRY_DSN_EDGE + SENTRY_ENVIRONMENT planted</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentry secrets (GitHub Actions)</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">SENTRY_AUTH_TOKEN + SENTRY_ORG + SENTRY_PROJECT planted</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Postmark domain verification</div>
+        <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">keycontent.ai</span><span class="tag tag-neutral">hello@keycontent.ai</span></div>
+        <div class="card-desc">`keycontent.ai` fully verified (DKIM + Return-Path); `hello@keycontent.ai` signature live</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Gmail inbox rules</div>
+        <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">KeyContent/Bug</span><span class="tag tag-neutral">/Suggestion</span><span class="tag tag-neutral">/Question</span></div>
+        <div class="card-desc">`KeyContent/Bug` (red+star+important), `/Suggestion` (yellow), `/Question` (blue+important) labels and subject filters live</div>
+      </div></div>
+    </section>
+    <section class="column col-in-progress">
+      <header class="col-head">
+        <h2>🟡 In Progress</h2>
+        <span class="col-count">2</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Sentry SDK installation</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span><span class="tag tag-blocked">blocked-by:cloudflare</span><span class="tag tag-neutral">briefs/BRIEF-sentry-installation.md</span></div>
+        <div class="card-desc">Brief ready (`briefs/BRIEF-sentry-installation.md`). Awaiting Cloudflare env var setup before handoff to build session</div>
+      </div>
+      <div class="card">
+        <div class="card-title">RLS fix for `webhook_events`</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">P1</span><span class="tag tag-neutral">20260512192536_enable_rls_webhook_events</span></div>
+        <div class="card-desc">Migration `20260512192536_enable_rls_webhook_events` shipped to staging; advisor cleared. Awaiting staging verification (Zernio event smoke test) and prod promotion</div>
+      </div></div>
+    </section>
+    <section class="column col-blocked">
+      <header class="col-head">
+        <h2>🚫 Blocked</h2>
+        <span class="col-count">1</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Cloudflare org access</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-est">est:4h</span></div>
+        <div class="card-desc">Awaiting invite from the Coreshift HQ Cloudflare account owner. Unblocks all Phase 1+ Cloudflare work</div>
+      </div></div>
+    </section>
+    <section class="column col-this-week">
+      <header class="col-head">
+        <h2>🔵 This Week</h2>
+        <span class="col-count">7</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Cloudflare Pages env vars (Step 2c)</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span></div>
+        <div class="card-desc">Add VITE_SENTRY_DSN + VITE_SENTRY_ENVIRONMENT to Preview environment</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Hand Sentry brief to build session</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span></div>
+        <div class="card-desc">Paste prompt from briefs/BRIEF-sentry-installation.md</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Review Sentry PR + verify on staging</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span></div>
+        <div class="card-desc">Standard 5-step PR review + Sentry event validation</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Pitch dry-run</div>
+        <div class="card-tags"><span class="tag tag-ops">ops</span></div>
+        <div class="card-desc">15 min with timer before Monday</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Verify GitHub branch protection</div>
+        <div class="card-tags"><span class="tag tag-neutral">audit</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">staging</span><span class="tag tag-neutral">playbook/HOW-WE-DO-APP-AUDITS.md</span></div>
+        <div class="card-desc">Confirm `main` requires PR + status checks; `staging` requires PR. Per `playbook/HOW-WE-DO-APP-AUDITS.md`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Verify Supabase backup retention</div>
+        <div class="card-tags"><span class="tag tag-neutral">audit</span><span class="tag tag-ops">ops</span></div>
+        <div class="card-desc">Confirm prod backup retention meets data-loss tolerance. Default is 7 days</div>
+      </div>
+      <div class="card">
+        <div class="card-title">CEO Pitch (Monday May 18)</div>
+        <div class="card-tags"><span class="tag tag-milestone">milestone</span></div>
+        <div class="card-desc">Present deck + playbook + live staging demo</div>
+      </div></div>
+    </section>
+    <section class="column col-backlog">
+      <header class="col-head">
+        <h2>⚪ Backlog</h2>
+        <span class="col-count">21</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">V0 to production</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0-prod</span></div>
+        <div class="card-desc">Promotion follows HOW-WE-DO-DEPLOYS. Triggered post-pitch approval</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Better Stack uptime monitor</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w2</span></div>
+        <div class="card-desc">Free tier, 3-min checks for staging + production</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Public status page</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w2</span></div>
+        <div class="card-desc">status.keycontent.ai with brand customization</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cloudflare alert integration</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w2</span></div>
+        <div class="card-desc">Workers + Pages health → email</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Briefing templates for Claude Code</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w4</span></div>
+        <div class="card-desc">One template per ticket type</div>
+      </div>
+      <div class="card">
+        <div class="card-title">PR review checklist published in repo</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w4</span></div>
+        <div class="card-desc">In-repo copy of HOW-WE-DO-PR-REVIEWS</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Triage rhythm locked</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w4</span></div>
+        <div class="card-desc">Morning routine codified</div>
+      </div>
+      <div class="card">
+        <div class="card-title">PRIORITY.md in repo</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w5</span></div>
+        <div class="card-desc">In-repo summary of priority framework</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Incident runbook in repo</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w5</span></div>
+        <div class="card-desc">In-repo summary for fast 2 AM reference</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Operator onboarding doc</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w5</span></div>
+        <div class="card-desc">For future second operator or hire</div>
+      </div>
+      <div class="card">
+        <div class="card-title">bug_reports DB table</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
+        <div class="card-desc">Persistent storage for analytics + history</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Auto-create GitHub Issues from reports</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
+        <div class="card-desc">Type → label mapping, direct triage pipeline</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Auto-reply users on resolution</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
+        <div class="card-desc">Close the loop, build trust</div>
+      </div>
+      <div class="card">
+        <div class="card-title">&quot;My past reports&quot; view</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
+        <div class="card-desc">User-facing transparency</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Document cloning playbook</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
+        <div class="card-desc">PLAYBOOK-cloning-to-new-app.md</div>
+      </div>
+      <div class="card">
+        <div class="card-title">First clone to App #2</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
+        <div class="card-desc">When App #2 launches</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel architecture decision</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
+        <div class="card-desc">Centralized vs federated reads</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel dashboard build</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
+        <div class="card-desc">Internal triage queue across all apps</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Monthly trend reviews</div>
+        <div class="card-tags"><span class="tag tag-recurring">recurring</span></div>
+        <div class="card-desc">Recurring bug patterns analysis</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Quarterly free-tier usage check</div>
+        <div class="card-tags"><span class="tag tag-recurring">recurring</span></div>
+        <div class="card-desc">Watch Sentry / Postmark / etc. limits</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Quarterly stale-issue prune</div>
+        <div class="card-tags"><span class="tag tag-recurring">recurring</span></div>
+        <div class="card-desc">Close aged P3s</div>
+      </div></div>
+    </section>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="page-foot">
+    Edit <code>KANBAN.md</code> and run <code>update-kanban.cmd</code> to refresh this view.
+    &nbsp;·&nbsp;
+    Companion to <a href="ops-playbook.html">ops-playbook.html</a> &amp; <a href="ROADMAP.md">ROADMAP.md</a>.
+  </footer>
+</body>
+</html>

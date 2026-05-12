@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roadmap · Coreshift HQ Ops</title>
+  <style>
+    :root {
+      --navy: #0F1E3D;
+      --navy-deep: #081530;
+      --navy-soft: #1A2A4F;
+      --teal: #14B8A6;
+      --teal-dark: #0D9488;
+      --teal-light: #CCFBF1;
+      --amber: #F59E0B;
+      --green: #10B981;
+      --red: #DC2626;
+      --gray: #64748B;
+      --gray-light: #E2E8F0;
+      --gray-lighter: #F1F5F9;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #475569;
+      --text-soft: #94A3B8;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 15px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    aside.sidebar {
+      background: var(--navy);
+      color: #CADCFC;
+      padding: 32px 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .brand {
+      display: flex; flex-direction: column;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--navy-soft);
+      margin-bottom: 20px;
+    }
+    .brand-mark {
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      width: 36px; height: 36px;
+      background: var(--teal);
+      color: var(--navy);
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .brand-title {
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .brand-sub {
+      color: var(--teal);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    nav .nav-label {
+      color: #6B7CA0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    nav a {
+      display: block;
+      padding: 7px 10px;
+      border-radius: 6px;
+      color: #CADCFC;
+      text-decoration: none;
+      font-size: 13px;
+      transition: background 0.15s, color 0.15s;
+      line-height: 1.4;
+    }
+    nav a:hover { background: var(--navy-soft); color: #FFFFFF; }
+    nav .back-link {
+      display: block;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--navy-soft);
+    }
+    nav .back-link a {
+      color: var(--teal);
+      padding: 0;
+      font-size: 12px;
+      display: inline;
+    }
+
+    /* Main content */
+    main {
+      padding: 56px 80px 96px;
+      max-width: 1000px;
+    }
+
+    /* Cover */
+    .cover {
+      margin-bottom: 56px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .cover .eyebrow {
+      color: var(--teal-dark);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      margin-bottom: 16px;
+    }
+    .cover h1 {
+      color: var(--navy);
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin: 0 0 12px;
+    }
+    .cover .tagline {
+      color: var(--text-muted);
+      font-size: 18px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Markdown content */
+    .md h2 {
+      color: var(--navy);
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin: 56px 0 16px;
+      padding-top: 8px;
+    }
+    .md h2:first-child { margin-top: 16px; }
+    .md h3 {
+      color: var(--navy);
+      font-size: 18px;
+      font-weight: 700;
+      margin: 32px 0 12px;
+    }
+    .md h4 {
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 700;
+      margin: 20px 0 8px;
+    }
+    .md p { margin: 0 0 16px; color: var(--text); }
+    .md hr {
+      border: 0;
+      height: 1px;
+      background: var(--gray-light);
+      margin: 48px 0;
+    }
+    .md ul, .md ol {
+      margin: 0 0 16px;
+      padding-left: 24px;
+    }
+    .md li { margin-bottom: 6px; }
+    .md li input[type="checkbox"] {
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .md a {
+      color: var(--teal-dark);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(13, 148, 136, 0.3);
+    }
+    .md a:hover { border-color: var(--teal-dark); }
+    .md strong { color: var(--navy); font-weight: 700; }
+    .md em { color: var(--text-muted); }
+    .md code {
+      font-family: "SF Mono", Consolas, Monaco, "Courier New", monospace;
+      background: var(--gray-lighter);
+      color: var(--navy);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+      border: 1px solid var(--gray-light);
+    }
+    .md pre {
+      background: var(--navy);
+      color: #CADCFC;
+      padding: 20px 24px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 24px 0;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .md pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      border: 0;
+    }
+    .md blockquote {
+      margin: 24px 0;
+      padding: 12px 24px;
+      border-left: 3px solid var(--teal);
+      background: var(--teal-light);
+      color: var(--navy);
+      border-radius: 0 8px 8px 0;
+    }
+    .md blockquote p:last-child { margin-bottom: 0; }
+    .md table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 24px 0;
+      font-size: 14px;
+      background: var(--card);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px var(--gray-light);
+    }
+    .md th {
+      background: var(--gray-lighter);
+      color: var(--navy);
+      font-weight: 700;
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--gray-light);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .md td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--gray-lighter);
+      vertical-align: top;
+    }
+    .md tr:last-child td { border-bottom: none; }
+
+    /* Style checkbox lists like progress items */
+    .md ul li {
+      list-style: none;
+      position: relative;
+      padding-left: 4px;
+    }
+    .md ul:not(.contains-task-list) li {
+      list-style: disc;
+      padding-left: 0;
+    }
+
+    .md-foot {
+      margin-top: 56px;
+      padding-top: 24px;
+      border-top: 1px solid var(--gray-light);
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+    .md-foot a {
+      color: var(--teal-dark);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(13, 148, 136, 0.3);
+    }
+
+    /* Print */
+    @media print {
+      .layout { display: block; }
+      aside.sidebar { display: none; }
+      main { padding: 0; max-width: 100%; }
+    }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      aside.sidebar { position: relative; height: auto; padding: 20px; }
+      main { padding: 32px 20px 64px; }
+      .cover h1 { font-size: 32px; }
+      .md h2 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">🛡</div>
+        <div class="brand-title">Coreshift HQ Ops</div>
+        <div class="brand-sub">Detailed Roadmap</div>
+      </div>
+      <nav>
+        <div class="nav-label">9 Sections</div>
+        <a href="#current-status">Current Status</a>
+        <a href="#this-week-pre-ceo-pitch-by-mon-may-18">This Week — Pre-CEO Pitch (by Mon, May 18)</a>
+        <a href="#coreshift-hq-way-artifacts-elevation-layer">&quot;Coreshift HQ Way&quot; Artifacts (Elevation Layer)</a>
+        <a href="#phase-1-full-maintenance-ops-rollout-5-weeks-post-ceo-approval">Phase 1 — Full Maintenance Ops Rollout (5 weeks, post-CEO approval)</a>
+        <a href="#phase-2-widget-enhancements-post-rollout-3-4-weeks-of-work">Phase 2 — Widget Enhancements (post-rollout, ~3-4 weeks of work)</a>
+        <a href="#phase-3-scaling-across-coreshift-hq-when-launching-the-next-app">Phase 3 — Scaling Across Coreshift HQ (when launching the next app)</a>
+        <a href="#phase-4-sentinel-the-unified-ops-dashboard-when-at-2-3-apps">Phase 4 — Sentinel (the unified ops dashboard, ~when at 2-3 apps)</a>
+        <a href="#operational-maintenance-ongoing">Operational Maintenance (ongoing)</a>
+        <a href="#notes-constraints">Notes / Constraints</a>
+        <div class="back-link">
+          <a href="ops-kanban.html">← Back to Dashboard</a>
+        </div>
+      </nav>
+    </aside>
+
+    <main>
+      <header class="cover">
+        <div class="eyebrow">INTERNAL · ROLLOUT PLAN · V1</div>
+        <h1>Detailed Roadmap</h1>
+        <p class="tagline">Every phase, every task, every blocker. The master plan behind the dashboard.</p>
+      </header>
+
+      <div class="md">
+        <p><strong>Working name:</strong> <strong>Sentinel</strong> 🛡️ — the unified ops platform vision for monitoring every Coreshift HQ app from one place.
+<strong>Phase 0 product:</strong> KeyContent Maintenance Ops (currently the only app on Sentinel).</p>
+<p><strong>Last updated:</strong> 2026-05-11
+<strong>Owner:</strong> Abe (operator) · Claude Code (implementer)
+<strong>North Star:</strong> Catch bugs before users do · Ship fixes in hours · Retire email-support workflow · Scale to every Coreshift HQ app</p>
+<hr>
+<h2 id="current-status">Current Status</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Phase 0</strong> — In-app Report Issue widget</td>
+<td>✅ SHIPPED on staging.keycontent.ai</td>
+</tr>
+<tr>
+<td><strong>CEO Pitch deck</strong></td>
+<td>✅ Ready (<code>deck/KeyContent-Maintenance-Ops.pptx</code>)</td>
+</tr>
+<tr>
+<td><strong>CEO Pitch date</strong></td>
+<td>Monday, May 18, 2026</td>
+</tr>
+<tr>
+<td><strong>Phase 1</strong> — Full Maintenance Ops playbook</td>
+<td>⏳ Pending CEO approval</td>
+</tr>
+<tr>
+<td><strong>Phase 2</strong> — Widget enhancements + auto-replies</td>
+<td>📋 Planned</td>
+</tr>
+<tr>
+<td><strong>Phase 3</strong> — Clone to other Coreshift HQ apps</td>
+<td>📋 Future</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="this-week-pre-ceo-pitch-by-mon-may-18">This Week — Pre-CEO Pitch (by Mon, May 18)</h2>
+<p>Tasks that strengthen the Monday pitch.</p>
+<h3>Promote V0 from staging to production</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Deploy <code>report-issue</code> Edge Function to the production Supabase project</li>
+<li><input disabled="" type="checkbox"> Set <code>POSTMARK_SERVER_TOKEN</code> + <code>REPORT_TO_EMAIL</code> as secrets on production Supabase</li>
+<li><input disabled="" type="checkbox"> Run storage migration on prod — <code>bug-report-screenshots</code> bucket + RLS policies</li>
+<li><input disabled="" type="checkbox"> Verify Edge Function CORS allowlist includes the production origin</li>
+<li><input disabled="" type="checkbox"> Confirm Postmark is sending from a live server (not sandbox) with verified sender</li>
+<li><input disabled="" type="checkbox"> Merge staging branch to main → confirm Cloudflare deploys to production</li>
+<li><input disabled="" type="checkbox"> End-to-end smoke test on production (Bug + Suggestion + screenshot)</li>
+</ul>
+<h3>Pitch-strengthening</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Set up inbox rules for <code>[KeyContent · BUG]</code> / <code>[· SUGGESTION]</code> / <code>[· QUESTION]</code> (filter, flag, route)</li>
+<li><input disabled="" type="checkbox"> Build at least one &quot;Coreshift HQ Way&quot; artifact to attach to the pitch — proof of elevation</li>
+<li><input disabled="" type="checkbox"> Optional: short dry-run of the pitch (15 min, with timer)</li>
+</ul>
+<hr>
+<h2>&quot;Coreshift HQ Way&quot; Artifacts (Elevation Layer)</h2>
+<p>These are the small playbook docs that turn industry standards into <em>your version</em> of those standards. Each one is ~1 page.</p>
+<ul>
+<li><input disabled="" type="checkbox"> <code>HOW-WE-DO-PRIORITY.md</code> — P0–P3 + user-impact narrative + blast radius</li>
+<li><input disabled="" type="checkbox"> <code>HOW-WE-DO-PR-REVIEWS.md</code> — non-coder behavior-based PR review checklist</li>
+<li><input disabled="" type="checkbox"> <code>HOW-WE-DO-BUG-REPORTS.md</code> — the widget + email pipeline + inbox routing (codifies what already shipped)</li>
+<li><input disabled="" type="checkbox"> <code>HOW-WE-DO-DEPLOYS.md</code> — preview deploy → test → gradual rollout → monitor</li>
+<li><input disabled="" type="checkbox"> <code>HOW-WE-DO-INCIDENTS.md</code> — alert → diagnose → fix → status page → post-mortem</li>
+</ul>
+<p><strong>Recommended order:</strong> Priority → PR Reviews → Incidents → Bug Reports → Deploys.</p>
+<hr>
+<h2 id="phase-1-full-maintenance-ops-rollout-5-weeks-post-ceo-approval">Phase 1 — Full Maintenance Ops Rollout (5 weeks, post-CEO approval)</h2>
+<p>The 5-week plan from the pitch deck. Week 3 already shipped.</p>
+<h3>Week 1 — Foundation</h3>
+<ul>
+<li><input disabled="" type="checkbox"> GitHub Issues — labels (<code>bug</code>, <code>enhancement</code>, <code>question</code>, <code>tech-debt</code>, <code>user-reported</code>) + priority labels (<code>P0</code> → <code>P3</code>)</li>
+<li><input disabled="" type="checkbox"> Issue templates (bug, feature, question)</li>
+<li><input disabled="" type="checkbox"> GitHub Project board (Triage → To Do → In Progress → In Review → Done)</li>
+<li><input disabled="" type="checkbox"> Sentry account + Sentry project for KeyContent</li>
+<li><input disabled="" type="checkbox"> Sentry SDK installed in the app (frontend + backend)</li>
+<li><input disabled="" type="checkbox"> Sentry release tracking wired to Cloudflare deploys</li>
+</ul>
+<h3>Week 2 — Visibility</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Better Stack account + uptime monitor for <code>keycontent.ai</code></li>
+<li><input disabled="" type="checkbox"> Public status page at <code>status.keycontent.ai</code></li>
+<li><input disabled="" type="checkbox"> Cloudflare alert integration (Workers + Pages health)</li>
+</ul>
+<h3>Week 3 — User Channel ✅ DONE</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> V1 Report Issue widget shipped (May 11, 2026)</li>
+<li><input checked="" disabled="" type="checkbox"> Round 2 polish + ticket-type selector shipped</li>
+</ul>
+<h3>Week 4 — Workflow</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Briefing templates for Claude Code (one per ticket type)</li>
+<li><input disabled="" type="checkbox"> PR review checklist published in repo</li>
+<li><input disabled="" type="checkbox"> Morning triage routine documented (10-min ritual)</li>
+<li><input disabled="" type="checkbox"> Triage rhythm locked in (when to look at Sentry, Better Stack, GitHub Issues)</li>
+</ul>
+<h3>Week 5 — Documentation</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <code>PRIORITY.md</code> in the keycontent repo (in-repo summary of priority framework)</li>
+<li><input disabled="" type="checkbox"> Incident runbook in the repo</li>
+<li><input disabled="" type="checkbox"> Operator onboarding doc (in case a second operator joins)</li>
+</ul>
+<hr>
+<h2 id="phase-2-widget-enhancements-post-rollout-3-4-weeks-of-work">Phase 2 — Widget Enhancements (post-rollout, ~3-4 weeks of work)</h2>
+<p>The widget shipped in Phase 0 grows outputs without a frontend rewrite.</p>
+<ul>
+<li><input disabled="" type="checkbox"> Add <code>bug_reports</code> table in Supabase — Edge Function writes a row alongside sending the email</li>
+<li><input disabled="" type="checkbox"> Auto-create a GitHub Issue from each report (mapped: Bug → <code>bug</code> label, Suggestion → <code>enhancement</code>, Question → <code>question</code>)</li>
+<li><input disabled="" type="checkbox"> Auto-reply email to the user when their issue gets resolved (closes the loop, builds trust)</li>
+<li><input disabled="" type="checkbox"> In-app &quot;My past reports&quot; view for users (transparency upgrade)</li>
+<li><input disabled="" type="checkbox"> Rate limiting if abuse becomes a concern (only if needed)</li>
+</ul>
+<hr>
+<h2 id="phase-3-scaling-across-coreshift-hq-when-launching-the-next-app">Phase 3 — Scaling Across Coreshift HQ (when launching the next app)</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Document the cloning playbook (<code>PLAYBOOK-cloning-to-new-app.md</code>)</li>
+<li><input disabled="" type="checkbox"> First clone — apply the system to Coreshift HQ App #2 when it launches</li>
+<li><input disabled="" type="checkbox"> Federate Sentry org / Better Stack workspace across the portfolio</li>
+</ul>
+<h2 id="phase-4-sentinel-the-unified-ops-dashboard-when-at-2-3-apps">Phase 4 — Sentinel (the unified ops dashboard, ~when at 2-3 apps)</h2>
+<p>The single internal platform that aggregates every app&#39;s bug reports, alerts, and triage state into one queue. Internal-only — not customer-facing.</p>
+<h3>Forward-compatible decisions (make NOW, even at one app)</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Add <code>app_id</code> (or <code>app_slug</code>) field to every bug report payload — even though only &quot;keycontent&quot; exists today, the schema is ready for &quot;coreshift-app-2&quot;, etc.</li>
+<li><input disabled="" type="checkbox"> When the <code>bug_reports</code> table is created in Phase 2, include <code>app_id</code> as a column from day one</li>
+<li><input disabled="" type="checkbox"> Edge Function payload accepts and validates <code>app_id</code> (default to &quot;keycontent&quot; for now)</li>
+</ul>
+<h3>Build phase (when ready)</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Decide architecture: centralized Sentinel Supabase project OR federated reads from each app&#39;s Supabase via API</li>
+<li><input disabled="" type="checkbox"> Build the Sentinel web app — internal dashboard with triage queue, filters (by app, type, priority), resolution flow</li>
+<li><input disabled="" type="checkbox"> Auth: Coreshift HQ team only (no public access)</li>
+<li><input disabled="" type="checkbox"> Optional: federated views into Sentry + Better Stack + GitHub Issues across the portfolio</li>
+</ul>
+<hr>
+<h2 id="operational-maintenance-ongoing">Operational Maintenance (ongoing)</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Monthly: review issue trends — are the same kinds of bugs recurring?</li>
+<li><input disabled="" type="checkbox"> Quarterly: review free-tier usage vs limits (Sentry events, Resend emails, etc.)</li>
+<li><input disabled="" type="checkbox"> Quarterly: prune stale issues, close P3s that have aged out</li>
+<li><input disabled="" type="checkbox"> Annually: re-evaluate tool choices (Sentry vs alternatives, Better Stack vs alternatives)</li>
+</ul>
+<hr>
+<h2 id="notes-constraints">Notes / Constraints</h2>
+<ul>
+<li><strong>Budget:</strong> Free tiers only for new tooling at current scale (~10-20 users). Upgrade triggers documented in deck Slide 11.</li>
+<li><strong>Role split:</strong> Abe triages + briefs + verifies. Claude Code implements. Tools watch + alert + record.</li>
+<li><strong>Stack:</strong> GitHub (<code>keycontent</code>), Supabase (staging + prod), Cloudflare (Workers/Pages/D1/KV/R2), Postmark (transactional email).</li>
+<li><strong>All artifacts live in:</strong> <code>D:\Coreshift HQ\Sentinel\</code></li>
+</ul>
+
+      </div>
+
+      <div class="md-foot">
+        Built 2026-05-12 21:14 UTC  ·  Source: <code>ROADMAP.md</code>  ·  Companion: <a href="ops-playbook.html">Playbook</a>  ·  <a href="pitch-deck.html">Pitch Deck</a>  ·  <a href="ops-kanban.html">Dashboard</a>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

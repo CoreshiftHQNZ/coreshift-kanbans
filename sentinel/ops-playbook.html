@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coreshift HQ Ops Playbook</title>
+  <style>
+    :root {
+      --navy: #0F1E3D;
+      --navy-deep: #081530;
+      --navy-soft: #1A2A4F;
+      --teal: #14B8A6;
+      --teal-dark: #0D9488;
+      --teal-light: #CCFBF1;
+      --amber: #F59E0B;
+      --red: #DC2626;
+      --gray: #64748B;
+      --gray-light: #E2E8F0;
+      --gray-lighter: #F1F5F9;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #475569;
+      --text-soft: #94A3B8;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 15px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    /* ===== Sidebar ===== */
+    aside.sidebar {
+      background: var(--navy);
+      color: #CADCFC;
+      padding: 32px 24px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex; flex-direction: column;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--navy-soft);
+      margin-bottom: 24px;
+    }
+    .brand-mark {
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      width: 36px; height: 36px;
+      background: var(--teal);
+      color: var(--navy);
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+    .brand-name {
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: -0.01em;
+    }
+    .brand-sub {
+      color: var(--teal);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    nav .nav-label {
+      color: #6B7CA0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 6px;
+      color: #CADCFC;
+      text-decoration: none;
+      font-size: 14px;
+      transition: background 0.15s, color 0.15s;
+    }
+    nav a:hover {
+      background: var(--navy-soft);
+      color: #FFFFFF;
+    }
+    nav a .play-num {
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 11px;
+      min-width: 32px;
+    }
+
+    nav .nav-foot {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--navy-soft);
+      font-size: 11px;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    /* ===== Main content ===== */
+    main {
+      padding: 64px 80px 96px;
+      max-width: 920px;
+    }
+
+    /* Cover */
+    .cover {
+      margin-bottom: 80px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .cover .eyebrow {
+      color: var(--teal-dark);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .cover h1 {
+      color: var(--navy);
+      font-size: 56px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin: 0 0 16px;
+    }
+    .cover .tagline {
+      color: var(--text-muted);
+      font-size: 20px;
+      line-height: 1.5;
+      margin: 0;
+      font-weight: 400;
+    }
+    .cover .meta {
+      margin-top: 32px;
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      color: var(--gray);
+      font-size: 13px;
+    }
+    .cover .meta strong { color: var(--text); font-weight: 600; }
+
+    /* Section header */
+    section.play {
+      margin-bottom: 96px;
+      padding-top: 24px;
+    }
+    section.play .play-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    section.play .play-eyebrow {
+      display: inline-block;
+      background: var(--teal-light);
+      color: var(--teal-dark);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+    section.play[data-accent="amber"] .play-eyebrow {
+      background: #FEF3C7;
+      color: #B45309;
+    }
+    section.play .play-title {
+      color: var(--navy);
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 8px 0 8px;
+      width: 100%;
+    }
+    section.play .play-tagline {
+      color: var(--text-muted);
+      font-size: 17px;
+      font-style: italic;
+      margin: 0 0 24px;
+      width: 100%;
+    }
+    section.play .play-divider {
+      height: 3px;
+      width: 56px;
+      background: var(--teal);
+      border-radius: 2px;
+      margin-bottom: 40px;
+    }
+    section.play[data-accent="amber"] .play-divider { background: var(--amber); }
+
+    /* Markdown content */
+    .md h1 { display: none; } /* in case any slipped through */
+    .md h2 {
+      color: var(--navy);
+      font-size: 24px;
+      font-weight: 700;
+      margin: 48px 0 16px;
+      letter-spacing: -0.01em;
+    }
+    .md h3 {
+      color: var(--navy);
+      font-size: 18px;
+      font-weight: 700;
+      margin: 32px 0 12px;
+    }
+    .md h4 {
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 700;
+      margin: 24px 0 8px;
+    }
+    .md p {
+      margin: 0 0 16px;
+      color: var(--text);
+    }
+    .md hr {
+      border: 0;
+      height: 1px;
+      background: var(--gray-light);
+      margin: 48px 0;
+    }
+    .md ul, .md ol {
+      margin: 0 0 16px;
+      padding-left: 24px;
+    }
+    .md li { margin-bottom: 6px; }
+    .md li > p { margin-bottom: 6px; }
+
+    .md a {
+      color: var(--teal-dark);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(13, 148, 136, 0.3);
+      transition: border-color 0.15s;
+    }
+    .md a:hover { border-color: var(--teal-dark); }
+
+    .md strong { color: var(--navy); font-weight: 700; }
+    .md em { color: var(--text-muted); }
+
+    .md code {
+      font-family: "SF Mono", Consolas, Monaco, "Courier New", monospace;
+      background: var(--gray-lighter);
+      color: var(--navy);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+      border: 1px solid var(--gray-light);
+    }
+    .md pre {
+      background: var(--navy);
+      color: #CADCFC;
+      padding: 20px 24px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 24px 0;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .md pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      border: 0;
+      font-size: inherit;
+    }
+
+    .md blockquote {
+      margin: 24px 0;
+      padding: 16px 24px;
+      border-left: 3px solid var(--teal);
+      background: var(--teal-light);
+      color: var(--navy);
+      border-radius: 0 8px 8px 0;
+    }
+    .md blockquote p:last-child { margin-bottom: 0; }
+    .md blockquote em { color: var(--navy); }
+
+    .md table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 24px 0;
+      font-size: 14px;
+      background: var(--card);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px var(--gray-light);
+    }
+    .md th {
+      background: var(--gray-lighter);
+      color: var(--navy);
+      font-weight: 700;
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--gray-light);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .md td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--gray-lighter);
+      color: var(--text);
+      vertical-align: top;
+    }
+    .md tr:last-child td { border-bottom: none; }
+    .md td code { font-size: 12.5px; }
+
+    /* Status meta line at top of each doc */
+    .md > p:first-child {
+      background: var(--gray-lighter);
+      border-left: 3px solid var(--gray);
+      padding: 12px 16px;
+      border-radius: 0 6px 6px 0;
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-bottom: 32px;
+    }
+
+    /* Print */
+    @media print {
+      .layout { display: block; }
+      aside.sidebar { display: none; }
+      main { padding: 0; max-width: 100%; }
+      section.play { page-break-inside: avoid; margin-bottom: 60px; }
+      section.play .play-title { font-size: 28px; }
+      .cover h1 { font-size: 36px; }
+      a { color: var(--navy) !important; border: none !important; }
+      .md pre { background: var(--gray-lighter); color: var(--navy); border: 1px solid var(--gray-light); }
+      .md blockquote { background: var(--gray-lighter); border-left-color: var(--gray); color: var(--text); }
+    }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      aside.sidebar { position: relative; height: auto; padding: 24px; }
+      main { padding: 32px 24px 64px; }
+      .cover h1 { font-size: 36px; }
+      section.play .play-title { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">🛡</div>
+        <div class="brand-name">Coreshift HQ</div>
+        <div class="brand-sub">Ops Playbook</div>
+      </div>
+      <nav>
+        <div class="nav-label">The Five Plays</div>
+        <a href="#priority"><span class="play-num">01</span><span>Priority Framework</span></a>
+        <a href="#pr-reviews"><span class="play-num">02</span><span>PR Reviews</span></a>
+        <a href="#incidents"><span class="play-num">03</span><span>Incident Response</span></a>
+        <a href="#deploys"><span class="play-num">04</span><span>Deploy Pipeline</span></a>
+        <a href="#bug-reports"><span class="play-num">05</span><span>Bug Reports</span></a>
+        <a href="#app-audits"><span class="play-num">06</span><span>App Audits</span></a>
+        <div class="nav-foot">
+          Internal · v1 · May 2026<br>
+          For Coreshift HQ team
+        </div>
+      </nav>
+    </aside>
+
+    <main>
+      <header class="cover">
+        <div class="eyebrow">INTERNAL PLAYBOOK · v1 · MAY 2026</div>
+        <h1>How We Run Apps</h1>
+        <p class="tagline">Five plays. One deliberate system. Built once for KeyContent. Cloned in an afternoon for every Coreshift HQ app after.</p>
+        <div class="meta">
+          <div><strong>Owner:</strong> Abe (Operator)</div>
+          <div><strong>Implementer:</strong> Claude Code</div>
+          <div><strong>Stack:</strong> Supabase · Cloudflare · GitHub · Postmark</div>
+          <div><strong>Scale:</strong> 10–20 users today</div>
+        </div>
+      </header>
+
+      
+      <section id="priority" class="play" data-accent="teal">
+        <div class="play-header">
+          <span class="play-eyebrow">PLAY 1</span>
+        </div>
+        <h2 class="play-title">Priority Framework</h2>
+        <p class="play-tagline">How we triage what gets fixed first.</p>
+        <div class="play-divider"></div>
+        <div class="md"><p><strong>Status:</strong> Active · v1 · 2026-05-11
+<strong>Applies to:</strong> Every Coreshift HQ app · Currently: KeyContent
+<strong>Owners:</strong> Operator (assigns priority) · Claude Code (consults for triage cues)</p>
+<hr>
+<h2>What this doc is</h2>
+<p>How Coreshift HQ triages and prioritizes issues. Built on the <strong>P0–P3 industry standard</strong> (so we play nicely with the rest of the world), elevated with <strong>two custom fields</strong> that force better thinking:</p>
+<ol>
+<li><strong>User Impact Narrative</strong> — a one-line human story, not a technical description</li>
+<li><strong>Blast Radius</strong> — explicit count of how many users are affected</li>
+</ol>
+<p>The standard tells us <em>what to call things.</em> Our additions force us to <em>think about who&#39;s affected</em> before we act.</p>
+<hr>
+<h2>The Four Priority Tiers</h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Name</th>
+<th>When</th>
+<th>Action</th>
+<th>Default response time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>P0</strong></td>
+<td>Drop Everything</td>
+<td>App is down for most/all users · Data loss · Active security breach</td>
+<td>Fix now, today</td>
+<td>Hours</td>
+</tr>
+<tr>
+<td><strong>P1</strong></td>
+<td>This Week</td>
+<td>A core feature is broken · OR a smaller feature broken for many users</td>
+<td>Fix in 1–3 days</td>
+<td>Same business day</td>
+</tr>
+<tr>
+<td><strong>P2</strong></td>
+<td>This Milestone</td>
+<td>A bug exists but users have a workaround · OR only a small subset is affected</td>
+<td>Fix in current sprint</td>
+<td>Within the week</td>
+</tr>
+<tr>
+<td><strong>P3</strong></td>
+<td>When Convenient</td>
+<td>Polish · Cosmetic · Wishlist · Edge case</td>
+<td>Backlog — close if stale</td>
+<td>No SLA</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>The Decision Tree (use this in 10 seconds)</h2>
+<pre><code>1. Is the app down for everyone?              → YES → P0
+                                                NO ↓
+2. Is a core feature broken for many users?   → YES → P1
+                                                NO ↓
+3. Is anything functionally broken?            → YES → P2
+                                                NO ↓
+4. Cosmetic / nice-to-have?                    → P3
+</code></pre>
+<p><strong>&quot;Core feature&quot; for KeyContent</strong> = login · the main content workflow · saving work · billing/payments.
+Each app defines its own list in its in-repo <code>PRIORITY.md</code>.</p>
+<hr>
+<h2>The Two Required Fields (the elevation)</h2>
+<h3>1. User Impact Narrative</h3>
+<p>Every triaged issue must include a <strong>one-line story</strong> of how this affects the user&#39;s day.</p>
+<table>
+<thead>
+<tr>
+<th>❌ Bad (technical)</th>
+<th>✅ Good (human)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Save button throws TypeError&quot;</td>
+<td>&quot;Users lose their drafts when clicking Save — they have to retype everything&quot;</td>
+</tr>
+<tr>
+<td>&quot;API 500 on /jobs endpoint&quot;</td>
+<td>&quot;Users can&#39;t see their own jobs list when they log in — looks like everything&#39;s gone&quot;</td>
+</tr>
+<tr>
+<td>&quot;Modal animation janky on Safari&quot;</td>
+<td>&quot;Safari users see a flicker when opening the report widget — minor visual annoyance&quot;</td>
+</tr>
+</tbody></table>
+<p><strong>Why:</strong> Triage from the user&#39;s perspective, not the engineer&#39;s. The narrative tells you the <em>severity</em> better than the stack trace.</p>
+<h3>2. Blast Radius</h3>
+<p>Tag every issue with one of:</p>
+<table>
+<thead>
+<tr>
+<th>Tag</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>radius:single</code></td>
+<td>One user affected (so far)</td>
+</tr>
+<tr>
+<td><code>radius:some</code></td>
+<td>A subset — e.g., users on Safari, free-tier users, users in a specific region</td>
+</tr>
+<tr>
+<td><code>radius:many</code></td>
+<td>Most users will hit this</td>
+</tr>
+<tr>
+<td><code>radius:all</code></td>
+<td>Everyone, every session</td>
+</tr>
+</tbody></table>
+<p><strong>Why:</strong> Lets us spot escalation. A <code>P2 · radius:some</code> issue that gets re-reported as <code>radius:many</code> jumps to <code>P1</code> instantly.</p>
+<hr>
+<h2>How Type, Priority, and Radius Compose</h2>
+<p>These are three orthogonal axes — all assigned, but at different moments:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Set by</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Type</strong> (Bug / Suggestion / Question)</td>
+<td>The user</td>
+<td>At report time (via the widget)</td>
+</tr>
+<tr>
+<td><strong>Priority</strong> (P0–P3)</td>
+<td>The operator</td>
+<td>At triage time</td>
+</tr>
+<tr>
+<td><strong>Blast Radius</strong></td>
+<td>The operator</td>
+<td>At triage time</td>
+</tr>
+</tbody></table>
+<p>A typical fully-triaged issue looks like:</p>
+<blockquote>
+<p><strong>Type:</strong> Bug
+<strong>Priority:</strong> P1
+<strong>Blast Radius:</strong> <code>radius:many</code>
+<strong>Narrative:</strong> Users lose their drafts when clicking Save — they have to retype everything.</p>
+</blockquote>
+<p>This is rich enough that <strong>Claude Code can read it cold and start fixing.</strong> That&#39;s the whole point.</p>
+<hr>
+<h2>Common Mistakes (don&#39;t do these)</h2>
+<ul>
+<li><strong>Everything is P1.</strong> If everything&#39;s urgent, nothing is. Be ruthless.</li>
+<li><strong>The loudest user sets priority.</strong> <em>Impact</em> sets priority, not volume. A single angry user reporting a typo is still P3.</li>
+<li><strong>You-found-it bugs ranked above users-found-it.</strong> Reverse it — user-reported issues are real, by definition.</li>
+<li><strong>Priority never changes.</strong> Re-triage when you learn more. A P2 affecting <code>radius:some</code> that turns into <code>radius:many</code> becomes P1.</li>
+<li><strong>Skipping the narrative.</strong> Without it, you&#39;re prioritizing on vibes. Force the user-impact line every time.</li>
+</ul>
+<hr>
+<h2>Why we tweaked the standard</h2>
+<p>The industry&#39;s P0–P3 system is a vocabulary, not a thinking framework. Two issues can both be &quot;P1&quot; and have wildly different actual impact on users. By requiring <strong>narrative + radius</strong>, we force a small amount of structured thinking that:</p>
+<ul>
+<li>Prevents priority inflation</li>
+<li>Makes triage trustworthy (numbers are decisions, not guesses)</li>
+<li>Generates great Claude Code briefs as a byproduct</li>
+<li>Sets up future automation — <code>radius:all</code> could auto-page; <code>radius:single + P3</code> could auto-close after 60 days</li>
+</ul>
+<p>These are not exotic additions. They&#39;re cheap, repeatable habits that compound over hundreds of triaged issues.</p>
+<hr>
+<h2>How this lives in practice</h2>
+<ul>
+<li><strong>The widget</strong> captures Type at report time</li>
+<li><strong>Triage</strong> (10 min/day) sets Priority + Blast Radius + Narrative</li>
+<li><strong>GitHub Issues</strong> stores all three as labels and fields (Phase 1)</li>
+<li><strong>Sentinel</strong> (future ops dashboard) filters and sorts by these</li>
+<li><strong>The pitch deck (Slide 7)</strong> is the public-facing summary of this doc</li>
+</ul>
+<hr>
+<h2>When this doc changes</h2>
+<ul>
+<li>Edit when we discover a new tier is needed (rare)</li>
+<li>Edit when the &quot;core feature&quot; list changes per app</li>
+<li>Bump the version at the top</li>
+<li>Mention in the next CEO update</li>
+</ul>
+<hr>
+<h2>See also</h2>
+<ul>
+<li><code>../briefs/BRIEF-report-issue-widget.md</code> — how Type is captured</li>
+<li><code>../briefs/BRIEF-report-issue-widget-round2.md</code> — Type selector implementation</li>
+<li><code>../deck/KeyContent-Maintenance-Ops.pptx</code> — Slide 7 (Priority Framework)</li>
+<li><code>../ROADMAP.md</code> — Phase 1 Week 5 (in-repo <code>PRIORITY.md</code> follows this doc)</li>
+</ul>
+</div>
+      </section>
+
+      <section id="pr-reviews" class="play" data-accent="teal">
+        <div class="play-header">
+          <span class="play-eyebrow">PLAY 2</span>
+        </div>
+        <h2 class="play-title">PR Reviews</h2>
+        <p class="play-tagline">How a non-coder verifies every change.</p>
+        <div class="play-divider"></div>
+        <div class="md"><p><strong>Status:</strong> Active · v1 · 2026-05-13
+<strong>Applies to:</strong> Every PR from Claude Code or any contributor
+<strong>Owners:</strong> Operator (reviewer) · Claude Code (author)</p>
+<hr>
+<h2>What this doc is</h2>
+<p>A behavior-based, <strong>code-free</strong> PR review checklist. Designed for an operator who <strong>doesn&#39;t write code</strong> to confidently approve or push back on changes — at speed, every day.</p>
+<hr>
+<h2>The principle</h2>
+<p><strong>Behavior &gt; code.</strong></p>
+<p>Most engineering orgs review PRs by reading source code line by line. We can&#39;t — and we don&#39;t need to. We trust Claude Code&#39;s implementation patterns and verify what <em>actually matters</em>: that the change does what we asked for, and nothing else broke.</p>
+<p>Our verification happens at the <strong>user-experience layer</strong>, not the source-code layer.</p>
+<p><strong>The trade:</strong> we don&#39;t personally catch every subtle bug. We rely on <strong>gradual deploys + Sentry monitoring + instant rollback</strong> as the safety net for what slips through.</p>
+<hr>
+<h2>The 5-Step Review</h2>
+<p>Run these in order for every PR. Total time: ~5 minutes per PR.</p>
+<h3>Step 1 · Read the PR description</h3>
+<ul>
+<li>Does the change match what I briefed?</li>
+<li>Are the &quot;What&#39;s new&quot; items a subset of what I asked for? <em>(No scope creep.)</em></li>
+<li>Does the test plan match what we should verify?</li>
+</ul>
+<p>✅ Yes → continue.   ❌ No → comment to clarify before testing.</p>
+<h3>Step 2 · Open the preview URL</h3>
+<ul>
+<li>Cloudflare auto-creates a preview deploy for every PR</li>
+<li>The link appears in the PR comments (Cloudflare Pages bot)</li>
+<li>If no preview exists → ask for one before reviewing</li>
+</ul>
+<h3>Step 3 · Reproduce the original goal</h3>
+<ul>
+<li><strong>For bugs:</strong> repeat the steps from the original issue. Confirm the bug is gone.</li>
+<li><strong>For features:</strong> use the feature exactly as a user would. Confirm it does what we asked.</li>
+</ul>
+<h3>Step 4 · Smoke test the critical flows</h3>
+<p>After verifying the targeted change, quickly probe 2–3 high-traffic paths to make sure nothing else broke.</p>
+<p><strong>KeyContent&#39;s critical flows:</strong></p>
+<ul>
+<li>Sign in / sign up</li>
+<li>Dashboard loads cleanly</li>
+<li>The primary content workflow (create / edit / save a job)</li>
+<li>Sign out</li>
+</ul>
+<p>Each click ~5–10 seconds. Whole smoke test ~1 minute.</p>
+<h3>Step 5 · Mobile check</h3>
+<ul>
+<li>Resize your browser to ~400px wide (or pull it up on your phone)</li>
+<li>Hit the changed page</li>
+<li>Confirm nothing is broken or unreadable</li>
+</ul>
+<p><strong>All 5 pass → merge.   Any fail → comment and bounce back.</strong></p>
+<hr>
+<h2>Decision matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>All 5 steps pass</td>
+<td>✅ Merge</td>
+</tr>
+<tr>
+<td>Bug isn&#39;t actually fixed</td>
+<td>❌ Comment with exact failing steps</td>
+</tr>
+<tr>
+<td>Fix works, but smoke test broke something else</td>
+<td>❌ Comment + screenshot</td>
+</tr>
+<tr>
+<td>Mobile broken</td>
+<td>❌ Comment &quot;Mobile broken — see screenshot&quot;</td>
+</tr>
+<tr>
+<td>PR description doesn&#39;t match my brief</td>
+<td>❌ &quot;This doesn&#39;t match my brief — please redo X&quot;</td>
+</tr>
+<tr>
+<td>Looks fine but I&#39;m uncertain</td>
+<td>⏸ Pull in second eyes OR test more flows</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Example comments to give Claude Code</h2>
+<p><strong>Bug not fixed:</strong></p>
+<blockquote>
+<p><em>&quot;Tested on preview. Original issue still happens: when I click Save on the draft, the page reloads and the content is lost. Can you take another look?&quot;</em></p>
+</blockquote>
+<p><strong>Smoke test broke something:</strong></p>
+<blockquote>
+<p><em>&quot;Targeted fix works. But noticed: clicking &#39;New Job&#39; button now crashes the page. Reproduced 3 times. Screenshot attached.&quot;</em></p>
+</blockquote>
+<p><strong>Mobile broken:</strong></p>
+<blockquote>
+<p><em>&quot;On mobile width (~400px), the new ticket-type selector wraps weirdly and &#39;Send Report&#39; is cut off. Screenshot.&quot;</em></p>
+</blockquote>
+<p><strong>Scope creep:</strong></p>
+<blockquote>
+<p><em>&quot;I see you also refactored the auth code — please pull that out into a separate PR so this one stays focused on the bug fix.&quot;</em></p>
+</blockquote>
+<hr>
+<h2>What I never do</h2>
+<ul>
+<li>Read code line by line</li>
+<li>Approve a PR based on &quot;looks good to me&quot;</li>
+<li>Skip the smoke test</li>
+<li>Merge on a Friday afternoon</li>
+<li>Trust the test plan without running it myself</li>
+</ul>
+<hr>
+<h2>Post-merge: the 1-hour Sentry watch</h2>
+<p>After merging, glance at Sentry once an hour for 2–3 hours:</p>
+<ul>
+<li><strong>New error spike?</strong> → 1-click rollback via Cloudflare gradual deploy</li>
+<li><strong>All quiet?</strong> → done. Full release proceeds via gradual deploy to 100%</li>
+</ul>
+<hr>
+<h2>Why we elevated the standard</h2>
+<p>The industry assumes the PR reviewer is also a coder. Our system <strong>inverts that assumption</strong>: the operator doesn&#39;t read code, so the checklist is 100% behavior-focused.</p>
+<p>This:</p>
+<ol>
+<li><strong>Unblocks non-coding operators</strong> from running a real engineering ops process</li>
+<li><strong>Catches the bugs that actually matter</strong> — user-visible breakage, not stylistic preferences</li>
+<li><strong>Pairs with safety nets</strong> — gradual deploy + Sentry + instant rollback catch what visual testing misses</li>
+<li><strong>Scales across apps</strong> — same checklist works for KeyContent and every Coreshift HQ app after</li>
+</ol>
+<p>The unfair advantage: we move <em>faster</em> than teams that require code-reading reviewers, because every PR has exactly one reviewer (the operator) and the review is mechanical.</p>
+<hr>
+<h2>When this doc changes</h2>
+<ul>
+<li>When new critical flows emerge in any app (add to Step 4 list)</li>
+<li>When a recurring failure mode isn&#39;t being caught by the smoke test</li>
+<li>After any major post-merge incident (add a check to prevent recurrence)</li>
+<li>Bump the version at the top and note the change</li>
+</ul>
+<hr>
+<h2>Per-app critical flows</h2>
+<p>Each Coreshift HQ app declares its own critical flows for Step 4. KeyContent&#39;s are above. App #2 will add its own.</p>
+<hr>
+<h2>See also</h2>
+<ul>
+<li><code>HOW-WE-DO-PRIORITY.md</code> — how we triage what gets fixed first</li>
+<li><code>HOW-WE-DO-DEPLOYS.md</code> — the gradual-rollout safety net behind merge <em>(coming next)</em></li>
+<li><code>HOW-WE-DO-INCIDENTS.md</code> — what to do when the post-merge Sentry watch fires <em>(coming next)</em></li>
+<li>Deck Slide 6 — Shipping a New Feature (the visual narrative)</li>
+<li>Deck Slide 10 — Role Distribution (Operator: Triage, brief, <strong>verify</strong>)</li>
+</ul>
+</div>
+      </section>
+
+      <section id="incidents" class="play" data-accent="amber">
+        <div class="play-header">
+          <span class="play-eyebrow">PLAY 3</span>
+        </div>
+        <h2 class="play-title">Incident Response</h2>
+        <p class="play-tagline">Pre-written calm beats in-the-moment heroics.</p>
+        <div class="play-divider"></div>
+        <div class="md"><p><strong>Status:</strong> Active · v1 · 2026-05-13
+<strong>Applies to:</strong> Any unplanned event degrading user experience in production
+<strong>Owners:</strong> Operator (incident driver) · Claude Code (fix implementer) · Tools (detection)</p>
+<hr>
+<h2>What this doc is</h2>
+<p>The pre-written playbook for when something is broken in production. Designed for <strong>a solo operator at 2 AM</strong>, when you don&#39;t have time to think — just follow the script.</p>
+<hr>
+<h2>The principle</h2>
+<p><strong>Pre-written calm beats in-the-moment heroics.</strong></p>
+<p>The worst time to design a process is during a fire. So we wrote it now. When something breaks, you don&#39;t think — you <strong>execute the script.</strong> Decisions are made in advance; the runbook is the brain.</p>
+<hr>
+<h2>Severity Levels</h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Definition</th>
+<th>Response window</th>
+<th>Public comms</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>SEV1</strong></td>
+<td>App is down for everyone · data loss · active security breach</td>
+<td>Now</td>
+<td>Status page + user email if &gt; 30 min</td>
+</tr>
+<tr>
+<td><strong>SEV2</strong></td>
+<td>Core feature broken · app down for many users</td>
+<td>Within 30 min</td>
+<td>Status page</td>
+</tr>
+<tr>
+<td><strong>SEV3</strong></td>
+<td>Degraded but functional · slow · minor breakage</td>
+<td>Same day</td>
+<td>Internal only</td>
+</tr>
+</tbody></table>
+<p><em>Non-urgent bugs that aren&#39;t actively breaking things → use the <strong>P0–P3 priority framework</strong>, not the incident process.</em></p>
+<hr>
+<h2>The 6-Step Response</h2>
+<h3>1. ACKNOWLEDGE (0 min)</h3>
+<ul>
+<li>Alert arrived from Better Stack or Sentry</li>
+<li>You&#39;re aware. The clock is running.</li>
+<li><em>Internally:</em> stop everything else. This is your only task.</li>
+</ul>
+<h3>2. ASSESS severity (≤ 60 seconds)</h3>
+<p>Three quick questions:</p>
+<ul>
+<li>Can users still use the app at all? → No: <strong>SEV1 or SEV2</strong>. Yes: <strong>SEV3</strong>.</li>
+<li>How many users affected? → All: <strong>SEV1</strong>. Many: <strong>SEV2</strong>. Few: <strong>SEV3</strong>.</li>
+<li>Data being lost or corrupted? → Yes: always <strong>SEV1</strong>.</li>
+</ul>
+<p>Pick a level. Don&#39;t agonize. You can adjust as you learn more.</p>
+<h3>3. COMMUNICATE (≤ 5 minutes from acknowledge)</h3>
+<ul>
+<li><strong>SEV1 / SEV2:</strong> update the public status page immediately. Use the templates below.</li>
+<li><strong>SEV3:</strong> note in your incident log; update the status page only if it persists past 30 min.</li>
+</ul>
+<h3>4. DIAGNOSE — &quot;what changed?&quot;</h3>
+<p>Run through these dashboards in order. <strong>9 out of 10 incidents trace to a recent deploy.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>What to look for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Recent deploys</td>
+<td>Anything shipped in the last 4 hours?</td>
+</tr>
+<tr>
+<td>Sentry</td>
+<td>New error spike? Click for stack trace + breadcrumbs</td>
+</tr>
+<tr>
+<td>Cloudflare Workers logs</td>
+<td>5xx surge? Function timeouts?</td>
+</tr>
+<tr>
+<td>Supabase logs</td>
+<td>DB errors? Connection issues? Migration problems?</td>
+</tr>
+<tr>
+<td>Postmark</td>
+<td>Are emails bouncing? Server outage?</td>
+</tr>
+<tr>
+<td>Third-party status pages</td>
+<td>Cloudflare · Supabase · Postmark all have public status pages</td>
+</tr>
+</tbody></table>
+<h3>5. MITIGATE — pick the safest path</h3>
+<pre><code>Was there a recent deploy?
+   YES → ROLLBACK FIRST. Diagnose later.
+         (Cloudflare 1-click rollback to previous version.)
+   NO  ↓
+
+Is it a third-party outage?
+   YES → Communicate, wait, monitor. Update users.
+   NO  ↓
+
+Is it a code bug requiring a new fix?
+   → Brief Claude Code with full Sentry trace + context.
+     Get a hotfix PR. Verify on preview. Merge.
+     (Use the standard PR review checklist — abbreviated for hotfix.)
+</code></pre>
+<h3>6. RESOLVE</h3>
+<ul>
+<li>Test the affected flow yourself on production</li>
+<li>Update status page to &quot;Resolved&quot;</li>
+<li>Note in your incident log</li>
+</ul>
+<hr>
+<h2>The 1 AM Rule</h2>
+<p>When something fires at 1 AM, do <strong>the minimum to make it stop</strong>:</p>
+<ol>
+<li><strong>Rollback</strong> the last deploy if there was one recent</li>
+<li><strong>Communicate</strong> to users via status page</li>
+<li><strong>Sleep.</strong> Investigate properly in the morning.</li>
+</ol>
+<p><strong>Don&#39;t do at 1 AM:</strong></p>
+<ul>
+<li>Write or brief new code</li>
+<li>Deploy speculative fixes</li>
+<li>Read complex logs</li>
+<li>Make architectural decisions</li>
+</ul>
+<p>The 1 AM rule exists because sleep-deprived decisions are how minor incidents become major ones.</p>
+<hr>
+<h2>Claude Code&#39;s Role During Incidents</h2>
+<p>You don&#39;t write code. Even during incidents. Especially during incidents.</p>
+<p>When a hotfix is needed:</p>
+<ol>
+<li>Capture the full Sentry trace + URL + user details + timestamp</li>
+<li>Open Claude Code (a fresh session for the incident, if helpful)</li>
+<li>Brief it like: <em>&quot;P0 hotfix. {feature} broken in production since {time}. Sentry error attached. Rollback wasn&#39;t possible because {reason}. Need a fix opened as a PR immediately.&quot;</em></li>
+<li>Verify the fix on the preview</li>
+<li>Merge</li>
+</ol>
+<p>Operator&#39;s role is <strong>triage, brief, verify</strong> — same as always, just faster.</p>
+<hr>
+<h2>Pre-Written Status Page Templates</h2>
+<p><strong>Investigating:</strong></p>
+<blockquote>
+<p><em>We&#39;re investigating reports of {issue} affecting {feature}. We&#39;ll provide an update within 30 minutes.</em></p>
+</blockquote>
+<p><strong>Identified:</strong></p>
+<blockquote>
+<p><em>We&#39;ve identified the issue with {feature}. We&#39;re working on a fix now.</em></p>
+</blockquote>
+<p><strong>Monitoring:</strong></p>
+<blockquote>
+<p><em>A fix has been deployed. We&#39;re monitoring to confirm everything is working as expected.</em></p>
+</blockquote>
+<p><strong>Resolved:</strong></p>
+<blockquote>
+<p><em>This incident is resolved. {Feature} is fully operational. Sorry for the disruption.</em></p>
+</blockquote>
+<hr>
+<h2>When to Email Users (beyond the status page)</h2>
+<p>Most incidents: status page is enough.</p>
+<p><strong>Email users only when ALL of these are true:</strong></p>
+<ul>
+<li>SEV1 lasted &gt; 30 minutes, OR data was visibly affected</li>
+<li>The user might reasonably think their account is broken</li>
+<li>You can identify the affected users</li>
+</ul>
+<p>Template:</p>
+<pre><code>Subject: We had a brief outage — your data is safe
+
+Hi {name},
+
+Earlier today between {start} and {end}, {feature} was {down/broken}.
+We&#39;re back to normal now.
+
+What you might have noticed: {brief description}
+What we did: {1-2 sentences}
+
+Thanks for your patience.
+
+— The Coreshift HQ Team
+</code></pre>
+<hr>
+<h2>Post-Mortem — Within 24 Hours of any SEV1 / SEV2</h2>
+<p>Save as <code>incidents/YYYY-MM-DD-N.md</code> in the repo. Lean template — 5 sections:</p>
+<pre><code>## Incident YYYY-MM-DD-N
+
+**Severity:** SEV{1|2|3}
+**Duration:** Detected HH:MM → Resolved HH:MM ({X} minutes)
+**Affected:** {features, ~user count}
+
+### What happened
+{One paragraph.}
+
+### Root cause
+{One paragraph.}
+
+### How we caught it
+{Sentry / Better Stack / user report / other?}
+
+### What we did
+{Bullet list of actions taken, in order, with timestamps.}
+
+### Action items
+- [ ] Prevent recurrence: {specific change}
+- [ ] Improve detection: {specific change, if applicable}
+- [ ] Update this runbook: {specific addition, if applicable}
+</code></pre>
+<p><strong>Don&#39;t:</strong></p>
+<ul>
+<li>Skip the post-mortem because &quot;everyone knows what happened&quot;</li>
+<li>Make it about blame (the system failed, not the person)</li>
+<li>Write a novel — 5 sections is enough</li>
+</ul>
+<p><strong>Do:</strong></p>
+<ul>
+<li>File the action items as P1 GitHub Issues</li>
+<li>Re-read recent post-mortems quarterly — patterns emerge</li>
+</ul>
+<hr>
+<h2>Common Anti-Patterns (don&#39;t do these)</h2>
+<ul>
+<li><strong>Skipping comms</strong> — users finding out from a friend is worse than a brief status update</li>
+<li><strong>Forcing a fix at midnight</strong> — rollback + sleep is almost always better</li>
+<li><strong>Investigating before mitigating</strong> — stop the bleeding first</li>
+<li><strong>No post-mortem because &quot;it&#39;s fixed&quot;</strong> — patterns repeat unless documented</li>
+<li><strong>Skipping the status page update because &quot;it&#39;s small&quot;</strong> — the rule is consistency, not severity</li>
+</ul>
+<hr>
+<h2>Why we elevated the standard</h2>
+<p>The industry has detailed incident playbooks designed for <strong>large engineering teams with rotating on-call rotations, incident commanders, and war rooms</strong>. Most of that doesn&#39;t apply when you&#39;re a solo operator with Claude Code as your implementer.</p>
+<p>Our elevations:</p>
+<ol>
+<li><strong>Solo-operator-aware</strong> — no incident commander, no war room, no Slack #incidents channel. Just you + the runbook.</li>
+<li><strong>The 1 AM Rule</strong> — explicit permission to do the minimum at night. Sleep is operational equipment.</li>
+<li><strong>Pre-written communications</strong> — copy/paste during the fire, edit later.</li>
+<li><strong>Claude Code is the implementer</strong> — you brief, it codes, you verify. Same workflow as a normal day, just under pressure.</li>
+<li><strong>Lean post-mortems</strong> — 5 sections, not 50. Trends matter; ritual doesn&#39;t.</li>
+</ol>
+<p>These choices make incidents survivable for a small team without sacrificing the discipline that prevents recurrence.</p>
+<hr>
+<h2>When this doc changes</h2>
+<ul>
+<li>After any SEV1 — what new step or check would have helped?</li>
+<li>When the team grows beyond 1 — add coordination details</li>
+<li>When new tools enter the stack — add their dashboards to Step 4</li>
+<li>After a recurring pattern emerges — codify it</li>
+<li>Bump version, note the change</li>
+</ul>
+<hr>
+<h2>See also</h2>
+<ul>
+<li><code>HOW-WE-DO-PRIORITY.md</code> — P0/P1 priorities map to SEV1/SEV2 severities</li>
+<li><code>HOW-WE-DO-PR-REVIEWS.md</code> — the standard review process; incident review is the abbreviated version</li>
+<li><code>HOW-WE-DO-DEPLOYS.md</code> — rollback details <em>(coming next)</em></li>
+<li><code>../ROADMAP.md</code> — Phase 1 Week 2 wires up Better Stack + status page (the detection layer)</li>
+<li>Deck Slide 5 — Scenario 2: outage at 2 AM (the visual narrative)</li>
+</ul>
+</div>
+      </section>
+
+      <section id="deploys" class="play" data-accent="teal">
+        <div class="play-header">
+          <span class="play-eyebrow">PLAY 4</span>
+        </div>
+        <h2 class="play-title">Deploy Pipeline</h2>
+        <p class="play-tagline">Three rules. No exceptions.</p>
+        <div class="play-divider"></div>
+        <div class="md"><p><strong>Status:</strong> Active · v1 · 2026-05-13
+<strong>Applies to:</strong> Every code change reaching production · Every Coreshift HQ app
+<strong>Owners:</strong> Operator (verifier) · Claude Code (implementer) · Cloudflare + Supabase (mechanism)</p>
+<hr>
+<h2>What this doc is</h2>
+<p>The pre-written rules for moving code from <em>&quot;Claude Code just wrote it&quot;</em> to <em>&quot;real users are using it.&quot;</em> Designed for an operator who <strong>doesn&#39;t read code</strong> to ship safely, daily.</p>
+<hr>
+<h2>The principle</h2>
+<p><strong>Every deploy goes through staging. Every deploy is rollback-able. Every deploy is gradual.</strong></p>
+<p>Three rules. No exceptions. The cost of following them is ~10 minutes. The cost of skipping them is a user-visible incident — every time.</p>
+<hr>
+<h2>The Standard Deploy Pipeline</h2>
+<pre><code>Claude Code writes fix → opens PR
+            ↓
+Cloudflare auto-creates a preview URL for the PR
+            ↓
+You verify on the preview  (per HOW-WE-DO-PR-REVIEWS.md)
+            ↓
+Merge to staging branch
+            ↓
+Cloudflare deploys to staging.keycontent.ai automatically
+            ↓
+Smoke test on staging
+            ↓
+Merge staging → main  (the promotion gate)
+            ↓
+Cloudflare deploys to production
+   gradual rollout: 10% → 50% → 100% over ~30 min
+            ↓
+Sentry watch for 1 hour
+            ↓
+Done.
+</code></pre>
+<hr>
+<h2>The Three Rules</h2>
+<h3>Rule 1 · Every deploy goes through staging</h3>
+<ul>
+<li>No direct merges to main</li>
+<li>No &quot;trivial&quot; exceptions — the rule has no carve-outs</li>
+<li>Staging is a real Supabase + Cloudflare environment with separate data</li>
+<li>Even a one-character typo fix follows the path</li>
+</ul>
+<h3>Rule 2 · Every deploy is rollback-able</h3>
+<ul>
+<li>Cloudflare Pages keeps every previous deployment indefinitely</li>
+<li>1-click rollback from the dashboard, live in ~60 seconds</li>
+<li>Database migrations need extra thinking (see Type C below)</li>
+<li>Before merging anything risky: mentally rehearse <em>&quot;if this breaks, what do I click?&quot;</em></li>
+</ul>
+<h3>Rule 3 · Every deploy is gradual</h3>
+<ul>
+<li>Cloudflare Workers / Pages support gradual rollouts at the traffic layer</li>
+<li>Default: <strong>10% of users for 10 minutes → if Sentry quiet, advance to 50% → 100%</strong></li>
+<li>Sentry spike during the 10% window = automatic or manual abort</li>
+<li>Edge Functions deploy atomically — the gradual layer happens upstream at frontend traffic</li>
+</ul>
+<hr>
+<h2>Deploy Types</h2>
+<h3>Type A · Standard feature or fix</h3>
+<p>Follow the standard pipeline above. No extra steps.</p>
+<h3>Type B · Hotfix (incident response)</h3>
+<p>When an incident requires an emergency fix:</p>
+<ol>
+<li>Brief Claude Code with the full incident context (Sentry trace + steps to reproduce)</li>
+<li>PR opened against staging</li>
+<li><strong>Abbreviated review:</strong> only check the targeted fix (not full 5-step) IF the incident is SEV1</li>
+<li>Merge to staging → quick smoke test → promote to main</li>
+<li><strong>Skip the slow gradual ramp</strong> — proceed 10% → 50% → 100% faster if needed</li>
+<li><strong>Sentry watch for 2 hours</strong> after a hotfix (double the normal window)</li>
+</ol>
+<h3>Type C · Database migration</h3>
+<p>Migrations are the riskiest deploy type because rollback isn&#39;t clean.</p>
+<ol>
+<li>Claude Code writes the migration in a PR</li>
+<li><strong>Apply to staging first</strong> (Supabase migration CLI or <code>apply_migration</code> MCP)</li>
+<li>Test the affected features end-to-end on staging</li>
+<li>Sample queries to confirm data didn&#39;t corrupt</li>
+<li><strong>Snapshot production Supabase</strong> before applying to prod (backup point)</li>
+<li>Apply migration to production</li>
+<li>Verify in production</li>
+<li><strong>If anything breaks:</strong> Postgres migrations are NOT easily reversible. Have Claude Code write a forward-fix migration. Restore from backup only as a last resort.</li>
+</ol>
+<p><strong>Migration rule:</strong> never apply a migration to production without first applying it to staging and verifying the affected features.</p>
+<h3>Type D · Secrets / environment changes</h3>
+<p>Adding or rotating a secret (e.g., <code>POSTMARK_SERVER_TOKEN</code>):</p>
+<ol>
+<li>Add to <strong>staging</strong> Supabase first</li>
+<li>Verify behavior on staging</li>
+<li>Add to <strong>production</strong> Supabase</li>
+<li>Deploy any code that depends on the new secret (if not already deployed)</li>
+<li>Verify in production</li>
+</ol>
+<p><strong>Never:</strong> add a secret only to prod without testing on staging first.</p>
+<hr>
+<h2>The Staging → Production Promotion Checklist</h2>
+<p>When ready to promote a feature from staging to production, all must be true:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Feature has been live on staging for at least 24 hours with no Sentry alerts</li>
+<li><input disabled="" type="checkbox"> All Edge Function secrets exist in production Supabase</li>
+<li><input disabled="" type="checkbox"> All required migrations have been applied to production</li>
+<li><input disabled="" type="checkbox"> Storage buckets and RLS policies exist in production (if used)</li>
+<li><input disabled="" type="checkbox"> CORS allowlist on Edge Functions includes the production origin</li>
+<li><input disabled="" type="checkbox"> No outstanding Sentry errors related to the feature in staging</li>
+<li><input disabled="" type="checkbox"> You have <strong>at least 2 hours</strong> to monitor after promotion (don&#39;t promote at end of day)</li>
+<li><input disabled="" type="checkbox"> Rollback plan is mentally rehearsed</li>
+</ul>
+<p>If any box is unchecked: pause, fix, then promote.</p>
+<hr>
+<h2>Rollback Procedures (memorize these)</h2>
+<h3>Frontend (Cloudflare Pages)</h3>
+<ol>
+<li>Cloudflare dashboard → Pages → KeyContent project → Deployments</li>
+<li>Find the last known-good deployment</li>
+<li>Click ⋯ → &quot;Rollback to this deployment&quot;</li>
+<li>Confirm. Live within ~60 seconds.</li>
+</ol>
+<h3>Edge Function (Supabase)</h3>
+<ol>
+<li>Check out the previous git commit on the function file</li>
+<li>Re-deploy via Supabase CLI: <code>supabase functions deploy {function-name} --project-ref {prod-ref}</code></li>
+<li>OR brief Claude Code to revert and open a new PR (slower but safer)</li>
+</ol>
+<h3>Database migration</h3>
+<ul>
+<li>Not easily rollback-able. Use a forward-fix migration.</li>
+<li>Restore from production backup only as last resort (data loss between snapshot and now).</li>
+</ul>
+<h3>Secret rotation gone wrong</h3>
+<ul>
+<li>If new secret is broken: revert the secret value in Supabase dashboard to the previous one</li>
+<li>Or remove the secret entirely if the code can fall back gracefully</li>
+</ul>
+<hr>
+<h2>What to Watch After Every Deploy</h2>
+<p>For 1 hour after a normal merge (2 hours for hotfix), glance at:</p>
+<ul>
+<li><strong>Sentry</strong> — new error spike?</li>
+<li><strong>Cloudflare</strong> — request volume changing? Latency spikes?</li>
+<li><strong>Your inbox / bug report widget</strong> — any user reports?</li>
+<li><strong>Better Stack</strong> — status page still green?</li>
+</ul>
+<p>If anything looks off: <strong>rollback first, diagnose later.</strong></p>
+<hr>
+<h2>Anti-Patterns (don&#39;t do these)</h2>
+<ul>
+<li>❌ <em>&quot;It&#39;s just a tiny change&quot;</em> — every change goes through the pipeline</li>
+<li>❌ <em>Promoting on Friday afternoon</em> — there&#39;s no good reason</li>
+<li>❌ <em>Skipping the staging smoke test</em> — staging exists precisely for this</li>
+<li>❌ <em>Adding a secret to prod first</em> — always staging first</li>
+<li>❌ <em>Manual SQL changes against prod</em> — use the migration system; untracked changes break future migrations</li>
+<li>❌ <em>Deploying without a rollback path mentally rehearsed</em> — if you can&#39;t rollback, don&#39;t deploy</li>
+</ul>
+<hr>
+<h2>Why we elevated the standard</h2>
+<p>The industry has dozens of deploy frameworks: blue-green, canary, feature flags, ring-based rollouts, GitOps, etc. Most are designed for large engineering teams with dedicated SRE. We don&#39;t need that complexity.</p>
+<p>Our elevations:</p>
+<ol>
+<li><strong>Three rules, no exceptions</strong> — easy to remember, hard to violate by mistake</li>
+<li><strong>Cloudflare&#39;s gradual rollout IS our canary</strong> — built-in, free, no extra tooling</li>
+<li><strong>Behavior-based review at every gate</strong> — pairs with HOW-WE-DO-PR-REVIEWS.md</li>
+<li><strong>Staging is non-optional</strong> — even for &quot;trivial&quot; changes (a culture choice, not a technical one)</li>
+<li><strong>Rollback-first culture</strong> — explicit safety bias during incidents</li>
+<li><strong>Friday rule</strong> — no production deploys after Thursday lunch unless it&#39;s a hotfix</li>
+</ol>
+<p>The trade: deploys take ~10 extra minutes each. The gain: production stays stable, mornings stay calm, and you can promote with confidence.</p>
+<hr>
+<h2>Concrete Example — Promoting V0 (Report Issue Widget) to Production</h2>
+<p>This is the actual exercise we&#39;re about to run. Use it as the canonical example for future promotions:</p>
+<ol>
+<li>Confirm V0 has been live on <code>staging.keycontent.ai</code> for 24+ hours with no Sentry alerts — ✅</li>
+<li>Add <code>POSTMARK_SERVER_TOKEN</code> and <code>REPORT_TO_EMAIL</code> to production Supabase secrets — operator dashboard step</li>
+<li>Apply the storage migration to production (creates <code>bug-report-screenshots</code> bucket + RLS policies) — Claude Code task</li>
+<li>Deploy <code>report-issue</code> Edge Function to production Supabase — Claude Code task</li>
+<li>Verify Edge Function CORS allows the production origin — Claude Code task</li>
+<li>Confirm Postmark sender signature is verified for production domain — operator dashboard step</li>
+<li>Merge staging → main → Cloudflare deploys to production with gradual rollout — automated</li>
+<li>Smoke test on production: submit a Bug report with screenshot — operator</li>
+<li>Sentry watch for 2 hours — operator</li>
+<li>Done.</li>
+</ol>
+<p>After this lands, this section becomes the &quot;we&#39;ve done it once&quot; reference for App #2.</p>
+<hr>
+<h2>When this doc changes</h2>
+<ul>
+<li>After any incident traced to a deploy — what gate failed?</li>
+<li>When the stack gains a new component (e.g., when Sentry is wired up in Phase 1, add a release-tracking step)</li>
+<li>When a new deploy type emerges (e.g., feature flags)</li>
+<li>Bump version, note the change</li>
+</ul>
+<hr>
+<h2>See also</h2>
+<ul>
+<li><code>HOW-WE-DO-PRIORITY.md</code> — what justifies a hotfix vs standard deploy</li>
+<li><code>HOW-WE-DO-PR-REVIEWS.md</code> — the verification gate before merge</li>
+<li><code>HOW-WE-DO-INCIDENTS.md</code> — what to do when a deploy goes wrong</li>
+<li><code>../ROADMAP.md</code> — V0 production promotion is queued under &quot;Phase 0 wrap-up&quot;</li>
+<li>Deck Slide 6 — Scenario 3: shipping new code safely (the visual narrative)</li>
+</ul>
+</div>
+      </section>
+
+      <section id="bug-reports" class="play" data-accent="teal">
+        <div class="play-header">
+          <span class="play-eyebrow">PLAY 5</span>
+        </div>
+        <h2 class="play-title">Bug Reports</h2>
+        <p class="play-tagline">Make reporting effortless. Make context automatic.</p>
+        <div class="play-divider"></div>
+        <div class="md"><p><strong>Status:</strong> Active · v1 · 2026-05-13
+<strong>Applies to:</strong> User-facing feedback channel · KeyContent (live on staging) · Future Coreshift HQ apps
+<strong>Owners:</strong> Operator (triager) · Claude Code (implementer) · Tools (capture, store, deliver)</p>
+<hr>
+<h2>What this doc is</h2>
+<p>The end-to-end definition of how user feedback flows into the system — from the click of the floating widget to the issue landing in the triage queue. Codifies what&#39;s already shipped on <code>staging.keycontent.ai</code>.</p>
+<hr>
+<h2>The principle</h2>
+<p><strong>Make reporting effortless. Make context automatic.</strong></p>
+<p>The user types one sentence. The system attaches everything else — who they are, where they were, what their browser is, what they were looking at. That&#39;s the difference between a useful report and a frustrating email thread.</p>
+<hr>
+<h2>The Pipeline</h2>
+<pre><code>User clicks the floating &quot;?&quot; button on any page
+            ↓
+Modal opens — pre-filled with context awareness
+            ↓
+User picks a type:  🐛 Bug   💡 Suggestion   ❓ Question
+            ↓
+User types their message (placeholder adapts to type)
+            ↓
+User optionally drops in a screenshot
+            ↓
+On submit: screenshot uploads to Supabase Storage (if present)
+            ↓
+POST to Edge Function with: { type, message, page_url, user_agent, screenshot_path, app_id }
+            ↓
+Edge Function validates auth + payload, generates a signed URL for the screenshot
+            ↓
+Postmark sends email to operator with full context
+            ↓
+Operator triages in inbox  (P0–P3 + radius + narrative)
+            ↓
+Hand to Claude Code  →  fix lands  →  loop closed
+</code></pre>
+<hr>
+<h2>The Three Ticket Types</h2>
+<table>
+<thead>
+<tr>
+<th>Icon</th>
+<th>Type</th>
+<th>When users pick it</th>
+<th>Maps to (future GitHub label)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>🐛</td>
+<td><strong>Bug</strong></td>
+<td>&quot;Something is broken&quot;</td>
+<td><code>bug</code></td>
+</tr>
+<tr>
+<td>💡</td>
+<td><strong>Suggestion</strong></td>
+<td>&quot;I have an idea or want a feature&quot;</td>
+<td><code>enhancement</code></td>
+</tr>
+<tr>
+<td>❓</td>
+<td><strong>Question</strong></td>
+<td>&quot;I&#39;m stuck, unsure, or need help&quot;</td>
+<td><code>question</code></td>
+</tr>
+</tbody></table>
+<p>Default selection: <strong>Bug</strong> (most common in production apps).</p>
+<p>The type selector drives two things:</p>
+<ol>
+<li>The <strong>textarea placeholder</strong> adapts (better coaching per type)</li>
+<li>The <strong>email subject prefix</strong> in the operator&#39;s inbox: <code>[KeyContent · BUG]</code> vs <code>[· SUGGESTION]</code> vs <code>[· QUESTION]</code></li>
+</ol>
+<hr>
+<h2>What Gets Captured Automatically</h2>
+<p>The user types one sentence. The system attaches all of this without asking:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Where it comes from</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>User email</td>
+<td>Supabase auth session</td>
+</tr>
+<tr>
+<td>User ID</td>
+<td>Supabase auth session</td>
+</tr>
+<tr>
+<td>Page URL</td>
+<td><code>window.location.href</code> at the moment of report</td>
+</tr>
+<tr>
+<td>Browser / OS</td>
+<td><code>navigator.userAgent</code></td>
+</tr>
+<tr>
+<td>Server timestamp</td>
+<td>Edge Function captures on receipt (UTC)</td>
+</tr>
+<tr>
+<td>Screenshot URL</td>
+<td>Signed Supabase Storage URL (30-day expiry), if attached</td>
+</tr>
+<tr>
+<td>App ID</td>
+<td><code>&quot;keycontent&quot;</code> for now; future apps drop in seamlessly</td>
+</tr>
+</tbody></table>
+<p>This is why operator triage takes 30 seconds instead of 3 emails: <strong>the report already contains everything needed to act</strong>.</p>
+<hr>
+<h2>The Email Format (what lands in your inbox)</h2>
+<pre><code>Subject: [KeyContent · BUG] from nzricky@gmail.com
+
+Type: Bug
+App: keycontent
+User: nzricky@gmail.com  (id: 6b87712a-abce-48ee-b444-...)
+Page: https://staging.keycontent.ai/jobs/d66a2195-...
+Browser: Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/148.0.0.0 ...
+Time: Mon, 11 May 2026 09:16:21 GMT
+Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
+
+----- Their message -----
+{the user&#39;s message}
+</code></pre>
+<p>The subject prefix is the key feature for triage: <strong>inbox rules can route by type automatically</strong>.</p>
+<hr>
+<h2>Architecture (the components)</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Component</th>
+<th>Where it lives</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Frontend widget</td>
+<td><code>&lt;ReportIssueButton /&gt;</code> mounted in app root layout</td>
+<td>KeyContent frontend repo</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>Private bucket <code>bug-report-screenshots</code>, RLS-scoped to user folder</td>
+<td>Supabase Storage</td>
+</tr>
+<tr>
+<td>Edge Function</td>
+<td><code>report-issue</code> — validates auth, generates signed URL, sends email</td>
+<td>Supabase Edge Functions</td>
+</tr>
+<tr>
+<td>Email delivery</td>
+<td>Postmark API (via <code>POSTMARK_SERVER_TOKEN</code>)</td>
+<td>Postmark</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>Supabase JWT on every request</td>
+<td>Supabase Auth</td>
+</tr>
+<tr>
+<td>Multi-app readiness</td>
+<td><code>app_id</code> field in payload</td>
+<td>Forward-compatible for Sentinel</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Security Model</h2>
+<ul>
+<li><strong>Authentication required</strong> — only signed-in users can submit reports (Edge Function rejects 401 otherwise)</li>
+<li><strong>Screenshots are private by default</strong> — bucket is private, RLS restricts uploads to the user&#39;s own folder</li>
+<li><strong>Signed URLs</strong> with 30-day expiry — operator&#39;s email has a time-bounded link, not a permanent public URL</li>
+<li><strong>Secrets never in code</strong> — <code>POSTMARK_SERVER_TOKEN</code> and <code>REPORT_TO_EMAIL</code> live in Supabase Edge Function secrets</li>
+<li><strong>CORS allowlist</strong> — Edge Function only accepts requests from the app&#39;s verified origin</li>
+</ul>
+<hr>
+<h2>Operator Triage Flow</h2>
+<p>When a report lands in your inbox:</p>
+<ol>
+<li><strong>Read the subject</strong> — type tells you the lane (bug/suggestion/question)</li>
+<li><strong>Read the message + look at screenshot</strong> — 30 seconds to understand</li>
+<li><strong>Assign priority</strong> (per <code>HOW-WE-DO-PRIORITY.md</code>) — P0/P1/P2/P3 + blast radius + narrative</li>
+<li><strong>For Bug + Suggestion:</strong> brief Claude Code, get a PR, verify on preview, merge</li>
+<li><strong>For Question:</strong> reply to the user directly with the answer</li>
+<li><strong>Optionally:</strong> archive the email or move to a &quot;triaged&quot; folder</li>
+</ol>
+<p><strong>Recommended inbox rules (Gmail/Outlook):</strong></p>
+<ul>
+<li><code>[KeyContent · BUG]</code> → flag + star + same-day</li>
+<li><code>[KeyContent · SUGGESTION]</code> → archive to &quot;Product Backlog&quot; label, weekly review</li>
+<li><code>[KeyContent · QUESTION]</code> → flag for same-day reply</li>
+</ul>
+<hr>
+<h2>Phase 1 Evolution (when full ops kicks in)</h2>
+<p>The pipeline is designed to grow without rewriting the frontend. Three additive enhancements:</p>
+<h3>A. Save to a Supabase table</h3>
+<p>Edge Function also writes a row to a <code>bug_reports</code> table (alongside sending the email):</p>
+<ul>
+<li>Columns: <code>id, type, message, page_url, user_agent, user_id, user_email, screenshot_path, app_id, created_at, status, priority, blast_radius</code></li>
+<li>Enables analytics, search, and trend analysis over time</li>
+<li><code>app_id</code> is already in the payload — no migration of historical data needed</li>
+</ul>
+<h3>B. Auto-create a GitHub Issue</h3>
+<p>After saving the email, the Edge Function also creates a GitHub Issue:</p>
+<ul>
+<li>Repo: <code>keycontent</code> (or matched by <code>app_id</code>)</li>
+<li>Label: <code>bug</code> / <code>enhancement</code> / <code>question</code> (mapped from type)</li>
+<li>Title: <code>{type}: {first 60 chars of message}</code></li>
+<li>Body: the same context as the email + a link to the screenshot</li>
+<li>Operator triages on GitHub, not in email</li>
+</ul>
+<h3>C. Auto-reply on resolution</h3>
+<p>When the GitHub Issue is closed (or labelled <code>resolved</code>), an automated email goes back to the user:</p>
+<ul>
+<li>Subject: <code>Update on your report — {type}</code></li>
+<li>Body: thanks for reporting, here&#39;s what we changed</li>
+<li>Closes the loop, builds trust, almost no other apps do this</li>
+</ul>
+<p>These three additions take the system from &quot;useful&quot; to &quot;remarkable&quot; — without the user-facing widget changing at all.</p>
+<hr>
+<h2>Why we elevated the standard</h2>
+<p>Most apps have a &quot;Contact Us&quot; form or a help@ email address. Reports come in with no context, and the support thread that follows is mostly back-and-forth asking for screenshots, browser versions, and account details. Hours wasted per report.</p>
+<p>Our elevations:</p>
+<ol>
+<li><strong>One-click reporting from any page</strong> (vs hunting for a contact link)</li>
+<li><strong>Auto-captured context</strong> (vs interrogation email threads)</li>
+<li><strong>Type-aware UX</strong> (placeholder adapts → users describe better)</li>
+<li><strong>Screenshots without screenshot tools</strong> (drag-drop in the modal)</li>
+<li><strong>Inbox-routable subject prefixes</strong> (vs everything in one queue)</li>
+<li><strong>Forward-compatible for multi-app</strong> (<code>app_id</code> field already plumbed)</li>
+</ol>
+<p>The trade: building the widget took ~2 hours of Claude Code time. The gain: every report that lands is <strong>actionable in 30 seconds</strong> instead of 3 hours of email tennis.</p>
+<hr>
+<h2>Cloning to Another App</h2>
+<p>When Coreshift HQ launches App #2, the bug-reports system clones in an afternoon:</p>
+<ol>
+<li>Drop <code>&lt;ReportIssueButton /&gt;</code> into App #2&#39;s layout (set <code>app_id: &quot;app2-slug&quot;</code>)</li>
+<li>Create the <code>bug-report-screenshots</code> bucket + RLS policies on App #2&#39;s Supabase</li>
+<li>Deploy the <code>report-issue</code> Edge Function to App #2&#39;s Supabase</li>
+<li>Add <code>POSTMARK_SERVER_TOKEN</code> + <code>REPORT_TO_EMAIL</code> to App #2&#39;s secrets</li>
+<li>Optionally: separate Postmark Message Stream for App #2&#39;s reports</li>
+</ol>
+<p>Everything else — the email format, the type system, the triage flow — is identical across apps. <strong>One operator can triage all apps from one inbox</strong>, filtered by the subject prefix.</p>
+<p>This is why the system is also called &quot;Sentinel&quot; in the long-term vision: one set of eyes, every Coreshift HQ app.</p>
+<hr>
+<h2>When this doc changes</h2>
+<ul>
+<li>When the widget adds new types or fields</li>
+<li>When a new app onboards (note any deviations)</li>
+<li>When Phase 1 adds the DB table / GitHub Issue auto-creation</li>
+<li>After any incident affecting the report pipeline</li>
+<li>Bump version, note the change</li>
+</ul>
+<hr>
+<h2>See also</h2>
+<ul>
+<li><code>../briefs/BRIEF-report-issue-widget.md</code> — V1 implementation brief (the spec Claude Code shipped from)</li>
+<li><code>../briefs/BRIEF-report-issue-widget-round2.md</code> — polish + type selector</li>
+<li><code>../briefs/BRIEF-rewire-to-postmark.md</code> — email vendor swap</li>
+<li><code>HOW-WE-DO-PRIORITY.md</code> — what happens after the report lands</li>
+<li><code>../ROADMAP.md</code> — Phase 2 enhancements queued</li>
+<li>Deck Slide 4 — Scenario 1: a user hits a bug (the visual narrative)</li>
+</ul>
+</div>
+      </section>
+
+      <section id="app-audits" class="play" data-accent="teal">
+        <div class="play-header">
+          <span class="play-eyebrow">PLAY 6</span>
+        </div>
+        <h2 class="play-title">App Audits</h2>
+        <p class="play-tagline">Defaults are dangerous. Audit is the gate.</p>
+        <div class="play-divider"></div>
+        <div class="md"><p><strong>Status:</strong> Active · v1 · 2026-05-13
+<strong>Applies to:</strong> Every Coreshift HQ app — at onboarding (before joining Sentinel ops) and quarterly thereafter
+<strong>Owners:</strong> Operator (runs the checklist) · Claude Code (writes fix briefs for failed items) · Tools (Supabase advisors, Cloudflare audit logs, vendor dashboards)</p>
+<hr>
+<h2>What this doc is</h2>
+<p>A single-pass checklist that verifies an app has its <strong>default-off settings turned on</strong> before it&#39;s considered operator-ready. Runs as a gate at onboarding (first time) and as a re-audit on a quarterly cadence thereafter.</p>
+<p>This doc exists because of a specific lesson learned: when KeyContent was handed over for operator-driven maintenance, <code>webhook_events</code> had RLS disabled and Supabase Auth had HIBP password protection off — both default-off settings the original developer never toggled on, because no checklist forced the question. This checklist is the elevation.</p>
+<hr>
+<h2>The principle</h2>
+<p><strong>Defaults are dangerous. Cloud platforms ship with security off-by-default because they don&#39;t know your context. An audit is the gate that catches what was never toggled on.</strong></p>
+<p>Not paranoia. Not enterprise compliance theatre. Just a 30-minute pass that asks: <em>&quot;For every cloud setting that defaults to less-safe, did we make a conscious choice?&quot;</em></p>
+<hr>
+<h2>When this audit runs</h2>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>What it produces</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Onboarding</strong> — before an app joins Sentinel ops</td>
+<td>Pass/fail gate. App can&#39;t go live with Sentinel ops until 100% pass or every failure is consciously deferred.</td>
+</tr>
+<tr>
+<td><strong>Quarterly</strong> — recurring re-audit</td>
+<td>Delta report: what regressed, what&#39;s new, what new vendor checks should be added.</td>
+</tr>
+<tr>
+<td><strong>Post-incident</strong> — when an incident traces to a default-off setting</td>
+<td>Targeted re-check of the affected area + add the check to this doc.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>The Audit Checklist</h2>
+<p>Each item is a <em>yes/no</em> check the operator can verify in ≤ 2 minutes. Items marked <strong>(N/A until X)</strong> are only relevant once the named vendor or feature is in the stack.</p>
+<h3>Supabase — Database + Auth + Storage + Edge Functions</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <code>get_advisors</code> (security) returns zero <strong>critical</strong> and zero <strong>warn</strong> entries</li>
+<li><input disabled="" type="checkbox"> <code>get_advisors</code> (performance) reviewed — issues triaged or deferred</li>
+<li><input disabled="" type="checkbox"> Row Level Security enabled on every <code>public</code> schema table<ul>
+<li>Verify: <code>SELECT relname FROM pg_class WHERE relkind=&#39;r&#39; AND relnamespace=&#39;public&#39;::regnamespace AND NOT relrowsecurity</code> returns 0 rows</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox"> Every RLS-enabled table has at least one policy (else the authenticated role is silently locked out)</li>
+<li><input disabled="" type="checkbox"> HIBP password protection enabled (Auth → Password security → &quot;Check passwords against HaveIBeenPwned&quot;)</li>
+<li><input disabled="" type="checkbox"> Email rate limits configured (Auth → Rate limits) — defaults are often too generous</li>
+<li><input disabled="" type="checkbox"> All Storage buckets are <strong>private by default</strong>; public buckets are explicit and justified</li>
+<li><input disabled="" type="checkbox"> Storage bucket policies scope writes to the user&#39;s own folder (path pattern <code>{user_id}/...</code>)</li>
+<li><input disabled="" type="checkbox"> CORS allowlist on every Edge Function lists only known origins (no <code>*</code>)</li>
+<li><input disabled="" type="checkbox"> All Edge Function secrets exist in <strong>both</strong> staging AND production projects</li>
+<li><input disabled="" type="checkbox"> Service role key is <strong>not</strong> referenced in any client-side code (grep <code>client/</code> for <code>SERVICE_ROLE</code> — must be 0 hits)</li>
+<li><input disabled="" type="checkbox"> Database backup retention reviewed (Supabase default is 7 days; upgrade if data loss tolerance &lt; 7d)</li>
+<li><input disabled="" type="checkbox"> No raw SQL changes against production outside the migration system (every prod schema change has a <code>supabase/migrations/</code> file)</li>
+</ul>
+<h3>Cloudflare — Frontend + DNS + WAF</h3>
+<ul>
+<li><input disabled="" type="checkbox"> WAF rate limiting on auth endpoints (<code>/login</code>, <code>/signup</code>, password reset)</li>
+<li><input disabled="" type="checkbox"> DNSSEC enabled on the production domain</li>
+<li><input disabled="" type="checkbox"> Bot Fight Mode (free tier) enabled</li>
+<li><input disabled="" type="checkbox"> SSL/TLS encryption mode set to <strong>Full (Strict)</strong> — not Flexible</li>
+<li><input disabled="" type="checkbox"> Pages preview deploys are gated (auth required) OR known to be safe-by-default</li>
+<li><input disabled="" type="checkbox"> Environment variables exist in <strong>both</strong> Preview and Production environments</li>
+<li><input disabled="" type="checkbox"> Page Rules / Configuration Rules reviewed for leftover staging-only rules</li>
+</ul>
+<h3>GitHub — Repo Hygiene</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Branch protection on <code>main</code>: requires PR + status checks pass + linear history</li>
+<li><input disabled="" type="checkbox"> Branch protection on <code>staging</code>: requires PR + status checks pass</li>
+<li><input disabled="" type="checkbox"> Default branch is the production branch (<code>main</code> for KeyContent)</li>
+<li><input disabled="" type="checkbox"> <code>.gitignore</code> excludes <code>.env*</code>, <code>*.pem</code>, <code>*.key</code>, credential files</li>
+<li><input disabled="" type="checkbox"> Secret scanning enabled (free for public repos; opt-in for private)</li>
+<li><input disabled="" type="checkbox"> Dependabot enabled for security updates</li>
+<li><input disabled="" type="checkbox"> <code>.github/ISSUE_TEMPLATE/</code> populated per <code>HOW-WE-DO-BUG-REPORTS.md</code></li>
+<li><input disabled="" type="checkbox"> No secrets in commit history (gitleaks or <code>gh secret-scanning</code> pass clean)</li>
+<li><input disabled="" type="checkbox"> Repo visibility matches expectation (private for KeyContent; public exposure would be intentional)</li>
+</ul>
+<h3>Postmark — Transactional Email</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Sending domain verified (DKIM + Return-Path + SPF all green)</li>
+<li><input disabled="" type="checkbox"> Bounce + complaint webhooks configured to the app (or Sentinel ingestion)</li>
+<li><input disabled="" type="checkbox"> Message Streams separated by purpose (e.g. <code>outbound</code> for transactional vs <code>broadcast</code> for marketing)</li>
+<li><input disabled="" type="checkbox"> Suppression list reviewed quarterly</li>
+<li><input disabled="" type="checkbox"> Sender reputation score acceptable (≥ 80)</li>
+</ul>
+<h3>Sentry — Error Monitoring (N/A until Phase 1 Week 1 ships)</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Frontend + backend (server + edge functions) projects exist</li>
+<li><input disabled="" type="checkbox"> DSNs configured per environment (staging DSN ≠ prod DSN)</li>
+<li><input disabled="" type="checkbox"> Source map upload verified (stack traces show readable file names, not minified)</li>
+<li><input disabled="" type="checkbox"> Release tracking wired to deploys (commit SHA tagging confirmed)</li>
+<li><input disabled="" type="checkbox"> Alert rules: new-issue email, regression email, high-frequency email</li>
+<li><input disabled="" type="checkbox"> User context attached after auth (id + email)</li>
+<li><input disabled="" type="checkbox"> PII capture is <strong>off</strong> (<code>sendDefaultPii: false</code>)</li>
+<li><input disabled="" type="checkbox"> Session replay privacy defaults (mask all text, block all media)</li>
+</ul>
+<h3>Better Stack — Uptime Monitoring (N/A until Phase 1 Week 2 ships)</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Uptime monitors cover <strong>both</strong> staging and production endpoints</li>
+<li><input disabled="" type="checkbox"> Check interval ≤ 3 min</li>
+<li><input disabled="" type="checkbox"> Alert channels configured (email at minimum; SMS for SEV1 ideally)</li>
+<li><input disabled="" type="checkbox"> Public status page exists at <code>status.{app-domain}</code> with brand customisation</li>
+</ul>
+<h3>Operational Hygiene</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Report Issue widget submits a Bug, Suggestion, and Question successfully (one of each)</li>
+<li><input disabled="" type="checkbox"> Inbox rules / labels routing <code>[{App} · BUG/SUGGESTION/QUESTION]</code> correctly</li>
+<li><input disabled="" type="checkbox"> Postmark sender domain matches the app&#39;s primary domain</li>
+<li><input disabled="" type="checkbox"> Rollback procedure mentally rehearsed per <code>HOW-WE-DO-DEPLOYS.md</code> Rule 2</li>
+<li><input disabled="" type="checkbox"> Triage rhythm documented and being followed (10-min ritual per <code>ROADMAP.md</code> Phase 1 Week 4)</li>
+<li><input disabled="" type="checkbox"> <code>ROADMAP.md</code> and <code>KANBAN.md</code> checked for staleness — shipped items marked <code>[x]</code></li>
+</ul>
+<hr>
+<h2>What to do when an audit item fails</h2>
+<p>Don&#39;t fix items mid-audit. Finish the full pass, then triage all failures together. This prevents tunnel-vision on one finding while missing others.</p>
+<pre><code>For each failure:
+  ↓
+1. Categorise by impact using HOW-WE-DO-PRIORITY (P0/P1/P2/P3)
+  ↓
+2. Determine fix type:
+   ▸ Code fix (e.g. missing RLS policy) → write a brief, hand to Claude Code
+   ▸ Dashboard toggle (e.g. HIBP)        → add a kanban card, operator handles
+   ▸ Process gap (e.g. no inbox rule)    → add to triage rhythm, no PR needed
+  ↓
+3. File the action — every failure produces either a PR, a kanban card,
+   or an explicit &quot;consciously deferred&quot; note (with reason + reconsider date)
+</code></pre>
+<hr>
+<h2>Why we elevated the standard</h2>
+<p>The industry has formal compliance audits — SOC2, ISO 27001, HIPAA, etc. They&#39;re designed for enterprise teams with compliance officers, weeks of evidence-gathering, and external auditors. Most of that ceremony doesn&#39;t apply to a solo operator running 1–N small apps. But the <em>underlying principle</em> — that defaults are dangerous and audit is a gate — does apply.</p>
+<p>Our elevations:</p>
+<ol>
+<li><strong>Specific to our stack</strong> — checks Supabase, Cloudflare, Postmark, GitHub, Sentry, Better Stack directly. Not generic CIS benchmarks.</li>
+<li><strong>Automatable where possible</strong> — <code>get_advisors</code>, RLS query, grep checks. Operator runs them; Claude Code can re-run them on demand.</li>
+<li><strong>Lightweight</strong> — 30-minute pass, not a 2-week formal audit.</li>
+<li><strong>Dual-purpose</strong> — same checklist for first-time onboarding AND quarterly re-audit. No second doc to maintain.</li>
+<li><strong>Failure flows into existing workflows</strong> — Claude Code briefs for code fixes, kanban cards for dashboard toggles. No special incident category.</li>
+<li><strong>App-portable</strong> — every Coreshift HQ app passes the same audit before joining Sentinel ops. App #2 inherits the discipline.</li>
+</ol>
+<p>The win at scale: when Sentinel covers 3+ apps, the audit is the contract. No app ever ships with <code>RLS disabled on a webhook log</code> or <code>HIBP off in Auth</code> again, because the checklist would&#39;ve blocked it.</p>
+<hr>
+<h2>When this doc changes</h2>
+<ul>
+<li><strong>After any incident that traces to a default-off setting</strong> — add the check that would&#39;ve caught it</li>
+<li><strong>When a new vendor enters the stack</strong> — add their section (Stripe security, Zernio HMAC, etc.)</li>
+<li><strong>When Supabase / Cloudflare / etc. ship new advisor types</strong> — add the lints they surface</li>
+<li><strong>Quarterly, after running the audit</strong> — what was missing? What&#39;s noise?</li>
+<li><strong>When App #2 onboards</strong> — verify every check is portable; flag KeyContent-specific items</li>
+</ul>
+<p>Bump the version at the top and note the change.</p>
+<hr>
+<h2>Outstanding items for KeyContent (initial audit, 2026-05-13)</h2>
+<p>The first time this checklist runs on KeyContent, it produces this delta. Surfaced during the Sentinel folder review session.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RLS on <code>webhook_events</code></td>
+<td>✅ Fixed on staging 2026-05-12; awaiting prod promotion</td>
+<td>See <code>../briefs/BRIEF-rls-fix-webhook-events.md</code></td>
+</tr>
+<tr>
+<td>HIBP password protection</td>
+<td>✅ Enabled on staging + prod 2026-05-13</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>get_advisors</code> zero-warn</td>
+<td>✅ Staging clean; prod has 1 outstanding (RLS pending promotion)</td>
+<td>Resolves when RLS fix promotes to prod</td>
+</tr>
+<tr>
+<td>Sentry sections</td>
+<td>N/A</td>
+<td>Will run after Phase 1 Week 1</td>
+</tr>
+<tr>
+<td>Better Stack sections</td>
+<td>N/A</td>
+<td>Will run after Phase 1 Week 2</td>
+</tr>
+<tr>
+<td>Branch protection</td>
+<td>❓ Unknown — needs manual verification</td>
+<td>Add kanban card</td>
+</tr>
+<tr>
+<td>Backup retention</td>
+<td>❓ Unknown — likely Supabase default</td>
+<td>Add kanban card</td>
+</tr>
+</tbody></table>
+<p>Re-run the full audit once Sentry and Better Stack are integrated, and quarterly thereafter.</p>
+<hr>
+<h2>See also</h2>
+<ul>
+<li><code>HOW-WE-DO-PRIORITY.md</code> — how audit failures get triaged</li>
+<li><code>HOW-WE-DO-DEPLOYS.md</code> — Type C migrations (the usual fix path for RLS / schema gaps)</li>
+<li><code>HOW-WE-DO-INCIDENTS.md</code> — when a failure is severe enough to be incident-mode</li>
+<li><code>../ROADMAP.md</code> — Phase 4 (Sentinel) — passing this audit is the gate for any new app joining</li>
+<li><a href="https://supabase.com/docs/guides/database/database-advisors">Supabase Database Advisors docs</a></li>
+<li><a href="https://developers.cloudflare.com/waf/">Cloudflare WAF docs</a></li>
+</ul>
+</div>
+      </section>
+
+    </main>
+  </div>
+</body>
+</html>
