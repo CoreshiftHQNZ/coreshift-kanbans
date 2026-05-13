@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>42%</strong> complete</div>
-        <div><strong>22</strong>/53 cards done</div>
-        <div>Updated <strong>2026-05-12 22:22 UTC</strong></div>
+        <div><strong>60%</strong> complete</div>
+        <div><strong>34</strong>/57 cards done</div>
+        <div>Updated <strong>2026-05-13 01:01 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,23 +821,23 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">22</div>
+        <div class="status-num">34</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">2</div>
+        <div class="status-num">1</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">1</div>
+        <div class="status-num">0</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">7</div>
+        <div class="status-num">2</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">21</div>
+        <div class="status-num">20</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">22</span>
+        <span class="col-count">34</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1037,6 +1037,66 @@
         <div class="card-desc">Enabled on staging + prod. `get_advisors` confirms no more leaked-password warnings</div>
       </div>
       <div class="card">
+        <div class="card-title">Sentinel kanban published</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Live at coreshifthqnz.github.io/coreshift-kanbans/sentinel/ alongside DigitalArchitect. Includes kanban + playbook + roadmap. Pitch deck deliberately internal</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cloudflare org access</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Operator now has org access. Unblocks Sentry env vars, gradual rollout, alert integration, and all downstream Phase 1+ Cloudflare work</div>
+      </div>
+      <div class="card">
+        <div class="card-title">GitHub branch protection</div>
+        <div class="card-tags"><span class="tag tag-neutral">audit</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">staging</span></div>
+        <div class="card-desc">Rules added on `main` + `staging`: PR required (0 approvals — 2-person team), linear history, force-push blocked, deletion blocked. Admin bypass left enabled (judgment-call exception for Ricky)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Supabase backup retention verified</div>
+        <div class="card-tags"><span class="tag tag-neutral">audit</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Prod has 8 days of daily physical DB backups. Storage objects NOT included (see Phase 1 Week 5 follow-up for that gap)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentry env vars in Railway</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">VITE_SENTRY_DSN</span><span class="tag tag-neutral">VITE_SENTRY_ENVIRONMENT=staging</span></div>
+        <div class="card-desc">`VITE_SENTRY_DSN` + `VITE_SENTRY_ENVIRONMENT=staging` planted in Railway staging environment. Frontend builds on Railway (not Cloudflare Pages — doc correction needed; see backlog)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentry SDK installation</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">keycontent-frontend</span><span class="tag tag-neutral">keycontent-backend</span></div>
+        <div class="card-desc">Both `keycontent-frontend` and `keycontent-backend` actively receiving events on staging. Release tracking confirmed (commit SHA tagged on deploys). Crash-free sessions: 100%. **Phase 1 Week 1 complete.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Better Stack uptime monitors</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w2</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Free tier, 3-min checks across 2 regions for production + staging. Bonus monitor on coreshifthq.com. Email alerts to operator</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Public status page (Better Stack subdomain)</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w2</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Live at https://keycontent.betteruptime.com showing production status only. Custom domain (status.keycontent.ai) deferred — requires Better Stack paid tier</div>
+      </div>
+      <div class="card">
+        <div class="card-title">SSL/TLS Full (Strict)</div>
+        <div class="card-tags"><span class="tag tag-neutral">audit</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">keycontent.ai</span></div>
+        <div class="card-desc">Cloudflare encryption mode bumped from Full → Full (Strict) for `keycontent.ai`. End-to-end cert validation now enforced between CF and Railway origin</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cloudflare alert integration</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w2</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">HTTP DDoS Attack Alert + Universal SSL Alert configured at account level. Email destination: abe@coreshifthq.com. Both enabled. **Phase 1 Week 2 complete.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">HOW-WE-DO-DEPLOYS v2 (Railway revision)</div>
+        <div class="card-tags"><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Standard Deploy Pipeline, Three Rules (Rule 3 reframed from &quot;gradual&quot; → &quot;observable&quot;), Rollback Procedures, and V0 promotion example all updated to match Railway reality. Cloudflare&#39;s role narrowed to DNS+CDN+WAF</div>
+      </div>
+      <div class="card">
+        <div class="card-title">HOW-WE-DO-PR-REVIEWS v2 (Railway revision)</div>
+        <div class="card-tags"><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">5-step review replaced with Two-Phase Review: Phase A (pre-merge, description + files-changed + clarifying Qs) + Phase B (post-merge-to-staging behavior testing). Safety net retitled to &quot;Sentry + Better Stack + Railway fast rollback.&quot;</div>
+      </div>
+      <div class="card">
         <div class="card-title">GitHub labels</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">13 new labels (P0-P3, radius:*, status types) live in the repo</div>
@@ -1080,14 +1140,9 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">1</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Sentry SDK installation</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span><span class="tag tag-blocked">blocked-by:cloudflare</span><span class="tag tag-neutral">briefs/BRIEF-sentry-installation.md</span></div>
-        <div class="card-desc">Brief ready (`briefs/BRIEF-sentry-installation.md`). Awaiting Cloudflare env var setup before handoff to build session</div>
-      </div>
       <div class="card">
         <div class="card-title">RLS fix for `webhook_events`</div>
         <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">P1</span><span class="tag tag-neutral">20260512192536_enable_rls_webhook_events</span></div>
@@ -1097,50 +1152,20 @@
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">0</span>
       </header>
-      <div class="cards">
-      <div class="card">
-        <div class="card-title">Cloudflare org access</div>
-        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-est">est:4h</span></div>
-        <div class="card-desc">Awaiting invite from the Coreshift HQ Cloudflare account owner. Unblocks all Phase 1+ Cloudflare work</div>
-      </div></div>
+      <div class="cards"><div class="empty">No items</div></div>
     </section>
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Cloudflare Pages env vars (Step 2c)</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span></div>
-        <div class="card-desc">Add VITE_SENTRY_DSN + VITE_SENTRY_ENVIRONMENT to Preview environment</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Hand Sentry brief to build session</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span></div>
-        <div class="card-desc">Paste prompt from briefs/BRIEF-sentry-installation.md</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Review Sentry PR + verify on staging</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w1</span></div>
-        <div class="card-desc">Standard 5-step PR review + Sentry event validation</div>
-      </div>
       <div class="card">
         <div class="card-title">Pitch dry-run</div>
         <div class="card-tags"><span class="tag tag-ops">ops</span></div>
         <div class="card-desc">15 min with timer before Monday</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Verify GitHub branch protection</div>
-        <div class="card-tags"><span class="tag tag-neutral">audit</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">staging</span><span class="tag tag-neutral">playbook/HOW-WE-DO-APP-AUDITS.md</span></div>
-        <div class="card-desc">Confirm `main` requires PR + status checks; `staging` requires PR. Per `playbook/HOW-WE-DO-APP-AUDITS.md`</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Verify Supabase backup retention</div>
-        <div class="card-tags"><span class="tag tag-neutral">audit</span><span class="tag tag-ops">ops</span></div>
-        <div class="card-desc">Confirm prod backup retention meets data-loss tolerance. Default is 7 days</div>
       </div>
       <div class="card">
         <div class="card-title">CEO Pitch (Monday May 18)</div>
@@ -1151,7 +1176,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">21</span>
+        <span class="col-count">20</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1160,19 +1185,9 @@
         <div class="card-desc">Promotion follows HOW-WE-DO-DEPLOYS. Triggered post-pitch approval</div>
       </div>
       <div class="card">
-        <div class="card-title">Better Stack uptime monitor</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w2</span></div>
-        <div class="card-desc">Free tier, 3-min checks for staging + production</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Public status page</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w2</span></div>
-        <div class="card-desc">status.keycontent.ai with brand customization</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Cloudflare alert integration</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w2</span></div>
-        <div class="card-desc">Workers + Pages health → email</div>
+        <div class="card-title">Status page custom domain</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w2</span><span class="tag tag-neutral">deferred</span><span class="tag tag-neutral">keycontent.betteruptime.com</span><span class="tag tag-neutral">status.keycontent.ai</span></div>
+        <div class="card-desc">Move status page from `keycontent.betteruptime.com` to `status.keycontent.ai`. Requires Better Stack Pro tier (~$25/mo). Decide post-pitch whether the polish is worth the cost</div>
       </div>
       <div class="card">
         <div class="card-title">Briefing templates for Claude Code</div>
@@ -1203,6 +1218,11 @@
         <div class="card-title">Operator onboarding doc</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1-w5</span></div>
         <div class="card-desc">For future second operator or hire</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Supabase Storage backup strategy</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1-w5</span><span class="tag tag-neutral">audit-followup</span><span class="tag tag-neutral">job-assets</span></div>
+        <div class="card-desc">Daily DB backups exclude Storage bucket objects. Prod `job-assets` has ~890 user objects with no backup. Design a strategy (S3-rsync, manual quarterly export, or Supabase&#39;s S3 protocol)</div>
       </div>
       <div class="card">
         <div class="card-title">bug_reports DB table</div>

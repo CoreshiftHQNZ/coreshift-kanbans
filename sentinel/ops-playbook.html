@@ -619,9 +619,12 @@ Each app defines its own list in its in-repo <code>PRIORITY.md</code>.</p>
         <h2 class="play-title">PR Reviews</h2>
         <p class="play-tagline">How a non-coder verifies every change.</p>
         <div class="play-divider"></div>
-        <div class="md"><p><strong>Status:</strong> Active · v1 · 2026-05-13
+        <div class="md"><p><strong>Status:</strong> Active · v2 · 2026-05-13 (Railway revision)
 <strong>Applies to:</strong> Every PR from Claude Code or any contributor
 <strong>Owners:</strong> Operator (reviewer) · Claude Code (author)</p>
+<blockquote>
+<p><strong>v2 note:</strong> Original v1 assumed Cloudflare Pages preview URLs per PR. The actual stack uses Railway, which doesn&#39;t generate per-PR previews on the free tier. The review model has shifted from <em>&quot;verify on a preview, then merge&quot;</em> to <em>&quot;review-by-description pre-merge, behavior-test on staging post-merge.&quot;</em> Safety net is Sentry + Better Stack + Railway fast rollback.</p>
+</blockquote>
 <hr>
 <h2>What this doc is</h2>
 <p>A behavior-based, <strong>code-free</strong> PR review checklist. Designed for an operator who <strong>doesn&#39;t write code</strong> to confidently approve or push back on changes — at speed, every day.</p>
@@ -630,29 +633,47 @@ Each app defines its own list in its in-repo <code>PRIORITY.md</code>.</p>
 <p><strong>Behavior &gt; code.</strong></p>
 <p>Most engineering orgs review PRs by reading source code line by line. We can&#39;t — and we don&#39;t need to. We trust Claude Code&#39;s implementation patterns and verify what <em>actually matters</em>: that the change does what we asked for, and nothing else broke.</p>
 <p>Our verification happens at the <strong>user-experience layer</strong>, not the source-code layer.</p>
-<p><strong>The trade:</strong> we don&#39;t personally catch every subtle bug. We rely on <strong>gradual deploys + Sentry monitoring + instant rollback</strong> as the safety net for what slips through.</p>
+<p><strong>The trade:</strong> we don&#39;t personally catch every subtle bug. We rely on <strong>Sentry monitoring + Better Stack uptime + Railway fast rollback</strong> as the safety net for what slips through.</p>
 <hr>
-<h2>The 5-Step Review</h2>
-<p>Run these in order for every PR. Total time: ~5 minutes per PR.</p>
-<h3>Step 1 · Read the PR description</h3>
+<h2>Two-Phase Review (Railway-adapted)</h2>
+<p>Railway free tier doesn&#39;t create a preview URL per PR — only the staging branch gets deployed. So the review splits into two phases:</p>
+<ul>
+<li><strong>Phase A (pre-merge):</strong> description-based review only. No behavior-testing yet.</li>
+<li><strong>Phase B (post-merge-to-staging):</strong> behavior verification on <code>staging.keycontent.ai</code> after Railway deploys.</li>
+</ul>
+<p>Total time: ~3 min pre-merge + ~5 min post-merge.</p>
+<h3>Phase A — Pre-merge review (~3 min)</h3>
+<h4>Step 1 · Read the PR description carefully</h4>
 <ul>
 <li>Does the change match what I briefed?</li>
 <li>Are the &quot;What&#39;s new&quot; items a subset of what I asked for? <em>(No scope creep.)</em></li>
 <li>Does the test plan match what we should verify?</li>
 </ul>
-<p>✅ Yes → continue.   ❌ No → comment to clarify before testing.</p>
-<h3>Step 2 · Open the preview URL</h3>
+<p>✅ Yes → continue.   ❌ No → comment to clarify before merging.</p>
+<h4>Step 2 · Read the files-changed list</h4>
+<p>Don&#39;t read the code itself — just the <strong>list of files</strong>. Quick sanity check:</p>
 <ul>
-<li>Cloudflare auto-creates a preview deploy for every PR</li>
-<li>The link appears in the PR comments (Cloudflare Pages bot)</li>
-<li>If no preview exists → ask for one before reviewing</li>
+<li>Does the file count match the scope? (A &quot;fix subject line&quot; PR touching 12 files is a red flag.)</li>
+<li>Are any unexpected files touched? (e.g., a UI fix PR that changed migration files — ask why.)</li>
 </ul>
-<h3>Step 3 · Reproduce the original goal</h3>
+<p>If files look reasonable → proceed.   If suspicious → ask Claude Code to explain.</p>
+<h4>Step 3 · Ask clarifying questions in PR comments</h4>
+<p>You can&#39;t behavior-test yet, so questions are the only pre-merge gate. Examples:</p>
+<ul>
+<li><em>&quot;You added a new env var — does it have a sensible default if missing?&quot;</em></li>
+<li><em>&quot;You touched the auth flow — confirm sign-in/sign-out still work after this?&quot;</em></li>
+<li><em>&quot;This change affects the report widget — does staging Postmark still get hit?&quot;</em></li>
+</ul>
+<p>Claude Code answering well = green light to merge. Claude Code stumbling = bounce back.</p>
+<p><strong>Phase A passes → merge to staging.</strong></p>
+<h3>Phase B — Post-merge behavior testing on staging (~5 min)</h3>
+<p>After merging to staging, Railway redeploys in ~2-3 min. Open <code>https://staging.keycontent.ai</code> and:</p>
+<h4>Step 4 · Reproduce the original goal</h4>
 <ul>
 <li><strong>For bugs:</strong> repeat the steps from the original issue. Confirm the bug is gone.</li>
 <li><strong>For features:</strong> use the feature exactly as a user would. Confirm it does what we asked.</li>
 </ul>
-<h3>Step 4 · Smoke test the critical flows</h3>
+<h4>Step 5 · Smoke test the critical flows</h4>
 <p>After verifying the targeted change, quickly probe 2–3 high-traffic paths to make sure nothing else broke.</p>
 <p><strong>KeyContent&#39;s critical flows:</strong></p>
 <ul>
@@ -662,62 +683,89 @@ Each app defines its own list in its in-repo <code>PRIORITY.md</code>.</p>
 <li>Sign out</li>
 </ul>
 <p>Each click ~5–10 seconds. Whole smoke test ~1 minute.</p>
-<h3>Step 5 · Mobile check</h3>
+<h4>Step 6 · Mobile check</h4>
 <ul>
 <li>Resize your browser to ~400px wide (or pull it up on your phone)</li>
 <li>Hit the changed page</li>
 <li>Confirm nothing is broken or unreadable</li>
 </ul>
-<p><strong>All 5 pass → merge.   Any fail → comment and bounce back.</strong></p>
+<h4>Step 7 · If anything fails</h4>
+<ul>
+<li><strong>Comment on the merged PR</strong> with the failing details</li>
+<li><strong>Brief Claude Code</strong> for the follow-up fix (new PR)</li>
+<li><strong>If the failure is severe (auth, payment, data loss):</strong> rollback staging via Railway → Deployments → redeploy previous</li>
+</ul>
+<p><strong>All checks pass → ready to promote staging → main.</strong></p>
 <hr>
 <h2>Decision matrix</h2>
 <table>
 <thead>
 <tr>
 <th>Situation</th>
+<th>Phase</th>
 <th>Action</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>All 5 steps pass</td>
-<td>✅ Merge</td>
-</tr>
-<tr>
-<td>Bug isn&#39;t actually fixed</td>
-<td>❌ Comment with exact failing steps</td>
-</tr>
-<tr>
-<td>Fix works, but smoke test broke something else</td>
-<td>❌ Comment + screenshot</td>
-</tr>
-<tr>
-<td>Mobile broken</td>
-<td>❌ Comment &quot;Mobile broken — see screenshot&quot;</td>
+<td>Description + files match brief, questions answered well</td>
+<td>A</td>
+<td>✅ Merge to staging</td>
 </tr>
 <tr>
 <td>PR description doesn&#39;t match my brief</td>
-<td>❌ &quot;This doesn&#39;t match my brief — please redo X&quot;</td>
+<td>A</td>
+<td>❌ <em>&quot;This doesn&#39;t match my brief — please redo X&quot;</em> before merging</td>
 </tr>
 <tr>
-<td>Looks fine but I&#39;m uncertain</td>
-<td>⏸ Pull in second eyes OR test more flows</td>
+<td>Suspicious files-changed list</td>
+<td>A</td>
+<td>❌ Ask Claude Code to explain before merging</td>
+</tr>
+<tr>
+<td>Already merged, all behavior checks pass on staging</td>
+<td>B</td>
+<td>✅ Ready to promote staging → main</td>
+</tr>
+<tr>
+<td>Bug isn&#39;t actually fixed (on staging)</td>
+<td>B</td>
+<td>❌ Comment with exact failing steps; new PR for fix</td>
+</tr>
+<tr>
+<td>Fix works, but smoke test broke something else</td>
+<td>B</td>
+<td>❌ Comment + screenshot; new PR for fix</td>
+</tr>
+<tr>
+<td>Mobile broken on staging</td>
+<td>B</td>
+<td>❌ Comment &quot;Mobile broken — see screenshot&quot;; new PR</td>
+</tr>
+<tr>
+<td>Severe failure on staging (auth, data loss)</td>
+<td>B</td>
+<td>🚨 Rollback staging via Railway, then fix via new PR</td>
 </tr>
 </tbody></table>
 <hr>
 <h2>Example comments to give Claude Code</h2>
-<p><strong>Bug not fixed:</strong></p>
+<p><strong>Pre-merge clarifying question (Phase A):</strong></p>
 <blockquote>
-<p><em>&quot;Tested on preview. Original issue still happens: when I click Save on the draft, the page reloads and the content is lost. Can you take another look?&quot;</em></p>
+<p><em>&quot;You&#39;re touching the auth middleware — confirm sign-in still works for existing sessions after this lands. Don&#39;t want to log everyone out.&quot;</em></p>
 </blockquote>
-<p><strong>Smoke test broke something:</strong></p>
+<p><strong>Bug not fixed (Phase B, post-merge on staging):</strong></p>
 <blockquote>
-<p><em>&quot;Targeted fix works. But noticed: clicking &#39;New Job&#39; button now crashes the page. Reproduced 3 times. Screenshot attached.&quot;</em></p>
+<p><em>&quot;Tested on staging. Original issue still happens: when I click Save on the draft, the page reloads and the content is lost. New PR for follow-up fix?&quot;</em></p>
 </blockquote>
-<p><strong>Mobile broken:</strong></p>
+<p><strong>Smoke test broke something (Phase B):</strong></p>
 <blockquote>
-<p><em>&quot;On mobile width (~400px), the new ticket-type selector wraps weirdly and &#39;Send Report&#39; is cut off. Screenshot.&quot;</em></p>
+<p><em>&quot;Targeted fix works on staging. But noticed: clicking &#39;New Job&#39; button now crashes the page. Reproduced 3 times on staging. Screenshot attached. Need a follow-up PR.&quot;</em></p>
 </blockquote>
-<p><strong>Scope creep:</strong></p>
+<p><strong>Mobile broken (Phase B):</strong></p>
+<blockquote>
+<p><em>&quot;On mobile width (~400px) on staging, the new ticket-type selector wraps weirdly and &#39;Send Report&#39; is cut off. Screenshot.&quot;</em></p>
+</blockquote>
+<p><strong>Scope creep (Phase A):</strong></p>
 <blockquote>
 <p><em>&quot;I see you also refactored the auth code — please pull that out into a separate PR so this one stays focused on the bug fix.&quot;</em></p>
 </blockquote>
@@ -731,12 +779,15 @@ Each app defines its own list in its in-repo <code>PRIORITY.md</code>.</p>
 <li>Trust the test plan without running it myself</li>
 </ul>
 <hr>
-<h2>Post-merge: the 1-hour Sentry watch</h2>
-<p>After merging, glance at Sentry once an hour for 2–3 hours:</p>
+<h2>Post-merge to PROD: the 1-hour watch</h2>
+<p>After promoting staging → main and Railway redeploys production:</p>
 <ul>
-<li><strong>New error spike?</strong> → 1-click rollback via Cloudflare gradual deploy</li>
-<li><strong>All quiet?</strong> → done. Full release proceeds via gradual deploy to 100%</li>
+<li><strong>New error spike in Sentry?</strong> → rollback via Railway (Deployments → redeploy previous, ~2 min)</li>
+<li><strong>Better Stack monitor flipped red?</strong> → same: rollback first, diagnose later</li>
+<li><strong>User reports a problem via the widget?</strong> → check if it correlates with the deploy; rollback if yes</li>
+<li><strong>All quiet for 1 hour?</strong> → done.</li>
 </ul>
+<p>For hotfixes, watch for <strong>2 hours</strong> instead of 1.</p>
 <hr>
 <h2>Why we elevated the standard</h2>
 <p>The industry assumes the PR reviewer is also a coder. Our system <strong>inverts that assumption</strong>: the operator doesn&#39;t read code, so the checklist is 100% behavior-focused.</p>
@@ -744,8 +795,9 @@ Each app defines its own list in its in-repo <code>PRIORITY.md</code>.</p>
 <ol>
 <li><strong>Unblocks non-coding operators</strong> from running a real engineering ops process</li>
 <li><strong>Catches the bugs that actually matter</strong> — user-visible breakage, not stylistic preferences</li>
-<li><strong>Pairs with safety nets</strong> — gradual deploy + Sentry + instant rollback catch what visual testing misses</li>
-<li><strong>Scales across apps</strong> — same checklist works for KeyContent and every Coreshift HQ app after</li>
+<li><strong>Pairs with safety nets</strong> — Sentry + Better Stack + Railway fast rollback catch what visual testing misses</li>
+<li><strong>Adapts to platform reality</strong> — when Cloudflare-Pages-style per-PR previews aren&#39;t available (Railway), the review moves to staging-after-merge with rollback as the safety net</li>
+<li><strong>Scales across apps</strong> — same two-phase pattern works for KeyContent and every Coreshift HQ app after</li>
 </ol>
 <p>The unfair advantage: we move <em>faster</em> than teams that require code-reading reviewers, because every PR has exactly one reviewer (the operator) and the review is mechanical.</p>
 <hr>
@@ -763,9 +815,10 @@ Each app defines its own list in its in-repo <code>PRIORITY.md</code>.</p>
 <h2>See also</h2>
 <ul>
 <li><code>HOW-WE-DO-PRIORITY.md</code> — how we triage what gets fixed first</li>
-<li><code>HOW-WE-DO-DEPLOYS.md</code> — the gradual-rollout safety net behind merge <em>(coming next)</em></li>
-<li><code>HOW-WE-DO-INCIDENTS.md</code> — what to do when the post-merge Sentry watch fires <em>(coming next)</em></li>
-<li>Deck Slide 6 — Shipping a New Feature (the visual narrative)</li>
+<li><code>HOW-WE-DO-DEPLOYS.md</code> — the deploy pipeline + rollback procedures (v2 Railway-adapted)</li>
+<li><code>HOW-WE-DO-INCIDENTS.md</code> — what to do when the post-merge watch fires</li>
+<li><code>HOW-WE-DO-APP-AUDITS.md</code> — the broader audit framework</li>
+<li>Deck Slide 6 — Shipping a New Feature (the visual narrative — may need slight rewording for Railway in next deck revision)</li>
 <li>Deck Slide 10 — Role Distribution (Operator: Triage, brief, <strong>verify</strong>)</li>
 </ul>
 </div>
@@ -1051,36 +1104,39 @@ Thanks for your patience.
         <h2 class="play-title">Deploy Pipeline</h2>
         <p class="play-tagline">Three rules. No exceptions.</p>
         <div class="play-divider"></div>
-        <div class="md"><p><strong>Status:</strong> Active · v1 · 2026-05-13
+        <div class="md"><p><strong>Status:</strong> Active · v2 · 2026-05-13 (Railway revision)
 <strong>Applies to:</strong> Every code change reaching production · Every Coreshift HQ app
-<strong>Owners:</strong> Operator (verifier) · Claude Code (implementer) · Cloudflare + Supabase (mechanism)</p>
+<strong>Owners:</strong> Operator (verifier) · Claude Code (implementer) · Railway + Supabase + Cloudflare (mechanism)</p>
+<blockquote>
+<p><strong>v2 note:</strong> This doc was originally written assuming Cloudflare Pages hosts the frontend with per-PR preview URLs and gradual traffic rollout. The actual stack uses <strong>Railway</strong> for frontend + Express server hosting, with <strong>Cloudflare in front for DNS, CDN, WAF, and SSL</strong> (not Pages). Sections below have been rewritten to match Railway&#39;s mechanics. Future apps in the Sentinel portfolio that use Cloudflare Pages will need a separate variant.</p>
+</blockquote>
 <hr>
 <h2>What this doc is</h2>
 <p>The pre-written rules for moving code from <em>&quot;Claude Code just wrote it&quot;</em> to <em>&quot;real users are using it.&quot;</em> Designed for an operator who <strong>doesn&#39;t read code</strong> to ship safely, daily.</p>
 <hr>
 <h2>The principle</h2>
-<p><strong>Every deploy goes through staging. Every deploy is rollback-able. Every deploy is gradual.</strong></p>
+<p><strong>Every deploy goes through staging. Every deploy is rollback-able fast. Every deploy is observable.</strong></p>
 <p>Three rules. No exceptions. The cost of following them is ~10 minutes. The cost of skipping them is a user-visible incident — every time.</p>
 <hr>
 <h2>The Standard Deploy Pipeline</h2>
-<pre><code>Claude Code writes fix → opens PR
+<pre><code>Claude Code writes fix → opens PR against staging branch
             ↓
-Cloudflare auto-creates a preview URL for the PR
+[Known gap: Railway free tier has no per-PR preview URLs]
             ↓
-You verify on the preview  (per HOW-WE-DO-PR-REVIEWS.md)
+Read PR description + ask Claude Code clarifying questions
+   (per HOW-WE-DO-PR-REVIEWS.md — review-by-description model)
             ↓
 Merge to staging branch
             ↓
-Cloudflare deploys to staging.keycontent.ai automatically
+Railway auto-deploys to staging.keycontent.ai  (~2-3 min)
             ↓
 Smoke test on staging
             ↓
-Merge staging → main  (the promotion gate)
+Promote staging → main via PR  (the promotion gate)
             ↓
-Cloudflare deploys to production
-   gradual rollout: 10% → 50% → 100% over ~30 min
+Railway auto-deploys to keycontent.ai  (~2-3 min, atomic cutover)
             ↓
-Sentry watch for 1 hour
+Sentry + Better Stack watch for 1 hour
             ↓
 Done.
 </code></pre>
@@ -1090,23 +1146,25 @@ Done.
 <ul>
 <li>No direct merges to main</li>
 <li>No &quot;trivial&quot; exceptions — the rule has no carve-outs</li>
-<li>Staging is a real Supabase + Cloudflare environment with separate data</li>
+<li>Staging is a real Railway environment with separate Supabase project + separate data</li>
 <li>Even a one-character typo fix follows the path</li>
 </ul>
-<h3>Rule 2 · Every deploy is rollback-able</h3>
+<h3>Rule 2 · Every deploy is rollback-able fast</h3>
 <ul>
-<li>Cloudflare Pages keeps every previous deployment indefinitely</li>
-<li>1-click rollback from the dashboard, live in ~60 seconds</li>
+<li>Railway keeps every previous deployment in the service&#39;s Deployments tab</li>
+<li>Rollback = click a previous deployment → <strong>Redeploy</strong>. Live in ~2 minutes.</li>
 <li>Database migrations need extra thinking (see Type C below)</li>
-<li>Before merging anything risky: mentally rehearse <em>&quot;if this breaks, what do I click?&quot;</em></li>
+<li>Before merging anything risky: mentally rehearse <em>&quot;if this breaks, which deployment do I redeploy?&quot;</em></li>
 </ul>
-<h3>Rule 3 · Every deploy is gradual</h3>
+<h3>Rule 3 · Every deploy is observable</h3>
+<p>Railway free tier deploys atomically — there is no native gradual traffic rollout. The discipline shifts from <em>pre-deploy gradual exposure</em> to <em>post-deploy fast detection + revert</em>. Our safety net:</p>
 <ul>
-<li>Cloudflare Workers / Pages support gradual rollouts at the traffic layer</li>
-<li>Default: <strong>10% of users for 10 minutes → if Sentry quiet, advance to 50% → 100%</strong></li>
-<li>Sentry spike during the 10% window = automatic or manual abort</li>
-<li>Edge Functions deploy atomically — the gradual layer happens upstream at frontend traffic</li>
+<li><strong>Sentry</strong> catches application errors automatically within seconds of the deploy</li>
+<li><strong>Better Stack</strong> catches downtime/availability issues with 3-minute checks</li>
+<li><strong>Railway rollback</strong> is the kill switch when either alarm fires</li>
+<li><strong>The 1-hour watch</strong> after every prod deploy is the operator commitment to be reachable</li>
 </ul>
+<p>If Railway adds gradual rollouts (or the team upgrades to Railway preview environments or paid tier with that capability), this rule reverts to &quot;gradual.&quot; Until then: deploy → watch → revert if needed.</p>
 <hr>
 <h2>Deploy Types</h2>
 <h3>Type A · Standard feature or fix</h3>
@@ -1160,13 +1218,14 @@ Done.
 <p>If any box is unchecked: pause, fix, then promote.</p>
 <hr>
 <h2>Rollback Procedures (memorize these)</h2>
-<h3>Frontend (Cloudflare Pages)</h3>
+<h3>Frontend + Express server (Railway)</h3>
 <ol>
-<li>Cloudflare dashboard → Pages → KeyContent project → Deployments</li>
-<li>Find the last known-good deployment</li>
-<li>Click ⋯ → &quot;Rollback to this deployment&quot;</li>
-<li>Confirm. Live within ~60 seconds.</li>
+<li>Railway dashboard → KeyContent project → the service that runs the app</li>
+<li><strong>Deployments</strong> tab → find the last known-good deployment (sorted newest first; pick the one before the breaking deploy)</li>
+<li>Click the ⋯ menu → <strong>Redeploy</strong></li>
+<li>Confirm. Live within ~2 minutes (Railway rebuilds + cuts over).</li>
 </ol>
+<p>If you need to roll back simultaneously on staging + production, repeat the process per service. Each Railway environment is independent.</p>
 <h3>Edge Function (Supabase)</h3>
 <ol>
 <li>Check out the previous git commit on the function file</li>
@@ -1176,21 +1235,28 @@ Done.
 <h3>Database migration</h3>
 <ul>
 <li>Not easily rollback-able. Use a forward-fix migration.</li>
-<li>Restore from production backup only as last resort (data loss between snapshot and now).</li>
+<li>Restore from production backup only as last resort (data loss between snapshot and now, AND Supabase Storage objects are NOT in the daily backups — see <code>HOW-WE-DO-APP-AUDITS.md</code>).</li>
 </ul>
 <h3>Secret rotation gone wrong</h3>
 <ul>
-<li>If new secret is broken: revert the secret value in Supabase dashboard to the previous one</li>
+<li>If new secret is broken: revert the secret value in Supabase or Railway dashboard to the previous one</li>
 <li>Or remove the secret entirely if the code can fall back gracefully</li>
+</ul>
+<h3>Cloudflare-level issues</h3>
+<ul>
+<li>DNS or proxy misconfiguration → Cloudflare → DNS → Records → revert the record</li>
+<li>SSL/TLS mode change broke things → SSL/TLS → Overview → revert encryption mode</li>
+<li>Cloudflare doesn&#39;t deploy app code, so rollbacks here are config-level only</li>
 </ul>
 <hr>
 <h2>What to Watch After Every Deploy</h2>
 <p>For 1 hour after a normal merge (2 hours for hotfix), glance at:</p>
 <ul>
-<li><strong>Sentry</strong> — new error spike?</li>
-<li><strong>Cloudflare</strong> — request volume changing? Latency spikes?</li>
+<li><strong>Sentry</strong> — new error spike on <code>keycontent-frontend</code> or <code>keycontent-backend</code>?</li>
+<li><strong>Railway</strong> — deploy succeeded green, no crash-loop, log output looks healthy?</li>
+<li><strong>Better Stack</strong> — both monitors still green at <a href="https://keycontent.betteruptime.com">https://keycontent.betteruptime.com</a>?</li>
 <li><strong>Your inbox / bug report widget</strong> — any user reports?</li>
-<li><strong>Better Stack</strong> — status page still green?</li>
+<li><strong>Cloudflare</strong> — Analytics dashboard for unusual traffic or error rates?</li>
 </ul>
 <p>If anything looks off: <strong>rollback first, diagnose later.</strong></p>
 <hr>
@@ -1209,8 +1275,8 @@ Done.
 <p>Our elevations:</p>
 <ol>
 <li><strong>Three rules, no exceptions</strong> — easy to remember, hard to violate by mistake</li>
-<li><strong>Cloudflare&#39;s gradual rollout IS our canary</strong> — built-in, free, no extra tooling</li>
-<li><strong>Behavior-based review at every gate</strong> — pairs with HOW-WE-DO-PR-REVIEWS.md</li>
+<li><strong>Observable-first deploys</strong> — Sentry + Better Stack + Railway rollback compose into a fast-detect-and-revert safety net. Replaces the pre-deploy gradual ramp we don&#39;t have on Railway.</li>
+<li><strong>Description-based review pre-merge, behavior-based verification post-merge</strong> — pairs with HOW-WE-DO-PR-REVIEWS.md</li>
 <li><strong>Staging is non-optional</strong> — even for &quot;trivial&quot; changes (a culture choice, not a technical one)</li>
 <li><strong>Rollback-first culture</strong> — explicit safety bias during incidents</li>
 <li><strong>Friday rule</strong> — no production deploys after Thursday lunch unless it&#39;s a hotfix</li>
@@ -1218,17 +1284,18 @@ Done.
 <p>The trade: deploys take ~10 extra minutes each. The gain: production stays stable, mornings stay calm, and you can promote with confidence.</p>
 <hr>
 <h2>Concrete Example — Promoting V0 (Report Issue Widget) to Production</h2>
-<p>This is the actual exercise we&#39;re about to run. Use it as the canonical example for future promotions:</p>
+<p>This is the canonical promotion exercise. Use it as the reference for future promotions:</p>
 <ol>
-<li>Confirm V0 has been live on <code>staging.keycontent.ai</code> for 24+ hours with no Sentry alerts — ✅</li>
-<li>Add <code>POSTMARK_SERVER_TOKEN</code> and <code>REPORT_TO_EMAIL</code> to production Supabase secrets — operator dashboard step</li>
+<li>Confirm V0 has been live on <code>staging.keycontent.ai</code> for 24+ hours with no Sentry alerts</li>
+<li>Add <code>POSTMARK_SERVER_TOKEN</code> and <code>REPORT_TO_EMAIL</code> to production Supabase Edge Function secrets — operator dashboard</li>
 <li>Apply the storage migration to production (creates <code>bug-report-screenshots</code> bucket + RLS policies) — Claude Code task</li>
 <li>Deploy <code>report-issue</code> Edge Function to production Supabase — Claude Code task</li>
-<li>Verify Edge Function CORS allows the production origin — Claude Code task</li>
-<li>Confirm Postmark sender signature is verified for production domain — operator dashboard step</li>
-<li>Merge staging → main → Cloudflare deploys to production with gradual rollout — automated</li>
+<li>Verify Edge Function CORS allows the production origin (<code>https://keycontent.ai</code>) — Claude Code task</li>
+<li>Confirm Postmark sender domain is verified for production — operator dashboard</li>
+<li>Merge staging → main via PR — triggers Railway production deploy automatically (~2-3 min)</li>
 <li>Smoke test on production: submit a Bug report with screenshot — operator</li>
-<li>Sentry watch for 2 hours — operator</li>
+<li><strong>Sentry + Better Stack watch for 2 hours</strong> — operator</li>
+<li>If alarms fire: Railway → KeyContent prod service → Deployments → redeploy previous (the rollback)</li>
 <li>Done.</li>
 </ol>
 <p>After this lands, this section becomes the &quot;we&#39;ve done it once&quot; reference for App #2.</p>
@@ -1721,13 +1788,13 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 </tr>
 <tr>
 <td>Branch protection</td>
-<td>❓ Unknown — needs manual verification</td>
-<td>Add kanban card</td>
+<td>✅ Rules added on <code>main</code> + <code>staging</code> 2026-05-13</td>
+<td>Admin bypass left ON for 2-person team flexibility</td>
 </tr>
 <tr>
 <td>Backup retention</td>
-<td>❓ Unknown — likely Supabase default</td>
-<td>Add kanban card</td>
+<td>✅ Verified 2026-05-13 — 8 days of daily DB backups</td>
+<td>⚠️ Storage objects not in backups; follow-up queued for Phase 1 Week 5</td>
 </tr>
 </tbody></table>
 <p>Re-run the full audit once Sentry and Better Stack are integrated, and quarterly thereafter.</p>
