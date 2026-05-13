@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Sow — Build Kanban</title>
+    <meta name="description" content="Live build status for Sow — a 4-pillar church-aligned personal budgeting app." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌱%3C/text%3E%3C/svg%3E" />
+    <style>
+      :root {
+        --bg: #fafaf9;
+        --card: #ffffff;
+        --ink: #18181b;
+        --ink-muted: #71717a;
+        --ink-subtle: #a1a1aa;
+        --border: #e4e4e7;
+        --done: #059669;
+        --doing: #d97706;
+        --next: #2563eb;
+        --back: #475569;
+        --back-bg: #f1f5f9;
+        --ricky: #7c3aed;
+        --ricky-bg: #f5f3ff;
+        --ricky-border: #ddd6fe;
+        --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+        --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+        --radius: 10px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0a0a;
+          --card: #18181b;
+          --ink: #fafafa;
+          --ink-muted: #a1a1aa;
+          --ink-subtle: #71717a;
+          --border: #27272a;
+          --done: #10b981;
+          --doing: #f59e0b;
+          --next: #3b82f6;
+          --back: #94a3b8;
+          --back-bg: #0f172a;
+          --ricky: #a78bfa;
+          --ricky-bg: #1e1b4b;
+          --ricky-border: #312e81;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 1400px; margin: 0 auto; padding: 32px 24px 80px; }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0 0 4px;
+      }
+      .subtitle { color: var(--ink-muted); font-size: 14px; margin: 0; }
+      .meta { text-align: right; font-size: 13px; color: var(--ink-muted); }
+      .meta a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+      .meta a:hover { color: var(--ink); }
+
+      h2.section-title {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink-muted);
+        margin: 0 0 12px;
+      }
+
+      .progress {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        box-shadow: var(--shadow);
+      }
+      .progress-bars {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .pbar { font-size: 12px; color: var(--ink-muted); }
+      .pbar-label { margin-bottom: 4px; }
+      .pbar-label strong { color: var(--ink); font-weight: 600; }
+      .pbar-track { background: var(--back-bg); height: 6px; border-radius: 999px; overflow: hidden; }
+      .pbar-fill { background: var(--done); height: 100%; border-radius: 999px; }
+      .pbar.active .pbar-fill { background: var(--doing); }
+      .pbar.future .pbar-fill { background: var(--ink-subtle); opacity: 0.4; }
+
+      .ricky-panel {
+        background: var(--ricky-bg);
+        border: 1px solid var(--ricky-border);
+        border-radius: var(--radius);
+        padding: 18px 22px;
+        margin-bottom: 28px;
+      }
+      .ricky-panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      .ricky-panel h2 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--ricky);
+        margin: 0;
+      }
+      .ricky-panel .badge {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--ricky);
+        background: var(--card);
+        border: 1px solid var(--ricky-border);
+        padding: 3px 8px;
+        border-radius: 999px;
+      }
+      .ricky-panel .intro {
+        font-size: 13px;
+        color: var(--ink-muted);
+        margin: 0 0 14px;
+      }
+      .ricky-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      @media (max-width: 800px) { .ricky-grid { grid-template-columns: 1fr; } }
+      .ricky-section h3 {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--ricky);
+        margin: 0 0 8px;
+      }
+      .ricky-section.later h3 { color: var(--ink-muted); }
+      .ricky-section .helper { font-size: 12px; color: var(--ink-muted); margin: 0 0 12px; }
+      .task {
+        background: var(--card);
+        border: 1px solid var(--ricky-border);
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin-bottom: 8px;
+      }
+      .ricky-section.later .task { border-color: var(--border); }
+      .task-title { font-size: 13px; font-weight: 600; margin: 0 0 4px; line-height: 1.4; }
+      .task-when { font-size: 11px; color: var(--ink-subtle); font-weight: 500; margin-left: 6px; }
+      .task-body { font-size: 12px; color: var(--ink-muted); margin: 0; line-height: 1.45; }
+      .task-link { color: var(--ricky); text-decoration: none; }
+      .task-link:hover { text-decoration: underline; }
+      code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11px; background: var(--back-bg); padding: 1px 5px; border-radius: 4px; }
+
+      .board {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+      }
+      @media (max-width: 1100px) { .board { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 640px)  { .board { grid-template-columns: 1fr; } .progress-bars { grid-template-columns: repeat(2, 1fr); } }
+
+      .col {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .col-head {
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .col-head .dot { width: 8px; height: 8px; border-radius: 999px; margin-right: 8px; }
+      .col-title {
+        font-weight: 600;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: flex;
+        align-items: center;
+      }
+      .col-count {
+        font-size: 12px;
+        color: var(--ink-muted);
+        background: var(--back-bg);
+        padding: 2px 8px;
+        border-radius: 999px;
+        min-width: 24px;
+        text-align: center;
+      }
+      .col.done .dot { background: var(--done); }
+      .col.doing .dot { background: var(--doing); }
+      .col.next .dot { background: var(--next); }
+      .col.back .dot { background: var(--back); }
+
+      .col-body {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: calc(100vh - 280px);
+        overflow-y: auto;
+      }
+
+      .card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 14px;
+        transition: transform 80ms ease, box-shadow 120ms ease;
+      }
+      .card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+      .card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+      .card-id { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11px; font-weight: 600; color: var(--ink-muted); }
+      .card-title { font-size: 14px; font-weight: 500; margin: 0 0 4px; line-height: 1.4; }
+      .card-note { font-size: 12px; color: var(--ink-muted); margin: 0; line-height: 1.45; }
+      .chip {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 1px 7px;
+        border-radius: 999px;
+        background: var(--back-bg);
+        color: var(--back);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .chip.m0 { background: #fce7f3; color: #be185d; }
+      .chip.m1 { background: #ede9fe; color: #6d28d9; }
+      .chip.m2 { background: #e0e7ff; color: #3730a3; }
+      .chip.m3 { background: #ccfbf1; color: #115e59; }
+      .chip.m4 { background: #fef3c7; color: #92400e; }
+      @media (prefers-color-scheme: dark) {
+        .chip.m0 { background: #500724; color: #f9a8d4; }
+        .chip.m1 { background: #2e1065; color: #c4b5fd; }
+        .chip.m2 { background: #1e1b4b; color: #a5b4fc; }
+        .chip.m3 { background: #042f2e; color: #5eead4; }
+        .chip.m4 { background: #451a03; color: #fcd34d; }
+      }
+
+      footer {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--ink-subtle);
+        text-align: center;
+      }
+      footer a { color: var(--ink-muted); text-decoration: underline; text-underline-offset: 3px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div>
+          <h1>Sow — Build Kanban</h1>
+          <p class="subtitle">4-pillar church-aligned budgeting app · Akahu bank sync · single-user v1</p>
+        </div>
+        <div class="meta">
+          Last updated <strong>2026-05-13</strong><br />
+          <a href="https://github.com/CoreshiftHQNZ/sow" target="_blank" rel="noopener">repo</a> ·
+          <a href="https://supabase.com/dashboard/project/vmzivnciductsdjduljw" target="_blank" rel="noopener">supabase</a> ·
+          <a href="https://railway.com/project/2aa7ea26-6f54-4dd0-a27b-f182251e8e25" target="_blank" rel="noopener">railway</a>
+        </div>
+      </header>
+
+      <section class="progress">
+        <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Build phases</div>
+        <div class="progress-bars">
+          <div class="pbar"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar"><div class="pbar-label"><strong>M1</strong> Onboarding + dashboard</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar"><div class="pbar-label"><strong>M2</strong> Cashflow + goals</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Deploy + polish</div><div class="pbar-track"><div class="pbar-fill" style="width: 30%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Multi-user (church)</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+        </div>
+      </section>
+
+      <section class="ricky-panel">
+        <div class="ricky-panel-head">
+          <h2>Ricky's tasks</h2>
+          <span class="badge">Action items</span>
+        </div>
+        <p class="intro">
+          Things that need a human (you) to click through a flow. None are technical. <strong>Don't worry about the "Later" column</strong> — Claude will tell you when each becomes time-sensitive.
+        </p>
+
+        <div class="ricky-grid">
+          <div class="ricky-section">
+            <h3>Do now</h3>
+            <p class="helper">App is buildable + runnable locally. These three unblock the next phase.</p>
+
+            <div class="task">
+              <p class="task-title">▶️ Test the swipe UI locally <span class="task-when">~15 min · validates the core UX</span></p>
+              <p class="task-body">
+                <code>cd /Users/Ricky/Documents/Claude/Projects/Equippers/sow &amp;&amp; npm run dev</code>, then open <a class="task-link" href="http://localhost:5050" target="_blank" rel="noopener">http://localhost:5050</a> and sign up with <code>ricky@coreshifthq.com</code>. Auto-provision links to your existing user row. You'll land on /onboarding with your real 272 merchant groups. Try drag · tap · arrow keys. Note what feels rough — biggest UX risk is the 272 number itself (most are internal transfers). Feed back which buckets you want a "skip / ignore" flow for.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">🚂 Finish Railway dashboard wiring <span class="task-when">~15 min · gets sow deployable</span></p>
+              <p class="task-body">
+                Follow <a class="task-link" href="https://github.com/CoreshiftHQNZ/sow/blob/dev/docs/setup/railway-deploy.md" target="_blank" rel="noopener">docs/setup/railway-deploy.md</a>. Project shell + staging env are already created via CLI. The remaining steps need the dashboard: connect GitHub repo, paste env vars (block included), generate domains, update Supabase redirect URLs.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">🔐 Rotate Akahu tokens at my.akahu.nz <span class="task-when">after first deploy — 5 min</span></p>
+              <p class="task-body">
+                The two Akahu tokens were pasted into this chat. Once Railway is live and pulling vars, rotate both at <a class="task-link" href="https://my.akahu.nz" target="_blank" rel="noopener">my.akahu.nz</a>, then update <code>.env</code> locally and the Railway env vars (both environments). Old tokens stop working immediately.
+              </p>
+            </div>
+          </div>
+
+          <div class="ricky-section later">
+            <h3>Later — heads-up only</h3>
+            <p class="helper">Each becomes time-sensitive when its milestone starts. I'll prompt you.</p>
+
+            <div class="task">
+              <p class="task-title">Decide: stay solo, or open to the church? <span class="task-when">after M3 polish</span></p>
+              <p class="task-body">
+                If you want other church members on Sow, M4 kicks in: graduate from Akahu Personal App → full Akahu app, go through Akahu's accreditation, switch the auth layer to per-user OAuth2. ~2–4 weeks of work + waiting on accreditation. Keeping it solo is fine — Sow stays free and your existing tokens keep working.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">Custom domain (optional) <span class="task-when">any time after deploy</span></p>
+              <p class="task-body">
+                <code>sow.coreshifthq.com</code> via Cloudflare → Railway custom domain. Currently Railway-provided URL is fine.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <h2 class="section-title">Kanban</h2>
+      <div class="board">
+        <!-- DONE -->
+        <div class="col done">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Done</div>
+            <div class="col-count">14</div>
+          </div>
+          <div class="col-body">
+            <div class="card">
+              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SOW-1</span></div>
+              <p class="card-title">Repo bootstrapped from CoreshiftHQNZ/app-template</p>
+              <p class="card-note">Private repo at <code>CoreshiftHQNZ/sow</code>, branches dev → staging → main, GitHub Actions auto-promotion green.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SOW-2</span></div>
+              <p class="card-title">Supabase project + schema applied</p>
+              <p class="card-note">Sydney region, ref <code>vmzivnciductsdjduljw</code>. 10 sow tables + 4 enums (pillar, goal_mode, sync_status, user_role).</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SOW-3</span></div>
+              <p class="card-title">Inherited template TS errors fixed</p>
+              <p class="card-note">tsconfig target=es2022, auth middleware null narrowing, dotenv loader, removed example route. Worth back-porting upstream.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SOW-4</span></div>
+              <p class="card-title">Akahu sync layer</p>
+              <p class="card-note">Service + route + CLI. Pulls accounts + transactions (365d first run, 35d incremental), classifies income, detects recurring patterns. Verified: 7 accounts, 956 txns, 9 patterns.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SOW-5</span></div>
+              <p class="card-title">Default categories + onboarding API</p>
+              <p class="card-note">4 system categories (one per pillar). /api/onboarding/merchants groups by merchant or whitespace-collapsed description; /categorise bulk-assigns; /complete flips users.onboardingComplete.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SOW-6</span></div>
+              <p class="card-title">Swipe onboarding UI</p>
+              <p class="card-note">Tinder-style card with pointer drag + 4-direction tap buttons + arrow-key shortcuts. Up = Stewarding, Right = Saving, Down = Spending, Left = Seeding. Pure CSS transforms — no anim libs.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SOW-7</span></div>
+              <p class="card-title">Dashboard with 4-pillar grid</p>
+              <p class="card-note">Greeting, last-synced timestamp, uncategorised banner, pillar cards (Stewarding shows tithe progress vs target), recent activity, accounts table.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SOW-8</span></div>
+              <p class="card-title">Cashflow 8-week timeline</p>
+              <p class="card-note">Projects recurring patterns forward, buckets into Monday-anchored weeks, computes running balance, flags low-balance weeks. Expandable per-week event list.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SOW-9</span></div>
+              <p class="card-title">Goals with dual-mode projection</p>
+              <p class="card-note">date_locked → app computes required monthly rate. rate_locked → app computes estimated finish date. Inline create + allocate forms. Auto-marks complete on target hit.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SOW-10</span></div>
+              <p class="card-title">Shared AppShell with nav</p>
+              <p class="card-note">Sow logo + Home/Cashflow/Goals tabs + Refresh + Sign out. Active state highlights current page. Dashboard uses it; new pages plug in for free.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-11</span></div>
+              <p class="card-title">Railway project + staging env created</p>
+              <p class="card-note">Project ID <code>2aa7ea26-6f54-4dd0-a27b-f182251e8e25</code> in Coreshift HQ workspace, staging env duplicated from production. GitHub repo link + env-var paste pending (see "Do now").</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-12</span></div>
+              <p class="card-title">Local dev verified end-to-end</p>
+              <p class="card-note">npm run dev boots on port 5050 (5000 taken by macOS AirPlay), serves React app, API endpoints respond, auth gating works.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-13</span></div>
+              <p class="card-title">Railway deploy docs</p>
+              <p class="card-note">docs/setup/railway-deploy.md — exact dashboard clickthrough + env-var paste block + Supabase redirect URL update + first-deploy workflow.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-14</span></div>
+              <p class="card-title">Kanban entry (this page)</p>
+              <p class="card-note">Sow added to coreshift-kanbans index. Will be kept in sync as part of the work, not as a separate pass.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOING -->
+        <div class="col doing">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Doing</div>
+            <div class="col-count">1</div>
+          </div>
+          <div class="col-body">
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-15</span></div>
+              <p class="card-title">Browser smoke-test of full flow</p>
+              <p class="card-note">Ricky to log in, swipe through merchants, look at the dashboard / cashflow / goals. Capture what feels rough so M3 polish can be brief-driven, not guessed.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEXT -->
+        <div class="col next">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Next</div>
+            <div class="col-count">5</div>
+          </div>
+          <div class="col-body">
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-16</span></div>
+              <p class="card-title">"Skip / ignore" option in swipe onboarding</p>
+              <p class="card-note">272 merchant groups is a lot — many are internal transfers. Add a 5th option (probably a small button below the card) that marks a merchant as "not relevant for budgeting" and hides it from future onboarding without categorising it.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-17</span></div>
+              <p class="card-title">Recurring pattern next_expected auto-advance</p>
+              <p class="card-note">Detector currently stores next_expected = lastSeen + frequencyDays. When that's in the past (pattern stopped recurring), the cashflow forecast excludes the pattern. Should we advance forward to current cycle or mark it stale? Probably stale + visible in a "review patterns" screen.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-18</span></div>
+              <p class="card-title">Akahu category → pillar auto-suggest</p>
+              <p class="card-note">Akahu enriches some txns with NZFCC categories (e.g. "Religious organisations" for Equippers Church). Map common categories → suggested pillar so the swipe pre-fills, reducing taps.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-19</span></div>
+              <p class="card-title">Settings page (tithe %, account "is savings" flags)</p>
+              <p class="card-note">User can change tithePct, mark which accounts represent Saving pillar (drives "Saving" totals from transfers), edit category names. Currently only system defaults exist.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-20</span></div>
+              <p class="card-title">First production deploy</p>
+              <p class="card-note">After Railway dashboard wiring lands. Test the staging URL, then trigger the Deploy to Production workflow to push staging → main.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- BACKLOG -->
+        <div class="col back">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Backlog</div>
+            <div class="col-count">8</div>
+          </div>
+          <div class="col-body">
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-21</span></div>
+              <p class="card-title">Custom sub-categories per pillar</p>
+              <p class="card-note">User-defined sub-categories ("Groceries", "Subscriptions", "Holiday fund") nested inside each pillar. Schema supports it; needs UI + categorisation flow that doesn't blow up the swipe simplicity.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-22</span></div>
+              <p class="card-title">Goal allocation history view</p>
+              <p class="card-note">Per goal, show every allocation that's flowed in (manual + linked to transactions). Currently the schema records them but the UI just shows the total.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-23</span></div>
+              <p class="card-title">Dashboard graphs</p>
+              <p class="card-note">Pillar trend over the last 6 months. Income vs outflow per pillar. Probably recharts since it's already a small bundle add.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-24</span></div>
+              <p class="card-title">Transaction edit (per-txn override)</p>
+              <p class="card-note">From the dashboard, tap a txn → change category or set pillarOverride. Useful for one-off recategorisations.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SOW-25</span></div>
+              <p class="card-title">Nightly cron for /api/sync</p>
+              <p class="card-note">Currently sync is manual. Add a Railway cron job (or simple setInterval in the server) to pull from Akahu once per 24h.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m4">M4</span><span class="card-id">SOW-26</span></div>
+              <p class="card-title">Akahu full app + accreditation</p>
+              <p class="card-note">Personal Apps cap at "1 user (yourself)". Full app is the prerequisite for OAuth2 multi-user. Process: <a class="task-link" href="https://developers.akahu.nz/docs/app-accreditation" target="_blank" rel="noopener">akahu accreditation</a>.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m4">M4</span><span class="card-id">SOW-27</span></div>
+              <p class="card-title">OAuth2 signup flow for church members</p>
+              <p class="card-note">"Connect with Akahu" button → user picks their bank → returns with a per-user token stored encrypted in the users table. Replaces the env-var Akahu tokens.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m4">M4</span><span class="card-id">SOW-28</span></div>
+              <p class="card-title">Encrypted per-user token storage</p>
+              <p class="card-note">When multi-user lands, each user's Akahu tokens need to live in the DB (encrypted with a KMS key) instead of env vars. Required for OAuth2 path.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <a href="../">← all kanbans</a> · <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/blob/main/sow/index.html" target="_blank" rel="noopener">edit this page</a>
+      </footer>
+    </div>
+  </body>
+</html>
