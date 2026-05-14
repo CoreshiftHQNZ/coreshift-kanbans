@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Storepro Component Count — Build Kanban</title>
+    <meta name="description" content="Live build status for the Storepro Component Count app — automated component counting + racking design review." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📐%3C/text%3E%3C/svg%3E" />
+    <style>
+      :root {
+        --bg: #fafaf9;
+        --card: #ffffff;
+        --ink: #18181b;
+        --ink-muted: #71717a;
+        --ink-subtle: #a1a1aa;
+        --border: #e4e4e7;
+        --done: #059669;
+        --doing: #d97706;
+        --next: #2563eb;
+        --back: #475569;
+        --back-bg: #f1f5f9;
+        --ricky: #7c3aed;
+        --ricky-bg: #f5f3ff;
+        --ricky-border: #ddd6fe;
+        --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+        --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+        --radius: 10px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0a0a;
+          --card: #18181b;
+          --ink: #fafafa;
+          --ink-muted: #a1a1aa;
+          --ink-subtle: #71717a;
+          --border: #27272a;
+          --done: #10b981;
+          --doing: #f59e0b;
+          --next: #3b82f6;
+          --back: #94a3b8;
+          --back-bg: #0f172a;
+          --ricky: #a78bfa;
+          --ricky-bg: #1e1b4b;
+          --ricky-border: #312e81;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 1400px; margin: 0 auto; padding: 32px 24px 80px; }
+      header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+      h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 4px; }
+      .subtitle { color: var(--ink-muted); font-size: 14px; margin: 0; }
+      .meta { text-align: right; font-size: 13px; color: var(--ink-muted); }
+      .meta a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+      .meta a:hover { color: var(--ink); }
+      h2.section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); margin: 0 0 12px; }
+      .progress { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; box-shadow: var(--shadow); }
+      .progress-bars { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 8px; }
+      .pbar { font-size: 12px; color: var(--ink-muted); }
+      .pbar-label { margin-bottom: 4px; }
+      .pbar-label strong { color: var(--ink); font-weight: 600; }
+      .pbar-track { background: var(--back-bg); height: 6px; border-radius: 999px; overflow: hidden; }
+      .pbar-fill { background: var(--done); height: 100%; border-radius: 999px; }
+      .pbar.active .pbar-fill { background: var(--doing); }
+      .pbar.future .pbar-fill { background: var(--ink-subtle); opacity: 0.4; }
+      .ricky-panel { background: var(--ricky-bg); border: 1px solid var(--ricky-border); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 28px; }
+      .ricky-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+      .ricky-panel h2 { font-size: 16px; font-weight: 700; color: var(--ricky); margin: 0; }
+      .ricky-panel .badge { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ricky); background: var(--card); border: 1px solid var(--ricky-border); padding: 3px 8px; border-radius: 999px; }
+      .ricky-panel .intro { font-size: 13px; color: var(--ink-muted); margin: 0 0 14px; }
+      .ricky-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+      @media (max-width: 800px) { .ricky-grid { grid-template-columns: 1fr; } }
+      .ricky-section h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ricky); margin: 0 0 8px; }
+      .ricky-section.later h3 { color: var(--ink-muted); }
+      .ricky-section .helper { font-size: 12px; color: var(--ink-muted); margin: 0 0 12px; }
+      .task { background: var(--card); border: 1px solid var(--ricky-border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+      .ricky-section.later .task { border-color: var(--border); }
+      .task-title { font-size: 13px; font-weight: 600; margin: 0 0 4px; line-height: 1.4; }
+      .task-when { font-size: 11px; color: var(--ink-subtle); font-weight: 500; margin-left: 6px; }
+      .task-body { font-size: 12px; color: var(--ink-muted); margin: 0; line-height: 1.45; }
+      .task-link { color: var(--ricky); text-decoration: none; }
+      .task-link:hover { text-decoration: underline; }
+      code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11px; background: var(--back-bg); padding: 1px 5px; border-radius: 4px; }
+      .board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+      @media (max-width: 1100px) { .board { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 640px)  { .board { grid-template-columns: 1fr; } .progress-bars { grid-template-columns: repeat(2, 1fr); } }
+      .col { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+      .col-head { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+      .col-head .dot { width: 8px; height: 8px; border-radius: 999px; margin-right: 8px; }
+      .col-title { font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; }
+      .col-count { font-size: 12px; color: var(--ink-muted); background: var(--back-bg); padding: 2px 8px; border-radius: 999px; min-width: 24px; text-align: center; }
+      .col.done .dot { background: var(--done); }
+      .col.doing .dot { background: var(--doing); }
+      .col.next .dot { background: var(--next); }
+      .col.back .dot { background: var(--back); }
+      .col-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 280px); overflow-y: auto; }
+      .card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; transition: transform 80ms ease, box-shadow 120ms ease; }
+      .card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+      .card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+      .card-id { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11px; font-weight: 600; color: var(--ink-muted); }
+      .card-title { font-size: 14px; font-weight: 500; margin: 0 0 4px; line-height: 1.4; }
+      .card-note { font-size: 12px; color: var(--ink-muted); margin: 0; line-height: 1.45; }
+      .chip { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 999px; background: var(--back-bg); color: var(--back); text-transform: uppercase; letter-spacing: 0.04em; }
+      .chip.m0 { background: #fce7f3; color: #be185d; }
+      .chip.m1 { background: #ede9fe; color: #6d28d9; }
+      .chip.m2 { background: #e0e7ff; color: #3730a3; }
+      .chip.m3 { background: #ccfbf1; color: #115e59; }
+      .chip.m4 { background: #fef3c7; color: #92400e; }
+      @media (prefers-color-scheme: dark) {
+        .chip.m0 { background: #500724; color: #f9a8d4; }
+        .chip.m1 { background: #2e1065; color: #c4b5fd; }
+        .chip.m2 { background: #1e1b4b; color: #a5b4fc; }
+        .chip.m3 { background: #042f2e; color: #5eead4; }
+        .chip.m4 { background: #451a03; color: #fcd34d; }
+      }
+      footer { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--ink-subtle); text-align: center; }
+      footer a { color: var(--ink-muted); text-decoration: underline; text-underline-offset: 3px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div>
+          <h1>Storepro Component Count — Build Kanban</h1>
+          <p class="subtitle">Automated component counting + racking design review · Storepro App Module 3</p>
+        </div>
+        <div class="meta">
+          Last updated <strong>2026-05-14</strong><br />
+          <a href="https://github.com/CoreshiftHQNZ/storepro-component-count" target="_blank" rel="noopener">repo</a> ·
+          <a href="https://github.com/CoreshiftHQNZ/storepro-component-count/blob/main/docs/build-proposal.md" target="_blank" rel="noopener">build proposal</a>
+        </div>
+      </header>
+
+      <section class="progress">
+        <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Build phases</div>
+        <div class="progress-bars">
+          <div class="pbar"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Vision pipeline</div><div class="pbar-track"><div class="pbar-fill" style="width: 5%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M2</strong> Rules + AI reviewer</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M3</strong> Review UI</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Integration + pilot</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+        </div>
+      </section>
+
+      <section class="ricky-panel">
+        <div class="ricky-panel-head">
+          <h2>Ricky's tasks</h2>
+          <span class="badge">Action items</span>
+        </div>
+        <p class="intro">
+          Things that need a human (you) to make a call or chase a person. None are technical. <strong>Don't worry about the "Later" column</strong> — Claude will tell you when each becomes time-sensitive.
+        </p>
+        <div class="ricky-grid">
+          <div class="ricky-section">
+            <h3>Do now</h3>
+            <p class="helper">M1 (vision pipeline) can start without these, but they unblock M3/M4.</p>
+
+            <div class="task">
+              <p class="task-title">🏢 Confirm Storepro's Microsoft 365 tenant <span class="task-when">~10 min · needed before M3 auth wiring</span></p>
+              <p class="task-body">
+                Ask Storepro (or check NetSuite for it) which M365 tenant the team logs in with. We need the tenant ID + a service account / app registration with read access to user directory. This is what auth will SSO against.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">📑 Get 2 more sample DWGs from Storepro <span class="task-when">~5 min · ask, then wait</span></p>
+              <p class="task-body">
+                Sigma is one job; we need 2–3 more representative job DWGs so the vision pipeline isn't overfit to one drawing's style. Specifically: <strong>one job with a different bay-type mix</strong> (not just S6/S8/S1/S2) and <strong>one job with extra bracing / sprinkler beams</strong> so we can validate the overlay detection.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">🎯 Nominate 3 pilot jobs <span class="task-when">~5 min · needed for M4 validation</span></p>
+              <p class="task-body">
+                For pilot we need 3 jobs Storepro has <em>already counted manually</em>. Ideally varied: one straightforward selective rack, one with double-deep, one with mesh / sprinkler / unusual extras. The pilot compares our count to their manual count and tunes from there.
+              </p>
+            </div>
+          </div>
+
+          <div class="ricky-section later">
+            <h3>Later — heads-up only</h3>
+            <p class="helper">Each becomes time-sensitive when its phase starts. I'll prompt you.</p>
+
+            <div class="task">
+              <p class="task-title">Schedule Gino for the validation pass <span class="task-when">end of M3, before pilot</span></p>
+              <p class="task-body">
+                We don't need Gino to <em>build</em> — recipes come from the elevation drawings, not from his head. We need ~2 hours of his time to <strong>review the app's output on the 3 pilot jobs</strong> and tell us where it got it wrong. Post-M3.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">NetSuite integration approach <span class="task-when">M4 — once Phase 1 is shipping</span></p>
+              <p class="task-body">
+                Decide: RESTlets, SuiteTalk, or third-party iPaaS for write-back? Sandbox access needed. Same decision applies to the rest of the Storepro App modules.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">Storepro product catalogue cleanup <span class="task-when">Phase 2 (BOM) — not Phase 1</span></p>
+              <p class="task-body">
+                For Phase 2 (BOM → Job Coaster) to work, every component needs a SKU. Phase 1 ships without this; Phase 2 is gated on it. Worth flagging to Storepro now so they can scope the cleanup in parallel.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <h2 class="section-title">Kanban</h2>
+      <div class="board">
+        <!-- DONE -->
+        <div class="col done">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Done</div>
+            <div class="col-count">7</div>
+          </div>
+          <div class="col-body">
+            <div class="card">
+              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-1</span></div>
+              <p class="card-title">Phase 0 prototype — DWG/DXF parser</p>
+              <p class="card-note">libredwg + ezdxf pipeline. Reads DXF strict-mode; falls back to dwgread minJSON + iconv for DWG-only inputs. Validated against Sigma Healthcare DWG.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-2</span></div>
+              <p class="card-title">Storepro-editable component library (YAML)</p>
+              <p class="card-note">Block-name → canonical-component alias table. Seeded from Sigma block names; safe-substring matcher to avoid Revit XREF false positives. Editable by Storepro admins without dev support.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-3</span></div>
+              <p class="card-title">Rules engine (YAML)</p>
+              <p class="card-note">Counting rules (row spacer industry-standard, mesh connector 4-vs-6) + compliance flags (11m upright, cutdown protector, double-deep backstop). Pattern-based ignore for AutoCAD anonymous noise (*U/*D/*X). Captures the ruleset Ricky provided 2026-05-13.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-4</span></div>
+              <p class="card-title">Architectural understanding locked</p>
+              <p class="card-note">Plan view → bay count by type. Elevation view → recipe per type. Storepro already produces this manually (the capacity table on every plan-view sheet). App automates + adds compliance layer.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-5</span></div>
+              <p class="card-title">Build proposal approved by Storepro</p>
+              <p class="card-note">Phase 1 (read &amp; count + design review): NZ$32-48k. Phase 2 (BOM → Job Coaster): NZ$8-14k. Standalone repo, independent of platform layer for now. Full doc: <code>docs/build-proposal.md</code>.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-6</span></div>
+              <p class="card-title">Repo scaffolded at CoreshiftHQNZ/storepro-component-count</p>
+              <p class="card-note">main + dev + staging branches up. Phase 0 prototype ported into <code>parser/</code>. <code>api/</code> and <code>web/</code> placeholders for next iteration. README, CLAUDE.md, .gitignore in.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-7</span></div>
+              <p class="card-title">Kanban entry (this page)</p>
+              <p class="card-note">Added to coreshift-kanbans index. Will be kept in sync as part of the work, not as a separate pass.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOING -->
+        <div class="col doing">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Doing</div>
+            <div class="col-count">1</div>
+          </div>
+          <div class="col-body">
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-8</span></div>
+              <p class="card-title">Sheet rasterisation pipeline (PDF → high-res PNG)</p>
+              <p class="card-note">First step of the vision pipeline. poppler-utils installed locally; need a Python wrapper that takes a sheet PDF and emits a per-sheet PNG at the resolution + crop region the bay detector wants.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEXT -->
+        <div class="col next">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Next</div>
+            <div class="col-count">6</div>
+          </div>
+          <div class="col-body">
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-9</span></div>
+              <p class="card-title">Bay-rectangle detection in plan views</p>
+              <p class="card-note">OpenCV-based: find coloured rectangles in the plan-view region, group by hue, count per group. First regression target: reproduce Sigma Phase 1 Stage 1 capacity table (S1=42, S2=29, S6=139, S8=79).</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-10</span></div>
+              <p class="card-title">S-label OCR</p>
+              <p class="card-note">Confirms bay-type assignment from the colour-based detection. Tesseract or EasyOCR — pick the one that handles small CAD text best on first test.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-11</span></div>
+              <p class="card-title">Elevation recipe extractor (per S-type)</p>
+              <p class="card-note">For each S-type, parse its elevation drawing: count beam levels, OCR weight ratings, detect mesh presence (red hatch pattern), differentiate mid-frame vs end-frame, read upright spec from dimension text.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-12</span></div>
+              <p class="card-title">Overlay detector (red bracing, sprinkler beams, etc.)</p>
+              <p class="card-note">Per-bay overlays that aren't in the base recipe — extra bracing in red, sprinkler beams at specific bays, cutdown post protector requirement (per the height-vs-lowest-beam rule).</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-13</span></div>
+              <p class="card-title">End-frame sharing logic</p>
+              <p class="card-note">Detect end-of-row bays geometrically; apply frame-sharing rule (row of N bays → N+1 frames, not 2N). Reads end vs mid from the elevation drawing's frame variants.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-14</span></div>
+              <p class="card-title">AI design-reviewer wiring</p>
+              <p class="card-note">Claude vision + parsed data + rule output. Produces compliance commentary (missing/wrong items) for the estimator to read before approval. Always advisory, never authoritative.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- BACKLOG -->
+        <div class="col back">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Backlog</div>
+            <div class="col-count">8</div>
+          </div>
+          <div class="col-body">
+            <div class="card">
+              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-15</span></div>
+              <p class="card-title">Rules engine port — prototype → production</p>
+              <p class="card-note">Move the YAML rules + library from <code>parser/</code> into the production service layer; wire to the API so Storepro admins can edit via a future admin UI (later — initially they edit the YAML directly).</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-16</span></div>
+              <p class="card-title">FastAPI backend scaffold</p>
+              <p class="card-note">Endpoints: file upload, parse job kickoff, status polling, result retrieval. Wraps the parser + vision + rules + AI reviewer behind a clean API.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-17</span></div>
+              <p class="card-title">Next.js frontend scaffold</p>
+              <p class="card-note">Upload UI, job dashboard, review screen (sheet preview + count table + rule trace + AI flags), estimator approval flow. Tailwind for styling.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-18</span></div>
+              <p class="card-title">Microsoft 365 SSO via Supabase auth</p>
+              <p class="card-note">Storepro logs in with their existing M365 tenant. Standard Coreshift auth pattern — Supabase OIDC against Azure AD.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-19</span></div>
+              <p class="card-title">Railway dev/staging/prod pipeline</p>
+              <p class="card-note">dev → staging (auto-deploy) → main (auto-deploy). GitHub Actions wires the auto-deploys. Standard Coreshift architecture.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m4">M4</span><span class="card-id">SCC-20</span></div>
+              <p class="card-title">NetSuite write-back</p>
+              <p class="card-note">Count + PDF summary attaches to the opportunity record. Format TBD with Storepro (custom record? PDF attachment? both?). Phase 2 (Job Coaster integration) builds on this.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m4">M4</span><span class="card-id">SCC-21</span></div>
+              <p class="card-title">Audit trail</p>
+              <p class="card-note">Every run versioned: file hash, rule-set version, AI model version, reviewer identity, timestamp. Re-runs reproducible. Required for accountability when a count drives a quote.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m4">M4</span><span class="card-id">SCC-22</span></div>
+              <p class="card-title">Pilot on 3 real jobs</p>
+              <p class="card-note">Run the app on 3 Storepro jobs that already have manual counts. Compare. Gino reviews the AI commentary. Tune accuracy. Cutover when >= 98% on standard jobs.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <a href="../">← all kanbans</a> · <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/blob/main/storepro-component-count/index.html" target="_blank" rel="noopener">edit this page</a>
+      </footer>
+    </div>
+  </body>
+</html>
