@@ -175,7 +175,7 @@
 
       <div class="columns">
         <div class="col col-done">
-          <div class="col-head"><span>Done</span><span class="count">4</span></div>
+          <div class="col-head"><span>Done</span><span class="count">8</span></div>
           <div class="card-item">
             <p class="card-title">GitHub repo + branches</p>
             <p class="card-note">core-ricky/sponsored-listicle-writer with dev / staging / main.</p>
@@ -190,55 +190,67 @@
           </div>
           <div class="card-item">
             <p class="card-title">Railway project + envs</p>
-            <p class="card-note">production + staging environments. Domains generated. Deploy workflow committed (awaits RAILWAY_TOKEN).</p>
+            <p class="card-note">production + staging. Deploy workflow committed; awaits RAILWAY_TOKEN to actually fire.</p>
           </div>
-        </div>
-
-        <div class="col col-inflight">
-          <div class="col-head"><span>In flight</span><span class="count">1</span></div>
           <div class="card-item">
             <p class="card-title">Phase 2 — DB schema</p>
             <p class="card-note">jobs, job_artifacts, verify_markers, validator_findings. Storage bucket for hero images.</p>
           </div>
+          <div class="card-item">
+            <p class="card-title">Phase 3 — Chain</p>
+            <p class="card-note">5 steps: research (web search), outline (Zod-validated), write (with retry), HTML render, hero image (Gemini 3). Per-step cost + latency captured.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Phase 4 — Validator</p>
+            <p class="card-note">Banned phrases, em-dash cap (2), en-dash cap (4), transition-adverb cap, negation parallelism, bold allowlist, unsourced-numeric heuristic, required-sections, [VERIFY:] extraction. Blocking vs warning split.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Phase 5 — UI + API</p>
+            <p class="card-note">Magic-link auth, single-screen input, POST /api/jobs fires chain via after(), /jobs/[id] with status polling + three-panel output + verify checklist, /jobs history list.</p>
+          </div>
+        </div>
+
+        <div class="col col-inflight">
+          <div class="col-head"><span>In flight</span><span class="count">0</span></div>
+          <div class="card-item" style="opacity:0.6">
+            <p class="card-title">—</p>
+            <p class="card-note">Build clean on dev branch. Awaiting operator actions in the Blocked column to unblock deploy.</p>
+          </div>
         </div>
 
         <div class="col col-blocked">
-          <div class="col-head"><span>Blocked / awaiting</span><span class="count">3</span></div>
+          <div class="col-head"><span>Blocked / awaiting operator</span><span class="count">4</span></div>
           <div class="card-item">
             <p class="card-title">RAILWAY_TOKEN secret</p>
-            <p class="card-note">Operator to create at railway.com/project/.../settings/tokens and paste; will be added as GitHub Actions secret.</p>
+            <p class="card-note">Create at railway.com → project settings → tokens, add as a GitHub Actions secret on the repo. Until added, pushes to staging / main don't deploy.</p>
           </div>
           <div class="card-item">
             <p class="card-title">Anthropic API key (rotated)</p>
-            <p class="card-note">Previous key was exposed in chat; awaiting rotated value.</p>
+            <p class="card-note">Previous key was exposed in chat. Generate fresh at console.anthropic.com, paste into .env.local locally and Railway env vars for both environments.</p>
           </div>
           <div class="card-item">
             <p class="card-title">Google Vertex service account (rotated)</p>
-            <p class="card-note">Previous JSON private key was exposed in chat; awaiting rotated value.</p>
+            <p class="card-note">Previous JSON private key was exposed in chat. Generate fresh in GCP for vertexairunner@coreshifthq.iam.gserviceaccount.com, paste as a single-line JSON string into GOOGLE_APPLICATION_CREDENTIALS_JSON.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">First staging deploy</p>
+            <p class="card-note">Merge dev → staging once tokens are in place. CI auto-deploys to Railway staging env.</p>
           </div>
         </div>
 
         <div class="col col-pending">
-          <div class="col-head"><span>Up next</span><span class="count">5</span></div>
+          <div class="col-head"><span>Up next</span><span class="count">3</span></div>
           <div class="card-item">
-            <p class="card-title">Phase 3 — Chain</p>
-            <p class="card-note">5 steps: research (web search), outline, write, HTML render, hero image (Gemini 3).</p>
-          </div>
-          <div class="card-item">
-            <p class="card-title">Phase 4 — Validator</p>
-            <p class="card-note">Banned phrases, em/en-dash caps, bold-rules, unsourced-numeric heuristics, [VERIFY:] extraction.</p>
-          </div>
-          <div class="card-item">
-            <p class="card-title">Phase 5 — UI</p>
-            <p class="card-note">Single input screen, live progress, three-panel output, verify checklist, job history.</p>
-          </div>
-          <div class="card-item">
-            <p class="card-title">Phase 6 — Telemetry</p>
-            <p class="card-note">Per-job cost + latency, /admin/stats aggregate.</p>
+            <p class="card-title">Smoke test on staging</p>
+            <p class="card-note">Run "buy youtube views" with the original UseViral URL as top pick 1 and compare output to the example docx.</p>
           </div>
           <div class="card-item">
             <p class="card-title">Cloudflare DNS</p>
-            <p class="card-note">listicles.coreshifthq.com → Railway production domain. Last step.</p>
+            <p class="card-note">Add CNAME listicles.coreshifthq.com → Railway production target (Railway provides the target in the custom-domain UI). DNS-only or proxied per Railway's instruction.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Phase 6 — Telemetry view (optional)</p>
+            <p class="card-note">Per-job cost is shown on /jobs/[id] and /jobs already. Aggregate /admin/stats nice-to-have; defer until first real usage shows whether it's needed.</p>
           </div>
         </div>
       </div>
