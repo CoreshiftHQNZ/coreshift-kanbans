@@ -133,7 +133,7 @@
           <p class="subtitle">Automated component counting + racking design review · Storepro App Module 3</p>
         </div>
         <div class="meta">
-          Last updated <strong>2026-05-14 (PM)</strong><br />
+          Last updated <strong>2026-05-14 (late PM)</strong><br />
           <a href="https://github.com/CoreshiftHQNZ/storepro-component-count" target="_blank" rel="noopener">repo</a> ·
           <a href="https://github.com/CoreshiftHQNZ/storepro-component-count/blob/main/docs/build-proposal.md" target="_blank" rel="noopener">build proposal</a>
         </div>
@@ -145,7 +145,7 @@
           <div class="pbar"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Vision pipeline</div><div class="pbar-track"><div class="pbar-fill" style="width: 40%"></div></div></div>
           <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Rules + AI reviewer</div><div class="pbar-track"><div class="pbar-fill" style="width: 15%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Review UI</div><div class="pbar-track"><div class="pbar-fill" style="width: 50%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Review UI</div><div class="pbar-track"><div class="pbar-fill" style="width: 75%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Integration + pilot</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
         </div>
       </section>
@@ -219,7 +219,7 @@
         <div class="col done">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Done</div>
-            <div class="col-count">14</div>
+            <div class="col-count">18</div>
           </div>
           <div class="col-body">
             <div class="card">
@@ -286,6 +286,26 @@
               <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-14</span></div>
               <p class="card-title">AI design-reviewer stubbed</p>
               <p class="card-note"><code>api/services/reviewer.py</code> defines the interface, gates on <code>ANTHROPIC_API_KEY</code>, returns a placeholder until M2 wires the actual Claude vision call. Architecture sketch (request shape, model choice) captured in the module's docstring.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-26</span></div>
+              <p class="card-title">DWG path wired into the API (libredwg → JSON → parser)</p>
+              <p class="card-note">POST /api/jobs now accepts a DWG directly. Internal pipeline: dwgread minJSON → iconv UTF-8 sanitise → JSON parser. Verified with the Sigma DWG: counts match prototype output (428 post protector, 341 beam, 324 FEP, 319 backstop, etc).</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-17b</span></div>
+              <p class="card-title">Web UI polished for demos</p>
+              <p class="card-note">Drag-and-drop upload. Sidebar with auto-refreshing recent jobs list. Detailed result view: 3-stat summary, canonical count table, per-block breakdown with unmapped flagging, rules trace, compliance flags with severity badges. Light + dark themes.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-27</span></div>
+              <p class="card-title">End-to-end DWG regression test passing</p>
+              <p class="card-note"><code>tests/e2e_dwg_count.sh</code> boots the API, uploads Sigma DWG, asserts every canonical component matches ground truth — 7/7 PASS. Proves the full chain (uvicorn → multipart → libredwg → JSON parser → rules engine → response) works end-to-end.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-28</span></div>
+              <p class="card-title">Drawing-conventions recommendations doc</p>
+              <p class="card-note"><code>docs/drawing-conventions.md</code> — 13 recommendations for Storepro to author drawings the app parses more reliably. Three tiers (low-effort high-impact → nice-to-have). The two biggest leverage items: consistent block library + bay-type rectangles as real blocks.</p>
             </div>
           </div>
         </div>
