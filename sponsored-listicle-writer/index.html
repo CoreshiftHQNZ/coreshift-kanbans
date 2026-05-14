@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Sponsored Listicle Writer — Kanban</title>
+    <meta name="description" content="Build status for the Sponsored Listicle Writer tool." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📰%3C/text%3E%3C/svg%3E" />
+    <style>
+      :root {
+        --bg: #fafaf9;
+        --card: #ffffff;
+        --ink: #18181b;
+        --ink-muted: #71717a;
+        --ink-subtle: #a1a1aa;
+        --border: #e4e4e7;
+        --accent: #2563eb;
+        --done: #16a34a;
+        --done-bg: #dcfce7;
+        --inflight: #ca8a04;
+        --inflight-bg: #fef9c3;
+        --blocked: #dc2626;
+        --blocked-bg: #fee2e2;
+        --pending: #71717a;
+        --pending-bg: #f4f4f5;
+        --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+        --radius: 10px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0a0a;
+          --card: #18181b;
+          --ink: #fafafa;
+          --ink-muted: #a1a1aa;
+          --ink-subtle: #71717a;
+          --border: #27272a;
+          --accent: #3b82f6;
+          --done-bg: #052e16;
+          --inflight-bg: #422006;
+          --blocked-bg: #450a0a;
+          --pending-bg: #1f1f23;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 1100px; margin: 0 auto; padding: 56px 24px 80px; }
+      header { margin-bottom: 32px; }
+      .crumb { font-size: 13px; color: var(--ink-subtle); margin-bottom: 12px; }
+      .crumb a { color: var(--ink-muted); text-decoration: none; }
+      .crumb a:hover { text-decoration: underline; }
+      h1 { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 6px; }
+      .subtitle { color: var(--ink-muted); font-size: 15px; margin: 0 0 20px; max-width: 64ch; }
+      .meta-row {
+        display: flex; gap: 18px; flex-wrap: wrap;
+        font-size: 12px; color: var(--ink-subtle);
+      }
+      .meta-row a { color: var(--accent); text-decoration: none; }
+      .meta-row a:hover { text-decoration: underline; }
+
+      .columns {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-top: 24px;
+      }
+      @media (max-width: 900px) {
+        .columns { grid-template-columns: 1fr; }
+      }
+      .col {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        box-shadow: var(--shadow);
+        min-height: 200px;
+      }
+      .col-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        margin-bottom: 14px;
+      }
+      .count {
+        font-size: 11px;
+        background: var(--pending-bg);
+        color: var(--ink-muted);
+        padding: 2px 7px;
+        border-radius: 99px;
+        letter-spacing: 0;
+      }
+
+      .card-item {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 11px 13px;
+        background: var(--bg);
+        margin-bottom: 10px;
+      }
+      .card-item:last-child { margin-bottom: 0; }
+      .card-title {
+        font-size: 13px;
+        font-weight: 600;
+        margin: 0 0 4px;
+      }
+      .card-note {
+        font-size: 12px;
+        color: var(--ink-muted);
+        margin: 0;
+      }
+
+      .col-done .col-head { color: var(--done); }
+      .col-inflight .col-head { color: var(--inflight); }
+      .col-blocked .col-head { color: var(--blocked); }
+      .col-pending .col-head { color: var(--pending); }
+
+      .col-done { background: var(--done-bg); border-color: transparent; }
+      .col-inflight { background: var(--inflight-bg); border-color: transparent; }
+      .col-blocked { background: var(--blocked-bg); border-color: transparent; }
+
+      .section { margin-top: 40px; }
+      .section h2 {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        margin: 0 0 14px;
+      }
+      .links {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;
+      }
+      .link-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 14px;
+        text-decoration: none;
+        color: inherit;
+        font-size: 13px;
+      }
+      .link-card:hover { border-color: var(--ink-subtle); }
+      .link-card .lbl { display: block; font-size: 11px; color: var(--ink-subtle); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.08em; }
+      .link-card .val { font-weight: 600; word-break: break-all; }
+
+      footer { margin-top: 56px; font-size: 12px; color: var(--ink-subtle); }
+      footer a { color: var(--ink-muted); text-decoration: underline; text-underline-offset: 3px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="crumb"><a href="../">← All projects</a></div>
+      <header>
+        <h1>Sponsored Listicle Writer</h1>
+        <p class="subtitle">Generates paid-placement listicles for authoritative host sites. Operator gives a keyword and up to three top-pick landing pages; the chain researches competitors, writes the article in markdown + HTML, and produces a hero image.</p>
+        <div class="meta-row">
+          <span>Coreshift HQ — Internal</span>
+          <a href="https://github.com/core-ricky/sponsored-listicle-writer" target="_blank" rel="noopener">repo →</a>
+          <a href="https://sponsored-listicle-writer-staging.up.railway.app" target="_blank" rel="noopener">staging →</a>
+          <a href="https://sponsored-listicle-writer-production.up.railway.app" target="_blank" rel="noopener">production →</a>
+        </div>
+      </header>
+
+      <div class="columns">
+        <div class="col col-done">
+          <div class="col-head"><span>Done</span><span class="count">4</span></div>
+          <div class="card-item">
+            <p class="card-title">GitHub repo + branches</p>
+            <p class="card-note">core-ricky/sponsored-listicle-writer with dev / staging / main.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Next.js 16 scaffold</p>
+            <p class="card-note">App router, Tailwind v4, shadcn/ui. Supabase + Anthropic + Google GenAI SDKs installed.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Supabase project</p>
+            <p class="card-note">ref ltyihhtejbogdqccxqvc, Sydney region. Anon + service-role keys wired into Railway envs.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Railway project + envs</p>
+            <p class="card-note">production + staging environments. Domains generated. Deploy workflow committed (awaits RAILWAY_TOKEN).</p>
+          </div>
+        </div>
+
+        <div class="col col-inflight">
+          <div class="col-head"><span>In flight</span><span class="count">1</span></div>
+          <div class="card-item">
+            <p class="card-title">Phase 2 — DB schema</p>
+            <p class="card-note">jobs, job_artifacts, verify_markers, validator_findings. Storage bucket for hero images.</p>
+          </div>
+        </div>
+
+        <div class="col col-blocked">
+          <div class="col-head"><span>Blocked / awaiting</span><span class="count">3</span></div>
+          <div class="card-item">
+            <p class="card-title">RAILWAY_TOKEN secret</p>
+            <p class="card-note">Operator to create at railway.com/project/.../settings/tokens and paste; will be added as GitHub Actions secret.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Anthropic API key (rotated)</p>
+            <p class="card-note">Previous key was exposed in chat; awaiting rotated value.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Google Vertex service account (rotated)</p>
+            <p class="card-note">Previous JSON private key was exposed in chat; awaiting rotated value.</p>
+          </div>
+        </div>
+
+        <div class="col col-pending">
+          <div class="col-head"><span>Up next</span><span class="count">5</span></div>
+          <div class="card-item">
+            <p class="card-title">Phase 3 — Chain</p>
+            <p class="card-note">5 steps: research (web search), outline, write, HTML render, hero image (Gemini 3).</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Phase 4 — Validator</p>
+            <p class="card-note">Banned phrases, em/en-dash caps, bold-rules, unsourced-numeric heuristics, [VERIFY:] extraction.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Phase 5 — UI</p>
+            <p class="card-note">Single input screen, live progress, three-panel output, verify checklist, job history.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Phase 6 — Telemetry</p>
+            <p class="card-note">Per-job cost + latency, /admin/stats aggregate.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Cloudflare DNS</p>
+            <p class="card-note">listicles.coreshifthq.com → Railway production domain. Last step.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Quick links</h2>
+        <div class="links">
+          <a class="link-card" href="https://github.com/core-ricky/sponsored-listicle-writer" target="_blank" rel="noopener">
+            <span class="lbl">GitHub repo</span>
+            <span class="val">core-ricky/sponsored-listicle-writer</span>
+          </a>
+          <a class="link-card" href="https://supabase.com/dashboard/project/ltyihhtejbogdqccxqvc" target="_blank" rel="noopener">
+            <span class="lbl">Supabase project</span>
+            <span class="val">ltyihhtejbogdqccxqvc</span>
+          </a>
+          <a class="link-card" href="https://railway.com/project/a97f2112-1aa2-4a15-b4f7-7282ee525da3" target="_blank" rel="noopener">
+            <span class="lbl">Railway project</span>
+            <span class="val">a97f2112-…ee525da3</span>
+          </a>
+          <a class="link-card" href="https://sponsored-listicle-writer-staging.up.railway.app" target="_blank" rel="noopener">
+            <span class="lbl">Staging URL</span>
+            <span class="val">sponsored-listicle-writer-staging.up.railway.app</span>
+          </a>
+        </div>
+      </div>
+
+      <footer>
+        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a>
+      </footer>
+    </div>
+  </body>
+</html>
