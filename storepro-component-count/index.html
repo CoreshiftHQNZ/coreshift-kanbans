@@ -133,7 +133,7 @@
           <p class="subtitle">Automated component counting + racking design review · Storepro App Module 3</p>
         </div>
         <div class="meta">
-          Last updated <strong>2026-05-14 (late PM)</strong><br />
+          Last updated <strong>2026-05-14 (evening)</strong><br />
           <a href="https://github.com/CoreshiftHQNZ/storepro-component-count" target="_blank" rel="noopener">repo</a> ·
           <a href="https://github.com/CoreshiftHQNZ/storepro-component-count/blob/main/docs/build-proposal.md" target="_blank" rel="noopener">build proposal</a>
         </div>
@@ -143,8 +143,8 @@
         <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Build phases</div>
         <div class="progress-bars">
           <div class="pbar"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Vision pipeline</div><div class="pbar-track"><div class="pbar-fill" style="width: 40%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Rules + AI reviewer</div><div class="pbar-track"><div class="pbar-fill" style="width: 15%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Vision pipeline</div><div class="pbar-track"><div class="pbar-fill" style="width: 50%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Rules + AI reviewer</div><div class="pbar-track"><div class="pbar-fill" style="width: 60%"></div></div></div>
           <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Review UI</div><div class="pbar-track"><div class="pbar-fill" style="width: 75%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Integration + pilot</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
         </div>
@@ -219,7 +219,7 @@
         <div class="col done">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Done</div>
-            <div class="col-count">18</div>
+            <div class="col-count">23</div>
           </div>
           <div class="col-body">
             <div class="card">
@@ -307,6 +307,36 @@
               <p class="card-title">Drawing-conventions recommendations doc</p>
               <p class="card-note"><code>docs/drawing-conventions.md</code> — 13 recommendations for Storepro to author drawings the app parses more reliably. Three tiers (low-effort high-impact → nice-to-have). The two biggest leverage items: consistent block library + bay-type rectangles as real blocks.</p>
             </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-29</span></div>
+              <p class="card-title">Rules-engine unit tests (6/6 PASS)</p>
+              <p class="card-note">tests/test_rules_engine.py guards: library loads with expected canonicals, alias lookup canonicalises known names, alias rejection of short generic substrings (XREF regression), rules.yaml has required keys, apply_rules emits expected output on Sigma-like counts, mesh_back_connectors maths is correct. Wired into <code>make test</code> + GitHub Actions CI.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-30</span></div>
+              <p class="card-title">Makefile for one-command local dev</p>
+              <p class="card-note"><code>make dev</code> boots API + web together. <code>make test</code> runs parser smoke + API import + 6 unit tests. <code>make e2e</code> runs the full-stack regression. <code>make install</code> installs both stacks. <code>make clean</code> nukes caches.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-31</span></div>
+              <p class="card-title">v3 vision approach: glyph-detection</p>
+              <p class="card-note">parser/vision/ocr_glyphs.py finds dark text-glyph blobs in row bands, groups adjacent glyphs into labels, OCRs each. Best location accuracy of any approach so far: 376 candidates vs 289 expected bays. OCR engine resolution still the bottleneck — captured in vision/README + path-forward options.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-32</span></div>
+              <p class="card-title">Designer-practices doc (companion to drawing-conventions)</p>
+              <p class="card-note">docs/designer-practices.md — 17 habits across "before drawing → while drawing → before sign-off → at export → quarterly". TL;DR: insert from library never type, every component on its semantic layer every time, re-count visually before sign-off.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-33</span></div>
+              <p class="card-title">AI design-reviewer wired (Claude vision)</p>
+              <p class="card-note">api/services/reviewer.py now makes the actual Claude vision call — structured prompt with parsed count + rules + flags, optional sheet PNG images, returns JSON array of severity-tagged comments. Gated on ANTHROPIC_API_KEY (disabled path is a no-op). API attaches ai_comments to every job result. Verified E2E still passes (7/7 components match) in the disabled path.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-34</span></div>
+              <p class="card-title">Claude vision OCR fallback module</p>
+              <p class="card-note">parser/vision/claude_ocr.py — when Tesseract can't read a label crop, route it to Claude vision in batches of 20. anthropic SDK installed; activates when ANTHROPIC_API_KEY is set. Disabled path returns aligned None values without any API call.</p>
+            </div>
           </div>
         </div>
 
@@ -348,9 +378,9 @@
               <p class="card-note">Detect end-of-row bays geometrically; apply frame-sharing rule (row of N bays → N+1 frames, not 2N). Reads end vs mid from the elevation drawing's frame variants.</p>
             </div>
             <div class="card">
-              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-14b</span></div>
-              <p class="card-title">AI design-reviewer — wire the Claude vision call</p>
-              <p class="card-note">Stub is in place at <code>api/services/reviewer.py</code>. Wire the actual Claude vision request: sheet PNGs + parsed count + rules trace as input, structured commentary as output. Gated on ANTHROPIC_API_KEY at deploy time.</p>
+              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-14c</span></div>
+              <p class="card-title">Set ANTHROPIC_API_KEY and demo the AI reviewer</p>
+              <p class="card-note">Wiring is in place (SCC-33). Setting the env var unblocks the actual Claude vision call. Will produce JSON-array comments per job. Test path: run e2e_dwg_count.sh with the env var set, observe ai_comments in the response.</p>
             </div>
             <div class="card">
               <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-23</span></div>
