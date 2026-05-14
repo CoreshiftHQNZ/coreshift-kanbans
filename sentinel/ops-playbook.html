@@ -386,6 +386,7 @@
         <a href="#deploys"><span class="play-num">04</span><span>Deploy Pipeline</span></a>
         <a href="#bug-reports"><span class="play-num">05</span><span>Bug Reports</span></a>
         <a href="#app-audits"><span class="play-num">06</span><span>App Audits</span></a>
+        <a href="#triage"><span class="play-num">07</span><span>Triage Rhythm</span></a>
         <div class="nav-foot">
           Internal · v1 · May 2026<br>
           For Coreshift HQ team
@@ -1804,9 +1805,131 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 <li><code>HOW-WE-DO-PRIORITY.md</code> — how audit failures get triaged</li>
 <li><code>HOW-WE-DO-DEPLOYS.md</code> — Type C migrations (the usual fix path for RLS / schema gaps)</li>
 <li><code>HOW-WE-DO-INCIDENTS.md</code> — when a failure is severe enough to be incident-mode</li>
-<li><code>../ROADMAP.md</code> — Phase 4 (Sentinel) — passing this audit is the gate for any new app joining</li>
+<li><code>../ROADMAP.md</code> — Phase 3 (Sentinel) — passing this audit is the gate for any new app joining</li>
 <li><a href="https://supabase.com/docs/guides/database/database-advisors">Supabase Database Advisors docs</a></li>
 <li><a href="https://developers.cloudflare.com/waf/">Cloudflare WAF docs</a></li>
+</ul>
+</div>
+      </section>
+
+      <section id="triage" class="play" data-accent="teal">
+        <div class="play-header">
+          <span class="play-eyebrow">PLAY 7</span>
+        </div>
+        <h2 class="play-title">Triage Rhythm</h2>
+        <p class="play-tagline">Ten minutes every morning. Empty the column.</p>
+        <div class="play-divider"></div>
+        <div class="md"><p><strong>Status:</strong> Active · v1 · 2026-05-14
+<strong>Applies to:</strong> Every operator-day across every Coreshift HQ app
+<strong>Owners:</strong> Operator (does the triage) · Tools (queue the work)</p>
+<hr>
+<h2>What this doc is</h2>
+<p>The daily 10-minute ritual that keeps Sentinel honest. Where you set priority, where you decide what to hand to Claude Code, and where you spot patterns. Designed so a tired operator on a busy morning can run it mechanically.</p>
+<hr>
+<h2>The principle</h2>
+<p><strong>Consistent rhythm beats heroic catch-up.</strong></p>
+<p>Ten minutes every morning is dramatically more effective than two hours every Friday when the backlog has gone feral. The ritual is the discipline — not the act of triaging itself.</p>
+<p>The ritual has one job: empty the Triage column. Anything else (fixing, replying, reviewing) is downstream work.</p>
+<hr>
+<h2>The 10-minute morning routine</h2>
+<p>Run this every working morning. Sit down, set a timer, go.</p>
+<h3>Step 1 · Skim the front door (1 min)</h3>
+<p>Open these in tabs, in order:</p>
+<ol>
+<li>Sentinel Dashboard <em>(when Phase 3 ships — until then: Gmail with the <code>KeyContent/Bug</code>, <code>/Suggestion</code>, <code>/Question</code> labels)</em></li>
+<li>Better Stack monitors page — anything red?</li>
+<li>Sentry — any new unresolved issues in <code>keycontent-frontend</code> or <code>keycontent-backend</code> since yesterday?</li>
+</ol>
+<p>If anything is on fire (Better Stack red, Sentry spike, P0-shaped report), <strong>abort the ritual and go to <code>HOW-WE-DO-INCIDENTS.md</code>.</strong> Triage waits.</p>
+<h3>Step 2 · Drain the Triage column (5-7 min)</h3>
+<p>For each card in Triage:</p>
+<ol>
+<li>Read the message + look at the screenshot (~10 sec)</li>
+<li>Set the three fields:<ul>
+<li><strong>Priority</strong> — P0/P1/P2/P3 <em>(only required for Bug type — see <code>HOW-WE-DO-PRIORITY.md</code>)</em></li>
+<li><strong>Blast radius</strong> — single / some / many / all <em>(only required for Bug type)</em></li>
+<li><strong>Narrative</strong> — one-line user-impact story</li>
+</ul>
+</li>
+<li>Decide where the card goes next:<ul>
+<li><strong>Spam / duplicate / nonsense</strong> → delete (or <code>wontfix</code> it)</li>
+<li><strong>Don&#39;t have time today, will get to it</strong> → drag to <strong>To Do</strong></li>
+<li><strong>Acting on it right now</strong> → drag to <strong>In Progress</strong>, hand brief to Claude Code</li>
+</ul>
+</li>
+</ol>
+<p>Per-card target: ~30 seconds for Bugs, ~10 seconds for Suggestions and Questions.</p>
+<h3>Step 3 · Glance at In Review (1 min)</h3>
+<p>Any open PRs from Claude Code in In Review? If yes, you owe them a verification pass — but not now. Note them mentally; do the verification after the ritual.</p>
+<h3>Step 4 · Close out (1 min)</h3>
+<ul>
+<li>Anything blocked or stuck for &gt;24 hours? Flag in your notes.</li>
+<li>Anything finished overnight that should move to Done? Move it. Resolution emails fire automatically.</li>
+<li>Note any pattern: same kind of bug 3 days in a row → that&#39;s a Sentinel insight, not just a triage item.</li>
+</ul>
+<hr>
+<h2>What &quot;drain the Triage column&quot; actually means</h2>
+<p><strong>Triage column empty at the end of the ritual is the goal.</strong> Every card should have either:</p>
+<ul>
+<li>Moved out (to To Do, In Progress, or Done)</li>
+<li>Been deleted/won&#39;t-fixed</li>
+<li>Been triaged in place with priority + radius + narrative (if you genuinely can&#39;t decide where it goes yet)</li>
+</ul>
+<p>If you leave cards in Triage untouched, tomorrow you have yesterday&#39;s triage + today&#39;s. That compounds. Don&#39;t.</p>
+<hr>
+<h2>What to do when the Triage column is empty</h2>
+<p>Celebrate, then close the tab. Don&#39;t go looking for work in other columns — that&#39;s not what the ritual is for. Resolution + fix work happens in its own time.</p>
+<h2>What to do when the Triage column is overflowing</h2>
+<p>If you log in and see 15+ untriaged cards:</p>
+<ol>
+<li><strong>Don&#39;t try to do all of them.</strong> Set the 10-minute timer and run normally.</li>
+<li>Take the <strong>highest-priority signal first</strong> — anything with P0-shaped wording in the message (&quot;can&#39;t log in,&quot; &quot;lost my data,&quot; &quot;page broken&quot;) jumps the queue.</li>
+<li>Anything obviously low-priority (typos, polish, feature requests) — batch-triage them as P3 / &quot;park in To Do&quot; with no narrative. Don&#39;t write narratives for things you won&#39;t work on.</li>
+<li>If 15+ overflowing happens twice in a row, that&#39;s a signal: either you have a real influx (new launch?), or the triage rhythm isn&#39;t being honored. Both deserve attention beyond the ritual.</li>
+</ol>
+<hr>
+<h2>When NOT to triage</h2>
+<ul>
+<li><strong>In the middle of an incident</strong> — <code>HOW-WE-DO-INCIDENTS.md</code> takes priority. Triage waits.</li>
+<li><strong>At 1 AM</strong> — the 1 AM Rule says do the minimum. Triage isn&#39;t the minimum; rollback + sleep is.</li>
+<li><strong>When you haven&#39;t read a single report&#39;s message</strong> — don&#39;t skim three at once and assign priorities. Read each one fully or skip the whole ritual.</li>
+</ul>
+<hr>
+<h2>Why we elevated the standard</h2>
+<p>Most engineering orgs have &quot;triage meetings&quot; — weekly hour-long sessions where a group reviews tickets. That doesn&#39;t scale to a solo operator running multiple apps, and it doesn&#39;t catch problems fast enough (a P0 bug shouldn&#39;t wait a week for a meeting).</p>
+<p>Our elevations:</p>
+<ol>
+<li><strong>Daily ritual, not weekly meeting</strong> — the cost of being late on a P0 is too high</li>
+<li><strong>Single operator, no coordination overhead</strong> — you triage, you decide, you move on</li>
+<li><strong>Timer-bounded</strong> — 10 minutes hard cap forces speed. Better to triage 10 cards in 10 minutes than 1 card in 30.</li>
+<li><strong>Empty-the-column discipline</strong> — &quot;completed triage&quot; is a binary state, not a feeling</li>
+<li><strong>Skip-when-on-fire rule</strong> — incidents trump rituals</li>
+<li><strong>Type-aware shortcuts</strong> — Suggestions and Questions don&#39;t need the full priority pass (per <code>HOW-WE-DO-PRIORITY.md</code>)</li>
+</ol>
+<p>The trade: 10 minutes of focused attention every weekday morning. The gain: nothing rots, patterns become visible, and the queue never becomes a thing you&#39;re afraid to open.</p>
+<hr>
+<h2>How this lives in practice</h2>
+<ul>
+<li><strong>Before Phase 3:</strong> triage happens across Gmail labels, Sentry, Better Stack tabs. Friction is real; ritual still helps.</li>
+<li><strong>After Phase 3:</strong> triage happens entirely in the Sentinel Dashboard. The 5-column board is the surface.</li>
+<li><strong>When Noozey onboards (Phase 4):</strong> the ritual is the same. Same 10 minutes covers both apps because both feed the same Dashboard.</li>
+<li><strong>When a third app arrives:</strong> still 10 minutes if the discipline holds. Sentinel&#39;s elevation is &quot;operator&#39;s attention is the bottleneck, not engineering time&quot; — keeping triage tight is what makes that work.</li>
+</ul>
+<hr>
+<h2>When this doc changes</h2>
+<ul>
+<li>When the Dashboard ships and the rhythm shifts from tab-hopping to single-screen</li>
+<li>When a new app onboards and the rhythm needs cross-app considerations</li>
+<li>After any week where the ritual didn&#39;t run — figure out why, fix the friction</li>
+<li>When the timer-bounded 10 minutes is regularly insufficient — symptom of volume change, deserves its own response</li>
+</ul>
+<hr>
+<h2>See also</h2>
+<ul>
+<li><code>HOW-WE-DO-PRIORITY.md</code> — what priority, radius, narrative actually mean</li>
+<li><code>HOW-WE-DO-INCIDENTS.md</code> — what to do when triage gets pre-empted by a real fire</li>
+<li><code>HOW-WE-DO-BUG-REPORTS.md</code> — where the cards in Triage come from</li>
+<li><code>../ROADMAP.md</code> — Phase 1 Week 4 (this doc is the deliverable for &quot;Triage rhythm locked&quot;)</li>
 </ul>
 </div>
       </section>
