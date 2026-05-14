@@ -133,7 +133,7 @@
           <p class="subtitle">Automated component counting + racking design review · Storepro App Module 3</p>
         </div>
         <div class="meta">
-          Last updated <strong>2026-05-14</strong><br />
+          Last updated <strong>2026-05-14 (PM)</strong><br />
           <a href="https://github.com/CoreshiftHQNZ/storepro-component-count" target="_blank" rel="noopener">repo</a> ·
           <a href="https://github.com/CoreshiftHQNZ/storepro-component-count/blob/main/docs/build-proposal.md" target="_blank" rel="noopener">build proposal</a>
         </div>
@@ -143,9 +143,9 @@
         <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Build phases</div>
         <div class="progress-bars">
           <div class="pbar"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Vision pipeline</div><div class="pbar-track"><div class="pbar-fill" style="width: 5%"></div></div></div>
-          <div class="pbar future"><div class="pbar-label"><strong>M2</strong> Rules + AI reviewer</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
-          <div class="pbar future"><div class="pbar-label"><strong>M3</strong> Review UI</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Vision pipeline</div><div class="pbar-track"><div class="pbar-fill" style="width: 40%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Rules + AI reviewer</div><div class="pbar-track"><div class="pbar-fill" style="width: 15%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Review UI</div><div class="pbar-track"><div class="pbar-fill" style="width: 50%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Integration + pilot</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
         </div>
       </section>
@@ -219,7 +219,7 @@
         <div class="col done">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Done</div>
-            <div class="col-count">7</div>
+            <div class="col-count">14</div>
           </div>
           <div class="col-body">
             <div class="card">
@@ -257,6 +257,36 @@
               <p class="card-title">Kanban entry (this page)</p>
               <p class="card-note">Added to coreshift-kanbans index. Will be kept in sync as part of the work, not as a separate pass.</p>
             </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-8</span></div>
+              <p class="card-title">Sheet rasterisation pipeline (PDF → high-res PNG)</p>
+              <p class="card-note">poppler's pdftoppm wrapped in <code>parser/vision/rasterize.py</code>. 300 DPI default, configurable per-call. Emits per-page PNGs next to the source PDF.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-9</span></div>
+              <p class="card-title">Bay-rectangle detector v1 (colour + OCR + scanline) — partial</p>
+              <p class="card-note">Three approaches landed: hue-based (<code>detect_bays.py</code>), OCR-based via Tesseract (<code>ocr_bays.py</code>), scanline-based (<code>segment_bays.py</code>). First pass on Sigma plan view at ~57% recall — preprocessing tuning is next-session work. Architecture is sound; numbers improve with tuning, not refactoring.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-16</span></div>
+              <p class="card-title">FastAPI backend scaffolded</p>
+              <p class="card-note">api/main.py with <code>/api/health</code>, <code>POST /api/jobs</code>, <code>GET /api/jobs/{id}</code>. DXF parse path wired end-to-end (parser → rules → flags → JSON). DWG/PDF paths return an M1-work sentinel.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-17</span></div>
+              <p class="card-title">Next.js frontend scaffolded</p>
+              <p class="card-note">Next.js 15 + TypeScript + Tailwind 4. Single-page upload UI with component count table, rules trace, and compliance flags display. <code>NEXT_PUBLIC_API_URL</code> env var for the API origin.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-19</span></div>
+              <p class="card-title">Railway deploy config + GitHub Actions CI</p>
+              <p class="card-note">nixpacks.toml installs Python 3.11 + poppler + tesseract + libredwg system deps. railway.json for the web service. CI workflow runs parser smoke test + api import check + web typecheck/build on every push to dev/staging/main.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-14</span></div>
+              <p class="card-title">AI design-reviewer stubbed</p>
+              <p class="card-note"><code>api/services/reviewer.py</code> defines the interface, gates on <code>ANTHROPIC_API_KEY</code>, returns a placeholder until M2 wires the actual Claude vision call. Architecture sketch (request shape, model choice) captured in the module's docstring.</p>
+            </div>
           </div>
         </div>
 
@@ -268,9 +298,9 @@
           </div>
           <div class="col-body">
             <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-8</span></div>
-              <p class="card-title">Sheet rasterisation pipeline (PDF → high-res PNG)</p>
-              <p class="card-note">First step of the vision pipeline. poppler-utils installed locally; need a Python wrapper that takes a sheet PDF and emits a per-sheet PNG at the resolution + crop region the bay detector wants.</p>
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-9b</span></div>
+              <p class="card-title">Bay detector preprocessing tuning</p>
+              <p class="card-note">Close the gap from ~57% to >=95% recall on the Sigma capacity table. Candidates: adaptive threshold, per-bay tight crops via the segmenter, multi-pass merge across threshold values, Claude vision as a fallback for low-confidence bays.</p>
             </div>
           </div>
         </div>
@@ -279,23 +309,13 @@
         <div class="col next">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Next</div>
-            <div class="col-count">6</div>
+            <div class="col-count">5</div>
           </div>
           <div class="col-body">
             <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-9</span></div>
-              <p class="card-title">Bay-rectangle detection in plan views</p>
-              <p class="card-note">OpenCV-based: find coloured rectangles in the plan-view region, group by hue, count per group. First regression target: reproduce Sigma Phase 1 Stage 1 capacity table (S1=42, S2=29, S6=139, S8=79).</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-10</span></div>
-              <p class="card-title">S-label OCR</p>
-              <p class="card-note">Confirms bay-type assignment from the colour-based detection. Tesseract or EasyOCR — pick the one that handles small CAD text best on first test.</p>
-            </div>
-            <div class="card">
               <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-11</span></div>
               <p class="card-title">Elevation recipe extractor (per S-type)</p>
-              <p class="card-note">For each S-type, parse its elevation drawing: count beam levels, OCR weight ratings, detect mesh presence (red hatch pattern), differentiate mid-frame vs end-frame, read upright spec from dimension text.</p>
+              <p class="card-note">For each S-type, parse its elevation drawing: count beam levels, OCR weight ratings, detect mesh presence (red hatch pattern), differentiate mid-frame vs end-frame, read upright spec from dimension text. Same OCR + scanline tools as the bay detector.</p>
             </div>
             <div class="card">
               <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-12</span></div>
@@ -308,9 +328,14 @@
               <p class="card-note">Detect end-of-row bays geometrically; apply frame-sharing rule (row of N bays → N+1 frames, not 2N). Reads end vs mid from the elevation drawing's frame variants.</p>
             </div>
             <div class="card">
-              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-14</span></div>
-              <p class="card-title">AI design-reviewer wiring</p>
-              <p class="card-note">Claude vision + parsed data + rule output. Produces compliance commentary (missing/wrong items) for the estimator to read before approval. Always advisory, never authoritative.</p>
+              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-14b</span></div>
+              <p class="card-title">AI design-reviewer — wire the Claude vision call</p>
+              <p class="card-note">Stub is in place at <code>api/services/reviewer.py</code>. Wire the actual Claude vision request: sheet PNGs + parsed count + rules trace as input, structured commentary as output. Gated on ANTHROPIC_API_KEY at deploy time.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-23</span></div>
+              <p class="card-title">Sheet preview in the review UI</p>
+              <p class="card-note">Render each parsed sheet inline with the detected bays highlighted. Lets the estimator visually verify before locking the count. Reuses the rasterize.py output + detection bounding boxes.</p>
             </div>
           </div>
         </div>
@@ -319,33 +344,23 @@
         <div class="col back">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Backlog</div>
-            <div class="col-count">8</div>
+            <div class="col-count">6</div>
           </div>
           <div class="col-body">
             <div class="card">
-              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-15</span></div>
-              <p class="card-title">Rules engine port — prototype → production</p>
-              <p class="card-note">Move the YAML rules + library from <code>parser/</code> into the production service layer; wire to the API so Storepro admins can edit via a future admin UI (later — initially they edit the YAML directly).</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-16</span></div>
-              <p class="card-title">FastAPI backend scaffold</p>
-              <p class="card-note">Endpoints: file upload, parse job kickoff, status polling, result retrieval. Wraps the parser + vision + rules + AI reviewer behind a clean API.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-17</span></div>
-              <p class="card-title">Next.js frontend scaffold</p>
-              <p class="card-note">Upload UI, job dashboard, review screen (sheet preview + count table + rule trace + AI flags), estimator approval flow. Tailwind for styling.</p>
-            </div>
-            <div class="card">
               <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-18</span></div>
               <p class="card-title">Microsoft 365 SSO via Supabase auth</p>
-              <p class="card-note">Storepro logs in with their existing M365 tenant. Standard Coreshift auth pattern — Supabase OIDC against Azure AD.</p>
+              <p class="card-note">Storepro logs in with their existing M365 tenant. Standard Coreshift auth pattern — Supabase OIDC against Azure AD. Blocked on Storepro IT providing tenant ID + app-registration credentials.</p>
             </div>
             <div class="card">
-              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-19</span></div>
-              <p class="card-title">Railway dev/staging/prod pipeline</p>
-              <p class="card-note">dev → staging (auto-deploy) → main (auto-deploy). GitHub Actions wires the auto-deploys. Standard Coreshift architecture.</p>
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-24</span></div>
+              <p class="card-title">Job persistence (Supabase)</p>
+              <p class="card-note">Currently jobs are in-memory in the API process. Move to a <code>jobs</code> table in Supabase so jobs survive restarts and can be listed across users.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-25</span></div>
+              <p class="card-title">Background job queue (Arq + Redis)</p>
+              <p class="card-note">Parses run inline today. Once the vision + AI reviewer are wired in, request latency will be too high for a sync flow — switch to a queue + worker model.</p>
             </div>
             <div class="card">
               <div class="card-head"><span class="chip m4">M4</span><span class="card-id">SCC-20</span></div>
