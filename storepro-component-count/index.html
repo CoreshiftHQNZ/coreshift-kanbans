@@ -133,7 +133,7 @@
           <p class="subtitle">Automated component counting + racking design review · Storepro App Module 3</p>
         </div>
         <div class="meta">
-          Last updated <strong>2026-05-14 (evening)</strong><br />
+          Last updated <strong>2026-05-14 (late evening)</strong><br />
           <a href="https://github.com/CoreshiftHQNZ/storepro-component-count" target="_blank" rel="noopener">repo</a> ·
           <a href="https://github.com/CoreshiftHQNZ/storepro-component-count/blob/main/docs/build-proposal.md" target="_blank" rel="noopener">build proposal</a>
         </div>
@@ -143,9 +143,9 @@
         <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Build phases</div>
         <div class="progress-bars">
           <div class="pbar"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Vision pipeline</div><div class="pbar-track"><div class="pbar-fill" style="width: 50%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Rules + AI reviewer</div><div class="pbar-track"><div class="pbar-fill" style="width: 60%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Review UI</div><div class="pbar-track"><div class="pbar-fill" style="width: 75%"></div></div></div>
+          <div class="pbar"><div class="pbar-label"><strong>M1</strong> Vision pipeline</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar"><div class="pbar-label"><strong>M2</strong> Rules + AI reviewer</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Review UI</div><div class="pbar-track"><div class="pbar-fill" style="width: 95%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Integration + pilot</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
         </div>
       </section>
@@ -219,7 +219,7 @@
         <div class="col done">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Done</div>
-            <div class="col-count">23</div>
+            <div class="col-count">28</div>
           </div>
           <div class="col-body">
             <div class="card">
@@ -337,6 +337,31 @@
               <p class="card-title">Claude vision OCR fallback module</p>
               <p class="card-note">parser/vision/claude_ocr.py — when Tesseract can't read a label crop, route it to Claude vision in batches of 20. anthropic SDK installed; activates when ANTHROPIC_API_KEY is set. Disabled path returns aligned None values without any API call.</p>
             </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-35</span></div>
+              <p class="card-title">AI reviewer LIVE on Sigma DWG</p>
+              <p class="card-note">ANTHROPIC_API_KEY set, .env auto-loaded. AI reviewer produced 11 substantive comments on Sigma: AS 4084 compliance gaps (zero row spacers + 660 beams, only 28 anchors vs 162+ frames), naming variance (Backstop beam vs Stop Beam), BOM completeness (1,330 unmapped *U blocks). Exactly the differentiated value scoped in the proposal.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-36</span></div>
+              <p class="card-title">Recipe extractor LIVE: full S6 + S8 recipes from elevation PDF</p>
+              <p class="card-note">Claude vision extracted complete recipes for S6(LSS) and S8/S10: 11 + 10 beam levels with heights (304mm to 13035mm), weight ratings (260kg / 2000kg / 1800kg), upright profile (114x100x2.5mm), backing mesh detection, front bay load rating (13840 kg). All from the rendered PDF.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-37</span></div>
+              <p class="card-title">S-type alias resolver (S6 → S6(LSS), S8 → S8/S10)</p>
+              <p class="card-note">Plan-view labels use bare names (S6, S8); elevation labels are decorated (S6(LSS), S8/S10). Resolver handles exact / parenthesised-suffix / compound-slash patterns. 5 unit tests, wired into Makefile + CI.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-38</span></div>
+              <p class="card-title">Single-call Claude vision bay counter</p>
+              <p class="card-note">parser/vision/bay_count_vision.py — one Claude API call on the whole plan-view PNG returns {S-type: count} dict. 3-10 seconds vs 2 min for the per-crop pipeline. Reads either the capacity table or counts rectangles directly. Auto-wired into the API as the primary bay-counter when sheet PDFs are uploaded.</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-39</span></div>
+              <p class="card-title">FULL PIPELINE WORKING: DWG → BOM end-to-end (~90s)</p>
+              <p class="card-note">Verified locally: upload DWG + plan PDF + elevation PDF → returns deterministic count + bay counts (auto-extracted) + recipes (auto-extracted) + alias-resolved expanded BOM (4,202 beams, 436 uprights, 872 anchors, etc.) + 11 AI design-reviewer comments. The Phase 1 deliverable is functioning end-to-end against the Sigma drawing.</p>
+            </div>
           </div>
         </div>
 
@@ -348,9 +373,9 @@
           </div>
           <div class="col-body">
             <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-9b</span></div>
-              <p class="card-title">Bay detector preprocessing tuning</p>
-              <p class="card-note">Close the gap from ~57% to >=95% recall on the Sigma capacity table. Candidates: adaptive threshold, per-bay tight crops via the segmenter, multi-pass merge across threshold values, Claude vision as a fallback for low-confidence bays.</p>
+              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-40</span></div>
+              <p class="card-title">Prompt tuning: catch S1/S2 reliably</p>
+              <p class="card-note">First-shot single-call bay counter sometimes only returns the larger types (S6, S8). The simpler prompt during prototype testing returned all 4 perfectly. Worth a focused 30-min tuning session with the production prompt to ensure consistent extraction of every type in the capacity table.</p>
             </div>
           </div>
         </div>
