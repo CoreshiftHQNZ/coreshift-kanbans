@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Velocity — Kanban</title>
+    <meta name="description" content="Build status for Velocity, the agentic sales OS for Growth Partners and Coreshift HQ." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🚀%3C/text%3E%3C/svg%3E" />
+    <style>
+      :root {
+        --bg: #fafaf9;
+        --card: #ffffff;
+        --ink: #18181b;
+        --ink-muted: #71717a;
+        --ink-subtle: #a1a1aa;
+        --border: #e4e4e7;
+        --accent: #2563eb;
+        --done: #16a34a;
+        --done-bg: #dcfce7;
+        --inflight: #ca8a04;
+        --inflight-bg: #fef9c3;
+        --blocked: #dc2626;
+        --blocked-bg: #fee2e2;
+        --pending: #71717a;
+        --pending-bg: #f4f4f5;
+        --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+        --radius: 10px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0a0a;
+          --card: #18181b;
+          --ink: #fafafa;
+          --ink-muted: #a1a1aa;
+          --ink-subtle: #71717a;
+          --border: #27272a;
+          --accent: #3b82f6;
+          --done-bg: #052e16;
+          --inflight-bg: #422006;
+          --blocked-bg: #450a0a;
+          --pending-bg: #1f1f23;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 1100px; margin: 0 auto; padding: 56px 24px 80px; }
+      header { margin-bottom: 32px; }
+      .crumb { font-size: 13px; color: var(--ink-subtle); margin-bottom: 12px; }
+      .crumb a { color: var(--ink-muted); text-decoration: none; }
+      .crumb a:hover { text-decoration: underline; }
+      h1 { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 6px; }
+      .subtitle { color: var(--ink-muted); font-size: 15px; margin: 0 0 20px; max-width: 64ch; }
+      .meta-row {
+        display: flex; gap: 18px; flex-wrap: wrap;
+        font-size: 12px; color: var(--ink-subtle);
+      }
+      .meta-row a { color: var(--accent); text-decoration: none; }
+      .meta-row a:hover { text-decoration: underline; }
+
+      .columns {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-top: 24px;
+      }
+      @media (max-width: 900px) {
+        .columns { grid-template-columns: 1fr; }
+      }
+      .col {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        box-shadow: var(--shadow);
+        min-height: 200px;
+      }
+      .col-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        margin-bottom: 14px;
+      }
+      .count {
+        font-size: 11px;
+        background: var(--pending-bg);
+        color: var(--ink-muted);
+        padding: 2px 7px;
+        border-radius: 99px;
+        letter-spacing: 0;
+      }
+
+      .card-item {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 11px 13px;
+        background: var(--bg);
+        margin-bottom: 10px;
+      }
+      .card-item:last-child { margin-bottom: 0; }
+      .card-title {
+        font-size: 13px;
+        font-weight: 600;
+        margin: 0 0 4px;
+      }
+      .card-note {
+        font-size: 12px;
+        color: var(--ink-muted);
+        margin: 0;
+      }
+
+      .col-done .col-head { color: var(--done); }
+      .col-inflight .col-head { color: var(--inflight); }
+      .col-blocked .col-head { color: var(--blocked); }
+      .col-pending .col-head { color: var(--pending); }
+
+      .col-done { background: var(--done-bg); border-color: transparent; }
+      .col-inflight { background: var(--inflight-bg); border-color: transparent; }
+      .col-blocked { background: var(--blocked-bg); border-color: transparent; }
+
+      .section { margin-top: 40px; }
+      .section h2 {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        margin: 0 0 14px;
+      }
+      .links {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;
+      }
+      .link-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 14px;
+        text-decoration: none;
+        color: inherit;
+        font-size: 13px;
+      }
+      .link-card:hover { border-color: var(--ink-subtle); }
+      .link-card .lbl { display: block; font-size: 11px; color: var(--ink-subtle); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.08em; }
+      .link-card .val { font-weight: 600; word-break: break-all; }
+
+      footer { margin-top: 56px; font-size: 12px; color: var(--ink-subtle); }
+      footer a { color: var(--ink-muted); text-decoration: underline; text-underline-offset: 3px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="crumb"><a href="../">← All projects</a></div>
+      <header>
+        <h1>Velocity</h1>
+        <p class="subtitle">Agentic sales operating system for Growth Partners and Coreshift HQ — one engine, two playbooks. Internal sales OS (pipeline, deals, anti-stall scheduler, commission engine) plus a customer-facing portal with Nirvana AI agent under hard rails. Built by Mal solo with Claude.</p>
+        <div class="meta-row">
+          <span>Coreshift HQ × Growth Partners</span>
+          <a href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">repo →</a>
+          <span>v0.2 · 16 commits on dev · never deployed</span>
+        </div>
+      </header>
+
+      <div class="columns">
+        <div class="col col-done">
+          <div class="col-head"><span>Done</span><span class="count">10</span></div>
+          <div class="card-item">
+            <p class="card-title">GitHub repo + branches</p>
+            <p class="card-note">CoreshiftHQNZ/velocity with dev / staging / main. Deploy workflows committed (dev → staging auto, staging → main manual via workflow_dispatch).</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Spec docs (Nirvana → Code handoff)</p>
+            <p class="card-note">3 docs in /docs/specs: BUILD-HANDOFF (60KB), SYSTEM-V1, SALES-CYCLE-V1. Plus standards: architecture, auth, storage. Treated as source of truth.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Supabase project + schema</p>
+            <p class="card-note">ref uodsmyystkaxoogitvsw, ap-southeast-2. 32 tables pushed via drizzle-kit push. Multi-tenant from day one (tenant_id + playbook_id on every scoped row).</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Backend (Express + Drizzle)</p>
+            <p class="card-note">Auth via Supabase JWT (JWKS verified). 20 route files in flat /server/routes/. Tenant scoping in middleware (no Supabase RLS by convention). Audit logging on every agent call.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Frontend (React + Vite + Wouter)</p>
+            <p class="card-note">Dashboard, Pipeline kanban, Deal detail, Companies, Win/Loss, Commissions, Settings, Portal. Cmd+K search across deals/companies/people. AppShell with sidebar + playbook switcher.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">5 AI features + extractor</p>
+            <p class="card-note">Today's brief, pre-meeting brief, post-meeting recap, Day Zero insight pack, portal chat. Plus rolling-profile extractor from notes/transcripts/emails. Stub mode when no API key.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Customer portal with Nirvana hard rails</p>
+            <p class="card-note">Magic-link gated at /portal/:token. Buyer-safe projection strips internal fields. AI chat refuses to negotiate price/scope, never reveals internal data, never pretends to be human. Price/scope keywords auto-flag for Mal.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Anti-stall scheduler + commission engine</p>
+            <p class="card-note">In-process setInterval: hourly Rules 1-7 evaluation, daily forecast snapshots + nurture demotion. Commission rules auto-fire on Closed Won.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Seed data + smoke test</p>
+            <p class="card-note">6 demo deals across GP + CS (Aditi, Storepro, Hilltop Honey, Bright &amp; Bold, Mission Control, Equippers). 36-assertion smoke test all passing.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Local POC verified (Abe, 2026-05-15)</p>
+            <p class="card-note">Ran on Windows pointing at Mal's seeded Supabase. Abe added as admin in Coreshift tenant. Real Claude wired via Anthropic key. Five AI features confirmed live.</p>
+          </div>
+        </div>
+
+        <div class="col col-inflight">
+          <div class="col-head"><span>In flight</span><span class="count">1</span></div>
+          <div class="card-item">
+            <p class="card-title">Code review feedback documented</p>
+            <p class="card-note">Abe's 2026-05-14 review captured 8 risks (drizzle-kit push, in-process scheduler, /objects/* no-auth, portal expiry never checked, commission errors swallowed, etc.). Listed in Up next — each becomes its own card once scoped.</p>
+          </div>
+        </div>
+
+        <div class="col col-blocked">
+          <div class="col-head"><span>Blocked / awaiting operator</span><span class="count">7</span></div>
+          <div class="card-item">
+            <p class="card-title">Railway project not yet created</p>
+            <p class="card-note">No staging or production environment exists. Workflows are committed and will fire on push to dev, but they only build — Railway has to be set up + watching the staging branch before first deploy actually deploys.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">RAILWAY_TOKEN secret</p>
+            <p class="card-note">Once Railway project exists, generate token at railway.com → project settings → tokens, add as GitHub Actions secret on the repo. Currently the deploy workflow assumes Railway auto-watches the staging/main branches; no token push needed for that model, but worth verifying.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">First staging deploy</p>
+            <p class="card-note">staging branch is at the initial-commit SHA (2506973). Merge dev → staging once Railway is wired. Will validate the deploy-staging.yml workflow actually works end-to-end.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Supabase Storage bucket</p>
+            <p class="card-note">'velocity-files' not created. File-upload routes will 500 in prod. Create bucket in Supabase dashboard before deploying anything that uploads.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Anthropic API key for prod</p>
+            <p class="card-note">Local dev currently uses Mal's personal key. Decide whether Velocity gets a dedicated key under Coreshift HQ's Anthropic Console workspace and add as Railway env var per environment.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Cloudflare DNS strategy</p>
+            <p class="card-note">Confirm whether Velocity gets a coreshifthq.com subdomain (e.g. velocity.coreshifthq.com) or stays on Railway's *.up.railway.app. If subdomain — add CNAME in Cloudflare to Railway's custom-domain target.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Mal's local DATABASE_URL is stale</p>
+            <p class="card-note">Mal's local .env points at aws-0-ap-southeast-2.pooler.supabase.com — Supabase has migrated the project to aws-1. He should swap the host string before next dev session or the scheduler errors on boot.</p>
+          </div>
+        </div>
+
+        <div class="col col-pending">
+          <div class="col-head"><span>Up next</span><span class="count">10</span></div>
+          <div class="card-item">
+            <p class="card-title">Switch drizzle-kit push → generate + migrate</p>
+            <p class="card-note">Current db:push is destructive (can drop columns silently). Before any prod data exists, switch to migration files in git. Spec already calls for this; just not done yet.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Add tests to CI</p>
+            <p class="card-note">deploy-staging.yml runs npm run build only. Add npm run check (tsc) + npx tsx scripts/smoke-test.ts before the promote-to-staging step.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Move scheduler out of web process</p>
+            <p class="card-note">setInterval inside Express means 2 Railway instances double the alerts + race on nurture demotions. Fix: Postgres advisory lock around each job (cheapest), or move to Railway cron service.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Lock down /objects/* file route</p>
+            <p class="card-note">server/routes/files.ts:113 — public, no isAuthenticated. randomUUID paths make guessing hard but it's security by obscurity. Either delete (use signed URLs) or add auth + ownership check.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Portal magic-link expiry</p>
+            <p class="card-note">portal.ts sets magicLinkExpiresAt to 365 days AND never compares it on lookup. Two-line fix: shorten to 90 days default, check on every load. Add a 'Regenerate link' button on the deal page.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Surface commission engine errors</p>
+            <p class="card-note">deals.ts transition swallows commission errors silently — deal still moves to Won but commissionsResult shows {created:0, skipped:0}. Surface real error to client banner.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Index portal Day Zero document scan</p>
+            <p class="card-note">portal.ts:124 pulls every document for the tenant per buyer page-view, filters by title prefix in JS. Add index + WHERE clause.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">npm audit fix (9 vulns)</p>
+            <p class="card-note">6 moderate + 3 high inherited from app-template (incl. multer@1.x). Patch what's patchable, document the rest.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Per-user OAuth connector flows</p>
+            <p class="card-note">Schema + UI stubbed (Gmail, GCal, Fireflies, Otter, LinkedIn, HubSpot, Slack, Outlook, Teams). Each unblocks when Ricky adds the provider OAuth credentials to env. No code work needed per provider beyond the handler.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Wire into Sentinel monitoring</p>
+            <p class="card-note">/health endpoint exists, audit_logs table captures token usage. Once Velocity is on Railway, add to Sentinel's watch list as the second tracked app after KeyContent.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Quick links</h2>
+        <div class="links">
+          <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">
+            <span class="lbl">GitHub repo</span>
+            <span class="val">CoreshiftHQNZ/velocity</span>
+          </a>
+          <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity/tree/dev/docs/specs" target="_blank" rel="noopener">
+            <span class="lbl">Spec docs (Nirvana handoff)</span>
+            <span class="val">/docs/specs on dev</span>
+          </a>
+          <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity/blob/dev/TESTING.md" target="_blank" rel="noopener">
+            <span class="lbl">TESTING.md</span>
+            <span class="val">Demo flow for Ricky / Mal</span>
+          </a>
+          <a class="link-card" href="https://supabase.com/dashboard/project/uodsmyystkaxoogitvsw" target="_blank" rel="noopener">
+            <span class="lbl">Supabase project</span>
+            <span class="val">uodsmyystkaxoogitvsw</span>
+          </a>
+          <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity/commits/dev" target="_blank" rel="noopener">
+            <span class="lbl">Commit history</span>
+            <span class="val">16 commits on dev</span>
+          </a>
+        </div>
+      </div>
+
+      <footer>
+        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a>
+      </footer>
+    </div>
+  </body>
+</html>
