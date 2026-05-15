@@ -24,6 +24,12 @@
         --blocked-bg: #fee2e2;
         --pending: #71717a;
         --pending-bg: #f4f4f5;
+        --tag-demo-bg: #dbeafe;
+        --tag-demo-ink: #1e40af;
+        --tag-v10-bg: #ede9fe;
+        --tag-v10-ink: #5b21b6;
+        --tag-v11-bg: #f1f5f9;
+        --tag-v11-ink: #475569;
         --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
         --radius: 10px;
       }
@@ -40,6 +46,12 @@
           --inflight-bg: #422006;
           --blocked-bg: #450a0a;
           --pending-bg: #1f1f23;
+          --tag-demo-bg: #172554;
+          --tag-demo-ink: #93c5fd;
+          --tag-v10-bg: #2e1065;
+          --tag-v10-ink: #c4b5fd;
+          --tag-v11-bg: #1e293b;
+          --tag-v11-ink: #94a3b8;
         }
       }
       * { box-sizing: border-box; }
@@ -51,7 +63,7 @@
         line-height: 1.55;
         -webkit-font-smoothing: antialiased;
       }
-      .wrap { max-width: 1100px; margin: 0 auto; padding: 56px 24px 80px; }
+      .wrap { max-width: 1180px; margin: 0 auto; padding: 56px 24px 80px; }
       header { margin-bottom: 32px; }
       .crumb { font-size: 13px; color: var(--ink-subtle); margin-bottom: 12px; }
       .crumb a { color: var(--ink-muted); text-decoration: none; }
@@ -65,13 +77,22 @@
       .meta-row a { color: var(--accent); text-decoration: none; }
       .meta-row a:hover { text-decoration: underline; }
 
+      .milestones-banner {
+        margin: 18px 0 0; padding: 14px 16px;
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: var(--radius);
+        font-size: 13px; color: var(--ink-muted);
+      }
+      .milestones-banner strong { color: var(--ink); font-weight: 600; }
+      .milestones-banner .ms { display: inline-block; margin-right: 18px; }
+
       .columns {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 16px;
         margin-top: 24px;
       }
-      @media (max-width: 900px) {
+      @media (max-width: 1000px) {
         .columns { grid-template-columns: 1fr; }
       }
       .col {
@@ -110,6 +131,28 @@
         margin-bottom: 10px;
       }
       .card-item:last-child { margin-bottom: 0; }
+      .card-tags {
+        display: flex; gap: 6px; flex-wrap: wrap;
+        margin: 0 0 6px;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        padding: 1px 7px;
+        border-radius: 99px;
+        line-height: 1.6;
+      }
+      .tag-id {
+        background: var(--pending-bg);
+        color: var(--ink-muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        letter-spacing: 0;
+      }
+      .tag-demo { background: var(--tag-demo-bg); color: var(--tag-demo-ink); }
+      .tag-v10 { background: var(--tag-v10-bg); color: var(--tag-v10-ink); }
+      .tag-v11 { background: var(--tag-v11-bg); color: var(--tag-v11-ink); }
       .card-title {
         font-size: 13px;
         font-weight: 600;
@@ -129,6 +172,18 @@
       .col-done { background: var(--done-bg); border-color: transparent; }
       .col-inflight { background: var(--inflight-bg); border-color: transparent; }
       .col-blocked { background: var(--blocked-bg); border-color: transparent; }
+
+      .pending-group-head {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink-subtle);
+        margin: 14px 0 8px;
+        padding-top: 8px;
+        border-top: 1px dashed var(--border);
+      }
+      .pending-group-head:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
 
       .section { margin-top: 40px; }
       .section h2 {
@@ -164,25 +219,46 @@
       <div class="crumb"><a href="../">← All projects</a></div>
       <header>
         <h1>Velocity</h1>
-        <p class="subtitle">Agentic sales operating system for Growth Partners and Coreshift HQ — one engine, two playbooks. Internal sales OS (pipeline, deals, anti-stall scheduler, commission engine) plus a customer-facing portal with Nirvana AI agent under hard rails. Built by Mal solo with Claude.</p>
+        <p class="subtitle">Agentic sales operating system for Growth Partners and Coreshift HQ — one engine, two playbooks. Internal sales OS (pipeline, deals, anti-stall scheduler, commission engine) plus a customer-facing portal with Nirvana AI agent under hard rails. Built by Mal; V1 wired up by Abe.</p>
         <div class="meta-row">
           <span>Coreshift HQ × Growth Partners</span>
           <a href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">repo →</a>
           <a href="https://velocity-staging-staging.up.railway.app" target="_blank" rel="noopener">staging →</a>
-          <span>v0.2 · 16 commits on dev · staging deployed 2026-05-15</span>
+          <span>v0.3 · 20 commits on dev · staging deployed 2026-05-15 · prod not deployed</span>
+        </div>
+        <div class="milestones-banner">
+          <span class="ms"><span class="tag tag-demo">Demo</span> <strong>week of 2026-06-22</strong> — Aditi-demo-ready subset (UX, B4 living proposal, 25%/50% delight payloads, hardening)</span>
+          <span class="ms"><span class="tag tag-v10">V1.0</span> <strong>week of 2026-07-27</strong> — full V1.0, first prod deploy</span>
+          <span class="ms"><span class="tag tag-v11">V1.1</span> <strong>week of 2026-10-05</strong> — voice, 7 integrations, anti-overselling, remaining delight payloads</span>
         </div>
       </header>
 
       <div class="columns">
         <div class="col col-done">
-          <div class="col-head"><span>Done</span><span class="count">15</span></div>
+          <div class="col-head"><span>Done</span><span class="count">18</span></div>
+
           <div class="card-item">
-            <p class="card-title">🚀 First staging deploy live (Abe, 2026-05-15)</p>
-            <p class="card-note">https://velocity-staging-staging.up.railway.app · /health 200 · DB connected · real Claude wired · SPA serves. Build via Railpack (railpack v0.23, node 22.22.3, ap-southeast-2 region). Bypassed deploy-staging.yml workflow for first push (force-push dev:staging from local); workflow validation deferred.</p>
+            <div class="card-tags"><span class="tag tag-id">H3 + H4</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Security ship-blockers closed (PR #1, 2026-05-15)</p>
+            <p class="card-note">H3: deleted unauthed GET /objects/* file route + rewrote storage.md snippet so future agents copy the authed pattern. H4: portal magic-link now 90d (was 365 + never compared), expiry checked on all 3 public routes (410 expired), new POST /api/deals/:id/portal/rotate auth-gated endpoint + Regenerate button in PortalLink.tsx.</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">docs</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">V1 planning docs landed (2026-05-15)</p>
+            <p class="card-note">docs/planning/v1-work.md (spec-grounded breakdown, H/I/P/W/D/A/U/C taxonomy), v1-timeline.md (3-milestone framing + Mal email draft), handover.md (exhaustive next-session brief). H9 (split staging Supabase) added.</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">C2</span></div>
+            <p class="card-title">deploy-staging.yml workflow validated end-to-end</p>
+            <p class="card-note">Push to dev auto-promotes to staging via GitHub Actions. Default GITHUB_TOKEN scope sufficient; no 'permissions: contents: write' declaration needed. Confirmed 2026-05-15 16:25 PST.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">🚀 First staging deploy live (2026-05-15)</p>
+            <p class="card-note">https://velocity-staging-staging.up.railway.app · /health 200 · DB connected · real Claude wired · SPA serves. Build via Railpack (railpack v0.23, node 22.22.3, ap-southeast-2 region).</p>
           </div>
           <div class="card-item">
             <p class="card-title">Railway project + envs + services</p>
-            <p class="card-note">Project velocity (id 269e6e9a…) in Coreshift HQ workspace. Two envs: production (watches main, service 'velocity') + staging (watches staging, service 'velocity-staging'). Auto-deploy on branch push.</p>
+            <p class="card-note">Project velocity (id 269e6e9a…) in Coreshift HQ workspace. Two envs: production (watches main) + staging (watches staging). Auto-deploy on branch push.</p>
           </div>
           <div class="card-item">
             <p class="card-title">Supabase Storage bucket velocity-files</p>
@@ -190,11 +266,11 @@
           </div>
           <div class="card-item">
             <p class="card-title">Env vars on both Railway services</p>
-            <p class="card-note">DATABASE_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, STORAGE_BUCKET=velocity-files, ANTHROPIC_API_KEY, NODE_ENV=production. PORT deliberately unset (Railway provides). DNS stays on *.up.railway.app for now; Anthropic key reused across envs (revisit when prod traffic justifies a dedicated key).</p>
+            <p class="card-note">DATABASE_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, STORAGE_BUCKET=velocity-files, ANTHROPIC_API_KEY, NODE_ENV=production. PORT deliberately unset (Railway provides). DNS stays on *.up.railway.app for now.</p>
           </div>
           <div class="card-item">
-            <p class="card-title">Velocity kanban added to coreshift-kanbans (Abe, 2026-05-15)</p>
-            <p class="card-note">Published at coreshifthqnz.github.io/coreshift-kanbans/velocity/. Matches sponsored-listicle-writer pattern. Now linked from root index.</p>
+            <p class="card-title">Velocity kanban added to coreshift-kanbans</p>
+            <p class="card-note">Published at coreshifthqnz.github.io/coreshift-kanbans/velocity/. Linked from root index. Refreshed 2026-05-15 evening with V1 milestone framing.</p>
           </div>
           <div class="card-item">
             <p class="card-title">GitHub repo + branches</p>
@@ -206,7 +282,7 @@
           </div>
           <div class="card-item">
             <p class="card-title">Supabase project + schema</p>
-            <p class="card-note">ref uodsmyystkaxoogitvsw, ap-southeast-2. 32 tables pushed via drizzle-kit push. Multi-tenant from day one (tenant_id + playbook_id on every scoped row).</p>
+            <p class="card-note">ref uodsmyystkaxoogitvsw, ap-southeast-2. 32 tables pushed via drizzle-kit push. Multi-tenant from day one (tenant_id + playbook_id on every scoped row). H9 will split this into separate staging + prod projects.</p>
           </div>
           <div class="card-item">
             <p class="card-title">Backend (Express + Drizzle)</p>
@@ -222,11 +298,11 @@
           </div>
           <div class="card-item">
             <p class="card-title">Customer portal with Nirvana hard rails</p>
-            <p class="card-note">Magic-link gated at /portal/:token. Buyer-safe projection strips internal fields. AI chat refuses to negotiate price/scope, never reveals internal data, never pretends to be human. Price/scope keywords auto-flag for Mal.</p>
+            <p class="card-note">Magic-link gated at /portal/:token. Buyer-safe projection strips internal fields. AI chat refuses to negotiate price/scope, never reveals internal data, never pretends to be human. Price/scope keywords auto-flag for Mal. Expiry now enforced (H4).</p>
           </div>
           <div class="card-item">
             <p class="card-title">Anti-stall scheduler + commission engine</p>
-            <p class="card-note">In-process setInterval: hourly Rules 1-7 evaluation, daily forecast snapshots + nurture demotion. Commission rules auto-fire on Closed Won.</p>
+            <p class="card-note">In-process setInterval: hourly Rules 1-7 evaluation, daily forecast snapshots + nurture demotion. Commission rules auto-fire on Closed Won. H2 will wrap each job in pg_try_advisory_lock so 2 Railway instances don't double-fire.</p>
           </div>
           <div class="card-item">
             <p class="card-title">Seed data + smoke test</p>
@@ -239,26 +315,23 @@
         </div>
 
         <div class="col col-inflight">
-          <div class="col-head"><span>In flight</span><span class="count">2</span></div>
+          <div class="col-head"><span>In flight</span><span class="count">1</span></div>
           <div class="card-item">
-            <p class="card-title">Abe smoke-testing staging in browser</p>
-            <p class="card-note">Sign up, sign in (already admin in Coreshift tenant from local POC user row — same DB), click through dashboard / pipeline / deal detail / portal. Confirm real Claude AI features return non-stub content.</p>
-          </div>
-          <div class="card-item">
-            <p class="card-title">Code review feedback documented</p>
-            <p class="card-note">Abe's 2026-05-14 review captured 8 risks (drizzle-kit push, in-process scheduler, /objects/* no-auth, portal expiry never checked, commission errors swallowed, etc.). Listed in Up next — each becomes its own card once scoped.</p>
+            <div class="card-tags"><span class="tag tag-id">H1</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Step 2 — drizzle-kit push → generate + migrate</p>
+            <p class="card-note">Switch package.json db:push → db:generate + db:migrate. Generate initial migration capturing current 32-table schema, commit to /migrations/. Update AGENTS.md so future sessions stop using db:push. Test migration applies cleanly to staging Supabase before merging. ~0.5d.</p>
           </div>
         </div>
 
         <div class="col col-blocked">
           <div class="col-head"><span>Blocked / awaiting operator</span><span class="count">3</span></div>
           <div class="card-item">
-            <p class="card-title">Validate deploy-staging.yml workflow end-to-end</p>
-            <p class="card-note">First deploy bypassed Mal's CI (direct force-push dev:staging from local). Next push to dev should exercise the workflow: build check + auto-promote to staging. May fail on GITHUB_TOKEN permissions (workflow doesn't declare 'permissions: contents: write'). Diagnose and fix when it next runs.</p>
+            <p class="card-title">6 Mal decisions for V1 scope</p>
+            <p class="card-note">Each unblocks specific work: (1) Aditi sign-through-portal by demo? → pulls I5 e-sign into Demo, +5–7d. (2) Case study library seed (3–5 GP wins) → unblocks D7. (3) Voice capture before demo? → pulls W3, +10d. (4) GP's SWOT/PEST process → unblocks D5 quality. (5) GST ex/inc in pipeline values. (6) Personal data privacy (which Person fields recorded vs mental-only). Email draft in docs/planning/v1-timeline.md §B awaiting Abe send.</p>
           </div>
           <div class="card-item">
             <p class="card-title">Production deploy (when ready)</p>
-            <p class="card-note">main is still at the empty initial-commit (2506973). Production service has CRASHED deploys waiting on real code. Trigger via Actions → Deploy to Production → Run workflow once staging has soaked + the 8 review-risk fixes are in.</p>
+            <p class="card-note">main is still at the empty initial-commit (2506973). Production service has CRASHED deploys waiting on real code. Trigger via Actions → Deploy to Production → Run workflow once V1.0 work is done + staging soaked (~week of 2026-07-27).</p>
           </div>
           <div class="card-item">
             <p class="card-title">Mal's local DATABASE_URL is stale</p>
@@ -267,46 +340,107 @@
         </div>
 
         <div class="col col-pending">
-          <div class="col-head"><span>Up next</span><span class="count">10</span></div>
+          <div class="col-head"><span>Up next</span><span class="count">18</span></div>
+
+          <div class="pending-group-head">Demo Milestone (2026-06-22)</div>
           <div class="card-item">
-            <p class="card-title">Switch drizzle-kit push → generate + migrate</p>
-            <p class="card-note">Current db:push is destructive (can drop columns silently). Before any prod data exists, switch to migration files in git. Spec already calls for this; just not done yet.</p>
+            <div class="card-tags"><span class="tag tag-id">H2</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Scheduler advisory lock (Step 3)</p>
+            <p class="card-note">Wrap each setInterval job (anti-stall, forecast, nurture demotion, commissions) in pg_try_advisory_lock so 2 Railway instances don't double-fire. Test by temporarily scaling staging to numReplicas: 2, confirm jobs run once not twice. ~0.5–1d.</p>
           </div>
           <div class="card-item">
-            <p class="card-title">Add tests to CI</p>
-            <p class="card-note">deploy-staging.yml runs npm run build only. Add npm run check (tsc) + npx tsx scripts/smoke-test.ts before the promote-to-staging step.</p>
+            <div class="card-tags"><span class="tag tag-id">H9</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Split staging Supabase from prod (NEW)</p>
+            <p class="card-note">Right now both Railway envs point at the same Supabase ref (uodsmyystkaxoogitvsw). Becomes urgent the moment Mal seeds test data over the weekend — that data lives in what will eventually be prod. Spin up a second Supabase project, point staging at it, migrate schema + seed. ~0.5–1d.</p>
           </div>
           <div class="card-item">
-            <p class="card-title">Move scheduler out of web process</p>
-            <p class="card-note">setInterval inside Express means 2 Railway instances double the alerts + race on nurture demotions. Fix: Postgres advisory lock around each job (cheapest), or move to Railway cron service.</p>
+            <div class="card-tags"><span class="tag tag-id">C1</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">CI tests gating staging (Step 4)</p>
+            <p class="card-note">Add npm run check (tsc) + npx tsx scripts/smoke-test.ts to .github/workflows/deploy-staging.yml before the promote-to-staging job. Catches broken builds before they hit staging. ~0.5d.</p>
           </div>
           <div class="card-item">
-            <p class="card-title">Lock down /objects/* file route</p>
-            <p class="card-note">server/routes/files.ts:113 — public, no isAuthenticated. randomUUID paths make guessing hard but it's security by obscurity. Either delete (use signed URLs) or add auth + ownership check.</p>
+            <div class="card-tags"><span class="tag tag-id">H5</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Surface commission-engine errors on Closed Won</p>
+            <p class="card-note">deals.ts transition swallows commission errors silently — deal still moves to Won but commissionsResult shows {created:0, skipped:0}. Surface real error to client banner. ~0.5d.</p>
           </div>
           <div class="card-item">
-            <p class="card-title">Portal magic-link expiry</p>
-            <p class="card-note">portal.ts sets magicLinkExpiresAt to 365 days AND never compares it on lookup. Two-line fix: shorten to 90 days default, check on every load. Add a 'Regenerate link' button on the deal page.</p>
-          </div>
-          <div class="card-item">
-            <p class="card-title">Surface commission engine errors</p>
-            <p class="card-note">deals.ts transition swallows commission errors silently — deal still moves to Won but commissionsResult shows {created:0, skipped:0}. Surface real error to client banner.</p>
-          </div>
-          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">H6</span><span class="tag tag-demo">Demo</span></div>
             <p class="card-title">Index portal Day Zero document scan</p>
-            <p class="card-note">portal.ts:124 pulls every document for the tenant per buyer page-view, filters by title prefix in JS. Add index + WHERE clause.</p>
+            <p class="card-note">portal.ts pulls every document for the tenant per buyer page-view, filters by title prefix in JS. Add type='day_zero' column + index + WHERE clause. ~0.5d.</p>
           </div>
           <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">H7</span><span class="tag tag-demo">Demo</span></div>
             <p class="card-title">npm audit fix (9 vulns)</p>
-            <p class="card-note">6 moderate + 3 high inherited from app-template (incl. multer@1.x). Patch what's patchable, document the rest.</p>
+            <p class="card-note">6 moderate + 3 high inherited from app-template (incl. multer@1.x). Patch what's patchable, document the rest. ~0.5–1d.</p>
           </div>
           <div class="card-item">
-            <p class="card-title">Per-user OAuth connector flows</p>
-            <p class="card-note">Schema + UI stubbed (Gmail, GCal, Fireflies, Otter, LinkedIn, HubSpot, Slack, Outlook, Teams). Each unblocks when Ricky adds the provider OAuth credentials to env. No code work needed per provider beyond the handler.</p>
+            <div class="card-tags"><span class="tag tag-id">P4</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Living proposal portal panel (B4) — MAJOR V1 GAP</p>
+            <p class="card-note">BUILD §3 B4: versioning, side-by-side diff, "Approve this version" button. Not built. Aditi will see proposals via portal → this is the X-factor surface for the demo. ~4–6d.</p>
           </div>
           <div class="card-item">
-            <p class="card-title">Wire into Sentinel monitoring</p>
-            <p class="card-note">/health endpoint exists, audit_logs table captures token usage. Once Velocity is on Railway, add to Sentinel's watch list as the second tracked app after KeyContent.</p>
+            <div class="card-tags"><span class="tag tag-id">U1–U3</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">UX overhaul — portal + internal + deal detail</p>
+            <p class="card-note">Abe has authority on the UX surface per Mal 2026-05-14. Portal: visual journey not list of tabs, "soft not aggressive" styling, mobile-friendly. Internal dashboard: "page Mal opens once a day with coffee." Deal detail reorganised around the 5 wow factors. ~10–15d total.</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">W4</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">"What's slipping" daily alert reshape</p>
+            <p class="card-note">SYSTEM-V1 §9.4: ONE thing each morning, not a deluge. dailyKickoff.ts exists, needs reshaping. Anti-stall scheduler feeds it. ~1–2d.</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">W5</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Handover doc that builds itself</p>
+            <p class="card-note">SYSTEM-V1 §9.5: every commitment/quirk/stakeholder/risk auto-flows in. 90% written by Closed Won. Hard gate at 100%. Schema + modal exist; auto-progressive flow incomplete. ~3–4d.</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">D1, D4–D9</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">25% + 50% delight payloads</p>
+            <p class="card-note">Aditi will be at 25% or 50% by demo. D1 "we already know this" insight, D4 soft demo of journey, D5 full insight pack, D6 AI audio walkthrough of proposal, D7 matched case study (needs library seed — blocked on Mal), D8 Decision Toolkit, D9 portal proposal demo framing. ~9–14d.</p>
+          </div>
+
+          <div class="pending-group-head">V1.0 complete (2026-07-27)</div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">P3, P6</span><span class="tag tag-v10">V1.0</span></div>
+            <p class="card-title">Remaining portal panels</p>
+            <p class="card-note">P3 last-meeting summary "was this accurate?" amend flow. P6 resources hub (tagged, searchable, buyer can upload). ~3–5d.</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">U4, U5</span><span class="tag tag-v10">V1.0</span></div>
+            <p class="card-title">Component library + mobile-friendly verification</p>
+            <p class="card-note">Small shared component library for V1.1 to build on. Responsive baseline (mobile-first deferred to V2 per spec unless usage warrants). ~2–4d.</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">C3</span><span class="tag tag-v10">V1.0</span></div>
+            <p class="card-title">First production deploy</p>
+            <p class="card-note">Promote staging → main via Actions workflow_dispatch. Abe triggers; Mal-confirmed once V1.0 is done + staging soaked.</p>
+          </div>
+
+          <div class="pending-group-head">V1.1 (2026-10-05)</div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">I1–I7</span><span class="tag tag-v11">V1.1</span></div>
+            <p class="card-title">7 required V1 integrations</p>
+            <p class="card-note">Google Calendar OAuth (load-bearing for Anti-Stall Rule 1), Gmail OAuth + inbound mirror, Fireflies/Otter transcription, Xero push (commissions → bills, won → invoice), native portal e-sign, LinkedIn enrichment, Google Drive archive. Zero built. ~20–29d. I5 may pull into Demo if Mal aims to close Aditi via portal.</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">W3</span><span class="tag tag-v11">V1.1</span></div>
+            <p class="card-title">Voice capture from anywhere</p>
+            <p class="card-note">SYSTEM-V1 §9.3: "Hey Nirvana, Mary at Aditi just told me…" routes to deal, updates field, sets reminder. Spec calls it "load-bearing for v1." Not built. Mobile native + transcription pipeline. ~7–10d. May pull into Demo if Mal insists.</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">P8</span><span class="tag tag-v11">V1.1</span></div>
+            <p class="card-title">Quiet data capture (agent asks gentle Qs)</p>
+            <p class="card-note">BUILD §3 B8: extractor exists but agent doesn't prompt buyer with gentle questions over time. ~2–3d.</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">A1, A2</span><span class="tag tag-v11">V1.1</span></div>
+            <p class="card-title">Anti-overselling guardrails</p>
+            <p class="card-note">SYSTEM-V1 §3: A1 "Should we walk?" surfaces wrong-fit deals before delivery failure. A2 "Do we understand them yet?" pre-proposal readiness score — &lt;80% recommends more discovery. ~4–6d.</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">D10–D15</span><span class="tag tag-v11">V1.1</span></div>
+            <p class="card-title">Remaining delight payloads</p>
+            <p class="card-note">D10 Week One walkthrough, D11 AI execution team intro, D13 Welcome pack, D15 industry keep-warm content. D12 covered by I5 e-sign. ~5–8d.</p>
           </div>
         </div>
       </div>
@@ -318,6 +452,10 @@
             <span class="lbl">Staging URL</span>
             <span class="val">velocity-staging-staging.up.railway.app</span>
           </a>
+          <a class="link-card" href="https://velocity-staging-staging.up.railway.app/portal/aditi-demo-portal-2026" target="_blank" rel="noopener">
+            <span class="lbl">Sample portal (Aditi)</span>
+            <span class="val">/portal/aditi-demo-portal-2026</span>
+          </a>
           <a class="link-card" href="https://railway.com/project/269e6e9a-c684-43bf-8721-938177d01f2d" target="_blank" rel="noopener">
             <span class="lbl">Railway project</span>
             <span class="val">269e6e9a-…938177d01f2d</span>
@@ -326,27 +464,27 @@
             <span class="lbl">GitHub repo</span>
             <span class="val">CoreshiftHQNZ/velocity</span>
           </a>
+          <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity/tree/dev/docs/planning" target="_blank" rel="noopener">
+            <span class="lbl">V1 planning docs</span>
+            <span class="val">/docs/planning on dev</span>
+          </a>
           <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity/tree/dev/docs/specs" target="_blank" rel="noopener">
             <span class="lbl">Spec docs (Nirvana handoff)</span>
             <span class="val">/docs/specs on dev</span>
-          </a>
-          <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity/blob/dev/TESTING.md" target="_blank" rel="noopener">
-            <span class="lbl">TESTING.md</span>
-            <span class="val">Demo flow for Ricky / Mal</span>
           </a>
           <a class="link-card" href="https://supabase.com/dashboard/project/uodsmyystkaxoogitvsw" target="_blank" rel="noopener">
             <span class="lbl">Supabase project</span>
             <span class="val">uodsmyystkaxoogitvsw</span>
           </a>
-          <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity/commits/dev" target="_blank" rel="noopener">
-            <span class="lbl">Commit history</span>
-            <span class="val">16 commits on dev</span>
+          <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity/pulls" target="_blank" rel="noopener">
+            <span class="lbl">Pull requests</span>
+            <span class="val">PR list on velocity</span>
           </a>
         </div>
       </div>
 
       <footer>
-        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a>
+        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a> · Last refresh: 2026-05-15 evening (Step 1 of V1.0 hardening shipped)
       </footer>
     </div>
   </body>
