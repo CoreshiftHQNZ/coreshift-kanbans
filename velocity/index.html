@@ -224,7 +224,7 @@
           <span>Coreshift HQ × Growth Partners</span>
           <a href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">repo →</a>
           <a href="https://velocity-staging-staging.up.railway.app" target="_blank" rel="noopener">staging →</a>
-          <span>v0.3 · 20 commits on dev · staging deployed 2026-05-15 · prod not deployed</span>
+          <span>v0.3 · 21 commits on dev · staging deployed 2026-05-15 · prod not deployed</span>
         </div>
         <div class="milestones-banner">
           <span class="ms"><span class="tag tag-demo">Demo</span> <strong>week of 2026-06-22</strong> — Aditi-demo-ready subset (UX, B4 living proposal, 25%/50% delight payloads, hardening)</span>
@@ -235,8 +235,13 @@
 
       <div class="columns">
         <div class="col col-done">
-          <div class="col-head"><span>Done</span><span class="count">18</span></div>
+          <div class="col-head"><span>Done</span><span class="count">19</span></div>
 
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">H1</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">drizzle-kit push → generate + migrate (PR #2, 2026-05-15)</p>
+            <p class="card-note">Swapped the destructive db:push for a reviewable migration workflow. migrations/0000_brave_prism.sql captures the current 32-table schema; scripts/migrate.ts wraps Drizzle's migrator; .gitattributes locks LF on SQL files so the SHA-256 hash matches across Windows dev + Linux Railway hosts. Shared staging Supabase bootstrapped: one row in drizzle.__drizzle_migrations marks 0000 as already-applied. AGENTS.md, README.md, architecture.md, supabase.md all updated to use the new flow + warn off db:push. .gitignore un-ignored migrations/.</p>
+          </div>
           <div class="card-item">
             <div class="card-tags"><span class="tag tag-id">H3 + H4</span><span class="tag tag-demo">Demo</span></div>
             <p class="card-title">Security ship-blockers closed (PR #1, 2026-05-15)</p>
@@ -317,9 +322,9 @@
         <div class="col col-inflight">
           <div class="col-head"><span>In flight</span><span class="count">1</span></div>
           <div class="card-item">
-            <div class="card-tags"><span class="tag tag-id">H1</span><span class="tag tag-demo">Demo</span></div>
-            <p class="card-title">Step 2 — drizzle-kit push → generate + migrate</p>
-            <p class="card-note">Switch package.json db:push → db:generate + db:migrate. Generate initial migration capturing current 32-table schema, commit to /migrations/. Update AGENTS.md so future sessions stop using db:push. Test migration applies cleanly to staging Supabase before merging. ~0.5d.</p>
+            <div class="card-tags"><span class="tag tag-id">H2</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Step 3 — scheduler advisory lock</p>
+            <p class="card-note">Wrap each setInterval job (anti-stall Rules 1–7, daily forecast snapshots, nurture demotion, commission auto-fire) in pg_try_advisory_lock so 2 Railway instances don't double-fire. Test plan: temporarily scale staging to numReplicas:2, confirm jobs run once not twice, then scale back. ~0.5–1d.</p>
           </div>
         </div>
 
@@ -340,14 +345,9 @@
         </div>
 
         <div class="col col-pending">
-          <div class="col-head"><span>Up next</span><span class="count">18</span></div>
+          <div class="col-head"><span>Up next</span><span class="count">17</span></div>
 
           <div class="pending-group-head">Demo Milestone (2026-06-22)</div>
-          <div class="card-item">
-            <div class="card-tags"><span class="tag tag-id">H2</span><span class="tag tag-demo">Demo</span></div>
-            <p class="card-title">Scheduler advisory lock (Step 3)</p>
-            <p class="card-note">Wrap each setInterval job (anti-stall, forecast, nurture demotion, commissions) in pg_try_advisory_lock so 2 Railway instances don't double-fire. Test by temporarily scaling staging to numReplicas: 2, confirm jobs run once not twice. ~0.5–1d.</p>
-          </div>
           <div class="card-item">
             <div class="card-tags"><span class="tag tag-id">H9</span><span class="tag tag-demo">Demo</span></div>
             <p class="card-title">Split staging Supabase from prod (NEW)</p>
@@ -484,7 +484,7 @@
       </div>
 
       <footer>
-        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a> · Last refresh: 2026-05-15 evening (Step 1 of V1.0 hardening shipped)
+        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a> · Last refresh: 2026-05-15 evening (Steps 1 + 2 of V1.0 hardening shipped — H1, H3, H4 done)
       </footer>
     </div>
   </body>
