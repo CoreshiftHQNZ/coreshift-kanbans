@@ -168,13 +168,34 @@
         <div class="meta-row">
           <span>Coreshift HQ × Growth Partners</span>
           <a href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">repo →</a>
-          <span>v0.2 · 16 commits on dev · never deployed</span>
+          <a href="https://velocity-staging-staging.up.railway.app" target="_blank" rel="noopener">staging →</a>
+          <span>v0.2 · 16 commits on dev · staging deployed 2026-05-15</span>
         </div>
       </header>
 
       <div class="columns">
         <div class="col col-done">
-          <div class="col-head"><span>Done</span><span class="count">10</span></div>
+          <div class="col-head"><span>Done</span><span class="count">15</span></div>
+          <div class="card-item">
+            <p class="card-title">🚀 First staging deploy live (Abe, 2026-05-15)</p>
+            <p class="card-note">https://velocity-staging-staging.up.railway.app · /health 200 · DB connected · real Claude wired · SPA serves. Build via Railpack (railpack v0.23, node 22.22.3, ap-southeast-2 region). Bypassed deploy-staging.yml workflow for first push (force-push dev:staging from local); workflow validation deferred.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Railway project + envs + services</p>
+            <p class="card-note">Project velocity (id 269e6e9a…) in Coreshift HQ workspace. Two envs: production (watches main, service 'velocity') + staging (watches staging, service 'velocity-staging'). Auto-deploy on branch push.</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Supabase Storage bucket velocity-files</p>
+            <p class="card-note">Created private, 10MB limit, MIME allowlist matches server/routes/files.ts (jpeg/png/webp/gif/pdf/csv).</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Env vars on both Railway services</p>
+            <p class="card-note">DATABASE_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, STORAGE_BUCKET=velocity-files, ANTHROPIC_API_KEY, NODE_ENV=production. PORT deliberately unset (Railway provides). DNS stays on *.up.railway.app for now; Anthropic key reused across envs (revisit when prod traffic justifies a dedicated key).</p>
+          </div>
+          <div class="card-item">
+            <p class="card-title">Velocity kanban added to coreshift-kanbans (Abe, 2026-05-15)</p>
+            <p class="card-note">Published at coreshifthqnz.github.io/coreshift-kanbans/velocity/. Matches sponsored-listicle-writer pattern. Now linked from root index.</p>
+          </div>
           <div class="card-item">
             <p class="card-title">GitHub repo + branches</p>
             <p class="card-note">CoreshiftHQNZ/velocity with dev / staging / main. Deploy workflows committed (dev → staging auto, staging → main manual via workflow_dispatch).</p>
@@ -218,7 +239,11 @@
         </div>
 
         <div class="col col-inflight">
-          <div class="col-head"><span>In flight</span><span class="count">1</span></div>
+          <div class="col-head"><span>In flight</span><span class="count">2</span></div>
+          <div class="card-item">
+            <p class="card-title">Abe smoke-testing staging in browser</p>
+            <p class="card-note">Sign up, sign in (already admin in Coreshift tenant from local POC user row — same DB), click through dashboard / pipeline / deal detail / portal. Confirm real Claude AI features return non-stub content.</p>
+          </div>
           <div class="card-item">
             <p class="card-title">Code review feedback documented</p>
             <p class="card-note">Abe's 2026-05-14 review captured 8 risks (drizzle-kit push, in-process scheduler, /objects/* no-auth, portal expiry never checked, commission errors swallowed, etc.). Listed in Up next — each becomes its own card once scoped.</p>
@@ -226,30 +251,14 @@
         </div>
 
         <div class="col col-blocked">
-          <div class="col-head"><span>Blocked / awaiting operator</span><span class="count">7</span></div>
+          <div class="col-head"><span>Blocked / awaiting operator</span><span class="count">3</span></div>
           <div class="card-item">
-            <p class="card-title">Railway project not yet created</p>
-            <p class="card-note">No staging or production environment exists. Workflows are committed and will fire on push to dev, but they only build — Railway has to be set up + watching the staging branch before first deploy actually deploys.</p>
+            <p class="card-title">Validate deploy-staging.yml workflow end-to-end</p>
+            <p class="card-note">First deploy bypassed Mal's CI (direct force-push dev:staging from local). Next push to dev should exercise the workflow: build check + auto-promote to staging. May fail on GITHUB_TOKEN permissions (workflow doesn't declare 'permissions: contents: write'). Diagnose and fix when it next runs.</p>
           </div>
           <div class="card-item">
-            <p class="card-title">RAILWAY_TOKEN secret</p>
-            <p class="card-note">Once Railway project exists, generate token at railway.com → project settings → tokens, add as GitHub Actions secret on the repo. Currently the deploy workflow assumes Railway auto-watches the staging/main branches; no token push needed for that model, but worth verifying.</p>
-          </div>
-          <div class="card-item">
-            <p class="card-title">First staging deploy</p>
-            <p class="card-note">staging branch is at the initial-commit SHA (2506973). Merge dev → staging once Railway is wired. Will validate the deploy-staging.yml workflow actually works end-to-end.</p>
-          </div>
-          <div class="card-item">
-            <p class="card-title">Supabase Storage bucket</p>
-            <p class="card-note">'velocity-files' not created. File-upload routes will 500 in prod. Create bucket in Supabase dashboard before deploying anything that uploads.</p>
-          </div>
-          <div class="card-item">
-            <p class="card-title">Anthropic API key for prod</p>
-            <p class="card-note">Local dev currently uses Mal's personal key. Decide whether Velocity gets a dedicated key under Coreshift HQ's Anthropic Console workspace and add as Railway env var per environment.</p>
-          </div>
-          <div class="card-item">
-            <p class="card-title">Cloudflare DNS strategy</p>
-            <p class="card-note">Confirm whether Velocity gets a coreshifthq.com subdomain (e.g. velocity.coreshifthq.com) or stays on Railway's *.up.railway.app. If subdomain — add CNAME in Cloudflare to Railway's custom-domain target.</p>
+            <p class="card-title">Production deploy (when ready)</p>
+            <p class="card-note">main is still at the empty initial-commit (2506973). Production service has CRASHED deploys waiting on real code. Trigger via Actions → Deploy to Production → Run workflow once staging has soaked + the 8 review-risk fixes are in.</p>
           </div>
           <div class="card-item">
             <p class="card-title">Mal's local DATABASE_URL is stale</p>
@@ -305,6 +314,14 @@
       <div class="section">
         <h2>Quick links</h2>
         <div class="links">
+          <a class="link-card" href="https://velocity-staging-staging.up.railway.app" target="_blank" rel="noopener">
+            <span class="lbl">Staging URL</span>
+            <span class="val">velocity-staging-staging.up.railway.app</span>
+          </a>
+          <a class="link-card" href="https://railway.com/project/269e6e9a-c684-43bf-8721-938177d01f2d" target="_blank" rel="noopener">
+            <span class="lbl">Railway project</span>
+            <span class="val">269e6e9a-…938177d01f2d</span>
+          </a>
           <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">
             <span class="lbl">GitHub repo</span>
             <span class="val">CoreshiftHQNZ/velocity</span>
