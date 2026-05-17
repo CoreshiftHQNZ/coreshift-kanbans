@@ -224,7 +224,7 @@
           <span>Coreshift HQ × Growth Partners</span>
           <a href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">repo →</a>
           <a href="https://velocity-staging-staging.up.railway.app" target="_blank" rel="noopener">staging →</a>
-          <span>v0.3 · 21 commits on dev · staging deployed 2026-05-15 · prod not deployed</span>
+          <span>v0.3 · 23 commits on dev · staging deployed 2026-05-15 · prod not deployed</span>
         </div>
         <div class="milestones-banner">
           <span class="ms"><span class="tag tag-demo">Demo</span> <strong>week of 2026-06-22</strong> — Aditi-demo-ready subset (UX, B4 living proposal, 25%/50% delight payloads, hardening)</span>
@@ -235,8 +235,18 @@
 
       <div class="columns">
         <div class="col col-done">
-          <div class="col-head"><span>Done</span><span class="count">19</span></div>
+          <div class="col-head"><span>Done</span><span class="count">21</span></div>
 
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">C1</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">CI tests gating staging (PR #4, 2026-05-16)</p>
+            <p class="card-note">deploy-staging.yml now runs `npm run check` (tsc, hard gate — compile errors block promotion) and `npx tsx scripts/smoke-test.ts` (soft gate, continue-on-error: true) before pushing dev to staging. Smoke kept soft because its assertions are seeded-data-coupled ("Aditi @ 25%", "GP has 6 stages") and will go red on normal data changes — surfaces as yellow warning without blocking. Needs DATABASE_URL repo secret (gh secret set, not in Claude's PAT scope).</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">H2</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Scheduler advisory lock (PR #3, 2026-05-16)</p>
+            <p class="card-note">Every scheduler tick (hourly anti-stall, daily forecast snapshot, daily nurture demotion, boot-time anti-stall) wrapped in withAdvisoryLock helper using pg_try_advisory_xact_lock inside an explicit BEGIN/COMMIT. Transaction-scoped (not session-scoped) because Supabase's Transaction Pooler routes statements across backends — session locks failed the race test. Three stable job IDs reserved. Race-test script at scripts/test-advisory-lock.ts (4/4 assertions pass).</p>
+          </div>
           <div class="card-item">
             <div class="card-tags"><span class="tag tag-id">H1</span><span class="tag tag-demo">Demo</span></div>
             <p class="card-title">drizzle-kit push → generate + migrate (PR #2, 2026-05-15)</p>
@@ -255,7 +265,7 @@
           <div class="card-item">
             <div class="card-tags"><span class="tag tag-id">C2</span></div>
             <p class="card-title">deploy-staging.yml workflow validated end-to-end</p>
-            <p class="card-note">Push to dev auto-promotes to staging via GitHub Actions. Default GITHUB_TOKEN scope sufficient; no 'permissions: contents: write' declaration needed. Confirmed 2026-05-15 16:25 PST.</p>
+            <p class="card-note">Push to dev auto-promotes to staging via GitHub Actions. Default GITHUB_TOKEN scope sufficient. Confirmed 2026-05-15 16:25 PST. Hardened in PR #4 (tsc gate + soft smoke test added).</p>
           </div>
           <div class="card-item">
             <p class="card-title">🚀 First staging deploy live (2026-05-15)</p>
@@ -307,7 +317,7 @@
           </div>
           <div class="card-item">
             <p class="card-title">Anti-stall scheduler + commission engine</p>
-            <p class="card-note">In-process setInterval: hourly Rules 1-7 evaluation, daily forecast snapshots + nurture demotion. Commission rules auto-fire on Closed Won. H2 will wrap each job in pg_try_advisory_lock so 2 Railway instances don't double-fire.</p>
+            <p class="card-note">In-process setInterval: hourly Rules 1-7 evaluation, daily forecast snapshots + nurture demotion. Commission rules auto-fire on Closed Won. Multi-replica safe as of PR #3 (pg_try_advisory_xact_lock per tick).</p>
           </div>
           <div class="card-item">
             <p class="card-title">Seed data + smoke test</p>
@@ -320,11 +330,10 @@
         </div>
 
         <div class="col col-inflight">
-          <div class="col-head"><span>In flight</span><span class="count">1</span></div>
+          <div class="col-head"><span>In flight</span><span class="count">0</span></div>
           <div class="card-item">
-            <div class="card-tags"><span class="tag tag-id">H2</span><span class="tag tag-demo">Demo</span></div>
-            <p class="card-title">Step 3 — scheduler advisory lock</p>
-            <p class="card-note">Wrap each setInterval job (anti-stall Rules 1–7, daily forecast snapshots, nurture demotion, commission auto-fire) in pg_try_advisory_lock so 2 Railway instances don't double-fire. Test plan: temporarily scale staging to numReplicas:2, confirm jobs run once not twice, then scale back. ~0.5–1d.</p>
+            <p class="card-title">Awaiting Abe's direction</p>
+            <p class="card-note">Hardening sprint paused after H1 + H2 + H3 + H4 + C1 (the no-Mal-dependency batch). Next tier (UX overhaul + portal P4 living proposal + 25/50% delight payloads) depends on the 6 Mal decisions in the blocked column — especially case study library seed (D7) and SWOT/PEST process (D5). H5/H6/H7/H8/H9 still independent and shippable any time.</p>
           </div>
         </div>
 
@@ -345,18 +354,13 @@
         </div>
 
         <div class="col col-pending">
-          <div class="col-head"><span>Up next</span><span class="count">17</span></div>
+          <div class="col-head"><span>Up next</span><span class="count">16</span></div>
 
           <div class="pending-group-head">Demo Milestone (2026-06-22)</div>
           <div class="card-item">
             <div class="card-tags"><span class="tag tag-id">H9</span><span class="tag tag-demo">Demo</span></div>
             <p class="card-title">Split staging Supabase from prod (NEW)</p>
             <p class="card-note">Right now both Railway envs point at the same Supabase ref (uodsmyystkaxoogitvsw). Becomes urgent the moment Mal seeds test data over the weekend — that data lives in what will eventually be prod. Spin up a second Supabase project, point staging at it, migrate schema + seed. ~0.5–1d.</p>
-          </div>
-          <div class="card-item">
-            <div class="card-tags"><span class="tag tag-id">C1</span><span class="tag tag-demo">Demo</span></div>
-            <p class="card-title">CI tests gating staging (Step 4)</p>
-            <p class="card-note">Add npm run check (tsc) + npx tsx scripts/smoke-test.ts to .github/workflows/deploy-staging.yml before the promote-to-staging job. Catches broken builds before they hit staging. ~0.5d.</p>
           </div>
           <div class="card-item">
             <div class="card-tags"><span class="tag tag-id">H5</span><span class="tag tag-demo">Demo</span></div>
@@ -484,7 +488,7 @@
       </div>
 
       <footer>
-        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a> · Last refresh: 2026-05-15 evening (Steps 1 + 2 of V1.0 hardening shipped — H1, H3, H4 done)
+        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a> · Last refresh: 2026-05-16 (Steps 1–4 of V1.0 hardening shipped — H1, H2, H3, H4, C1 done; paused for direction)
       </footer>
     </div>
   </body>
