@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>71%</strong> complete</div>
-        <div><strong>47</strong>/66 cards done</div>
-        <div>Updated <strong>2026-05-19 14:20 UTC</strong></div>
+        <div><strong>73%</strong> complete</div>
+        <div><strong>48</strong>/66 cards done</div>
+        <div>Updated <strong>2026-05-19 21:39 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">47</div>
+        <div class="status-num">48</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">4</div>
+        <div class="status-num">3</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">47</span>
+        <span class="col-count">48</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1200,6 +1200,11 @@
         <div class="card-title">CEO Pitch (Monday May 18)</div>
         <div class="card-tags"><span class="tag tag-milestone">milestone</span><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">Deck + playbook + live staging demo presented. _Operator: update with outcome / follow-ups if any._</div>
+      </div>
+      <div class="card">
+        <div class="card-title">HOW-WE-DO-APP-AUDITS v2</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">schema_migrations</span></div>
+        <div class="card-desc">Audit checklist bumped to v2 with new Railway section (env-var parity, watch-branch, health-check) + Supabase `schema_migrations` consistency checks. Triggered by the 2026-05 incident pair (Zernio 16-day outage + RLS bookkeeping drift). Live on the Sentinel ops site. Both findings would have been caught at the previous quarterly audit if v2 had existed</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1219,7 +1224,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1234,13 +1239,8 @@
       </div>
       <div class="card">
         <div class="card-title">Zernio post-mortem</div>
-        <div class="card-tags"><span class="tag tag-neutral">incident</span><span class="tag tag-neutral">docs</span><span class="tag tag-neutral">incidents/2026-05-19-zernio-webhook-secret.md</span></div>
-        <div class="card-desc">Now actionable. Save as `incidents/2026-05-19-zernio-webhook-secret.md` in keycontent-app repo. SEV3 doesn&#39;t strictly require one per HOW-WE-DO-INCIDENTS, but the 16-day undetected window is a process failure worth writing down</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Audit checklist update for env-var + migration drift</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">docs</span><span class="tag tag-neutral">supabase_migrations.schema_migrations</span><span class="tag tag-neutral">schema_migrations</span></div>
-        <div class="card-desc">Add to HOW-WE-DO-APP-AUDITS: &quot;verify all expected env vars exist in both Railway environments,&quot; &quot;diff `supabase_migrations.schema_migrations` rows between staging and prod (versions must match filenames),&quot; &quot;diff in-repo migration files vs `schema_migrations` rows.&quot; Closes the systemic gaps that allowed the Zernio outage + the RLS bookkeeping bug to land undetected</div>
+        <div class="card-tags"><span class="tag tag-neutral">incident</span><span class="tag tag-neutral">docs</span><span class="tag tag-neutral">incidents/</span></div>
+        <div class="card-desc">Written and pushed. PR [#76](https://github.com/CoreshiftHQNZ/keycontent-app/pull/76) open against staging; awaiting review/merge. Establishes `incidents/` directory in keycontent-app. Action items inside the post-mortem (reconciliation, Sentry 5xx alert, 401-doublet investigation) tracked separately</div>
       </div></div>
     </section>
     <section class="column col-backlog">
