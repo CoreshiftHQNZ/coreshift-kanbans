@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>73%</strong> complete</div>
-        <div><strong>48</strong>/66 cards done</div>
-        <div>Updated <strong>2026-05-19 21:39 UTC</strong></div>
+        <div><strong>74%</strong> complete</div>
+        <div><strong>49</strong>/66 cards done</div>
+        <div>Updated <strong>2026-05-19 21:54 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">48</div>
+        <div class="status-num">49</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">3</div>
+        <div class="status-num">2</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">48</span>
+        <span class="col-count">49</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1205,6 +1205,11 @@
         <div class="card-title">HOW-WE-DO-APP-AUDITS v2</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">schema_migrations</span></div>
         <div class="card-desc">Audit checklist bumped to v2 with new Railway section (env-var parity, watch-branch, health-check) + Supabase `schema_migrations` consistency checks. Triggered by the 2026-05 incident pair (Zernio 16-day outage + RLS bookkeeping drift). Live on the Sentinel ops site. Both findings would have been caught at the previous quarterly audit if v2 had existed</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel Brief 2 env-var pre-flight</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">KEYCONTENT_SUPABASE_URL</span><span class="tag tag-neutral">KEYCONTENT_SUPABASE_SERVICE_ROLE_KEY</span></div>
+        <div class="card-desc">`KEYCONTENT_SUPABASE_URL` + `KEYCONTENT_SUPABASE_SERVICE_ROLE_KEY` set to KC staging values on both Sentinel production AND staging Railway environments (2026-05-20). Brief 2 dev work now unblocked. When Phase 2 ships to KC prod, flip back to KC prod values via the same path</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1224,14 +1229,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Sentinel Brief 2 env-var pre-flight</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">KEYCONTENT_*</span><span class="tag tag-neutral">bug_reports</span></div>
-        <div class="card-desc">Flip Sentinel&#39;s `KEYCONTENT_*` env vars on Railway from KC-prod → KC-staging values (Phase 2 `bug_reports` table is only on KC staging). One-line config change; unblocks Brief 2 dev work</div>
-      </div>
       <div class="card">
         <div class="card-title">Zernio reconciliation / backfill</div>
         <div class="card-tags"><span class="tag tag-neutral">incident-followup</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">calendar_entry</span><span class="tag tag-neutral">job</span><span class="tag tag-neutral">zernio_post_id</span><span class="tag tag-neutral">late_post_id</span></div>
