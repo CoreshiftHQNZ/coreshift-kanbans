@@ -1268,6 +1268,7 @@ Done.
 <li>❌ <em>Skipping the staging smoke test</em> — staging exists precisely for this</li>
 <li>❌ <em>Adding a secret to prod first</em> — always staging first</li>
 <li>❌ <em>Manual SQL changes against prod</em> — use the migration system; untracked changes break future migrations</li>
+<li>❌ <em>Using the Supabase MCP&#39;s <code>apply_migration</code> tool against tracked-migration projects</em> — it auto-stamps the <code>schema_migrations.version</code> to apply-time, not the filename, breaking the contract that <code>supabase db push</code> relies on. Use the CLI (<code>npx supabase db push --project-ref &lt;ref&gt;</code>) even when the MCP shortcut is available. <strong>Recovery if you&#39;ve already done it:</strong> the schema change itself is correct; only the bookkeeping is wrong. Fix with <code>UPDATE supabase_migrations.schema_migrations SET version = &#39;&lt;filename-version&gt;&#39; WHERE version = &#39;&lt;wrong-apply-time-version&gt;&#39; AND name = &#39;&lt;migration-name&gt;&#39;;</code></li>
 <li>❌ <em>Deploying without a rollback path mentally rehearsed</em> — if you can&#39;t rollback, don&#39;t deploy</li>
 </ul>
 <hr>
@@ -1601,9 +1602,12 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
         <h2 class="play-title">App Audits</h2>
         <p class="play-tagline">Defaults are dangerous. Audit is the gate.</p>
         <div class="play-divider"></div>
-        <div class="md"><p><strong>Status:</strong> Active · v1 · 2026-05-13
+        <div class="md"><p><strong>Status:</strong> Active · v2 · 2026-05-19
 <strong>Applies to:</strong> Every Coreshift HQ app — at onboarding (before joining Sentinel ops) and quarterly thereafter
 <strong>Owners:</strong> Operator (runs the checklist) · Claude Code (writes fix briefs for failed items) · Tools (Supabase advisors, Cloudflare audit logs, vendor dashboards)</p>
+<blockquote>
+<p><strong>v2 changelog:</strong> Added Railway section (env-var parity, watch-branch, health-check checks); tightened Supabase section with <code>schema_migrations</code> consistency checks; updated KeyContent outstanding items. Triggered by the 2026-05 incident pair: 16-day <code>ZERNIO_WEBHOOK_SECRET</code> outage on KC prod + RLS migration bookkeeping drift. Both would have been caught by v2 checks.</p>
+</blockquote>
 <hr>
 <h2>What this doc is</h2>
 <p>A single-pass checklist that verifies an app has its <strong>default-off settings turned on</strong> before it&#39;s considered operator-ready. Runs as a gate at onboarding (first time) and as a re-audit on a quarterly cadence thereafter.</p>
@@ -1655,6 +1659,27 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 <li><input disabled="" type="checkbox"> Service role key is <strong>not</strong> referenced in any client-side code (grep <code>client/</code> for <code>SERVICE_ROLE</code> — must be 0 hits)</li>
 <li><input disabled="" type="checkbox"> Database backup retention reviewed (Supabase default is 7 days; upgrade if data loss tolerance &lt; 7d)</li>
 <li><input disabled="" type="checkbox"> No raw SQL changes against production outside the migration system (every prod schema change has a <code>supabase/migrations/</code> file)</li>
+<li><input disabled="" type="checkbox"> <strong><code>schema_migrations</code> rows match filenames in <code>supabase/migrations/</code></strong> — for every <code>&lt;version&gt;_&lt;name&gt;.sql</code> file in the repo, a row with that exact <code>version</code> exists in <strong>both</strong> staging and prod <code>supabase_migrations.schema_migrations</code>; and for every row in either table, a corresponding file exists in the repo. Drift here breaks future <code>supabase db push</code>.<ul>
+<li>Verify (run against each env): <code>SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version;</code> — diff against <code>ls supabase/migrations/</code> output</li>
+<li>Common cause: applying via Supabase MCP <code>apply_migration</code> instead of CLI (MCP auto-stamps <code>version</code> to apply-time, not filename) — see <code>HOW-WE-DO-DEPLOYS.md</code> Anti-Patterns</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox"> <strong>Migration history matches between staging and prod</strong> — every row in staging&#39;s <code>schema_migrations</code> also exists in prod&#39;s (modulo intentional staging-only branches that are clearly noted)</li>
+</ul>
+<h3>Railway — App Hosting</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Production and staging environments both exist for the app&#39;s service</li>
+<li><input disabled="" type="checkbox"> <strong>Watch branch is correctly set per environment</strong> — production environment watches <code>main</code>; staging environment watches <code>staging</code> (Settings → Deploys → Watch Branch)</li>
+<li><input disabled="" type="checkbox"> <strong>All app-runtime env vars exist in BOTH environments</strong> — diff: list vars on staging, list vars on production; every var on one must appear on the other (modulo values that are env-specific by design like <code>APP_URL</code>)<ul>
+<li>Verify: <code>railway variables --service &lt;name&gt;</code> in each env, then diff the lists</li>
+<li>Common gap missed: webhook signing secrets (e.g. <code>ZERNIO_WEBHOOK_SECRET</code>), API tokens for vendors only configured on staging during development then never propagated to production</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox"> <strong>No secret values shared between staging and production</strong> — each environment has its own copies of <code>SUPABASE_SERVICE_ROLE_KEY</code>, <code>STRIPE_SECRET_KEY</code>, etc. (mixing them cross-contaminates data/billing)</li>
+<li><input disabled="" type="checkbox"> <code>PORT</code> is <strong>not</strong> set — Railway sets it automatically; setting it manually breaks the platform&#39;s port binding</li>
+<li><input disabled="" type="checkbox"> Health-check path in <code>railway.toml</code> matches a route the app actually exposes (e.g. <code>/health</code> returns 200)</li>
+<li><input disabled="" type="checkbox"> Service region is appropriate (close to users and Supabase project region for low latency)</li>
+<li><input disabled="" type="checkbox"> Auto-deploy is wired per <code>HOW-WE-DO-DEPLOYS.md</code> — push to <code>dev</code> → staging; promotion workflow → main</li>
 </ul>
 <h3>Cloudflare — Frontend + DNS + WAF</h3>
 <ul>
@@ -1752,7 +1777,7 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 </ul>
 <p>Bump the version at the top and note the change.</p>
 <hr>
-<h2>Outstanding items for KeyContent (initial audit, 2026-05-13)</h2>
+<h2>Outstanding items for KeyContent (initial audit, 2026-05-13; updated 2026-05-19)</h2>
 <p>The first time this checklist runs on KeyContent, it produces this delta. Surfaced during the Sentinel folder review session.</p>
 <table>
 <thead>
@@ -1764,8 +1789,8 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 </thead>
 <tbody><tr>
 <td>RLS on <code>webhook_events</code></td>
-<td>✅ Fixed on staging 2026-05-12; awaiting prod promotion</td>
-<td>See <code>../briefs/BRIEF-rls-fix-webhook-events.md</code></td>
+<td>✅ <strong>Fully shipped</strong> — staging 2026-05-12, prod 2026-05-15 (PR #71 merged 2026-05-19)</td>
+<td>—</td>
 </tr>
 <tr>
 <td>HIBP password protection</td>
@@ -1774,31 +1799,41 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 </tr>
 <tr>
 <td><code>get_advisors</code> zero-warn</td>
-<td>✅ Staging clean; prod has 1 outstanding (RLS pending promotion)</td>
-<td>Resolves when RLS fix promotes to prod</td>
+<td>✅ Staging + prod both clean 2026-05-19</td>
+<td>—</td>
 </tr>
 <tr>
 <td>Sentry sections</td>
-<td>N/A</td>
-<td>Will run after Phase 1 Week 1</td>
+<td>✅ Integrated Phase 1 Week 1; needs first audit pass</td>
+<td>Run Sentry checks at next quarterly audit</td>
 </tr>
 <tr>
 <td>Better Stack sections</td>
-<td>N/A</td>
-<td>Will run after Phase 1 Week 2</td>
+<td>✅ Integrated Phase 1 Week 2; needs first audit pass</td>
+<td>Run BS checks at next quarterly audit</td>
 </tr>
 <tr>
 <td>Branch protection</td>
 <td>✅ Rules added on <code>main</code> + <code>staging</code> 2026-05-13</td>
-<td>Admin bypass left ON for 2-person team flexibility</td>
+<td>Admin bypass left ON for 2-person team flexibility. ⚠️ Note: actual <code>staging</code> rule requires review approval despite kanban claiming 0 approvals — audit the rule itself next pass</td>
 </tr>
 <tr>
 <td>Backup retention</td>
 <td>✅ Verified 2026-05-13 — 8 days of daily DB backups</td>
 <td>⚠️ Storage objects not in backups; follow-up queued for Phase 1 Week 5</td>
 </tr>
+<tr>
+<td><strong>Railway env-var parity</strong> (v2)</td>
+<td>❌ <strong>Caught at second-pass audit 2026-05-19</strong> — <code>ZERNIO_WEBHOOK_SECRET</code> was missing on KC prod for 16 days, dropping all Zernio webhooks (38 items mis-statused). Secret restored 2026-05-19.</td>
+<td>Reconciliation/backfill of the 38 stuck items queued. Post-mortem at <code>incidents/2026-05-19-zernio-webhook-secret.md</code>.</td>
+</tr>
+<tr>
+<td><strong><code>schema_migrations</code> consistency</strong> (v2)</td>
+<td>⚠️ <strong>Drift caught + repaired 2026-05-19</strong> — <code>enable_rls_webhook_events</code> was applied to prod via Supabase MCP, which auto-stamped <code>version=20260515142600</code> instead of the filename&#39;s <code>20260512192536</code>. Aligned via UPDATE. File renamed in PR #71 to match.</td>
+<td>Both DBs + repo now agree on <code>20260512192536</code>.</td>
+</tr>
 </tbody></table>
-<p>Re-run the full audit once Sentry and Better Stack are integrated, and quarterly thereafter.</p>
+<p>Re-run the full audit quarterly. The v2-new items (Railway parity + schema_migrations consistency) should be a focus of the next pass for every app.</p>
 <hr>
 <h2>See also</h2>
 <ul>
