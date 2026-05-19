@@ -224,7 +224,7 @@
           <span>Coreshift HQ × Growth Partners</span>
           <a href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">repo →</a>
           <a href="https://velocity-staging-staging.up.railway.app" target="_blank" rel="noopener">staging →</a>
-          <span>v0.3 · 23 commits on dev · staging deployed 2026-05-15 · prod not deployed</span>
+          <span>v0.3 · 24 commits on dev · staging deployed 2026-05-15 · prod not deployed</span>
         </div>
         <div class="milestones-banner">
           <span class="ms"><span class="tag tag-demo">Demo</span> <strong>week of 2026-06-22</strong> — Aditi-demo-ready subset (UX, B4 living proposal, 25%/50% delight payloads, hardening)</span>
@@ -235,8 +235,13 @@
 
       <div class="columns">
         <div class="col col-done">
-          <div class="col-head"><span>Done</span><span class="count">21</span></div>
+          <div class="col-head"><span>Done</span><span class="count">22</span></div>
 
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">H5 + H6</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Commission errors surfaced + Day Zero scan scoped (PR #5, 2026-05-19)</p>
+            <p class="card-note">H5: commissionsResult now carries an optional error field — UI can show "Deal moved to Won, but commissions failed: &lt;reason&gt;" instead of silent {0,0}. H6: added documents.company_id column + index + migration 0001 with backfill; portal hydrate now filters at SQL level (WHERE company_id=? AND title LIKE 'Day Zero — %' ORDER BY created_at DESC LIMIT 1) instead of full tenant scan + JS filter; also fixed dormant bug in dayZeroService where version-counting query compared deal_id to companyId (never matched).</p>
+          </div>
           <div class="card-item">
             <div class="card-tags"><span class="tag tag-id">C1</span><span class="tag tag-demo">Demo</span></div>
             <p class="card-title">CI tests gating staging (PR #4, 2026-05-16)</p>
@@ -333,7 +338,7 @@
           <div class="col-head"><span>In flight</span><span class="count">0</span></div>
           <div class="card-item">
             <p class="card-title">Awaiting Abe's direction</p>
-            <p class="card-note">Hardening sprint paused after H1 + H2 + H3 + H4 + C1 (the no-Mal-dependency batch). Next tier (UX overhaul + portal P4 living proposal + 25/50% delight payloads) depends on the 6 Mal decisions in the blocked column — especially case study library seed (D7) and SWOT/PEST process (D5). H5/H6/H7/H8/H9 still independent and shippable any time.</p>
+            <p class="card-note">Hardening sprint paused after H1 + H2 + H3 + H4 + H5 + H6 + C1. Next tier (UX overhaul + portal P4 living proposal + 25/50% delight payloads) depends on the 6 Mal decisions in the blocked column — especially case study library seed (D7) and SWOT/PEST process (D5). H7 (npm audit) + H8 (bucket cleanup) + H9 (split staging Supabase) still independent and shippable any time.</p>
           </div>
         </div>
 
@@ -354,23 +359,13 @@
         </div>
 
         <div class="col col-pending">
-          <div class="col-head"><span>Up next</span><span class="count">16</span></div>
+          <div class="col-head"><span>Up next</span><span class="count">14</span></div>
 
           <div class="pending-group-head">Demo Milestone (2026-06-22)</div>
           <div class="card-item">
             <div class="card-tags"><span class="tag tag-id">H9</span><span class="tag tag-demo">Demo</span></div>
-            <p class="card-title">Split staging Supabase from prod (NEW)</p>
-            <p class="card-note">Right now both Railway envs point at the same Supabase ref (uodsmyystkaxoogitvsw). Becomes urgent the moment Mal seeds test data over the weekend — that data lives in what will eventually be prod. Spin up a second Supabase project, point staging at it, migrate schema + seed. ~0.5–1d.</p>
-          </div>
-          <div class="card-item">
-            <div class="card-tags"><span class="tag tag-id">H5</span><span class="tag tag-demo">Demo</span></div>
-            <p class="card-title">Surface commission-engine errors on Closed Won</p>
-            <p class="card-note">deals.ts transition swallows commission errors silently — deal still moves to Won but commissionsResult shows {created:0, skipped:0}. Surface real error to client banner. ~0.5d.</p>
-          </div>
-          <div class="card-item">
-            <div class="card-tags"><span class="tag tag-id">H6</span><span class="tag tag-demo">Demo</span></div>
-            <p class="card-title">Index portal Day Zero document scan</p>
-            <p class="card-note">portal.ts pulls every document for the tenant per buyer page-view, filters by title prefix in JS. Add type='day_zero' column + index + WHERE clause. ~0.5d.</p>
+            <p class="card-title">Split staging Supabase from prod</p>
+            <p class="card-note">Right now both Railway envs point at the same Supabase ref (uodsmyystkaxoogitvsw). Mal didn't seed weekend test data so the urgency window passed without incident — but the moment he does, that data lives in what will eventually be prod. Spin up a second Supabase project, point staging at it, run db:migrate against it, re-seed. ~0.5–1d.</p>
           </div>
           <div class="card-item">
             <div class="card-tags"><span class="tag tag-id">H7</span><span class="tag tag-demo">Demo</span></div>
@@ -488,7 +483,7 @@
       </div>
 
       <footer>
-        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a> · Last refresh: 2026-05-16 (Steps 1–4 of V1.0 hardening shipped — H1, H2, H3, H4, C1 done; paused for direction)
+        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a> · Last refresh: 2026-05-19 (H5 + H6 shipped on top of the Saturday batch; H workstream now ~1.5–2.5 dev-days remaining)
       </footer>
     </div>
   </body>
