@@ -224,7 +224,7 @@
           <span>Coreshift HQ × Growth Partners</span>
           <a href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">repo →</a>
           <a href="https://velocity-staging-staging.up.railway.app" target="_blank" rel="noopener">staging →</a>
-          <span>v0.3 · 24 commits on dev · staging deployed 2026-05-15 · prod not deployed</span>
+          <span>v0.4 · 25 commits on dev · staging deployed 2026-05-15 · prod not deployed</span>
         </div>
         <div class="milestones-banner">
           <span class="ms"><span class="tag tag-demo">Demo</span> <strong>week of 2026-06-22</strong> — Aditi-demo-ready subset (UX, B4 living proposal, 25%/50% delight payloads, hardening)</span>
@@ -235,8 +235,18 @@
 
       <div class="columns">
         <div class="col col-done">
-          <div class="col-head"><span>Done</span><span class="count">22</span></div>
+          <div class="col-head"><span>Done</span><span class="count">24</span></div>
 
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">P4</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">B4 Living Proposal panel — built end-to-end (PR #6, 2026-05-20)</p>
+            <p class="card-note">The single biggest V1 gap is closed. Salesperson side: ProposalSection on the Deal page — textarea editor, save-on-blur, Publish button, Revise creates v+1 (seeds body from prior). Buyer side: LivingProposalPanel in the portal — markdown-rendered current version, "See what changed" toggle flips to side-by-side diff (rose removed / emerald added) using hand-rolled LCS in shared/diff.ts, "Approve this version" button writes a portal_activities row of type approval. Published versions are immutable (state machine: draft → publish → approved). Migration 0002 adds documents.body + updated_at, applied to staging.</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">decisions</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Six V1 decisions locked (2026-05-20)</p>
+            <p class="card-note">Mal delegated V1 scope authority to Abe. All six previously-open decisions resolved: I5 e-sign → V1.1; W3 voice → V1.1; D5/D7 ship stub-quality with template markers; GST → ex-GST default; personal data → default-restrictive (things-to-avoid recorded but internalOnly); multi-buyer portal → V2; Closed Lost → leave with stage=Lost; mobile-first → V2. Full log in docs/planning/v1-work.md.</p>
+          </div>
           <div class="card-item">
             <div class="card-tags"><span class="tag tag-id">H5 + H6</span><span class="tag tag-demo">Demo</span></div>
             <p class="card-title">Commission errors surfaced + Day Zero scan scoped (PR #5, 2026-05-19)</p>
@@ -337,17 +347,13 @@
         <div class="col col-inflight">
           <div class="col-head"><span>In flight</span><span class="count">0</span></div>
           <div class="card-item">
-            <p class="card-title">Awaiting Abe's direction</p>
-            <p class="card-note">Hardening sprint paused after H1 + H2 + H3 + H4 + H5 + H6 + C1. Next tier (UX overhaul + portal P4 living proposal + 25/50% delight payloads) depends on the 6 Mal decisions in the blocked column — especially case study library seed (D7) and SWOT/PEST process (D5). H7 (npm audit) + H8 (bucket cleanup) + H9 (split staging Supabase) still independent and shippable any time.</p>
+            <p class="card-title">Demo Milestone sprint queued, awaiting kickoff</p>
+            <p class="card-note">All V1 scope decisions locked. No Mal-sized blockers remain. Critical path for Demo Milestone (week of 2026-06-22): U1 portal UX redesign, the 25/50% delight payload stubs (D1, D4, D5, D6, D7, D8, D9), W4 / W5 wow factor polish, then H7 + H8 + H9 hardening tail and U2 / U3 internal UX. Going-ham 4-week floor is on the table.</p>
           </div>
         </div>
 
         <div class="col col-blocked">
-          <div class="col-head"><span>Blocked / awaiting operator</span><span class="count">3</span></div>
-          <div class="card-item">
-            <p class="card-title">6 Mal decisions for V1 scope</p>
-            <p class="card-note">Each unblocks specific work: (1) Aditi sign-through-portal by demo? → pulls I5 e-sign into Demo, +5–7d. (2) Case study library seed (3–5 GP wins) → unblocks D7. (3) Voice capture before demo? → pulls W3, +10d. (4) GP's SWOT/PEST process → unblocks D5 quality. (5) GST ex/inc in pipeline values. (6) Personal data privacy (which Person fields recorded vs mental-only). Email draft in docs/planning/v1-timeline.md §B awaiting Abe send.</p>
-          </div>
+          <div class="col-head"><span>Blocked / awaiting operator</span><span class="count">2</span></div>
           <div class="card-item">
             <p class="card-title">Production deploy (when ready)</p>
             <p class="card-note">main is still at the empty initial-commit (2506973). Production service has CRASHED deploys waiting on real code. Trigger via Actions → Deploy to Production → Run workflow once V1.0 work is done + staging soaked (~week of 2026-07-27).</p>
@@ -483,7 +489,7 @@
       </div>
 
       <footer>
-        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a> · Last refresh: 2026-05-19 (H5 + H6 shipped on top of the Saturday batch; H workstream now ~1.5–2.5 dev-days remaining)
+        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a> · Last refresh: 2026-05-20 (P4 Living Proposal shipped — biggest V1 gap closed; all six V1 decisions locked after Mal delegated scope authority to Abe; Demo Milestone sprint ready to kick off)
       </footer>
     </div>
   </body>
