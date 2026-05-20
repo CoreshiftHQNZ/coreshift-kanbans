@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>76%</strong> complete</div>
-        <div><strong>52</strong>/68 cards done</div>
-        <div>Updated <strong>2026-05-20 20:03 UTC</strong></div>
+        <div><strong>74%</strong> complete</div>
+        <div><strong>52</strong>/70 cards done</div>
+        <div>Updated <strong>2026-05-20 20:04 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">2</div>
+        <div class="status-num">4</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -1224,8 +1224,15 @@
       <div class="card">
         <div class="card-title">Sentinel branch-protection bypass dance documented</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">deploy-staging.yml</span><span class="tag tag-neutral">dev → staging</span><span class="tag tag-neutral">git push --force-with-lease=staging:origin/staging origin origin/dev:staging</span></div>
-        <div class="card-desc">Three times this session (PRs #71, #4, #5, #6) the auto-promote workflow (`deploy-staging.yml` push `dev → staging`) was blocked by branch protection requiring review approval. Worked around with admin-merge + manual `git push --force-with-lease=staging:origin/staging origin origin/dev:staging`. **Real fix queued in backlog: add github-actions[bot] to the staging branch protection bypass list.**</div>
+        <div class="card-desc">Three times this session (PRs #71, #4, #5, #6) the auto-promote workflow (`deploy-staging.yml` push `dev → staging`) was blocked by branch protection requiring review approval. Worked around with admin-merge + manual `git push --force-with-lease=staging:origin/staging origin origin/dev:staging`. **Real fix queued in This Week: add github-actions[bot] to the staging branch protection bypass list.**</div>
       </div></div>
+    </section>
+    <section class="column col-in-progress">
+      <header class="col-head">
+        <h2>🟡 In Progress</h2>
+        <span class="col-count">0</span>
+      </header>
+      <div class="cards"><div class="empty">No items</div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -1237,9 +1244,19 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Sentinel V1 — Brief 3: drag-and-drop status updates</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">bug_reports</span><span class="tag tag-neutral">/api/reports/:id</span><span class="tag tag-neutral">status</span></div>
+        <div class="card-desc">Next dev brief. Fully unblocked (Brief 2 shipped to staging + prod). Adds the first WRITE operation against KC&#39;s `bug_reports` (PATCH `/api/reports/:id` endpoint that updates `status`). ~2-3 hour coding session</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel branch protection: add github-actions[bot] to staging bypass</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span></div>
+        <div class="card-desc">~5 min at Settings → Branches → staging on the sentinel-app repo. Eliminates the admin-merge + force-push dance that&#39;s recurred every Sentinel PR this session. Same fix likely needed on KC repo&#39;s staging protection too</div>
+      </div>
       <div class="card">
         <div class="card-title">Zernio reconciliation / backfill</div>
         <div class="card-tags"><span class="tag tag-neutral">incident-followup</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">calendar_entry</span><span class="tag tag-neutral">job</span><span class="tag tag-neutral">zernio_post_id</span><span class="tag tag-neutral">late_post_id</span></div>
