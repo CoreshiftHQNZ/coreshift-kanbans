@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>74%</strong> complete</div>
-        <div><strong>52</strong>/70 cards done</div>
-        <div>Updated <strong>2026-05-20 20:04 UTC</strong></div>
+        <div><strong>77%</strong> complete</div>
+        <div><strong>55</strong>/71 cards done</div>
+        <div>Updated <strong>2026-05-20 20:33 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">52</div>
+        <div class="status-num">55</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,11 +833,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">4</div>
+        <div class="status-num">3</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">14</div>
+        <div class="status-num">13</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">52</span>
+        <span class="col-count">55</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1224,7 +1224,22 @@
       <div class="card">
         <div class="card-title">Sentinel branch-protection bypass dance documented</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">deploy-staging.yml</span><span class="tag tag-neutral">dev → staging</span><span class="tag tag-neutral">git push --force-with-lease=staging:origin/staging origin origin/dev:staging</span></div>
-        <div class="card-desc">Three times this session (PRs #71, #4, #5, #6) the auto-promote workflow (`deploy-staging.yml` push `dev → staging`) was blocked by branch protection requiring review approval. Worked around with admin-merge + manual `git push --force-with-lease=staging:origin/staging origin origin/dev:staging`. **Real fix queued in This Week: add github-actions[bot] to the staging branch protection bypass list.**</div>
+        <div class="card-desc">Three times this session (PRs #71, #4, #5, #6) the auto-promote workflow (`deploy-staging.yml` push `dev → staging`) was blocked by branch protection requiring review approval. Worked around with admin-merge + manual `git push --force-with-lease=staging:origin/staging origin origin/dev:staging`. **Update 2026-05-20: Brief 3&#39;s PR #7 merge auto-promoted to staging cleanly** — either operator fixed the rule or the workflow finally cooperated. Status verification still queued in This Week</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V1 — Brief 3: drag-and-drop status updates</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">bug_reports</span><span class="tag tag-neutral">PATCH /api/reports/:id</span><span class="tag tag-neutral">wontfix</span><span class="tag tag-neutral">@dnd-kit</span><span class="tag tag-neutral">ReportCard</span><span class="tag tag-neutral">ReportColumn</span><span class="tag tag-neutral">useUpdateReportStatus</span><span class="tag tag-neutral">setQueryData</span></div>
+        <div class="card-desc">First WRITE operation against KC&#39;s `bug_reports` from Sentinel. `PATCH /api/reports/:id` with UUID + status-allowlist validation + distinct `wontfix` rejection. `@dnd-kit` primitives wrap `ReportCard` (draggable) + `ReportColumn` (droppable). `useUpdateReportStatus` mutation with optimistic `setQueryData` + onError revert + onSettled invalidate. Inline toast for error feedback. PR [#7](https://github.com/CoreshiftHQNZ/sentinel-app/pull/7) merged to dev → staging; PR [#8](https://github.com/CoreshiftHQNZ/sentinel-app/pull/8) merged staging → main 2026-05-20. 31/31 tests pass (11 new for PATCH). Verified end-to-end on Sentinel staging — Triage → To Do drag persists in KC&#39;s DB</div>
+      </div>
+      <div class="card">
+        <div class="card-title">KC prod service-role key rotation</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">KEYCONTENT_*</span><span class="tag tag-neutral">/health</span><span class="tag tag-neutral">npx railway variables</span><span class="tag tag-neutral">--kv</span></div>
+        <div class="card-desc">The KC prod service-role key was logged in a Railway env-var listing on 2026-05-19 during the Sentinel `KEYCONTENT_*` swap session. Rotated same day via Supabase dashboard (Reset). KC Railway prod env + KC Supabase Edge Function secrets updated by operator with the new value. In-memory key on the running KC process picked up the new value via the unrelated Railway outage that forced a container restart — verified by uptime drop on `/health` afterward. **Anti-pattern captured:** `npx railway variables` (no flag) dumps full values to stdout; use `--kv` with regex extraction for any secret-bearing variable inspection</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Zernio post-mortem</div>
+        <div class="card-tags"><span class="tag tag-neutral">incident</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">incidents/2026-05-19-zernio-webhook-secret.md</span><span class="tag tag-neutral">incidents/</span></div>
+        <div class="card-desc">`incidents/2026-05-19-zernio-webhook-secret.md` written + PR [#76](https://github.com/CoreshiftHQNZ/keycontent-app/pull/76) admin-merged to KC staging. Establishes the `incidents/` directory in keycontent-app. Action items spawned as KC issues [#77](https://github.com/CoreshiftHQNZ/keycontent-app/issues/77) (Sentry 5xx webhook alert) and [#78](https://github.com/CoreshiftHQNZ/keycontent-app/issues/78) (Zernio 401-doublet investigation)</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1244,34 +1259,29 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Sentinel V1 — Brief 3: drag-and-drop status updates</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">bug_reports</span><span class="tag tag-neutral">/api/reports/:id</span><span class="tag tag-neutral">status</span></div>
-        <div class="card-desc">Next dev brief. Fully unblocked (Brief 2 shipped to staging + prod). Adds the first WRITE operation against KC&#39;s `bug_reports` (PATCH `/api/reports/:id` endpoint that updates `status`). ~2-3 hour coding session</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Sentinel branch protection: add github-actions[bot] to staging bypass</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span></div>
-        <div class="card-desc">~5 min at Settings → Branches → staging on the sentinel-app repo. Eliminates the admin-merge + force-push dance that&#39;s recurred every Sentinel PR this session. Same fix likely needed on KC repo&#39;s staging protection too</div>
+        <div class="card-title">Sentinel V1 — Brief 4: card detail + triage fields</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
+        <div class="card-desc">Next dev brief. Modal or side-panel on card click; set priority, blast_radius, narrative. Brief doc not yet written. Brief 3 prerequisite shipped</div>
       </div>
       <div class="card">
         <div class="card-title">Zernio reconciliation / backfill</div>
         <div class="card-tags"><span class="tag tag-neutral">incident-followup</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">calendar_entry</span><span class="tag tag-neutral">job</span><span class="tag tag-neutral">zernio_post_id</span><span class="tag tag-neutral">late_post_id</span></div>
-        <div class="card-desc">Now unblocked (secret landed 2026-05-19). Run a script that queries Zernio for each in-flight `calendar_entry` + `job` (using `zernio_post_id`/`late_post_id`) and updates KC&#39;s 38 stuck rows (22 calendar entries, 16 jobs) to actual status. Send missed failure emails for any that came back failed. ~1-2 days Claude Code work</div>
+        <div class="card-desc">Now unblocked (secret landed 2026-05-19; post-mortem merged 2026-05-20). Run a script that queries Zernio for each in-flight `calendar_entry` + `job` (using `zernio_post_id`/`late_post_id`) and updates KC&#39;s 38 stuck rows (22 calendar entries, 16 jobs) to actual status. Send missed failure emails for any that came back failed. ~1-2 days Claude Code work. **Biggest user-visible win on the list — 38 wrongly-statused posts in KC prod get fixed.**</div>
       </div>
       <div class="card">
-        <div class="card-title">Zernio post-mortem</div>
-        <div class="card-tags"><span class="tag tag-neutral">incident</span><span class="tag tag-neutral">docs</span><span class="tag tag-neutral">incidents/</span></div>
-        <div class="card-desc">Written and pushed. PR [#76](https://github.com/CoreshiftHQNZ/keycontent-app/pull/76) open against staging; awaiting review/merge. Establishes `incidents/` directory in keycontent-app. Action items inside the post-mortem (reconciliation, Sentry 5xx alert, 401-doublet investigation) tracked separately</div>
+        <div class="card-title">Verify Sentinel branch-protection bypass state</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">staging</span></div>
+        <div class="card-desc">Auto-promote worked on Brief 3&#39;s PR #7 → staging without manual intervention, suggesting something changed. Confirm at Sentinel-app Settings → Branches → staging that github-actions[bot] is in the &quot;Allow specified actors to bypass required pull requests&quot; list. If yes, mark fully shipped. If no, add it — same fix likely needed on KC&#39;s `staging` rule too. ~5 min</div>
       </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">14</span>
+        <span class="col-count">13</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1295,14 +1305,9 @@
         <div class="card-desc">User-facing transparency. Deferred until after Dashboard ships</div>
       </div>
       <div class="card">
-        <div class="card-title">Sentinel V1 — Brief 3: drag-and-drop status updates</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
-        <div class="card-desc">Pending Brief 2</div>
-      </div>
-      <div class="card">
         <div class="card-title">Sentinel V1 — Brief 4: card detail + triage fields</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
-        <div class="card-desc">Set priority/radius/narrative. Pending Brief 3</div>
+        <div class="card-desc">*(also listed in This Week — keep here as longer-horizon view)* Set priority/radius/narrative via card-click modal. Brief 3 prerequisite shipped</div>
       </div>
       <div class="card">
         <div class="card-title">Sentinel V1 — Brief 5: auto-create GH Issue when leaving Triage</div>
