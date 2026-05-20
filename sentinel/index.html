@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>78%</strong> complete</div>
-        <div><strong>56</strong>/72 cards done</div>
-        <div>Updated <strong>2026-05-20 21:15 UTC</strong></div>
+        <div><strong>77%</strong> complete</div>
+        <div><strong>56</strong>/73 cards done</div>
+        <div>Updated <strong>2026-05-20 21:46 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">3</div>
+        <div class="status-num">4</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -1264,13 +1264,18 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
       <div class="card">
+        <div class="card-title">Sentinel V1 — Brief 4.5: Google OAuth + Coreshift HQ domain check</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">auth</span><span class="tag tag-neutral">briefs/BRIEF-sentinel-v4.5-google-oauth.md</span><span class="tag tag-neutral">@coreshifthq.com</span><span class="tag tag-neutral">SENTINEL_ALLOWED_EMAILS</span><span class="tag tag-neutral">@coreshifthq.com</span></div>
+        <div class="card-desc">Brief written at `briefs/BRIEF-sentinel-v4.5-google-oauth.md`. Replaces email/password + magic-link sign-in with Google OAuth restricted to `@coreshifthq.com`. Drops `SENTINEL_ALLOWED_EMAILS` env-var allowlist in favor of a server-side domain check. **Decided architecture (2026-05-20):** Sentinel-only first; `@coreshifthq.com` domain check (not allowlist); drop magic link entirely. **Pre-flight is operator-side:** Google Cloud OAuth Client ID + Supabase Auth Google provider config (~10 min total). Implementation is ~2-3 hours. Will ship before Briefs 5+6 so the GH-issue + email attribution uses real Google identities</div>
+      </div>
+      <div class="card">
         <div class="card-title">Sentinel Briefs 5 + 6 — credential pre-flight</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">CoreshiftHQNZ/keycontent-app</span><span class="tag tag-neutral">Issues: Read and write</span><span class="tag tag-neutral">GITHUB_TOKEN_KC</span><span class="tag tag-neutral">POSTMARK_API_KEY</span><span class="tag tag-neutral">POSTMARK_API_KEY</span><span class="tag tag-neutral">POSTMARK_FROM_EMAIL</span></div>
-        <div class="card-desc">Before Briefs 5 (auto-create GH Issue) and 6 (resolution-ack email) can ship: (1) Generate a GitHub fine-grained PAT scoped to `CoreshiftHQNZ/keycontent-app` with `Issues: Read and write`; add to Sentinel Railway prod + staging as `GITHUB_TOKEN_KC`. (2) Decide Postmark setup — reuse KC&#39;s existing `POSTMARK_API_KEY` (Option A, recommended for V1) or create a separate Postmark server for Sentinel (Option B). Verify the sender address. Add to Sentinel Railway as `POSTMARK_API_KEY` + `POSTMARK_FROM_EMAIL`. ~10 min operator-side total</div>
+        <div class="card-desc">After Brief 4.5 ships: (1) Generate a GitHub fine-grained PAT scoped to `CoreshiftHQNZ/keycontent-app` with `Issues: Read and write`; add to Sentinel Railway prod + staging as `GITHUB_TOKEN_KC`. (2) Decide Postmark setup — reuse KC&#39;s existing `POSTMARK_API_KEY` (Option A, recommended for V1) or create a separate Postmark server for Sentinel (Option B). Verify the sender address. Add to Sentinel Railway as `POSTMARK_API_KEY` + `POSTMARK_FROM_EMAIL`. ~10 min operator-side total</div>
       </div>
       <div class="card">
         <div class="card-title">Zernio reconciliation / backfill</div>
