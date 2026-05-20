@@ -387,6 +387,7 @@
         <a href="#bug-reports"><span class="play-num">05</span><span>Bug Reports</span></a>
         <a href="#app-audits"><span class="play-num">06</span><span>App Audits</span></a>
         <a href="#triage"><span class="play-num">07</span><span>Triage Rhythm</span></a>
+        <a href="#drag-and-drop"><span class="play-num">08</span><span>Drag-and-Drop</span></a>
         <div class="nav-foot">
           Internal · v1 · May 2026<br>
           For Coreshift HQ team
@@ -1965,6 +1966,255 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 <li><code>HOW-WE-DO-INCIDENTS.md</code> — what to do when triage gets pre-empted by a real fire</li>
 <li><code>HOW-WE-DO-BUG-REPORTS.md</code> — where the cards in Triage come from</li>
 <li><code>../ROADMAP.md</code> — Phase 1 Week 4 (this doc is the deliverable for &quot;Triage rhythm locked&quot;)</li>
+</ul>
+</div>
+      </section>
+
+      <section id="drag-and-drop" class="play" data-accent="teal">
+        <div class="play-header">
+          <span class="play-eyebrow">RECIPE 1</span>
+        </div>
+        <h2 class="play-title">Drag-and-Drop</h2>
+        <p class="play-tagline">Click-and-drag UX that doesn't break click-to-open.</p>
+        <div class="play-divider"></div>
+        <div class="md"><p><strong>Status:</strong> Active · v1 · 2026-05-20
+<strong>Applies to:</strong> Any Coreshift HQ React app that wants kanban-style drag-and-drop on columns of cards (Sentinel, future Noozey ops view, etc.)
+<strong>Owners:</strong> Frontend dev wiring the feature · Claude Code (typical implementer)</p>
+<hr>
+<h2>What this doc is</h2>
+<p>The portable recipe for adding column-to-column drag-and-drop to a card board, the way Sentinel&#39;s <code>bug_reports</code> dashboard does it. Battle-tested in Brief 3 (drag the status) + Brief 4 (click the card → detail panel — both gestures coexist on the same card).</p>
+<p>This is the <strong>how</strong>, not the <strong>what</strong>. For the original spec, see <code>briefs/BRIEF-sentinel-v3-drag-and-drop.md</code> in the sentinel-app repo.</p>
+<hr>
+<h2>The principle</h2>
+<p><strong>Drags should feel instant. Clicks should still work. Failures should revert silently.</strong></p>
+<p>Three feelings, three implementation tricks:</p>
+<ol>
+<li><strong>Instant</strong> — optimistic UI via TanStack Query&#39;s <code>setQueryData</code></li>
+<li><strong>Clicks still work</strong> — <code>PointerSensor</code> with a 5px activation distance</li>
+<li><strong>Silent revert</strong> — <code>onMutate</code> snapshot + <code>onError</code> restore + <code>onSettled</code> invalidate</li>
+</ol>
+<p>Get those three right and the board feels like Notion / Trello. Get them wrong and it feels broken on every other drag.</p>
+<hr>
+<h2>The stack</h2>
+<pre><code class="language-jsonc">// package.json
+&quot;dependencies&quot;: {
+  &quot;@dnd-kit/core&quot;: &quot;^6.3.1&quot;,
+  &quot;@dnd-kit/utilities&quot;: &quot;^3.2.2&quot;,
+  &quot;@tanstack/react-query&quot;: &quot;^5.x&quot;
+}
+</code></pre>
+<p>That&#39;s it. No HTML5 drag API, no <code>react-dnd</code>, no heavier libraries.</p>
+<p><strong>Why @dnd-kit specifically:</strong> maintained, accessible (keyboard nav, screen-reader support out of the box), small (~30 kb), and the API mirrors React hook semantics. KeyContent uses the same pinned versions; future Coreshift HQ apps should too unless there&#39;s a reason to diverge.</p>
+<hr>
+<h2>The five moving pieces</h2>
+<h3>1. <code>DndContext</code> at the board level + sensor</h3>
+<pre><code class="language-tsx">import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from &quot;@dnd-kit/core&quot;;
+
+const sensors = useSensors(
+  useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+);
+
+&lt;DndContext sensors={sensors} onDragEnd={handleDragEnd}&gt;
+  {/* columns + cards */}
+&lt;/DndContext&gt;
+</code></pre>
+<p><strong>The 5px activation distance is the trick.</strong> Without it, every click on a card triggers a drag-then-cancel, which feels broken when the card also has an <code>onClick</code>. With it, normal clicks pass through to React&#39;s <code>onClick</code> handler. Cards become drag-AND-click without any extra plumbing.</p>
+<h3>2. Cards as draggables</h3>
+<pre><code class="language-tsx">import { useDraggable } from &quot;@dnd-kit/core&quot;;
+import { CSS } from &quot;@dnd-kit/utilities&quot;;
+
+const { attributes, listeners, setNodeRef, transform, isDragging } =
+  useDraggable({ id: item.id });
+
+&lt;article
+  ref={setNodeRef}
+  style={{
+    transform: CSS.Translate.toString(transform),
+    zIndex: isDragging ? 50 : undefined,      // lift above siblings + columns
+    opacity: isDragging ? 0.85 : undefined,   // target column shows through
+  }}
+  {...attributes}
+  {...listeners}
+  onClick={() =&gt; openDetail(item)}             // coexists with drag (5px sensor)
+  className={cn(&quot;cursor-grab&quot;, isDragging &amp;&amp; &quot;cursor-grabbing shadow-lg&quot;)}
+&gt;
+  {/* card content */}
+&lt;/article&gt;
+</code></pre>
+<p>The cursor-state switch (<code>cursor-grab</code> → <code>cursor-grabbing</code> during drag) is a small detail with outsized UX impact. Without it users feel uncertain about whether they&#39;re actually dragging.</p>
+<h3>3. Columns as droppables</h3>
+<pre><code class="language-tsx">import { useDroppable } from &quot;@dnd-kit/core&quot;;
+
+const { isOver, setNodeRef } = useDroppable({ id: column.statusKey });
+
+&lt;div
+  ref={setNodeRef}
+  className={cn(
+    &quot;border transition-colors&quot;,
+    isOver ? &quot;border-primary bg-primary/5&quot; : &quot;border-border&quot;,
+  )}
+&gt;
+  {/* cards */}
+&lt;/div&gt;
+</code></pre>
+<p><code>isOver</code> highlight is <strong>mandatory</strong>. Without visual feedback on the target column, operators don&#39;t know if their drop will register. Two lines of conditional CSS = night-and-day UX difference.</p>
+<h3>4. <code>onDragEnd</code> — the only &quot;logic&quot; line</h3>
+<pre><code class="language-tsx">const handleDragEnd = (event: DragEndEvent) =&gt; {
+  const { active, over } = event;
+  if (!over) return;                                // dropped on nothing → snap back
+  const id = active.id as string;
+  const newStatus = over.id as string;
+  const current = items.find((i) =&gt; i.id === id);
+  if (!current || current.status === newStatus) return;  // no-op short-circuit
+  mutate({ id, status: newStatus });
+};
+</code></pre>
+<p>The <code>current.status === newStatus</code> short-circuit matters. Without it, dropping a card on its own column fires a redundant mutation. Operators do this all the time when they grab-then-fumble.</p>
+<h3>5. Optimistic mutation with revert-on-error</h3>
+<pre><code class="language-tsx">useMutation({
+  mutationFn: ({ id, status }) =&gt;
+    apiRequest(&quot;PATCH&quot;, `/api/items/${id}`, { status }),
+
+  // Apply optimistically BEFORE the network call
+  onMutate: async ({ id, status }) =&gt; {
+    await queryClient.cancelQueries({ queryKey: [&quot;/api/items&quot;] });
+    const previous = queryClient.getQueryData&lt;Item[]&gt;([&quot;/api/items&quot;]);
+    queryClient.setQueryData&lt;Item[]&gt;([&quot;/api/items&quot;], (old = []) =&gt;
+      old.map((i) =&gt; (i.id === id ? { ...i, status } : i)),
+    );
+    return { previous };
+  },
+
+  // Revert on error — restore the snapshot
+  onError: (_err, _vars, ctx) =&gt; {
+    if (ctx?.previous) queryClient.setQueryData([&quot;/api/items&quot;], ctx.previous);
+  },
+
+  // Always re-fetch — server is the source of truth (catches concurrent edits)
+  onSettled: () =&gt; {
+    queryClient.invalidateQueries({ queryKey: [&quot;/api/items&quot;] });
+  },
+});
+</code></pre>
+<p>Optimistic UI over spinners is non-obvious but right. A 200 ms spinner-then-update feels SLOWER than instant + silent-revert-on-error, because the operator already sees the result they expected. Trust their model; only break it on actual failure.</p>
+<hr>
+<h2>The non-obvious bits that make it feel good</h2>
+<table>
+<thead>
+<tr>
+<th>Detail</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>5px sensor activation distance</strong></td>
+<td>Without it, click + drag can&#39;t coexist on the same element</td>
+</tr>
+<tr>
+<td><strong><code>isOver</code> column highlight</strong></td>
+<td>Operators don&#39;t know if their drop is valid otherwise</td>
+</tr>
+<tr>
+<td><strong>Same-column drop short-circuit</strong></td>
+<td>Avoids redundant network calls on fumbled drags</td>
+</tr>
+<tr>
+<td><strong>Cursor state (<code>grab</code> ↔ <code>grabbing</code>)</strong></td>
+<td>Confirms the gesture is registering</td>
+</tr>
+<tr>
+<td><strong>Optimistic UI</strong></td>
+<td>Instant + silent-revert beats spinner-then-update</td>
+</tr>
+<tr>
+<td><strong><code>onSettled</code> invalidates always</strong></td>
+<td>Catches concurrent edits from another tab/operator</td>
+</tr>
+<tr>
+<td><strong><code>zIndex</code> lift on dragging card</strong></td>
+<td>Otherwise the card gets clipped by its column</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>What you DON&#39;T need</h2>
+<p>Skip these unless you have a concrete reason — they add complexity for negligible UX gain:</p>
+<ul>
+<li><strong><code>DragOverlay</code></strong> — only needed for complex cross-container animations. In-place transform works for column-to-column status changes.</li>
+<li><strong><code>@dnd-kit/sortable</code></strong> — that&#39;s for reordering WITHIN a list. If you only care about which column an item belongs to (not its order within the column), plain droppables are simpler.</li>
+<li><strong><code>TouchSensor</code></strong> — desktop-first is fine for an internal ops tool. Add it later if anyone actually uses the dashboard on mobile.</li>
+<li><strong>Drag preview customization</strong> — the default transform-translate is fine. Customizing it tends to introduce z-index / clipping bugs more often than it improves feel.</li>
+</ul>
+<hr>
+<h2>Testing the server side</h2>
+<p>Status changes are usually a <code>PATCH /api/items/:id</code> with body <code>{ status: &quot;new&quot; }</code>. The server-side tests that matter:</p>
+<ul>
+<li><strong>401 without auth</strong> · <strong>403 if not allowlisted</strong> (existing middleware)</li>
+<li><strong>400 with invalid status</strong> — validation matters more than you think. Without it, a malformed drag could write garbage status.</li>
+<li><strong>200 happy path</strong> + assert update payload contains the expected fields</li>
+<li><strong>404 when row missing</strong> (e.g., deleted in another tab while this drag was in flight)</li>
+<li><strong>500 with sanitized error</strong> — don&#39;t leak DB error details to the client</li>
+</ul>
+<p>The Sentinel implementation lives in <code>server/routes/reports.test.ts</code> — it uses <code>vitest</code> + <code>supertest</code> + a chainable Supabase builder mock. Lift that pattern as the template.</p>
+<hr>
+<h2>Files to copy/adapt when wiring this into a new app</h2>
+<p>These four files are the verbatim references. Rename per resource (e.g. <code>useUpdateJob</code> instead of <code>useUpdateReport</code>):</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What to take from it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>client/src/hooks/useUpdateReport.ts</code></td>
+<td>The full optimistic-mutation hook</td>
+</tr>
+<tr>
+<td><code>client/src/components/ReportCard.tsx</code></td>
+<td><code>useDraggable</code> wiring + click coexistence</td>
+</tr>
+<tr>
+<td><code>client/src/components/ReportColumn.tsx</code></td>
+<td><code>useDroppable</code> wiring + <code>isOver</code> highlight</td>
+</tr>
+<tr>
+<td><code>client/src/pages/Dashboard.tsx</code></td>
+<td><code>DndContext</code> + <code>onDragEnd</code> (the ~30 lines around <code>handleDragEnd</code>)</td>
+</tr>
+</tbody></table>
+<p>All four are on <code>main</code> in <code>CoreshiftHQNZ/sentinel-app</code>.</p>
+<hr>
+<h2>Why we elevated the standard</h2>
+<p>Most kanban-drag examples on the internet teach you the primitives but skip the UX polish that makes the difference between &quot;this works&quot; and &quot;this feels good.&quot; Our elevations:</p>
+<ol>
+<li><strong>The 5px sensor trick</strong> is documented at the top — without it, drag-and-click conflict bites you on day one</li>
+<li><strong>Optimistic UI is the default</strong>, not an afterthought — anything else makes a 2-3 person team&#39;s workflow feel sluggish</li>
+<li><strong><code>onSettled</code> invalidation is non-optional</strong> — concurrent edits between tabs are inevitable in a 2-3 person ops team</li>
+<li><strong>No drag overlay, no sortable</strong> — keep the surface small; add complexity only when needed</li>
+<li><strong>Server-side validation is tested</strong> — drags write to real DB rows; bad input must 400, not 500</li>
+</ol>
+<p>The win at scale: every new Coreshift HQ app that adds drag-and-drop reaches the same UX quality without re-discovering the gotchas. Future Brief 1s for app #2+ point at this recipe.</p>
+<hr>
+<h2>When this doc changes</h2>
+<ul>
+<li>When @dnd-kit ships a breaking change — update version + any affected snippets</li>
+<li>When we adopt a new pattern (e.g. add <code>DragOverlay</code> for some reason) — capture the trigger</li>
+<li>When a Coreshift HQ app diverges from this recipe — note the reason here so it&#39;s not silent drift</li>
+</ul>
+<hr>
+<h2>See also</h2>
+<ul>
+<li><code>../briefs/BRIEF-sentinel-v3-drag-and-drop.md</code> — the original spec</li>
+<li><code>../briefs/BRIEF-sentinel-v4-card-detail.md</code> — Brief 4, which builds on this and confirmed click + drag coexistence in production</li>
+<li><code>HOW-WE-DO-PR-REVIEWS.md</code> — review checklist for UI changes (drag-and-drop changes deserve a manual operator pass, not just description-based review)</li>
+<li><a href="https://docs.dndkit.com/">@dnd-kit docs</a> — primitives reference</li>
+<li><a href="https://tanstack.com/query/latest/docs/framework/react/guides/optimistic-updates">TanStack Query optimistic updates</a> — the mutation pattern</li>
 </ul>
 </div>
       </section>
