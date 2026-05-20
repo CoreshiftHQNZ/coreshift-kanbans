@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>77%</strong> complete</div>
         <div><strong>56</strong>/73 cards done</div>
-        <div>Updated <strong>2026-05-20 21:46 UTC</strong></div>
+        <div>Updated <strong>2026-05-20 23:25 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">56</span>
+        <span class="col-count">57</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1245,6 +1245,11 @@
         <div class="card-title">Sentinel V1 — Brief 4: card detail + triage fields</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">PATCH /api/reports/:id</span><span class="tag tag-neutral">ReportDetailPanel</span><span class="tag tag-neutral">useUpdateReportStatus</span><span class="tag tag-neutral">useUpdateReport</span></div>
         <div class="card-desc">Click a card → side panel slides in from the right → operator edits priority, blast_radius, narrative inline → Save sends a partial PATCH to KC. Generalized `PATCH /api/reports/:id` to accept any subset of writable fields with strict per-field + envelope validation (unknown top-level keys rejected). `ReportDetailPanel` with backdrop/ESC/X close + unsaved-changes confirm. `useUpdateReportStatus` renamed/generalized to `useUpdateReport`. PR [#9](https://github.com/CoreshiftHQNZ/sentinel-app/pull/9) merged to dev → staging; PR [#10](https://github.com/CoreshiftHQNZ/sentinel-app/pull/10) merged staging → main 2026-05-20. 41/41 tests pass (10 new). Status edits still drag-and-drop-only (clean separation of interaction models)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V1 — Brief 4.5: Google OAuth + Coreshift HQ domain check</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">auth</span><span class="tag tag-neutral">Google OAuth</span><span class="tag tag-neutral">@coreshifthq.com</span><span class="tag tag-neutral">requireCoreshiftDomain</span><span class="tag tag-neutral">/api/auth/check-access</span></div>
+        <div class="card-desc">Sentinel now auth&#39;s exclusively via Google OAuth restricted to `@coreshifthq.com` Workspace accounts. Login page is a single &quot;Continue with Google&quot; button — email/password and magic-link flows gone. Server-side `requireCoreshiftDomain` middleware (suffix-anchored email check) is the authoritative gate; Google `hd=coreshifthq.com` is UX only. `SENTINEL_ALLOWED_EMAILS` env var removed from prod + staging. PR [#11](https://github.com/CoreshiftHQNZ/sentinel-app/pull/11) merged to dev → staging; PR [#12](https://github.com/CoreshiftHQNZ/sentinel-app/pull/12) merged staging → main 2026-05-20. 43/43 tests pass. Verified on prod: `/api/auth/check-access` 401 (auth enforced), old `/api/auth/check-allowlist` route gone. Unblocks Briefs 5+6 — issues + emails now carry real Google identities</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1264,14 +1269,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Sentinel V1 — Brief 4.5: Google OAuth + Coreshift HQ domain check</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">auth</span><span class="tag tag-neutral">briefs/BRIEF-sentinel-v4.5-google-oauth.md</span><span class="tag tag-neutral">@coreshifthq.com</span><span class="tag tag-neutral">SENTINEL_ALLOWED_EMAILS</span><span class="tag tag-neutral">@coreshifthq.com</span></div>
-        <div class="card-desc">Brief written at `briefs/BRIEF-sentinel-v4.5-google-oauth.md`. Replaces email/password + magic-link sign-in with Google OAuth restricted to `@coreshifthq.com`. Drops `SENTINEL_ALLOWED_EMAILS` env-var allowlist in favor of a server-side domain check. **Decided architecture (2026-05-20):** Sentinel-only first; `@coreshifthq.com` domain check (not allowlist); drop magic link entirely. **Pre-flight is operator-side:** Google Cloud OAuth Client ID + Supabase Auth Google provider config (~10 min total). Implementation is ~2-3 hours. Will ship before Briefs 5+6 so the GH-issue + email attribution uses real Google identities</div>
-      </div>
       <div class="card">
         <div class="card-title">Sentinel Briefs 5 + 6 — credential pre-flight</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">CoreshiftHQNZ/keycontent-app</span><span class="tag tag-neutral">Issues: Read and write</span><span class="tag tag-neutral">GITHUB_TOKEN_KC</span><span class="tag tag-neutral">POSTMARK_API_KEY</span><span class="tag tag-neutral">POSTMARK_API_KEY</span><span class="tag tag-neutral">POSTMARK_FROM_EMAIL</span></div>
