@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>80%</strong> complete</div>
-        <div><strong>69</strong>/86 cards done</div>
-        <div>Updated <strong>2026-05-21 18:54 UTC</strong></div>
+        <div><strong>82%</strong> complete</div>
+        <div><strong>72</strong>/88 cards done</div>
+        <div>Updated <strong>2026-05-21 20:47 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -721,7 +721,7 @@
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Noozey onboarding <span class="phase-pill-date">After Brief 9b ships</span></span>
+          <span class="phase-pill-value">Noozey onboarding <span class="phase-pill-date">After operator sets up Sentry alert rules</span></span>
         </div>
       </div>
     </section>
@@ -809,10 +809,10 @@
             <div class="phase-status-pill phase-status-in-progress">In progress</div>
           </div>
           <div class="phase-title">Phase 4 <span class="phase-subtitle">Multi-app + Maintenance</span></div>
-          <div class="phase-window">In progress · Brief 9b promotion next</div>
+          <div class="phase-window">In progress · Noozey onboarding closes phase</div>
           <p class="phase-desc">Scope grew mid-flight: multi-app filter strip + an entirely new /maintenance surface for tracking AI-model lifecycle, vendor reviews, and recurring upkeep. Noozey onboarding closes the phase.</p>
           <ul class="phase-deliverables">
-            <li>Brief 8: App filter strip (conditional render) ✓</li><li>Brief 9a: /maintenance V1 foundation (sidebar, AppShell, RLS) ✓</li><li>Brief 9b: Auto-discovery scanner (node-cron + GitHub Code Search) — built, awaiting promotion</li><li>Brief 10: Vendor lifecycle reference table (planned)</li><li>Brief 11: Monthly review cadence (planned)</li><li>Noozey onboarding via cloning playbook</li>
+            <li>Brief 8: App filter strip (conditional render) ✓</li><li>Brief 9a: /maintenance V1 foundation (sidebar, AppShell, RLS) ✓</li><li>Brief 9b: Auto-discovery scanner — built but rolled back; node-cron deploy crash to debug</li><li>Brief 10: Vendor lifecycle reference table + UI banner ✓</li><li>Brief 11: Manual-trigger maintenance digest (auto-schedule pending 9b retry) ✓</li><li>Noozey onboarding via cloning playbook (closes Phase 4)</li>
           </ul>
         </div>
       </div>
@@ -821,11 +821,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">69</div>
+        <div class="status-num">72</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">1</div>
+        <div class="status-num">0</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">69</span>
+        <span class="col-count">72</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1283,8 +1283,23 @@
       </div>
       <div class="card">
         <div class="card-title">Sentinel V2 — Brief 9b: auto-discovery scanner</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">built</span><span class="tag tag-neutral">node-cron</span><span class="tag tag-neutral">maintenance_entries</span><span class="tag tag-neutral">POST /api/maintenance/apps/:id/scan</span></div>
-        <div class="card-desc">`node-cron` nightly job (2am UTC) walks every onboarded app, runs the 8 model-name patterns (gpt-3.5, gpt-4, o1-, o3-, claude-, gemini-, mistral-, llama-) against GitHub Code Search, upserts findings into `maintenance_entries`, archives ones that disappeared. `POST /api/maintenance/apps/:id/scan` for manual triggers. Built + tests passing — **promotion to prod is the next action.**</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">rolled-back</span><span class="tag tag-neutral">node-cron</span><span class="tag tag-neutral">maintenance_entries</span><span class="tag tag-neutral">__dirname</span><span class="tag tag-neutral">feat/brief-9b-maintenance-scanner</span></div>
+        <div class="card-desc">`node-cron` nightly job (2am UTC) walks every onboarded app, runs 8 model-name patterns against GitHub Code Search, upserts findings into `maintenance_entries`, archives ones that disappeared. Built + tested + merged but **deploy crashed twice in a row** (node-cron@4 + ESM `__dirname` issue → v3 downgrade also failed for a different reason that needed dashboard log access). Rolled back to Brief 9a baseline via PR #29; code preserved on `feat/brief-9b-maintenance-scanner` branch. Retry tracked at task #102</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 9a follow-up: service_role GRANT on maintenance tables</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">fix</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">GRANT SELECT/INSERT/UPDATE/DELETE</span><span class="tag tag-neutral">service_role</span><span class="tag tag-neutral">permission denied for table maintained_apps</span></div>
+        <div class="card-desc">Brief 9a&#39;s migration enabled RLS + deny policies but omitted the underlying `GRANT SELECT/INSERT/UPDATE/DELETE` to `service_role`, which RLS bypass needs. Discovered when Brief 9b&#39;s promotion attempt surfaced 16hr of `permission denied for table maintained_apps` errors in Sentry. Fix migration applied via Supabase dashboard 2026-05-22. Lesson folded into HOW-WE-DO-APP-AUDITS via the v2.2 audit check</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V2 — Brief 10: vendor lifecycle reference table</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">public.vendor_lifecycle_reference</span><span class="tag tag-neutral">/maintenance</span><span class="tag tag-neutral">lifecycle_reference</span><span class="tag tag-neutral">MaintenanceEntryPanel</span><span class="tag tag-neutral">shared/lifecycle-pessimism.ts</span></div>
+        <div class="card-desc">New `public.vendor_lifecycle_reference` table on Sentinel Supabase, keyed by (kind, identifier) and seeded with 22 known dependency rows (Anthropic Claude, OpenAI GPT/embeddings, Google Gemini families). `/maintenance` entry endpoints (GET list, POST, PATCH) enrich each entry with `lifecycle_reference` via in-memory join. UI: banner in `MaintenanceEntryPanel` when the reference is more pessimistic than the entry&#39;s own status, with an &quot;Adopt suggestion&quot; button that PATCHes status + sunset_date in one go; small ⚠ badge on entry cards. Shared pessimism helper at `shared/lifecycle-pessimism.ts` with 6 unit tests. PR [#31](https://github.com/CoreshiftHQNZ/sentinel-app/pull/31) merged 2026-05-22</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V2 — Brief 11: manual-trigger maintenance digest</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">server/lib/digest.ts</span><span class="tag tag-neutral">POST /api/maintenance/digest/send</span><span class="tag tag-neutral">dryRun</span><span class="tag tag-neutral">to</span><span class="tag tag-neutral">/maintenance</span></div>
+        <div class="card-desc">`server/lib/digest.ts` buckets entries into &quot;vendor reminders&quot; (Brief 10 disagreement) + &quot;sunset approaching&quot; (within 60 days). HTML + text email bodies rendered, HTML-escaped. `POST /api/maintenance/digest/send` endpoint with optional `dryRun` + `to` overrides. &quot;Send digest&quot; button in `/maintenance` page header with auto-dismissing toast showing the response summary. 14 new unit tests covering bucketing edges + email rendering. **Scheduled cron deferred until Brief 9b&#39;s deploy crash is sorted** — manual trigger only for V1. PR [#32](https://github.com/CoreshiftHQNZ/sentinel-app/pull/32) merged 2026-05-22</div>
       </div>
       <div class="card">
         <div class="card-title">Catch-block Sentry discipline (KC #88)</div>
@@ -1315,14 +1330,9 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">0</span>
       </header>
-      <div class="cards">
-      <div class="card">
-        <div class="card-title">Sentinel V2 — Brief 9b: promote scanner to prod + first scan against keycontent</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">maintenance_entries</span><span class="tag tag-neutral">keycontent</span></div>
-        <div class="card-desc">Built + tests green. Needs the dev → staging → main promotion flow + first nightly scan to populate `maintenance_entries` against the onboarded `keycontent` app. Owner: Claude Code. ~30 min</div>
-      </div></div>
+      <div class="cards"><div class="empty">No items</div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -1340,12 +1350,12 @@
       <div class="card">
         <div class="card-title">Operator: apply 3-rule Sentry alert recipe to 4 projects</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-3-followup</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">Sentinel/playbook/HOW-WE-DO-SENTRY-ALERTS.md</span></div>
-        <div class="card-desc">Sentry UI → KEYCONTENT-BACKEND, KEYCONTENT-FRONTEND, SENTINEL-BACKEND, SENTINEL-FRONTEND. Each gets 3 rules (new-issue, regression, high-frequency). Recipe with field-by-field values at `Sentinel/playbook/HOW-WE-DO-SENTRY-ALERTS.md`. ~5 min per project, ~20 min total. **Closes the Zernio post-mortem&#39;s &quot;Sentry alert on persistent webhook 5xx&quot; item (KC [#77](https://github.com/CoreshiftHQNZ/keycontent-app/issues/77)).**</div>
+        <div class="card-desc">Sentry UI → KEYCONTENT-BACKEND, KEYCONTENT-FRONTEND, SENTINEL-BACKEND, SENTINEL-FRONTEND. Each gets 3 rules (new-issue, regression, high-frequency). Recipe with field-by-field values at `Sentinel/playbook/HOW-WE-DO-SENTRY-ALERTS.md` (PLAY 7 in the ops playbook). ~5 min per project, ~20 min total. **Closes the Zernio post-mortem&#39;s &quot;Sentry alert on persistent webhook 5xx&quot; item (KC [#77](https://github.com/CoreshiftHQNZ/keycontent-app/issues/77)).**</div>
       </div>
       <div class="card">
-        <div class="card-title">Decide Brief 10/11 priorities</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
-        <div class="card-desc">Brief 10 (vendor lifecycle reference table) and Brief 11 (monthly review cadence) were sketched as the next maintenance briefs. After today&#39;s incident storm + audit checklist tightening, worth a quick re-read to decide whether those still come next or whether Noozey onboarding jumps the queue</div>
+        <div class="card-title">Brief 9b retry — diagnose the deploy crash</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">deferred</span><span class="tag tag-neutral">__dirname</span><span class="tag tag-neutral">feat/brief-9b-maintenance-scanner</span></div>
+        <div class="card-desc">Auto-discovery scanner was built + tested but its deploy crashed twice (node-cron@4 ESM `__dirname` issue, then v3 downgrade also failed for an unidentified second cause). Code preserved on `feat/brief-9b-maintenance-scanner` branch. Resume in a fresh session with Railway dashboard access to see the failed-deploy log directly. Once 9b lands, Brief 11&#39;s manual trigger can grow an auto-schedule. Tracked at task #102</div>
       </div></div>
     </section>
     <section class="column col-backlog">
@@ -1375,14 +1385,9 @@
         <div class="card-desc">User-facing transparency. Deferred until Dashboard polish phase</div>
       </div>
       <div class="card">
-        <div class="card-title">Sentinel — Brief 10: vendor lifecycle reference table</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
-        <div class="card-desc">Reference data for the /maintenance surface: which AI models are deprecated, which are current, recommended upgrade paths. Auto-populated where possible</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Sentinel — Brief 11: monthly review cadence + report</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">/maintenance</span></div>
-        <div class="card-desc">Surfaces `/maintenance` entries that need quarterly attention. Email digest or in-app surface</div>
+        <div class="card-title">Brief 11 auto-schedule (post Brief 9b retry)</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">DIGEST_RECIPIENT</span></div>
+        <div class="card-desc">Currently the digest is operator-triggered via &quot;Send digest&quot; button. Once Brief 9b&#39;s cron crash is solved, wire a monthly cron (1st of month, 9am UTC) to call the same digest endpoint. Email recipient comes from `DIGEST_RECIPIENT` env var</div>
       </div>
       <div class="card">
         <div class="card-title">Document cloning playbook</div>
@@ -1392,7 +1397,7 @@
       <div class="card">
         <div class="card-title">Onboard Noozey to Sentinel</div>
         <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
-        <div class="card-desc">Apply the cloning playbook. Each piece auto-flows into Dashboard + /maintenance as it lands</div>
+        <div class="card-desc">Apply the cloning playbook. Each piece auto-flows into Dashboard + /maintenance as it lands. Closes Phase 4 once shipped</div>
       </div>
       <div class="card">
         <div class="card-title">Sentry alert &quot;heartbeat&quot; detection</div>
@@ -1408,6 +1413,11 @@
         <div class="card-title">Investigate 401-then-200 Zernio doublet (KC #78)</div>
         <div class="card-tags"><span class="tag tag-neutral">incident-followup</span></div>
         <div class="card-desc">Every successful Zernio 200 since the secret was restored is preceded by a 401 ~1s earlier. Probably probe + real event, or HMAC format the handler doesn&#39;t accept first try. Not blocking; worth understanding before Zernio scales</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Vendor lifecycle reference auto-population</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">vendor_lifecycle_reference</span></div>
+        <div class="card-desc">Brief 10 ships with 22 manually-seeded rows. Future enhancement: scrape Anthropic/OpenAI/Google deprecation pages on a cadence and upsert into `vendor_lifecycle_reference`. Probably HTML scraping + a kind-specific parser per vendor. Only worth doing once the manual edit cadence proves painful</div>
       </div>
       <div class="card">
         <div class="card-title">Monthly trend reviews</div>
