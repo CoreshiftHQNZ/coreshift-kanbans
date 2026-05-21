@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>77%</strong> complete</div>
         <div><strong>56</strong>/73 cards done</div>
-        <div>Updated <strong>2026-05-21 00:25 UTC</strong></div>
+        <div>Updated <strong>2026-05-21 00:35 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">59</span>
+        <span class="col-count">60</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1260,6 +1260,11 @@
         <div class="card-title">Sentinel Briefs 5 + 6 — credential pre-flight</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">GITHUB_TOKEN_KC</span><span class="tag tag-neutral">POSTMARK_API_KEY</span><span class="tag tag-neutral">POSTMARK_FROM_EMAIL</span></div>
         <div class="card-desc">Three vars landed on Sentinel Railway prod + staging (2026-05-21): `GITHUB_TOKEN_KC` (fine-grained PAT scoped to `CoreshiftHQNZ/keycontent-app` with `Issues: Read and write`); `POSTMARK_API_KEY` + `POSTMARK_FROM_EMAIL` reused from KC&#39;s Postmark Server (Option A — recipients are KC end-users, same trusted sender domain `hello@keycontent.ai`). Sentinel PR [#13](https://github.com/CoreshiftHQNZ/sentinel-app/pull/13) → [#14](https://github.com/CoreshiftHQNZ/sentinel-app/pull/14) landed the `.env.example` doc through dev → staging → main. Briefs 5 and 6 now fully unblocked</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V1 — Brief 5: file GitHub issue on operator ack</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">GITHUB_TOKEN_KC</span><span class="tag tag-neutral">POST /api/reports/:id/file-issue</span><span class="tag tag-neutral">github_issue_number</span><span class="tag tag-neutral">CoreshiftHQNZ/keycontent-app</span></div>
+        <div class="card-desc">Explicit operator action: side panel shows &quot;File GitHub issue&quot; button → Sentinel calls `POST /api/reports/:id/file-issue` → server creates a real GitHub issue in `CoreshiftHQNZ/keycontent-app` via the fine-grained PAT, writes `github_issue_number` + `github_issue_url` back to KC&#39;s `bug_reports` row. Idempotent at three layers: server returns existing issue without re-filing if already set; client cache merge writes the same fields either way; TanStack `onSettled` invalidates so concurrent operators reconcile. Issue body is a markdown template (reporter/type/priority/blast radius meta line, page URL + user agent, the reporter&#39;s message as a block quote, operator&#39;s narrative, screenshot path, Sentinel back-reference). Card shows a `GH #N` pill; panel shows a `GH #N ↗` link once filed. 74/74 tests pass (+20 github lib, +11 fileIssue route). PR [#15](https://github.com/CoreshiftHQNZ/sentinel-app/pull/15) merged to dev → staging; PR [#16](https://github.com/CoreshiftHQNZ/sentinel-app/pull/16) merged staging → main 2026-05-21. Verified on prod</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1279,14 +1284,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Sentinel V1 — Brief 5: file GitHub issue on operator ack</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">GITHUB_TOKEN_KC</span><span class="tag tag-neutral">CoreshiftHQNZ/keycontent-app</span><span class="tag tag-neutral">bug_reports</span></div>
-        <div class="card-desc">When an operator moves a card out of `Triage` (or hits a future &quot;Acknowledge&quot; action), Sentinel creates a GitHub issue in `CoreshiftHQNZ/keycontent-app` with the bug-report context (reporter, narrative, screenshots if any, priority, blast_radius, link back to the Sentinel card). Issue number stored on the `bug_reports` row so we don&#39;t double-file. Pre-flight done — `GITHUB_TOKEN_KC` is on Railway prod + staging. Brief 5 itself still to write</div>
-      </div>
       <div class="card">
         <div class="card-title">Sentinel V1 — Brief 6: resolution-ack email when card moves to Done</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">POSTMARK_API_KEY</span><span class="tag tag-neutral">POSTMARK_FROM_EMAIL</span><span class="tag tag-neutral">hello@keycontent.ai</span></div>
