@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>77%</strong> complete</div>
-        <div><strong>56</strong>/73 cards done</div>
-        <div>Updated <strong>2026-05-21 00:55 UTC</strong></div>
+        <div><strong>86%</strong> complete</div>
+        <div><strong>63</strong>/73 cards done</div>
+        <div>Updated <strong>2026-05-21 01:20 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">62</span>
+        <span class="col-count">63</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1274,7 +1274,12 @@
       <div class="card">
         <div class="card-title">CI auto-promote fix (Node 22 + write perms + lease) for both repos</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">.github/workflows</span><span class="tag tag-neutral">GITHUB_TOKEN</span><span class="tag tag-neutral">--force-with-lease</span></div>
-        <div class="card-desc">Auto-promote dev → staging had been failing silently most of this session — we&#39;d been force-pushing manually as the workaround. Three root causes found and fixed in both Sentinel and KC `deploy-staging.yml` + `deploy-production.yml`: (1) Node 20 → 22 to match nixpacks runtime (avoids `@supabase/supabase-js` eager WebSocket check); (2) explicit `permissions: contents: write` block — default `GITHUB_TOKEN` was read-only on some configs, so `git push` silently failed; (3) `git push --force-with-lease` instead of plain push, so concurrent dev updates surface as a clear failure rather than a silent no-op. **Meta-proof:** Sentinel PR [#19](https://github.com/CoreshiftHQNZ/sentinel-app/pull/19) merged at 00:49 UTC and auto-promoted to staging without any manual intervention by 00:51 — the workflow validated itself. PR [#20](https://github.com/CoreshiftHQNZ/sentinel-app/pull/20) carried it to main. KC mirror: PR [#84](https://github.com/CoreshiftHQNZ/keycontent-app/pull/84) → [#85](https://github.com/CoreshiftHQNZ/keycontent-app/pull/85). No runtime behavior change in either repo</div>
+        <div class="card-desc">Auto-promote dev → staging had been failing silently most of this session — we&#39;d been force-pushing manually as the workaround. Three root causes found and fixed in both Sentinel and KC `deploy-staging.yml` + `deploy-production.yml`: (1) Node 20 → 22 to match nixpacks runtime (avoids `@supabase/supabase-js` eager WebSocket check); (2) explicit `permissions: contents: write` block — default `GITHUB_TOKEN` was read-only on some configs, so `git push` silently failed; (3) `git push --force-with-lease` instead of plain push, so concurrent dev updates surface as a clear failure rather than a silent no-op. **Meta-proof:** Sentinel PR [#19](https://github.com/CoreshiftHQNZ/sentinel-app/pull/19) merged at 00:49 UTC and auto-promoted to staging without any manual intervention by 00:51 — the workflow validated itself. **Second proof:** Brief 7&#39;s PR #21 also auto-promoted cleanly. PR [#20](https://github.com/CoreshiftHQNZ/sentinel-app/pull/20) carried it to main. KC mirror: PR [#84](https://github.com/CoreshiftHQNZ/keycontent-app/pull/84) → [#85](https://github.com/CoreshiftHQNZ/keycontent-app/pull/85). No runtime behavior change in either repo</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V1 — Brief 7: Better Stack status pills</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">BETTERSTACK_API_KEY</span><span class="tag tag-neutral">GET /api/status</span><span class="tag tag-neutral">listMonitors</span></div>
+        <div class="card-desc">Dashboard header now shows live colored pills, one per Better Stack monitor (green = up, red = down, amber = paused/validating/maintenance, gray = unknown). Server route `GET /api/status` (auth + domain check) proxies Better Stack&#39;s list-monitors API behind Sentinel&#39;s own auth with a 10-second in-memory cache so refresh-happy operators don&#39;t burn through the upstream rate limit. Client uses TanStack Query (30s staleTime + window-focus refetch). Pills with a URL link out to the monitored URL in a new tab. Loading = 3-dot skeleton; error = single amber &quot;Status check unavailable&quot; pill (board unaffected by Better Stack outages). 118/118 tests pass (+12 betterstack lib, +10 status route). PR [#21](https://github.com/CoreshiftHQNZ/sentinel-app/pull/21) merged dev → staging via auto-promote (first real feature ship after the workflow fix); PR [#22](https://github.com/CoreshiftHQNZ/sentinel-app/pull/22) merged staging → main 2026-05-21. Operator-verified visually on staging. **Closes Phase 3 — Sentinel V1 feature-complete.**</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1294,9 +1299,14 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">0</span>
+        <span class="col-count">1</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Sentinel V2 — Brief 8: filter strip (app filter slot, conditional render)</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">bug_reports.app_id</span><span class="tag tag-neutral">FilterStrip</span><span class="tag tag-neutral">?app=</span></div>
+        <div class="card-desc">Phase 4 opener — multi-app UI. New `&lt;FilterStrip /&gt;` component in the status-pills row hosts the &quot;App ▾&quot; dropdown. Dropdown is **conditionally rendered** — invisible while only one `app_id` exists in the data, appears automatically the moment a second app&#39;s first bug_report lands (e.g. Noozey onboards). Options derived from `SELECT DISTINCT app_id`, labeled with per-option counts. URL persistence (`?app=keycontent`) so filters survive reload + are shareable. Server extension: `GET /api/reports?app=keycontent` accepts the filter; no-op when missing. TanStack queryKey becomes `[/api/reports, { app }]` so each filter has its own cache slot. FilterStrip designed as a row of slots — Brief 8.5 will add `&lt;PriorityFilter /&gt;`, `&lt;TypeFilter /&gt;`, `&lt;ReporterFilter /&gt;`, `&lt;HasIssueFilter /&gt;` without re-chroming. ~half the size of Brief 5</div>
+      </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
@@ -1323,26 +1333,6 @@
         <div class="card-title">&quot;My past reports&quot; view</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
         <div class="card-desc">User-facing transparency. Deferred until after Dashboard ships</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Sentinel V1 — Brief 4: card detail + triage fields</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
-        <div class="card-desc">*(also listed in This Week — keep here as longer-horizon view)* Set priority/radius/narrative via card-click modal. Brief 3 prerequisite shipped</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Sentinel V1 — Brief 5: auto-create GH Issue when leaving Triage</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
-        <div class="card-desc">Pending Brief 4</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Sentinel V1 — Brief 6: resolution-ack email when → Done</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
-        <div class="card-desc">Pending Brief 5</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Sentinel V1 — Brief 7: Better Stack status pills</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
-        <div class="card-desc">Pending Brief 6</div>
       </div>
       <div class="card">
         <div class="card-title">Document cloning playbook</div>
