@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>86%</strong> complete</div>
-        <div><strong>63</strong>/73 cards done</div>
-        <div>Updated <strong>2026-05-21 01:20 UTC</strong></div>
+        <div><strong>88%</strong> complete</div>
+        <div><strong>64</strong>/73 cards done</div>
+        <div>Updated <strong>2026-05-21 01:30 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">63</span>
+        <span class="col-count">64</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1280,6 +1280,11 @@
         <div class="card-title">Sentinel V1 — Brief 7: Better Stack status pills</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">BETTERSTACK_API_KEY</span><span class="tag tag-neutral">GET /api/status</span><span class="tag tag-neutral">listMonitors</span></div>
         <div class="card-desc">Dashboard header now shows live colored pills, one per Better Stack monitor (green = up, red = down, amber = paused/validating/maintenance, gray = unknown). Server route `GET /api/status` (auth + domain check) proxies Better Stack&#39;s list-monitors API behind Sentinel&#39;s own auth with a 10-second in-memory cache so refresh-happy operators don&#39;t burn through the upstream rate limit. Client uses TanStack Query (30s staleTime + window-focus refetch). Pills with a URL link out to the monitored URL in a new tab. Loading = 3-dot skeleton; error = single amber &quot;Status check unavailable&quot; pill (board unaffected by Better Stack outages). 118/118 tests pass (+12 betterstack lib, +10 status route). PR [#21](https://github.com/CoreshiftHQNZ/sentinel-app/pull/21) merged dev → staging via auto-promote (first real feature ship after the workflow fix); PR [#22](https://github.com/CoreshiftHQNZ/sentinel-app/pull/22) merged staging → main 2026-05-21. Operator-verified visually on staging. **Closes Phase 3 — Sentinel V1 feature-complete.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V2 — Brief 8: filter strip (app filter slot, conditional render)</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">FilterStrip</span><span class="tag tag-neutral">AppFilter</span><span class="tag tag-neutral">?app=</span><span class="tag tag-neutral">useUrlFilter</span><span class="tag tag-neutral">bug_reports.app_id</span></div>
+        <div class="card-desc">Phase 4 opener — multi-app UI architecture in place. Three layers: server `GET /api/reports?app=keycontent` (trims whitespace, rejects &gt;64 chars, no-op when missing), client `useReports({ app })` with per-filter queryKey, URL persistence via `useUrlFilter` hook (50 lines, no new deps). New `&lt;FilterStrip /&gt;` component hosts the `&lt;AppFilter /&gt;` dropdown today and slots for `&lt;PriorityFilter /&gt;` / `&lt;TypeFilter /&gt;` / `&lt;ReporterFilter /&gt;` / `&lt;HasIssueFilter /&gt;` tomorrow (Brief 8.5). Dropdown conditionally rendered — invisible while only one `app_id` exists in the data, appears automatically when a second app onboards (no code change at Phase 4 onboarding time). Counts derived from client cache so they reflect the true dataset regardless of current filter. Detail panel&#39;s open-report lookup uses unfiltered list so changing filter mid-edit doesn&#39;t drop the panel. 124/124 tests pass (+6 for the `?app=` filter coverage). PR [#23](https://github.com/CoreshiftHQNZ/sentinel-app/pull/23) merged dev → staging via auto-promote; PR [#24](https://github.com/CoreshiftHQNZ/sentinel-app/pull/24) merged staging → main 2026-05-21. Verified on prod — endpoint accepts `?app=` param, auth gate enforced, dropdown stays hidden as designed</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1299,14 +1304,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">0</span>
       </header>
-      <div class="cards">
-      <div class="card">
-        <div class="card-title">Sentinel V2 — Brief 8: filter strip (app filter slot, conditional render)</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">bug_reports.app_id</span><span class="tag tag-neutral">FilterStrip</span><span class="tag tag-neutral">?app=</span></div>
-        <div class="card-desc">Phase 4 opener — multi-app UI. New `&lt;FilterStrip /&gt;` component in the status-pills row hosts the &quot;App ▾&quot; dropdown. Dropdown is **conditionally rendered** — invisible while only one `app_id` exists in the data, appears automatically the moment a second app&#39;s first bug_report lands (e.g. Noozey onboards). Options derived from `SELECT DISTINCT app_id`, labeled with per-option counts. URL persistence (`?app=keycontent`) so filters survive reload + are shareable. Server extension: `GET /api/reports?app=keycontent` accepts the filter; no-op when missing. TanStack queryKey becomes `[/api/reports, { app }]` so each filter has its own cache slot. FilterStrip designed as a row of slots — Brief 8.5 will add `&lt;PriorityFilter /&gt;`, `&lt;TypeFilter /&gt;`, `&lt;ReporterFilter /&gt;`, `&lt;HasIssueFilter /&gt;` without re-chroming. ~half the size of Brief 5</div>
-      </div></div>
+      <div class="cards"><div class="empty">No items</div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
