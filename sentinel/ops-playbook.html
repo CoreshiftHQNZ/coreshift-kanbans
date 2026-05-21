@@ -1604,10 +1604,11 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
         <h2 class="play-title">App Audits</h2>
         <p class="play-tagline">Defaults are dangerous. Audit is the gate.</p>
         <div class="play-divider"></div>
-        <div class="md"><p><strong>Status:</strong> Active · v2.1 · 2026-05-22
+        <div class="md"><p><strong>Status:</strong> Active · v2.2 · 2026-05-22
 <strong>Applies to:</strong> Every Coreshift HQ app — at onboarding (before joining Sentinel ops) and quarterly thereafter
 <strong>Owners:</strong> Operator (runs the checklist) · Claude Code (writes fix briefs for failed items) · Tools (Supabase advisors, Cloudflare audit logs, vendor dashboards)</p>
 <blockquote>
+<p><strong>v2.2 changelog:</strong> Refined the Railway env-var parity check to be a <strong>full diff</strong> of staging vs production env-var keys, not &quot;check whichever var we&#39;re investigating today.&quot; The 2026-05-19 audit pass found <code>ZERNIO_WEBHOOK_SECRET</code> missing on prod but missed that the entire Sentry block (<code>SENTRY_DSN</code>, <code>SENTRY_AUTH_TOKEN</code>, etc.) was also missing — because the audit focused on the var that triggered the incident rather than diffing the full set. Triggered by the 2026-05-22 Sentry env-var drift incident (KC backend was silently un-observable for ~9 days). Added a one-line shell command to make the diff trivial.</p>
 <p><strong>v2.1 changelog:</strong> Added catch-block discipline check to the Sentry section. Server-side <code>catch</code> blocks that return 5xx but don&#39;t call <code>Sentry.captureException</code> make failures invisible to the operator dashboard. Triggered by the 2026-05-22 Quick Post 502 incident — Sentry was wired but the handler silently swallowed the exception. Tracked at KC <a href="https://github.com/CoreshiftHQNZ/keycontent-app/issues/88">#88</a>.</p>
 <p><strong>v2 changelog:</strong> Added Railway section (env-var parity, watch-branch, health-check checks); tightened Supabase section with <code>schema_migrations</code> consistency checks; updated KeyContent outstanding items. Triggered by the 2026-05 incident pair: 16-day <code>ZERNIO_WEBHOOK_SECRET</code> outage on KC prod + RLS migration bookkeeping drift. Both would have been caught by v2 checks.</p>
 </blockquote>
@@ -1673,9 +1674,12 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 <ul>
 <li><input disabled="" type="checkbox"> Production and staging environments both exist for the app&#39;s service</li>
 <li><input disabled="" type="checkbox"> <strong>Watch branch is correctly set per environment</strong> — production environment watches <code>main</code>; staging environment watches <code>staging</code> (Settings → Deploys → Watch Branch)</li>
-<li><input disabled="" type="checkbox"> <strong>All app-runtime env vars exist in BOTH environments</strong> — diff: list vars on staging, list vars on production; every var on one must appear on the other (modulo values that are env-specific by design like <code>APP_URL</code>)<ul>
-<li>Verify: <code>railway variables --service &lt;name&gt;</code> in each env, then diff the lists</li>
-<li>Common gap missed: webhook signing secrets (e.g. <code>ZERNIO_WEBHOOK_SECRET</code>), API tokens for vendors only configured on staging during development then never propagated to production</li>
+<li><input disabled="" type="checkbox"> <strong>All app-runtime env vars exist in BOTH environments</strong> — <strong>full diff</strong> of staging vs production env-var keys, not just &quot;check the var we&#39;re investigating.&quot; Every var on one must appear on the other (modulo values that are env-specific by design like <code>APP_URL</code>, <code>SENTRY_ENVIRONMENT</code>, <code>VITE_SENTRY_ENVIRONMENT</code>).<ul>
+<li>Verify (one-liner): <code>diff &lt;(railway variables --kv --environment staging | cut -d= -f1 | sort) &lt;(railway variables --kv --environment production | cut -d= -f1 | sort)</code></li>
+<li>PowerShell equivalent: <code>Compare-Object (railway variables --kv --environment staging | ForEach-Object { ($_ -split &#39;=&#39;)[0] } | Sort-Object) (railway variables --kv --environment production | ForEach-Object { ($_ -split &#39;=&#39;)[0] } | Sort-Object)</code></li>
+<li>Expected output: empty (no diff) for runtime vars. Any line starting with <code>&lt;</code> means &quot;in staging only&quot;; <code>&gt;</code> means &quot;in production only.&quot; Both directions are bugs unless they&#39;re an environment-specific value by design.</li>
+<li><strong>Common gaps missed historically:</strong> webhook signing secrets (<code>ZERNIO_WEBHOOK_SECRET</code> — KC 2026-04-30 → 2026-05-19, ~16 days), observability config (<code>SENTRY_DSN</code>, <code>SENTRY_AUTH_TOKEN</code>, <code>SENTRY_ORG</code>, <code>SENTRY_PROJECT</code>, <code>VITE_SENTRY_DSN</code> — KC 2026-05-13 → 2026-05-22, ~9 days), vendor API tokens (any new integration first wired on staging during development).</li>
+<li><strong>Why the full diff matters:</strong> when an incident pulls your attention to one missing var, it&#39;s tempting to just restore that var and move on. Past data shows: if one var drifted, others probably did too — they were all part of the same &quot;first set up on staging during development&quot; workflow. Diff everything every time.</li>
 </ul>
 </li>
 <li><input disabled="" type="checkbox"> <strong>No secret values shared between staging and production</strong> — each environment has its own copies of <code>SUPABASE_SERVICE_ROLE_KEY</code>, <code>STRIPE_SECRET_KEY</code>, etc. (mixing them cross-contaminates data/billing)</li>
@@ -1786,7 +1790,7 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 </ul>
 <p>Bump the version at the top and note the change.</p>
 <hr>
-<h2>Outstanding items for KeyContent (initial audit, 2026-05-13; updated 2026-05-19)</h2>
+<h2>Outstanding items for KeyContent (initial audit, 2026-05-13; updated 2026-05-19, 2026-05-22)</h2>
 <p>The first time this checklist runs on KeyContent, it produces this delta. Surfaced during the Sentinel folder review session.</p>
 <table>
 <thead>
@@ -1813,8 +1817,18 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 </tr>
 <tr>
 <td>Sentry sections</td>
-<td>✅ Integrated Phase 1 Week 1; needs first audit pass</td>
-<td>Run Sentry checks at next quarterly audit</td>
+<td>✅ Integrated Phase 1 Week 1; first audit pass forced by 2026-05-22 incident (see row below)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Sentry env-var parity</strong> (caught by v2.2 retroactively)</td>
+<td>❌ <strong>Caught at third-pass audit 2026-05-22</strong> — all 7 Sentry env vars (<code>SENTRY_DSN</code> + 6 others) were missing on KC prod for ~9 days. KC backend Sentry was a no-op the entire time. Vars copied staging→prod, prod Sentry verified working via probe. Same root pattern as the Zernio row below — exactly what v2.2&#39;s full-diff refinement is designed to prevent.</td>
+<td>All 7 vars now on prod. Catch-block discipline (PR #93) live. Post-mortem: <code>incidents/2026-05-22-sentry-env-var-drift.md</code>. Alert rules recipe at <code>HOW-WE-DO-SENTRY-ALERTS.md</code>.</td>
+</tr>
+<tr>
+<td>Sentry alert rules</td>
+<td>⚠️ Recipe drafted 2026-05-22 (<code>HOW-WE-DO-SENTRY-ALERTS.md</code>); 3 rules per project (new-issue, regression, high-frequency)</td>
+<td>Operator to apply rules to KEYCONTENT-BACKEND + KEYCONTENT-FRONTEND + SENTINEL-BACKEND + SENTINEL-FRONTEND (~20 min total).</td>
 </tr>
 <tr>
 <td>Better Stack sections</td>
@@ -1842,7 +1856,7 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 <td>Both DBs + repo now agree on <code>20260512192536</code>.</td>
 </tr>
 </tbody></table>
-<p>Re-run the full audit quarterly. The v2-new items (Railway parity + schema_migrations consistency) should be a focus of the next pass for every app.</p>
+<p>Re-run the full audit quarterly. The v2/v2.2 items (Railway full-diff parity + <code>schema_migrations</code> consistency + Sentry alert rules) should be a focus of the next pass for every app.</p>
 <hr>
 <h2>See also</h2>
 <ul>
