@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>77%</strong> complete</div>
         <div><strong>56</strong>/73 cards done</div>
-        <div>Updated <strong>2026-05-21 00:45 UTC</strong></div>
+        <div>Updated <strong>2026-05-21 00:55 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">61</span>
+        <span class="col-count">62</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1270,6 +1270,11 @@
         <div class="card-title">Sentinel V1 — Brief 6: resolution-ack email when card moves to Done</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">POSTMARK_API_KEY</span><span class="tag tag-neutral">resolved_at</span><span class="tag tag-neutral">hello@keycontent.ai</span></div>
         <div class="card-desc">When PATCH `/api/reports/:id` sets `status=&#39;done&#39;` AND the row&#39;s `resolved_at` was NULL, Sentinel stamps `resolved_at=NOW()` in the same UPDATE and fires a Postmark email to the reporter (&quot;your bug report has been resolved&quot;). Idempotent — once `resolved_at` is set, the email never re-fires (Done → Triage → Done is safe). Postmark failures are logged + sent to Sentry but DO NOT fail the PATCH; the status change has already landed. Reuses KC&#39;s Postmark Server (sender `hello@keycontent.ai`). Defensive HTML escape on reporter content so &quot;&lt;script&gt;&quot; in a message can&#39;t render as live HTML. Panel shows &quot;✓ Resolution email sent to &lt;reporter&gt; · X ago&quot; confirmation. 96/96 tests pass (+12 postmark lib, +10 PATCH resolution-flow). PR [#17](https://github.com/CoreshiftHQNZ/sentinel-app/pull/17) merged to dev → staging; PR [#18](https://github.com/CoreshiftHQNZ/sentinel-app/pull/18) merged staging → main 2026-05-21. Dry-run verified on staging with a synthetic row sending to `abe@coreshifthq.com`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">CI auto-promote fix (Node 22 + write perms + lease) for both repos</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">.github/workflows</span><span class="tag tag-neutral">GITHUB_TOKEN</span><span class="tag tag-neutral">--force-with-lease</span></div>
+        <div class="card-desc">Auto-promote dev → staging had been failing silently most of this session — we&#39;d been force-pushing manually as the workaround. Three root causes found and fixed in both Sentinel and KC `deploy-staging.yml` + `deploy-production.yml`: (1) Node 20 → 22 to match nixpacks runtime (avoids `@supabase/supabase-js` eager WebSocket check); (2) explicit `permissions: contents: write` block — default `GITHUB_TOKEN` was read-only on some configs, so `git push` silently failed; (3) `git push --force-with-lease` instead of plain push, so concurrent dev updates surface as a clear failure rather than a silent no-op. **Meta-proof:** Sentinel PR [#19](https://github.com/CoreshiftHQNZ/sentinel-app/pull/19) merged at 00:49 UTC and auto-promoted to staging without any manual intervention by 00:51 — the workflow validated itself. PR [#20](https://github.com/CoreshiftHQNZ/sentinel-app/pull/20) carried it to main. KC mirror: PR [#84](https://github.com/CoreshiftHQNZ/keycontent-app/pull/84) → [#85](https://github.com/CoreshiftHQNZ/keycontent-app/pull/85). No runtime behavior change in either repo</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1289,14 +1294,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">0</span>
       </header>
-      <div class="cards">
-      <div class="card">
-        <div class="card-title">Verify Sentinel branch-protection bypass state</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">staging</span></div>
-        <div class="card-desc">Auto-promote worked on Brief 3&#39;s PR #7 → staging without manual intervention, suggesting something changed. Confirm at Sentinel-app Settings → Branches → staging that github-actions[bot] is in the &quot;Allow specified actors to bypass required pull requests&quot; list. If yes, mark fully shipped. If no, add it — same fix likely needed on KC&#39;s `staging` rule too. ~5 min</div>
-      </div></div>
+      <div class="cards"><div class="empty">No items</div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
