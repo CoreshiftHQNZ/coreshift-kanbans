@@ -333,7 +333,7 @@
       <div class="md">
         <p><strong>Working name:</strong> <strong>Sentinel</strong> 🛡️ — the unified ops platform vision for monitoring every Coreshift HQ app from one place.
 <strong>Phase 0 product:</strong> KeyContent Maintenance Ops (currently the only app on Sentinel).</p>
-<p><strong>Last updated:</strong> 2026-05-11
+<p><strong>Last updated:</strong> 2026-05-22
 <strong>Owner:</strong> Abe (operator) · Claude Code (implementer)
 <strong>North Star:</strong> Catch bugs before users do · Ship fixes in hours · Retire email-support workflow · Scale to every Coreshift HQ app</p>
 <hr>
@@ -363,11 +363,15 @@
 </tr>
 <tr>
 <td><strong>Phase 3</strong> — Sentinel (unified ops dashboard)</td>
-<td>🟡 <strong>Active</strong> — V1 Brief 1 shipped (scaffold + auth); Brief 2 (render cards) next</td>
+<td>✅ <strong>Complete</strong> — V1 shipped 2026-05-21. Briefs 1–7 + Brief 4.5 + CI workflow hardening. Live at <code>sentinel.coreshifthq.com</code></td>
 </tr>
 <tr>
-<td><strong>Phase 4</strong> — Clone to other Coreshift HQ apps</td>
-<td>📋 Future (after a second app exists to onboard)</td>
+<td><strong>Phase 4</strong> — Multi-app + Maintenance surface</td>
+<td>🟡 <strong>Active</strong> — Brief 8 (filter strip) ✓, Brief 9a (<code>/maintenance</code> V1) ✓, Brief 9b (auto-discovery scanner) built + awaiting promotion. Briefs 10–11 (vendor lifecycle + monthly review) planned. Noozey onboarding closes the phase.</td>
+</tr>
+<tr>
+<td><strong>Observability hardening (2026-05-22)</strong></td>
+<td>✅ <strong>Catch-block discipline shipped to KC prod</strong> (PR #91 → #93 — 138 sites); <strong>Sentry env vars restored on KC prod</strong> (silent observability drift for ~9 days, fixed via Railway CLI); <strong>post-mortem + alert-rules recipe + audit checklist v2.2</strong> all live. Operator action remaining: apply 3-rule Sentry alert recipe to 4 projects.</td>
 </tr>
 </tbody></table>
 <hr>
@@ -488,7 +492,7 @@
       </div>
 
       <div class="md-foot">
-        Built 2026-05-20 19:23 UTC  ·  Source: <code>ROADMAP.md</code>  ·  Companion: <a href="ops-playbook.html">Playbook</a>  ·  <a href="pitch-deck.html">Pitch Deck</a>  ·  <a href="ops-kanban.html">Dashboard</a>
+        Built 2026-05-21 18:55 UTC  ·  Source: <code>ROADMAP.md</code>  ·  Companion: <a href="ops-playbook.html">Playbook</a>  ·  <a href="pitch-deck.html">Pitch Deck</a>  ·  <a href="ops-kanban.html">Dashboard</a>
       </div>
     </main>
   </div>

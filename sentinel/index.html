@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>88%</strong> complete</div>
-        <div><strong>65</strong>/74 cards done</div>
-        <div>Updated <strong>2026-05-21 02:30 UTC</strong></div>
+        <div><strong>80%</strong> complete</div>
+        <div><strong>69</strong>/86 cards done</div>
+        <div>Updated <strong>2026-05-21 18:54 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">Phase 1 · Week 1 — Foundation</span>
+          <span class="phase-pill-value">Phase 4 · Multi-app + Maintenance</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">CEO Pitch <span class="phase-pill-date">Monday, May 18, 2026</span></span>
+          <span class="phase-pill-value">Noozey onboarding <span class="phase-pill-date">After Brief 9b ships</span></span>
         </div>
       </div>
     </section>
@@ -791,28 +791,28 @@
             <li>bug_reports table in Supabase ✓</li><li>Immediate ack email to user on submit ✓</li><li>Auto-create GH Issue + resolution-ack moved to Phase 3 (Dashboard)</li><li>&quot;My past reports&quot; view deferred</li>
           </ul>
         </div>
-        <div class="phase-card phase-in-progress">
+        <div class="phase-card phase-done">
           <div class="phase-card-head">
             <div class="phase-marker">3</div>
-            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
           </div>
           <div class="phase-title">Phase 3 <span class="phase-subtitle">Sentinel Dashboard</span></div>
-          <div class="phase-window">In progress · 7 briefs queued</div>
-          <p class="phase-desc">The unified internal ops dashboard. Brought forward from &quot;when at 2-3 apps&quot; — Abe already operates two apps (KC + Noozey) and the triage friction is real today. KC-first; Noozey onboards in Phase 4.</p>
+          <div class="phase-window">Complete · V1 shipped 2026-05-21</div>
+          <p class="phase-desc">The unified internal ops dashboard. All 7 V1 briefs + Brief 4.5 (Google OAuth) shipped to production. Live at sentinel.coreshifthq.com.</p>
           <ul class="phase-deliverables">
-            <li>Brief 1: Scaffold + auth + empty shell (in flight)</li><li>Briefs 2-4: bug_reports board + drag-and-drop + triage UI</li><li>Briefs 5-6: GH Issue auto-create + resolution-ack wiring</li><li>Brief 7: Better Stack status pills</li><li>Architecture: federated reads from each app&#39;s Supabase via service role</li>
+            <li>Brief 1: Scaffold + Google OAuth (via Brief 4.5) ✓</li><li>Brief 2: bug_reports read-only board ✓</li><li>Brief 3: Drag-and-drop status updates ✓</li><li>Brief 4: Card detail panel + triage fields ✓</li><li>Brief 5: Auto-file GitHub Issue when leaving Triage ✓</li><li>Brief 6: Resolution-ack email on → Done ✓</li><li>Brief 7: Better Stack status pills ✓</li>
           </ul>
         </div>
-        <div class="phase-card phase-planned">
+        <div class="phase-card phase-in-progress">
           <div class="phase-card-head">
             <div class="phase-marker">4</div>
-            <div class="phase-status-pill phase-status-planned">Planned</div>
+            <div class="phase-status-pill phase-status-in-progress">In progress</div>
           </div>
-          <div class="phase-title">Phase 4 <span class="phase-subtitle">Scale to Other Apps</span></div>
-          <div class="phase-window">After Phase 3 ships</div>
-          <p class="phase-desc">Apply the Sentinel system to Abe&#39;s other apps. Noozey first — widget, monitoring, audits, and Dashboard integration roll over via a cloning playbook.</p>
+          <div class="phase-title">Phase 4 <span class="phase-subtitle">Multi-app + Maintenance</span></div>
+          <div class="phase-window">In progress · Brief 9b promotion next</div>
+          <p class="phase-desc">Scope grew mid-flight: multi-app filter strip + an entirely new /maintenance surface for tracking AI-model lifecycle, vendor reviews, and recurring upkeep. Noozey onboarding closes the phase.</p>
           <ul class="phase-deliverables">
-            <li>Cloning playbook (PLAYBOOK-cloning-to-new-app.md)</li><li>Noozey onboarding: widget + Sentry + Better Stack + GH labels</li><li>Federated Sentry org + Better Stack workspace across apps</li>
+            <li>Brief 8: App filter strip (conditional render) ✓</li><li>Brief 9a: /maintenance V1 foundation (sidebar, AppShell, RLS) ✓</li><li>Brief 9b: Auto-discovery scanner (node-cron + GitHub Code Search) — built, awaiting promotion</li><li>Brief 10: Vendor lifecycle reference table (planned)</li><li>Brief 11: Monthly review cadence (planned)</li><li>Noozey onboarding via cloning playbook</li>
           </ul>
         </div>
       </div>
@@ -821,11 +821,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">56</div>
+        <div class="status-num">69</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
+        <div class="status-num">1</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -833,11 +833,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">4</div>
+        <div class="status-num">2</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">13</div>
+        <div class="status-num">14</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">65</span>
+        <span class="col-count">69</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1248,56 +1248,81 @@
       </div>
       <div class="card">
         <div class="card-title">Sentinel V1 — Brief 4.5: Google OAuth + Coreshift HQ domain check</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">auth</span><span class="tag tag-neutral">Google OAuth</span><span class="tag tag-neutral">@coreshifthq.com</span><span class="tag tag-neutral">requireCoreshiftDomain</span><span class="tag tag-neutral">/api/auth/check-access</span></div>
-        <div class="card-desc">Sentinel now auth&#39;s exclusively via Google OAuth restricted to `@coreshifthq.com` Workspace accounts. Login page is a single &quot;Continue with Google&quot; button — email/password and magic-link flows gone. Server-side `requireCoreshiftDomain` middleware (suffix-anchored email check) is the authoritative gate; Google `hd=coreshifthq.com` is UX only. `SENTINEL_ALLOWED_EMAILS` env var removed from prod + staging. PR [#11](https://github.com/CoreshiftHQNZ/sentinel-app/pull/11) merged to dev → staging; PR [#12](https://github.com/CoreshiftHQNZ/sentinel-app/pull/12) merged staging → main 2026-05-20. 43/43 tests pass. Verified on prod: `/api/auth/check-access` 401 (auth enforced), old `/api/auth/check-allowlist` route gone. Unblocks Briefs 5+6 — issues + emails now carry real Google identities</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">auth</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">@coreshifthq.com</span><span class="tag tag-neutral">SENTINEL_ALLOWED_EMAILS</span><span class="tag tag-neutral">/dashboard</span><span class="tag tag-neutral">/access-denied</span></div>
+        <div class="card-desc">Email/password + magic-link sign-in replaced with Google OAuth restricted to `@coreshifthq.com`. Server-side domain check (not env-var allowlist). `SENTINEL_ALLOWED_EMAILS` retired from Railway. Sign-in tested: allowlisted Coreshift Google identity → `/dashboard`, non-Coreshift → `/access-denied`. PR merged to dev → staging → main 2026-05-20</div>
       </div>
       <div class="card">
-        <div class="card-title">Zernio reconciliation / backfill</div>
-        <div class="card-tags"><span class="tag tag-neutral">incident-followup</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">calendar_entry</span><span class="tag tag-neutral">job</span><span class="tag tag-neutral">late_post_id</span></div>
-        <div class="card-desc">`script/reconcile-zernio-stuck.ts` shipped 2026-05-20 (KC PR [#81](https://github.com/CoreshiftHQNZ/keycontent-app/pull/81)). Dry-run + `--apply` run against KC prod via `railway run`. Final population was smaller than the original 38-item estimate: **17 calendar_entries across 8 jobs** (Growth Partners agency; AeroFlow Filters, Touchstone Advisory, Mermed clients). Outcome: 14 entries → posted, 3 entries → failed, 5 jobs → posted, 3 jobs → failed, 17 in-app notifications inserted matching the live webhook handler&#39;s shape. Re-run reports 0 stuck (idempotent). **All 3 failures are AeroFlow Filters Facebook posts on May 4 / May 11 / May 18** — real platform-side pattern tracked at KC [#80](https://github.com/CoreshiftHQNZ/keycontent-app/issues/80). Also surfaced a related gap in the live Zernio webhook handler (doesn&#39;t update `jobs.status`) — tracked at KC [#79](https://github.com/CoreshiftHQNZ/keycontent-app/issues/79). Closes the open action item in `incidents/2026-05-19-zernio-webhook-secret.md`</div>
+        <div class="card-title">Sentinel V1 — Brief 5: auto-file GitHub Issue when leaving Triage</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">server/lib/github.ts</span><span class="tag tag-neutral">createIssue</span><span class="tag tag-neutral">POST /api/reports/:id/file-issue</span><span class="tag tag-neutral">GITHUB_TOKEN_KC</span><span class="tag tag-neutral">keycontent-app</span></div>
+        <div class="card-desc">`server/lib/github.ts` with `createIssue` + body/title builders. `POST /api/reports/:id/file-issue` route. Frontend hook + panel button + card badge. PAT pre-flight: fine-grained `GITHUB_TOKEN_KC` scoped to `keycontent-app` (Issues: R+W) on Sentinel Railway prod + staging. PR [#15](https://github.com/CoreshiftHQNZ/sentinel-app/pull/15) merged 2026-05-20. Closes Zernio post-mortem action item</div>
       </div>
       <div class="card">
-        <div class="card-title">Sentinel Briefs 5 + 6 — credential pre-flight</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">GITHUB_TOKEN_KC</span><span class="tag tag-neutral">POSTMARK_API_KEY</span><span class="tag tag-neutral">POSTMARK_FROM_EMAIL</span></div>
-        <div class="card-desc">Three vars landed on Sentinel Railway prod + staging (2026-05-21): `GITHUB_TOKEN_KC` (fine-grained PAT scoped to `CoreshiftHQNZ/keycontent-app` with `Issues: Read and write`); `POSTMARK_API_KEY` + `POSTMARK_FROM_EMAIL` reused from KC&#39;s Postmark Server (Option A — recipients are KC end-users, same trusted sender domain `hello@keycontent.ai`). Sentinel PR [#13](https://github.com/CoreshiftHQNZ/sentinel-app/pull/13) → [#14](https://github.com/CoreshiftHQNZ/sentinel-app/pull/14) landed the `.env.example` doc through dev → staging → main. Briefs 5 and 6 now fully unblocked</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Sentinel V1 — Brief 5: file GitHub issue on operator ack</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">GITHUB_TOKEN_KC</span><span class="tag tag-neutral">POST /api/reports/:id/file-issue</span><span class="tag tag-neutral">github_issue_number</span><span class="tag tag-neutral">CoreshiftHQNZ/keycontent-app</span></div>
-        <div class="card-desc">Explicit operator action: side panel shows &quot;File GitHub issue&quot; button → Sentinel calls `POST /api/reports/:id/file-issue` → server creates a real GitHub issue in `CoreshiftHQNZ/keycontent-app` via the fine-grained PAT, writes `github_issue_number` + `github_issue_url` back to KC&#39;s `bug_reports` row. Idempotent at three layers: server returns existing issue without re-filing if already set; client cache merge writes the same fields either way; TanStack `onSettled` invalidates so concurrent operators reconcile. Issue body is a markdown template (reporter/type/priority/blast radius meta line, page URL + user agent, the reporter&#39;s message as a block quote, operator&#39;s narrative, screenshot path, Sentinel back-reference). Card shows a `GH #N` pill; panel shows a `GH #N ↗` link once filed. 74/74 tests pass (+20 github lib, +11 fileIssue route). PR [#15](https://github.com/CoreshiftHQNZ/sentinel-app/pull/15) merged to dev → staging; PR [#16](https://github.com/CoreshiftHQNZ/sentinel-app/pull/16) merged staging → main 2026-05-21. Verified on prod</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Sentinel V1 — Brief 6: resolution-ack email when card moves to Done</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">POSTMARK_API_KEY</span><span class="tag tag-neutral">resolved_at</span><span class="tag tag-neutral">hello@keycontent.ai</span></div>
-        <div class="card-desc">When PATCH `/api/reports/:id` sets `status=&#39;done&#39;` AND the row&#39;s `resolved_at` was NULL, Sentinel stamps `resolved_at=NOW()` in the same UPDATE and fires a Postmark email to the reporter (&quot;your bug report has been resolved&quot;). Idempotent — once `resolved_at` is set, the email never re-fires (Done → Triage → Done is safe). Postmark failures are logged + sent to Sentry but DO NOT fail the PATCH; the status change has already landed. Reuses KC&#39;s Postmark Server (sender `hello@keycontent.ai`). Defensive HTML escape on reporter content so &quot;&lt;script&gt;&quot; in a message can&#39;t render as live HTML. Panel shows &quot;✓ Resolution email sent to &lt;reporter&gt; · X ago&quot; confirmation. 96/96 tests pass (+12 postmark lib, +10 PATCH resolution-flow). PR [#17](https://github.com/CoreshiftHQNZ/sentinel-app/pull/17) merged to dev → staging; PR [#18](https://github.com/CoreshiftHQNZ/sentinel-app/pull/18) merged staging → main 2026-05-21. Dry-run verified on staging with a synthetic row sending to `abe@coreshifthq.com`</div>
-      </div>
-      <div class="card">
-        <div class="card-title">CI auto-promote fix (Node 22 + write perms + lease) for both repos</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">.github/workflows</span><span class="tag tag-neutral">GITHUB_TOKEN</span><span class="tag tag-neutral">--force-with-lease</span></div>
-        <div class="card-desc">Auto-promote dev → staging had been failing silently most of this session — we&#39;d been force-pushing manually as the workaround. Three root causes found and fixed in both Sentinel and KC `deploy-staging.yml` + `deploy-production.yml`: (1) Node 20 → 22 to match nixpacks runtime (avoids `@supabase/supabase-js` eager WebSocket check); (2) explicit `permissions: contents: write` block — default `GITHUB_TOKEN` was read-only on some configs, so `git push` silently failed; (3) `git push --force-with-lease` instead of plain push, so concurrent dev updates surface as a clear failure rather than a silent no-op. **Meta-proof:** Sentinel PR [#19](https://github.com/CoreshiftHQNZ/sentinel-app/pull/19) merged at 00:49 UTC and auto-promoted to staging without any manual intervention by 00:51 — the workflow validated itself. **Second proof:** Brief 7&#39;s PR #21 also auto-promoted cleanly. PR [#20](https://github.com/CoreshiftHQNZ/sentinel-app/pull/20) carried it to main. KC mirror: PR [#84](https://github.com/CoreshiftHQNZ/keycontent-app/pull/84) → [#85](https://github.com/CoreshiftHQNZ/keycontent-app/pull/85). No runtime behavior change in either repo</div>
+        <div class="card-title">Sentinel V1 — Brief 6: resolution-ack email when → Done</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">server/lib/postmark.ts</span><span class="tag tag-neutral">done</span><span class="tag tag-neutral">POSTMARK_API_KEY</span></div>
+        <div class="card-desc">`server/lib/postmark.ts` with HTML-escaped resolution email builder. PATCH `done`-transition logic extends the existing endpoint with a synthetic-row safety check. Panel footer shows &quot;Resolution email sent &lt;time ago&gt;&quot;. Reused KC&#39;s Postmark server + `POSTMARK_API_KEY`. Promoted with dry-run + synthetic-row safety. PR merged 2026-05-20</div>
       </div>
       <div class="card">
         <div class="card-title">Sentinel V1 — Brief 7: Better Stack status pills</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">BETTERSTACK_API_KEY</span><span class="tag tag-neutral">GET /api/status</span><span class="tag tag-neutral">listMonitors</span></div>
-        <div class="card-desc">Dashboard header now shows live colored pills, one per Better Stack monitor (green = up, red = down, amber = paused/validating/maintenance, gray = unknown). Server route `GET /api/status` (auth + domain check) proxies Better Stack&#39;s list-monitors API behind Sentinel&#39;s own auth with a 10-second in-memory cache so refresh-happy operators don&#39;t burn through the upstream rate limit. Client uses TanStack Query (30s staleTime + window-focus refetch). Pills with a URL link out to the monitored URL in a new tab. Loading = 3-dot skeleton; error = single amber &quot;Status check unavailable&quot; pill (board unaffected by Better Stack outages). 118/118 tests pass (+12 betterstack lib, +10 status route). PR [#21](https://github.com/CoreshiftHQNZ/sentinel-app/pull/21) merged dev → staging via auto-promote (first real feature ship after the workflow fix); PR [#22](https://github.com/CoreshiftHQNZ/sentinel-app/pull/22) merged staging → main 2026-05-21. Operator-verified visually on staging. **Closes Phase 3 — Sentinel V1 feature-complete.**</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">server/lib/betterstack.ts</span><span class="tag tag-neutral">listMonitors</span><span class="tag tag-neutral">GET /api/status</span><span class="tag tag-neutral">useStatus</span><span class="tag tag-neutral">StatusPills</span></div>
+        <div class="card-desc">`server/lib/betterstack.ts` with `listMonitors` + normalize. `GET /api/status` route with 10s in-memory cache. Frontend `useStatus` hook + colored `StatusPills` component on Dashboard. PR [#21](https://github.com/CoreshiftHQNZ/sentinel-app/pull/21) merged 2026-05-21 — auto-promoted cleanly (CI workflow hardening pay-off). **Closes Phase 3.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">CI workflow hardening (Sentinel + KC)</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">permissions: contents: write</span></div>
+        <div class="card-desc">Sentinel PR #19 + KC PR #84. Node 22, `permissions: contents: write`, force-with-lease in the dev → staging promotion. Eliminated the every-PR manual force-push friction that plagued Briefs 4–6. Brief 7 PR #21 was the proof — auto-promoted on first try</div>
       </div>
       <div class="card">
         <div class="card-title">Sentinel V2 — Brief 8: filter strip (app filter slot, conditional render)</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">FilterStrip</span><span class="tag tag-neutral">AppFilter</span><span class="tag tag-neutral">?app=</span><span class="tag tag-neutral">useUrlFilter</span><span class="tag tag-neutral">bug_reports.app_id</span></div>
-        <div class="card-desc">Phase 4 opener — multi-app UI architecture in place. Three layers: server `GET /api/reports?app=keycontent` (trims whitespace, rejects &gt;64 chars, no-op when missing), client `useReports({ app })` with per-filter queryKey, URL persistence via `useUrlFilter` hook (50 lines, no new deps). New `&lt;FilterStrip /&gt;` component hosts the `&lt;AppFilter /&gt;` dropdown today and slots for `&lt;PriorityFilter /&gt;` / `&lt;TypeFilter /&gt;` / `&lt;ReporterFilter /&gt;` / `&lt;HasIssueFilter /&gt;` tomorrow (Brief 8.5). Dropdown conditionally rendered — invisible while only one `app_id` exists in the data, appears automatically when a second app onboards (no code change at Phase 4 onboarding time). Counts derived from client cache so they reflect the true dataset regardless of current filter. Detail panel&#39;s open-report lookup uses unfiltered list so changing filter mid-edit doesn&#39;t drop the panel. 124/124 tests pass (+6 for the `?app=` filter coverage). PR [#23](https://github.com/CoreshiftHQNZ/sentinel-app/pull/23) merged dev → staging via auto-promote; PR [#24](https://github.com/CoreshiftHQNZ/sentinel-app/pull/24) merged staging → main 2026-05-21. Verified on prod — endpoint accepts `?app=` param, auth gate enforced, dropdown stays hidden as designed</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">?app=</span><span class="tag tag-neutral">/api/reports</span><span class="tag tag-neutral">useUrlFilter</span><span class="tag tag-neutral">useReports</span><span class="tag tag-neutral">FilterStrip</span><span class="tag tag-neutral">AppFilter</span></div>
+        <div class="card-desc">Opens Phase 4. Server-side `?app=` filter on `/api/reports`. Client-side `useUrlFilter` (popstate sync + replaceState) drives `useReports` via filter param. `FilterStrip` + `AppFilter` components conditionally render only when ≥ 2 apps are onboarded (no UI noise for KC-only state). PR merged 2026-05-21</div>
       </div>
       <div class="card">
         <div class="card-title">Sentinel V2 — Brief 9a: /maintenance V1 foundation</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">maintained_apps</span><span class="tag tag-neutral">maintenance_entries</span><span class="tag tag-neutral">Sidebar</span><span class="tag tag-neutral">AppShell</span><span class="tag tag-neutral">Sentinel-owned DB</span></div>
-        <div class="card-desc">Sentinel V2 begins — **first feature where Sentinel writes to its own Supabase**. New `/maintenance` page registers every external dependency (AI models, vendor APIs, credentials, libraries) per onboarded app with one generic schema. Two new tables (`maintained_apps`, `maintenance_entries`) in Sentinel`s project `ayblweywpdxmhbcmzfbk`. New layout: left `&lt;Sidebar&gt;` rail replaces the inline header; `&lt;AppShell&gt;` wraps both Dashboard and Maintenance pages. 8 new endpoints across 2 server modules, all `requireAuth + requireCoreshiftDomain`. Issue-filing generalized so maintenance entries write to their app`s repo (per `maintained_apps` row) rather than the hardcoded keycontent-app from Brief 5. 167/167 tests pass (+43 maintenance tests). Migration applied via MCP `execute_sql` + canonical version `20260521010000` stamped in `supabase_migrations.schema_migrations` so future `db push` skips cleanly. PR [#25](https://github.com/CoreshiftHQNZ/sentinel-app/pull/25) merged dev → staging; PR [#26](https://github.com/CoreshiftHQNZ/sentinel-app/pull/26) staging → main 2026-05-21. **Seeded on prod**: keycontent onboarded + 6 real entries (Gemini SDK, OpenAI, @zernio/node, POSTMARK_API_KEY, KC service-role key, @supabase/supabase-js). **Architecture flag for ROADMAP**: Sentinel`s Supabase is shared across Railway staging + prod (one project, both envs). Fine for additive internal data; should split before any feature where staging writes would pollute prod</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">AppShell</span><span class="tag tag-neutral">Sidebar</span><span class="tag tag-neutral">maintained_apps</span><span class="tag tag-neutral">maintenance_entries</span></div>
+        <div class="card-desc">New operational surface for tracking AI-model lifecycle, vendor reviews, and recurring upkeep. `AppShell` + `Sidebar` (Inbox + Wrench icons). Sentinel-owned Supabase tables (`maintained_apps` + `maintenance_entries`) with deny-all RLS + service-role bypass. Onboard / edit / delete entries. Keycontent onboarded + 5 entries seeded</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V2 — Brief 9b: auto-discovery scanner</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">built</span><span class="tag tag-neutral">node-cron</span><span class="tag tag-neutral">maintenance_entries</span><span class="tag tag-neutral">POST /api/maintenance/apps/:id/scan</span></div>
+        <div class="card-desc">`node-cron` nightly job (2am UTC) walks every onboarded app, runs the 8 model-name patterns (gpt-3.5, gpt-4, o1-, o3-, claude-, gemini-, mistral-, llama-) against GitHub Code Search, upserts findings into `maintenance_entries`, archives ones that disappeared. `POST /api/maintenance/apps/:id/scan` for manual triggers. Built + tests passing — **promotion to prod is the next action.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Catch-block Sentry discipline (KC #88)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-3-followup</span><span class="tag tag-neutral">observability</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentry.captureException</span></div>
+        <div class="card-desc">Audit found 138 catch-block sites across 23 KC server route files returning 5xx without `Sentry.captureException`. PR [#91](https://github.com/CoreshiftHQNZ/keycontent-app/pull/91) → #92 → #93 promoted dev → staging → main. All 138 sites now capture with route + resource-ID context</div>
+      </div>
+      <div class="card">
+        <div class="card-title">KC Sentry env-var drift (incident + fix)</div>
+        <div class="card-tags"><span class="tag tag-neutral">incident</span><span class="tag tag-neutral">SEV3</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Sentry vars set on KC staging when Phase 1 W1 shipped, never propagated to prod. KC backend Sentry was a silent no-op for ~9 days. Discovered during Quick Post 502 triage. Vars copied staging → prod on Railway via CLI. Prod backend now observable for the first time (verified via timestamped probe). Same drift pattern as the 2026-05-19 Zernio incident</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentry env-var drift post-mortem</div>
+        <div class="card-tags"><span class="tag tag-neutral">incident</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">keycontent-app/incidents/2026-05-22-sentry-env-var-drift.md</span></div>
+        <div class="card-desc">`keycontent-app/incidents/2026-05-22-sentry-env-var-drift.md`. PR [#98](https://github.com/CoreshiftHQNZ/keycontent-app/pull/98) → #99 → #100 promoted dev → staging → main 2026-05-22</div>
+      </div>
+      <div class="card">
+        <div class="card-title">HOW-WE-DO-SENTRY-ALERTS.md (new playbook)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-3-followup</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">PLAY 7 in the ops playbook. 3-rule recipe (new-issue, regression, high-frequency) for every Coreshift Sentry project. Triage rhythm renumbered to PLAY 8</div>
+      </div>
+      <div class="card">
+        <div class="card-title">HOW-WE-DO-APP-AUDITS v2.2 (full env-var diff)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-3-followup</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Refined the Railway env-var parity check from &quot;check whichever var we&#39;re investigating&quot; to &quot;diff all keys staging vs prod&quot; with shell + PowerShell one-liners. Triggered by the 2026-05-22 Sentry drift incident — the 2026-05-19 pass missed the Sentry block because it focused on Zernio only</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">0</span>
+        <span class="col-count">1</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Sentinel V2 — Brief 9b: promote scanner to prod + first scan against keycontent</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">maintenance_entries</span><span class="tag tag-neutral">keycontent</span></div>
+        <div class="card-desc">Built + tests green. Needs the dev → staging → main promotion flow + first nightly scan to populate `maintenance_entries` against the onboarded `keycontent` app. Owner: Claude Code. ~30 min</div>
+      </div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -1309,45 +1334,80 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">0</span>
+        <span class="col-count">2</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Operator: apply 3-rule Sentry alert recipe to 4 projects</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-3-followup</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">Sentinel/playbook/HOW-WE-DO-SENTRY-ALERTS.md</span></div>
+        <div class="card-desc">Sentry UI → KEYCONTENT-BACKEND, KEYCONTENT-FRONTEND, SENTINEL-BACKEND, SENTINEL-FRONTEND. Each gets 3 rules (new-issue, regression, high-frequency). Recipe with field-by-field values at `Sentinel/playbook/HOW-WE-DO-SENTRY-ALERTS.md`. ~5 min per project, ~20 min total. **Closes the Zernio post-mortem&#39;s &quot;Sentry alert on persistent webhook 5xx&quot; item (KC [#77](https://github.com/CoreshiftHQNZ/keycontent-app/issues/77)).**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Decide Brief 10/11 priorities</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
+        <div class="card-desc">Brief 10 (vendor lifecycle reference table) and Brief 11 (monthly review cadence) were sketched as the next maintenance briefs. After today&#39;s incident storm + audit checklist tightening, worth a quick re-read to decide whether those still come next or whether Noozey onboarding jumps the queue</div>
+      </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">13</span>
+        <span class="col-count">14</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">V0 to production</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0-prod</span></div>
-        <div class="card-desc">Promotion follows HOW-WE-DO-DEPLOYS. Triggered post-pitch approval</div>
+        <div class="card-desc">Widget promotion to production. Follows HOW-WE-DO-DEPLOYS</div>
       </div>
       <div class="card">
         <div class="card-title">Status page custom domain</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1-w2</span><span class="tag tag-neutral">deferred</span><span class="tag tag-neutral">keycontent.betteruptime.com</span><span class="tag tag-neutral">status.keycontent.ai</span></div>
-        <div class="card-desc">Move status page from `keycontent.betteruptime.com` to `status.keycontent.ai`. Requires Better Stack Pro tier (~$25/mo). Decide post-pitch whether the polish is worth the cost</div>
+        <div class="card-desc">Move from `keycontent.betteruptime.com` to `status.keycontent.ai`. Requires Better Stack Pro (~$25/mo)</div>
       </div>
       <div class="card">
         <div class="card-title">Supabase Storage backup strategy</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1-w5</span><span class="tag tag-neutral">audit-followup</span><span class="tag tag-neutral">job-assets</span></div>
-        <div class="card-desc">Daily DB backups exclude Storage bucket objects. Prod `job-assets` has ~890 user objects with no backup. Design a strategy (S3-rsync, manual quarterly export, or Supabase&#39;s S3 protocol)</div>
+        <div class="card-desc">Daily DB backups exclude Storage objects. Prod `job-assets` has ~890 user objects with no backup. Design a strategy</div>
       </div>
       <div class="card">
         <div class="card-title">&quot;My past reports&quot; view</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
-        <div class="card-desc">User-facing transparency. Deferred until after Dashboard ships</div>
+        <div class="card-desc">User-facing transparency. Deferred until Dashboard polish phase</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel — Brief 10: vendor lifecycle reference table</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
+        <div class="card-desc">Reference data for the /maintenance surface: which AI models are deprecated, which are current, recommended upgrade paths. Auto-populated where possible</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel — Brief 11: monthly review cadence + report</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">/maintenance</span></div>
+        <div class="card-desc">Surfaces `/maintenance` entries that need quarterly attention. Email digest or in-app surface</div>
       </div>
       <div class="card">
         <div class="card-title">Document cloning playbook</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
-        <div class="card-desc">PLAYBOOK-cloning-to-new-app.md. Includes Dashboard onboarding for new apps</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">PLAYBOOK-cloning-to-new-app.md</span></div>
+        <div class="card-desc">`PLAYBOOK-cloning-to-new-app.md`. Includes Dashboard + /maintenance onboarding for new apps</div>
       </div>
       <div class="card">
-        <div class="card-title">Onboard Noozey to Sentinel (Phase 4)</div>
+        <div class="card-title">Onboard Noozey to Sentinel</div>
         <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
-        <div class="card-desc">Apply playbook: widget, Sentry, Better Stack, branch protection. Each piece auto-flows into Dashboard as it lands</div>
+        <div class="card-desc">Apply the cloning playbook. Each piece auto-flows into Dashboard + /maintenance as it lands</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentry alert &quot;heartbeat&quot; detection</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-3-followup</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">/__sentry-server-test</span><span class="tag tag-neutral">incidents/2026-05-22-sentry-env-var-drift.md</span></div>
+        <div class="card-desc">Sentry has no built-in &quot;you stopped receiving events&quot; alert. Options: liveness ping via daily cron, or Better Stack monitor on a `/__sentry-server-test` endpoint. Deferred — without the 3 base alert rules above, this wouldn&#39;t get noticed anyway. Tracked in `incidents/2026-05-22-sentry-env-var-drift.md`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Zernio reconciliation followups (KC #79, #80)</div>
+        <div class="card-tags"><span class="tag tag-neutral">incident-followup</span><span class="tag tag-neutral">jobs.status</span></div>
+        <div class="card-desc">Issue #79: live Zernio webhook handler doesn&#39;t update `jobs.status`. Issue #80: AeroFlow Filters Facebook posting failures on May 4/11/18 — platform-side pattern worth understanding</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Investigate 401-then-200 Zernio doublet (KC #78)</div>
+        <div class="card-tags"><span class="tag tag-neutral">incident-followup</span></div>
+        <div class="card-desc">Every successful Zernio 200 since the secret was restored is preceded by a 401 ~1s earlier. Probably probe + real event, or HMAC format the handler doesn&#39;t accept first try. Not blocking; worth understanding before Zernio scales</div>
       </div>
       <div class="card">
         <div class="card-title">Monthly trend reviews</div>
@@ -1357,7 +1417,7 @@
       <div class="card">
         <div class="card-title">Quarterly free-tier usage check</div>
         <div class="card-tags"><span class="tag tag-recurring">recurring</span></div>
-        <div class="card-desc">Watch Sentry / Postmark / etc. limits</div>
+        <div class="card-desc">Sentry / Postmark / Better Stack / Railway against limits</div>
       </div>
       <div class="card">
         <div class="card-title">Quarterly stale-issue prune</div>
