@@ -522,8 +522,8 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>65%</strong> complete</div>
-        <div><strong>28</strong>/43 cards done</div>
+        <div><strong>77%</strong> complete</div>
+        <div><strong>33</strong>/43 cards done</div>
         <div>Updated <strong>2026-05-22</strong></div>
         <div><a href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">repo →</a></div>
         <div><a href="https://velocity-staging-staging.up.railway.app" target="_blank" rel="noopener">staging →</a></div>
@@ -544,7 +544,7 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current sprint</span>
-          <span class="phase-pill-value">Demo Milestone — ~5 items remaining</span>
+          <span class="phase-pill-value">Demo Milestone — H7 only remaining</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
@@ -578,7 +578,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">28</div>
+        <div class="status-num">33</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -590,7 +590,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-up-next">
-        <div class="status-num">12</div>
+        <div class="status-num">8</div>
         <div class="status-label">Up Next</div>
       </div>
     </section>
@@ -639,6 +639,14 @@
           </div>
           <div class="link-arrow">→</div>
         </a>
+        <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity/blob/dev/docs/playbook/how-to-use-velocity.md" target="_blank" rel="noopener">
+          <div class="link-icon">📖</div>
+          <div class="link-text">
+            <div class="link-title">How to use Velocity (playbook)</div>
+            <div class="link-desc">End-to-end usage guide — daily routine, deal lifecycle, portal, handover</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
         <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity/tree/dev/docs/specs" target="_blank" rel="noopener">
           <div class="link-icon">📐</div>
           <div class="link-text">
@@ -669,15 +677,45 @@
     <!-- KANBAN BOARD -->
     <section class="board-section">
       <h2 class="section-head">Live Build Board</h2>
-      <p class="section-sub">v0.5 · 31 commits on dev · staging on velocity-prod-branch since 2026-05-21 · prod not deployed. Workstreams: H hardening · I integrations · P portal panels · W wow factor · D delight payloads · A anti-overselling · U UX · C CI/deploy.</p>
+      <p class="section-sub">v0.7 · 36 commits on dev · staging on Supabase staging branch since 2026-05-21 · prod not deployed. Workstreams: H hardening · I integrations · P portal panels · W wow factor · D delight payloads · A anti-overselling · U UX · C CI/deploy.</p>
       <div class="board">
 
         <section class="column col-done">
           <header class="col-head">
             <h2>✅ Done</h2>
-            <span class="col-count">28</span>
+            <span class="col-count">33</span>
           </header>
           <div class="cards">
+
+            <div class="card">
+              <div class="card-title">U2 dashboard polish + U3 deal page softening + how-to-use playbook (2026-05-22)</div>
+              <div class="card-tags"><span class="tag tag-id">U2, U3</span><span class="tag tag-ws-u">UX</span><span class="tag tag-demo">Demo</span></div>
+              <div class="card-desc">Internal UX overhaul shipped. U2 Dashboard.tsx rewritten — calmer hierarchy, W4 "one thing" leads, pipeline shape as quiet 3-up below, today's queue at the bottom; soft amber palette (no destructive red) on at-risk card to match U1's "page Mal opens with coffee" framing; new DashboardSection wrapper gives each block a circle-icon avatar. U3 Deal.tsx targeted polish — hero gets playbook eyebrow + 2-3xl tracking-tight, risk banner softened to amber, "No future meeting" warning softened, "Mark lost" button neutralised. Plus new docs/playbook/how-to-use-velocity.md (~7000 words): full end-to-end usage guide covering sign-in, daily routine, 6-stage deal lifecycle with test+gift table, customer portal panels, W5 handover hard gate, commissions, anti-stall scheduler, AI feature firing matrix, environments, V1.0 decisions log, conventions. Linked in Quick Links above. ~commit 92cdd47.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">W4 daily kickoff "one thing" reshape + W5 auto-progressive handover (2026-05-22)</div>
+              <div class="card-tags"><span class="tag tag-id">W4 + W5</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-demo">Demo</span></div>
+              <div class="card-desc">Two SYSTEM-V1 §9 wow factors in one push. W4: dailyKickoff.ts rewritten to a 7-tier priority ranking (`pickTopPriority`) that surfaces ONE thing each morning, not a deluge — fed by the anti-stall scheduler. DailyKickoffPanel renamed "The one thing today" with a priorityType chip. W5: new server/services/handoverAuto.ts synthesises 6 auto_* fields from commitments/people/objections/actionItems/companies/documents; init endpoint pre-populates; new /api/handovers/:id/refresh endpoint re-derives auto fields preserving manual edits. HandoverModal restructured into 3 sections — completeness+checklist, auto-derived (read-only with sparkle icon + "auto" tag), manual fields — with a "Refresh from signals" button. 100% checklist remains the hard gate for Closed Won. ~commit 97dae41.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Second delight quartet — D5 + D6 + D7 + D8 (2026-05-21)</div>
+              <div class="card-tags"><span class="tag tag-id">D5, D6, D7, D8</span><span class="tag tag-ws-d">delight</span><span class="tag tag-demo">Demo</span></div>
+              <div class="card-desc">Four more 25/50% delight payloads in the portal. D5 FullInsightPack (Day Zero "we already know this" expanded view, V1.0 stub-quality with TemplateBadge per locked decision). D6 audio button on LivingProposalPanel ("Listen to a walkthrough" — TTS stub for V1.0). D7 MatchedCaseStudy panel (industry-matched case study surface, V1.0 stub-quality with TemplateBadge — library seed still blocked on Mal but the framing ships). D8 DecisionToolkit (buyer-side compare/justify tooling). All Aditi-portal-visible by demo week. ~commit 041dcca.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Playbook switcher state share fix (2026-05-21)</div>
+              <div class="card-tags"><span class="tag tag-neutral">bugfix</span><span class="tag tag-demo">Demo</span></div>
+              <div class="card-desc">Each `usePlaybook()` call previously returned a fresh useState, so changing the sidebar dropdown didn't refresh the dashboard or pipeline without a hard reload. Fixed with a module-level singleton + subscriber set pattern — every consumer hook now reads from + writes to the same source. ~commit 628ae1a.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">First delight trio — D1 + D4 + D9 (2026-05-21)</div>
+              <div class="card-tags"><span class="tag tag-id">D1, D4, D9</span><span class="tag tag-ws-d">delight</span><span class="tag tag-demo">Demo</span></div>
+              <div class="card-desc">First three 25/50% delight payloads land in the portal. D1: Day Zero "we already know this" body now renders (was previously generated but unsaved — dayZeroService.ts now persists to documents.body, portal hydrate returns it). D4: JourneyOverview panel — soft demo of the journey/track-record framing. D9: portal proposal demo framing — empty-state guidance + unified mobile diff on LivingProposalPanel. Plus /portal/approve endpoint. ~commit b582d1a.</div>
+            </div>
 
             <div class="card">
               <div class="card-title">Staging / prod DB split — via branches (2026-05-21)</div>
@@ -857,9 +895,9 @@
           </header>
           <div class="cards">
             <div class="card">
-              <div class="card-title">Demo Milestone sprint — ~5 items remaining, queued</div>
+              <div class="card-title">Demo Milestone sprint — H7 only remaining</div>
               <div class="card-tags"><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Three Aditi-facing X-factor pieces all shipped (P4 living proposal, U1 portal UX, Google OAuth). Hardening workstream done bar H7 (deferred). Remaining critical path: 25/50% delight payload stubs (D1, D4, D5, D6, D7, D8, D9), W4 + W5 wow factor polish, U2 + U3 internal UX. Going-ham 4-week floor (2026-06-13) still on the table, even with margin. Next pick is D1/D4/D9 trio per latest plan.</div>
+              <div class="card-desc">Everything Aditi-facing has landed: P4 living proposal, U1 portal UX, Google OAuth, D1+D4+D9 + D5+D6+D7+D8 delight payloads, W4 one-thing daily kickoff, W5 auto-progressive handover, U2 dashboard polish, U3 deal page softening, and the how-to-use-velocity.md playbook. Only the deferred H7 (drizzle 0.38→0.45 audit fix) sits in Up Next under Demo. Going-ham 4-week floor (2026-06-13) comfortably under foot — focus shifts to V1.0 milestone items (P3, P6 portal panels; U4, U5 component library + mobile verification).</div>
             </div>
           </div>
         </section>
@@ -886,7 +924,7 @@
         <section class="column col-up-next">
           <header class="col-head">
             <h2>🔵 Up next</h2>
-            <span class="col-count">12</span>
+            <span class="col-count">8</span>
           </header>
           <div class="cards">
 
@@ -895,31 +933,7 @@
             <div class="card">
               <div class="card-title">npm audit fix — deferred to dedicated PR</div>
               <div class="card-tags"><span class="tag tag-id">H7</span><span class="tag tag-ws-h">hardening</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">10 vulns total: 9 are dev-only (esbuild + vite + drizzle-kit chain — only exposed if a malicious site is visited while npm run dev is running locally). 1 runtime-relevant: drizzle-orm &lt;0.45.2 SQL identifier injection — but exploit surface is theoretical because Velocity uses typed Drizzle query builder with no user-supplied identifier strings. Fix requires drizzle-orm 0.38→0.45 major bump with careful schema testing — better as its own PR. Not Aditi-demo-blocking. ~1d when picked up.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Internal UX overhaul — dashboard + deal detail</div>
-              <div class="card-tags"><span class="tag tag-id">U2, U3</span><span class="tag tag-ws-u">UX</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">U1 (portal) already shipped 2026-05-20. Remaining: U2 internal dashboard polish ("page Mal opens once a day with coffee"); U3 deal detail page reorganised around the new wow factors. Both internal-facing — Aditi doesn't see these but Mal lives in them daily. ~5–8d total.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">"What's slipping" daily alert reshape</div>
-              <div class="card-tags"><span class="tag tag-id">W4</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">SYSTEM-V1 §9.4: ONE thing each morning, not a deluge. dailyKickoff.ts exists, needs reshaping. Anti-stall scheduler feeds it. ~1–2d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Handover doc that builds itself</div>
-              <div class="card-tags"><span class="tag tag-id">W5</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">SYSTEM-V1 §9.5: every commitment/quirk/stakeholder/risk auto-flows in. 90% written by Closed Won. Hard gate at 100%. Schema + modal exist; auto-progressive flow incomplete. ~3–4d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">25% + 50% delight payloads</div>
-              <div class="card-tags"><span class="tag tag-id">D1, D4–D9</span><span class="tag tag-ws-d">delight</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Aditi will be at 25% or 50% by demo. D1 "we already know this" insight, D4 soft demo of journey, D5 full insight pack, D6 AI audio walkthrough of proposal, D7 matched case study (needs library seed — blocked on Mal), D8 Decision Toolkit, D9 portal proposal demo framing. ~9–14d.</div>
+              <div class="card-desc">Last Demo Milestone item. 10 vulns total: 9 are dev-only (esbuild + vite + drizzle-kit chain — only exposed if a malicious site is visited while npm run dev is running locally). 1 runtime-relevant: drizzle-orm &lt;0.45.2 SQL identifier injection — but exploit surface is theoretical because Velocity uses typed Drizzle query builder with no user-supplied identifier strings. Fix requires drizzle-orm 0.38→0.45 major bump with careful schema testing — better as its own PR. Not Aditi-demo-blocking. ~1d when picked up.</div>
             </div>
 
             <div class="pending-group-head">V1.0 complete (2026-07-27)</div>
@@ -985,7 +999,7 @@
   <footer class="page-foot">
     Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a>
     &nbsp;·&nbsp;
-    Last refresh: 2026-05-22 — H8 + H9 + Google OAuth all landed; H workstream effectively done bar deferred H7. Demo Milestone now ~5 items from done.
+    Last refresh: 2026-05-22 (PM) — U2 dashboard + U3 deal page polished, W4 one-thing daily kickoff + W5 auto-progressive handover shipped, full D1+D4+D9 / D5–D8 delight payloads in portal, how-to-use-velocity.md playbook landed. Demo Milestone is one card (H7) from done.
   </footer>
 </body>
 </html>
