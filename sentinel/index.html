@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>88%</strong> complete</div>
-        <div><strong>64</strong>/73 cards done</div>
-        <div>Updated <strong>2026-05-21 01:30 UTC</strong></div>
+        <div><strong>65</strong>/74 cards done</div>
+        <div>Updated <strong>2026-05-21 02:30 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">64</span>
+        <span class="col-count">65</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1285,6 +1285,11 @@
         <div class="card-title">Sentinel V2 — Brief 8: filter strip (app filter slot, conditional render)</div>
         <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">FilterStrip</span><span class="tag tag-neutral">AppFilter</span><span class="tag tag-neutral">?app=</span><span class="tag tag-neutral">useUrlFilter</span><span class="tag tag-neutral">bug_reports.app_id</span></div>
         <div class="card-desc">Phase 4 opener — multi-app UI architecture in place. Three layers: server `GET /api/reports?app=keycontent` (trims whitespace, rejects &gt;64 chars, no-op when missing), client `useReports({ app })` with per-filter queryKey, URL persistence via `useUrlFilter` hook (50 lines, no new deps). New `&lt;FilterStrip /&gt;` component hosts the `&lt;AppFilter /&gt;` dropdown today and slots for `&lt;PriorityFilter /&gt;` / `&lt;TypeFilter /&gt;` / `&lt;ReporterFilter /&gt;` / `&lt;HasIssueFilter /&gt;` tomorrow (Brief 8.5). Dropdown conditionally rendered — invisible while only one `app_id` exists in the data, appears automatically when a second app onboards (no code change at Phase 4 onboarding time). Counts derived from client cache so they reflect the true dataset regardless of current filter. Detail panel&#39;s open-report lookup uses unfiltered list so changing filter mid-edit doesn&#39;t drop the panel. 124/124 tests pass (+6 for the `?app=` filter coverage). PR [#23](https://github.com/CoreshiftHQNZ/sentinel-app/pull/23) merged dev → staging via auto-promote; PR [#24](https://github.com/CoreshiftHQNZ/sentinel-app/pull/24) merged staging → main 2026-05-21. Verified on prod — endpoint accepts `?app=` param, auth gate enforced, dropdown stays hidden as designed</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V2 — Brief 9a: /maintenance V1 foundation</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">maintained_apps</span><span class="tag tag-neutral">maintenance_entries</span><span class="tag tag-neutral">Sidebar</span><span class="tag tag-neutral">AppShell</span><span class="tag tag-neutral">Sentinel-owned DB</span></div>
+        <div class="card-desc">Sentinel V2 begins — **first feature where Sentinel writes to its own Supabase**. New `/maintenance` page registers every external dependency (AI models, vendor APIs, credentials, libraries) per onboarded app with one generic schema. Two new tables (`maintained_apps`, `maintenance_entries`) in Sentinel`s project `ayblweywpdxmhbcmzfbk`. New layout: left `&lt;Sidebar&gt;` rail replaces the inline header; `&lt;AppShell&gt;` wraps both Dashboard and Maintenance pages. 8 new endpoints across 2 server modules, all `requireAuth + requireCoreshiftDomain`. Issue-filing generalized so maintenance entries write to their app`s repo (per `maintained_apps` row) rather than the hardcoded keycontent-app from Brief 5. 167/167 tests pass (+43 maintenance tests). Migration applied via MCP `execute_sql` + canonical version `20260521010000` stamped in `supabase_migrations.schema_migrations` so future `db push` skips cleanly. PR [#25](https://github.com/CoreshiftHQNZ/sentinel-app/pull/25) merged dev → staging; PR [#26](https://github.com/CoreshiftHQNZ/sentinel-app/pull/26) staging → main 2026-05-21. **Seeded on prod**: keycontent onboarded + 6 real entries (Gemini SDK, OpenAI, @zernio/node, POSTMARK_API_KEY, KC service-role key, @supabase/supabase-js). **Architecture flag for ROADMAP**: Sentinel`s Supabase is shared across Railway staging + prod (one project, both envs). Fine for additive internal data; should split before any feature where staging writes would pollute prod</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
