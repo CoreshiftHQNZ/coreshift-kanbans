@@ -224,7 +224,7 @@
           <span>Coreshift HQ × Growth Partners</span>
           <a href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">repo →</a>
           <a href="https://velocity-staging-staging.up.railway.app" target="_blank" rel="noopener">staging →</a>
-          <span>v0.4 · 26 commits on dev · staging deployed 2026-05-15 · prod not deployed</span>
+          <span>v0.5 · 31 commits on dev · staging on velocity-prod-branch since 2026-05-21 · prod not deployed</span>
         </div>
         <div class="milestones-banner">
           <span class="ms"><span class="tag tag-demo">Demo</span> <strong>week of 2026-06-22</strong> — Aditi-demo-ready subset (UX, B4 living proposal, 25%/50% delight payloads, hardening)</span>
@@ -235,8 +235,23 @@
 
       <div class="columns">
         <div class="col col-done">
-          <div class="col-head"><span>Done</span><span class="count">25</span></div>
+          <div class="col-head"><span>Done</span><span class="count">28</span></div>
 
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">H9</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Staging / prod DB split — via branches (2026-05-21)</p>
+            <p class="card-note">Iteration story: first pass created a separate velocity-prod Supabase project. Abe pushed back — Coreshift pattern (confirmed at keycontent-v2) uses single project with main + staging branches. Reversed: deleted velocity-prod, created `staging` branch on uodsmyystkaxoogitvsw (ref pdawstndulfnydvesmdm), inherited 32-table schema, bootstrapped drizzle.__drizzle_migrations (3 rows), re-seeded everything via npx tsx scripts/seed.ts + seed-aditi-extras.ts + seed-demo-data.ts (Coreshift tenant, GP/CS playbooks, 6 demo deals incl. Aditi portal, commission rules, Mal + Abe admin rows). Railway prod env vars revert to main; Railway staging env vars point at staging branch. Aditi portal at /portal/aditi-demo-portal-2026 verified loading. ~$9.68/mo for the always-on branch (Pro plan). main branch keeps pre-split seed for now — clean before C3 cutover.</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">auth</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Google OAuth wired on main + staging (2026-05-21)</p>
+            <p class="card-note">Login.tsx + AuthCallback.tsx were already coded; just needed Google Cloud OAuth client (project: coreshift-velocity, Internal user type for @coreshifthq.com Workspace) + Supabase provider config on both main and staging branches + redirect URLs. Hybrid auth decision locked: internal Sales OS uses Google OAuth (+ email/password + magic link fallbacks), customer-facing portal stays magic-link-only (capability-based, no OAuth gate). Abe signed in via Google to staging end-to-end on 2026-05-21 — middleware auto-linked his new Supabase ID to the pre-seeded admin row by email match.</p>
+          </div>
+          <div class="card-item">
+            <div class="card-tags"><span class="tag tag-id">H8</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Bucket name cleanup (PR #8, 2026-05-21)</p>
+            <p class="card-note">Purged `my-app-files` everywhere — .env.example default, server/lib/storage.ts fallback, README, all docs/setup + docs/standards. `velocity-files` is now the single consistent bucket name across .env, code, docs, and both Supabase branches. H7 (drizzle 0.38→0.45 audit fix) deferred to its own PR — exploit surface theoretical (typed query builder, no user-supplied identifier strings), and 9 of 10 vulns are dev-only.</p>
+          </div>
           <div class="card-item">
             <div class="card-tags"><span class="tag tag-id">U1</span><span class="tag tag-demo">Demo</span></div>
             <p class="card-title">Portal UX redesign — journey-first, soft, mobile (PR #7, 2026-05-20)</p>
@@ -352,8 +367,8 @@
         <div class="col col-inflight">
           <div class="col-head"><span>In flight</span><span class="count">0</span></div>
           <div class="card-item">
-            <p class="card-title">Demo Milestone sprint — P4 + U1 done, ~6 items remaining</p>
-            <p class="card-note">Two of the three Aditi-facing X-factor pieces shipped today (P4 living proposal + U1 portal UX). Remaining critical path: 25/50% delight payload stubs (D1, D4, D5, D6, D7, D8, D9), W4 / W5 wow factor polish, H7 + H8 + H9 hardening tail, U2 / U3 internal UX. Going-ham 4-week floor still on the table.</p>
+            <p class="card-title">Demo Milestone sprint — ~5 items remaining, queued</p>
+            <p class="card-note">Three Aditi-facing X-factor pieces all shipped (P4 living proposal, U1 portal UX, Google OAuth). Hardening workstream done bar H7 (deferred). Remaining critical path: 25/50% delight payload stubs (D1, D4, D5, D6, D7, D8, D9), W4 + W5 wow factor polish, U2 + U3 internal UX. Going-ham 4-week floor (2026-06-13) still on the table, even with margin. Next pick is D1/D4/D9 trio per latest plan.</p>
           </div>
         </div>
 
@@ -370,28 +385,18 @@
         </div>
 
         <div class="col col-pending">
-          <div class="col-head"><span>Up next</span><span class="count">14</span></div>
+          <div class="col-head"><span>Up next</span><span class="count">12</span></div>
 
           <div class="pending-group-head">Demo Milestone (2026-06-22)</div>
           <div class="card-item">
-            <div class="card-tags"><span class="tag tag-id">H9</span><span class="tag tag-demo">Demo</span></div>
-            <p class="card-title">Split staging Supabase from prod</p>
-            <p class="card-note">Right now both Railway envs point at the same Supabase ref (uodsmyystkaxoogitvsw). Mal didn't seed weekend test data so the urgency window passed without incident — but the moment he does, that data lives in what will eventually be prod. Spin up a second Supabase project, point staging at it, run db:migrate against it, re-seed. ~0.5–1d.</p>
-          </div>
-          <div class="card-item">
             <div class="card-tags"><span class="tag tag-id">H7</span><span class="tag tag-demo">Demo</span></div>
-            <p class="card-title">npm audit fix (9 vulns)</p>
-            <p class="card-note">6 moderate + 3 high inherited from app-template (incl. multer@1.x). Patch what's patchable, document the rest. ~0.5–1d.</p>
+            <p class="card-title">npm audit fix — deferred to dedicated PR</p>
+            <p class="card-note">10 vulns total: 9 are dev-only (esbuild + vite + drizzle-kit chain — only exposed if a malicious site is visited while npm run dev is running locally). 1 runtime-relevant: drizzle-orm &lt;0.45.2 SQL identifier injection — but exploit surface is theoretical because Velocity uses typed Drizzle query builder with no user-supplied identifier strings. Fix requires drizzle-orm 0.38→0.45 major bump with careful schema testing — better as its own PR. Not Aditi-demo-blocking. ~1d when picked up.</p>
           </div>
           <div class="card-item">
-            <div class="card-tags"><span class="tag tag-id">P4</span><span class="tag tag-demo">Demo</span></div>
-            <p class="card-title">Living proposal portal panel (B4) — MAJOR V1 GAP</p>
-            <p class="card-note">BUILD §3 B4: versioning, side-by-side diff, "Approve this version" button. Not built. Aditi will see proposals via portal → this is the X-factor surface for the demo. ~4–6d.</p>
-          </div>
-          <div class="card-item">
-            <div class="card-tags"><span class="tag tag-id">U1–U3</span><span class="tag tag-demo">Demo</span></div>
-            <p class="card-title">UX overhaul — portal + internal + deal detail</p>
-            <p class="card-note">Abe has authority on the UX surface per Mal 2026-05-14. Portal: visual journey not list of tabs, "soft not aggressive" styling, mobile-friendly. Internal dashboard: "page Mal opens once a day with coffee." Deal detail reorganised around the 5 wow factors. ~10–15d total.</p>
+            <div class="card-tags"><span class="tag tag-id">U2, U3</span><span class="tag tag-demo">Demo</span></div>
+            <p class="card-title">Internal UX overhaul — dashboard + deal detail</p>
+            <p class="card-note">U1 (portal) already shipped 2026-05-20. Remaining: U2 internal dashboard polish ("page Mal opens once a day with coffee"); U3 deal detail page reorganised around the new wow factors. Both internal-facing — Aditi doesn't see these but Mal lives in them daily. ~5–8d total.</p>
           </div>
           <div class="card-item">
             <div class="card-tags"><span class="tag tag-id">W4</span><span class="tag tag-demo">Demo</span></div>
@@ -494,7 +499,7 @@
       </div>
 
       <footer>
-        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a> · Last refresh: 2026-05-20 evening (P4 + U1 shipped — the two biggest Aditi-facing X-factor pieces both landed in one day; Demo Milestone now ~6 items from done)
+        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a> · Last refresh: 2026-05-21 (H8 + H9 + Google OAuth all landed today — H workstream effectively done bar deferred H7; Demo Milestone now ~5 items from done)
       </footer>
     </div>
   </body>
