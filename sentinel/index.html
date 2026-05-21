@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>77%</strong> complete</div>
         <div><strong>56</strong>/73 cards done</div>
-        <div>Updated <strong>2026-05-21 00:05 UTC</strong></div>
+        <div>Updated <strong>2026-05-21 00:25 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">58</span>
+        <span class="col-count">59</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1255,6 +1255,11 @@
         <div class="card-title">Zernio reconciliation / backfill</div>
         <div class="card-tags"><span class="tag tag-neutral">incident-followup</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">calendar_entry</span><span class="tag tag-neutral">job</span><span class="tag tag-neutral">late_post_id</span></div>
         <div class="card-desc">`script/reconcile-zernio-stuck.ts` shipped 2026-05-20 (KC PR [#81](https://github.com/CoreshiftHQNZ/keycontent-app/pull/81)). Dry-run + `--apply` run against KC prod via `railway run`. Final population was smaller than the original 38-item estimate: **17 calendar_entries across 8 jobs** (Growth Partners agency; AeroFlow Filters, Touchstone Advisory, Mermed clients). Outcome: 14 entries → posted, 3 entries → failed, 5 jobs → posted, 3 jobs → failed, 17 in-app notifications inserted matching the live webhook handler&#39;s shape. Re-run reports 0 stuck (idempotent). **All 3 failures are AeroFlow Filters Facebook posts on May 4 / May 11 / May 18** — real platform-side pattern tracked at KC [#80](https://github.com/CoreshiftHQNZ/keycontent-app/issues/80). Also surfaced a related gap in the live Zernio webhook handler (doesn&#39;t update `jobs.status`) — tracked at KC [#79](https://github.com/CoreshiftHQNZ/keycontent-app/issues/79). Closes the open action item in `incidents/2026-05-19-zernio-webhook-secret.md`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel Briefs 5 + 6 — credential pre-flight</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">GITHUB_TOKEN_KC</span><span class="tag tag-neutral">POSTMARK_API_KEY</span><span class="tag tag-neutral">POSTMARK_FROM_EMAIL</span></div>
+        <div class="card-desc">Three vars landed on Sentinel Railway prod + staging (2026-05-21): `GITHUB_TOKEN_KC` (fine-grained PAT scoped to `CoreshiftHQNZ/keycontent-app` with `Issues: Read and write`); `POSTMARK_API_KEY` + `POSTMARK_FROM_EMAIL` reused from KC&#39;s Postmark Server (Option A — recipients are KC end-users, same trusted sender domain `hello@keycontent.ai`). Sentinel PR [#13](https://github.com/CoreshiftHQNZ/sentinel-app/pull/13) → [#14](https://github.com/CoreshiftHQNZ/sentinel-app/pull/14) landed the `.env.example` doc through dev → staging → main. Briefs 5 and 6 now fully unblocked</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1274,13 +1279,18 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Sentinel Briefs 5 + 6 — credential pre-flight</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">CoreshiftHQNZ/keycontent-app</span><span class="tag tag-neutral">Issues: Read and write</span><span class="tag tag-neutral">GITHUB_TOKEN_KC</span><span class="tag tag-neutral">POSTMARK_API_KEY</span><span class="tag tag-neutral">POSTMARK_API_KEY</span><span class="tag tag-neutral">POSTMARK_FROM_EMAIL</span></div>
-        <div class="card-desc">After Brief 4.5 ships: (1) Generate a GitHub fine-grained PAT scoped to `CoreshiftHQNZ/keycontent-app` with `Issues: Read and write`; add to Sentinel Railway prod + staging as `GITHUB_TOKEN_KC`. (2) Decide Postmark setup — reuse KC&#39;s existing `POSTMARK_API_KEY` (Option A, recommended for V1) or create a separate Postmark server for Sentinel (Option B). Verify the sender address. Add to Sentinel Railway as `POSTMARK_API_KEY` + `POSTMARK_FROM_EMAIL`. ~10 min operator-side total</div>
+        <div class="card-title">Sentinel V1 — Brief 5: file GitHub issue on operator ack</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">GITHUB_TOKEN_KC</span><span class="tag tag-neutral">CoreshiftHQNZ/keycontent-app</span><span class="tag tag-neutral">bug_reports</span></div>
+        <div class="card-desc">When an operator moves a card out of `Triage` (or hits a future &quot;Acknowledge&quot; action), Sentinel creates a GitHub issue in `CoreshiftHQNZ/keycontent-app` with the bug-report context (reporter, narrative, screenshots if any, priority, blast_radius, link back to the Sentinel card). Issue number stored on the `bug_reports` row so we don&#39;t double-file. Pre-flight done — `GITHUB_TOKEN_KC` is on Railway prod + staging. Brief 5 itself still to write</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V1 — Brief 6: resolution-ack email when card moves to Done</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">POSTMARK_API_KEY</span><span class="tag tag-neutral">POSTMARK_FROM_EMAIL</span><span class="tag tag-neutral">hello@keycontent.ai</span></div>
+        <div class="card-desc">When a bug-report card moves to Done, Sentinel sends a Postmark email back to the reporter: &quot;your report on X has been resolved.&quot; Reuses KC&#39;s Postmark Server (Option A — same sender `hello@keycontent.ai` they already trust). Idempotent: store `resolution_emailed_at` on the row so dragging a card Done→In Progress→Done doesn&#39;t double-fire. Pre-flight done — `POSTMARK_API_KEY` + `POSTMARK_FROM_EMAIL` are on Railway prod + staging. Brief 6 itself still to write</div>
       </div>
       <div class="card">
         <div class="card-title">Verify Sentinel branch-protection bypass state</div>
