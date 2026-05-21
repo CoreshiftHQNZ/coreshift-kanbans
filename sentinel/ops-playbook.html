@@ -1603,10 +1603,11 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
         <h2 class="play-title">App Audits</h2>
         <p class="play-tagline">Defaults are dangerous. Audit is the gate.</p>
         <div class="play-divider"></div>
-        <div class="md"><p><strong>Status:</strong> Active · v2 · 2026-05-19
+        <div class="md"><p><strong>Status:</strong> Active · v2.1 · 2026-05-22
 <strong>Applies to:</strong> Every Coreshift HQ app — at onboarding (before joining Sentinel ops) and quarterly thereafter
 <strong>Owners:</strong> Operator (runs the checklist) · Claude Code (writes fix briefs for failed items) · Tools (Supabase advisors, Cloudflare audit logs, vendor dashboards)</p>
 <blockquote>
+<p><strong>v2.1 changelog:</strong> Added catch-block discipline check to the Sentry section. Server-side <code>catch</code> blocks that return 5xx but don&#39;t call <code>Sentry.captureException</code> make failures invisible to the operator dashboard. Triggered by the 2026-05-22 Quick Post 502 incident — Sentry was wired but the handler silently swallowed the exception. Tracked at KC <a href="https://github.com/CoreshiftHQNZ/keycontent-app/issues/88">#88</a>.</p>
 <p><strong>v2 changelog:</strong> Added Railway section (env-var parity, watch-branch, health-check checks); tightened Supabase section with <code>schema_migrations</code> consistency checks; updated KeyContent outstanding items. Triggered by the 2026-05 incident pair: 16-day <code>ZERNIO_WEBHOOK_SECRET</code> outage on KC prod + RLS migration bookkeeping drift. Both would have been caught by v2 checks.</p>
 </blockquote>
 <hr>
@@ -1722,6 +1723,13 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 <li><input disabled="" type="checkbox"> User context attached after auth (id + email)</li>
 <li><input disabled="" type="checkbox"> PII capture is <strong>off</strong> (<code>sendDefaultPii: false</code>)</li>
 <li><input disabled="" type="checkbox"> Session replay privacy defaults (mask all text, block all media)</li>
+<li><input disabled="" type="checkbox"> <strong>Catch-block discipline</strong> — every server-side <code>catch</code> block that returns 5xx calls <code>Sentry.captureException(err, { extra: {...} })</code> BEFORE the response. Sentry only auto-captures <em>uncaught</em> exceptions; anything inside a try/catch is invisible unless explicitly reported. Quick way to audit: <code>grep -rn &quot;res\.status(5&quot; server/</code> and verify each match has a <code>Sentry.captureException</code> call within the same <code>catch</code> block.
+  <ul>
+    <li>Anti-pattern: <code>catch (err) { res.status(502).json({...}) }</code> — silent failure, looks like a clean status code to the operator dashboard.</li>
+    <li>Correct pattern: <code>catch (err) { console.error(&quot;[route] context:&quot;, err); Sentry.captureException(err, { extra: { route, ... } }); res.status(500).json({...}); }</code></li>
+    <li>This check would have caught the 2026-05-19 Zernio webhook secret incident (16-day silent outage) and the 2026-05-22 Quick Post 502 (caught only via user report). Tracked at KC <a href="https://github.com/CoreshiftHQNZ/keycontent-app/issues/88">#88</a>.</li>
+  </ul>
+</li>
 </ul>
 <h3>Better Stack — Uptime Monitoring (N/A until Phase 1 Week 2 ships)</h3>
 <ul>
