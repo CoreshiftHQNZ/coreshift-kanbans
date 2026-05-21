@@ -386,8 +386,9 @@
         <a href="#deploys"><span class="play-num">04</span><span>Deploy Pipeline</span></a>
         <a href="#bug-reports"><span class="play-num">05</span><span>Bug Reports</span></a>
         <a href="#app-audits"><span class="play-num">06</span><span>App Audits</span></a>
-        <a href="#triage"><span class="play-num">07</span><span>Triage Rhythm</span></a>
-        <a href="#drag-and-drop"><span class="play-num">08</span><span>Drag-and-Drop</span></a>
+        <a href="#sentry-alerts"><span class="play-num">07</span><span>Sentry Alerts</span></a>
+        <a href="#triage"><span class="play-num">08</span><span>Triage Rhythm</span></a>
+        <a href="#drag-and-drop"><span class="play-num">09</span><span>Drag-and-Drop</span></a>
         <div class="nav-foot">
           Internal · v1 · May 2026<br>
           For Coreshift HQ team
@@ -1723,12 +1724,11 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 <li><input disabled="" type="checkbox"> User context attached after auth (id + email)</li>
 <li><input disabled="" type="checkbox"> PII capture is <strong>off</strong> (<code>sendDefaultPii: false</code>)</li>
 <li><input disabled="" type="checkbox"> Session replay privacy defaults (mask all text, block all media)</li>
-<li><input disabled="" type="checkbox"> <strong>Catch-block discipline</strong> — every server-side <code>catch</code> block that returns 5xx calls <code>Sentry.captureException(err, { extra: {...} })</code> BEFORE the response. Sentry only auto-captures <em>uncaught</em> exceptions; anything inside a try/catch is invisible unless explicitly reported. Quick way to audit: <code>grep -rn &quot;res\.status(5&quot; server/</code> and verify each match has a <code>Sentry.captureException</code> call within the same <code>catch</code> block.
-  <ul>
-    <li>Anti-pattern: <code>catch (err) { res.status(502).json({...}) }</code> — silent failure, looks like a clean status code to the operator dashboard.</li>
-    <li>Correct pattern: <code>catch (err) { console.error(&quot;[route] context:&quot;, err); Sentry.captureException(err, { extra: { route, ... } }); res.status(500).json({...}); }</code></li>
-    <li>This check would have caught the 2026-05-19 Zernio webhook secret incident (16-day silent outage) and the 2026-05-22 Quick Post 502 (caught only via user report). Tracked at KC <a href="https://github.com/CoreshiftHQNZ/keycontent-app/issues/88">#88</a>.</li>
-  </ul>
+<li><input disabled="" type="checkbox"> <strong>Catch-block discipline</strong> — every server-side <code>catch</code> block that returns 5xx calls <code>Sentry.captureException(err, { extra: {...} })</code> BEFORE the response. Sentry only auto-captures <em>uncaught</em> exceptions; anything inside a try/catch is invisible unless explicitly reported. Quick way to audit: <code>grep -rn &quot;res\.status(5&quot; server/</code> and verify each match has a <code>Sentry.captureException</code> call within the same <code>catch</code> block.<ul>
+<li>Anti-pattern: <code>catch (err) { res.status(502).json({...}) }</code> — silent failure, looks like a clean status code to the operator dashboard.</li>
+<li>Correct pattern: <code>catch (err) { console.error(&quot;[route] context:&quot;, err); Sentry.captureException(err, { extra: { route, ... } }); res.status(500).json({...}); }</code></li>
+<li>This check would have caught the 2026-05-19 Zernio webhook secret incident (16-day silent outage) and the 2026-05-22 Quick Post 502 (caught only via user report). Tracked at KC <a href="https://github.com/CoreshiftHQNZ/keycontent-app/issues/88">#88</a>.</li>
+</ul>
 </li>
 </ul>
 <h3>Better Stack — Uptime Monitoring (N/A until Phase 1 Week 2 ships)</h3>
@@ -1856,9 +1856,192 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 </div>
       </section>
 
-      <section id="triage" class="play" data-accent="teal">
+      <section id="sentry-alerts" class="play" data-accent="teal">
         <div class="play-header">
           <span class="play-eyebrow">PLAY 7</span>
+        </div>
+        <h2 class="play-title">Sentry Alerts</h2>
+        <p class="play-tagline">Make Sentry come find you. Don't go looking.</p>
+        <div class="play-divider"></div>
+        <div class="md"><p><strong>Last updated:</strong> 2026-05-22
+<strong>Owners:</strong> Operator (configures rules in Sentry UI) · Claude Code (drafts the recipe + revises after incidents)
+<strong>Why this exists:</strong> Sentry&#39;s inbox is reactive — it shows you errors when you go look. Alert rules are what make Sentry come find you. Without them, observability requires you to remember to check, which means real problems sit unread for days. See <code>keycontent-app/incidents/2026-05-22-sentry-env-var-drift.md</code> for the incident that motivated this doc.</p>
+<hr>
+<h2>The 3 rules every Coreshift backend + frontend project gets</h2>
+<p>Apply these to <strong>every</strong> Sentry project (KEYCONTENT-BACKEND, KEYCONTENT-FRONTEND, SENTINEL-BACKEND, SENTINEL-FRONTEND, and any future Coreshift project). They take ~5 minutes per project to set up.</p>
+<h3>Rule 1 — New issue (first time we&#39;ve ever seen this error)</h3>
+<p><strong>Purpose:</strong> Catch bugs the moment they ship. New fingerprint = something just broke in a way nothing has broken before.</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Type</strong></td>
+<td>Issue alert (<code>Alerts → Create Alert → Issue Alert</code>)</td>
+</tr>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>New issue — first occurrence</code></td>
+</tr>
+<tr>
+<td><strong>Conditions: When</strong></td>
+<td><code>A new issue is created</code></td>
+</tr>
+<tr>
+<td><strong>Conditions: If</strong></td>
+<td>(none — leave the IF block empty so it fires for any new issue)</td>
+</tr>
+<tr>
+<td><strong>Filters</strong></td>
+<td><code>The issue&#39;s level is equal to error or fatal</code> (suppresses warnings/info)</td>
+</tr>
+<tr>
+<td><strong>Action: Then</strong></td>
+<td><code>Send a notification to abe@coreshifthq.com</code> (and optionally a Slack channel if wired up)</td>
+</tr>
+<tr>
+<td><strong>Environment</strong></td>
+<td><code>All Environments</code> (catch new bugs on staging too — they&#39;ll hit prod next)</td>
+</tr>
+<tr>
+<td><strong>Rate limit</strong></td>
+<td><code>1 notification per issue per 5 minutes</code> (Sentry&#39;s default — leave it)</td>
+</tr>
+</tbody></table>
+<p><strong>Tuning:</strong> If you find this too noisy because intentional Sentry smoke tests fire it, add a filter <code>The event&#39;s message does not contain &quot;smoke test&quot;</code>. We haven&#39;t needed that yet.</p>
+<h3>Rule 2 — Regression (a previously-resolved issue came back)</h3>
+<p><strong>Purpose:</strong> When you mark an issue resolved, you&#39;re claiming &quot;this is fixed.&quot; If it fires again, the fix didn&#39;t work — and you should hear about it immediately, not at the next inbox check.</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Name</strong></td>
+<td><code>Regression — a closed issue reopened</code></td>
+</tr>
+<tr>
+<td><strong>Conditions: When</strong></td>
+<td><code>The issue changes state from resolved to unresolved</code></td>
+</tr>
+<tr>
+<td><strong>Conditions: If</strong></td>
+<td>(none)</td>
+</tr>
+<tr>
+<td><strong>Filters</strong></td>
+<td>(none — regressions of any level matter)</td>
+</tr>
+<tr>
+<td><strong>Action: Then</strong></td>
+<td>Same destinations as Rule 1</td>
+</tr>
+<tr>
+<td><strong>Environment</strong></td>
+<td><code>All Environments</code></td>
+</tr>
+</tbody></table>
+<h3>Rule 3 — High frequency (one error is firing a lot)</h3>
+<p><strong>Purpose:</strong> A new issue may not seem important when it first appears. But if it starts firing 50 times an hour, something is on fire and you need to know now.</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Name</strong></td>
+<td><code>High frequency — issue fired &gt;25 times in 1 hour</code></td>
+</tr>
+<tr>
+<td><strong>Conditions: When</strong></td>
+<td><code>The issue is seen more than 25 times in 1 hour</code></td>
+</tr>
+<tr>
+<td><strong>Conditions: If</strong></td>
+<td>(none)</td>
+</tr>
+<tr>
+<td><strong>Filters</strong></td>
+<td>(none)</td>
+</tr>
+<tr>
+<td><strong>Action: Then</strong></td>
+<td>Same destinations as Rule 1</td>
+</tr>
+<tr>
+<td><strong>Environment</strong></td>
+<td><code>Production only</code> (we don&#39;t care if staging is on fire during testing)</td>
+</tr>
+</tbody></table>
+<p><strong>Tuning:</strong> Start at 25/hour. If you&#39;re getting too many of these from a known noisy issue, raise it to 50/hour. If you&#39;ve never gotten one in 2 weeks, lower it to 10/hour to be more sensitive. The number is supposed to be &quot;well above background noise but well below a real incident.&quot;</p>
+<hr>
+<h2>Setup checklist (per project)</h2>
+<p>For each project (KEYCONTENT-BACKEND, KEYCONTENT-FRONTEND, SENTINEL-BACKEND, SENTINEL-FRONTEND):</p>
+<ol>
+<li>Open Sentry → Switch to the project (top-left dropdown)</li>
+<li>Navigate to <strong>Alerts</strong> in the left sidebar</li>
+<li>Click <strong>Create Alert</strong> → <strong>Issue Alert</strong></li>
+<li>Fill in Rule 1 from the table above</li>
+<li>Click <strong>Save Rule</strong></li>
+<li>Repeat for Rules 2 and 3</li>
+<li>Verify all 3 appear in the <strong>Alerts</strong> list</li>
+</ol>
+<p><strong>Done state:</strong> every project has exactly 3 rules in its Alerts list, all enabled (toggle in the right column).</p>
+<hr>
+<h2>Sanity-check the rules are working</h2>
+<p>Pick ONE project to verify (e.g. KEYCONTENT-BACKEND on staging):</p>
+<ol>
+<li>Trigger a deliberate 5xx that produces a never-before-seen error fingerprint:<pre><code class="language-bash">curl -X POST https://staging.keycontent.ai/api/auth/sync \
+  -H &quot;Content-Type: application/json&quot; \
+  --data &#39;{deliberately broken JSON &#39; $(date +%s)
+</code></pre>
+(The unique timestamp ensures the fingerprint is fresh, not grouped with an existing one.)</li>
+<li>Within ~30 seconds, Sentry should:<ul>
+<li>Create a new issue in the inbox.</li>
+<li>Fire Rule 1 → you should see an email arrive within ~1 minute.</li>
+</ul>
+</li>
+<li>Resolve the issue manually (click into it, mark as Resolved).</li>
+<li>Fire the same probe again with a new timestamp.</li>
+<li>The issue reopens (regression) → Rule 2 fires → another email.</li>
+</ol>
+<p>If either email doesn&#39;t arrive: check the Action destination is correct (your email address is whitelisted, no typos, etc.) and that your email provider isn&#39;t filtering Sentry as spam (add <code>noreply@sentry.io</code> to safe senders).</p>
+<hr>
+<h2>Routing — where alerts go</h2>
+<p>Default destination: <strong>operator email</strong> (<code>abe@coreshifthq.com</code> — per <code>git config user.email</code>).</p>
+<p><strong>Optional upgrades (not blocking but nice to have):</strong></p>
+<ul>
+<li><strong>Slack</strong> — Sentry has a first-party Slack integration. Add the workspace, choose a channel like <code>#sentry-alerts</code>, then change the Action destination on each rule from &quot;email&quot; to &quot;Slack: #sentry-alerts&quot;. The integration also lets you click-to-acknowledge/resolve from Slack, which is faster than the Sentry UI.</li>
+<li><strong>PagerDuty</strong> — overkill for Coreshift&#39;s current size. Revisit if we&#39;re ever supporting customers under SLA.</li>
+<li><strong>Multiple destinations</strong> — Sentry lets you add several Action rows on one rule. Common pattern: Slack for the realtime ping + email for a paper trail.</li>
+</ul>
+<hr>
+<h2>What this doesn&#39;t cover (deliberately)</h2>
+<ul>
+<li><strong>&quot;Sentry itself stopped receiving events&quot;</strong> detection. Sentry has no built-in alert for &quot;you stopped seeing traffic from environment X.&quot; A truly silent inbox can mean either &quot;no errors are happening&quot; (good) or &quot;Sentry is off&quot; (very bad — see the 2026-05-22 incident). Options for this are tracked in the post-mortem&#39;s action items but are lower priority than getting these 3 rules in place first.</li>
+<li><strong>Performance / tracing alerts.</strong> Out of scope for V1. Revisit if we start using Sentry&#39;s performance product seriously.</li>
+<li><strong>Custom fingerprinting / grouping.</strong> Trust Sentry&#39;s default grouping for now. Revisit if a specific issue is splitting into too many fingerprints (e.g. one per route param).</li>
+</ul>
+<hr>
+<h2>Maintenance</h2>
+<ul>
+<li><strong>After every incident:</strong> review whether the 3 rules would have caught it earlier. If not, ask whether a 4th rule is justified or whether the issue is something else (e.g. operator-visibility gap, not alerting gap).</li>
+<li><strong>Quarterly:</strong> verify the rules are still firing (the sanity-check probe above). Email destinations sometimes silently break (mailbox full, provider flagged Sentry as spam, etc.).</li>
+<li><strong>When adding a new Coreshift project:</strong> these 3 rules are the minimum. Add them as part of the project&#39;s onboarding to Sentinel — they should never go more than a day without the 3 standard rules in place.</li>
+</ul>
+</div>
+      </section>
+
+      <section id="triage" class="play" data-accent="teal">
+        <div class="play-header">
+          <span class="play-eyebrow">PLAY 8</span>
         </div>
         <h2 class="play-title">Triage Rhythm</h2>
         <p class="play-tagline">Ten minutes every morning. Empty the column.</p>
