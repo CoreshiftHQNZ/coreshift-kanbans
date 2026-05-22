@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>83%</strong> complete</div>
-        <div><strong>76</strong>/92 cards done</div>
-        <div>Updated <strong>2026-05-22 00:41 UTC</strong></div>
+        <div><strong>84%</strong> complete</div>
+        <div><strong>76</strong>/91 cards done</div>
+        <div>Updated <strong>2026-05-22 01:03 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -812,7 +812,7 @@
           <div class="phase-window">In progress · Noozey onboarding closes phase</div>
           <p class="phase-desc">Scope grew mid-flight: multi-app filter strip + an entirely new /maintenance surface for tracking AI-model lifecycle, vendor reviews, and recurring upkeep. Noozey onboarding closes the phase.</p>
           <ul class="phase-deliverables">
-            <li>Brief 8: App filter strip (conditional render) ✓</li><li>Brief 9a: /maintenance V1 foundation (sidebar, AppShell, RLS) ✓</li><li>Brief 9b: Auto-discovery scanner — node-cron nightly + GitHub Code Search ✓</li><li>Brief 10: Vendor lifecycle reference table + UI banner ✓</li><li>Brief 11: Manual-trigger maintenance digest ✓ (auto-schedule queued — easy add now that 9b cron infra is live)</li><li>Noozey onboarding via cloning playbook (closes Phase 4)</li>
+            <li>Brief 8: App filter strip (conditional render) ✓</li><li>Brief 9a: /maintenance V1 foundation (sidebar, AppShell, RLS) ✓</li><li>Brief 9b: Auto-discovery scanner — node-cron nightly + GitHub Code Search ✓</li><li>Brief 10: Vendor lifecycle reference table + UI banner ✓</li><li>Brief 11: Maintenance digest ✓ (manual button + weekly Monday auto-schedule)</li><li>Noozey onboarding via cloning playbook (closes Phase 4)</li>
           </ul>
         </div>
       </div>
@@ -837,7 +837,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">13</div>
+        <div class="status-num">12</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -1297,9 +1297,9 @@
         <div class="card-desc">New `public.vendor_lifecycle_reference` table on Sentinel Supabase, keyed by (kind, identifier) and seeded with 22 known dependency rows (Anthropic Claude, OpenAI GPT/embeddings, Google Gemini families). `/maintenance` entry endpoints (GET list, POST, PATCH) enrich each entry with `lifecycle_reference` via in-memory join. UI: banner in `MaintenanceEntryPanel` when the reference is more pessimistic than the entry&#39;s own status, with an &quot;Adopt suggestion&quot; button that PATCHes status + sunset_date in one go; small ⚠ badge on entry cards. Shared pessimism helper at `shared/lifecycle-pessimism.ts` with 6 unit tests. PR [#31](https://github.com/CoreshiftHQNZ/sentinel-app/pull/31) merged 2026-05-22</div>
       </div>
       <div class="card">
-        <div class="card-title">Sentinel V2 — Brief 11: manual-trigger maintenance digest</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">server/lib/digest.ts</span><span class="tag tag-neutral">POST /api/maintenance/digest/send</span><span class="tag tag-neutral">dryRun</span><span class="tag tag-neutral">to</span><span class="tag tag-neutral">/maintenance</span></div>
-        <div class="card-desc">`server/lib/digest.ts` buckets entries into &quot;vendor reminders&quot; (Brief 10 disagreement) + &quot;sunset approaching&quot; (within 60 days). HTML + text email bodies rendered, HTML-escaped. `POST /api/maintenance/digest/send` endpoint with optional `dryRun` + `to` overrides. &quot;Send digest&quot; button in `/maintenance` page header with auto-dismissing toast showing the response summary. 14 new unit tests covering bucketing edges + email rendering. **Scheduled cron deferred until Brief 9b&#39;s deploy crash is sorted** — manual trigger only for V1. PR [#32](https://github.com/CoreshiftHQNZ/sentinel-app/pull/32) merged 2026-05-22</div>
+        <div class="card-title">Sentinel V2 — Brief 11: maintenance digest (manual + auto-schedule)</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">server/lib/digest.ts</span><span class="tag tag-neutral">POST /api/maintenance/digest/send</span><span class="tag tag-neutral">dryRun</span><span class="tag tag-neutral">to</span><span class="tag tag-neutral">/maintenance</span><span class="tag tag-neutral">server/lib/digest-scheduler.ts</span><span class="tag tag-neutral">timezone</span><span class="tag tag-neutral">DISABLE_DIGEST_SCHEDULER=true</span></div>
+        <div class="card-desc">`server/lib/digest.ts` buckets entries into &quot;vendor reminders&quot; (Brief 10 disagreement) + &quot;sunset approaching&quot; (within 60 days). HTML + text email bodies rendered, HTML-escaped. `POST /api/maintenance/digest/send` endpoint with optional `dryRun` + `to` overrides. &quot;Send digest&quot; button in `/maintenance` page header for ad-hoc previews. **Auto-schedule** via `server/lib/digest-scheduler.ts`: weekly Monday at 10am Pacific/Auckland (DST-correct via node-cron&#39;s `timezone` option). Empty digests are sent anyway — heartbeat behavior. Kill switch via `DISABLE_DIGEST_SCHEDULER=true`. 21 unit tests total (14 for builder + 7 for scheduler). Manual button PR [#32](https://github.com/CoreshiftHQNZ/sentinel-app/pull/32) + auto-schedule PR [#43](https://github.com/CoreshiftHQNZ/sentinel-app/pull/43) → #44 → #45 merged 2026-05-22</div>
       </div>
       <div class="card">
         <div class="card-title">Catch-block Sentry discipline (KC #88)</div>
@@ -1386,7 +1386,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">13</span>
+        <span class="col-count">12</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1403,11 +1403,6 @@
         <div class="card-title">&quot;My past reports&quot; view</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
         <div class="card-desc">User-facing transparency. Deferred until Dashboard polish phase</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Brief 11 auto-schedule</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">DIGEST_RECIPIENT</span></div>
-        <div class="card-desc">Currently the digest is operator-triggered via &quot;Send digest&quot; button. With Brief 9b&#39;s node-cron infrastructure now live, wire a monthly cron (1st of month, 9am UTC) to call the same digest endpoint. Email recipient comes from `DIGEST_RECIPIENT` env var. Simple add</div>
       </div>
       <div class="card">
         <div class="card-title">Document cloning playbook</div>
