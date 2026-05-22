@@ -522,10 +522,10 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>77%</strong> complete</div>
-        <div><strong>33</strong>/43 cards done</div>
+        <div><strong>82%</strong> complete</div>
+        <div><strong>37</strong>/45 cards done</div>
         <div>Updated <strong>2026-05-22</strong></div>
-        <div><a href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">repo →</a></div>
+        <div><a href="https://velocity-production-b772.up.railway.app" target="_blank" rel="noopener">prod →</a></div>
         <div><a href="https://velocity-staging-staging.up.railway.app" target="_blank" rel="noopener">staging →</a></div>
       </div>
     </div>
@@ -544,11 +544,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current sprint</span>
-          <span class="phase-pill-value">Demo Milestone — H7 only remaining</span>
+          <span class="phase-pill-value">Demo Milestone done · prod live</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Demo-ready for Aditi <span class="phase-pill-date">week of 2026-06-22</span></span>
+          <span class="phase-pill-value">V1.0 polish <span class="phase-pill-date">week of 2026-07-27</span></span>
         </div>
       </div>
     </section>
@@ -578,19 +578,19 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">33</div>
+        <div class="status-num">37</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">1</div>
+        <div class="status-num">0</div>
         <div class="status-label">In flight</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">2</div>
+        <div class="status-num">1</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-up-next">
-        <div class="status-num">8</div>
+        <div class="status-num">7</div>
         <div class="status-label">Up Next</div>
       </div>
     </section>
@@ -599,6 +599,14 @@
     <section class="links">
       <h2 class="section-head">Quick Links</h2>
       <div class="links-grid">
+        <a class="link-card" href="https://velocity-production-b772.up.railway.app" target="_blank" rel="noopener">
+          <div class="link-icon">🟢</div>
+          <div class="link-text">
+            <div class="link-title">Production URL <span style="color:var(--green); font-size:11px; font-weight:600;">· LIVE</span></div>
+            <div class="link-desc">velocity-production-b772.up.railway.app</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
         <a class="link-card" href="https://velocity-staging-staging.up.railway.app" target="_blank" rel="noopener">
           <div class="link-icon">🚀</div>
           <div class="link-text">
@@ -677,15 +685,33 @@
     <!-- KANBAN BOARD -->
     <section class="board-section">
       <h2 class="section-head">Live Build Board</h2>
-      <p class="section-sub">v0.7 · 36 commits on dev · staging on Supabase staging branch since 2026-05-21 · prod not deployed. Workstreams: H hardening · I integrations · P portal panels · W wow factor · D delight payloads · A anti-overselling · U UX · C CI/deploy.</p>
+      <p class="section-sub">v1.0-rc · prod LIVE since 2026-05-22 · staging on Supabase staging branch · Aurora Glass theme. Workstreams: H hardening · I integrations · P portal panels · W wow factor · D delight payloads · A anti-overselling · U UX · C CI/deploy.</p>
       <div class="board">
 
         <section class="column col-done">
           <header class="col-head">
             <h2>✅ Done</h2>
-            <span class="col-count">33</span>
+            <span class="col-count">37</span>
           </header>
           <div class="cards">
+
+            <div class="card">
+              <div class="card-title">🟢 First production deploy — Velocity is live (2026-05-22)</div>
+              <div class="card-tags"><span class="tag tag-id">C3</span><span class="tag tag-ws-c">CI</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Promoted staging → main and Velocity is now live in production at velocity-production-b772.up.railway.app. Three blockers cleared in one session: (1) prod Supabase main was already migrated to schema v0001+v0002 (verified via new scripts/bootstrap-prod-main.ts — idempotent + safe to re-run), (2) deploy-production.yml now uses --force-with-lease so the first staging-to-main push could succeed (main had been at the orphan "Initialize main" commit 2506973), (3) staging 92b0b50 force-pushed to main, Railway auto-deployed, /health returned 200 with 15s uptime. Aurora Glass bundle confirmed serving (Geist+Mono in HTML, CSS hash index-Cg1k16aT.css matches staging). Service domain: velocity-production-b772.up.railway.app. Google OAuth env var set (VITE_ENABLE_GOOGLE_AUTH=true) — pending: Mal/Abe to add the prod redirect URL to the existing Google Cloud OAuth client and toggle Google provider on in Supabase main branch (~2 min of dashboard work).</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Aurora Glass design package landed (2026-05-22)</div>
+              <div class="card-tags"><span class="tag tag-id">U2/U3/U4</span><span class="tag tag-ws-u">UX</span><span class="tag tag-demo">Demo</span></div>
+              <div class="card-desc">Replaced the stock shadcn slate look with Claude Design's "Aurora Glass" — glassmorphic light theme over a soft aurora backdrop (violet · coral · jade gradients). Six commits, applied per the HANDOFF order: (1) tokens — oklch palette (violet 285 / coral 30 / jade 165 / amber 75 / ink 285), HSL channel compat for shadcn opacity modifiers, four glass surface tiers (.glass / .glass-strong / .glass-mission / .aurora), Geist Mono added alongside Inter. (2) glass primitives — Money, GlassCard, Chip, MissionButton, LetterAvatar, ProgressRing, Eyebrow + new lib/utils.ts (cn helper) + lib/api.ts (apiFetch alias). (3) AppShell — glass panel stack sidebar, violet→coral active nav pill, full-bleed main (kills max-w-5xl right-side gap). (4) Dashboard — greeting hero, W4 mission card lead, today's plate as visual card grid (avatars+rings), forecast strip with raw-vs-honest bar, dot+number stage cards, ember-tinted alerts. (5) Deal — 64px letter avatar + tracking-tight name + progress ring + stage track + coral mission CTA. (6) Pipeline — full-bleed kanban with violet→coral column heads. (7) Portal — coral-led aurora-portal backdrop, 820px reading-width. (8) Login — two-pane desktop, MailCheck confirmation, Google gated. Data flow preserved exactly. DailyKickoffPanel adapted to existing POST /api/agent/daily-kickoff endpoint (design assumed richer GET shape). Brief at docs/playbook/design-brief.md.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Aurora Glass null-safety fixes — Deal + Pipeline (2026-05-22)</div>
+              <div class="card-tags"><span class="tag tag-id">U-hotfix</span><span class="tag tag-ws-u">UX</span><span class="tag tag-demo">Demo</span></div>
+              <div class="card-desc">Two same-class bugs caught in the verification pass right after Aurora Glass shipped. The design assumed company/playbook/stage/handover were always non-null but they're left-joined on the server. Deal page rendered EMPTY for any deal without an initialized handover doc (HandoverCard.completenessPct → TypeError → entire subtree unmounted). Pipeline cards would have crashed the moment any deal arrived with a missing left-join. Fixed both: HandoverCard renders a quiet "Not started" surface when null; Deal hero pre-computes companyName/playbookName/stageCode/stageDisplay with fallbacks; Pipeline Deal interface marks the joined fields as nullable and DealCard guards every risk-chip + days-in-stage label. Then a verification pass walked every Aurora Glass surface (Dashboard, Deal, Pipeline, Portal, Login, AppShell, DailyKickoffPanel) — no more of the pattern. Commits 869d1fe + 2204b99.</div>
+            </div>
 
             <div class="card">
               <div class="card-title">U2 dashboard polish + U3 deal page softening + how-to-use playbook (2026-05-22)</div>
@@ -891,28 +917,19 @@
         <section class="column col-in-progress">
           <header class="col-head">
             <h2>🟡 In flight</h2>
-            <span class="col-count">1</span>
+            <span class="col-count">0</span>
           </header>
           <div class="cards">
-            <div class="card">
-              <div class="card-title">Demo Milestone sprint — H7 only remaining</div>
-              <div class="card-tags"><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Everything Aditi-facing has landed: P4 living proposal, U1 portal UX, Google OAuth, D1+D4+D9 + D5+D6+D7+D8 delight payloads, W4 one-thing daily kickoff, W5 auto-progressive handover, U2 dashboard polish, U3 deal page softening, and the how-to-use-velocity.md playbook. Only the deferred H7 (drizzle 0.38→0.45 audit fix) sits in Up Next under Demo. Going-ham 4-week floor (2026-06-13) comfortably under foot — focus shifts to V1.0 milestone items (P3, P6 portal panels; U4, U5 component library + mobile verification).</div>
-            </div>
+            <p class="empty">Quiet for the first time in weeks. Pick the next thing from Up Next when ready.</p>
           </div>
         </section>
 
         <section class="column col-blocked">
           <header class="col-head">
             <h2>🚫 Blocked / awaiting operator</h2>
-            <span class="col-count">2</span>
+            <span class="col-count">1</span>
           </header>
           <div class="cards">
-            <div class="card">
-              <div class="card-title">Production deploy (when ready)</div>
-              <div class="card-tags"><span class="tag tag-id">C3</span><span class="tag tag-ws-c">CI</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">main is still at the empty initial-commit (2506973). Production service has CRASHED deploys waiting on real code. Trigger via Actions → Deploy to Production → Run workflow once V1.0 work is done + staging soaked (~week of 2026-07-27).</div>
-            </div>
             <div class="card">
               <div class="card-title">Mal's local DATABASE_URL is stale</div>
               <div class="card-tags"><span class="tag tag-neutral">env</span></div>
@@ -924,7 +941,7 @@
         <section class="column col-up-next">
           <header class="col-head">
             <h2>🔵 Up next</h2>
-            <span class="col-count">8</span>
+            <span class="col-count">7</span>
           </header>
           <div class="cards">
 
@@ -948,12 +965,6 @@
               <div class="card-title">Component library + mobile-friendly verification</div>
               <div class="card-tags"><span class="tag tag-id">U4, U5</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
               <div class="card-desc">Small shared component library for V1.1 to build on. Responsive baseline (mobile-first deferred to V2 per spec unless usage warrants). ~2–4d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">First production deploy</div>
-              <div class="card-tags"><span class="tag tag-id">C3</span><span class="tag tag-ws-c">CI</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Promote staging → main via Actions workflow_dispatch. Abe triggers; Mal-confirmed once V1.0 is done + staging soaked.</div>
             </div>
 
             <div class="pending-group-head">V1.1 (2026-10-05)</div>
@@ -999,7 +1010,7 @@
   <footer class="page-foot">
     Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a>
     &nbsp;·&nbsp;
-    Last refresh: 2026-05-22 (PM) — U2 dashboard + U3 deal page polished, W4 one-thing daily kickoff + W5 auto-progressive handover shipped, full D1+D4+D9 / D5–D8 delight payloads in portal, how-to-use-velocity.md playbook landed. Demo Milestone is one card (H7) from done.
+    Last refresh: 2026-05-22 (evening) — 🟢 PROD IS LIVE at velocity-production-b772.up.railway.app. Aurora Glass design landed via Claude Design handoff. Two same-class null-safety bugs caught + fixed in verification pass. Demo Milestone shipped — focus shifts to V1.0 polish + V1.1 integrations.
   </footer>
 </body>
 </html>
