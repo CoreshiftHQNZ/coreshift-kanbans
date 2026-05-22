@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>82%</strong> complete</div>
-        <div><strong>72</strong>/88 cards done</div>
-        <div>Updated <strong>2026-05-21 20:47 UTC</strong></div>
+        <div><strong>83%</strong> complete</div>
+        <div><strong>76</strong>/92 cards done</div>
+        <div>Updated <strong>2026-05-22 00:41 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -812,7 +812,7 @@
           <div class="phase-window">In progress · Noozey onboarding closes phase</div>
           <p class="phase-desc">Scope grew mid-flight: multi-app filter strip + an entirely new /maintenance surface for tracking AI-model lifecycle, vendor reviews, and recurring upkeep. Noozey onboarding closes the phase.</p>
           <ul class="phase-deliverables">
-            <li>Brief 8: App filter strip (conditional render) ✓</li><li>Brief 9a: /maintenance V1 foundation (sidebar, AppShell, RLS) ✓</li><li>Brief 9b: Auto-discovery scanner — built but rolled back; node-cron deploy crash to debug</li><li>Brief 10: Vendor lifecycle reference table + UI banner ✓</li><li>Brief 11: Manual-trigger maintenance digest (auto-schedule pending 9b retry) ✓</li><li>Noozey onboarding via cloning playbook (closes Phase 4)</li>
+            <li>Brief 8: App filter strip (conditional render) ✓</li><li>Brief 9a: /maintenance V1 foundation (sidebar, AppShell, RLS) ✓</li><li>Brief 9b: Auto-discovery scanner — node-cron nightly + GitHub Code Search ✓</li><li>Brief 10: Vendor lifecycle reference table + UI banner ✓</li><li>Brief 11: Manual-trigger maintenance digest ✓ (auto-schedule queued — easy add now that 9b cron infra is live)</li><li>Noozey onboarding via cloning playbook (closes Phase 4)</li>
           </ul>
         </div>
       </div>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">72</div>
+        <div class="status-num">76</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,11 +833,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">2</div>
+        <div class="status-num">3</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">14</div>
+        <div class="status-num">13</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">72</span>
+        <span class="col-count">76</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1283,8 +1283,8 @@
       </div>
       <div class="card">
         <div class="card-title">Sentinel V2 — Brief 9b: auto-discovery scanner</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">rolled-back</span><span class="tag tag-neutral">node-cron</span><span class="tag tag-neutral">maintenance_entries</span><span class="tag tag-neutral">__dirname</span><span class="tag tag-neutral">feat/brief-9b-maintenance-scanner</span></div>
-        <div class="card-desc">`node-cron` nightly job (2am UTC) walks every onboarded app, runs 8 model-name patterns against GitHub Code Search, upserts findings into `maintenance_entries`, archives ones that disappeared. Built + tested + merged but **deploy crashed twice in a row** (node-cron@4 + ESM `__dirname` issue → v3 downgrade also failed for a different reason that needed dashboard log access). Rolled back to Brief 9a baseline via PR #29; code preserved on `feat/brief-9b-maintenance-scanner` branch. Retry tracked at task #102</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">node-cron</span><span class="tag tag-neutral">maintenance_entries</span><span class="tag tag-neutral">POST /api/maintenance/apps/:id/scan</span><span class="tag tag-neutral">/maintenance</span><span class="tag tag-neutral">__dirname</span><span class="tag tag-neutral">__dirname</span><span class="tag tag-neutral">banner</span><span class="tag tag-neutral">__dirname</span><span class="tag tag-neutral">__filename</span><span class="tag tag-neutral">require</span><span class="tag tag-neutral">import.meta.url</span><span class="tag tag-neutral">20260521030000_add_running_to_scan_status.sql</span></div>
+        <div class="card-desc">`node-cron` v3 nightly job (2am UTC) walks every onboarded app, runs 8 model-name patterns (gpt-3.5, gpt-4, o1-, o3-, claude-, gemini-, mistral-, llama-) against GitHub Code Search, upserts findings into `maintenance_entries`, archives ones that disappeared. `POST /api/maintenance/apps/:id/scan` for manual triggers; &quot;Scan now&quot; button per onboarded app on `/maintenance`. Took **three deploy attempts** to land: (1) node-cron@4 crashed on ESM `__dirname` (real bug, confirmed in dashboard logs); (2) v3 downgrade ALSO crashed for the same reason — turned out node-cron v3 has the same `__dirname` use; (3) **third attempt added an esbuild `banner` polyfill** that injects `__dirname`/`__filename`/`require` derived from `import.meta.url`. The banner fix was sitting **uncommitted in the local working tree** the whole time (PR #40). Once committed → staging + prod deployed cleanly. Migration `20260521030000_add_running_to_scan_status.sql` applied to Sentinel Supabase 2026-05-22. PR [#38](https://github.com/CoreshiftHQNZ/sentinel-app/pull/38) (code) + [#40](https://github.com/CoreshiftHQNZ/sentinel-app/pull/40) (banner fix) merged 2026-05-22</div>
       </div>
       <div class="card">
         <div class="card-title">Brief 9a follow-up: service_role GRANT on maintenance tables</div>
@@ -1325,6 +1325,26 @@
         <div class="card-title">HOW-WE-DO-APP-AUDITS v2.2 (full env-var diff)</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-3-followup</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">Refined the Railway env-var parity check from &quot;check whichever var we&#39;re investigating&quot; to &quot;diff all keys staging vs prod&quot; with shell + PowerShell one-liners. Triggered by the 2026-05-22 Sentry drift incident — the 2026-05-19 pass missed the Sentry block because it focused on Zernio only</div>
+      </div>
+      <div class="card">
+        <div class="card-title">V0 widget promoted to KC prod</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0-prod</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">User reported &quot;Failed to fetch&quot; on KC prod ticket submit. Diagnosis: widget UI was shipping to prod via Cloudflare but the Supabase backend never followed (Phase 0 backlog item from May). Closed the gap in one session: bug_reports table + bug-report-screenshots Storage bucket migrations applied to KC prod Supabase, report-issue Edge Function deployed via Supabase CLI, secrets set (POSTMARK_SERVER_TOKEN reused from Railway&#39;s POSTMARK_API_KEY + REPORT_TO_EMAIL=abe@coreshifthq.com). Operator confirmed live submission works end-to-end</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel prod KEYCONTENT_* flipped to KC prod</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0-prod</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">KEYCONTENT_SUPABASE_URL</span><span class="tag tag-neutral">KEYCONTENT_SUPABASE_SERVICE_ROLE_KEY</span></div>
+        <div class="card-desc">Sentinel was reading bug_reports from KC staging since May (task #7 carry-over). With V0 widget now writing to KC prod, flipped Sentinel prod&#39;s `KEYCONTENT_SUPABASE_URL` + `KEYCONTENT_SUPABASE_SERVICE_ROLE_KEY` to KC prod values. Sentinel staging stays on KC staging (sandbox isolation)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">ONBOARDING.md for Sentinel design sessions</div>
+        <div class="card-tags"><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Self-contained handoff doc for a UI/UX design session: visual system (full color tokens, dark-mode-canonical), page inventory with maturity tags, component vocabulary, six concrete angles for a whole-app design system pass, hard constraints. Lives at github.com/CoreshiftHQNZ/sentinel-app/blob/main/ONBOARDING.md. PR [#35](https://github.com/CoreshiftHQNZ/sentinel-app/pull/35) → #36 → #37</div>
+      </div>
+      <div class="card">
+        <div class="card-title">esbuild banner: __dirname/__filename polyfill</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">const daemonPath = \</span><span class="tag tag-neutral">;</span><span class="tag tag-neutral">createRequire</span><span class="tag tag-neutral">fileURLToPath</span><span class="tag tag-neutral">dirname</span><span class="tag tag-neutral">git diff HEAD</span></div>
+        <div class="card-desc">The hidden root cause behind Brief 9b&#39;s two earlier deploy crashes. node-cron (both v3 and v4) has `const daemonPath = \`${__dirname}/daemon.js\`;` at module top level — ReferenceError in an ESM bundle. The polyfill banner via `createRequire`/`fileURLToPath`/`dirname` was sitting **uncommitted in the local working tree** the whole time. Once committed (PR #40), Brief 9b deployed cleanly on third attempt. Lesson: when a local build passes but CI crashes the same way twice, `git diff HEAD` is the first diagnostic</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1344,7 +1364,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1353,22 +1373,22 @@
         <div class="card-desc">Sentry UI → KEYCONTENT-BACKEND, KEYCONTENT-FRONTEND, SENTINEL-BACKEND, SENTINEL-FRONTEND. Each gets 3 rules (new-issue, regression, high-frequency). Recipe with field-by-field values at `Sentinel/playbook/HOW-WE-DO-SENTRY-ALERTS.md` (PLAY 7 in the ops playbook). ~5 min per project, ~20 min total. **Closes the Zernio post-mortem&#39;s &quot;Sentry alert on persistent webhook 5xx&quot; item (KC [#77](https://github.com/CoreshiftHQNZ/keycontent-app/issues/77)).**</div>
       </div>
       <div class="card">
-        <div class="card-title">Brief 9b retry — diagnose the deploy crash</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">deferred</span><span class="tag tag-neutral">__dirname</span><span class="tag tag-neutral">feat/brief-9b-maintenance-scanner</span></div>
-        <div class="card-desc">Auto-discovery scanner was built + tested but its deploy crashed twice (node-cron@4 ESM `__dirname` issue, then v3 downgrade also failed for an unidentified second cause). Code preserved on `feat/brief-9b-maintenance-scanner` branch. Resume in a fresh session with Railway dashboard access to see the failed-deploy log directly. Once 9b lands, Brief 11&#39;s manual trigger can grow an auto-schedule. Tracked at task #102</div>
+        <div class="card-title">Run first scan against keycontent</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">/maintenance</span></div>
+        <div class="card-desc">Now that Brief 9b is live on prod, hit &quot;Scan now&quot; on the keycontent row in `/maintenance` and verify scanner populates entries from the GitHub Code Search hits. Otherwise the nightly cron will fire tonight at 2am UTC automatically</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel UI/UX design pass</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">design</span></div>
+        <div class="card-desc">Hand the ONBOARDING.md link to Claude Design (or a human designer). Scope: typography scale, spacing rhythm, color token consolidation, ReportDetailPanel vs MaintenanceEntryPanel consistency audit</div>
       </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">14</span>
+        <span class="col-count">13</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">V0 to production</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0-prod</span></div>
-        <div class="card-desc">Widget promotion to production. Follows HOW-WE-DO-DEPLOYS</div>
-      </div>
       <div class="card">
         <div class="card-title">Status page custom domain</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1-w2</span><span class="tag tag-neutral">deferred</span><span class="tag tag-neutral">keycontent.betteruptime.com</span><span class="tag tag-neutral">status.keycontent.ai</span></div>
@@ -1385,9 +1405,9 @@
         <div class="card-desc">User-facing transparency. Deferred until Dashboard polish phase</div>
       </div>
       <div class="card">
-        <div class="card-title">Brief 11 auto-schedule (post Brief 9b retry)</div>
+        <div class="card-title">Brief 11 auto-schedule</div>
         <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">DIGEST_RECIPIENT</span></div>
-        <div class="card-desc">Currently the digest is operator-triggered via &quot;Send digest&quot; button. Once Brief 9b&#39;s cron crash is solved, wire a monthly cron (1st of month, 9am UTC) to call the same digest endpoint. Email recipient comes from `DIGEST_RECIPIENT` env var</div>
+        <div class="card-desc">Currently the digest is operator-triggered via &quot;Send digest&quot; button. With Brief 9b&#39;s node-cron infrastructure now live, wire a monthly cron (1st of month, 9am UTC) to call the same digest endpoint. Email recipient comes from `DIGEST_RECIPIENT` env var. Simple add</div>
       </div>
       <div class="card">
         <div class="card-title">Document cloning playbook</div>
