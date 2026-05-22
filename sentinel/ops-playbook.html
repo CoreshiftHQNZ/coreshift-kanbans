@@ -388,7 +388,8 @@
         <a href="#app-audits"><span class="play-num">06</span><span>App Audits</span></a>
         <a href="#sentry-alerts"><span class="play-num">07</span><span>Sentry Alerts</span></a>
         <a href="#triage"><span class="play-num">08</span><span>Triage Rhythm</span></a>
-        <a href="#drag-and-drop"><span class="play-num">09</span><span>Drag-and-Drop</span></a>
+        <a href="#cloning"><span class="play-num">09</span><span>Cloning to a New App</span></a>
+        <a href="#drag-and-drop"><span class="play-num">010</span><span>Drag-and-Drop</span></a>
         <div class="nav-foot">
           Internal · v1 · May 2026<br>
           For Coreshift HQ team
@@ -2172,6 +2173,416 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 <li><code>HOW-WE-DO-BUG-REPORTS.md</code> — where the cards in Triage come from</li>
 <li><code>../ROADMAP.md</code> — Phase 1 Week 4 (this doc is the deliverable for &quot;Triage rhythm locked&quot;)</li>
 </ul>
+</div>
+      </section>
+
+      <section id="cloning" class="play" data-accent="teal">
+        <div class="play-header">
+          <span class="play-eyebrow">PLAY 9</span>
+        </div>
+        <h2 class="play-title">Cloning to a New App</h2>
+        <p class="play-tagline">Onboard the next Coreshift app to Sentinel.</p>
+        <div class="play-divider"></div>
+        <div class="md"><p><strong>Last updated:</strong> 2026-05-22
+<strong>Owners:</strong> Operator (runs the checklist) · Claude Code (executes most steps under operator&#39;s account)
+<strong>Why this exists:</strong> Sentinel was built for KeyContent. Onboarding the next app (Noozey, etc.) involves ~7 systems, ~10 env vars, 2 small code changes in <code>sentinel-app</code>, and a handful of operator UI clicks (Sentry, Better Stack). This doc is the single self-contained runbook: hand it (plus the access list below) to a Claude Code session and the session can drive the onboarding end-to-end, asking the operator only for things that genuinely require human eyes (a sender domain to verify, a Sentry rule to confirm, etc.).</p>
+<hr>
+<h2>How to use this doc with Claude Code</h2>
+<p>Upload this file into a Claude Code session opened <strong>in the <code>sentinel-app</code> repo</strong> (<code>D:\Coreshift HQ\Sentinel\sentinel-app\</code>). Open the session with the standard Coreshift access set (see <code>~/.claude/CLAUDE.md</code> — <code>gh</code> CLI, Supabase MCP, Cloudflare MCP, Railway CLI).</p>
+<p>Then tell Claude:</p>
+<blockquote>
+<p>&quot;Use <code>playbook/PLAYBOOK-cloning-to-new-app.md</code> to onboard <code>&lt;new-app-slug&gt;</code> to Sentinel. The new app is at <code>CoreshiftHQNZ/&lt;repo-name&gt;</code>, hosted at <code>&lt;domain&gt;</code>, with its own Supabase project <code>&lt;ref&gt;</code>. Run the playbook steps in order, ask me only when an action needs my hands.&quot;</p>
+</blockquote>
+<p>Claude will work through the steps below, pausing when:</p>
+<ul>
+<li>It needs you to verify a sender email in Postmark</li>
+<li>A Sentry alert rule needs a click in the UI</li>
+<li>A Cloudflare DNS record needs the orange-cloud dance</li>
+<li>A Better Stack monitor needs operator credentials it can&#39;t access</li>
+</ul>
+<p>Everything else (env vars, migrations, code edits, PR flow, smoke tests) Claude can do directly.</p>
+<hr>
+<h2>The architectural decision baked into V1</h2>
+<p><strong>Sentinel uses a <em>shared support backend</em> model.</strong> Every onboarded app&#39;s Report Issue widget writes into <strong>KeyContent&#39;s</strong> <code>bug_reports</code> table via <strong>KeyContent&#39;s</strong> <code>report-issue</code> Supabase Edge Function. Sentinel reads one source. The <code>app_id</code> column on each row tells Sentinel which app the report came from.</p>
+<table>
+<thead>
+<tr>
+<th>Pro</th>
+<th>Con</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>One backend, one Edge Function, one Postmark sender to maintain</td>
+<td>Reports from all apps share one Supabase project (privacy isolation = <code>app_id</code> filter, not separate DB)</td>
+</tr>
+<tr>
+<td>New apps onboard with widget config only — no Supabase project of their own needed for support</td>
+<td>If KC&#39;s Supabase has an outage, all apps&#39; Report widgets go down</td>
+</tr>
+<tr>
+<td>Sentinel&#39;s <code>getKcClient()</code> stays a singleton</td>
+<td>Per-app data sovereignty isn&#39;t possible without a real refactor</td>
+</tr>
+</tbody></table>
+<p><strong>If this trade-off ever stops working</strong> (e.g. you sell an app, or one app needs SOC2 isolation), the lift is roughly: refactor <code>server/lib/keycontent.ts</code> → <code>server/lib/app-supabase.ts</code> keyed by <code>app_id</code>, with per-app <code>&lt;SLUG&gt;_SUPABASE_URL</code> + <code>&lt;SLUG&gt;_SUPABASE_SERVICE_ROLE_KEY</code> env vars. That&#39;s a real brief, not a quick swap. Flag it now if it&#39;s a known requirement; otherwise, V1 stands.</p>
+<hr>
+<h2>TL;DR — every system that gets a touch</h2>
+<p>For onboarding <code>&lt;new-app-slug&gt;</code> (lowercase, hyphen-separated; the same slug is used everywhere):</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>What changes</th>
+<th>Who does it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>New app&#39;s widget</strong></td>
+<td>Install <code>Report Issue</code> widget, configured with <code>app_id: &quot;&lt;slug&gt;&quot;</code> and KC&#39;s Edge Function URL</td>
+<td>Claude (in new app&#39;s repo)</td>
+</tr>
+<tr>
+<td><strong>KC&#39;s <code>bug_reports</code> table</strong></td>
+<td>Nothing — already accepts any <code>app_id</code> string</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Sentinel <code>maintained_apps</code> table</strong></td>
+<td>New row via <code>POST /api/maintenance/apps</code> (or the <code>/maintenance</code> UI)</td>
+<td>Claude (or operator UI)</td>
+</tr>
+<tr>
+<td><strong>Sentinel <code>fileIssue.ts</code></strong></td>
+<td>Code change — generalize hardcoded <code>keycontent-app</code> target → lookup by <code>report.app_id</code> from <code>maintained_apps</code>. See §&quot;Pre-onboarding code changes&quot; below</td>
+<td>Claude (one-time, before app #2)</td>
+</tr>
+<tr>
+<td><strong>Sentinel Railway env vars</strong></td>
+<td>Add <code>GITHUB_TOKEN_&lt;APP_SLUG_UPPER&gt;</code> (fine-grained PAT scoped to new repo, Issues: R+W) — staging + prod</td>
+<td>Operator (creates PAT) + Claude (sets var)</td>
+</tr>
+<tr>
+<td><strong>Sentry projects</strong></td>
+<td>Create <code>&lt;APP-SLUG&gt;-FRONTEND</code> + <code>&lt;APP-SLUG&gt;-BACKEND</code> projects in CoreShift Sentry org</td>
+<td>Operator (UI)</td>
+</tr>
+<tr>
+<td><strong>Sentry alert rules</strong></td>
+<td>Apply the 3-rule recipe from <code>HOW-WE-DO-SENTRY-ALERTS.md</code> to both new projects</td>
+<td>Operator (UI, ~10 min)</td>
+</tr>
+<tr>
+<td><strong>New app&#39;s Railway env vars</strong></td>
+<td>Add <code>SENTRY_DSN_BACKEND</code>, <code>VITE_SENTRY_DSN</code>, <code>SENTRY_ENVIRONMENT</code>, <code>VITE_SENTRY_ENVIRONMENT</code> — staging + prod</td>
+<td>Claude</td>
+</tr>
+<tr>
+<td><strong>Sentry release tracking (GitHub Actions)</strong></td>
+<td>Add <code>SENTRY_AUTH_TOKEN</code> + <code>SENTRY_ORG</code> + <code>SENTRY_PROJECT</code> GitHub secrets</td>
+<td>Claude</td>
+</tr>
+<tr>
+<td><strong>Better Stack monitor</strong></td>
+<td>Add HTTP monitor for new app&#39;s prod URL (+ staging optional)</td>
+<td>Operator (UI)</td>
+</tr>
+<tr>
+<td><strong>Better Stack on Sentinel</strong></td>
+<td>Nothing — <code>/api/status</code> auto-discovers via Better Stack API</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Postmark</strong></td>
+<td>Reuse KC&#39;s verified sender (<code>hello@keycontent.ai</code>) for the ack email — OR verify a sender on the new app&#39;s domain if branded ack matters</td>
+<td>Operator (Postmark UI if new sender)</td>
+</tr>
+<tr>
+<td><strong><code>maintenance_entries</code></strong></td>
+<td>Run a first scan to populate from the new repo (Brief 9b)</td>
+<td>Claude (<code>POST /api/maintenance/apps/:id/scan</code>) or wait for 2am UTC cron</td>
+</tr>
+<tr>
+<td><strong>Cloudflare</strong></td>
+<td>Nothing on Sentinel&#39;s side. New app&#39;s own DNS is handled per-project</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Pre-onboarding code changes</h2>
+<p>These must land <strong>before</strong> app #2&#39;s first bug report. They generalize KC-specific hardcoded behavior to data-driven lookups. Each is a ~30-line PR.</p>
+<h3>Change 1 — Generalize <code>fileIssue.ts</code> target repo lookup</h3>
+<p><strong>File:</strong> <code>server/routes/fileIssue.ts:45-46</code></p>
+<p>Today:</p>
+<pre><code class="language-ts">const TARGET_OWNER = &quot;CoreshiftHQNZ&quot;;
+const TARGET_REPO = &quot;keycontent-app&quot;;
+</code></pre>
+<p>Replace with a lookup against <code>maintained_apps</code> by <code>report.app_id</code>:</p>
+<pre><code class="language-ts">// In the route handler, after loading the report:
+const { data: maintainedApp, error: appLookupError } = await getSentinelDbClient()
+  .from(&quot;maintained_apps&quot;)
+  .select(&quot;repo_owner, repo_name&quot;)
+  .eq(&quot;slug&quot;, report.app_id)
+  .maybeSingle();
+
+if (appLookupError || !maintainedApp) {
+  return res.status(400).json({
+    error: `app_id &quot;${report.app_id}&quot; is not registered in maintained_apps`,
+  });
+}
+
+// Use maintainedApp.repo_owner + maintainedApp.repo_name for the createIssue call.
+</code></pre>
+<p><strong>Test:</strong> existing <code>fileIssue.test.ts</code> mocks the KC client — add a parallel mock for <code>sentinel-db</code> returning a <code>maintained_apps</code> row.</p>
+<p><strong>Why this is required:</strong> without it, filing a GitHub issue from a Noozey bug report would still file the issue against <code>keycontent-app</code>. Symptom would be a confusingly-misfiled issue; fix is trivial once spotted but the time-to-detect is high.</p>
+<h3>Change 2 — Generalize the GitHub PAT lookup</h3>
+<p><strong>File:</strong> <code>server/lib/github.ts:41-44</code></p>
+<p>Today:</p>
+<pre><code class="language-ts">const token = process.env.GITHUB_TOKEN_KC;
+if (!token) {
+  throw new Error(&quot;GITHUB_TOKEN_KC is not configured&quot;);
+}
+</code></pre>
+<p>Replace with a per-app lookup, with <code>GITHUB_TOKEN_KC</code> retained as the KC fallback for backwards compat:</p>
+<pre><code class="language-ts">export interface CreateIssueParams {
+  owner: string;
+  repo: string;
+  title: string;
+  body: string;
+  appSlug: string; // NEW — used to resolve the PAT env var
+}
+
+// inside createIssue():
+const envVarName = `GITHUB_TOKEN_${params.appSlug.toUpperCase().replace(/-/g, &quot;_&quot;)}`;
+const token = process.env[envVarName] ?? process.env.GITHUB_TOKEN_KC;
+if (!token) {
+  throw new Error(`No GitHub token configured: looked for ${envVarName}`);
+}
+</code></pre>
+<p>This way every new app needs <code>GITHUB_TOKEN_&lt;SLUG_UPPER&gt;</code> planted on Sentinel Railway, with KC&#39;s existing token still working.</p>
+<p><strong>Alternative (simpler, less paranoid):</strong> create one Sentinel-bot PAT with <code>Issues: R+W</code> across the whole <code>CoreshiftHQNZ</code> org, store as <code>GITHUB_TOKEN</code>, and have <code>createIssue</code> use it for every app. Trade-off: single PAT means one rotation event affects all apps. For 2-3 apps the per-app-PAT model is overkill; for 10+ apps the single-PAT-with-rotation-discipline is better. <strong>Recommend single org PAT for V2.</strong></p>
+<h3>Change 3 (optional but recommended) — Surface the maintained_apps slug in <code>bug_reports</code></h3>
+<p>Today the widget client sends an arbitrary <code>app_id</code> string. If a typo is sent (<code>&quot;noozeyy&quot;</code> instead of <code>&quot;noozey&quot;</code>), Sentinel will happily show that report under a phantom app and <code>fileIssue</code> will fail with &quot;not registered.&quot;</p>
+<p><strong>Defensive option:</strong> validate <code>app_id</code> at write-time in the <code>report-issue</code> Edge Function against an env-var allowlist (<code>ALLOWED_APP_IDS=keycontent,noozey,...</code>), or against a Supabase <code>app_ids</code> view. The latter is more maintainable but adds a cross-DB dependency on Sentinel&#39;s <code>maintained_apps</code>. <strong>V1: env-var allowlist on KC&#39;s Edge Function. Updated when a new app onboards.</strong></p>
+<hr>
+<h2>Step-by-step onboarding</h2>
+<p>Pick a slug (<code>&lt;slug&gt;</code>) and stick with it. Examples below use <code>noozey</code>.</p>
+<h3>Step 0 — Pre-flight</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Decide the slug. It must match the regex <code>^[a-z][a-z0-9-]{1,40}$</code>. Capture in lowercase. Used in: <code>bug_reports.app_id</code>, <code>maintained_apps.slug</code>, env-var names (<code>GITHUB_TOKEN_&lt;UPPER&gt;</code>, <code>&lt;UPPER&gt;_SUPABASE_URL</code> if future per-app DB), Sentry project names (<code>&lt;UPPER&gt;-BACKEND</code>, <code>&lt;UPPER&gt;-FRONTEND</code>).</li>
+<li><input disabled="" type="checkbox"> Confirm Pre-onboarding code changes 1-2 above have shipped. (If this is app #2 and they haven&#39;t, do them first. Add <code>&lt;slug&gt;</code> to KC&#39;s <code>report-issue</code> allowlist at the same time per Change 3.)</li>
+<li><input disabled="" type="checkbox"> Confirm the new app has a GitHub repo at <code>CoreshiftHQNZ/&lt;repo-name&gt;</code> with branch protection per <code>HOW-WE-DO-DEPLOYS.md</code>.</li>
+</ul>
+<h3>Step 1 — Register the app in Sentinel</h3>
+<p>Two equivalent paths:</p>
+<p><strong>A. Via the UI</strong> — Sentinel → <code>/maintenance</code> → &quot;Onboard app&quot; → fill in slug, display_name, repo_owner (<code>CoreshiftHQNZ</code>), repo_name, scan_paths (default <code>server/</code>, <code>lib/</code>, <code>services/</code> covers most). Save.</p>
+<p><strong>B. Via the API</strong> (useful when scripting):</p>
+<pre><code class="language-bash">curl -sS -X POST &#39;https://sentinel.coreshifthq.com/api/maintenance/apps&#39; \
+  -H &#39;Content-Type: application/json&#39; \
+  -H &#39;Cookie: &lt;your sentinel session cookie&gt;&#39; \
+  -d &#39;{
+    &quot;slug&quot;: &quot;noozey&quot;,
+    &quot;display_name&quot;: &quot;Noozey&quot;,
+    &quot;repo_owner&quot;: &quot;CoreshiftHQNZ&quot;,
+    &quot;repo_name&quot;: &quot;noozey-app&quot;,
+    &quot;default_branch&quot;: &quot;main&quot;,
+    &quot;scan_paths&quot;: [&quot;server/&quot;, &quot;lib/&quot;]
+  }&#39;
+</code></pre>
+<h3>Step 2 — Install the Report Issue widget in the new app</h3>
+<p>Copy from <code>keycontent-app</code>. The widget lives in the frontend:</p>
+<ul>
+<li><p><input disabled="" type="checkbox"> Copy <code>client/src/components/ReportIssueWidget/</code> (the V1 widget tree) into the new app&#39;s repo at the same path.</p>
+</li>
+<li><p><input disabled="" type="checkbox"> Wire it into the app shell with <code>app_id=&quot;&lt;slug&gt;&quot;</code>:</p>
+<pre><code class="language-tsx">&lt;ReportIssueWidget
+  appId=&quot;&lt;slug&gt;&quot;
+  endpoint={import.meta.env.VITE_REPORT_ISSUE_ENDPOINT}
+/&gt;
+</code></pre>
+</li>
+<li><p><input disabled="" type="checkbox"> Set <code>VITE_REPORT_ISSUE_ENDPOINT</code> in the new app&#39;s Railway env (staging + prod) to KC prod&#39;s Edge Function URL:</p>
+<pre><code>https://&lt;KC-PROD-SUPABASE-REF&gt;.supabase.co/functions/v1/report-issue
+</code></pre>
+<p><em>(Claude can fetch the actual URL with <code>npx supabase projects list</code> or via the Supabase MCP.)</em></p>
+</li>
+<li><p><input disabled="" type="checkbox"> If KC&#39;s <code>report-issue</code> function has CORS allowlist of origins, add the new app&#39;s prod + staging origins. Edit the function source, redeploy via <code>npx supabase functions deploy report-issue --project-ref &lt;KC-PROD-REF&gt;</code>.</p>
+</li>
+</ul>
+<h3>Step 3 — Sentinel-side env vars</h3>
+<p>On Sentinel Railway, staging + prod environments:</p>
+<pre><code class="language-bash"># Operator creates a fine-grained PAT scoped to the new repo (Issues: R+W),
+# then Claude plants it:
+railway variables --set &quot;GITHUB_TOKEN_NOOZEY=&lt;token&gt;&quot; --skip-deploys
+</code></pre>
+<p>If Change 2 above used the single-org-PAT alternative, this step is skipped — <code>GITHUB_TOKEN</code> is already in place.</p>
+<h3>Step 4 — Sentry projects + alerts</h3>
+<p><strong>Operator actions</strong> (Sentry UI, ~10 min):</p>
+<ul>
+<li><input disabled="" type="checkbox"> Create project <code>&lt;UPPER&gt;-FRONTEND</code> (platform: React)</li>
+<li><input disabled="" type="checkbox"> Create project <code>&lt;UPPER&gt;-BACKEND</code> (platform: Node.js Express)</li>
+<li><input disabled="" type="checkbox"> Note both DSNs</li>
+<li><input disabled="" type="checkbox"> Apply the 3-rule recipe from <code>HOW-WE-DO-SENTRY-ALERTS.md</code> to <strong>both</strong> projects (~5 min each)</li>
+</ul>
+<p><strong>Claude actions</strong> — plant the DSNs on the new app&#39;s Railway env (staging + prod):</p>
+<pre><code class="language-bash"># new app&#39;s Railway project
+railway variables --set &quot;SENTRY_DSN_BACKEND=&lt;backend DSN&gt;&quot; \
+                  --set &quot;VITE_SENTRY_DSN=&lt;frontend DSN&gt;&quot; \
+                  --set &quot;SENTRY_ENVIRONMENT=production&quot; \
+                  --set &quot;VITE_SENTRY_ENVIRONMENT=production&quot; \
+                  --skip-deploys
+# repeat for the staging env with SENTRY_ENVIRONMENT=staging
+</code></pre>
+<p><strong>Claude actions</strong> — plant the release-tracking secrets in the new app&#39;s GitHub repo:</p>
+<pre><code class="language-bash">gh secret set SENTRY_AUTH_TOKEN --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#39;&lt;token&gt;&#39;
+gh secret set SENTRY_ORG       --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#39;coreshift&#39;
+gh secret set SENTRY_PROJECT   --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#39;&lt;upper&gt;-backend&#39;
+</code></pre>
+<h3>Step 5 — Better Stack monitor</h3>
+<p><strong>Operator actions</strong> (Better Stack UI):</p>
+<ul>
+<li><input disabled="" type="checkbox"> Add HTTP monitor for <code>https://&lt;new-app-prod-url&gt;/health</code> (or the closest equivalent — find the path the app uses)</li>
+<li><input disabled="" type="checkbox"> 3-min cadence, 2-region default</li>
+<li><input disabled="" type="checkbox"> Email destination: <code>abe@coreshifthq.com</code></li>
+</ul>
+<p><strong>No Claude action needed</strong> — Sentinel&#39;s <code>/api/status</code> will surface the new monitor automatically next time the dashboard loads (10s cache).</p>
+<h3>Step 6 — Postmark sender</h3>
+<p>If the new app&#39;s bug ack should come from <code>hello@&lt;newapp&gt;.com</code> instead of <code>hello@keycontent.ai</code>:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Operator verifies the sender in Postmark (DKIM + Return-Path)</li>
+<li><input disabled="" type="checkbox"> Update KC&#39;s <code>report-issue</code> Edge Function to choose sender by <code>app_id</code> (small switch statement), redeploy</li>
+</ul>
+<p>Otherwise: skip — reuse <code>hello@keycontent.ai</code> for all apps&#39; ack emails. Trade-off is brand consistency; for an internal/back-of-house tool, fine.</p>
+<h3>Step 7 — First scan + first smoke test</h3>
+<ul>
+<li><input disabled="" type="checkbox"> On Sentinel <code>/maintenance</code>, find the new app&#39;s row and click <strong>Scan now</strong>. Verify the GitHub Code Search scan completes and populates <code>maintenance_entries</code> from the new repo&#39;s AI-model/credential patterns.</li>
+<li><input disabled="" type="checkbox"> Submit a test bug from the new app&#39;s Report Issue widget. Verify:<ul>
+<li>The ack email arrives at the reporter&#39;s address</li>
+<li>The row appears in Sentinel&#39;s dashboard (filter by <code>app_id</code> if needed)</li>
+<li>The &quot;File GitHub issue&quot; button on the card detail panel files an issue into the <strong>correct</strong> repo (<code>&lt;repo-name&gt;</code>, not <code>keycontent-app</code>)</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox"> Drag the report through the columns (Triage → To Do → Done) and verify the resolution-ack email fires.</li>
+</ul>
+<h3>Step 8 — Update the kanban + roadmap</h3>
+<p>Per <code>~/.claude/projects/.../memory/feedback_kanban_refresh.md</code>: after onboarding lands, update <code>KANBAN.md</code>, rebuild the public HTML, sync to <code>coreshift-kanbans/sentinel/index.html</code>, commit + push. If Noozey closes Phase 4, also flip the ROADMAP.md Current Status table row.</p>
+<hr>
+<h2>Verification checklist</h2>
+<p>After Step 7, all of these should be true:</p>
+<ul>
+<li><input disabled="" type="checkbox"> <code>SELECT slug FROM maintained_apps</code> includes <code>&lt;slug&gt;</code></li>
+<li><input disabled="" type="checkbox"> New app&#39;s widget POSTs to KC&#39;s Edge Function and returns 200</li>
+<li><input disabled="" type="checkbox"> A test bug report appears in <code>bug_reports</code> with <code>app_id = &#39;&lt;slug&gt;&#39;</code></li>
+<li><input disabled="" type="checkbox"> The Sentinel dashboard shows the new report (with the &quot;App&quot; filter dropdown now showing 2+ options)</li>
+<li><input disabled="" type="checkbox"> Clicking &quot;File GitHub issue&quot; on that report creates an issue in <code>CoreshiftHQNZ/&lt;repo-name&gt;</code> (not <code>keycontent-app</code>)</li>
+<li><input disabled="" type="checkbox"> <code>maintenance_entries</code> has at least one row for the new <code>app_id</code> after a scan</li>
+<li><input disabled="" type="checkbox"> Better Stack monitor for the new app is green</li>
+<li><input disabled="" type="checkbox"> Both Sentry projects show test-event activity (Send Test Event from project settings)</li>
+<li><input disabled="" type="checkbox"> Kanban + roadmap reflect the new app</li>
+</ul>
+<hr>
+<h2>V2 strategy — onboarding without a Claude Code session</h2>
+<p>The V1 playbook above takes ~45 min with a Claude Code session driving. Most of that is API calls Claude makes on the operator&#39;s behalf (<code>railway variables --set</code>, <code>gh secret set</code>, the SQL insert, the widget copy). A V2 should compress this to <strong>operator-only, &lt;10 min, no IDE required</strong>.</p>
+<p>The bottleneck isn&#39;t the steps — it&#39;s that the steps span 6 separate consoles (GitHub, Railway, Supabase, Sentry, Better Stack, Postmark) plus a code edit. To remove the Claude Code session, we&#39;d need to consolidate the operator-facing surface and remove the one-time code edits.</p>
+<h3>Three-track strategy</h3>
+<p><strong>Track A — Eliminate the per-app code edits (PR ~1 day)</strong></p>
+<p>Land the &quot;Pre-onboarding code changes&quot; (§1-2 above) once, properly. After that, onboarding app #N is <em>purely</em> a config operation — no <code>sentinel-app</code> PR needed for app #N+1, #N+2, etc. This is the biggest one-time win.</p>
+<p>Also: switch to the single-org-PAT model for <code>GITHUB_TOKEN</code> so adding an app doesn&#39;t require planting a per-app PAT.</p>
+<p><strong>Track B — A Sentinel-side onboarding wizard (<code>/maintenance/onboard</code>)</strong> (PR ~2-3 days)</p>
+<p>A multi-step wizard on Sentinel itself, gated on <code>requireCoreshiftDomain</code>. Steps:</p>
+<ol>
+<li><strong>Identity</strong> — slug, display_name, repo_owner, repo_name → inserts <code>maintained_apps</code> row (already supported)</li>
+<li><strong>GitHub PAT prompt</strong> — operator pastes the fine-grained PAT once (if we keep per-app PATs) — Sentinel stores it via a server-side endpoint that writes to Railway&#39;s API. <em>(Caveat: Sentinel writing to its own Railway env via the Railway GraphQL API is doable but introduces a &quot;Sentinel can rewrite its own deploy&quot; dependency. Defer this unless Track C lands.)</em></li>
+<li><strong>Sentry pairing</strong> — show a checklist with the exact rule names + recipe screenshots. Operator clicks &quot;done&quot; when applied. (Sentry&#39;s API supports creating alert rules programmatically — <code>POST /api/0/projects/{org}/{project}/rules/</code> — so a future wizard could <em>create</em> the rules with one click given a Sentry API token in <code>SENTRY_API_TOKEN</code>. Realistic V2.5.)</li>
+<li><strong>Better Stack monitor add</strong> — Better Stack has a clean REST API (<code>POST /api/v2/monitors</code>). Wizard collects URL + region + cadence, calls the API server-side with <code>BETTERSTACK_API_KEY</code> (already in Sentinel&#39;s env). One-click monitor creation.</li>
+<li><strong>Widget snippet</strong> — wizard generates a copy-paste-able <code>&lt;ReportIssueWidget appId=&quot;&lt;slug&gt;&quot; endpoint=&quot;...&quot; /&gt;</code> block + the <code>VITE_REPORT_ISSUE_ENDPOINT</code> value, with a &quot;copy&quot; button. Operator pastes into the new app&#39;s repo.</li>
+<li><strong>First scan</strong> — wizard triggers <code>POST /api/maintenance/apps/:id/scan</code> automatically.</li>
+</ol>
+<p>The wizard handles 5 of the 7 operator UIs and removes Claude Code from the loop for app #N+1.</p>
+<p><strong>Track C — A GitHub Actions reusable workflow</strong> (PR ~1 day, depends on Track A)</p>
+<p>In <code>sentinel-app</code> repo, expose a workflow <code>.github/workflows/onboard-app.yml</code> triggered by <code>workflow_dispatch</code>. Inputs: <code>slug</code>, <code>display_name</code>, <code>repo_owner</code>, <code>repo_name</code>. Action:</p>
+<ol>
+<li>Calls <code>POST /api/maintenance/apps</code> on Sentinel</li>
+<li>Creates the Sentry projects via Sentry&#39;s API</li>
+<li>Plants the DSNs as GitHub Actions secrets on the new repo</li>
+<li>Creates the Better Stack monitor</li>
+<li>Posts a summary to a Slack channel (or sends an email) telling the operator what&#39;s left (Sentry alert rules, Postmark sender)</li>
+</ol>
+<p>Operator runs the workflow from the GitHub UI — one button, structured inputs, full audit trail.</p>
+<h3>Recommended V2 sequence</h3>
+<ol>
+<li><strong>Track A first</strong> — un-blocks app #2 cleanly. Lands the once-and-done code work.</li>
+<li><strong>Track C second</strong> — buys 90% of the convenience with the least new code (uses existing APIs).</li>
+<li><strong>Track B last</strong> — best UX but the most surface area to build and maintain. Worth it once Sentinel onboards apps frequently enough that the GitHub Actions form starts feeling clunky.</li>
+</ol>
+<h3>What to defer</h3>
+<ul>
+<li><strong>Auto-creating Sentry alert rules via API.</strong> Sentry&#39;s rule-creation endpoint exists but the rule schema is opaque enough that maintaining the JSON-as-config is its own headache. Keep alert rules as a 5-min operator click for now.</li>
+<li><strong>Auto-verifying Postmark senders.</strong> Domain verification is a DNS dance — there&#39;s no API shortcut. Document it; don&#39;t try to automate it.</li>
+<li><strong>A &quot;deboard an app&quot; flow.</strong> When (if) it&#39;s needed, the DELETE endpoint on <code>/api/maintenance/apps</code> already cascades to <code>maintenance_entries</code>. The harder cleanup is on the app-side widget removal and Sentry/Better Stack monitor cleanup, which are reverse-operator tasks anyway. Build deboarding when you have the second instance of doing it manually, not before.</li>
+</ul>
+<hr>
+<h2>Appendix — worked example: KeyContent</h2>
+<p>KC was the first app onboarded. Its config (for reference when wiring app #2):</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>maintained_apps.slug</code></td>
+<td><code>keycontent</code></td>
+</tr>
+<tr>
+<td><code>maintained_apps.display_name</code></td>
+<td><code>KeyContent</code></td>
+</tr>
+<tr>
+<td><code>maintained_apps.repo_owner</code></td>
+<td><code>CoreshiftHQNZ</code></td>
+</tr>
+<tr>
+<td><code>maintained_apps.repo_name</code></td>
+<td><code>keycontent-app</code></td>
+</tr>
+<tr>
+<td><code>maintained_apps.default_branch</code></td>
+<td><code>main</code></td>
+</tr>
+<tr>
+<td><code>maintained_apps.scan_paths</code></td>
+<td><code>{server/, lib/, supabase/functions/}</code></td>
+</tr>
+<tr>
+<td>Sentry projects</td>
+<td><code>KEYCONTENT-FRONTEND</code>, <code>KEYCONTENT-BACKEND</code></td>
+</tr>
+<tr>
+<td>Railway env vars (Sentinel)</td>
+<td><code>GITHUB_TOKEN_KC</code></td>
+</tr>
+<tr>
+<td>Railway env vars (KC)</td>
+<td><code>SENTRY_DSN_BACKEND</code>, <code>VITE_SENTRY_DSN</code>, <code>SENTRY_ENVIRONMENT</code>, <code>VITE_SENTRY_ENVIRONMENT</code>, <code>POSTMARK_API_KEY</code>, <code>REPORT_TO_EMAIL</code></td>
+</tr>
+<tr>
+<td>Better Stack monitors</td>
+<td><code>keycontent.ai</code> (prod), <code>staging.keycontent.ai</code>, <code>coreshifthq.com</code></td>
+</tr>
+<tr>
+<td>Postmark sender</td>
+<td><code>hello@keycontent.ai</code> (verified, DKIM + Return-Path)</td>
+</tr>
+</tbody></table>
+<hr>
+<p><strong>Next steps after this doc lands:</strong></p>
+<ol>
+<li>Operator applies the 3-rule Sentry alert recipe to existing 4 projects (carry-over)</li>
+<li>Operator triggers first scan against <code>keycontent</code> (or wait for 2am UTC)</li>
+<li>Land Track A code changes (the two <code>fileIssue.ts</code>/<code>github.ts</code> generalizations) — required before Noozey</li>
+<li>Then drive Noozey onboarding through this playbook — pressure-tests it</li>
+</ol>
 </div>
       </section>
 

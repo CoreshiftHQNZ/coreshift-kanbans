@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>84%</strong> complete</div>
-        <div><strong>76</strong>/91 cards done</div>
-        <div>Updated <strong>2026-05-22 01:03 UTC</strong></div>
+        <div><strong>83%</strong> complete</div>
+        <div><strong>77</strong>/93 cards done</div>
+        <div>Updated <strong>2026-05-22 01:15 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -812,7 +812,7 @@
           <div class="phase-window">In progress · Noozey onboarding closes phase</div>
           <p class="phase-desc">Scope grew mid-flight: multi-app filter strip + an entirely new /maintenance surface for tracking AI-model lifecycle, vendor reviews, and recurring upkeep. Noozey onboarding closes the phase.</p>
           <ul class="phase-deliverables">
-            <li>Brief 8: App filter strip (conditional render) ✓</li><li>Brief 9a: /maintenance V1 foundation (sidebar, AppShell, RLS) ✓</li><li>Brief 9b: Auto-discovery scanner — node-cron nightly + GitHub Code Search ✓</li><li>Brief 10: Vendor lifecycle reference table + UI banner ✓</li><li>Brief 11: Maintenance digest ✓ (manual button + weekly Monday auto-schedule)</li><li>Noozey onboarding via cloning playbook (closes Phase 4)</li>
+            <li>Brief 8: App filter strip (conditional render) ✓</li><li>Brief 9a: /maintenance V1 foundation (sidebar, AppShell, RLS) ✓</li><li>Brief 9b: Auto-discovery scanner — node-cron nightly + GitHub Code Search ✓</li><li>Brief 10: Vendor lifecycle reference table + UI banner ✓</li><li>Brief 11: Maintenance digest ✓ (manual button + weekly Monday auto-schedule)</li><li>PLAYBOOK-cloning-to-new-app.md ✓ (PLAY 9 — onboarding runbook + V2 strategy)</li><li>Track A code changes (generalize fileIssue target + GitHub PAT lookup)</li><li>Noozey onboarding via PLAY 9 (closes Phase 4)</li>
           </ul>
         </div>
       </div>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">76</div>
+        <div class="status-num">77</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -837,7 +837,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">12</div>
+        <div class="status-num">13</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">76</span>
+        <span class="col-count">77</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1342,6 +1342,11 @@
         <div class="card-desc">Self-contained handoff doc for a UI/UX design session: visual system (full color tokens, dark-mode-canonical), page inventory with maturity tags, component vocabulary, six concrete angles for a whole-app design system pass, hard constraints. Lives at github.com/CoreshiftHQNZ/sentinel-app/blob/main/ONBOARDING.md. PR [#35](https://github.com/CoreshiftHQNZ/sentinel-app/pull/35) → #36 → #37</div>
       </div>
       <div class="card">
+        <div class="card-title">PLAYBOOK-cloning-to-new-app.md (PLAY 9)</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">bug_reports</span><span class="tag tag-neutral">fileIssue.ts</span><span class="tag tag-neutral">GITHUB_TOKEN_*</span></div>
+        <div class="card-desc">Self-contained runbook for onboarding the next Coreshift app to Sentinel. Calls out the V1 shared-backend decision (all apps write to KC&#39;s `bug_reports`), the two pre-onboarding code changes required before app #2 (generalize `fileIssue.ts` target lookup + per-app `GITHUB_TOKEN_*` resolution), a step-by-step checklist mapping every system that gets a touch (Sentinel UI, Sentry, Better Stack, Postmark, Railway env vars, GitHub Actions secrets), a verification checklist, and a V2 strategy (3 tracks: code-edit-elimination, Sentinel-side onboarding wizard, GitHub Actions reusable workflow) so onboarding eventually drops to &lt;10 min without a Claude Code session. Registered as PLAY 9 in the ops playbook (147.8 KB rebuild)</div>
+      </div>
+      <div class="card">
         <div class="card-title">esbuild banner: __dirname/__filename polyfill</div>
         <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">const daemonPath = \</span><span class="tag tag-neutral">;</span><span class="tag tag-neutral">createRequire</span><span class="tag tag-neutral">fileURLToPath</span><span class="tag tag-neutral">dirname</span><span class="tag tag-neutral">git diff HEAD</span></div>
         <div class="card-desc">The hidden root cause behind Brief 9b&#39;s two earlier deploy crashes. node-cron (both v3 and v4) has `const daemonPath = \`${__dirname}/daemon.js\`;` at module top level — ReferenceError in an ESM bundle. The polyfill banner via `createRequire`/`fileURLToPath`/`dirname` was sitting **uncommitted in the local working tree** the whole time. Once committed (PR #40), Brief 9b deployed cleanly on third attempt. Lesson: when a local build passes but CI crashes the same way twice, `git diff HEAD` is the first diagnostic</div>
@@ -1386,7 +1391,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">12</span>
+        <span class="col-count">13</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1405,14 +1410,19 @@
         <div class="card-desc">User-facing transparency. Deferred until Dashboard polish phase</div>
       </div>
       <div class="card">
-        <div class="card-title">Document cloning playbook</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">PLAYBOOK-cloning-to-new-app.md</span></div>
-        <div class="card-desc">`PLAYBOOK-cloning-to-new-app.md`. Includes Dashboard + /maintenance onboarding for new apps</div>
+        <div class="card-title">Pre-onboarding code changes (Track A of PLAY 9)</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">sentinel-app</span><span class="tag tag-neutral">server/routes/fileIssue.ts:45-46</span><span class="tag tag-neutral">keycontent-app</span><span class="tag tag-neutral">report.app_id</span><span class="tag tag-neutral">maintained_apps</span><span class="tag tag-neutral">server/lib/github.ts:41-44</span><span class="tag tag-neutral">GITHUB_TOKEN_KC</span><span class="tag tag-neutral">GITHUB_TOKEN_&lt;SLUG&gt;</span><span class="tag tag-neutral">keycontent-app</span></div>
+        <div class="card-desc">Two PRs in `sentinel-app` before Noozey can land: (1) generalize `server/routes/fileIssue.ts:45-46` hardcoded `keycontent-app` target → lookup by `report.app_id` from `maintained_apps`; (2) generalize `server/lib/github.ts:41-44` `GITHUB_TOKEN_KC` → per-app `GITHUB_TOKEN_&lt;SLUG&gt;` lookup with KC fallback. Recommend single org-wide PAT instead once the second app&#39;s pattern is proven. Without these, filing a GitHub issue from a Noozey bug report would create the issue in `keycontent-app` instead of the correct repo</div>
       </div>
       <div class="card">
         <div class="card-title">Onboard Noozey to Sentinel</div>
         <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
-        <div class="card-desc">Apply the cloning playbook. Each piece auto-flows into Dashboard + /maintenance as it lands. Closes Phase 4 once shipped</div>
+        <div class="card-desc">Apply [PLAY 9](playbook/PLAYBOOK-cloning-to-new-app.md) (cloning playbook). Each piece auto-flows into Dashboard + /maintenance as it lands. Closes Phase 4 once shipped. Blocked on Track A above</div>
+      </div>
+      <div class="card">
+        <div class="card-title">V2 onboarding automation (Tracks B + C of PLAY 9)</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">/maintenance/onboard</span><span class="tag tag-neutral">onboard-app.yml</span><span class="tag tag-neutral">workflow_dispatch</span></div>
+        <div class="card-desc">Two future improvements that compress onboarding from ~45 min (Claude Code) to &lt;10 min (operator UI only): **Track B** — `/maintenance/onboard` wizard inside Sentinel using Better Stack + Sentry APIs to auto-create monitors + projects; **Track C** — GitHub Actions reusable `onboard-app.yml` triggered by `workflow_dispatch`. Recommend Track A first (one-time code work, unblocks app #2), then Track C (most leverage per LoC), then Track B if onboarding cadence justifies. See PLAY 9 §&quot;V2 strategy&quot; for full breakdown</div>
       </div>
       <div class="card">
         <div class="card-title">Sentry alert &quot;heartbeat&quot; detection</div>
