@@ -2185,17 +2185,24 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
         <div class="play-divider"></div>
         <div class="md"><p><strong>Last updated:</strong> 2026-05-22
 <strong>Owners:</strong> Operator (runs the checklist) · Claude Code (executes most steps under operator&#39;s account)
-<strong>Why this exists:</strong> Sentinel was built for KeyContent. Onboarding the next app (Noozey, etc.) involves ~7 systems, ~10 env vars, 2 small code changes in <code>sentinel-app</code>, and a handful of operator UI clicks (Sentry, Better Stack). This doc is the single self-contained runbook: hand it (plus the access list below) to a Claude Code session and the session can drive the onboarding end-to-end, asking the operator only for things that genuinely require human eyes (a sender domain to verify, a Sentry rule to confirm, etc.).</p>
+<strong>Canonical source:</strong> <a href="https://github.com/CoreshiftHQNZ/sentinel-app/blob/main/docs/PLAYBOOK-cloning-to-new-app.md"><code>github.com/CoreshiftHQNZ/sentinel-app/blob/main/docs/PLAYBOOK-cloning-to-new-app.md</code></a>
+<strong>Rendered (read-only):</strong> <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#cloning">Sentinel ops playbook → PLAY 9</a></p>
+<p><strong>Why this exists:</strong> Sentinel was built for KeyContent. Onboarding the next app (Noozey, etc.) involves ~7 systems, ~10 env vars, 2 small code changes in <code>sentinel-app</code>, and a handful of operator UI clicks (Sentry, Better Stack). This doc is the single self-contained runbook: hand it (plus the access list below) to a Claude Code session and the session can drive the onboarding end-to-end, asking the operator only for things that genuinely require human eyes (a sender domain to verify, a Sentry rule to confirm, etc.).</p>
 <hr>
 <h2>How to use this doc with Claude Code</h2>
-<p>Upload this file into a Claude Code session opened <strong>in the <code>sentinel-app</code> repo</strong> (<code>D:\Coreshift HQ\Sentinel\sentinel-app\</code>). Open the session with the standard Coreshift access set (see <code>~/.claude/CLAUDE.md</code> — <code>gh</code> CLI, Supabase MCP, Cloudflare MCP, Railway CLI).</p>
+<p>You don&#39;t need any local files to use it — the doc lives on GitHub at the canonical link above. To pull it into a session, either:</p>
+<ul>
+<li>Open a Claude Code session in <a href="https://github.com/CoreshiftHQNZ/sentinel-app">the <code>sentinel-app</code> repo</a> — the doc is at <a href="https://github.com/CoreshiftHQNZ/sentinel-app/blob/main/docs/PLAYBOOK-cloning-to-new-app.md"><code>docs/PLAYBOOK-cloning-to-new-app.md</code></a> and Claude can <code>Read</code> it directly</li>
+<li>Or paste the canonical GitHub URL into any Claude session and ask Claude to fetch it via <code>WebFetch</code></li>
+</ul>
+<p>The session also needs the standard Coreshift access set (<code>gh</code> CLI, Supabase MCP, Cloudflare MCP, Railway CLI) — see <a href="https://github.com/CoreshiftHQNZ">Coreshift&#39;s account-level access doc</a> for the one-time setup.</p>
 <p>Then tell Claude:</p>
 <blockquote>
-<p>&quot;Use <code>playbook/PLAYBOOK-cloning-to-new-app.md</code> to onboard <code>&lt;new-app-slug&gt;</code> to Sentinel. The new app is at <code>CoreshiftHQNZ/&lt;repo-name&gt;</code>, hosted at <code>&lt;domain&gt;</code>, with its own Supabase project <code>&lt;ref&gt;</code>. Run the playbook steps in order, ask me only when an action needs my hands.&quot;</p>
+<p>&quot;Use the cloning playbook at <a href="https://github.com/CoreshiftHQNZ/sentinel-app/blob/main/docs/PLAYBOOK-cloning-to-new-app.md">docs/PLAYBOOK-cloning-to-new-app.md</a> to onboard <code>&lt;new-app-slug&gt;</code> to Sentinel. The new app is at <code>CoreshiftHQNZ/&lt;repo-name&gt;</code>, hosted at <code>&lt;domain&gt;</code>, with its own Supabase project <code>&lt;ref&gt;</code>. Run the playbook steps in order, ask me only when an action needs my hands.&quot;</p>
 </blockquote>
 <p>Claude will work through the steps below, pausing when:</p>
 <ul>
-<li>It needs you to verify a sender email in Postmark</li>
+<li>A Postmark sender domain needs verification</li>
 <li>A Sentry alert rule needs a click in the UI</li>
 <li>A Cloudflare DNS record needs the orange-cloud dance</li>
 <li>A Better Stack monitor needs operator credentials it can&#39;t access</li>
@@ -2224,7 +2231,7 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 <td>Per-app data sovereignty isn&#39;t possible without a real refactor</td>
 </tr>
 </tbody></table>
-<p><strong>If this trade-off ever stops working</strong> (e.g. you sell an app, or one app needs SOC2 isolation), the lift is roughly: refactor <code>server/lib/keycontent.ts</code> → <code>server/lib/app-supabase.ts</code> keyed by <code>app_id</code>, with per-app <code>&lt;SLUG&gt;_SUPABASE_URL</code> + <code>&lt;SLUG&gt;_SUPABASE_SERVICE_ROLE_KEY</code> env vars. That&#39;s a real brief, not a quick swap. Flag it now if it&#39;s a known requirement; otherwise, V1 stands.</p>
+<p><strong>If this trade-off ever stops working</strong> (e.g. you sell an app, or one app needs SOC2 isolation), the lift is roughly: refactor <a href="https://github.com/CoreshiftHQNZ/sentinel-app/blob/main/server/lib/keycontent.ts"><code>server/lib/keycontent.ts</code></a> → <code>server/lib/app-supabase.ts</code> keyed by <code>app_id</code>, with per-app <code>&lt;SLUG&gt;_SUPABASE_URL</code> + <code>&lt;SLUG&gt;_SUPABASE_SERVICE_ROLE_KEY</code> env vars. That&#39;s a real brief, not a quick swap. Flag it now if it&#39;s a known requirement; otherwise, V1 stands.</p>
 <hr>
 <h2>TL;DR — every system that gets a touch</h2>
 <p>For onboarding <code>&lt;new-app-slug&gt;</code> (lowercase, hyphen-separated; the same slug is used everywhere):</p>
@@ -2253,7 +2260,7 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 </tr>
 <tr>
 <td><strong>Sentinel <code>fileIssue.ts</code></strong></td>
-<td>Code change — generalize hardcoded <code>keycontent-app</code> target → lookup by <code>report.app_id</code> from <code>maintained_apps</code>. See §&quot;Pre-onboarding code changes&quot; below</td>
+<td>Code change — generalize hardcoded <code>keycontent-app</code> target → lookup by <code>report.app_id</code> from <code>maintained_apps</code>. See <a href="#pre-onboarding-code-changes">§Pre-onboarding code changes</a> below</td>
 <td>Claude (one-time, before app #2)</td>
 </tr>
 <tr>
@@ -2268,7 +2275,7 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 </tr>
 <tr>
 <td><strong>Sentry alert rules</strong></td>
-<td>Apply the 3-rule recipe from <code>HOW-WE-DO-SENTRY-ALERTS.md</code> to both new projects</td>
+<td>Apply the 3-rule recipe from <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#sentry-alerts">HOW-WE-DO-SENTRY-ALERTS (PLAY 7)</a> to both new projects</td>
 <td>Operator (UI, ~10 min)</td>
 </tr>
 <tr>
@@ -2311,7 +2318,7 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 <h2>Pre-onboarding code changes</h2>
 <p>These must land <strong>before</strong> app #2&#39;s first bug report. They generalize KC-specific hardcoded behavior to data-driven lookups. Each is a ~30-line PR.</p>
 <h3>Change 1 — Generalize <code>fileIssue.ts</code> target repo lookup</h3>
-<p><strong>File:</strong> <code>server/routes/fileIssue.ts:45-46</code></p>
+<p><strong>File:</strong> <a href="https://github.com/CoreshiftHQNZ/sentinel-app/blob/main/server/routes/fileIssue.ts#L45-L46"><code>server/routes/fileIssue.ts</code></a> — lines 45-46.</p>
 <p>Today:</p>
 <pre><code class="language-ts">const TARGET_OWNER = &quot;CoreshiftHQNZ&quot;;
 const TARGET_REPO = &quot;keycontent-app&quot;;
@@ -2332,10 +2339,10 @@ if (appLookupError || !maintainedApp) {
 
 // Use maintainedApp.repo_owner + maintainedApp.repo_name for the createIssue call.
 </code></pre>
-<p><strong>Test:</strong> existing <code>fileIssue.test.ts</code> mocks the KC client — add a parallel mock for <code>sentinel-db</code> returning a <code>maintained_apps</code> row.</p>
+<p><strong>Test:</strong> existing <a href="https://github.com/CoreshiftHQNZ/sentinel-app/blob/main/server/routes/fileIssue.test.ts"><code>fileIssue.test.ts</code></a> mocks the KC client — add a parallel mock for <code>sentinel-db</code> returning a <code>maintained_apps</code> row.</p>
 <p><strong>Why this is required:</strong> without it, filing a GitHub issue from a Noozey bug report would still file the issue against <code>keycontent-app</code>. Symptom would be a confusingly-misfiled issue; fix is trivial once spotted but the time-to-detect is high.</p>
 <h3>Change 2 — Generalize the GitHub PAT lookup</h3>
-<p><strong>File:</strong> <code>server/lib/github.ts:41-44</code></p>
+<p><strong>File:</strong> <a href="https://github.com/CoreshiftHQNZ/sentinel-app/blob/main/server/lib/github.ts#L41-L44"><code>server/lib/github.ts</code></a> — lines 41-44.</p>
 <p>Today:</p>
 <pre><code class="language-ts">const token = process.env.GITHUB_TOKEN_KC;
 if (!token) {
@@ -2362,7 +2369,7 @@ if (!token) {
 <p><strong>Alternative (simpler, less paranoid):</strong> create one Sentinel-bot PAT with <code>Issues: R+W</code> across the whole <code>CoreshiftHQNZ</code> org, store as <code>GITHUB_TOKEN</code>, and have <code>createIssue</code> use it for every app. Trade-off: single PAT means one rotation event affects all apps. For 2-3 apps the per-app-PAT model is overkill; for 10+ apps the single-PAT-with-rotation-discipline is better. <strong>Recommend single org PAT for V2.</strong></p>
 <h3>Change 3 (optional but recommended) — Surface the maintained_apps slug in <code>bug_reports</code></h3>
 <p>Today the widget client sends an arbitrary <code>app_id</code> string. If a typo is sent (<code>&quot;noozeyy&quot;</code> instead of <code>&quot;noozey&quot;</code>), Sentinel will happily show that report under a phantom app and <code>fileIssue</code> will fail with &quot;not registered.&quot;</p>
-<p><strong>Defensive option:</strong> validate <code>app_id</code> at write-time in the <code>report-issue</code> Edge Function against an env-var allowlist (<code>ALLOWED_APP_IDS=keycontent,noozey,...</code>), or against a Supabase <code>app_ids</code> view. The latter is more maintainable but adds a cross-DB dependency on Sentinel&#39;s <code>maintained_apps</code>. <strong>V1: env-var allowlist on KC&#39;s Edge Function. Updated when a new app onboards.</strong></p>
+<p><strong>Defensive option:</strong> validate <code>app_id</code> at write-time in the <a href="https://github.com/CoreshiftHQNZ/keycontent-app/blob/main/supabase/functions/report-issue/index.ts"><code>report-issue</code> Edge Function</a> against an env-var allowlist (<code>ALLOWED_APP_IDS=keycontent,noozey,...</code>), or against a Supabase <code>app_ids</code> view. The latter is more maintainable but adds a cross-DB dependency on Sentinel&#39;s <code>maintained_apps</code>. <strong>V1: env-var allowlist on KC&#39;s Edge Function. Updated when a new app onboards.</strong></p>
 <hr>
 <h2>Step-by-step onboarding</h2>
 <p>Pick a slug (<code>&lt;slug&gt;</code>) and stick with it. Examples below use <code>noozey</code>.</p>
@@ -2370,7 +2377,7 @@ if (!token) {
 <ul>
 <li><input disabled="" type="checkbox"> Decide the slug. It must match the regex <code>^[a-z][a-z0-9-]{1,40}$</code>. Capture in lowercase. Used in: <code>bug_reports.app_id</code>, <code>maintained_apps.slug</code>, env-var names (<code>GITHUB_TOKEN_&lt;UPPER&gt;</code>, <code>&lt;UPPER&gt;_SUPABASE_URL</code> if future per-app DB), Sentry project names (<code>&lt;UPPER&gt;-BACKEND</code>, <code>&lt;UPPER&gt;-FRONTEND</code>).</li>
 <li><input disabled="" type="checkbox"> Confirm Pre-onboarding code changes 1-2 above have shipped. (If this is app #2 and they haven&#39;t, do them first. Add <code>&lt;slug&gt;</code> to KC&#39;s <code>report-issue</code> allowlist at the same time per Change 3.)</li>
-<li><input disabled="" type="checkbox"> Confirm the new app has a GitHub repo at <code>CoreshiftHQNZ/&lt;repo-name&gt;</code> with branch protection per <code>HOW-WE-DO-DEPLOYS.md</code>.</li>
+<li><input disabled="" type="checkbox"> Confirm the new app has a GitHub repo at <code>CoreshiftHQNZ/&lt;repo-name&gt;</code> with branch protection per <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#deploys">HOW-WE-DO-DEPLOYS (PLAY 4)</a>.</li>
 </ul>
 <h3>Step 1 — Register the app in Sentinel</h3>
 <p>Two equivalent paths:</p>
@@ -2391,7 +2398,7 @@ if (!token) {
 <h3>Step 2 — Install the Report Issue widget in the new app</h3>
 <p>Copy from <code>keycontent-app</code>. The widget lives in the frontend:</p>
 <ul>
-<li><p><input disabled="" type="checkbox"> Copy <code>client/src/components/ReportIssueWidget/</code> (the V1 widget tree) into the new app&#39;s repo at the same path.</p>
+<li><p><input disabled="" type="checkbox"> Copy <a href="https://github.com/CoreshiftHQNZ/keycontent-app/tree/main/client/src/components/ReportIssueWidget"><code>client/src/components/ReportIssueWidget/</code></a> (the V1 widget tree) from <code>keycontent-app</code> into the new app&#39;s repo at the same path.</p>
 </li>
 <li><p><input disabled="" type="checkbox"> Wire it into the app shell with <code>app_id=&quot;&lt;slug&gt;&quot;</code>:</p>
 <pre><code class="language-tsx">&lt;ReportIssueWidget
@@ -2405,7 +2412,7 @@ if (!token) {
 </code></pre>
 <p><em>(Claude can fetch the actual URL with <code>npx supabase projects list</code> or via the Supabase MCP.)</em></p>
 </li>
-<li><p><input disabled="" type="checkbox"> If KC&#39;s <code>report-issue</code> function has CORS allowlist of origins, add the new app&#39;s prod + staging origins. Edit the function source, redeploy via <code>npx supabase functions deploy report-issue --project-ref &lt;KC-PROD-REF&gt;</code>.</p>
+<li><p><input disabled="" type="checkbox"> If KC&#39;s <code>report-issue</code> function has a CORS allowlist of origins, add the new app&#39;s prod + staging origins. Edit the function source (<a href="https://github.com/CoreshiftHQNZ/keycontent-app/blob/main/supabase/functions/report-issue/index.ts"><code>supabase/functions/report-issue/index.ts</code></a>), redeploy via <code>npx supabase functions deploy report-issue --project-ref &lt;KC-PROD-REF&gt;</code>.</p>
 </li>
 </ul>
 <h3>Step 3 — Sentinel-side env vars</h3>
@@ -2421,7 +2428,7 @@ railway variables --set &quot;GITHUB_TOKEN_NOOZEY=&lt;token&gt;&quot; --skip-dep
 <li><input disabled="" type="checkbox"> Create project <code>&lt;UPPER&gt;-FRONTEND</code> (platform: React)</li>
 <li><input disabled="" type="checkbox"> Create project <code>&lt;UPPER&gt;-BACKEND</code> (platform: Node.js Express)</li>
 <li><input disabled="" type="checkbox"> Note both DSNs</li>
-<li><input disabled="" type="checkbox"> Apply the 3-rule recipe from <code>HOW-WE-DO-SENTRY-ALERTS.md</code> to <strong>both</strong> projects (~5 min each)</li>
+<li><input disabled="" type="checkbox"> Apply the 3-rule recipe from <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#sentry-alerts">HOW-WE-DO-SENTRY-ALERTS (PLAY 7)</a> to <strong>both</strong> projects (~5 min each)</li>
 </ul>
 <p><strong>Claude actions</strong> — plant the DSNs on the new app&#39;s Railway env (staging + prod):</p>
 <pre><code class="language-bash"># new app&#39;s Railway project
@@ -2444,7 +2451,7 @@ gh secret set SENTRY_PROJECT   --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#3
 <li><input disabled="" type="checkbox"> 3-min cadence, 2-region default</li>
 <li><input disabled="" type="checkbox"> Email destination: <code>abe@coreshifthq.com</code></li>
 </ul>
-<p><strong>No Claude action needed</strong> — Sentinel&#39;s <code>/api/status</code> will surface the new monitor automatically next time the dashboard loads (10s cache).</p>
+<p><strong>No Claude action needed</strong> — Sentinel&#39;s <a href="https://github.com/CoreshiftHQNZ/sentinel-app/blob/main/server/routes/status.ts"><code>/api/status</code></a> will surface the new monitor automatically next time the dashboard loads (10s cache).</p>
 <h3>Step 6 — Postmark sender</h3>
 <p>If the new app&#39;s bug ack should come from <code>hello@&lt;newapp&gt;.com</code> instead of <code>hello@keycontent.ai</code>:</p>
 <ul>
@@ -2464,7 +2471,7 @@ gh secret set SENTRY_PROJECT   --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#3
 <li><input disabled="" type="checkbox"> Drag the report through the columns (Triage → To Do → Done) and verify the resolution-ack email fires.</li>
 </ul>
 <h3>Step 8 — Update the kanban + roadmap</h3>
-<p>Per <code>~/.claude/projects/.../memory/feedback_kanban_refresh.md</code>: after onboarding lands, update <code>KANBAN.md</code>, rebuild the public HTML, sync to <code>coreshift-kanbans/sentinel/index.html</code>, commit + push. If Noozey closes Phase 4, also flip the ROADMAP.md Current Status table row.</p>
+<p>Per Coreshift project convention (the public kanban is the canonical &quot;where are we at&quot; answer; keep it in sync as part of the work, not as a separate pass): after onboarding lands, edit the kanban source, rebuild the public HTML, sync to <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/blob/main/sentinel/index.html"><code>coreshift-kanbans/sentinel/index.html</code></a>, commit + push. If the new app closes Phase 4, also flip the <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/roadmap.html">ROADMAP</a> Current Status table row.</p>
 <hr>
 <h2>Verification checklist</h2>
 <p>After Step 7, all of these should be true:</p>
@@ -2499,7 +2506,7 @@ gh secret set SENTRY_PROJECT   --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#3
 </ol>
 <p>The wizard handles 5 of the 7 operator UIs and removes Claude Code from the loop for app #N+1.</p>
 <p><strong>Track C — A GitHub Actions reusable workflow</strong> (PR ~1 day, depends on Track A)</p>
-<p>In <code>sentinel-app</code> repo, expose a workflow <code>.github/workflows/onboard-app.yml</code> triggered by <code>workflow_dispatch</code>. Inputs: <code>slug</code>, <code>display_name</code>, <code>repo_owner</code>, <code>repo_name</code>. Action:</p>
+<p>In the <a href="https://github.com/CoreshiftHQNZ/sentinel-app"><code>sentinel-app</code></a> repo, expose a workflow <code>.github/workflows/onboard-app.yml</code> triggered by <code>workflow_dispatch</code>. Inputs: <code>slug</code>, <code>display_name</code>, <code>repo_owner</code>, <code>repo_name</code>. Action:</p>
 <ol>
 <li>Calls <code>POST /api/maintenance/apps</code> on Sentinel</li>
 <li>Creates the Sentry projects via Sentry&#39;s API</li>
@@ -2518,7 +2525,7 @@ gh secret set SENTRY_PROJECT   --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#3
 <ul>
 <li><strong>Auto-creating Sentry alert rules via API.</strong> Sentry&#39;s rule-creation endpoint exists but the rule schema is opaque enough that maintaining the JSON-as-config is its own headache. Keep alert rules as a 5-min operator click for now.</li>
 <li><strong>Auto-verifying Postmark senders.</strong> Domain verification is a DNS dance — there&#39;s no API shortcut. Document it; don&#39;t try to automate it.</li>
-<li><strong>A &quot;deboard an app&quot; flow.</strong> When (if) it&#39;s needed, the DELETE endpoint on <code>/api/maintenance/apps</code> already cascades to <code>maintenance_entries</code>. The harder cleanup is on the app-side widget removal and Sentry/Better Stack monitor cleanup, which are reverse-operator tasks anyway. Build deboarding when you have the second instance of doing it manually, not before.</li>
+<li><strong>A &quot;deboard an app&quot; flow.</strong> When (if) it&#39;s needed, the <code>DELETE</code> endpoint on <code>/api/maintenance/apps</code> already cascades to <code>maintenance_entries</code>. The harder cleanup is on the app-side widget removal and Sentry/Better Stack monitor cleanup, which are reverse-operator tasks anyway. Build deboarding when you have the second instance of doing it manually, not before.</li>
 </ul>
 <hr>
 <h2>Appendix — worked example: KeyContent</h2>
@@ -2578,9 +2585,9 @@ gh secret set SENTRY_PROJECT   --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#3
 <hr>
 <p><strong>Next steps after this doc lands:</strong></p>
 <ol>
-<li>Operator applies the 3-rule Sentry alert recipe to existing 4 projects (carry-over)</li>
+<li>Operator applies the <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#sentry-alerts">3-rule Sentry alert recipe</a> to existing 4 projects (carry-over)</li>
 <li>Operator triggers first scan against <code>keycontent</code> (or wait for 2am UTC)</li>
-<li>Land Track A code changes (the two <code>fileIssue.ts</code>/<code>github.ts</code> generalizations) — required before Noozey</li>
+<li>Land Track A code changes (the two generalizations in <a href="https://github.com/CoreshiftHQNZ/sentinel-app/blob/main/server/routes/fileIssue.ts"><code>server/routes/fileIssue.ts</code></a> and <a href="https://github.com/CoreshiftHQNZ/sentinel-app/blob/main/server/lib/github.ts"><code>server/lib/github.ts</code></a>) — required before Noozey</li>
 <li>Then drive Noozey onboarding through this playbook — pressure-tests it</li>
 </ol>
 </div>
