@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>83%</strong> complete</div>
-        <div><strong>77</strong>/93 cards done</div>
-        <div>Updated <strong>2026-05-22 01:15 UTC</strong></div>
+        <div><strong>78</strong>/94 cards done</div>
+        <div>Updated <strong>2026-05-22 02:17 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">77</div>
+        <div class="status-num">78</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">77</span>
+        <span class="col-count">78</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1340,6 +1340,11 @@
         <div class="card-title">ONBOARDING.md for Sentinel design sessions</div>
         <div class="card-tags"><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">Self-contained handoff doc for a UI/UX design session: visual system (full color tokens, dark-mode-canonical), page inventory with maturity tags, component vocabulary, six concrete angles for a whole-app design system pass, hard constraints. Lives at github.com/CoreshiftHQNZ/sentinel-app/blob/main/ONBOARDING.md. PR [#35](https://github.com/CoreshiftHQNZ/sentinel-app/pull/35) → #36 → #37</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 9b follow-up: scanner rate-limit resilience</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">fix</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">scan-scheduler.ts</span><span class="tag tag-neutral">UTC</span><span class="tag tag-neutral">Pacific/Auckland</span><span class="tag tag-neutral">github-search.ts</span><span class="tag tag-neutral">github-search.test.ts</span></div>
+        <div class="card-desc">First autonomous Brief 9b nightly scan (2026-05-22 02:00 UTC) tripped GitHub&#39;s secondary rate limit on Code Search because 2am UTC = 2pm NZ — peak operator daytime — and the scanner raced operator GitHub activity against a per-USER shared limit. Two fixes: (1) `scan-scheduler.ts` timezone `UTC` → `Pacific/Auckland` so the cron fires at 2am NZ (quiet window); (2) `github-search.ts` now detects 403 + &quot;rate limit&quot; body and retries once after 90s (absorbs transient secondary-limit hits without operator-visible failure). Non-rate-limit 403s still error immediately. 3 new tests on `github-search.test.ts`; full suite 236/236. PR [#47](https://github.com/CoreshiftHQNZ/sentinel-app/pull/47) → #48 promoted dev → staging → main 2026-05-22</div>
       </div>
       <div class="card">
         <div class="card-title">PLAYBOOK-cloning-to-new-app.md (PLAY 9)</div>
