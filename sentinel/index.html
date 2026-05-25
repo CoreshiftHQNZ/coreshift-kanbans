@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>80%</strong> complete</div>
-        <div><strong>82</strong>/103 cards done</div>
-        <div>Updated <strong>2026-05-25 01:52 UTC</strong></div>
+        <div><strong>79%</strong> complete</div>
+        <div><strong>83</strong>/105 cards done</div>
+        <div>Updated <strong>2026-05-25 03:35 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">82</div>
+        <div class="status-num">83</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -837,7 +837,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">18</div>
+        <div class="status-num">19</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">82</span>
+        <span class="col-count">83</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1342,6 +1342,11 @@
         <div class="card-desc">Self-contained handoff doc for a UI/UX design session: visual system (full color tokens, dark-mode-canonical), page inventory with maturity tags, component vocabulary, six concrete angles for a whole-app design system pass, hard constraints. Lives at github.com/CoreshiftHQNZ/sentinel-app/blob/main/ONBOARDING.md. PR [#35](https://github.com/CoreshiftHQNZ/sentinel-app/pull/35) → #36 → #37</div>
       </div>
       <div class="card">
+        <div class="card-title">Sentinel V2 — Brief 13: weekly social-token digest</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">server/lib/social-token-digest.ts</span><span class="tag tag-neutral">server/lib/social-token-digest-scheduler.ts</span><span class="tag tag-neutral">server/routes/socialTokenDigest.ts</span><span class="tag tag-neutral">dryRun</span><span class="tag tag-neutral">server/lib/social-token-snapshot.ts</span></div>
+        <div class="card-desc">Operator-facing weekly email at **Mondays 8am Pacific/Auckland** listing expired + expiring-within-14d social-account OAuth tokens across all KC clients. Two hours before Brief 11&#39;s maintenance digest so they don&#39;t land simultaneously. Mirrors the Brief 11 pattern: `server/lib/social-token-digest.ts` (builder), `server/lib/social-token-digest-scheduler.ts` (node-cron, DST-correct), `server/routes/socialTokenDigest.ts` (manual trigger with `dryRun`), &quot;Send digest&quot; button on /social-tokens. Also refactored: extracted `server/lib/social-token-snapshot.ts` so the GET route + the digest call the exact same data pipeline (can&#39;t drift). Threshold mismatch with UI&#39;s 7-day pill is intentional — email is &quot;schedule the call&quot; at 14d, UI pill is &quot;drop everything&quot; at 7d. Empty digest sends an &quot;all healthy&quot; heartbeat. 19 new tests (11 builder + 6 scheduler + 2 boundary), full suite 262/262. PR [#58](https://github.com/CoreshiftHQNZ/sentinel-app/pull/58) → #59 → #60 promoted dev → staging → main 2026-05-25. First autonomous send: next Monday 8am NZ</div>
+      </div>
+      <div class="card">
         <div class="card-title">Sentinel V2 — Brief 12: /social-tokens page</div>
         <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/social-tokens</span><span class="tag tag-neutral">server/lib/zernio.ts</span><span class="tag tag-neutral">server/routes/socialTokens.ts</span><span class="tag tag-neutral">ZERNIO_API_KEY</span><span class="tag tag-neutral">LATE_API_KEY</span><span class="tag tag-neutral">socialTokens.test.ts</span></div>
         <div class="card-desc">New `/social-tokens` sub-page on Sentinel. Surfaces every connected social account across every onboarded app with KC + Zernio health side-by-side. Status pills (expired / expiring_soon / unknown / healthy) with platform-specific TTL math (FB/IG/LinkedIn = 60d, TikTok = 365d). Sorted urgency-first so the eye lands on action items. New `server/lib/zernio.ts` (minimal listAccounts wrapper with 5-min cache) + `server/routes/socialTokens.ts` (aggregates KC service-role read + Zernio per-profile call). Per-profile Zernio failures isolate to &quot;unknown&quot; rather than blowing up the response. `ZERNIO_API_KEY` planted on Sentinel Railway prod + staging (copied from KC&#39;s legacy `LATE_API_KEY` — same secret). 243/243 tests pass (7 new on `socialTokens.test.ts`). Caught + fixed during the KC #102/#108 incident chain so the next OAuth expiry doesn&#39;t require an incident to discover. PR [#49](https://github.com/CoreshiftHQNZ/sentinel-app/pull/49) → #50 → #51 promoted dev → staging → main 2026-05-25</div>
@@ -1416,7 +1421,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">18</span>
+        <span class="col-count">19</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1483,6 +1488,11 @@
         <div class="card-title">Brief 12 V2: daily auto-sync cron</div>
         <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">is_active = false</span></div>
         <div class="card-desc">Background job in Sentinel that runs the existing audit logic on a schedule (e.g. 4am Pacific/Auckland) and flips KC&#39;s `is_active = false` for any Zernio-side inactive rows. Currently this only happens on demand (post-attempt pre-flight OR a manual script run). Daily cron catches expirations within 24 hours rather than waiting for a user to discover them. Mirror of the digest scheduler pattern</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 13 V2: per-customer reconnect emails</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">low-priority</span></div>
+        <div class="card-desc">Today&#39;s V1 sends the digest to the operator only. V2 would send personalized reconnect emails directly to each affected client&#39;s agency owner (&quot;Hi [client], your Facebook account on KeyContent needs reconnection — here&#39;s how&quot;). Requires per-customer email targeting, copy-edit review, and probably an operator-side staging step (V1 confirms format works first). Ship after V1 has run for ~4 weeks and the operator confirms the content reads right</div>
       </div>
       <div class="card">
         <div class="card-title">Rotate prod creds committed in `script/migrate-v1-to-v2.ts`</div>
