@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>79%</strong> complete</div>
-        <div><strong>83</strong>/105 cards done</div>
-        <div>Updated <strong>2026-05-25 03:35 UTC</strong></div>
+        <div><strong>80%</strong> complete</div>
+        <div><strong>84</strong>/105 cards done</div>
+        <div>Updated <strong>2026-05-25 14:03 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">83</div>
+        <div class="status-num">84</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">3</div>
+        <div class="status-num">2</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">83</span>
+        <span class="col-count">84</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1342,6 +1342,11 @@
         <div class="card-desc">Self-contained handoff doc for a UI/UX design session: visual system (full color tokens, dark-mode-canonical), page inventory with maturity tags, component vocabulary, six concrete angles for a whole-app design system pass, hard constraints. Lives at github.com/CoreshiftHQNZ/sentinel-app/blob/main/ONBOARDING.md. PR [#35](https://github.com/CoreshiftHQNZ/sentinel-app/pull/35) → #36 → #37</div>
       </div>
       <div class="card">
+        <div class="card-title">Sentry alert rules applied across 4 projects</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-3-followup</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Notify Abe</span></div>
+        <div class="card-desc">Operator configured one consolidated `Notify Abe` alert in Sentry covering all 4 Coreshift projects (KEYCONTENT-BACKEND/FRONTEND, SENTINEL-BACKEND/FRONTEND), 3 trigger types (new issue, escalation, regression), filtered to error/fatal levels, 5-min throttle. Newer Sentry UI lets one rule span projects + triggers, so the original PLAY 7 design (12 separate rules) was replaced by a single consolidated rule. Verified end-to-end via the regression probe — fresh issue → alert email landed in inbox 2026-05-25. PLAY 7 updated to document the v2 consolidated pattern with the v1 design retained for reference. **Closes the Zernio post-mortem&#39;s &quot;Sentry alert on persistent webhook 5xx&quot; item (KC [#77](https://github.com/CoreshiftHQNZ/keycontent-app/issues/77)).**</div>
+      </div>
+      <div class="card">
         <div class="card-title">Sentinel V2 — Brief 13: weekly social-token digest</div>
         <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">server/lib/social-token-digest.ts</span><span class="tag tag-neutral">server/lib/social-token-digest-scheduler.ts</span><span class="tag tag-neutral">server/routes/socialTokenDigest.ts</span><span class="tag tag-neutral">dryRun</span><span class="tag tag-neutral">server/lib/social-token-snapshot.ts</span></div>
         <div class="card-desc">Operator-facing weekly email at **Mondays 8am Pacific/Auckland** listing expired + expiring-within-14d social-account OAuth tokens across all KC clients. Two hours before Brief 11&#39;s maintenance digest so they don&#39;t land simultaneously. Mirrors the Brief 11 pattern: `server/lib/social-token-digest.ts` (builder), `server/lib/social-token-digest-scheduler.ts` (node-cron, DST-correct), `server/routes/socialTokenDigest.ts` (manual trigger with `dryRun`), &quot;Send digest&quot; button on /social-tokens. Also refactored: extracted `server/lib/social-token-snapshot.ts` so the GET route + the digest call the exact same data pipeline (can&#39;t drift). Threshold mismatch with UI&#39;s 7-day pill is intentional — email is &quot;schedule the call&quot; at 14d, UI pill is &quot;drop everything&quot; at 7d. Empty digest sends an &quot;all healthy&quot; heartbeat. 19 new tests (11 builder + 6 scheduler + 2 boundary), full suite 262/262. PR [#58](https://github.com/CoreshiftHQNZ/sentinel-app/pull/58) → #59 → #60 promoted dev → staging → main 2026-05-25. First autonomous send: next Monday 8am NZ</div>
@@ -1399,14 +1404,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Operator: apply 3-rule Sentry alert recipe to 4 projects</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-3-followup</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">Sentinel/playbook/HOW-WE-DO-SENTRY-ALERTS.md</span></div>
-        <div class="card-desc">Sentry UI → KEYCONTENT-BACKEND, KEYCONTENT-FRONTEND, SENTINEL-BACKEND, SENTINEL-FRONTEND. Each gets 3 rules (new-issue, regression, high-frequency). Recipe with field-by-field values at `Sentinel/playbook/HOW-WE-DO-SENTRY-ALERTS.md` (PLAY 7 in the ops playbook). ~5 min per project, ~20 min total. **Closes the Zernio post-mortem&#39;s &quot;Sentry alert on persistent webhook 5xx&quot; item (KC [#77](https://github.com/CoreshiftHQNZ/keycontent-app/issues/77)).**</div>
-      </div>
       <div class="card">
         <div class="card-title">Run first scan against keycontent</div>
         <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">/maintenance</span></div>

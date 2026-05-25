@@ -1878,11 +1878,96 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
         <h2 class="play-title">Sentry Alerts</h2>
         <p class="play-tagline">Make Sentry come find you. Don't go looking.</p>
         <div class="play-divider"></div>
-        <div class="md"><p><strong>Last updated:</strong> 2026-05-22
+        <div class="md"><p><strong>Last updated:</strong> 2026-05-25
 <strong>Owners:</strong> Operator (configures rules in Sentry UI) · Claude Code (drafts the recipe + revises after incidents)
 <strong>Why this exists:</strong> Sentry&#39;s inbox is reactive — it shows you errors when you go look. Alert rules are what make Sentry come find you. Without them, observability requires you to remember to check, which means real problems sit unread for days. See <code>keycontent-app/incidents/2026-05-22-sentry-env-var-drift.md</code> for the incident that motivated this doc.</p>
 <hr>
-<h2>The 3 rules every Coreshift backend + frontend project gets</h2>
+<h2>Recommended pattern (v2): ONE consolidated rule, multi-project, multi-trigger</h2>
+<p>Sentry&#39;s newer alert builder lets a single rule cover multiple projects AND multiple trigger types. This is the recommended pattern as of 2026-05-25 — applied to KEYCONTENT-BACKEND, KEYCONTENT-FRONTEND, SENTINEL-BACKEND, SENTINEL-FRONTEND in one rule named <code>Notify Abe</code>.</p>
+<p><strong>Why one rule beats three:</strong></p>
+<ul>
+<li>~5 min to configure across all 4 projects (vs. ~20 min for 12 separate rules)</li>
+<li>One thing to keep tuned over time (vs. three things to drift apart)</li>
+<li>Single source of truth for &quot;alert me about issues&quot;</li>
+</ul>
+<p><strong>Trade-off:</strong> can&#39;t set different environment scopes per trigger. The legacy v1 design below scoped &quot;high frequency&quot; to production-only; the consolidated rule has one environment for all triggers. Acceptable for Coreshift&#39;s current scale.</p>
+<h3>The one rule</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Name</strong></td>
+<td><code>Notify Abe</code> (or whatever — single rule, one name)</td>
+</tr>
+<tr>
+<td><strong>Source: Projects</strong></td>
+<td>All Coreshift Sentry projects (KEYCONTENT-BACKEND, KEYCONTENT-FRONTEND, SENTINEL-BACKEND, SENTINEL-FRONTEND, + any future ones)</td>
+</tr>
+<tr>
+<td><strong>Filter Issues: Environments</strong></td>
+<td><code>All Environments</code></td>
+</tr>
+<tr>
+<td><strong>Alert Builder: WHEN any of</strong></td>
+<td>✓ A new issue is created<br>✓ An issue escalates (Sentry&#39;s adaptive baselining — replaces the old &quot;fires &gt;25 times in 1 hour&quot; static threshold)<br>✓ A resolved issue becomes unresolved (regression)</td>
+</tr>
+<tr>
+<td><strong>WHEN — do NOT check</strong></td>
+<td>✗ &quot;An issue is resolved&quot; (fires when YOU mark it fixed — that&#39;s celebratory, not signal)</td>
+</tr>
+<tr>
+<td><strong>IF (filter) — match</strong></td>
+<td><code>any</code></td>
+</tr>
+<tr>
+<td><strong>Filter row 1</strong></td>
+<td><code>The event&#39;s level</code> <code>equals</code> <code>error</code></td>
+</tr>
+<tr>
+<td><strong>Filter row 2</strong></td>
+<td><code>The event&#39;s level</code> <code>equals</code> <code>fatal</code></td>
+</tr>
+<tr>
+<td><strong>THEN: Notify</strong></td>
+<td><code>Member</code> → <code>abe@coreshifthq.com</code></td>
+</tr>
+<tr>
+<td><strong>Throttling: Action Throttle</strong></td>
+<td><code>5 minutes</code> per issue</td>
+</tr>
+</tbody></table>
+<h3>Setup (one-time)</h3>
+<ol>
+<li>Open Sentry → <strong>Alerts</strong> → <strong>Create Alert</strong> → <strong>Issue Alert</strong></li>
+<li>Under <strong>Source</strong>, add all 4 Coreshift projects</li>
+<li>Configure the rule per the table above</li>
+<li>Save</li>
+</ol>
+<h3>Verification probe</h3>
+<pre><code class="language-powershell"># PowerShell — Option A: trigger a regression (fastest signal)
+# 1. Resolve the existing SyntaxError issue in Sentry first
+# 2. Then re-run the probe:
+curl.exe -X POST &quot;https://staging.keycontent.ai/api/auth/sync&quot; `
+  -H &quot;Content-Type: application/json&quot; `
+  --data &quot;{ probe again&quot;
+
+# Option B: force a NEW fingerprint via a never-seen URL
+curl.exe -X POST &quot;https://staging.keycontent.ai/api/sentry-test-$([guid]::NewGuid().ToString().Substring(0,8))&quot; `
+  -H &quot;Content-Type: application/json&quot; --data &quot;{}&quot;
+</code></pre>
+<p><strong>⚠ Gotcha discovered 2026-05-25:</strong> Sentry groups errors by stack-trace shape, NOT by message content. Sending broken JSON to the same endpoint with different timestamps in the body all collapse to the SAME fingerprint — so Rule 1 (&quot;new issue created&quot;) only fires once per stack-trace shape, not once per probe. To verify the rule reliably, either use Option A (regression path) or generate a truly new URL path each probe.</p>
+<p><strong>What &quot;working&quot; looks like:</strong></p>
+<ul>
+<li>Sentry inbox: new issue appears within seconds of the probe</li>
+<li>Email: <code>[Sentry]</code> notification arrives at <code>abe@coreshifthq.com</code> within ~60s — if not, <strong>check spam first</strong> (<code>noreply@sentry.io</code> gets filtered routinely)</li>
+</ul>
+<hr>
+<h2>Legacy: three separate rules per project (v1 design)</h2>
+<p>This is the original PLAY 7 recipe, retained for reference. The v2 consolidated rule above supersedes it — but the underlying intent is identical.</p>
 <p>Apply these to <strong>every</strong> Sentry project (KEYCONTENT-BACKEND, KEYCONTENT-FRONTEND, SENTINEL-BACKEND, SENTINEL-FRONTEND, and any future Coreshift project). They take ~5 minutes per project to set up.</p>
 <h3>Rule 1 — New issue (first time we&#39;ve ever seen this error)</h3>
 <p><strong>Purpose:</strong> Catch bugs the moment they ship. New fingerprint = something just broke in a way nothing has broken before.</p>
