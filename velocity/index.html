@@ -590,7 +590,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-up-next">
-        <div class="status-num">5</div>
+        <div class="status-num">6</div>
         <div class="status-label">Up Next</div>
       </div>
     </section>
@@ -1007,7 +1007,7 @@
         <section class="column col-up-next">
           <header class="col-head">
             <h2>🔵 Up next</h2>
-            <span class="col-count">5</span>
+            <span class="col-count">6</span>
           </header>
           <div class="cards">
 
@@ -1039,6 +1039,12 @@
               <div class="card-title">6 remaining V1 integrations (I2–I7)</div>
               <div class="card-tags"><span class="tag tag-id">I2–I7</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
               <div class="card-desc">I1 (Google Calendar) is In Flight. Remaining: I2 Gmail OAuth + inbound mirror, I3 Fireflies/Otter transcription, I4 Xero push (commissions → bills, won → invoice), I5 native portal e-sign, I6 LinkedIn enrichment, I7 Google Drive archive. Zero built. ~16–25d. I5 may pull forward if Mal aims to close Aditi via portal.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Onboarding banner — auto-prompt to Connect Calendar</div>
+              <div class="card-tags"><span class="tag tag-id">I1-follow</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">Decision pinned 2026-05-23. Sign-in OAuth (Supabase, identity-only scopes) and Calendar OAuth (our own flow, calendar.readonly + refresh_token) are deliberately TWO steps — bundling them at sign-in expands the initial consent surface and violates Google's incremental-authorisation guidance. Discoverability lift instead: a dismissable Dashboard banner shown when user_connectors.gcal.status='not_connected', copy along the lines of "Connect your calendar — every meeting you book auto-links to the matching deal, and the 'invite accepted' gate check goes from manual to automatic." One-click to the existing /api/connectors/gcal/connect flow. ~0.5d. Should ship alongside the I1 sync layer so the banner's promise is true.</div>
             </div>
 
             <div class="card">
