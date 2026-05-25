@@ -522,9 +522,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>74%</strong> complete</div>
-        <div><strong>48</strong>/65 cards done</div>
-        <div>Updated <strong>2026-05-23 PM2</strong></div>
+        <div><strong>85%</strong> complete</div>
+        <div><strong>57</strong>/67 cards done</div>
+        <div>Updated <strong>2026-05-26 PM</strong></div>
         <div><a href="https://velocity.coreshifthq.com" target="_blank" rel="noopener">prod →</a></div>
         <div><a href="https://velocity-staging.coreshifthq.com" target="_blank" rel="noopener">staging →</a></div>
       </div>
@@ -691,9 +691,69 @@
         <section class="column col-done">
           <header class="col-head">
             <h2>✅ Done</h2>
-            <span class="col-count">48</span>
+            <span class="col-count">57</span>
           </header>
           <div class="cards">
+
+            <div class="card">
+              <div class="card-title">🟢 V1.0 fully closed (2026-05-26)</div>
+              <div class="card-tags"><span class="tag tag-id">milestone</span><span class="tag tag-v10">V1.0</span><span class="tag tag-demo">Demo</span></div>
+              <div class="card-desc">Every spec-locked V1.0 item is in dev. H1–H9 hardening, P1–P7 portal panels, W1+W2+W4+W5 wow factors (W3 voice = V1.1), D1+D4–D9 delight stubs, U1–U5 UX overhaul, C1–C3 CI+deploy + custom DNS. Reconciled against `docs/planning/v1-work.md`. Ready for Aditi demo. V1.1 work (I1 sync layer + I2–I8 + P8 + W3 + A1+A2 + D10–D15) lives in Up Next.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">U5 — Internal pages mobile sweep (2026-05-26)</div>
+              <div class="card-tags"><span class="tag tag-id">U5</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Closes the last V1.0 UX item. AppShell sidebar collapses to off-canvas drawer behind a thin mobile top bar (hamburger toggle, dim backdrop, auto-close on route change, body scroll locked while open). Pipeline kanban switches from 5-col grid to horizontal-scroll preserving 260px min column width. Pipeline filter popover viewport-clamped via `w-[min(340px,calc(100vw-2rem))]`. WinLoss summary grid-cols-3 → 1 sm:3. All internal pages standardised on `px-4 py-5 sm:px-6 lg:px-8` so phones get ~24px back. Commit 1bfa698.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">H7 — drizzle-orm upgrade + audit fix (2026-05-26)</div>
+              <div class="card-tags"><span class="tag tag-id">H7</span><span class="tag tag-ws-h">hardening</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Closes the last V1.0 hardening item. drizzle-orm 0.38.3 → 0.45.2 (closes SQL-identifier-injection advisory); drizzle-kit 0.30.1 → 0.31.10; drizzle-zod pinned at ^0.7.0 because 0.8.x requires Zod 4 namespace (incremental Zod v3 → v4 migration is a separate effort). path-to-regexp / picomatch / postcss / qs / ws / body-parser / express transitively bumped via `npm audit fix`. Was 13 vulns (10 moderate + 3 high), now 5 moderate — all dev-only esbuild chain via Vite 5.4 + drizzle-kit (only exploitable when `npm run dev` is running locally and you visit a malicious site). Vite 5 → 6 upgrade to close those deferred to V1.1. tsc + build both green; typed query builder paths unchanged. Commit a99a40c.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Hide all Nirvana-branded surfaces (2026-05-26)</div>
+              <div class="card-tags"><span class="tag tag-id">copy</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Mal: the AI-partner branding wasn't being used yet; surfacing it as if it were live was misleading. Removed: AppShell sidebar "Nirvana / live" pill, Portal "Ask Nirvana" chat section (stub — never wired to a real backend; PortalChat component removed too), Portal hero + footer microcopy mentions, Login page "Nirvana live" chip + hero copy, Dashboard header "Nirvana live" chip. Inline brand-flavor microcopy on the Deal page (tooltips/help text) left intact for a separate copy pass once naming is decided. Commit 911f425.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Tag dropdown + "Share with buyer" portal button (2026-05-26)</div>
+              <div class="card-tags"><span class="tag tag-id">qa-feedback</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Two QA-driven fixes on top of P6 expansion. (1) Tag editor was `window.prompt` — now a glass popover dropdown with 8 preset checkboxes (Discovery / Pricing / Case study / Proposal / Contract / Transcript / Reference / Onboarding) + custom-tag input + removable chips inside the popover. (2) PortalLink component existed but was never mounted — wired into Deal header row. No-portal state = MissionButton "Share with buyer" that mints the magic link on click. Portal-exists state = compact pill with truncated URL + state chip + copy + open-in-new-tab + rotate (with confirm). Commit 3ecad9d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">P6 expansion — tags + search + buyer-visibility (2026-05-26)</div>
+              <div class="card-tags"><span class="tag tag-id">P6-ext</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Closes BUILD §3 B6 tags-and-search half. Schema migration 0003: documents.is_buyer_visible (boolean, indexed) + documents.tags (jsonb&lt;string[]&gt;); sent proposals backfilled to buyer-visible. Server POST /attachments accepts tags + isBuyerVisible; NEW PATCH endpoint for inline edits; portal hydrate filters by isBuyerVisible=true and emits tags. Deal AttachmentsPanel: per-row tag editor + Eye/EyeOff visibility toggle, "Shared" jade pill, "internal only" caption, tag chips inline. Portal ResourcesHub: search input (title + tag substring), tag filter chip strip, filtered list with empty state. Migration applied to both staging + prod branches. Buyer-side upload deferred to V1.1 — different security semantics (unauthenticated POST + virus scan). Commit a6985a1.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">W1 — Pre-meeting brief mobile + competitive coaching tone (2026-05-26)</div>
+              <div class="card-tags"><span class="tag tag-id">W1</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Closes SYSTEM-V1 §9.1 W1 V1.0 scope. (1) AgentBriefPanel migrated to Aurora Glass primitives (GlassCard / Eyebrow / Chip / MissionButton), header now flex-wraps so mobile doesn't squish the meta line, "Phone-friendly" chip pill added, Markdown h2 styled as small mono violet eyebrows. (2) Server briefingService.ts system prompt reframed as a "sports coach giving a 15-second pre-game brief" — added explicit "## Suggested open" section first, talk-time goal, personal recall, business recall, info gaps, one-thing-NOT-to-say. Voice/phone delivery itself stays V1.1. Commit b447768.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">W2 — Post-meeting recap 4-dim sentiment breakdown (2026-05-26)</div>
+              <div class="card-tags"><span class="tag tag-id">W2</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Closes SYSTEM-V1 §9.2 W2 V1.0 scope. RecapModal sentiment was already 4-dim server-side (warmth / engagement / hesitation / commitment) but rendered as 5 flat numbers — read like a stats dump, not a breakdown. New SentimentBreakdown component: hero overall card with plain-English interpretation, 4 dimension rows each with horizontal gradient bar (jade for high warmth/engagement/commitment, amber for high hesitation — colours invert with meaning). Talk-time bar uses violet→coral gradient + coaching microcopy when userPct &gt; 60. Calendar auto-book still needs I1 sync layer (V1.1). Commit dc6ffe7.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">P2 — Day Zero Research panel polish (2026-05-26)</div>
+              <div class="card-tags"><span class="tag tag-id">P2</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Closes BUILD §3 B2. Day Zero body was rendering as one long blob via simpleMd. New DayZeroSections component parses `## ` headings (server's dayZeroService.ts produces five exact ones: Competitor scan / Mini SWOT / Market signals / Search/AI / Conversation seeds) into individual glass mini-cards. Per-section icon lookup picks the right glyph: Swords for competitor, LayoutGrid for SWOT, TrendingUp for market, Search for AI, MessageCircle for seeds. Commit 91d6534.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">P5 — Mutual action plan styling polish (2026-05-26)</div>
+              <div class="card-tags"><span class="tag tag-id">P5</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Closes BUILD §3 B5 Vision-3 "soft, not aggressive" framing. PortalActions list: pending tasks now sort first; per-row status icons (CheckCircle2 / Clock / Circle); a count chip in the header reads "N need attention" / "N/total done" / "all done"; relative-time + formatDate for due dates; empty-state placeholder when nothing's pending. Amber stays amber (no destructive red), emphasis lands on what's pending without nagging. Commit 0bde679.</div>
+            </div>
 
             <div class="card">
               <div class="card-title">I1 — Google Calendar OAuth foundation (2026-05-23)</div>
@@ -986,7 +1046,7 @@
             <span class="col-count">0</span>
           </header>
           <div class="cards">
-            <p class="empty">Nothing claimed yet — pick the next thing from Up Next when ready. The V1.0 demo-ready milestone is shipped; V1.0 polish + V1.1 integrations await.</p>
+            <p class="empty">Nothing claimed yet — V1.0 is fully closed. Next move is V1.1 (Google Calendar OAuth credentials + sync layer is the natural starting point; see Up Next).</p>
           </div>
         </section>
 
@@ -1003,60 +1063,16 @@
         <section class="column col-up-next">
           <header class="col-head">
             <h2>🔵 Up next</h2>
-            <span class="col-count">17</span>
+            <span class="col-count">10</span>
           </header>
           <div class="cards">
 
-            <div class="pending-group-head">V1.0 polish (2026-07-27) · ~10–14 dev-days</div>
-
-            <div class="card">
-              <div class="card-title">P2 — Day Zero Research panel polish</div>
-              <div class="card-tags"><span class="tag tag-id">P2</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Server-side Day Zero generator exists; portal-side display is partial. Spec BUILD §3 B2 calls for competitor SWOT + market signals + 3 conversation seeds rendered cleanly. Today the body renders raw via simpleMd — needs structured sections with proper visual hierarchy. ~2–3d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">P5 — Mutual action plan styling polish</div>
-              <div class="card-tags"><span class="tag tag-id">P5</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Mutual action plan is built and the checkbox toggle works in the Deal page. Portal-side rendering still needs the "soft, not aggressive" overdue styling polish per BUILD §3 B5 + Vision 3. Amber chips already, but needs a pass for emphasis hierarchy + microcopy. ~1d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">P6 expansion — tags + search + buyer-upload</div>
-              <div class="card-tags"><span class="tag tag-id">P6-ext</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">P6 download MVP shipped 2026-05-23 (commit 3e3878d). Spec BUILD §3 B6 calls for tagged + searchable + buyer-can-upload. Buyer-upload especially needs a new `is_buyer_visible` flag on documents OR a separate upload table since current portal resources are deal attachments only. ~1–2d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">W1 — Pre-meeting brief polish (mobile + tone)</div>
-              <div class="card-tags"><span class="tag tag-id">W1</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">15-min pre-meeting brief is built (per SYSTEM-V1 §9.1/§4) but desktop-only and tone needs polish — Mal flagged the "competitive coaching tone" doesn't land yet. Phone delivery is V1.1 (needs voice infrastructure). V1.0 = make it readable on mobile + tune the AI prompt for the right voice. ~2–3d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">W2 — Post-meeting recap polish (4-dim sentiment)</div>
-              <div class="card-tags"><span class="tag tag-id">W2</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">5-min post-meeting recap built (auto-draft email, MAP updates, sentiment). Spec SYSTEM-V1 §9.2 calls for sentiment scored across 4 dimensions (warmth/engagement/hesitation/commitment-language); current sentiment is single-dim. Calendar auto-book needs I1 sync (V1.1). V1.0 polish = expand sentiment to 4 dims. ~1–2d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">U5 — Mobile-friendly verification</div>
-              <div class="card-tags"><span class="tag tag-id">U5</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Portal mobile work done in U1; Aurora Glass full-bleed fixed the max-w gap on internal pages. U5 remaining: walk every page at &lt;768px, fix any overflow/layout breakage. Mobile-first deferred to V2 per spec; this is just "doesn't look broken on a phone." ~1d.</div>
-            </div>
+            <div class="pending-group-head">V1.0 nice-to-haves (not spec-locked, deferable)</div>
 
             <div class="card">
               <div class="card-title">V1.0 polish backlog (3 small items)</div>
-              <div class="card-tags"><span class="tag tag-id">polish</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Surfaced during testing — none are blockers. (a) Owner editing in Deal hero (read-only today; needs a user-picker popover — EditDealField doesn't support select). (b) PDF/DOCX → text extraction so Recap works on .pdf/.docx attachments, not just .txt/.md (server-side via `mammoth` + `pdf-parse`). (c) Portal D-workstream sub-components (JourneyOverview, FullInsightPack, MatchedCaseStudy, DecisionToolkit, LivingProposalPanel) still wear pre-Aurora classes inside the new portal shell — swap their card wrappers for &lt;GlassCard&gt; + &lt;Eyebrow&gt; for visual consistency. ~2–3d total.</div>
-            </div>
-
-            <div class="pending-group-head">Deferred (not Demo-blocking)</div>
-
-            <div class="card">
-              <div class="card-title">H7 — npm audit fix (drizzle 0.38→0.45)</div>
-              <div class="card-tags"><span class="tag tag-id">H7</span><span class="tag tag-ws-h">hardening</span></div>
-              <div class="card-desc">10 vulns total: 9 dev-only (esbuild + vite + drizzle-kit — only exposed if a malicious site is visited while npm run dev is running locally). 1 runtime-relevant: drizzle-orm &lt;0.45.2 SQL identifier injection — but exploit surface is theoretical because Velocity uses typed Drizzle query builder with no user-supplied identifier strings. Fix requires drizzle-orm 0.38→0.45 major bump with careful schema testing. ~1d when picked up.</div>
+              <div class="card-tags"><span class="tag tag-id">polish</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">Surfaced during testing — none are V1.0 spec items, none are blockers. (a) Owner editing in Deal hero (read-only today; needs a user-picker popover — EditDealField doesn't support select). (b) PDF/DOCX → text extraction so Recap works on .pdf/.docx attachments, not just .txt/.md (server-side via `mammoth` + `pdf-parse`). (c) Portal D-workstream sub-components (JourneyOverview, FullInsightPack, MatchedCaseStudy, DecisionToolkit, LivingProposalPanel) still wear pre-Aurora classes inside the new portal shell — swap their card wrappers for &lt;GlassCard&gt; + &lt;Eyebrow&gt; for visual consistency. ~2–3d total — punted into V1.1 since V1.0 spec is now fully closed.</div>
             </div>
 
             <div class="pending-group-head">V1.1 (2026-10-05) · ~38–56 dev-days</div>
@@ -1186,7 +1202,7 @@
   <footer class="page-foot">
     Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a>
     &nbsp;·&nbsp;
-    Last refresh: 2026-05-23 PM2 — Honest reconcile against the V1 spec breakdown (docs/planning/v1-work.md). Earlier refreshes had under-counted Up Next by trimming too aggressively; this pass adds back the 11 missing spec items (P2 polish · P5 styling · P6 expansion · W1 polish · W2 polish · I2–I8 · W3 · P8 · A1 · A2 · D10–D15 · C4) and drops the rosy 89% to an honest 74%. V1.0 remaining ≈ 10–14 dev-days · V1.1 ≈ 38–56 dev-days.
+    Last refresh: 2026-05-26 PM — V1.0 fully closed. Shipped today: P5 styling · P2 Day Zero polish · W2 sentiment breakdown · W1 mobile+tone · P6 expansion (tags + search + visibility) · QA-feedback fixes (tag dropdown + Share-with-buyer button) · Nirvana removal · H7 drizzle 0.38→0.45 + audit fix · U5 internal mobile sweep. 57/67 cards done, 85% complete. V1.1 ≈ 38–56 dev-days; natural next-move is Google Calendar OAuth credentials + sync layer.
   </footer>
 </body>
 </html>
