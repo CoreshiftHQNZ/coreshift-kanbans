@@ -522,9 +522,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>89%</strong> complete</div>
-        <div><strong>48</strong>/54 cards done</div>
-        <div>Updated <strong>2026-05-23 PM</strong></div>
+        <div><strong>74%</strong> complete</div>
+        <div><strong>48</strong>/65 cards done</div>
+        <div>Updated <strong>2026-05-23 PM2</strong></div>
         <div><a href="https://velocity.coreshifthq.com" target="_blank" rel="noopener">prod →</a></div>
         <div><a href="https://velocity-staging.coreshifthq.com" target="_blank" rel="noopener">staging →</a></div>
       </div>
@@ -544,7 +544,7 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current sprint</span>
-          <span class="phase-pill-value">V1.0 polish — P3 + P6 shipped · I1 sync layer next</span>
+          <span class="phase-pill-value">V1.0 polish — ~10–14 dev-days remaining</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
@@ -590,7 +590,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-up-next">
-        <div class="status-num">6</div>
+        <div class="status-num">17</div>
         <div class="status-label">Up Next</div>
       </div>
     </section>
@@ -1003,44 +1003,152 @@
         <section class="column col-up-next">
           <header class="col-head">
             <h2>🔵 Up next</h2>
-            <span class="col-count">6</span>
+            <span class="col-count">17</span>
           </header>
           <div class="cards">
 
-            <div class="pending-group-head">V1.0 polish (2026-07-27)</div>
+            <div class="pending-group-head">V1.0 polish (2026-07-27) · ~10–14 dev-days</div>
 
             <div class="card">
-              <div class="card-title">Mobile-friendly verification</div>
+              <div class="card-title">P2 — Day Zero Research panel polish</div>
+              <div class="card-tags"><span class="tag tag-id">P2</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Server-side Day Zero generator exists; portal-side display is partial. Spec BUILD §3 B2 calls for competitor SWOT + market signals + 3 conversation seeds rendered cleanly. Today the body renders raw via simpleMd — needs structured sections with proper visual hierarchy. ~2–3d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">P5 — Mutual action plan styling polish</div>
+              <div class="card-tags"><span class="tag tag-id">P5</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Mutual action plan is built and the checkbox toggle works in the Deal page. Portal-side rendering still needs the "soft, not aggressive" overdue styling polish per BUILD §3 B5 + Vision 3. Amber chips already, but needs a pass for emphasis hierarchy + microcopy. ~1d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">P6 expansion — tags + search + buyer-upload</div>
+              <div class="card-tags"><span class="tag tag-id">P6-ext</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">P6 download MVP shipped 2026-05-23 (commit 3e3878d). Spec BUILD §3 B6 calls for tagged + searchable + buyer-can-upload. Buyer-upload especially needs a new `is_buyer_visible` flag on documents OR a separate upload table since current portal resources are deal attachments only. ~1–2d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">W1 — Pre-meeting brief polish (mobile + tone)</div>
+              <div class="card-tags"><span class="tag tag-id">W1</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">15-min pre-meeting brief is built (per SYSTEM-V1 §9.1/§4) but desktop-only and tone needs polish — Mal flagged the "competitive coaching tone" doesn't land yet. Phone delivery is V1.1 (needs voice infrastructure). V1.0 = make it readable on mobile + tune the AI prompt for the right voice. ~2–3d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">W2 — Post-meeting recap polish (4-dim sentiment)</div>
+              <div class="card-tags"><span class="tag tag-id">W2</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">5-min post-meeting recap built (auto-draft email, MAP updates, sentiment). Spec SYSTEM-V1 §9.2 calls for sentiment scored across 4 dimensions (warmth/engagement/hesitation/commitment-language); current sentiment is single-dim. Calendar auto-book needs I1 sync (V1.1). V1.0 polish = expand sentiment to 4 dims. ~1–2d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">U5 — Mobile-friendly verification</div>
               <div class="card-tags"><span class="tag tag-id">U5</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">U4 (shared component library) is effectively done — the Aurora Glass glass primitives package serves that role. U5 remaining: walk every page at &lt;768px, fix any overflow/layout breakage. Mobile-first deferred to V2 per spec; this is just "doesn't look broken on a phone." ~1d.</div>
+              <div class="card-desc">Portal mobile work done in U1; Aurora Glass full-bleed fixed the max-w gap on internal pages. U5 remaining: walk every page at &lt;768px, fix any overflow/layout breakage. Mobile-first deferred to V2 per spec; this is just "doesn't look broken on a phone." ~1d.</div>
             </div>
 
             <div class="card">
-              <div class="card-title">V1.0 polish backlog (small)</div>
+              <div class="card-title">V1.0 polish backlog (3 small items)</div>
               <div class="card-tags"><span class="tag tag-id">polish</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Surfaced during testing — none are blockers, all are nice-to-haves. (a) Owner editing in Deal hero (currently read-only — needs a user-picker popover; EditDealField doesn't support select). (b) PDF/DOCX → text extraction on the server so Recap works on .pdf and .docx attachments, not just .txt/.md (likely via `mammoth` + `pdf-parse`). (c) Portal D-workstream sub-components (JourneyOverview, FullInsightPack, MatchedCaseStudy, DecisionToolkit, LivingProposalPanel) still wear pre-Aurora classes inside the new portal shell — swap their card wrappers for &lt;GlassCard&gt; + &lt;Eyebrow&gt; for visual consistency. ~2–3d total.</div>
+              <div class="card-desc">Surfaced during testing — none are blockers. (a) Owner editing in Deal hero (read-only today; needs a user-picker popover — EditDealField doesn't support select). (b) PDF/DOCX → text extraction so Recap works on .pdf/.docx attachments, not just .txt/.md (server-side via `mammoth` + `pdf-parse`). (c) Portal D-workstream sub-components (JourneyOverview, FullInsightPack, MatchedCaseStudy, DecisionToolkit, LivingProposalPanel) still wear pre-Aurora classes inside the new portal shell — swap their card wrappers for &lt;GlassCard&gt; + &lt;Eyebrow&gt; for visual consistency. ~2–3d total.</div>
             </div>
 
-            <div class="pending-group-head">Deferred</div>
+            <div class="pending-group-head">Deferred (not Demo-blocking)</div>
 
             <div class="card">
-              <div class="card-title">npm audit fix — deferred to dedicated PR</div>
+              <div class="card-title">H7 — npm audit fix (drizzle 0.38→0.45)</div>
               <div class="card-tags"><span class="tag tag-id">H7</span><span class="tag tag-ws-h">hardening</span></div>
-              <div class="card-desc">Last Demo Milestone item — moved out of the Demo group since the demo shipped without it. 10 vulns total: 9 are dev-only (esbuild + vite + drizzle-kit chain — only exposed if a malicious site is visited while npm run dev is running locally). 1 runtime-relevant: drizzle-orm &lt;0.45.2 SQL identifier injection — but exploit surface is theoretical because Velocity uses typed Drizzle query builder with no user-supplied identifier strings. Fix requires drizzle-orm 0.38→0.45 major bump with careful schema testing. ~1d when picked up.</div>
+              <div class="card-desc">10 vulns total: 9 dev-only (esbuild + vite + drizzle-kit — only exposed if a malicious site is visited while npm run dev is running locally). 1 runtime-relevant: drizzle-orm &lt;0.45.2 SQL identifier injection — but exploit surface is theoretical because Velocity uses typed Drizzle query builder with no user-supplied identifier strings. Fix requires drizzle-orm 0.38→0.45 major bump with careful schema testing. ~1d when picked up.</div>
             </div>
 
-            <div class="pending-group-head">V1.1 (2026-10-05)</div>
+            <div class="pending-group-head">V1.1 (2026-10-05) · ~38–56 dev-days</div>
 
             <div class="card">
-              <div class="card-title">I1 sync layer + 6 remaining integrations (I2–I7)</div>
-              <div class="card-tags"><span class="tag tag-id">I1-sync, I2–I7</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">I1 Google Calendar foundation is Done (OAuth flow + token store + Settings UI). The SYNC LAYER is the V1.1 piece — needs: hourly background job that pulls events from connected calendars, contact-email→event-attendee matching to identify which event belongs to which deal, auto-populate deal.nextMeetingAt when a match is found, and read attendee.responseStatus to widen the next_meeting gate auto-check from "date set" to "date set + accepted" (the stageGate.ts comment marker flags this exact line). Plus access_token refresh wrapper. ~3–4d for I1-sync. Remaining: I2 Gmail OAuth + inbound mirror, I3 Fireflies/Otter transcription, I4 Xero push (commissions → bills, won → invoice), I5 native portal e-sign, I6 LinkedIn enrichment, I7 Google Drive archive. ~16–25d combined. I5 may pull forward if Mal aims to close Aditi via portal.</div>
+              <div class="card-title">I1 sync layer — Calendar event → deal mapping + RSVP gate</div>
+              <div class="card-tags"><span class="tag tag-id">I1-sync</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">I1 Google Calendar foundation shipped 2026-05-23 (commit 8ac4deb — OAuth + token store + Settings UI). Sync layer is the V1.1 piece. Needs: hourly background job that pulls upcoming events from connected calendars, contact-email→event-attendee matching to identify which event belongs to which deal, auto-populate deal.nextMeetingAt when a match is found, read attendee.responseStatus to widen the next_meeting gate auto-check from "date set" to "date set + accepted" (the stageGate.ts TODO marker flags this exact line). Plus access_token refresh wrapper. ~3–4d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">I2 — Gmail OAuth (outbound recap)</div>
+              <div class="card-tags"><span class="tag tag-id">I2</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">SYSTEM-V1 §8. Send the W2 post-meeting recap emails from Mal's actual Gmail account (instead of via a generic SMTP relay). Same Google OAuth client; add gmail.send scope. ~2–3d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">I3 — Gmail inbound → mirror to portal</div>
+              <div class="card-tags"><span class="tag tag-id">I3</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">SYSTEM-V1 §5: "every email received from buyer outside portal gets mirrored back" — buyer sees a unified view in the portal regardless of how communication happened. Pub/Sub on Gmail or polling per connected user. ~2–3d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">I4 — Fireflies/Otter transcription pipeline</div>
+              <div class="card-tags"><span class="tag tag-id">I4</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">SYSTEM-V1 §8 "every sales call auto-transcribed and routed to the right deal." Webhook → match meeting via attendee email → pipe transcript into RecapModal-equivalent server flow. Manual paste works for V1.0 demo. ~3–4d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">I5 — Native e-sign in portal</div>
+              <div class="card-tags"><span class="tag tag-id">I5</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">SYSTEM-V1 §11 explicitly: "DocuSign dropped." SALES-CYCLE §10 names one-click sign as the 75% gift. Pull in if Mal closes Aditi via portal during demo cycle. ~5–7d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">I6 — Xero push (commissions + invoices)</div>
+              <div class="card-tags"><span class="tag tag-id">I6</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">SYSTEM-V1 §6: approved commissions push to Xero as bills payable; Closed Won → invoice. Velocity already calculates commission rules; this just plumbs the API write. ~3–4d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">I7 — LinkedIn enrichment</div>
+              <div class="card-tags"><span class="tag tag-id">I7</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">SYSTEM-V1 §8. Person enrichment + recent-activity signals. LinkedIn API access is limited so may need fallback (e.g. ProxyCurl). ~2–3d API-access-dependent.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">I8 — Google Drive archive layer</div>
+              <div class="card-tags"><span class="tag tag-id">I8</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">SYSTEM-V1 §8. Long-term archive for transcripts + recordings + documents older than 90d, pushed to Mal's Drive automatically. Velocity's storage stays hot; Drive holds the cold archive. ~1–2d.</div>
             </div>
 
             <div class="card">
               <div class="card-title">Onboarding banner — auto-prompt to Connect Calendar</div>
               <div class="card-tags"><span class="tag tag-id">I1-follow</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">Decision pinned 2026-05-23. Sign-in OAuth (Supabase, identity-only scopes) and Calendar OAuth (our own flow, calendar.readonly + refresh_token) are deliberately TWO steps — bundling them at sign-in expands the initial consent surface and violates Google's incremental-authorisation guidance. Discoverability lift instead: a dismissable Dashboard banner shown when user_connectors.gcal.status='not_connected', copy along the lines of "Connect your calendar — every meeting you book auto-links to the matching deal, and the 'invite accepted' gate check goes from manual to automatic." One-click to the existing /api/connectors/gcal/connect flow. ~0.5d. Should ship alongside the I1 sync layer so the banner's promise is true.</div>
+              <div class="card-desc">Decision pinned 2026-05-23. Sign-in OAuth (Supabase, identity-only scopes) and Calendar OAuth (our own flow, calendar.readonly + refresh_token) deliberately stay TWO steps — bundling them at sign-in expands the initial consent surface and violates Google's incremental-authorisation guidance. Discoverability lift instead: dismissable Dashboard banner when user_connectors.gcal.status='not_connected'. Ships alongside the I1 sync layer so the banner's promise is true. ~0.5d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">W3 — Voice capture from anywhere</div>
+              <div class="card-tags"><span class="tag tag-id">W3</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">SYSTEM-V1 §9.3 — "Hey Nirvana, Mary at Aditi just told me…" routes to deal, updates field, sets reminder. Spec calls it "load-bearing for v1." Mobile native + transcription pipeline. Locked-decision call 2026-05-20: V1.1 (Aditi demo runs on Mal-on-keyboard). ~7–10d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">P8 — Quiet data capture (agent asks gentle questions)</div>
+              <div class="card-tags"><span class="tag tag-id">P8</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">BUILD §3 B8. The portal agent surfaces gentle conversational questions over time to capture information Mal didn't get directly (preferred meeting time, budget calibration, internal stakeholder map). Extractor already exists; this is the prompt-the-buyer half. ~2–3d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">A1 — "Should we walk?" (anti-overselling)</div>
+              <div class="card-tags"><span class="tag tag-id">A1</span><span class="tag tag-ws-a">anti-overselling</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">SYSTEM-V1 §3 anti-overselling guardrail. Surfaces wrong-fit deals before they fail in delivery — Nirvana scans ICP score + objections + signals and flags the deal for re-qualification before more time goes in. ~2–3d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">A2 — "Do we understand them yet?" pre-proposal readiness</div>
+              <div class="card-tags"><span class="tag tag-id">A2</span><span class="tag tag-ws-a">anti-overselling</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">SYSTEM-V1 §3. Score from extracted signals: do we have success definition in their words, budget, decision-maker, compelling event? &lt;80% recommends more discovery before proposal goes out. Gates the 50% transition implicitly. ~2–3d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">D10–D11 + D13 + D15 — remaining delight payloads</div>
+              <div class="card-tags"><span class="tag tag-id">D10–D15</span><span class="tag tag-ws-d">delight</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">D10 Week One walkthrough (75% gift), D11 AI execution team intro (75% gift), D13 Welcome pack (100% gift), D15 industry keep-warm content for nurture-database deals. D12 covered by I5 e-sign; D14 is the manual Mal-touch (not a code item). ~5–8d combined.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">C4 — Wire Velocity into Sentinel monitoring</div>
+              <div class="card-tags"><span class="tag tag-id">C4</span><span class="tag tag-ws-c">CI</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">Not Velocity's scope — lives in the Sentinel project. Mention here for accountability. Once Sentinel ships its monitoring tap, Velocity needs the equivalent of a /api/health-detail endpoint or webhook integration. ~0.5d when Sentinel side is ready.</div>
             </div>
 
             <div class="card">
@@ -1078,7 +1186,7 @@
   <footer class="page-foot">
     Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a>
     &nbsp;·&nbsp;
-    Last refresh: 2026-05-23 PM — P3 (last-meeting amend flow), P6 (portal resources hub download), I1 Google Calendar OAuth foundation all shipped today on top of the morning's Aurora Glass polish + lifecycle restore + custom DNS push. In Flight cleared. Blocked cleared. Board now reflects actual build state — no personal-dev-debt clutter. Next moves on the menu: I1 sync layer + V1.0 polish backlog + mobile sweep.
+    Last refresh: 2026-05-23 PM2 — Honest reconcile against the V1 spec breakdown (docs/planning/v1-work.md). Earlier refreshes had under-counted Up Next by trimming too aggressively; this pass adds back the 11 missing spec items (P2 polish · P5 styling · P6 expansion · W1 polish · W2 polish · I2–I8 · W3 · P8 · A1 · A2 · D10–D15 · C4) and drops the rosy 89% to an honest 74%. V1.0 remaining ≈ 10–14 dev-days · V1.1 ≈ 38–56 dev-days.
   </footer>
 </body>
 </html>
