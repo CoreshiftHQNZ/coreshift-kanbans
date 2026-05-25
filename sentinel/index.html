@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>81%</strong> complete</div>
-        <div><strong>79</strong>/98 cards done</div>
-        <div>Updated <strong>2026-05-25 00:44 UTC</strong></div>
+        <div><strong>82%</strong> complete</div>
+        <div><strong>80</strong>/98 cards done</div>
+        <div>Updated <strong>2026-05-25 00:57 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">79</div>
+        <div class="status-num">80</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -837,7 +837,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">16</div>
+        <div class="status-num">15</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">79</span>
+        <span class="col-count">80</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1342,6 +1342,11 @@
         <div class="card-desc">Self-contained handoff doc for a UI/UX design session: visual system (full color tokens, dark-mode-canonical), page inventory with maturity tags, component vocabulary, six concrete angles for a whole-app design system pass, hard constraints. Lives at github.com/CoreshiftHQNZ/sentinel-app/blob/main/ONBOARDING.md. PR [#35](https://github.com/CoreshiftHQNZ/sentinel-app/pull/35) → #36 → #37</div>
       </div>
       <div class="card">
+        <div class="card-title">KC Zernio backfill (28 stale accounts → 0)</div>
+        <div class="card-tags"><span class="tag tag-neutral">kc</span><span class="tag tag-neutral">data</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">script/backfill-zernio-account-ids.ts</span><span class="tag tag-neutral">zernio.listAccounts(client.lateProfileId)</span><span class="tag tag-neutral">zernio_account_id</span><span class="tag tag-neutral">--apply</span><span class="tag tag-neutral">SELECT COUNT(*) FROM social_accounts WHERE is_active AND zernio_account_id IS NULL</span></div>
+        <div class="card-desc">Plan A from the KC #102 follow-up plan: written + ran the data backfill BEFORE any user had to reconnect. New script at `script/backfill-zernio-account-ids.ts` walks each client&#39;s stale social_accounts, calls `zernio.listAccounts(client.lateProfileId)`, matches by Zernio account ID / unique-platform / displayName, and populates `zernio_account_id`. Ran dry-run first against KC prod (clean), then `--apply` — **matched 28/28 (100%) via Strategy A (exact ID match)**. Confirmed via DB: `SELECT COUNT(*) FROM social_accounts WHERE is_active AND zernio_account_id IS NULL` = 0. Zero users needed to reconnect. PR [#105](https://github.com/CoreshiftHQNZ/keycontent-app/pull/105) → #106 → #107 promoted dev → staging → main 2026-05-25</div>
+      </div>
+      <div class="card">
         <div class="card-title">KC Zernio account-ownership fix (KC #102)</div>
         <div class="card-tags"><span class="tag tag-neutral">kc</span><span class="tag tag-neutral">P1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">lateAccountId</span><span class="tag tag-neutral">social_accounts</span><span class="tag tag-neutral">late_account_id</span><span class="tag tag-neutral">zernioAccountId</span><span class="tag tag-neutral">ACCOUNTS_NEED_RECONNECT</span><span class="tag tag-neutral">publishNow: true → scheduledFor: now</span><span class="tag tag-neutral">calendar.ts</span><span class="tag tag-neutral">zernioAccountId</span><span class="tag tag-neutral">script/migrate-v1-to-v2.ts</span></div>
         <div class="card-desc">Discovered via Railway error &quot;Zernio schedulePost failed: One or more accounts do not belong to this user.&quot; Root cause: KC was sending `lateAccountId` (old &quot;Late&quot; publisher&#39;s IDs) to Zernio in 4 send-paths (compose + 3 calendar paths). The schema comment on `social_accounts` already flagged this as the follow-up read-side switch from PR #4&#39;s dual-write that never landed. Scale: 28 of 34 active social_accounts (82%) were silently failing on post — only post-PR-#4 accounts worked (their `late_account_id` column happens to hold a Zernio ID). Fix: switch all reads to `zernioAccountId`, null-guard with structured `ACCOUNTS_NEED_RECONNECT` error so affected users get a clear &quot;reconnect&quot; message instead of the cryptic Zernio one. Also swept in the `publishNow: true → scheduledFor: now` fix from PR #86 for `calendar.ts` publish-now (was still on the old code path). 42/42 KC tests pass. PR [#102](https://github.com/CoreshiftHQNZ/keycontent-app/pull/102) → #103 → #104 promoted dev → staging → main 2026-05-25. Follow-ups: data backfill script for 28 stale accounts; webhook handler matching by `zernioAccountId`; rotate prod creds committed in `script/migrate-v1-to-v2.ts` (security)</div>
@@ -1401,7 +1406,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">16</span>
+        <span class="col-count">15</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1448,11 +1453,6 @@
         <div class="card-title">Investigate 401-then-200 Zernio doublet (KC #78)</div>
         <div class="card-tags"><span class="tag tag-neutral">incident-followup</span></div>
         <div class="card-desc">Every successful Zernio 200 since the secret was restored is preceded by a 401 ~1s earlier. Probably probe + real event, or HMAC format the handler doesn&#39;t accept first try. Not blocking; worth understanding before Zernio scales</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Backfill `zernio_account_id` for 28 stale social accounts</div>
-        <div class="card-tags"><span class="tag tag-neutral">kc</span><span class="tag tag-neutral">data</span><span class="tag tag-neutral">zernio_account_id</span><span class="tag tag-neutral">ACCOUNTS_NEED_RECONNECT</span><span class="tag tag-neutral">zernio.listAccounts()</span></div>
-        <div class="card-desc">Spawned by the Zernio account-ownership fix (KC #102). 28 of 34 active social_accounts have NULL `zernio_account_id` (connected before PR #4&#39;s dual-write). After the fix, those users hit the new `ACCOUNTS_NEED_RECONNECT` error and need to disconnect+reconnect in Settings. Backfill options: (A) Call `zernio.listAccounts()` per client + match by platform + external ID → bulk update; (B) Email affected clients with reconnect instructions; (C) Build a &quot;reconnect required&quot; banner in the KC UI. Recommend (C) + (B) combined</div>
       </div>
       <div class="card">
         <div class="card-title">Match Zernio webhooks by `zernioAccountId` too</div>
