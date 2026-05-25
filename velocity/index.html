@@ -522,11 +522,11 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>82%</strong> complete</div>
-        <div><strong>37</strong>/45 cards done</div>
-        <div>Updated <strong>2026-05-22</strong></div>
-        <div><a href="https://velocity-production-b772.up.railway.app" target="_blank" rel="noopener">prod →</a></div>
-        <div><a href="https://velocity-staging-staging.up.railway.app" target="_blank" rel="noopener">staging →</a></div>
+        <div><strong>83%</strong> complete</div>
+        <div><strong>45</strong>/54 cards done</div>
+        <div>Updated <strong>2026-05-23</strong></div>
+        <div><a href="https://velocity.coreshifthq.com" target="_blank" rel="noopener">prod →</a></div>
+        <div><a href="https://velocity-staging.coreshifthq.com" target="_blank" rel="noopener">staging →</a></div>
       </div>
     </div>
   </header>
@@ -544,11 +544,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current sprint</span>
-          <span class="phase-pill-value">Demo Milestone done · prod live</span>
+          <span class="phase-pill-value">V1.0 polish — P3 + P6 + I1 foundation in flight</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">V1.0 polish <span class="phase-pill-date">week of 2026-07-27</span></span>
+          <span class="phase-pill-value">V1.0 complete <span class="phase-pill-date">week of 2026-07-27</span></span>
         </div>
       </div>
     </section>
@@ -578,11 +578,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">37</div>
+        <div class="status-num">45</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
+        <div class="status-num">3</div>
         <div class="status-label">In flight</div>
       </div>
       <div class="status-stat status-blocked">
@@ -590,7 +590,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-up-next">
-        <div class="status-num">7</div>
+        <div class="status-num">5</div>
         <div class="status-label">Up Next</div>
       </div>
     </section>
@@ -599,23 +599,23 @@
     <section class="links">
       <h2 class="section-head">Quick Links</h2>
       <div class="links-grid">
-        <a class="link-card" href="https://velocity-production-b772.up.railway.app" target="_blank" rel="noopener">
+        <a class="link-card" href="https://velocity.coreshifthq.com" target="_blank" rel="noopener">
           <div class="link-icon">🟢</div>
           <div class="link-text">
             <div class="link-title">Production URL <span style="color:var(--green); font-size:11px; font-weight:600;">· LIVE</span></div>
-            <div class="link-desc">velocity-production-b772.up.railway.app</div>
+            <div class="link-desc">velocity.coreshifthq.com</div>
           </div>
           <div class="link-arrow">→</div>
         </a>
-        <a class="link-card" href="https://velocity-staging-staging.up.railway.app" target="_blank" rel="noopener">
+        <a class="link-card" href="https://velocity-staging.coreshifthq.com" target="_blank" rel="noopener">
           <div class="link-icon">🚀</div>
           <div class="link-text">
             <div class="link-title">Staging URL</div>
-            <div class="link-desc">velocity-staging-staging.up.railway.app</div>
+            <div class="link-desc">velocity-staging.coreshifthq.com</div>
           </div>
           <div class="link-arrow">→</div>
         </a>
-        <a class="link-card" href="https://velocity-staging-staging.up.railway.app/portal/aditi-demo-portal-2026" target="_blank" rel="noopener">
+        <a class="link-card" href="https://velocity-staging.coreshifthq.com/portal/aditi-demo-portal-2026" target="_blank" rel="noopener">
           <div class="link-icon">🔑</div>
           <div class="link-text">
             <div class="link-title">Sample portal (Aditi)</div>
@@ -685,15 +685,63 @@
     <!-- KANBAN BOARD -->
     <section class="board-section">
       <h2 class="section-head">Live Build Board</h2>
-      <p class="section-sub">v1.0-rc · prod LIVE since 2026-05-22 · staging on Supabase staging branch · Aurora Glass theme. Workstreams: H hardening · I integrations · P portal panels · W wow factor · D delight payloads · A anti-overselling · U UX · C CI/deploy.</p>
+      <p class="section-sub">v1.0 in flight · prod live on velocity.coreshifthq.com · Aurora Glass theme · full lifecycle Prospect→Won works end-to-end. Workstreams: H hardening · I integrations · P portal panels · W wow factor · D delight payloads · A anti-overselling · U UX · C CI/deploy.</p>
       <div class="board">
 
         <section class="column col-done">
           <header class="col-head">
             <h2>✅ Done</h2>
-            <span class="col-count">37</span>
+            <span class="col-count">45</span>
           </header>
           <div class="cards">
+
+            <div class="card">
+              <div class="card-title">Optimistic drag on Pipeline — Sentinel-style snap (2026-05-23)</div>
+              <div class="card-tags"><span class="tag tag-id">U-polish</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Pipeline drag-and-drop was server-bound: drop → wait → invalidate → card moves. Felt laggy. Lifted the TanStack onMutate/onError/onSettled pattern verbatim from Sentinel's BRIEF-sentinel-v3-drag-and-drop.md. Cache patches the deal's stage code on drop → card jumps instantly. On server reject, snapshot reverts + amber toast. PointerSensor activation 6px → 5px to match Sentinel's tuned value. Commit 344fb44.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">"Your next move" autoloads on Dashboard (2026-05-23)</div>
+              <div class="card-tags"><span class="tag tag-id">U-polish</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">DailyKickoffPanel renamed from "Your one move today" → "Your next move" and now auto-fires on mount via useEffect — Mal hits the dashboard, the move appears immediately. No "Show me" click. "Another" button still re-fires. Commit b439b0d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Document + transcript upload on Deal page (2026-05-22)</div>
+              <div class="card-tags"><span class="tag tag-id">deal-attach</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Demo-ready criterion #2 closed. New server/routes/attachments.ts: POST/GET/DELETE for /api/deals/:id/attachments + a /text endpoint for the Use-for-Recap flow. Client AttachmentsPanel: Aurora Glass card, "Upload file" + "Add transcript" buttons, file list with icon-per-type + relative time + size, per-file Download (signed URL) + Delete + Recap (on .txt/.md transcripts, pipes content into RecapModal). Broader MIME allowlist (PDF/DOC/DOCX/PPT/PPTX/XLS/XLSX/CSV/TXT/MD/images, 25MB). Bucket MIME allowlist on Supabase Storage expanded to match on both staging + prod branches via new scripts/update-bucket-mime.ts (idempotent). Commits 8b51640 + 819ae5a.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Lifecycle gate-criterion blockers closed (2026-05-22)</div>
+              <div class="card-tags"><span class="tag tag-id">lifecycle</span><span class="tag tag-ws-d">delight</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Three blockers preventing Mal from progressing a deal Prospect→Won via UI without override checkbox: (1) Proposal publish now auto-sets deal.documentsSentAt (the "docs out" moment per spec §7) → unblocks Verbal→Won gate. (2) Inline schedule-next-meeting EditDealField on Deal hero, datetime-local input → unblocks next_meeting/third_meeting/kickoff_scheduled criteria at Qualified+ gates. (3) "Score the ICP →" entry point under GateProgressCard opens existing IcpModal → unblocks pain_motivation + icp_threshold. End-to-end demo flow now possible with zero overrides. Commit d8f64bc.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">GateProgressCard + 5-question proposal template (2026-05-22)</div>
+              <div class="card-tags"><span class="tag tag-id">lifecycle</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Two spec-fidelity uplifts. (1) New GateProgressCard always-on view of next-stage criteria: "X of Y met" pill (jade if all), violet→coral progress bar, two-column criterion grid with auto/manual badges, detail line on failures, evidence-snippet quotes from extractor pre-tick, "Promote to X" button (primary when all met). Closes the "structural fields" gap from spec §7. (2) Proposal v1 body now seeded with the 5-framing-question template from spec §5 — "Start v1" no longer drops Mal into a blank textarea. Company name interpolated, default title becomes "Proposal for {Company} — v1". Commit e0afde0.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">7 Deal lifecycle controls restored in Aurora Glass (2026-05-22)</div>
+              <div class="card-tags"><span class="tag tag-id">restore-1-7</span><span class="tag tag-ws-u">UX</span><span class="tag tag-demo">Demo</span></div>
+              <div class="card-desc">Claude Design's Aurora Glass dropped a lot of working controls. Restored all seven in seven commits: (1) Action plan checkbox toggle — Square/CheckSquare flips via PATCH /api/action-items/:id. (2-3) Interactive StageTrack — each segment clickable with hover hints ("← back" / "promote →" / "★ mark won"); Closed Won segment only enabled at ≥75%; quiet "Mark this deal lost" pill below the track. (4) Inline-edit value + probability via EditDealField; owner surfaced in hero (read-only — needs picker, see V1.0 polish). (5) Edit Personal + Business via pencil-on-hover on ProfileCards (EditCompanyModal / EditPersonModal). (6) "✦ Recap from transcript" violet chip in Activity SectionHeader. (7) Real HTML5 drag-and-drop via @dnd-kit/core on the Pipeline kanban. Commits efabb0e + 52806ee + 1ef41c4 + 674671e + d4bad6c.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Pipeline Filter (stage / risk / owner / date) (2026-05-22)</div>
+              <div class="card-tags"><span class="tag tag-id">pipeline-filter</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Glass-popover with four filter dimensions, applied client-side. Stage: All / Prospect / Qualified / Presented / Verbal / Closed Won. Risk: All / At-risk / Honest pass. Owner: Anyone / You / specific (derived from loaded deals). Date: All / Meeting today / Meeting this week / Overdue actions. Active filters show as dismissable chips below header; Filter button shows count when active; "Clear all" in both the popover footer and the chip strip. Deal interface gained owner field. Commit 71fca81.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Custom DNS — velocity.coreshifthq.com live (2026-05-22)</div>
+              <div class="card-tags"><span class="tag tag-id">infra</span><span class="tag tag-ws-c">CI</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Replaced the auto-generated Railway domains with branded custom DNS. Prod: velocity.coreshifthq.com (CNAME → a4135o7d.up.railway.app). Staging: velocity-staging.coreshifthq.com (CNAME → cx8klqaf.up.railway.app). Both Cloudflare records DNS-only (grey cloud) so Railway's Let's Encrypt cert issuance worked. SSL provisioned within minutes. Supabase Auth Redirect URLs updated on BOTH branches (main + staging) for the new origins + `/**` wildcard. Site URL bumped from localhost:3000 to the production custom domain. Magic-link + Google OAuth verified working end-to-end on both URLs.</div>
+            </div>
 
             <div class="card">
               <div class="card-title">🟢 First production deploy — Velocity is live (2026-05-22)</div>
@@ -917,10 +965,28 @@
         <section class="column col-in-progress">
           <header class="col-head">
             <h2>🟡 In flight</h2>
-            <span class="col-count">0</span>
+            <span class="col-count">3</span>
           </header>
           <div class="cards">
-            <p class="empty">Quiet for the first time in weeks. Pick the next thing from Up Next when ready.</p>
+
+            <div class="card">
+              <div class="card-title">P3 — Last-meeting summary amend flow</div>
+              <div class="card-tags"><span class="tag tag-id">P3</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Portal-side affordance on the "Last conversation" card so the buyer can flag "this isn't quite right" and capture a correction. Server endpoint writes a portal_activity of type 'amendment' that surfaces back to Mal on the Deal page activity timeline. V1 scope is the latest meeting only — multi-meeting amend ledger is V1.1.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">P6 — Portal resources hub (download MVP)</div>
+              <div class="card-tags"><span class="tag tag-id">P6</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Wire the portal's existing "Everything we've shared" Resources section so buyers can actually download. Add a portal-scoped signed-URL endpoint (token-gated, no internal auth required). V1 scope is download-only of documents.storageUrl rows attached to the deal. Tagging / search / buyer-upload deferred to V1.1.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">I1 — Google Calendar OAuth (foundation)</div>
+              <div class="card-tags"><span class="tag tag-id">I1</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">First of 7 integrations. Foundation slice for this session: Settings UI "Connect Calendar" button, OAuth client + calendar.readonly scope, store refresh_token in new connectors row per user. Full sync + RSVP read for the "invite accepted" gate widening (stageGate.ts has the TODO comment marker) is V1.1 follow-up scope. Load-bearing for tightening anti-stall Rule 1.</div>
+            </div>
+
           </div>
         </section>
 
@@ -941,38 +1007,38 @@
         <section class="column col-up-next">
           <header class="col-head">
             <h2>🔵 Up next</h2>
-            <span class="col-count">7</span>
+            <span class="col-count">5</span>
           </header>
           <div class="cards">
 
-            <div class="pending-group-head">Demo Milestone (2026-06-22)</div>
+            <div class="pending-group-head">V1.0 polish (2026-07-27)</div>
+
+            <div class="card">
+              <div class="card-title">Mobile-friendly verification</div>
+              <div class="card-tags"><span class="tag tag-id">U5</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">U4 (shared component library) is effectively done — the Aurora Glass glass primitives package serves that role. U5 remaining: walk every page at &lt;768px, fix any overflow/layout breakage. Mobile-first deferred to V2 per spec; this is just "doesn't look broken on a phone." ~1d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">V1.0 polish backlog (small)</div>
+              <div class="card-tags"><span class="tag tag-id">polish</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Surfaced during testing — none are blockers, all are nice-to-haves. (a) Owner editing in Deal hero (currently read-only — needs a user-picker popover; EditDealField doesn't support select). (b) PDF/DOCX → text extraction on the server so Recap works on .pdf and .docx attachments, not just .txt/.md (likely via `mammoth` + `pdf-parse`). (c) Portal D-workstream sub-components (JourneyOverview, FullInsightPack, MatchedCaseStudy, DecisionToolkit, LivingProposalPanel) still wear pre-Aurora classes inside the new portal shell — swap their card wrappers for &lt;GlassCard&gt; + &lt;Eyebrow&gt; for visual consistency. ~2–3d total.</div>
+            </div>
+
+            <div class="pending-group-head">Deferred</div>
 
             <div class="card">
               <div class="card-title">npm audit fix — deferred to dedicated PR</div>
-              <div class="card-tags"><span class="tag tag-id">H7</span><span class="tag tag-ws-h">hardening</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Last Demo Milestone item. 10 vulns total: 9 are dev-only (esbuild + vite + drizzle-kit chain — only exposed if a malicious site is visited while npm run dev is running locally). 1 runtime-relevant: drizzle-orm &lt;0.45.2 SQL identifier injection — but exploit surface is theoretical because Velocity uses typed Drizzle query builder with no user-supplied identifier strings. Fix requires drizzle-orm 0.38→0.45 major bump with careful schema testing — better as its own PR. Not Aditi-demo-blocking. ~1d when picked up.</div>
-            </div>
-
-            <div class="pending-group-head">V1.0 complete (2026-07-27)</div>
-
-            <div class="card">
-              <div class="card-title">Remaining portal panels</div>
-              <div class="card-tags"><span class="tag tag-id">P3, P6</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">P3 last-meeting summary "was this accurate?" amend flow. P6 resources hub (tagged, searchable, buyer can upload). ~3–5d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Component library + mobile-friendly verification</div>
-              <div class="card-tags"><span class="tag tag-id">U4, U5</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Small shared component library for V1.1 to build on. Responsive baseline (mobile-first deferred to V2 per spec unless usage warrants). ~2–4d.</div>
+              <div class="card-tags"><span class="tag tag-id">H7</span><span class="tag tag-ws-h">hardening</span></div>
+              <div class="card-desc">Last Demo Milestone item — moved out of the Demo group since the demo shipped without it. 10 vulns total: 9 are dev-only (esbuild + vite + drizzle-kit chain — only exposed if a malicious site is visited while npm run dev is running locally). 1 runtime-relevant: drizzle-orm &lt;0.45.2 SQL identifier injection — but exploit surface is theoretical because Velocity uses typed Drizzle query builder with no user-supplied identifier strings. Fix requires drizzle-orm 0.38→0.45 major bump with careful schema testing. ~1d when picked up.</div>
             </div>
 
             <div class="pending-group-head">V1.1 (2026-10-05)</div>
 
             <div class="card">
-              <div class="card-title">7 required V1 integrations</div>
-              <div class="card-tags"><span class="tag tag-id">I1–I7</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">Google Calendar OAuth (load-bearing for Anti-Stall Rule 1), Gmail OAuth + inbound mirror, Fireflies/Otter transcription, Xero push (commissions → bills, won → invoice), native portal e-sign, LinkedIn enrichment, Google Drive archive. Zero built. ~20–29d. I5 may pull into Demo if Mal aims to close Aditi via portal.</div>
+              <div class="card-title">6 remaining V1 integrations (I2–I7)</div>
+              <div class="card-tags"><span class="tag tag-id">I2–I7</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">I1 (Google Calendar) is In Flight. Remaining: I2 Gmail OAuth + inbound mirror, I3 Fireflies/Otter transcription, I4 Xero push (commissions → bills, won → invoice), I5 native portal e-sign, I6 LinkedIn enrichment, I7 Google Drive archive. Zero built. ~16–25d. I5 may pull forward if Mal aims to close Aditi via portal.</div>
             </div>
 
             <div class="card">
@@ -1010,7 +1076,7 @@
   <footer class="page-foot">
     Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a>
     &nbsp;·&nbsp;
-    Last refresh: 2026-05-22 (evening) — 🟢 PROD IS LIVE at velocity-production-b772.up.railway.app. Aurora Glass design landed via Claude Design handoff. Two same-class null-safety bugs caught + fixed in verification pass. Demo Milestone shipped — focus shifts to V1.0 polish + V1.1 integrations.
+    Last refresh: 2026-05-23 — 🟢 Custom DNS live (velocity.coreshifthq.com). Big day post-prod: Pipeline Filter, 7-step Deal lifecycle restore, GateProgressCard, 5-question proposal template, lifecycle blocker fixes, document/transcript upload, optimistic drag, "Your next move" autoload. Focus shifts to V1.0 polish — P3 + P6 portal panels and I1 Google Calendar foundation are in flight.
   </footer>
 </body>
 </html>
