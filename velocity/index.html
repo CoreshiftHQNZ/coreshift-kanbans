@@ -522,9 +522,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>83%</strong> complete</div>
-        <div><strong>45</strong>/54 cards done</div>
-        <div>Updated <strong>2026-05-23</strong></div>
+        <div><strong>87%</strong> complete</div>
+        <div><strong>48</strong>/55 cards done</div>
+        <div>Updated <strong>2026-05-23 PM</strong></div>
         <div><a href="https://velocity.coreshifthq.com" target="_blank" rel="noopener">prod →</a></div>
         <div><a href="https://velocity-staging.coreshifthq.com" target="_blank" rel="noopener">staging →</a></div>
       </div>
@@ -544,7 +544,7 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current sprint</span>
-          <span class="phase-pill-value">V1.0 polish — P3 + P6 + I1 foundation in flight</span>
+          <span class="phase-pill-value">V1.0 polish — P3 + P6 shipped · I1 sync layer next</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
@@ -578,11 +578,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">45</div>
+        <div class="status-num">48</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">3</div>
+        <div class="status-num">0</div>
         <div class="status-label">In flight</div>
       </div>
       <div class="status-stat status-blocked">
@@ -691,9 +691,27 @@
         <section class="column col-done">
           <header class="col-head">
             <h2>✅ Done</h2>
-            <span class="col-count">45</span>
+            <span class="col-count">48</span>
           </header>
           <div class="cards">
+
+            <div class="card">
+              <div class="card-title">I1 — Google Calendar OAuth foundation (2026-05-23)</div>
+              <div class="card-tags"><span class="tag tag-id">I1</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">Real OAuth path wired for the gcal provider — previous stub returned 501 "oauth_flow_not_yet_implemented". New: GCAL_SCOPES=calendar.readonly+openid+email; buildGcalAuthorizeUrl with access_type=offline + prompt=consent (returns refresh_token reliably); exchangeGcalCode posts to oauth2.googleapis.com/token; decodeIdTokenEmail extracts the connected account email as display identifier. POST /api/connectors/gcal/connect now returns { redirectUrl } and marks status='connecting'. New GET /api/connectors/gcal/callback handles the token exchange, stores refresh_token in user_connectors.tokensJson, flips to 'connected', redirects to /settings with success/decline/error markers. State token carries userId so the unauthenticated callback can attach tokens to the right row. Client ConnectionsPanel follows redirectUrl. PENDING DASHBOARD STEP: Mal/Abe add https://velocity.coreshifthq.com/api/connectors/gcal/callback + the staging equivalent to the existing coreshift-velocity OAuth client's Authorized redirect URIs (~30s). After that the Settings → Connect Calendar flow is live. Token storage is plaintext for V1; Vault encryption is V1.1 hardening. Sync layer (auto-populate deal.nextMeetingAt + RSVP-read for "invite accepted" gate) is the next-up V1.1 piece. Commit 8ac4deb.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">P6 — Portal resources hub download (2026-05-23)</div>
+              <div class="card-tags"><span class="tag tag-id">P6</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Portal Resources section is now actually functional — and tightened. Hydrate query filter restricted to docs with storageUrl IS NOT NULL: was previously leaking unpublished proposal drafts (body-only) and Day Zero markdown into the buyer's resources list. Published proposals still surface via LivingProposalPanel as designed; only file uploads (AttachmentsPanel attachments) appear in Resources. New endpoint GET /api/portal/:token/resources/:resourceId/url is token-gated (no internal auth), verifies the resource belongs to the portal's deal + has storageUrl, returns a short-lived signed URL, and writes a portal_activity of type='page_view' with metadata.kind='resource_open' for engagement visibility. Client ResourceItem component replaces the broken `#resource-{id}` anchor with a real "Open" button + per-row error state. Empty state copy when nothing's attached. V1 scope is download-only — tagged/searchable/buyer-upload deferred to V1.1. Commit 3e3878d.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">P3 — Last-meeting summary amend flow (2026-05-23)</div>
+              <div class="card-tags"><span class="tag tag-id">P3</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">Buyer-side affordance under the "Last conversation" portal card so they can flag "this isn't quite right" + capture a correction. New endpoint POST /api/portal/:token/amend-meeting validates the magic-link token (active + non-expired), accepts a {correction} body (1–2000 chars), inserts an inbound note_text activity on the deal (subject: "Buyer correction to last meeting summary", source=portal_amendment in metadata) — surfaces naturally in Mal's Deal page activity timeline. Also inserts a portal_activities row of type='comment' for audit/analytics. Client MeetingAmendBlock component (idle/editing/saving/saved/error states) replaces the previous static "Drop a note in the chat below" italic. V1 scope is the latest meeting only — multi-meeting amend ledger is V1.1. Commit a63721c.</div>
+            </div>
 
             <div class="card">
               <div class="card-title">Optimistic drag on Pipeline — Sentinel-style snap (2026-05-23)</div>
@@ -965,28 +983,10 @@
         <section class="column col-in-progress">
           <header class="col-head">
             <h2>🟡 In flight</h2>
-            <span class="col-count">3</span>
+            <span class="col-count">0</span>
           </header>
           <div class="cards">
-
-            <div class="card">
-              <div class="card-title">P3 — Last-meeting summary amend flow</div>
-              <div class="card-tags"><span class="tag tag-id">P3</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Portal-side affordance on the "Last conversation" card so the buyer can flag "this isn't quite right" and capture a correction. Server endpoint writes a portal_activity of type 'amendment' that surfaces back to Mal on the Deal page activity timeline. V1 scope is the latest meeting only — multi-meeting amend ledger is V1.1.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">P6 — Portal resources hub (download MVP)</div>
-              <div class="card-tags"><span class="tag tag-id">P6</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Wire the portal's existing "Everything we've shared" Resources section so buyers can actually download. Add a portal-scoped signed-URL endpoint (token-gated, no internal auth required). V1 scope is download-only of documents.storageUrl rows attached to the deal. Tagging / search / buyer-upload deferred to V1.1.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">I1 — Google Calendar OAuth (foundation)</div>
-              <div class="card-tags"><span class="tag tag-id">I1</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">First of 7 integrations. Foundation slice for this session: Settings UI "Connect Calendar" button, OAuth client + calendar.readonly scope, store refresh_token in new connectors row per user. Full sync + RSVP read for the "invite accepted" gate widening (stageGate.ts has the TODO comment marker) is V1.1 follow-up scope. Load-bearing for tightening anti-stall Rule 1.</div>
-            </div>
-
+            <p class="empty">Nothing claimed yet — pick the next thing from Up Next when ready. The V1.0 demo-ready milestone is shipped; V1.0 polish + V1.1 integrations await.</p>
           </div>
         </section>
 
@@ -1036,9 +1036,9 @@
             <div class="pending-group-head">V1.1 (2026-10-05)</div>
 
             <div class="card">
-              <div class="card-title">6 remaining V1 integrations (I2–I7)</div>
-              <div class="card-tags"><span class="tag tag-id">I2–I7</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">I1 (Google Calendar) is In Flight. Remaining: I2 Gmail OAuth + inbound mirror, I3 Fireflies/Otter transcription, I4 Xero push (commissions → bills, won → invoice), I5 native portal e-sign, I6 LinkedIn enrichment, I7 Google Drive archive. Zero built. ~16–25d. I5 may pull forward if Mal aims to close Aditi via portal.</div>
+              <div class="card-title">I1 sync layer + 6 remaining integrations (I2–I7)</div>
+              <div class="card-tags"><span class="tag tag-id">I1-sync, I2–I7</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">I1 Google Calendar foundation is Done (OAuth flow + token store + Settings UI). The SYNC LAYER is the V1.1 piece — needs: hourly background job that pulls events from connected calendars, contact-email→event-attendee matching to identify which event belongs to which deal, auto-populate deal.nextMeetingAt when a match is found, and read attendee.responseStatus to widen the next_meeting gate auto-check from "date set" to "date set + accepted" (the stageGate.ts comment marker flags this exact line). Plus access_token refresh wrapper. ~3–4d for I1-sync. Remaining: I2 Gmail OAuth + inbound mirror, I3 Fireflies/Otter transcription, I4 Xero push (commissions → bills, won → invoice), I5 native portal e-sign, I6 LinkedIn enrichment, I7 Google Drive archive. ~16–25d combined. I5 may pull forward if Mal aims to close Aditi via portal.</div>
             </div>
 
             <div class="card">
@@ -1082,7 +1082,7 @@
   <footer class="page-foot">
     Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a>
     &nbsp;·&nbsp;
-    Last refresh: 2026-05-23 — 🟢 Custom DNS live (velocity.coreshifthq.com). Big day post-prod: Pipeline Filter, 7-step Deal lifecycle restore, GateProgressCard, 5-question proposal template, lifecycle blocker fixes, document/transcript upload, optimistic drag, "Your next move" autoload. Focus shifts to V1.0 polish — P3 + P6 portal panels and I1 Google Calendar foundation are in flight.
+    Last refresh: 2026-05-23 PM — P3 (last-meeting amend flow), P6 (portal resources hub download), I1 Google Calendar OAuth foundation all shipped today on top of the morning's Aurora Glass polish + lifecycle restore + custom DNS push. In Flight cleared. Next moves on the menu: I1 sync layer + V1.0 polish backlog + mobile sweep.
   </footer>
 </body>
 </html>
