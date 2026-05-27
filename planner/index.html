@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planner - Kanban</title>
+  <style>
+    :root {
+      --navy: #0F1E3D;
+      --navy-deep: #081530;
+      --navy-soft: #1A2A4F;
+      --teal: #14B8A6;
+      --teal-dark: #0D9488;
+      --teal-light: #CCFBF1;
+      --amber: #F59E0B;
+      --amber-light: #FEF3C7;
+      --red: #DC2626;
+      --red-light: #FEE2E2;
+      --green: #10B981;
+      --green-light: #D1FAE5;
+      --purple: #8B5CF6;
+      --purple-light: #EDE9FE;
+      --blue: #3B82F6;
+      --blue-light: #DBEAFE;
+      --indigo: #6366F1;
+      --indigo-light: #E0E7FF;
+      --pink: #EC4899;
+      --pink-light: #FCE7F3;
+      --gray: #64748B;
+      --gray-light: #E2E8F0;
+      --gray-lighter: #F1F5F9;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #475569;
+      --text-soft: #94A3B8;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 14px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    header.page-head {
+      background: var(--navy);
+      color: #FFFFFF;
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--navy-deep);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .page-head-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .page-brand { display: flex; align-items: center; gap: 14px; }
+    .brand-mark {
+      width: 36px; height: 36px;
+      background: var(--teal);
+      color: var(--navy);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 18px;
+    }
+    .brand-title {
+      font-size: 18px; font-weight: 700; letter-spacing: -0.01em;
+    }
+    .brand-sub {
+      font-size: 11px; color: var(--teal);
+      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .page-meta {
+      font-size: 12px; color: #8EA5C8;
+      display: flex; gap: 24px; flex-wrap: wrap;
+    }
+    .page-meta strong { color: #FFFFFF; font-weight: 600; }
+
+    /* Main layout */
+    .page-main {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 32px 32px 48px;
+    }
+
+    /* Section headings */
+    .section-head {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 16px;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: -8px 0 16px;
+    }
+    .section-sub code {
+      background: var(--gray-lighter);
+      border: 1px solid var(--gray-light);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 12px;
+      color: var(--navy);
+    }
+
+    /* Hero */
+    .hero {
+      margin-bottom: 48px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .hero-eyebrow {
+      color: var(--teal-dark);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      margin-bottom: 14px;
+    }
+    .hero-title {
+      color: var(--navy);
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin: 0 0 12px;
+    }
+    .hero-tagline {
+      color: var(--teal-dark);
+      font-size: 22px;
+      font-style: italic;
+      font-weight: 500;
+      margin: 0 0 16px;
+      line-height: 1.35;
+    }
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 17px;
+      line-height: 1.5;
+      max-width: 880px;
+      margin: 0;
+    }
+    .hero-phase-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .phase-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 13px;
+    }
+    .phase-pill-label {
+      color: var(--text-soft);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .phase-pill-value {
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .phase-pill-date {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 4px;
+    }
+    .phase-pill-milestone {
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+    .phase-pill-milestone .phase-pill-label { color: var(--teal); }
+    .phase-pill-milestone .phase-pill-value { color: #FFFFFF; }
+    .phase-pill-milestone .phase-pill-date { color: #CADCFC; }
+
+    /* Goals */
+    .goals { margin-bottom: 40px; }
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .goal-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 24px;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .goal-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .goal-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .goal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .goal-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Phases */
+    .phases { margin-bottom: 40px; }
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .phase-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .phase-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .phase-card.phase-done       { border-top: 4px solid var(--green); }
+    .phase-card.phase-in-progress{ border-top: 4px solid var(--amber); }
+    .phase-card.phase-planned    { border-top: 4px solid var(--blue); }
+    .phase-card.phase-future     { border-top: 4px solid var(--gray); opacity: 0.88; }
+    .phase-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .phase-marker {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .phase-card.phase-done .phase-marker        { background: var(--green); }
+    .phase-card.phase-in-progress .phase-marker { background: var(--amber); }
+    .phase-status-pill {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .phase-status-done        { background: var(--green-light); color: #065F46; }
+    .phase-status-in-progress { background: var(--amber-light); color: #B45309; }
+    .phase-status-planned     { background: var(--blue-light); color: #1D4ED8; }
+    .phase-status-future      { background: var(--gray-light); color: var(--gray); }
+    .phase-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 2px;
+      letter-spacing: -0.01em;
+    }
+    .phase-subtitle {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+    .phase-window {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+    .phase-desc {
+      font-size: 12.5px;
+      color: var(--text);
+      line-height: 1.5;
+      margin: 0 0 12px;
+    }
+    .phase-deliverables {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-top: 1px solid var(--gray-light);
+      padding-top: 10px;
+    }
+    .phase-deliverables li {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      padding: 3px 0 3px 14px;
+      position: relative;
+    }
+    .phase-deliverables li::before {
+      content: "•";
+      position: absolute;
+      left: 4px;
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    /* Status strip */
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 20px 8px;
+    }
+    .status-stat {
+      text-align: center;
+      padding: 8px 12px;
+      border-right: 1px solid var(--gray-light);
+    }
+    .status-stat:last-child { border-right: none; }
+    .status-num {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+    .status-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-top: 8px;
+    }
+    .status-done .status-num        { color: var(--green); }
+    .status-in-progress .status-num { color: var(--amber); }
+    .status-blocked .status-num     { color: var(--red); }
+    .status-this-week .status-num   { color: var(--blue); }
+    .status-backlog .status-num     { color: var(--gray); }
+
+    /* Links */
+    .links { margin-bottom: 40px; }
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+    }
+    .link-card:hover {
+      box-shadow: 0 4px 14px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+      border-color: var(--teal);
+    }
+    .link-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .link-text { flex: 1; }
+    .link-title {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+    .link-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .link-arrow {
+      color: var(--teal);
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Roles */
+    .roles { margin-bottom: 40px; }
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .role-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+    .role-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .role-text { flex: 1; }
+    .role-name {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .role-person {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 6px;
+      font-size: 13px;
+    }
+    .role-verbs {
+      font-size: 12px;
+      color: var(--text-soft);
+      font-weight: 500;
+    }
+
+    /* Recently shipped */
+    .recent { margin-bottom: 40px; }
+    .recent-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+    .recent-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+    }
+    .recent-check {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .recent-text { flex: 1; min-width: 0; }
+    .recent-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+    .recent-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    /* Board section */
+    .board-section { margin-top: 8px; }
+
+    /* Kanban board */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(280px, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .column {
+      background: var(--gray-lighter);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--gray-light);
+    }
+    .col-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 4px 4px 12px;
+      border-bottom: 2px solid transparent;
+    }
+    .col-head h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.02em;
+    }
+    .col-count {
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--gray-light);
+    }
+
+    /* Column accents */
+    .col-done .col-head        { border-bottom-color: var(--green); }
+    .col-in-progress .col-head { border-bottom-color: var(--amber); }
+    .col-blocked .col-head     { border-bottom-color: var(--red); }
+    .col-this-week .col-head   { border-bottom-color: var(--blue); }
+    .col-backlog .col-head     { border-bottom-color: var(--gray); }
+
+    .col-done .col-count        { color: var(--green); border-color: var(--green-light); }
+    .col-in-progress .col-count { color: #B45309; border-color: var(--amber-light); }
+    .col-blocked .col-count     { color: var(--red); border-color: var(--red-light); }
+    .col-this-week .col-count   { color: #1D4ED8; border-color: var(--blue-light); }
+    .col-backlog .col-count     { color: var(--gray); border-color: var(--gray-light); }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 12px 14px;
+      border: 1px solid var(--gray-light);
+      box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04);
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+    }
+    .card-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 4px 0;
+    }
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 12.5px;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+    .empty {
+      color: var(--text-soft);
+      font-size: 12px;
+      text-align: center;
+      padding: 16px 0;
+      font-style: italic;
+    }
+
+    /* Tags */
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .tag-shipped     { background: var(--green-light); color: #065F46; }
+    .tag-phase-0     { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-phase-1     { background: var(--blue-light); color: #1D4ED8; }
+    .tag-phase-2     { background: var(--purple-light); color: #6D28D9; }
+    .tag-phase-4     { background: var(--pink-light); color: #BE185D; }
+    .tag-phase-3     { background: var(--indigo-light); color: #4338CA; }
+    .tag-deliverable { background: var(--green-light); color: #047857; }
+    .tag-playbook    { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-milestone   { background: #FEE2E2; color: #991B1B; }
+    .tag-infra       { background: var(--amber-light); color: #B45309; }
+    .tag-ops         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-recurring   { background: var(--gray-light); color: var(--gray); }
+    .tag-blocked     { background: var(--red-light); color: var(--red); }
+    .tag-est         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-neutral     { background: var(--gray-light); color: var(--text-muted); }
+
+    /* Footer */
+    footer.page-foot {
+      padding: 16px 32px 32px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+    footer.page-foot a {
+      color: var(--teal-dark);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(13, 148, 136, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .board { grid-template-columns: repeat(3, minmax(280px, 1fr)); }
+      .links-grid { grid-template-columns: 1fr; }
+      .recent-list { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 1300px) {
+      .phases-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 1100px) {
+      .goals-grid { grid-template-columns: 1fr; }
+      .roles-grid { grid-template-columns: 1fr; }
+      .phases-grid { grid-template-columns: repeat(2, 1fr); }
+      .status-strip { grid-template-columns: repeat(2, 1fr); }
+      .status-stat { border-right: none; border-bottom: 1px solid var(--gray-light); }
+      .status-stat:nth-last-child(-n+2) { border-bottom: none; }
+    }
+    @media (max-width: 700px) {
+      .phases-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .page-main { padding: 24px 16px 32px; }
+      .board { grid-template-columns: 1fr; }
+      header.page-head { padding: 16px; }
+      .hero-title { font-size: 32px; }
+      .hero-tagline { font-size: 17px; }
+      .hero-desc { font-size: 15px; }
+    }
+
+    /* Print */
+    @media print {
+      header.page-head { background: var(--card); color: var(--navy); border-bottom: 2px solid var(--gray-light); position: static; }
+      .brand-mark { background: var(--navy); color: #FFFFFF; }
+      .brand-title, .page-meta strong { color: var(--navy); }
+      .page-meta, .brand-sub { color: var(--text-muted); }
+      .board { grid-template-columns: repeat(2, 1fr); padding: 16px; }
+      .column { break-inside: avoid; background: var(--card); border: 1px solid var(--gray-light); }
+      .card:hover { transform: none; box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04); }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="page-head-inner">
+      <div class="page-brand">
+        <div class="brand-mark">🧭</div>
+        <div>
+          <div class="brand-title">Planner</div>
+          <div class="brand-sub">Coreshift HQ Pipeline App</div>
+        </div>
+      </div>
+      <div class="page-meta">
+        <div><strong>BRIEF-1</strong> in review</div>
+        <div><strong>1</strong>/9 briefs underway</div>
+        <div>Updated <strong>2026-05-28</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-main">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">INTERNAL · BUILD BOARD</div>
+      <h1 class="hero-title">Planner</h1>
+      <p class="hero-tagline">Shape a spark into runnable briefs — without leaving the pipeline.</p>
+      <p class="hero-desc">A hosted, sign-in tool that runs the Coreshift build pipeline (Spark → Shape → Spec → briefs) as a guided, document-first conversation — grounded in the real repo and writing artifacts back to it. Built so the pipeline gets applied consistently instead of ad hoc, with less setup friction and a faster path from idea to execution briefs.</p>
+      <div class="hero-phase-row">
+        <div class="phase-pill">
+          <span class="phase-pill-label">Current phase</span>
+          <span class="phase-pill-value">BRIEF-1 · Walking skeleton (in review)</span>
+        </div>
+        <div class="phase-pill phase-pill-milestone">
+          <span class="phase-pill-label">Next milestone</span>
+          <span class="phase-pill-value">Grill engine <span class="phase-pill-date">BRIEF-2 — one working Shape turn</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOALS -->
+    <section class="goals">
+      <h2 class="section-head">Why We're Building It</h2>
+      <div class="goals-grid">
+        <div class="goal-card">
+          <div class="goal-icon">🎯</div>
+          <div class="goal-title">Pipeline applied consistently</div>
+          <div class="goal-desc">Every initiative shaped the same disciplined way — not only when someone remembers to follow the steps by hand.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">⚡</div>
+          <div class="goal-title">Less setup friction</div>
+          <div class="goal-desc">Sign in with your Coreshift Google account and go. No per-person Claude Code setup just to start shaping work.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">🧱</div>
+          <div class="goal-title">Faster idea → briefs</div>
+          <div class="goal-desc">A spark to a set of runnable execution briefs in under a day, ready to hand straight to Claude Code.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASES -->
+    <section class="phases">
+      <h2 class="section-head">The Build Arc</h2>
+      <div class="phases-grid">
+
+        <div class="phase-card phase-in-progress">
+          <div class="phase-card-head">
+            <div class="phase-marker">1</div>
+            <span class="phase-status-pill phase-status-in-progress">In progress</span>
+          </div>
+          <div class="phase-title">Walking skeleton</div>
+          <div class="phase-subtitle">BRIEF-1</div>
+          <p class="phase-desc">A deployed, signed-in, empty app with the data spine in place.</p>
+          <ul class="phase-deliverables">
+            <li>Google-OAuth + @coreshifthq.com gate</li>
+            <li>initiatives data spine (empty doc)</li>
+            <li>stage board + create-initiative</li>
+            <li>staging deploy + /health</li>
+          </ul>
+        </div>
+
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">2</div>
+            <span class="phase-status-pill phase-status-planned">Planned</span>
+          </div>
+          <div class="phase-title">The grill</div>
+          <div class="phase-subtitle">BRIEF-2 – 3</div>
+          <p class="phase-desc">The conversational engine that fills the doc, isolated per initiative.</p>
+          <ul class="phase-deliverables">
+            <li>one working Shape turn (tool-use loop)</li>
+            <li>per-initiative isolation</li>
+            <li>resume across sessions</li>
+          </ul>
+        </div>
+
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">3</div>
+            <span class="phase-status-pill phase-status-planned">Planned</span>
+          </div>
+          <div class="phase-title">Deepen + decompose</div>
+          <div class="phase-subtitle">BRIEF-4 – 6</div>
+          <p class="phase-desc">From a shaped initiative to a set of cut briefs.</p>
+          <ul class="phase-deliverables">
+            <li>pre-brief import</li>
+            <li>gates + Spec deepening</li>
+            <li>/to-issues brief generation</li>
+          </ul>
+        </div>
+
+        <div class="phase-card phase-future">
+          <div class="phase-card-head">
+            <div class="phase-marker">4</div>
+            <span class="phase-status-pill phase-status-future">Future</span>
+          </div>
+          <div class="phase-title">Ground + commit</div>
+          <div class="phase-subtitle">BRIEF-7 – 8</div>
+          <p class="phase-desc">Where the differentiator lives — repo-grounded + write-back.</p>
+          <ul class="phase-deliverables">
+            <li>grounded grilling (read target repo)</li>
+            <li>commit artifacts to the planner repo via PR</li>
+          </ul>
+        </div>
+
+        <div class="phase-card phase-future">
+          <div class="phase-card-head">
+            <div class="phase-marker">5</div>
+            <span class="phase-status-pill phase-status-future">Future</span>
+          </div>
+          <div class="phase-title">Measure</div>
+          <div class="phase-subtitle">BRIEF-9</div>
+          <p class="phase-desc">Adoption telemetry from day one. First usable milestone: 1–6 + 9.</p>
+          <ul class="phase-deliverables">
+            <li>create / grill / gate / cut / commit events</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- STATUS STRIP -->
+    <section class="status-strip">
+      <div class="status-stat status-done">
+        <div class="status-num">3</div>
+        <div class="status-label">Done</div>
+      </div>
+      <div class="status-stat status-in-progress">
+        <div class="status-num">1</div>
+        <div class="status-label">In progress</div>
+      </div>
+      <div class="status-stat status-blocked">
+        <div class="status-num">1</div>
+        <div class="status-label">Blocked</div>
+      </div>
+      <div class="status-stat status-this-week">
+        <div class="status-num">2</div>
+        <div class="status-label">This week</div>
+      </div>
+      <div class="status-stat status-backlog">
+        <div class="status-num">8</div>
+        <div class="status-label">Backlog</div>
+      </div>
+    </section>
+
+    <!-- LINKS -->
+    <section class="links">
+      <h2 class="section-head">Links</h2>
+      <div class="links-grid">
+        <a class="link-card" href="https://github.com/CoreshiftHQNZ/planner-app/pull/1" target="_blank" rel="noopener">
+          <div class="link-icon">🔀</div>
+          <div class="link-text">
+            <div class="link-title">PR #1 — BRIEF-1 scaffold</div>
+            <div class="link-desc">Auth + board + create-initiative, into dev</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://github.com/CoreshiftHQNZ/planner-app" target="_blank" rel="noopener">
+          <div class="link-icon">📦</div>
+          <div class="link-text">
+            <div class="link-title">Repo</div>
+            <div class="link-desc">CoreshiftHQNZ/planner-app</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://github.com/CoreshiftHQNZ/planner-app/blob/dev/initiatives/planner-app/initiative.md" target="_blank" rel="noopener">
+          <div class="link-icon">📄</div>
+          <div class="link-text">
+            <div class="link-title">Initiative doc</div>
+            <div class="link-desc">Full shape + spec + brief sequence</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://supabase.com/dashboard/project/zheommhysmvjokxovpwl" target="_blank" rel="noopener">
+          <div class="link-icon">🗄️</div>
+          <div class="link-text">
+            <div class="link-title">Supabase project</div>
+            <div class="link-desc">planner-app — auth + initiatives</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- RECENTLY SHIPPED -->
+    <section class="recent">
+      <h2 class="section-head">Recently Done</h2>
+      <div class="recent-list">
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">BRIEF-1 scaffold — green</div>
+            <div class="recent-desc">Mirrors sentinel-app; type-check + 30 tests + build all pass</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Supabase project + migration</div>
+            <div class="recent-desc">planner-app created; initiatives table live (RLS + advisor clean)</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Railway project created</div>
+            <div class="recent-desc">planner-app in the Coreshift HQ workspace</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">PR #1 opened into dev</div>
+            <div class="recent-desc">AC-by-AC test plan; awaiting review + operator pre-flight</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KANBAN BOARD -->
+    <section class="board-section">
+      <h2 class="section-head">Live Build Board</h2>
+      <p class="section-sub">Brief sequence from the <code>initiative.md</code>, plus the current BRIEF-1 state.</p>
+      <div class="board">
+
+        <section class="column col-done">
+          <header class="col-head">
+            <h2>✅ Done</h2>
+            <span class="col-count">3</span>
+          </header>
+          <div class="cards">
+            <div class="card">
+              <div class="card-title">Supabase project + migration</div>
+              <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">done</span></div>
+              <div class="card-desc">planner-app project created; initiatives table applied with RLS deny-all + service_role GRANT; security advisor clean</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Railway project created</div>
+              <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">done</span></div>
+              <div class="card-desc">planner-app in the Coreshift HQ workspace (repo connect + env wiring pending)</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Repo + branches + CI</div>
+              <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">done</span></div>
+              <div class="card-desc">dev / staging / main + deploy-staging and deploy-production workflows</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="column col-in-progress">
+          <header class="col-head">
+            <h2>🔨 In Progress</h2>
+            <span class="col-count">1</span>
+          </header>
+          <div class="cards">
+            <div class="card">
+              <div class="card-title">BRIEF-1 — scaffold + auth + board</div>
+              <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-est">~1 day</span></div>
+              <div class="card-desc">PR #1 open into dev. Google-OAuth + domain gate, initiatives spine, empty board, create-initiative. check/test/build green.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="column col-blocked">
+          <header class="col-head">
+            <h2>⛔ Blocked</h2>
+            <span class="col-count">1</span>
+          </header>
+          <div class="cards">
+            <div class="card">
+              <div class="card-title">BRIEF-1 staging deploy</div>
+              <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-blocked">operator</span></div>
+              <div class="card-desc">Needs operator: Google OAuth in Supabase, SUPABASE_SERVICE_ROLE_KEY, Railway repo connect + env vars.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="column col-this-week">
+          <header class="col-head">
+            <h2>📌 This Week</h2>
+            <span class="col-count">2</span>
+          </header>
+          <div class="cards">
+            <div class="card">
+              <div class="card-title">Operator: OAuth + Railway env</div>
+              <div class="card-tags"><span class="tag tag-ops">ops</span></div>
+              <div class="card-desc">Wire the Google provider, set service_role + Sentry DSNs, connect the repo to Railway (staging watches staging).</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Review + merge PR #1 to dev</div>
+              <div class="card-tags"><span class="tag tag-ops">ops</span></div>
+              <div class="card-desc">Then dev → staging auto-deploys; run the AC test plan on staging.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="column col-backlog">
+          <header class="col-head">
+            <h2>📋 Backlog</h2>
+            <span class="col-count">8</span>
+          </header>
+          <div class="cards">
+            <div class="card">
+              <div class="card-title">BRIEF-2 — Grill engine</div>
+              <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
+              <div class="card-desc">One working Shape turn: Claude tool-use loop filling the doc via update_section.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">BRIEF-3 — Isolation + resume</div>
+              <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
+              <div class="card-desc">Per-initiative context sealing; reopen an initiative and continue where it left off.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">BRIEF-4 — Pre-brief import</div>
+              <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
+              <div class="card-desc">Import a submitted pre-brief into matching sections; grill the gaps.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">BRIEF-5 — Gates + Spec deepening</div>
+              <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
+              <div class="card-desc">Shape gate blocks advance until satisfied; Spec grill on the same doc.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">BRIEF-6 — /to-issues</div>
+              <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
+              <div class="card-desc">Decompose into execution briefs, each owning a subset of ACs with a verbatim agent prompt.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">BRIEF-7 — Commit via PR</div>
+              <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
+              <div class="card-desc">GitHub App writes initiative + briefs to the planner repo and opens a PR.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">BRIEF-8 — Grounded grilling</div>
+              <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
+              <div class="card-desc">Read a linked target repo's tree + named files during the grill.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">BRIEF-9 — Telemetry</div>
+              <div class="card-tags"><span class="tag tag-neutral">measure</span></div>
+              <div class="card-desc">Adoption events: create, grill turn, gate pass, briefs cut, commit.</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="page-foot">
+    Planner build board — the source of truth for where this project is at.
+    &nbsp;·&nbsp;
+    See the <a href="https://github.com/CoreshiftHQNZ/planner-app/blob/dev/initiatives/planner-app/initiative.md">initiative doc</a> &amp; <a href="https://github.com/CoreshiftHQNZ/planner-app/pull/1">PR #1</a>.
+  </footer>
+</body>
+</html>
