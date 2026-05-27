@@ -578,7 +578,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">66</div>
+        <div class="status-num">67</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -691,9 +691,15 @@
         <section class="column col-done">
           <header class="col-head">
             <h2>✅ Done</h2>
-            <span class="col-count">66</span>
+            <span class="col-count">67</span>
           </header>
           <div class="cards">
+
+            <div class="card">
+              <div class="card-title">Gate now enforced server-side + drag opens the checklist (2026-05-28)</div>
+              <div class="card-tags"><span class="tag tag-id">fix</span><span class="tag tag-ws-w">gate</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">QA caught it: a pipeline card could be dragged to a new stage with no gate check — POST /api/deals/:id/transition moved the deal unconditionally; the gate was only enforced client-side in the Promote dialog. Permanent fix: the gate is now authoritative on the server. /transition evaluates evaluateStageGate on FORWARD promotions (by stages.ordering) and returns 422 with the unmet criteria unless an explicit override + documented reason is sent (logged to stage history, spec §1.1); backward moves and Closed Lost stay ungated. Pipeline drag no longer optimistically moves the card forward — it opens the gate checklist for the target stage; Mal ticks/completes the criteria (ticks now PERSIST via PATCH /criteria, the same store the server re-checks) and on success the card snaps into the dragged-to column. PromoteModal reworked: manual ticks persist, override needs a typed reason, broad query invalidation so the board refreshes. Commit acfe409.</div>
+            </div>
 
             <div class="card">
               <div class="card-title">V1.1 Phase 4 — auto-populate gate fields from sources (2026-05-28)</div>
