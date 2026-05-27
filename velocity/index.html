@@ -578,7 +578,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">70</div>
+        <div class="status-num">71</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -691,9 +691,15 @@
         <section class="column col-done">
           <header class="col-head">
             <h2>✅ Done</h2>
-            <span class="col-count">70</span>
+            <span class="col-count">71</span>
           </header>
           <div class="cards">
+
+            <div class="card">
+              <div class="card-title">Buyer corrections drive engagement, attention + one-click accept (2026-05-28)</div>
+              <div class="card-tags"><span class="tag tag-id">P8-adj</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">QA follow-up (Abe): a buyer correction shouldn't just sit in the timeline. Three upgrades. (1) Engagement — a confirm/correct in the portal now bumps lastBuyerTouchAt, resetting the anti-stall silence clock (Rule 2); an engaged buyer no longer reads as gone-quiet (was a real gap — the portal insert bypassed the route that normally bumps it). (2) Needs attention — dailyKickoff gains a buyer_correction priority ranked just under imminent meetings, so a pending correction becomes the morning "one thing" instead of waiting to be spotted. (3) One-click accept — new POST /api/deals/:id/shared-facts/:factId/accept adopts the buyer's wording as the confirmed statement and, where the fact maps to a known free-text field (compelling event, growth goal via new source_field column, migration 0012 applied to staging branch), writes it straight back to source. "Apply correction" button on the Shared Understanding card. Commit c2f899f.</div>
+            </div>
 
             <div class="card">
               <div class="card-title">Shared understanding — "have we got this right?" buyer confirm loop (2026-05-28)</div>
