@@ -578,7 +578,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">48</div>
+        <div class="status-num">66</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -590,7 +590,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-up-next">
-        <div class="status-num">17</div>
+        <div class="status-num">13</div>
         <div class="status-label">Up Next</div>
       </div>
     </section>
@@ -691,9 +691,21 @@
         <section class="column col-done">
           <header class="col-head">
             <h2>✅ Done</h2>
-            <span class="col-count">64</span>
+            <span class="col-count">66</span>
           </header>
           <div class="cards">
+
+            <div class="card">
+              <div class="card-title">V1.1 Phase 4 — auto-populate gate fields from sources (2026-05-28)</div>
+              <div class="card-tags"><span class="tag tag-id">Phase 4</span><span class="tag tag-ws-i">extractor</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">Paste a URL or text/transcript and Nirvana extracts the gate-relevant signals — reusing Velocity's existing extractor + activity + ExtractionsPanel review loop rather than a parallel store. services/dealSources.ts: ingestSource() crawls a URL (HTML→text, ported from KeyContent) or keeps pasted text, runs extractFromText, stores suggestions on a note_text activity (metadata.extraction) so they surface for review and pre-tick the gate. New POST /api/deals/:id/sources. applyExtraction now writes deal-level signals onto the REAL gate fields: compelling_event → deal.compellingEvent (fill-if-empty), decision_maker_named → primary contact.isDecisionMaker — these became auto_checkable in the Engaged build, so they need the field written, not just an evidence pre-tick. Suggest-don't-auto-apply holds (only on Apply, never clobbers a hand-typed value). AddSourceModal (URL / paste / transcript) wired into AttachmentsPanel; Apply now refreshes kill-check + transition-check so Gate Progress updates live. PDF/DOCX/image parsing remains the documented fast-follow. Commit d85dc8c.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">V1.1 Engaged 10% stage + Qualified gate rebuild — Phases 1–3 + Option A (2026-05-28)</div>
+              <div class="card-tags"><span class="tag tag-id">Phase 1–3</span><span class="tag tag-ws-w">gate</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">The Delta-5 stage Mal had to approve — now built and in staging. Phase 1: Engaged 10% stage between Prospect and Qualified (stage_code enum +"engaged", seeded stages row per playbook, StageTrack/Pipeline 6 columns, forcing event = discovery_call_booked); internal-only — portal journey collapses Engaged→Prospect so buyers still see Prospect→Qualified. Precise meeting-counting: distinct calendar events keyed by metadata.eventId, so the discovery call (1st) can't satisfy the second-meeting (Qualified) gate. Phase 2: real company turnover field surfaced on the Business card (icp_threshold reads turnover_cents). Phase 3: the 5 formerly-manual Qualified criteria flipped to auto/data-backed — lean_dm + willing_invest read the ICP score, opening_qualifiers + compelling_event + decision_maker read deal/people fields. Option A: opening qualifiers consolidated into one QualificationModal (turnover ✓, growth ✓, challenge area, compelling event) instead of scattered across ICP/company/deal; every Gate Progress item is now click-through to the action that satisfies it. Migrations 0006 (deal_criterion_state) applied both branches. Commits b4114ea + 486151c + 94c6c42 + 5adc6b8 + 96928be.</div>
+            </div>
 
             <div class="card">
               <div class="card-title">V1.1 sales-cycle — Deltas 1–4 (2026-05-28)</div>
@@ -1082,7 +1094,7 @@
             <span class="col-count">0</span>
           </header>
           <div class="cards">
-            <p class="empty">Nothing claimed yet. V1.1 is underway — Calendar (connect + sync + in-app scheduling/reschedule), the gate checklist, and sales-cycle Deltas 1–4 are shipped to staging. Biggest open decision: the Engaged 10% stage (awaiting Mal). See Up Next.</p>
+            <p class="empty">Nothing claimed yet. V1.1 is underway — Calendar (connect + sync + in-app scheduling/reschedule), the gate checklist, sales-cycle Deltas 1–4, the Engaged 10% stage + Qualified gate rebuild (Phases 1–3 + Option A), and source auto-populate (Phase 4) are all shipped to staging. See Up Next for remaining integrations + wow factors.</p>
           </div>
         </section>
 
@@ -1099,7 +1111,7 @@
         <section class="column col-up-next">
           <header class="col-head">
             <h2>🔵 Up next</h2>
-            <span class="col-count">14</span>
+            <span class="col-count">13</span>
           </header>
           <div class="cards">
 
@@ -1112,12 +1124,6 @@
             </div>
 
             <div class="pending-group-head">V1.1 — remaining</div>
-
-            <div class="card">
-              <div class="card-title">⭐ Engaged 10% stage — PROPOSED, awaiting Mal</div>
-              <div class="card-tags"><span class="tag tag-id">Delta 5</span><span class="tag tag-ws-w">gate</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">The one V1.1 spec delta with real blast radius — deliberately held. Internal-only stage between Prospect and Qualified (hidden from the buyer portal journey, which keeps reading Prospect → Qualified). Touches: stage_code enum (ALTER TYPE), a stages row per playbook, StageTrack (5→6 segments), Pipeline columns, portal journey collapse, forecast/honest filter, anti-stall Rule 1 at 10%. Flagged PROPOSED-NOT-LOCKED in VELOCITY-SALES-CYCLE-V1.1.md §7.2; implementation steps in v1.1-sales-cycle-implementation-plan.md. Do not start until Mal approves the stage itself. ~own workstream.</div>
-            </div>
 
             <div class="card">
               <div class="card-title">I2 — Gmail OAuth (outbound recap)</div>
