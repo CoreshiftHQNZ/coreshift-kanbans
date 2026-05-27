@@ -578,7 +578,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">68</div>
+        <div class="status-num">69</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -691,9 +691,15 @@
         <section class="column col-done">
           <header class="col-head">
             <h2>✅ Done</h2>
-            <span class="col-count">68</span>
+            <span class="col-count">69</span>
           </header>
           <div class="cards">
+
+            <div class="card">
+              <div class="card-title">"Full research pack" gate now pre-ticks from a populated snapshot (2026-05-28)</div>
+              <div class="card-tags"><span class="tag tag-id">gate</span><span class="tag tag-ws-w">gate</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">QA: the research-pack criterion ignored the corporate + personal data added via sources/notes — it was a pure manual tick with no signal wiring. Now snapshot_drafted (Engaged) + research_populated (Prospect) pre-tick (confirm-required, evidence-style "click to confirm") once the deal's corporate AND personal profile carry real content. stageGate.hasResearchSnapshot heuristic: ≥3 populated corporate fields (industry/region/size/turnover/growth goals/structure/regulatory/channels/competitors/events) AND ≥2 personal-layer fields (role/hobbies/travel/comms/hot buttons/avoid/family/events). Mirrors the Compelling-event / Decision-maker pre-tick pattern Abe endorsed. Note: reads the SAVED profile, so source suggestions must be Applied (or fields filled) — adding a source alone leaves them pending. Commit 95457ff.</div>
+            </div>
 
             <div class="card">
               <div class="card-title">Cards refresh after every deal change — no more hard refresh (2026-05-28)</div>
