@@ -522,9 +522,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>85%</strong> complete</div>
-        <div><strong>57</strong>/67 cards done</div>
-        <div>Updated <strong>2026-05-26 PM</strong></div>
+        <div><strong>V1.0 shipped · V1.1 underway</strong></div>
+        <div><strong>64</strong> cards done</div>
+        <div>Updated <strong>2026-05-28 PM</strong></div>
         <div><a href="https://velocity.coreshifthq.com" target="_blank" rel="noopener">prod →</a></div>
         <div><a href="https://velocity-staging.coreshifthq.com" target="_blank" rel="noopener">staging →</a></div>
       </div>
@@ -691,9 +691,45 @@
         <section class="column col-done">
           <header class="col-head">
             <h2>✅ Done</h2>
-            <span class="col-count">57</span>
+            <span class="col-count">64</span>
           </header>
           <div class="cards">
+
+            <div class="card">
+              <div class="card-title">V1.1 sales-cycle — Deltas 1–4 (2026-05-28)</div>
+              <div class="card-tags"><span class="tag tag-id">V1.1</span><span class="tag tag-ws-w">gate</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">Four low-risk methodology deltas from the V1.1 spec, in staging. (1) Closed Lost = 5 fixed reasons — lost_reason enum + win_loss_records column (migration 0007), required dropdown in WinLossModal, gate reads lost_reason. (2) Dropped "recommended approach presented" from the 50% Test (seller activity, not buyer commitment) — seed + data update on both branches. (3) Kill criteria at Qualified (= spec A1): services/killCriteria.ts evaluates 3 ICP-signal disqualifiers → "Should we walk?" amber card on the Deal page → one click to Closed Lost with the mapped reason pre-filled (human confirms). (4) Forcing-event framing: forcing:true on the one buyer-action criterion per stage; GateProgressCard shows a "Forcing event" badge. Engaged 10% (Delta 5) deliberately held — its enum + portal-journey blast radius is a separate, explicitly-approved workstream. Commit 29fceaa.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">V1.1 sales-cycle spec draft + implementation plan (2026-05-28)</div>
+              <div class="card-tags"><span class="tag tag-id">V1.1</span><span class="tag tag-neutral">docs</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">docs/specs/VELOCITY-SALES-CYCLE-V1.1.md — diffable markdown successor to the locked V1.0 spec (kept canonical; the .docx is the rep-facing render). §0 "Changes from V1.0" + four §7 deltas + Engaged 10% flagged PROPOSED-NOT-LOCKED. Plus docs/planning/v1.1-sales-cycle-implementation-plan.md breaking each delta into shippable steps with exact codebase touchpoints, lowest-risk first. Awaiting Mal's review. Commits d022fd3 + 4634922.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Stage-gate checklist + guided "Plan the move" (2026-05-28)</div>
+              <div class="card-tags"><span class="tag tag-id">gate</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">Manual gate criteria are now tickable + persisted (deal_criterion_state table, migration 0006) — GateProgressCard checkboxes hold state over time; auto criteria stay read-only. "Plan the move" became a guided picker that offers the next stage's unmet MANUAL criteria as one-tap moves (auto-checked outcomes filtered out — they're satisfied via their own flows). Deliberate-tick by design: completing a planned move doesn't auto-tick the gate. Commits bfef1a7 + 5d5bc1f.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">In-Velocity meeting scheduling + reschedule (Calendar write) (2026-05-28)</div>
+              <div class="card-tags"><span class="tag tag-id">I1+</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">Book meetings/calls from inside Velocity. gcal scope upgraded read-only → calendar.events; createCalendarEvent (sendUpdates=all + optional Meet link) + POST /api/deals/:id/schedule-meeting; ScheduleMeetingModal (title, datetime, duration, Meet toggle, pre-filled buyer invitee). Scheduling advances the next move to a "Prep for…" task. True reschedule moves the SAME event in place (events.patch; deal.next_meeting_event_id, migration 0005) — button reads "Reschedule" once a meeting exists; falls back to create if the event was deleted. Commits 21439a3 + 0a75766 + 664ffa2.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">I1 — Google Calendar connected + sync layer live (2026-05-27)</div>
+              <div class="card-tags"><span class="tag tag-id">I1</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">Calendar OAuth went live: GOOGLE_OAUTH_CLIENT_ID/SECRET + redirect URI set on Railway staging + prod; Calendar API enabled in the GCP project; connected as abe@coreshifthq.com. Sync layer built: connectorTokens (auto-refresh), googleCalendar REST client, hourly calendarSync (advisory-locked) matching event attendees → owned deals → nextMeetingAt + buyer RSVP (migration 0004), immediate-sync-on-connect + "Sync now" button. Stage gate now reads RSVP (accepted) where synced. Settings only shows live "Connect" for built integrations (implemented flag); others read "Coming soon". Commits 8ad5d89 → 818285c.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Pipeline risk-chip overflow fix (2026-05-27)</div>
+              <div class="card-tags"><span class="tag tag-id">fix</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
+              <div class="card-desc">At-risk chips on kanban cards overflowed the pill (e.g. "In pipeline 16 days — over cycle target (Rule 3)"). Now a short label ("16d in pipe") with the full Rule explanation in a hover tooltip; Chip gained a title prop; .chip CSS got white-space:nowrap + max-width. Commit 15be54f.</div>
+            </div>
 
             <div class="card">
               <div class="card-title">🟢 V1.0 fully closed (2026-05-26)</div>
@@ -1046,7 +1082,7 @@
             <span class="col-count">0</span>
           </header>
           <div class="cards">
-            <p class="empty">Nothing claimed yet — V1.0 is fully closed. Next move is V1.1 (Google Calendar OAuth credentials + sync layer is the natural starting point; see Up Next).</p>
+            <p class="empty">Nothing claimed yet. V1.1 is underway — Calendar (connect + sync + in-app scheduling/reschedule), the gate checklist, and sales-cycle Deltas 1–4 are shipped to staging. Biggest open decision: the Engaged 10% stage (awaiting Mal). See Up Next.</p>
           </div>
         </section>
 
@@ -1063,7 +1099,7 @@
         <section class="column col-up-next">
           <header class="col-head">
             <h2>🔵 Up next</h2>
-            <span class="col-count">10</span>
+            <span class="col-count">14</span>
           </header>
           <div class="cards">
 
@@ -1075,12 +1111,12 @@
               <div class="card-desc">Surfaced during testing — none are V1.0 spec items, none are blockers. (a) Owner editing in Deal hero (read-only today; needs a user-picker popover — EditDealField doesn't support select). (b) PDF/DOCX → text extraction so Recap works on .pdf/.docx attachments, not just .txt/.md (server-side via `mammoth` + `pdf-parse`). (c) Portal D-workstream sub-components (JourneyOverview, FullInsightPack, MatchedCaseStudy, DecisionToolkit, LivingProposalPanel) still wear pre-Aurora classes inside the new portal shell — swap their card wrappers for &lt;GlassCard&gt; + &lt;Eyebrow&gt; for visual consistency. ~2–3d total — punted into V1.1 since V1.0 spec is now fully closed.</div>
             </div>
 
-            <div class="pending-group-head">V1.1 (2026-10-05) · ~38–56 dev-days</div>
+            <div class="pending-group-head">V1.1 — remaining</div>
 
             <div class="card">
-              <div class="card-title">I1 sync layer — Calendar event → deal mapping + RSVP gate</div>
-              <div class="card-tags"><span class="tag tag-id">I1-sync</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">I1 Google Calendar foundation shipped 2026-05-23 (commit 8ac4deb — OAuth + token store + Settings UI). Sync layer is the V1.1 piece. Needs: hourly background job that pulls upcoming events from connected calendars, contact-email→event-attendee matching to identify which event belongs to which deal, auto-populate deal.nextMeetingAt when a match is found, read attendee.responseStatus to widen the next_meeting gate auto-check from "date set" to "date set + accepted" (the stageGate.ts TODO marker flags this exact line). Plus access_token refresh wrapper. ~3–4d.</div>
+              <div class="card-title">⭐ Engaged 10% stage — PROPOSED, awaiting Mal</div>
+              <div class="card-tags"><span class="tag tag-id">Delta 5</span><span class="tag tag-ws-w">gate</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">The one V1.1 spec delta with real blast radius — deliberately held. Internal-only stage between Prospect and Qualified (hidden from the buyer portal journey, which keeps reading Prospect → Qualified). Touches: stage_code enum (ALTER TYPE), a stages row per playbook, StageTrack (5→6 segments), Pipeline columns, portal journey collapse, forecast/honest filter, anti-stall Rule 1 at 10%. Flagged PROPOSED-NOT-LOCKED in VELOCITY-SALES-CYCLE-V1.1.md §7.2; implementation steps in v1.1-sales-cycle-implementation-plan.md. Do not start until Mal approves the stage itself. ~own workstream.</div>
             </div>
 
             <div class="card">
@@ -1144,12 +1180,6 @@
             </div>
 
             <div class="card">
-              <div class="card-title">A1 — "Should we walk?" (anti-overselling)</div>
-              <div class="card-tags"><span class="tag tag-id">A1</span><span class="tag tag-ws-a">anti-overselling</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">SYSTEM-V1 §3 anti-overselling guardrail. Surfaces wrong-fit deals before they fail in delivery — Nirvana scans ICP score + objections + signals and flags the deal for re-qualification before more time goes in. ~2–3d.</div>
-            </div>
-
-            <div class="card">
               <div class="card-title">A2 — "Do we understand them yet?" pre-proposal readiness</div>
               <div class="card-tags"><span class="tag tag-id">A2</span><span class="tag tag-ws-a">anti-overselling</span><span class="tag tag-v11">V1.1</span></div>
               <div class="card-desc">SYSTEM-V1 §3. Score from extracted signals: do we have success definition in their words, budget, decision-maker, compelling event? &lt;80% recommends more discovery before proposal goes out. Gates the 50% transition implicitly. ~2–3d.</div>
@@ -1202,7 +1232,7 @@
   <footer class="page-foot">
     Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a>
     &nbsp;·&nbsp;
-    Last refresh: 2026-05-26 PM — V1.0 fully closed. Shipped today: P5 styling · P2 Day Zero polish · W2 sentiment breakdown · W1 mobile+tone · P6 expansion (tags + search + visibility) · QA-feedback fixes (tag dropdown + Share-with-buyer button) · Nirvana removal · H7 drizzle 0.38→0.45 + audit fix · U5 internal mobile sweep. 57/67 cards done, 85% complete. V1.1 ≈ 38–56 dev-days; natural next-move is Google Calendar OAuth credentials + sync layer.
+    Last refresh: 2026-05-28 PM — V1.0 shipped, V1.1 underway. Since the V1.0 close: Google Calendar live (OAuth creds + Calendar API + sync layer with RSVP gate), in-Velocity meeting scheduling + true reschedule (calendar.events write), persistent stage-gate checklist + guided Plan-the-move, the V1.1 sales-cycle spec draft + implementation plan (for Mal's review), and sales-cycle Deltas 1–4 (5 fixed lost reasons · dropped "approach presented" · kill criteria / "Should we walk?" · forcing-event framing). All in staging. Held: Engaged 10% stage (Delta 5) — awaiting Mal, given its enum + portal-journey blast radius.
   </footer>
 </body>
 </html>
