@@ -578,7 +578,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">67</div>
+        <div class="status-num">68</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -691,9 +691,15 @@
         <section class="column col-done">
           <header class="col-head">
             <h2>✅ Done</h2>
-            <span class="col-count">67</span>
+            <span class="col-count">68</span>
           </header>
           <div class="cards">
+
+            <div class="card">
+              <div class="card-title">Cards refresh after every deal change — no more hard refresh (2026-05-28)</div>
+              <div class="card-tags"><span class="tag tag-id">fix</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">QA caught it: after scoring the ICP, booking a meeting, etc., the Gate Progress + "Should we walk?" cards stayed stale until a hard refresh. Root cause: query keys are single-string URLs (e.g. "/api/deals/:id/transition-check?toStageCode=engaged"), so invalidateQueries(["/api/deals/:id"]) only prefix-matched the exact detail key and silently missed the sibling endpoints (gate checks, kill-check, extractions, icp). New shared lib/invalidateDeal.ts predicate-invalidates every "/api/deals/:id…" query plus the pipeline list + dashboard; invalidateAllDeals for company edits that can touch several deals. Wired into all 12 deal-mutating surfaces — IcpModal, ScheduleMeetingModal, QualificationModal, EditPerson/EditCompany/EditDealField, WinLoss, Handover, ProposalSection, RecapModal, AddSourceModal, and the Deal-page demote. Cards now flip the instant a mutation lands. Commit 061c49b.</div>
+            </div>
 
             <div class="card">
               <div class="card-title">Gate now enforced server-side + drag opens the checklist (2026-05-28)</div>
