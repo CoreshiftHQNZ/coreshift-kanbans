@@ -148,6 +148,25 @@
 
     footer { color: var(--text-soft); font-size: 12px; padding: 24px 0; text-align: center; }
 
+    /* For-the-team panel */
+    .team-panel { background: linear-gradient(135deg, var(--violet-light), #FCE7E2); border: 1px solid #D9CFFB; border-radius: 16px; padding: 28px 32px; margin: 0 0 36px; }
+    .team-eyebrow { color: var(--violet-dark); font-size: 11px; font-weight: 700; letter-spacing: 0.18em; margin-bottom: 8px; }
+    .team-title { color: var(--navy); font-size: 22px; font-weight: 800; letter-spacing: -0.01em; margin: 0 0 6px; }
+    .team-lede { color: var(--text-muted); margin: 0 0 20px; font-size: 14px; max-width: 820px; }
+    .talking-list { list-style: none; padding: 0; margin: 0 0 18px; counter-reset: tp; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 22px; }
+    .talking-list li { position: relative; padding-left: 36px; font-size: 13px; line-height: 1.5; color: var(--text); counter-increment: tp; }
+    .talking-list li::before { content: counter(tp); position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%; background: var(--violet); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11.5px; }
+    .talking-list li strong { color: var(--navy); }
+    .open-qs { background: rgba(255,255,255,0.85); border: 1px solid var(--gray-light); border-radius: 12px; padding: 14px 18px; margin: 0 0 20px; }
+    .open-qs strong { color: var(--navy); display: block; margin-bottom: 4px; font-size: 13px; }
+    .open-qs ul { margin: 6px 0 0; padding-left: 20px; }
+    .open-qs ul li { padding: 3px 0; font-size: 13px; color: var(--text); }
+    .cta-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--violet); color: #fff; padding: 11px 20px; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 13.5px; box-shadow: 0 2px 8px rgba(124, 92, 252, 0.28); transition: transform 0.12s, background 0.12s; }
+    .cta-btn:hover { background: var(--violet-dark); transform: translateY(-1px); }
+    .cta-mini { color: var(--violet-dark); text-decoration: none; font-size: 12.5px; border-bottom: 1px solid rgba(91, 63, 217, 0.3); }
+    .cta-mini:hover { border-bottom-color: var(--violet-dark); }
+
     @media (max-width: 900px) {
       .step { grid-template-columns: 40px minmax(0, 1fr); }
       .step-note { grid-column: 2; padding-top: 6px; }
@@ -182,6 +201,39 @@
         <span><span class="dot user"></span> ICP / qualification</span>
         <span><span class="dot rep"></span> rep types in</span>
         <span><span class="dot miss"></span> not captured yet</span>
+      </div>
+    </section>
+
+    <!-- ====================== FOR THE TEAM ====================== -->
+    <section class="team-panel">
+      <div class="team-eyebrow">FOR THE TEAM · ASYNC</div>
+      <h2 class="team-title">Talking points · and how to leave feedback</h2>
+      <p class="team-lede">Read at your own pace. Drop questions or thoughts in the GitHub thread at the bottom — we'll fold them into the design as we go. No need to wait for a meeting.</p>
+
+      <ol class="talking-list">
+        <li><strong>What we're building.</strong> A step inside Velocity where the rep picks the right contract Type using Keitha's 3-question wizard, and Velocity pre-fills the customer's details. Reps see a near-ready draft instead of a blank Word doc.</li>
+        <li><strong>Keitha's wording stays hers.</strong> We're not rewriting the four templates — we just mark which bits change per customer (names, dates, prices).</li>
+        <li><strong>Keitha &amp; Mal stay in control.</strong> Templates live inside Velocity; they can open and edit any time. Next deal uses the new version. No engineering bottleneck.</li>
+        <li><strong>Reps can tweak a single deal's copy without touching the master.</strong> If Dalila asks to remove the IP bit again, the rep does it for her deal; the master is untouched.</li>
+        <li><strong>Signed contracts go where people need them.</strong> Velocity keeps a copy AND pushes the signed PDF to a shared Google Drive folder per customer — Lauren, Ricky, anyone with Drive access can find it. (Fixes the NZIE / Storepro pain.)</li>
+        <li><strong>Signing — external for now.</strong> Rep generates the PDF, sends via DocuSign / Dropbox Sign, uploads the signed copy back. Velocity pushes to Drive. One-click in-portal signing comes later.</li>
+        <li><strong>Each Type gets its own scope shape.</strong> Consulting reads differently from a build, which reads differently from a subscription. Four shapes, not one (see Part 3 of the mockup).</li>
+        <li><strong>Coreshift first, GP held for v1.2.</strong> Same engine — drops in when Mal's product reset is ready.</li>
+        <li><strong>Roles.</strong> Super-admin: Abe + Ricky. Template author (across both companies): Keitha + Mal. Reps just use templates.</li>
+        <li><strong>Where we are.</strong> In design discussion — no code shipped yet. Build kicks off once the two open questions below are settled.</li>
+      </ol>
+
+      <div class="open-qs">
+        <strong>Two things we'd most like your view on:</strong>
+        <ul>
+          <li><strong>One document or two?</strong> GP's examples combine proposal + contract in one signable thing. Do we want Coreshift the same — one signature — or proposal first, contract following?</li>
+          <li><strong>Which of the two GP examples is the "flimsy" one?</strong> <em>(Keitha)</em> — so we model the good one, not the bad one.</li>
+        </ul>
+      </div>
+
+      <div class="cta-row">
+        <a class="cta-btn" href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/issues/new?title=Velocity%20v1.1%20%C2%B7%20Contracts%20%26%20Proposals%20%E2%80%94%20async%20design%20feedback&amp;body=Async%20feedback%20thread%20for%20Velocity%20v1.1%20contracts%20%26%20proposals.%0A%0AMockup%3A%20https%3A%2F%2Fcoreshifthqnz.github.io%2Fcoreshift-kanbans%2Fvelocity%2Fcontracts-mockup.html%0A%0AComment%20with%20questions%20or%20thoughts.%20Open%20questions%3A%0A%0A1.%20Combined%20doc%2C%20or%20proposal%20%2B%20contract%20separate%3F%0A2.%20Which%20GP%20example%20is%20the%20%22flimsy%22%20one%20Keitha%20mentioned%3F%0A3.%20Anything%20missing%20in%20the%204%20scope%20shapes%20per%20Type%3F" target="_blank" rel="noopener">💬 Leave feedback or questions →</a>
+        <a class="cta-mini" href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/issues?q=is%3Aissue+contracts" target="_blank" rel="noopener">browse existing comments →</a>
       </div>
     </section>
 
