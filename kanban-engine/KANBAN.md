@@ -17,6 +17,7 @@
 - **Byte-identical Sentinel output verified** `phase-1` `shipped` — Fresh build of Sentinel via the new engine produces a 107,246-byte HTML matching the previously-shipped `sentinel/index.html` exactly, modulo the `Updated <timestamp>` line. Zero visual regression — the keystone proof.
 - **Public push** `phase-1` `shipped` — Commit `3df58a5` on `coreshift-kanbans/main`. GitHub Pages republished automatically; existing Sentinel board URL serves identical content from the new pipeline.
 - **Kanban-engine board itself (this page)** `phase-1` `shipped` `meta` — Dogfood: the kanban engine has its own kanban, built on the engine, using the template. Second consumer of the template kit and the proof that it generalizes.
+- **Styled how-to-add-a-project page** `phase-1` `shipped` `docs` — In-repo page at `/kanban-engine/how-to-add-a-project.html` leads with a paste-ready Claude Code prompt (the expected real path for adding boards), keeps the six-step manual setup below it. Replaces the GitHub-README link on this board — no GitHub side-quest required.
 
 ## 🟡 In Progress
 
