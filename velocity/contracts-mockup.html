@@ -167,6 +167,42 @@
     .cta-mini { color: var(--violet-dark); text-decoration: none; font-size: 12.5px; border-bottom: 1px solid rgba(91, 63, 217, 0.3); }
     .cta-mini:hover { border-bottom-color: var(--violet-dark); }
 
+    /* Per-item Giscus comments */
+    .item-comments { margin-top: 10px; }
+    .giscus-toggle {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 999px;
+      background: rgba(124, 92, 252, 0.08);
+      border: 1px solid rgba(124, 92, 252, 0.22);
+      color: var(--violet-dark);
+      font-size: 11.5px; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+    .giscus-toggle:hover { background: rgba(124, 92, 252, 0.16); }
+    .giscus-toggle[aria-expanded="true"] {
+      background: var(--violet); color: #fff; border-color: var(--violet);
+    }
+    .giscus-badge {
+      font-size: 10px; min-width: 14px; padding: 1px 6px;
+      border-radius: 999px;
+      background: var(--coral); color: #fff;
+      font-weight: 700; text-align: center;
+      display: none;
+    }
+    .giscus-badge.has-comments { display: inline-block; }
+    .giscus-toggle[aria-expanded="true"] .giscus-badge { background: rgba(255,255,255,0.3); }
+    .giscus-panel {
+      display: none; margin-top: 10px;
+      padding: 14px 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+    }
+    .giscus-panel.open { display: block; }
+    .giscus-container { min-height: 80px; }
+    .scope-card .item-comments { margin-top: 14px; border-top: 1px solid var(--gray-light); padding-top: 12px; }
+
     @media (max-width: 900px) {
       .step { grid-template-columns: 40px minmax(0, 1fr); }
       .step-note { grid-column: 2; padding-top: 6px; }
@@ -211,29 +247,90 @@
       <p class="team-lede">Read at your own pace. Drop questions or thoughts in the GitHub thread at the bottom — we'll fold them into the design as we go. No need to wait for a meeting.</p>
 
       <ol class="talking-list">
-        <li><strong>What we're building.</strong> A step inside Velocity where the rep picks the right contract Type using Keitha's 3-question wizard, and Velocity pre-fills the customer's details. Reps see a near-ready draft instead of a blank Word doc.</li>
-        <li><strong>Keitha's wording stays hers.</strong> We're not rewriting the four templates — we just mark which bits change per customer (names, dates, prices).</li>
-        <li><strong>Keitha &amp; Mal stay in control.</strong> Templates live inside Velocity; they can open and edit any time. Next deal uses the new version. No engineering bottleneck.</li>
-        <li><strong>Reps can tweak a single deal's copy without touching the master.</strong> If Dalila asks to remove the IP bit again, the rep does it for her deal; the master is untouched.</li>
-        <li><strong>Signed contracts go where people need them.</strong> Velocity keeps a copy AND pushes the signed PDF to a shared Google Drive folder per customer — Lauren, Ricky, anyone with Drive access can find it. (Fixes the NZIE / Storepro pain.)</li>
-        <li><strong>Signing — external for now.</strong> Rep generates the PDF, sends via DocuSign / Dropbox Sign, uploads the signed copy back. Velocity pushes to Drive. One-click in-portal signing comes later.</li>
-        <li><strong>Each Type gets its own scope shape.</strong> Consulting reads differently from a build, which reads differently from a subscription. Four shapes, not one (see Part 3 of the mockup).</li>
-        <li><strong>Coreshift first, GP held for v1.2.</strong> Same engine — drops in when Mal's product reset is ready.</li>
-        <li><strong>Roles.</strong> Super-admin: Abe + Ricky. Template author (across both companies): Keitha + Mal. Reps just use templates.</li>
-        <li><strong>Where we are.</strong> In design discussion — no code shipped yet. Build kicks off once the two open questions below are settled.</li>
+        <li id="tp-1"><strong>What we're building.</strong> A step inside Velocity where the rep picks the right contract Type using Keitha's 3-question wizard, and Velocity pre-fills the customer's details. Reps see a near-ready draft instead of a blank Word doc.
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-tp-1" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="tp-2"><strong>Keitha's wording stays hers.</strong> We're not rewriting the four templates — we just mark which bits change per customer (names, dates, prices).
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-tp-2" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="tp-3"><strong>Keitha &amp; Mal stay in control.</strong> Templates live inside Velocity; they can open and edit any time. Next deal uses the new version. No engineering bottleneck.
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-tp-3" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="tp-4"><strong>Reps can tweak a single deal's copy without touching the master.</strong> If Dalila asks to remove the IP bit again, the rep does it for her deal; the master is untouched.
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-tp-4" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="tp-5"><strong>Signed contracts go where people need them.</strong> Velocity keeps a copy AND pushes the signed PDF to a shared Google Drive folder per customer — Lauren, Ricky, anyone with Drive access can find it. (Fixes the NZIE / Storepro pain.)
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-tp-5" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="tp-6"><strong>Signing — external for now.</strong> Rep generates the PDF, sends via DocuSign / Dropbox Sign, uploads the signed copy back. Velocity pushes to Drive. One-click in-portal signing comes later.
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-tp-6" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="tp-7"><strong>Each Type gets its own scope shape.</strong> Consulting reads differently from a build, which reads differently from a subscription. Four shapes, not one (see Part 3 of the mockup).
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-tp-7" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="tp-8"><strong>Coreshift first, GP held for v1.2.</strong> Same engine — drops in when Mal's product reset is ready.
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-tp-8" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="tp-9"><strong>Roles.</strong> Super-admin: Abe + Ricky. Template author (across both companies): Keitha + Mal. Reps just use templates.
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-tp-9" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="tp-10"><strong>Where we are.</strong> In design discussion — no code shipped yet. Build kicks off once the two open questions below are settled.
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-tp-10" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
       </ol>
 
       <div class="open-qs">
         <strong>Two things we'd most like your view on:</strong>
-        <ul>
-          <li><strong>One document or two?</strong> GP's examples combine proposal + contract in one signable thing. Do we want Coreshift the same — one signature — or proposal first, contract following?</li>
-          <li><strong>Which of the two GP examples is the "flimsy" one?</strong> <em>(Keitha)</em> — so we model the good one, not the bad one.</li>
+        <ul style="list-style:none;padding-left:0;margin-top:8px;">
+          <li id="oq-1" style="margin-bottom:14px;"><strong>One document or two?</strong> GP's examples combine proposal + contract in one signable thing. Do we want Coreshift the same — one signature — or proposal first, contract following?
+            <div class="item-comments">
+              <button class="giscus-toggle" data-giscus-term="vcm-oq-1" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+              <div class="giscus-panel"><div class="giscus-container"></div></div>
+            </div>
+          </li>
+          <li id="oq-2"><strong>Which of the two GP examples is the "flimsy" one?</strong> <em>(Keitha)</em> — so we model the good one, not the bad one.
+            <div class="item-comments">
+              <button class="giscus-toggle" data-giscus-term="vcm-oq-2" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+              <div class="giscus-panel"><div class="giscus-container"></div></div>
+            </div>
+          </li>
         </ul>
       </div>
 
-      <div class="cta-row">
-        <a class="cta-btn" href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/issues/new?title=Velocity%20v1.1%20%C2%B7%20Contracts%20%26%20Proposals%20%E2%80%94%20async%20design%20feedback&amp;body=Async%20feedback%20thread%20for%20Velocity%20v1.1%20contracts%20%26%20proposals.%0A%0AMockup%3A%20https%3A%2F%2Fcoreshifthqnz.github.io%2Fcoreshift-kanbans%2Fvelocity%2Fcontracts-mockup.html%0A%0AComment%20with%20questions%20or%20thoughts.%20Open%20questions%3A%0A%0A1.%20Combined%20doc%2C%20or%20proposal%20%2B%20contract%20separate%3F%0A2.%20Which%20GP%20example%20is%20the%20%22flimsy%22%20one%20Keitha%20mentioned%3F%0A3.%20Anything%20missing%20in%20the%204%20scope%20shapes%20per%20Type%3F" target="_blank" rel="noopener">💬 Leave feedback or questions →</a>
-        <a class="cta-mini" href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/issues?q=is%3Aissue+contracts" target="_blank" rel="noopener">browse existing comments →</a>
+      <div class="cta-row" style="font-size:13px;color:var(--text-muted);">
+        Per-item threads are below each talking point, open question, and scope shape — just click the <strong>💬 Comments</strong> button on the item you want to discuss.
+        &nbsp;·&nbsp;
+        <a class="cta-mini" href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/discussions" target="_blank" rel="noopener">browse all discussions on GitHub →</a>
       </div>
     </section>
 
@@ -451,7 +548,7 @@
 
     <div class="scope-grid">
 
-      <div class="scope-card" style="border-top:4px solid var(--jade)">
+      <div class="scope-card" id="scope-1" style="border-top:4px solid var(--jade)">
         <span class="num" style="background:var(--jade)">1</span>
         <h3>Business Consultation</h3>
         <div class="sub">Pure advisory. Nothing built. SOW-driven.</div>
@@ -463,9 +560,13 @@
           <li>Outputs <small>What the customer ends up with (report, plan, model)</small></li>
           <li>Out of scope <small>What we won't touch in this SOW</small></li>
         </ol>
+        <div class="item-comments">
+          <button class="giscus-toggle" data-giscus-term="vcm-scope-1" aria-expanded="false">💬 Comments on Type 1<span class="giscus-badge"></span></button>
+          <div class="giscus-panel"><div class="giscus-container"></div></div>
+        </div>
       </div>
 
-      <div class="scope-card" style="border-top:4px solid var(--violet)">
+      <div class="scope-card" id="scope-2" style="border-top:4px solid var(--violet)">
         <span class="num" style="background:var(--violet)">2</span>
         <h3>Bespoke Build</h3>
         <div class="sub">Custom build. Customer owns it. Milestone payments.</div>
@@ -479,9 +580,13 @@
           <li>Ongoing support (optional) <small>Refers to SLA annexure if taken</small></li>
           <li>Out of scope</li>
         </ol>
+        <div class="item-comments">
+          <button class="giscus-toggle" data-giscus-term="vcm-scope-2" aria-expanded="false">💬 Comments on Type 2<span class="giscus-badge"></span></button>
+          <div class="giscus-panel"><div class="giscus-container"></div></div>
+        </div>
       </div>
 
-      <div class="scope-card" style="border-top:4px solid var(--coral)">
+      <div class="scope-card" id="scope-3" style="border-top:4px solid var(--coral)">
         <span class="num" style="background:var(--coral)">3</span>
         <h3>Platform Subscription</h3>
         <div class="sub">Customer subscribes to a platform we own. Example: Noozey.</div>
@@ -494,9 +599,13 @@
           <li>Roadmap <small>What's coming next that they'll benefit from</small></li>
           <li>Out of scope</li>
         </ol>
+        <div class="item-comments">
+          <button class="giscus-toggle" data-giscus-term="vcm-scope-3" aria-expanded="false">💬 Comments on Type 3<span class="giscus-badge"></span></button>
+          <div class="giscus-panel"><div class="giscus-container"></div></div>
+        </div>
       </div>
 
-      <div class="scope-card" style="border-top:4px solid var(--amber)">
+      <div class="scope-card" id="scope-4" style="border-top:4px solid var(--amber)">
         <span class="num" style="background:var(--amber)">4</span>
         <h3>Platform Resale</h3>
         <div class="sub">Customer onsells access to <em>their</em> End Users. Example: Key Content.</div>
@@ -510,6 +619,10 @@
           <li>Reporting <small>End User metrics shared back to them</small></li>
           <li>Out of scope</li>
         </ol>
+        <div class="item-comments">
+          <button class="giscus-toggle" data-giscus-term="vcm-scope-4" aria-expanded="false">💬 Comments on Type 4<span class="giscus-badge"></span></button>
+          <div class="giscus-panel"><div class="giscus-container"></div></div>
+        </div>
       </div>
 
     </div>
@@ -519,5 +632,68 @@
   <footer>
     Velocity v1.1 mockup · contracts &amp; proposals integration · discussion draft 2026-05-28
   </footer>
+
+  <script>
+  // Per-item Giscus comments — lazy-loaded, with count-badge updates via
+  // postMessage. Each [data-giscus-term] is a unique discussion thread.
+  (function () {
+    function initWidget(btn) {
+      var term = btn.getAttribute('data-giscus-term');
+      var container = btn.parentElement.querySelector('.giscus-container');
+      if (!container || container.dataset.initialized === '1') return;
+      container.dataset.initialized = '1';
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      s.setAttribute('data-repo', 'CoreshiftHQNZ/coreshift-kanbans');
+      s.setAttribute('data-repo-id', 'R_kgDOSTZfMQ');
+      s.setAttribute('data-category', 'General');
+      s.setAttribute('data-category-id', 'DIC_kwDOSTZfMc4C-BFr');
+      s.setAttribute('data-mapping', 'specific');
+      s.setAttribute('data-term', term);
+      s.setAttribute('data-strict', '0');
+      s.setAttribute('data-reactions-enabled', '1');
+      s.setAttribute('data-emit-metadata', '1');
+      s.setAttribute('data-input-position', 'bottom');
+      s.setAttribute('data-theme', 'light');
+      s.setAttribute('data-lang', 'en');
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      container.appendChild(s);
+    }
+
+    Array.prototype.forEach.call(document.querySelectorAll('.giscus-toggle'), function (btn) {
+      btn.addEventListener('click', function () {
+        var panel = btn.parentElement.querySelector('.giscus-panel');
+        if (!panel) return;
+        var opening = !panel.classList.contains('open');
+        panel.classList.toggle('open', opening);
+        btn.setAttribute('aria-expanded', opening ? 'true' : 'false');
+        if (opening) initWidget(btn);
+      });
+    });
+
+    // Listen for Giscus discussion-metadata events and update the count badge
+    // on whichever item's iframe emitted them.
+    window.addEventListener('message', function (ev) {
+      if (!ev.data || typeof ev.data !== 'object') return;
+      var giscus = ev.data.giscus;
+      if (!giscus || !giscus.discussion) return;
+      var count = (typeof giscus.discussion.totalCommentCount === 'number')
+        ? giscus.discussion.totalCommentCount : 0;
+      var frames = document.querySelectorAll('iframe.giscus-frame');
+      Array.prototype.forEach.call(frames, function (iframe) {
+        if (iframe.contentWindow === ev.source) {
+          var wrap = iframe.closest('.item-comments');
+          var badge = wrap ? wrap.querySelector('.giscus-badge') : null;
+          if (badge) {
+            badge.textContent = String(count);
+            if (count > 0) badge.classList.add('has-comments');
+            else badge.classList.remove('has-comments');
+          }
+        }
+      });
+    });
+  })();
+  </script>
 </body>
 </html>
