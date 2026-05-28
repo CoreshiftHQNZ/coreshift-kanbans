@@ -578,7 +578,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">72</div>
+        <div class="status-num">73</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -691,9 +691,15 @@
         <section class="column col-done">
           <header class="col-head">
             <h2>✅ Done</h2>
-            <span class="col-count">72</span>
+            <span class="col-count">73</span>
           </header>
           <div class="cards">
+
+            <div class="card">
+              <div class="card-title">Notifications — rep bell + per-deal card + buyer portal "Updates" (2026-05-28)</div>
+              <div class="card-tags"><span class="tag tag-id">notify</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">QA ask (Abe): a feed on both sides for action-required / status changes. New notifications table (migration 0013, applied to staging branch; prod pending promotion) + a notify() helper fired at event points — no websockets, refreshes on load / 60s poll. Events v1: buyer confirms/corrects/"yes to all" → rep; rep shares fact(s)/accepts a correction → buyer. Rep surfaces (chose BOTH): a global bell in the AppShell sidebar (unread count, cross-deal feed via GET /api/notifications, click to jump to the deal, mark-all-read) + a per-deal Notifications card on the Deal page (GET /api/deals/:id/notifications). Buyer surface: an "Updates" section in the portal (carried in the hydrate; marks read on view via POST /api/portal/:token/notifications/read). POST /api/notifications/read for the rep side. Commit b23e8cf.</div>
+            </div>
 
             <div class="card">
               <div class="card-title">Add-all shared facts · manual action-plan add · confirm item in plan (2026-05-28)</div>
