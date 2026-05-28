@@ -3,18 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex">
-  <title>Velocity — Kanban</title>
-  <meta name="description" content="Build status for Velocity, the agentic sales OS for Growth Partners and Coreshift HQ.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🚀%3C/text%3E%3C/svg%3E">
+  <title>Velocity — Build & Rollout Board</title>
   <style>
     :root {
-      --navy: #0F1E3D;
-      --navy-deep: #081530;
-      --navy-soft: #1A2A4F;
-      --teal: #14B8A6;
-      --teal-dark: #0D9488;
-      --teal-light: #CCFBF1;
+      --navy: #1A1140;
+      --navy-deep: #0E0826;
+      --navy-soft: #2A1C5C;
+      --teal: #7C5CFC;        /* violet primary */
+      --teal-dark: #5B3FD9;
+      --teal-light: #EDE9FE;
+      --coral: #FF6B5B;
+      --coral-light: #FFE4E0;
       --amber: #F59E0B;
       --amber-light: #FEF3C7;
       --red: #DC2626;
@@ -27,8 +26,6 @@
       --blue-light: #DBEAFE;
       --indigo: #6366F1;
       --indigo-light: #E0E7FF;
-      --pink: #EC4899;
-      --pink-light: #FCE7F3;
       --gray: #64748B;
       --gray-light: #E2E8F0;
       --gray-lighter: #F1F5F9;
@@ -38,1237 +35,462 @@
       --text-muted: #475569;
       --text-soft: #94A3B8;
     }
-
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-      font-size: 14px;
-      line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
+      color: var(--text); background: var(--bg);
+      font-size: 14px; line-height: 1.55; -webkit-font-smoothing: antialiased;
     }
+    a { color: inherit; }
 
-    /* Header */
     header.page-head {
-      background: var(--navy);
-      color: #FFFFFF;
-      padding: 24px 32px;
-      border-bottom: 1px solid var(--navy-deep);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      background: var(--navy); color: #FFFFFF; padding: 24px 32px;
+      border-bottom: 1px solid var(--navy-deep); position: sticky; top: 0; z-index: 10;
     }
-    .page-head-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
+    .page-head-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
     .page-brand { display: flex; align-items: center; gap: 14px; }
     .brand-mark {
-      width: 36px; height: 36px;
-      background: var(--teal);
-      color: var(--navy);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 18px;
+      width: 36px; height: 36px; background: linear-gradient(135deg, var(--teal), var(--coral));
+      color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px;
     }
-    .brand-title {
-      font-size: 18px; font-weight: 700; letter-spacing: -0.01em;
-    }
-    .brand-sub {
-      font-size: 11px; color: var(--teal);
-      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
-      margin-top: 2px;
-    }
-    .page-meta {
-      font-size: 12px; color: #8EA5C8;
-      display: flex; gap: 24px; flex-wrap: wrap;
-    }
+    .brand-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+    .brand-sub { font-size: 11px; color: var(--teal); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 2px; }
+    .page-meta { font-size: 12px; color: #B9A9E8; display: flex; gap: 24px; flex-wrap: wrap; }
     .page-meta strong { color: #FFFFFF; font-weight: 600; }
-    .page-meta a { color: var(--teal-light); text-decoration: none; border-bottom: 1px dotted var(--teal); }
-    .page-meta a:hover { color: #FFFFFF; }
 
-    /* Main layout */
-    .page-main {
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 32px 32px 48px;
-    }
+    .page-main { max-width: 1600px; margin: 0 auto; padding: 32px 32px 48px; }
+    .section-head { font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 16px; }
+    .section-sub { font-size: 13px; color: var(--text-muted); margin: -8px 0 16px; }
+    .section-sub code { background: var(--gray-lighter); border: 1px solid var(--gray-light); border-radius: 4px; padding: 1px 6px; font-size: 12px; color: var(--navy); }
 
-    .crumb { font-size: 13px; color: var(--text-soft); margin-bottom: 12px; }
-    .crumb a { color: var(--text-muted); text-decoration: none; }
-    .crumb a:hover { text-decoration: underline; }
-
-    /* Section headings */
-    .section-head {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin: 0 0 16px;
-    }
-    .section-sub {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin: -8px 0 16px;
-    }
-
-    /* Hero */
-    .hero {
-      margin-bottom: 48px;
-      padding-bottom: 40px;
-      border-bottom: 1px solid var(--gray-light);
-    }
-    .hero-eyebrow {
-      color: var(--teal-dark);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      margin-bottom: 14px;
-    }
-    .hero-title {
-      color: var(--navy);
-      font-size: 52px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      line-height: 1.05;
-      margin: 0 0 12px;
-    }
-    .hero-tagline {
-      color: var(--teal-dark);
-      font-size: 22px;
-      font-style: italic;
-      font-weight: 500;
-      margin: 0 0 16px;
-      line-height: 1.35;
-    }
-    .hero-desc {
-      color: var(--text-muted);
-      font-size: 17px;
-      line-height: 1.5;
-      max-width: 880px;
-      margin: 0;
-    }
-    .hero-phase-row {
-      display: flex;
-      gap: 12px;
-      margin-top: 24px;
-      flex-wrap: wrap;
-    }
-    .phase-pill {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 10px;
-      background: var(--card);
-      border: 1px solid var(--gray-light);
-      border-radius: 999px;
-      padding: 8px 18px;
-      font-size: 13px;
-    }
-    .phase-pill-label {
-      color: var(--text-soft);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-    .phase-pill-value {
-      color: var(--navy);
-      font-weight: 700;
-    }
-    .phase-pill-date {
-      color: var(--text-muted);
-      font-weight: 500;
-      margin-left: 4px;
-    }
-    .phase-pill-milestone {
-      background: var(--navy);
-      border-color: var(--navy);
-    }
+    .hero { margin-bottom: 44px; padding-bottom: 36px; border-bottom: 1px solid var(--gray-light); }
+    .hero-eyebrow { color: var(--teal-dark); font-size: 11px; font-weight: 700; letter-spacing: 0.18em; margin-bottom: 14px; }
+    .hero-title { color: var(--navy); font-size: 52px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; margin: 0 0 12px; }
+    .hero-tagline { color: var(--teal-dark); font-size: 22px; font-style: italic; font-weight: 500; margin: 0 0 16px; line-height: 1.35; }
+    .hero-desc { color: var(--text-muted); font-size: 17px; line-height: 1.5; max-width: 900px; margin: 0; }
+    .hero-phase-row { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+    .phase-pill { display: inline-flex; align-items: baseline; gap: 10px; background: var(--card); border: 1px solid var(--gray-light); border-radius: 999px; padding: 8px 18px; font-size: 13px; }
+    .phase-pill-label { color: var(--text-soft); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+    .phase-pill-value { color: var(--navy); font-weight: 700; }
+    .phase-pill-date { color: var(--text-muted); font-weight: 500; margin-left: 4px; }
+    .phase-pill-milestone { background: var(--navy); border-color: var(--navy); }
     .phase-pill-milestone .phase-pill-label { color: var(--teal); }
     .phase-pill-milestone .phase-pill-value { color: #FFFFFF; }
     .phase-pill-milestone .phase-pill-date { color: #CADCFC; }
 
-    /* Milestones row */
-    .milestones { margin-bottom: 40px; }
-    .milestones-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-    .milestone-card {
-      background: var(--card);
-      border: 1px solid var(--gray-light);
-      border-radius: 12px;
-      padding: 20px 22px;
-      border-top: 4px solid var(--gray);
-      transition: box-shadow 0.15s, transform 0.15s;
-    }
-    .milestone-card:hover {
-      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
-      transform: translateY(-2px);
-    }
-    .milestone-card.ms-demo { border-top-color: var(--blue); }
-    .milestone-card.ms-v10  { border-top-color: var(--purple); }
-    .milestone-card.ms-v11  { border-top-color: var(--pink); }
-    .milestone-tag {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 4px;
-      margin-bottom: 10px;
-    }
-    .milestone-card.ms-demo .milestone-tag { background: var(--blue-light); color: #1D4ED8; }
-    .milestone-card.ms-v10  .milestone-tag { background: var(--purple-light); color: #6D28D9; }
-    .milestone-card.ms-v11  .milestone-tag { background: var(--pink-light); color: #BE185D; }
-    .milestone-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 6px;
-    }
-    .milestone-desc {
-      font-size: 13.5px;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
+    .phases { margin-bottom: 40px; }
+    .phases-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    .phase-card { background: var(--card); border: 1px solid var(--gray-light); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; position: relative; transition: box-shadow 0.15s, transform 0.15s; }
+    .phase-card:hover { box-shadow: 0 6px 20px rgba(26, 17, 64, 0.08); transform: translateY(-2px); }
+    .phase-card.phase-done        { border-top: 4px solid var(--green); }
+    .phase-card.phase-in-progress { border-top: 4px solid var(--amber); }
+    .phase-card.phase-planned     { border-top: 4px solid var(--blue); }
+    .phase-card.phase-future      { border-top: 4px solid var(--gray); opacity: 0.9; }
+    .phase-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .phase-marker { width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+    .phase-card.phase-done .phase-marker        { background: var(--green); }
+    .phase-card.phase-in-progress .phase-marker { background: var(--amber); }
+    .phase-status-pill { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
+    .phase-status-done        { background: var(--green-light); color: #065F46; }
+    .phase-status-in-progress { background: var(--amber-light); color: #B45309; }
+    .phase-status-planned     { background: var(--blue-light); color: #1D4ED8; }
+    .phase-status-future      { background: var(--gray-light); color: var(--gray); }
+    .phase-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 2px; letter-spacing: -0.01em; }
+    .phase-subtitle { font-size: 13px; font-weight: 500; color: var(--text-muted); margin-left: 2px; }
+    .phase-window { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 10px; }
+    .env-prod    { color: var(--green); }
+    .env-staging { color: var(--amber); }
+    .phase-desc { font-size: 12.5px; color: var(--text); line-height: 1.5; margin: 0 0 12px; }
+    .phase-deliverables { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--gray-light); padding-top: 10px; }
+    .phase-deliverables li { font-size: 12px; color: var(--text-muted); line-height: 1.5; padding: 3px 0 3px 14px; position: relative; }
+    .phase-deliverables li::before { content: "•"; position: absolute; left: 4px; color: var(--teal); font-weight: 700; }
 
-    /* Status strip */
-    .status-strip {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 40px;
-      background: var(--card);
-      border: 1px solid var(--gray-light);
-      border-radius: 12px;
-      padding: 20px 8px;
-    }
-    .status-stat {
-      text-align: center;
-      padding: 8px 12px;
-      border-right: 1px solid var(--gray-light);
-    }
+    .status-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 40px; background: var(--card); border: 1px solid var(--gray-light); border-radius: 12px; padding: 20px 8px; }
+    .status-stat { text-align: center; padding: 8px 12px; border-right: 1px solid var(--gray-light); }
     .status-stat:last-child { border-right: none; }
-    .status-num {
-      font-size: 36px;
-      font-weight: 800;
-      line-height: 1;
-      color: var(--navy);
-      letter-spacing: -0.02em;
-    }
-    .status-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-soft);
-      margin-top: 8px;
-    }
+    .status-num { font-size: 36px; font-weight: 800; line-height: 1; color: var(--navy); letter-spacing: -0.02em; }
+    .status-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); margin-top: 8px; }
     .status-done .status-num        { color: var(--green); }
     .status-in-progress .status-num { color: var(--amber); }
     .status-blocked .status-num     { color: var(--red); }
-    .status-up-next .status-num     { color: var(--blue); }
+    .status-this-week .status-num   { color: var(--blue); }
+    .status-backlog .status-num     { color: var(--gray); }
 
-    /* Links */
     .links { margin-bottom: 40px; }
-    .links-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-    .link-card {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: var(--card);
-      border: 1px solid var(--gray-light);
-      border-radius: 10px;
-      padding: 16px 20px;
-      text-decoration: none;
-      color: inherit;
-      transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
-    }
-    .link-card:hover {
-      box-shadow: 0 4px 14px rgba(15, 30, 61, 0.08);
-      transform: translateY(-1px);
-      border-color: var(--teal);
-    }
-    .link-icon {
-      font-size: 24px;
-      flex-shrink: 0;
-    }
+    .links-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .link-card { display: flex; align-items: center; gap: 16px; background: var(--card); border: 1px solid var(--gray-light); border-radius: 10px; padding: 16px 20px; text-decoration: none; color: inherit; transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s; }
+    .link-card:hover { box-shadow: 0 4px 14px rgba(26, 17, 64, 0.08); transform: translateY(-1px); border-color: var(--teal); }
+    .link-icon { font-size: 24px; flex-shrink: 0; }
     .link-text { flex: 1; }
-    .link-title {
-      font-weight: 700;
-      color: var(--navy);
-      font-size: 15px;
-      margin-bottom: 2px;
-    }
-    .link-desc {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-    .link-arrow {
-      color: var(--teal);
-      font-size: 18px;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
+    .link-title { font-weight: 700; color: var(--navy); font-size: 15px; margin-bottom: 2px; }
+    .link-desc { font-size: 13px; color: var(--text-muted); }
+    .link-arrow { color: var(--teal); font-size: 18px; font-weight: 700; flex-shrink: 0; }
 
-    /* Board section */
+    /* Condensed environments / infrastructure card */
+    .infra-card { background: var(--card); border: 1px solid var(--gray-light); border-radius: 12px; padding: 8px 8px; }
+    .infra-row { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 8px; text-decoration: none; color: inherit; transition: background 0.12s; }
+    .infra-row + .infra-row { border-top: 1px solid var(--gray-lighter); }
+    .infra-row:hover { background: var(--gray-lighter); }
+    .infra-ico { font-size: 18px; width: 26px; text-align: center; flex-shrink: 0; }
+    .infra-main { flex: 1; min-width: 0; }
+    .infra-name { font-weight: 700; color: var(--navy); font-size: 13.5px; }
+    .infra-sub { font-size: 12px; color: var(--text-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .infra-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; flex-shrink: 0; }
+    .badge-prod    { background: var(--green-light); color: #065F46; }
+    .badge-staging { background: var(--amber-light); color: #B45309; }
+    .badge-code    { background: var(--teal-light); color: var(--teal-dark); }
+
     .board-section { margin-top: 8px; }
-
-    /* Kanban board */
-    .board {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(280px, 1fr));
-      gap: 16px;
-      align-items: start;
-    }
-
-    .column {
-      background: var(--gray-lighter);
-      border-radius: 12px;
-      padding: 16px;
-      border: 1px solid var(--gray-light);
-    }
-    .col-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      padding: 4px 4px 12px;
-      border-bottom: 2px solid transparent;
-    }
-    .col-head h2 {
-      margin: 0;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--navy);
-      letter-spacing: 0.02em;
-    }
-    .col-count {
-      font-size: 12px;
-      font-weight: 600;
-      background: var(--card);
-      color: var(--text-muted);
-      padding: 2px 8px;
-      border-radius: 10px;
-      border: 1px solid var(--gray-light);
-    }
-
-    /* Column accents */
+    .board { display: grid; grid-template-columns: repeat(5, minmax(280px, 1fr)); gap: 16px; align-items: start; }
+    .column { background: var(--gray-lighter); border-radius: 12px; padding: 16px; border: 1px solid var(--gray-light); }
+    .col-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 4px 4px 12px; border-bottom: 2px solid transparent; }
+    .col-head h2 { margin: 0; font-size: 14px; font-weight: 700; color: var(--navy); letter-spacing: 0.02em; }
+    .col-count { font-size: 12px; font-weight: 600; background: var(--card); color: var(--text-muted); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--gray-light); }
     .col-done .col-head        { border-bottom-color: var(--green); }
     .col-in-progress .col-head { border-bottom-color: var(--amber); }
     .col-blocked .col-head     { border-bottom-color: var(--red); }
-    .col-up-next .col-head     { border-bottom-color: var(--blue); }
-
+    .col-this-week .col-head   { border-bottom-color: var(--blue); }
+    .col-backlog .col-head     { border-bottom-color: var(--gray); }
     .col-done .col-count        { color: var(--green); border-color: var(--green-light); }
     .col-in-progress .col-count { color: #B45309; border-color: var(--amber-light); }
     .col-blocked .col-count     { color: var(--red); border-color: var(--red-light); }
-    .col-up-next .col-count     { color: #1D4ED8; border-color: var(--blue-light); }
+    .col-this-week .col-count   { color: #1D4ED8; border-color: var(--blue-light); }
+    .col-backlog .col-count     { color: var(--gray); border-color: var(--gray-light); }
+    .cards { display: flex; flex-direction: column; gap: 10px; }
+    .card { background: var(--card); border-radius: 8px; padding: 12px 14px; border: 1px solid var(--gray-light); box-shadow: 0 1px 2px rgba(26, 17, 64, 0.04); transition: box-shadow 0.15s, transform 0.15s; }
+    .card:hover { box-shadow: 0 4px 12px rgba(26, 17, 64, 0.08); transform: translateY(-1px); }
+    .card-title { font-weight: 600; color: var(--navy); font-size: 13.5px; line-height: 1.4; margin-bottom: 6px; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0; }
+    .card-desc { color: var(--text-muted); font-size: 12.5px; line-height: 1.5; margin-top: 6px; }
+    .empty { color: var(--text-soft); font-size: 12px; text-align: center; padding: 16px 0; font-style: italic; }
 
-    .cards {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    .tag { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px; letter-spacing: 0.02em; white-space: nowrap; }
+    .tag-prod      { background: var(--green-light); color: #065F46; }
+    .tag-staging   { background: var(--amber-light); color: #B45309; }
+    .tag-v10       { background: var(--gray-light); color: var(--text-muted); }
+    .tag-v11       { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-portal    { background: var(--coral-light); color: #BE3D2E; }
+    .tag-gate      { background: var(--purple-light); color: #6D28D9; }
+    .tag-int       { background: var(--blue-light); color: #1D4ED8; }
+    .tag-infra     { background: var(--amber-light); color: #B45309; }
+    .tag-fix       { background: var(--red-light); color: var(--red); }
+    .tag-neutral   { background: var(--gray-light); color: var(--text-muted); }
 
-    .card {
-      background: var(--card);
-      border-radius: 8px;
-      padding: 12px 14px;
-      border: 1px solid var(--gray-light);
-      box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04);
-      transition: box-shadow 0.15s, transform 0.15s;
-    }
-    .card:hover {
-      box-shadow: 0 4px 12px rgba(15, 30, 61, 0.08);
-      transform: translateY(-1px);
-    }
-    .card-title {
-      font-weight: 600;
-      color: var(--navy);
-      font-size: 13.5px;
-      line-height: 1.4;
-      margin-bottom: 6px;
-    }
-    .card-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      margin: 4px 0 6px;
-    }
-    .card-desc {
-      color: var(--text-muted);
-      font-size: 12.5px;
-      line-height: 1.5;
-      margin-top: 6px;
-    }
-    .empty {
-      color: var(--text-soft);
-      font-size: 12px;
-      text-align: center;
-      padding: 16px 0;
-      font-style: italic;
-    }
+    footer.page-foot { padding: 16px 32px 32px; text-align: center; color: var(--text-soft); font-size: 12px; }
+    footer.page-foot a { color: var(--teal-dark); text-decoration: none; border-bottom: 1px solid rgba(124, 92, 252, 0.3); }
 
-    /* Pending group dividers inside Up Next column */
-    .pending-group-head {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-soft);
-      margin: 8px 0 4px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--gray-light);
-    }
-    .pending-group-head:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
-
-    /* Tags */
-    .tag {
-      font-size: 10px;
-      font-weight: 600;
-      padding: 2px 7px;
-      border-radius: 4px;
-      letter-spacing: 0.02em;
-      white-space: nowrap;
-    }
-    .tag-id {
-      background: var(--gray-light);
-      color: var(--text-muted);
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      letter-spacing: 0;
-    }
-    /* Milestones */
-    .tag-demo  { background: var(--blue-light);   color: #1D4ED8; }
-    .tag-v10   { background: var(--purple-light); color: #6D28D9; }
-    .tag-v11   { background: var(--pink-light);   color: #BE185D; }
-    /* Workstream taxonomy (Velocity-specific) */
-    .tag-ws-h  { background: var(--amber-light);  color: #B45309; }  /* Hardening */
-    .tag-ws-i  { background: var(--green-light);  color: #047857; }  /* Integrations */
-    .tag-ws-p  { background: var(--teal-light);   color: var(--teal-dark); }  /* Portal panels */
-    .tag-ws-w  { background: var(--purple-light); color: #6D28D9; }  /* Wow factor */
-    .tag-ws-d  { background: var(--pink-light);   color: #BE185D; }  /* Delight payloads */
-    .tag-ws-a  { background: var(--red-light);    color: var(--red); } /* Anti-overselling */
-    .tag-ws-u  { background: var(--indigo-light); color: #4338CA; }  /* UX */
-    .tag-ws-c  { background: var(--amber-light);  color: #B45309; }  /* CI / deploy */
-    .tag-neutral { background: var(--gray-light); color: var(--text-muted); }
-
-    /* Footer */
-    footer.page-foot {
-      padding: 16px 32px 32px;
-      text-align: center;
-      color: var(--text-soft);
-      font-size: 12px;
-    }
-    footer.page-foot a {
-      color: var(--teal-dark);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(13, 148, 136, 0.3);
-    }
-
-    /* Responsive */
-    @media (max-width: 1400px) {
-      .board { grid-template-columns: repeat(2, minmax(280px, 1fr)); }
-      .links-grid { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 1100px) {
-      .milestones-grid { grid-template-columns: 1fr; }
-      .status-strip { grid-template-columns: repeat(2, 1fr); }
-      .status-stat { border-right: none; border-bottom: 1px solid var(--gray-light); }
-      .status-stat:nth-last-child(-n+2) { border-bottom: none; }
-    }
-    @media (max-width: 900px) {
-      .page-main { padding: 24px 16px 32px; }
-      .board { grid-template-columns: 1fr; }
-      header.page-head { padding: 16px; }
-      .hero-title { font-size: 32px; }
-      .hero-tagline { font-size: 17px; }
-      .hero-desc { font-size: 15px; }
-    }
-
-    /* Print */
-    @media print {
-      header.page-head { background: var(--card); color: var(--navy); border-bottom: 2px solid var(--gray-light); position: static; }
-      .brand-mark { background: var(--navy); color: #FFFFFF; }
-      .brand-title, .page-meta strong { color: var(--navy); }
-      .page-meta, .brand-sub { color: var(--text-muted); }
-      .board { grid-template-columns: repeat(2, 1fr); padding: 16px; }
-      .column { break-inside: avoid; background: var(--card); border: 1px solid var(--gray-light); }
-      .card:hover { transform: none; box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04); }
-    }
+    @media (max-width: 1400px) { .board { grid-template-columns: repeat(3, minmax(280px, 1fr)); } .links-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 1300px) { .phases-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 1100px) { .phases-grid { grid-template-columns: repeat(2, 1fr); } .status-strip { grid-template-columns: repeat(2, 1fr); } .status-stat { border-right: none; border-bottom: 1px solid var(--gray-light); } .status-stat:nth-last-child(-n+2) { border-bottom: none; } }
+    @media (max-width: 900px) { .page-main { padding: 24px 16px 32px; } .board { grid-template-columns: 1fr; } header.page-head { padding: 16px; } .hero-title { font-size: 32px; } .hero-tagline { font-size: 17px; } .hero-desc { font-size: 15px; } .phases-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
   <header class="page-head">
     <div class="page-head-inner">
       <div class="page-brand">
-        <div class="brand-mark">🚀</div>
+        <div class="brand-mark">V</div>
         <div>
           <div class="brand-title">Velocity</div>
-          <div class="brand-sub">Agentic Sales OS</div>
+          <div class="brand-sub">Agentic Sales OS · Build Board</div>
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>V1.0 shipped · V1.1 underway</strong></div>
-        <div><strong>64</strong> cards done</div>
-        <div>Updated <strong>2026-05-28 PM</strong></div>
-        <div><a href="https://velocity.coreshifthq.com" target="_blank" rel="noopener">prod →</a></div>
-        <div><a href="https://velocity-staging.coreshifthq.com" target="_blank" rel="noopener">staging →</a></div>
+        <div><strong>V1.0</strong> live in production</div>
+        <div><strong>V1.1</strong> on staging · awaiting prod promotion</div>
+        <div>Updated <strong>2026-05-28</strong></div>
       </div>
     </div>
   </header>
 
   <main class="page-main">
 
-    <div class="crumb"><a href="../">← All projects</a></div>
-
     <!-- HERO -->
     <section class="hero">
-      <div class="hero-eyebrow">INTERNAL · BUILD STATUS</div>
+      <div class="hero-eyebrow">INTERNAL · LIVE BUILD & ROLLOUT BOARD</div>
       <h1 class="hero-title">Velocity</h1>
-      <p class="hero-tagline">Agentic sales operating system. One engine, two playbooks.</p>
-      <p class="hero-desc">Internal sales OS (pipeline, deals, anti-stall scheduler, commission engine) for Growth Partners and Coreshift HQ, plus a customer-facing portal with the Nirvana AI agent under hard rails. Built by Mal; V1 wired up by Abe.</p>
+      <p class="hero-tagline">An agentic sales operating system for Growth Partners.</p>
+      <p class="hero-desc">Runs the full deal lifecycle — Prospect → Engaged → Qualified → Presented → Verbal → Won — with stage gates that are a test and a gift, an extractor that auto-populates the deal from notes/transcripts/URLs, and a buyer portal that keeps the client involved. V1.0 is live in production; the V1.1 sales-cycle + portal-interactivity batch is shipped to staging and waiting on a production promotion.</p>
       <div class="hero-phase-row">
         <div class="phase-pill">
-          <span class="phase-pill-label">Current sprint</span>
-          <span class="phase-pill-value">V1.0 polish — ~10–14 dev-days remaining</span>
+          <span class="phase-pill-label">Current phase</span>
+          <span class="phase-pill-value">Phase 4 · Portal interactivity &amp; auto-capture <span class="phase-pill-date">on staging</span></span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">V1.0 complete <span class="phase-pill-date">week of 2026-07-27</span></span>
+          <span class="phase-pill-value">Promote V1.1 batch to production <span class="phase-pill-date">incl. migrations 0011–0013 · awaiting Abe's sign-off</span></span>
         </div>
       </div>
     </section>
 
-    <!-- MILESTONES -->
-    <section class="milestones">
-      <h2 class="section-head">Three Milestones</h2>
-      <div class="milestones-grid">
-        <div class="milestone-card ms-demo">
-          <span class="milestone-tag">Demo · week of 2026-06-22</span>
-          <div class="milestone-title">Aditi-demo-ready subset</div>
-          <div class="milestone-desc">UX overhaul, B4 living proposal, 25%/50% delight payloads, hardening pass. The X-factor surface Aditi sees on demo day.</div>
+    <!-- PHASES -->
+    <section class="phases">
+      <h2 class="section-head">Development &amp; Production Phases</h2>
+      <p class="section-sub">Where Velocity has been, where it is now, and where it's going — and which environment each phase currently lives in. Each phase delivers value on its own.</p>
+      <div class="phases-grid">
+
+        <div class="phase-card phase-done">
+          <div class="phase-card-head"><div class="phase-marker">1</div><div class="phase-status-pill phase-status-done">Done</div></div>
+          <div class="phase-title">Phase 1 <span class="phase-subtitle">V1.0 Core</span></div>
+          <div class="phase-window env-prod">● In production</div>
+          <p class="phase-desc">The spec-locked V1.0: full deal lifecycle, the buyer portal, the wow factors, and the hardening + CI/deploy that made it shippable.</p>
+          <ul class="phase-deliverables">
+            <li>Lifecycle Prospect→Won + stage gates</li><li>Buyer portal (journey, resources, proposal, Day Zero)</li><li>W1/W2/W4/W5 wow factors + delight payloads</li><li>H1–H9 hardening, CI→Railway, custom DNS</li><li>Aurora Glass design system</li>
+          </ul>
         </div>
-        <div class="milestone-card ms-v10">
-          <span class="milestone-tag">V1.0 · week of 2026-07-27</span>
-          <div class="milestone-title">Full V1.0, first prod deploy</div>
-          <div class="milestone-desc">Remaining portal panels, component library, mobile-friendly verification, then promote staging → main via Actions workflow_dispatch.</div>
+
+        <div class="phase-card phase-done">
+          <div class="phase-card-head"><div class="phase-marker">2</div><div class="phase-status-pill phase-status-done">Done</div></div>
+          <div class="phase-title">Phase 2 <span class="phase-subtitle">V1.1 Sales-cycle methodology</span></div>
+          <div class="phase-window env-staging">● On staging</div>
+          <p class="phase-desc">Re-shaped the pipeline around the playbook: the Engaged stage, a rebuilt Qualified gate, kill criteria, and forcing events.</p>
+          <ul class="phase-deliverables">
+            <li>Engaged 10% stage (internal-only)</li><li>Qualified gate rebuilt — 8 data-backed criteria</li><li>Kill criteria ("Should we walk?")</li><li>Forcing events + 5 fixed loss reasons</li><li>Gate enforced server-side; drag opens the checklist</li>
+          </ul>
         </div>
-        <div class="milestone-card ms-v11">
-          <span class="milestone-tag">V1.1 · week of 2026-10-05</span>
-          <div class="milestone-title">Voice, integrations, anti-overselling</div>
-          <div class="milestone-desc">Voice capture from anywhere, 7 required V1 integrations, anti-overselling guardrails, remaining delight payloads.</div>
+
+        <div class="phase-card phase-in-progress">
+          <div class="phase-card-head"><div class="phase-marker">3</div><div class="phase-status-pill phase-status-in-progress">In progress</div></div>
+          <div class="phase-title">Phase 3 <span class="phase-subtitle">Integrations</span></div>
+          <div class="phase-window env-staging">● Calendar on staging · rest backlog</div>
+          <p class="phase-desc">Connect Velocity to the tools the rep already uses. Google Calendar is live; Gmail + transcription pipeline are queued.</p>
+          <ul class="phase-deliverables">
+            <li>Google Calendar — connect + sync + in-app scheduling ✓</li><li>I2 Gmail OAuth (outbound recap)</li><li>I3 Gmail inbound → portal mirror</li><li>I4 Fireflies/Otter transcription pipeline</li><li>I6 Xero · I7 LinkedIn · I8 Drive archive</li>
+          </ul>
+        </div>
+
+        <div class="phase-card phase-done">
+          <div class="phase-card-head"><div class="phase-marker">4</div><div class="phase-status-pill phase-status-done">Done</div></div>
+          <div class="phase-title">Phase 4 <span class="phase-subtitle">Portal interactivity &amp; auto-capture</span></div>
+          <div class="phase-window env-staging">● On staging</div>
+          <p class="phase-desc">Capture from anywhere, keep the buyer in the loop, and never let a deal stall silently.</p>
+          <ul class="phase-deliverables">
+            <li>Auto-populate gate fields from URLs/text/transcripts</li><li>Shared-understanding confirm loop (confirm/correct/accept)</li><li>"Add all" / "Yes to all" bulk actions</li><li>Mutual action plan — add + auto confirm item</li><li>Notifications — rep bell + per-deal card + buyer Updates</li>
+          </ul>
+        </div>
+
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head"><div class="phase-marker">5</div><div class="phase-status-pill phase-status-planned">Planned</div></div>
+          <div class="phase-title">Phase 5 <span class="phase-subtitle">Production rollout</span></div>
+          <div class="phase-window">Next up</div>
+          <p class="phase-desc">Promote the V1.1 batch from staging to production — code via staging→main, plus the DB migrations applied to the prod Supabase branch.</p>
+          <ul class="phase-deliverables">
+            <li>PR staging → main (gated, Abe's sign-off)</li><li>Apply migrations 0011–0013 to prod branch</li><li>Smoke-test prod + verify gates</li><li>Then: W3 voice, e-sign, P8 quiet capture</li>
+          </ul>
         </div>
       </div>
     </section>
 
     <!-- STATUS STRIP -->
     <section class="status-strip">
-      <div class="status-stat status-done">
-        <div class="status-num">73</div>
-        <div class="status-label">Done</div>
-      </div>
-      <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
-        <div class="status-label">In flight</div>
-      </div>
-      <div class="status-stat status-blocked">
-        <div class="status-num">0</div>
-        <div class="status-label">Blocked</div>
-      </div>
-      <div class="status-stat status-up-next">
-        <div class="status-num">13</div>
-        <div class="status-label">Up Next</div>
-      </div>
+      <div class="status-stat status-done"><div class="status-num">15</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-in-progress"><div class="status-num">1</div><div class="status-label">In Progress</div></div>
+      <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked</div></div>
+      <div class="status-stat status-this-week"><div class="status-num">2</div><div class="status-label">This Week</div></div>
+      <div class="status-stat status-backlog"><div class="status-num">14</div><div class="status-label">Backlog</div></div>
     </section>
 
-    <!-- KEY LINKS -->
+    <!-- KEY ARTIFACTS -->
     <section class="links">
-      <h2 class="section-head">Quick Links</h2>
+      <h2 class="section-head">Key Artifacts</h2>
       <div class="links-grid">
-        <a class="link-card" href="https://velocity.coreshifthq.com" target="_blank" rel="noopener">
-          <div class="link-icon">🟢</div>
-          <div class="link-text">
-            <div class="link-title">Production URL <span style="color:var(--green); font-size:11px; font-weight:600;">· LIVE</span></div>
-            <div class="link-desc">velocity.coreshifthq.com</div>
-          </div>
-          <div class="link-arrow">→</div>
-        </a>
-        <a class="link-card" href="https://velocity-staging.coreshifthq.com" target="_blank" rel="noopener">
-          <div class="link-icon">🚀</div>
-          <div class="link-text">
-            <div class="link-title">Staging URL</div>
-            <div class="link-desc">velocity-staging.coreshifthq.com</div>
-          </div>
-          <div class="link-arrow">→</div>
-        </a>
-        <a class="link-card" href="https://velocity-staging.coreshifthq.com/portal/aditi-demo-portal-2026" target="_blank" rel="noopener">
-          <div class="link-icon">🔑</div>
-          <div class="link-text">
-            <div class="link-title">Sample portal (Aditi)</div>
-            <div class="link-desc">/portal/aditi-demo-portal-2026</div>
-          </div>
-          <div class="link-arrow">→</div>
-        </a>
-        <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">
-          <div class="link-icon">📦</div>
-          <div class="link-text">
-            <div class="link-title">GitHub repo</div>
-            <div class="link-desc">CoreshiftHQNZ/velocity</div>
-          </div>
-          <div class="link-arrow">→</div>
-        </a>
-        <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity/pulls" target="_blank" rel="noopener">
-          <div class="link-icon">🔀</div>
-          <div class="link-text">
-            <div class="link-title">Pull requests</div>
-            <div class="link-desc">PR list on velocity</div>
-          </div>
-          <div class="link-arrow">→</div>
-        </a>
-        <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity/tree/dev/docs/planning" target="_blank" rel="noopener">
+        <a class="link-card" href="roadmap.html">
           <div class="link-icon">🗺</div>
           <div class="link-text">
-            <div class="link-title">V1 planning docs</div>
-            <div class="link-desc">/docs/planning on dev</div>
+            <div class="link-title">Roadmap</div>
+            <div class="link-desc">Phased plan — shipped, in flight, and what's next, with sequencing</div>
           </div>
           <div class="link-arrow">→</div>
         </a>
-        <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity/blob/dev/docs/playbook/how-to-use-velocity.md" target="_blank" rel="noopener">
+        <a class="link-card" href="ops-playbook.html">
           <div class="link-icon">📖</div>
           <div class="link-text">
-            <div class="link-title">How to use Velocity (playbook)</div>
-            <div class="link-desc">End-to-end usage guide — daily routine, deal lifecycle, portal, handover</div>
-          </div>
-          <div class="link-arrow">→</div>
-        </a>
-        <a class="link-card" href="https://github.com/CoreshiftHQNZ/velocity/tree/dev/docs/specs" target="_blank" rel="noopener">
-          <div class="link-icon">📐</div>
-          <div class="link-text">
-            <div class="link-title">Spec docs (Nirvana handoff)</div>
-            <div class="link-desc">/docs/specs on dev</div>
-          </div>
-          <div class="link-arrow">→</div>
-        </a>
-        <a class="link-card" href="https://railway.com/project/269e6e9a-c684-43bf-8721-938177d01f2d" target="_blank" rel="noopener">
-          <div class="link-icon">🚂</div>
-          <div class="link-text">
-            <div class="link-title">Railway project</div>
-            <div class="link-desc">269e6e9a-…938177d01f2d</div>
-          </div>
-          <div class="link-arrow">→</div>
-        </a>
-        <a class="link-card" href="https://supabase.com/dashboard/project/uodsmyystkaxoogitvsw" target="_blank" rel="noopener">
-          <div class="link-icon">🗄</div>
-          <div class="link-text">
-            <div class="link-title">Supabase project</div>
-            <div class="link-desc">uodsmyystkaxoogitvsw</div>
+            <div class="link-title">Operations Playbook</div>
+            <div class="link-desc">How Velocity is built &amp; run — environments, branch flow, migrations, QA, promotion, incidents</div>
           </div>
           <div class="link-arrow">→</div>
         </a>
       </div>
     </section>
 
-    <!-- KANBAN BOARD -->
+    <!-- ENVIRONMENTS & INFRASTRUCTURE (condensed) -->
+    <section class="links">
+      <h2 class="section-head">Environments &amp; Infrastructure</h2>
+      <p class="section-sub">Everything in one place — code, both running apps, host, and database. (Replaces the old separate repo / URL / Railway / Supabase cards.)</p>
+      <div class="infra-card">
+        <a class="infra-row" href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">
+          <span class="infra-ico">📦</span>
+          <span class="infra-main"><span class="infra-name">GitHub repo</span><br><span class="infra-sub">CoreshiftHQNZ/velocity · branches: dev → staging → main</span></span>
+          <span class="infra-badge badge-code">code</span>
+        </a>
+        <a class="infra-row" href="https://velocity.coreshifthq.com" target="_blank" rel="noopener">
+          <span class="infra-ico">🟢</span>
+          <span class="infra-main"><span class="infra-name">Production app</span><br><span class="infra-sub">velocity.coreshifthq.com · Railway prod env · Supabase main branch (uodsmyystkaxoogitvsw)</span></span>
+          <span class="infra-badge badge-prod">prod</span>
+        </a>
+        <a class="infra-row" href="https://velocity-staging.coreshifthq.com" target="_blank" rel="noopener">
+          <span class="infra-ico">🚀</span>
+          <span class="infra-main"><span class="infra-name">Staging app</span><br><span class="infra-sub">velocity-staging.coreshifthq.com · Railway staging env · Supabase staging branch (pdawstndulfnydvesmdm)</span></span>
+          <span class="infra-badge badge-staging">staging</span>
+        </a>
+        <a class="infra-row" href="https://railway.com/project/269e6e9a-c684-43bf-8721-938177d01f2d" target="_blank" rel="noopener">
+          <span class="infra-ico">🚂</span>
+          <span class="infra-main"><span class="infra-name">Railway project</span><br><span class="infra-sub">269e6e9a-…938177d01f2d · auto-deploys staging + main branches</span></span>
+          <span class="infra-badge badge-code">host</span>
+        </a>
+        <a class="infra-row" href="https://supabase.com/dashboard/project/uodsmyystkaxoogitvsw" target="_blank" rel="noopener">
+          <span class="infra-ico">🗄</span>
+          <span class="infra-main"><span class="infra-name">Supabase (org: CoreShift)</span><br><span class="infra-sub">project velocity · main = prod, staging = preview branch · DNS via Cloudflare</span></span>
+          <span class="infra-badge badge-code">data</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- LIVE ROLLOUT BOARD -->
     <section class="board-section">
-      <h2 class="section-head">Live Build Board</h2>
-      <p class="section-sub">v1.0 in flight · prod live on velocity.coreshifthq.com · Aurora Glass theme · full lifecycle Prospect→Won works end-to-end. Workstreams: H hardening · I integrations · P portal panels · W wow factor · D delight payloads · A anti-overselling · U UX · C CI/deploy.</p>
+      <h2 class="section-head">Live Rollout Board</h2>
+      <p class="section-sub">Curated by theme, not micro-task. <span style="color:var(--green);font-weight:700;">in&nbsp;prod</span> ships to users today; <span style="color:#B45309;font-weight:700;">on&nbsp;staging</span> is built &amp; verified, awaiting the V1.1 production promotion.</p>
       <div class="board">
 
+        <!-- DONE -->
         <section class="column col-done">
-          <header class="col-head">
-            <h2>✅ Done</h2>
-            <span class="col-count">73</span>
-          </header>
+          <header class="col-head"><h2>✅ Done</h2><span class="col-count">15</span></header>
           <div class="cards">
-
             <div class="card">
-              <div class="card-title">Notifications — rep bell + per-deal card + buyer portal "Updates" (2026-05-28)</div>
-              <div class="card-tags"><span class="tag tag-id">notify</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">QA ask (Abe): a feed on both sides for action-required / status changes. New notifications table (migration 0013, applied to staging branch; prod pending promotion) + a notify() helper fired at event points — no websockets, refreshes on load / 60s poll. Events v1: buyer confirms/corrects/"yes to all" → rep; rep shares fact(s)/accepts a correction → buyer. Rep surfaces (chose BOTH): a global bell in the AppShell sidebar (unread count, cross-deal feed via GET /api/notifications, click to jump to the deal, mark-all-read) + a per-deal Notifications card on the Deal page (GET /api/deals/:id/notifications). Buyer surface: an "Updates" section in the portal (carried in the hydrate; marks read on view via POST /api/portal/:token/notifications/read). POST /api/notifications/read for the rep side. Commit b23e8cf.</div>
+              <div class="card-title">V1.0 core — full lifecycle Prospect→Won</div>
+              <div class="card-tags"><span class="tag tag-v10">V1.0</span><span class="tag tag-prod">in prod</span></div>
+              <div class="card-desc">Companies, people, deals, stages, gates, win/loss, commissions. The end-to-end spine, live for Mal.</div>
             </div>
-
             <div class="card">
-              <div class="card-title">Add-all shared facts · manual action-plan add · confirm item in plan (2026-05-28)</div>
-              <div class="card-tags"><span class="tag tag-id">qa-feedback</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">Three QA asks (Abe). (1) "Add all N" button on the Shared Understanding card + POST /api/deals/:id/shared-facts/bulk to share every available captured fact in one click instead of chip-by-chip. (2) The mutual action plan had no way to ADD items from the UI (only a post-meeting recap auto-created them) — that's why it always looked empty in testing; added an inline "add item" composer to each side of the plan on the Deal page (POST /api/action-items). (3) Sharing facts for confirmation now keeps ONE self-updating buyer-side action — "Review & confirm the details we've shared" (source=agent + sourceRefId) — present while any shared fact awaits the buyer, auto-completing once they've answered all; synced from share/bulk/unshare (rep) + the portal respond (buyer). Commit 29113f9. Plus the buyer-side mirror: a "Yes to all (N)" button on the portal confirm panel (POST /api/portal/:token/shared-facts/confirm-all) confirms every still-pending item in one tap (leaves corrected/confirmed ones untouched); commit 12815df. Fix: suggestion dedup was statement-exact, so after a correction changed an item's text its concept got re-offered and "Add all" re-added a duplicate — now deduped by concept (label), so a shared "Why now" of any status is never re-suggested; commit 1542eef.</div>
+              <div class="card-title">Buyer portal — journey, resources, proposal, Day Zero</div>
+              <div class="card-tags"><span class="tag tag-v10">V1.0</span><span class="tag tag-portal">portal</span><span class="tag tag-prod">in prod</span></div>
+              <div class="card-desc">Magic-link buyer surface: journey spine, shared resources, living proposal, Day Zero insight pack, meeting-summary amend.</div>
             </div>
-
             <div class="card">
-              <div class="card-title">Buyer corrections drive engagement, attention + one-click accept (2026-05-28)</div>
-              <div class="card-tags"><span class="tag tag-id">P8-adj</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">QA follow-up (Abe): a buyer correction shouldn't just sit in the timeline. Three upgrades. (1) Engagement — a confirm/correct in the portal now bumps lastBuyerTouchAt, resetting the anti-stall silence clock (Rule 2); an engaged buyer no longer reads as gone-quiet (was a real gap — the portal insert bypassed the route that normally bumps it). (2) Needs attention — dailyKickoff gains a buyer_correction priority ranked just under imminent meetings, so a pending correction becomes the morning "one thing" instead of waiting to be spotted. (3) One-click accept — new POST /api/deals/:id/shared-facts/:factId/accept adopts the buyer's wording as the confirmed statement and, where the fact maps to a known free-text field (compelling event, growth goal via new source_field column, migration 0012 applied to staging branch), writes it straight back to source. "Apply correction" button on the Shared Understanding card. Commit c2f899f.</div>
+              <div class="card-title">Wow factors + delight payloads</div>
+              <div class="card-tags"><span class="tag tag-v10">V1.0</span><span class="tag tag-prod">in prod</span></div>
+              <div class="card-desc">W1 pre-meeting brief, W2 post-meeting recap (4-dim sentiment), W4 "what's slipping" daily move, W5 auto-building handover, D1–D9 delight stubs.</div>
             </div>
-
             <div class="card">
-              <div class="card-title">Shared understanding — "have we got this right?" buyer confirm loop (2026-05-28)</div>
-              <div class="card-tags"><span class="tag tag-id">P8-adj</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">QA insight (Abe): info we capture from calls/research should be confirmed by the buyer — accuracy + involvement, and it saves re-confirming basics next call. Built the rep-curated confirm loop. New deal_shared_facts table (migration 0011, applied to the staging Supabase branch pdawstndulfnydvesmdm; prod/main pending promotion). Rep side: SharedUnderstandingCard on the Deal page — compose a label + statement, or one-click "quick add" chips assembled server-side from EVERYTHING captured (GET /api/deals/:id/suggested-facts: why-now, challenge area, success definition from the extractor, decision-maker, lean decision-making + willingness-to-invest from the ICP, turnover, growth goal, competitors — minus anything already shared). Share to the buyer, see live confirmed/corrected status with the buyer's correction inline; GET/POST/DELETE /api/deals/:id/shared-facts. Buyer side: portal "Have we got this right?" panel — Confirm (one tap) or Correct (with a note); corrections post back as an inbound note on the deal + a portal_activity for audit. Locked design: confirm-LIST not raw transcript (privacy — transcripts stay internal), and rep curates (nothing auto-shares). Commit dc53e55.</div>
+              <div class="card-title">Hardening, CI/deploy &amp; Aurora Glass</div>
+              <div class="card-tags"><span class="tag tag-v10">V1.0</span><span class="tag tag-infra">infra</span><span class="tag tag-prod">in prod</span></div>
+              <div class="card-desc">H1–H9 (incl. drizzle upgrade, Supabase branch split), GitHub Actions → Railway, custom DNS, full Aurora Glass redesign + mobile sweep.</div>
             </div>
-
             <div class="card">
-              <div class="card-title">"Full research pack" gate now pre-ticks from a populated snapshot (2026-05-28)</div>
-              <div class="card-tags"><span class="tag tag-id">gate</span><span class="tag tag-ws-w">gate</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">QA: the research-pack criterion ignored the corporate + personal data added via sources/notes — it was a pure manual tick with no signal wiring. Now snapshot_drafted (Engaged) + research_populated (Prospect) pre-tick (confirm-required, evidence-style "click to confirm") once the deal's corporate AND personal profile carry real content. stageGate.hasResearchSnapshot heuristic: ≥3 populated corporate fields (industry/region/size/turnover/growth goals/structure/regulatory/channels/competitors/events) AND ≥2 personal-layer fields (role/hobbies/travel/comms/hot buttons/avoid/family/events). Mirrors the Compelling-event / Decision-maker pre-tick pattern Abe endorsed. Note: reads the SAVED profile, so source suggestions must be Applied (or fields filled) — adding a source alone leaves them pending. Follow-up: the "click to confirm" hint had no findable target (only the tiny status icon was clickable) — the WHOLE manual-criterion row is now a click target with a hover highlight, in both GateProgressCard and PromoteModal. Commits 95457ff + de0cc39.</div>
+              <div class="card-title">Google Calendar — connect, sync &amp; in-app scheduling</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-int">integrations</span><span class="tag tag-staging">on staging</span></div>
+              <div class="card-desc">OAuth (calendar.events), hourly sync → nextMeetingAt + buyer RSVP, in-Velocity scheduler + true reschedule, meeting advances the next move.</div>
             </div>
-
             <div class="card">
-              <div class="card-title">Cards refresh after every deal change — no more hard refresh (2026-05-28)</div>
-              <div class="card-tags"><span class="tag tag-id">fix</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">QA caught it: after scoring the ICP, booking a meeting, etc., the Gate Progress + "Should we walk?" cards stayed stale until a hard refresh. Root cause: query keys are single-string URLs (e.g. "/api/deals/:id/transition-check?toStageCode=engaged"), so invalidateQueries(["/api/deals/:id"]) only prefix-matched the exact detail key and silently missed the sibling endpoints (gate checks, kill-check, extractions, icp). New shared lib/invalidateDeal.ts predicate-invalidates every "/api/deals/:id…" query plus the pipeline list + dashboard; invalidateAllDeals for company edits that can touch several deals. Wired into all 12 deal-mutating surfaces — IcpModal, ScheduleMeetingModal, QualificationModal, EditPerson/EditCompany/EditDealField, WinLoss, Handover, ProposalSection, RecapModal, AddSourceModal, and the Deal-page demote. Cards now flip the instant a mutation lands. Commit 061c49b.</div>
+              <div class="card-title">V1.1 sales-cycle deltas 1–4</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-gate">gate</span><span class="tag tag-staging">on staging</span></div>
+              <div class="card-desc">5 fixed Closed-Lost reasons, dropped "approach presented", kill criteria at Qualified, forcing-event flag + badge.</div>
             </div>
-
             <div class="card">
-              <div class="card-title">Gate now enforced server-side + drag opens the checklist (2026-05-28)</div>
-              <div class="card-tags"><span class="tag tag-id">fix</span><span class="tag tag-ws-w">gate</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">QA caught it: a pipeline card could be dragged to a new stage with no gate check — POST /api/deals/:id/transition moved the deal unconditionally; the gate was only enforced client-side in the Promote dialog. Permanent fix: the gate is now authoritative on the server. /transition evaluates evaluateStageGate on FORWARD promotions (by stages.ordering) and returns 422 with the unmet criteria unless an explicit override + documented reason is sent (logged to stage history, spec §1.1); backward moves and Closed Lost stay ungated. Pipeline drag no longer optimistically moves the card forward — it opens the gate checklist for the target stage; Mal ticks/completes the criteria (ticks now PERSIST via PATCH /criteria, the same store the server re-checks) and on success the card snaps into the dragged-to column. PromoteModal reworked: manual ticks persist, override needs a typed reason, broad query invalidation so the board refreshes. Commit acfe409.</div>
+              <div class="card-title">Engaged 10% stage + Qualified gate rebuild</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-gate">gate</span><span class="tag tag-staging">on staging</span></div>
+              <div class="card-desc">Internal-only Engaged stage (discovery-call forcing event, precise meeting counting), 8 data-backed Qualified criteria, opening-qualifiers consolidated, every gate item click-through.</div>
             </div>
-
             <div class="card">
-              <div class="card-title">V1.1 Phase 4 — auto-populate gate fields from sources (2026-05-28)</div>
-              <div class="card-tags"><span class="tag tag-id">Phase 4</span><span class="tag tag-ws-i">extractor</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">Paste a URL or text/transcript and Nirvana extracts the gate-relevant signals — reusing Velocity's existing extractor + activity + ExtractionsPanel review loop rather than a parallel store. services/dealSources.ts: ingestSource() crawls a URL (HTML→text, ported from KeyContent) or keeps pasted text, runs extractFromText, stores suggestions on a note_text activity (metadata.extraction) so they surface for review and pre-tick the gate. New POST /api/deals/:id/sources. applyExtraction now writes deal-level signals onto the REAL gate fields: compelling_event → deal.compellingEvent (fill-if-empty), decision_maker_named → primary contact.isDecisionMaker — these became auto_checkable in the Engaged build, so they need the field written, not just an evidence pre-tick. Suggest-don't-auto-apply holds (only on Apply, never clobbers a hand-typed value). AddSourceModal (URL / paste / transcript) wired into AttachmentsPanel; Apply now refreshes kill-check + transition-check so Gate Progress updates live. PDF/DOCX/image parsing remains the documented fast-follow. Commit d85dc8c.</div>
+              <div class="card-title">Gate enforced server-side + drag opens checklist</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-gate">gate</span><span class="tag tag-fix">fix</span><span class="tag tag-staging">on staging</span></div>
+              <div class="card-desc">Transitions are gated authoritatively on the server (override needs a logged reason). A forward drag opens the gate checklist; the card snaps over once met.</div>
             </div>
-
             <div class="card">
-              <div class="card-title">V1.1 Engaged 10% stage + Qualified gate rebuild — Phases 1–3 + Option A (2026-05-28)</div>
-              <div class="card-tags"><span class="tag tag-id">Phase 1–3</span><span class="tag tag-ws-w">gate</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">The Delta-5 stage Mal had to approve — now built and in staging. Phase 1: Engaged 10% stage between Prospect and Qualified (stage_code enum +"engaged", seeded stages row per playbook, StageTrack/Pipeline 6 columns, forcing event = discovery_call_booked); internal-only — portal journey collapses Engaged→Prospect so buyers still see Prospect→Qualified. Precise meeting-counting: distinct calendar events keyed by metadata.eventId, so the discovery call (1st) can't satisfy the second-meeting (Qualified) gate. Phase 2: real company turnover field surfaced on the Business card (icp_threshold reads turnover_cents). Phase 3: the 5 formerly-manual Qualified criteria flipped to auto/data-backed — lean_dm + willing_invest read the ICP score, opening_qualifiers + compelling_event + decision_maker read deal/people fields. Option A: opening qualifiers consolidated into one QualificationModal (turnover ✓, growth ✓, challenge area, compelling event) instead of scattered across ICP/company/deal; every Gate Progress item is now click-through to the action that satisfies it. Migrations 0006 (deal_criterion_state) applied both branches. Commits b4114ea + 486151c + 94c6c42 + 5adc6b8 + 96928be.</div>
+              <div class="card-title">Phase 4 — auto-populate gate fields from sources</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-portal">extractor</span><span class="tag tag-staging">on staging</span></div>
+              <div class="card-desc">Add a URL / pasted text / transcript → the extractor surfaces suggestions → applying writes the real gate fields. "Full research pack" pre-ticks from a populated snapshot.</div>
             </div>
-
             <div class="card">
-              <div class="card-title">V1.1 sales-cycle — Deltas 1–4 (2026-05-28)</div>
-              <div class="card-tags"><span class="tag tag-id">V1.1</span><span class="tag tag-ws-w">gate</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">Four low-risk methodology deltas from the V1.1 spec, in staging. (1) Closed Lost = 5 fixed reasons — lost_reason enum + win_loss_records column (migration 0007), required dropdown in WinLossModal, gate reads lost_reason. (2) Dropped "recommended approach presented" from the 50% Test (seller activity, not buyer commitment) — seed + data update on both branches. (3) Kill criteria at Qualified (= spec A1): services/killCriteria.ts evaluates 3 ICP-signal disqualifiers → "Should we walk?" amber card on the Deal page → one click to Closed Lost with the mapped reason pre-filled (human confirms). (4) Forcing-event framing: forcing:true on the one buyer-action criterion per stage; GateProgressCard shows a "Forcing event" badge. Engaged 10% (Delta 5) deliberately held — its enum + portal-journey blast radius is a separate, explicitly-approved workstream. Commit 29fceaa.</div>
+              <div class="card-title">Shared-understanding confirm loop</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-portal">portal</span><span class="tag tag-staging">on staging</span></div>
+              <div class="card-desc">Rep shares captured facts → buyer confirms or corrects in "Have we got this right?" → corrections post back. "Add all" (rep) + "Yes to all" (buyer) + one-click accept-correction.</div>
             </div>
-
             <div class="card">
-              <div class="card-title">V1.1 sales-cycle spec draft + implementation plan (2026-05-28)</div>
-              <div class="card-tags"><span class="tag tag-id">V1.1</span><span class="tag tag-neutral">docs</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">docs/specs/VELOCITY-SALES-CYCLE-V1.1.md — diffable markdown successor to the locked V1.0 spec (kept canonical; the .docx is the rep-facing render). §0 "Changes from V1.0" + four §7 deltas + Engaged 10% flagged PROPOSED-NOT-LOCKED. Plus docs/planning/v1.1-sales-cycle-implementation-plan.md breaking each delta into shippable steps with exact codebase touchpoints, lowest-risk first. Awaiting Mal's review. Commits d022fd3 + 4634922.</div>
+              <div class="card-title">Corrections drive engagement + attention</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-portal">portal</span><span class="tag tag-staging">on staging</span></div>
+              <div class="card-desc">A buyer response resets the anti-stall clock, surfaces as the daily "one thing", and accepting writes the corrected wording back to the deal field.</div>
             </div>
-
             <div class="card">
-              <div class="card-title">Stage-gate checklist + guided "Plan the move" (2026-05-28)</div>
-              <div class="card-tags"><span class="tag tag-id">gate</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">Manual gate criteria are now tickable + persisted (deal_criterion_state table, migration 0006) — GateProgressCard checkboxes hold state over time; auto criteria stay read-only. "Plan the move" became a guided picker that offers the next stage's unmet MANUAL criteria as one-tap moves (auto-checked outcomes filtered out — they're satisfied via their own flows). Deliberate-tick by design: completing a planned move doesn't auto-tick the gate. Commits bfef1a7 + 5d5bc1f.</div>
+              <div class="card-title">Notifications — bell + per-deal card + buyer Updates</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-portal">portal</span><span class="tag tag-staging">on staging</span></div>
+              <div class="card-desc">Global bell (unread count, cross-deal, jump-to-deal) + per-deal card + a buyer "Updates" section. Fires on confirm/correct/share/accept.</div>
             </div>
-
             <div class="card">
-              <div class="card-title">In-Velocity meeting scheduling + reschedule (Calendar write) (2026-05-28)</div>
-              <div class="card-tags"><span class="tag tag-id">I1+</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">Book meetings/calls from inside Velocity. gcal scope upgraded read-only → calendar.events; createCalendarEvent (sendUpdates=all + optional Meet link) + POST /api/deals/:id/schedule-meeting; ScheduleMeetingModal (title, datetime, duration, Meet toggle, pre-filled buyer invitee). Scheduling advances the next move to a "Prep for…" task. True reschedule moves the SAME event in place (events.patch; deal.next_meeting_event_id, migration 0005) — button reads "Reschedule" once a meeting exists; falls back to create if the event was deleted. Commits 21439a3 + 0a75766 + 664ffa2.</div>
+              <div class="card-title">Mutual action plan — add + auto confirm item</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-portal">portal</span><span class="tag tag-staging">on staging</span></div>
+              <div class="card-desc">Inline "add item" on each side (was recap-only). Sharing facts keeps one self-updating "Review &amp; confirm" item that auto-completes when answered.</div>
             </div>
-
             <div class="card">
-              <div class="card-title">I1 — Google Calendar connected + sync layer live (2026-05-27)</div>
-              <div class="card-tags"><span class="tag tag-id">I1</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">Calendar OAuth went live: GOOGLE_OAUTH_CLIENT_ID/SECRET + redirect URI set on Railway staging + prod; Calendar API enabled in the GCP project; connected as abe@coreshifthq.com. Sync layer built: connectorTokens (auto-refresh), googleCalendar REST client, hourly calendarSync (advisory-locked) matching event attendees → owned deals → nextMeetingAt + buyer RSVP (migration 0004), immediate-sync-on-connect + "Sync now" button. Stage gate now reads RSVP (accepted) where synced. Settings only shows live "Connect" for built integrations (implemented flag); others read "Coming soon". Commits 8ad5d89 → 818285c.</div>
+              <div class="card-title">Cache fix — cards refresh after every mutation</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-fix">fix</span><span class="tag tag-staging">on staging</span></div>
+              <div class="card-desc">Shared invalidateDeal() so gate-progress + kill-check + extractions refresh instantly — no more hard refresh.</div>
             </div>
-
             <div class="card">
-              <div class="card-title">Pipeline risk-chip overflow fix (2026-05-27)</div>
-              <div class="card-tags"><span class="tag tag-id">fix</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">At-risk chips on kanban cards overflowed the pill (e.g. "In pipeline 16 days — over cycle target (Rule 3)"). Now a short label ("16d in pipe") with the full Rule explanation in a hover tooltip; Chip gained a title prop; .chip CSS got white-space:nowrap + max-width. Commit 15be54f.</div>
+              <div class="card-title">Suggestion dedup by concept</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-fix">fix</span><span class="tag tag-staging">on staging</span></div>
+              <div class="card-desc">Quick-add suggestions dedup by label, so an accepted/corrected item is never re-offered and "Add all" can't create a duplicate.</div>
             </div>
-
-            <div class="card">
-              <div class="card-title">🟢 V1.0 fully closed (2026-05-26)</div>
-              <div class="card-tags"><span class="tag tag-id">milestone</span><span class="tag tag-v10">V1.0</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Every spec-locked V1.0 item is in dev. H1–H9 hardening, P1–P7 portal panels, W1+W2+W4+W5 wow factors (W3 voice = V1.1), D1+D4–D9 delight stubs, U1–U5 UX overhaul, C1–C3 CI+deploy + custom DNS. Reconciled against `docs/planning/v1-work.md`. Ready for Aditi demo. V1.1 work (I1 sync layer + I2–I8 + P8 + W3 + A1+A2 + D10–D15) lives in Up Next.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">U5 — Internal pages mobile sweep (2026-05-26)</div>
-              <div class="card-tags"><span class="tag tag-id">U5</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Closes the last V1.0 UX item. AppShell sidebar collapses to off-canvas drawer behind a thin mobile top bar (hamburger toggle, dim backdrop, auto-close on route change, body scroll locked while open). Pipeline kanban switches from 5-col grid to horizontal-scroll preserving 260px min column width. Pipeline filter popover viewport-clamped via `w-[min(340px,calc(100vw-2rem))]`. WinLoss summary grid-cols-3 → 1 sm:3. All internal pages standardised on `px-4 py-5 sm:px-6 lg:px-8` so phones get ~24px back. Commit 1bfa698.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">H7 — drizzle-orm upgrade + audit fix (2026-05-26)</div>
-              <div class="card-tags"><span class="tag tag-id">H7</span><span class="tag tag-ws-h">hardening</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Closes the last V1.0 hardening item. drizzle-orm 0.38.3 → 0.45.2 (closes SQL-identifier-injection advisory); drizzle-kit 0.30.1 → 0.31.10; drizzle-zod pinned at ^0.7.0 because 0.8.x requires Zod 4 namespace (incremental Zod v3 → v4 migration is a separate effort). path-to-regexp / picomatch / postcss / qs / ws / body-parser / express transitively bumped via `npm audit fix`. Was 13 vulns (10 moderate + 3 high), now 5 moderate — all dev-only esbuild chain via Vite 5.4 + drizzle-kit (only exploitable when `npm run dev` is running locally and you visit a malicious site). Vite 5 → 6 upgrade to close those deferred to V1.1. tsc + build both green; typed query builder paths unchanged. Commit a99a40c.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Hide all Nirvana-branded surfaces (2026-05-26)</div>
-              <div class="card-tags"><span class="tag tag-id">copy</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Mal: the AI-partner branding wasn't being used yet; surfacing it as if it were live was misleading. Removed: AppShell sidebar "Nirvana / live" pill, Portal "Ask Nirvana" chat section (stub — never wired to a real backend; PortalChat component removed too), Portal hero + footer microcopy mentions, Login page "Nirvana live" chip + hero copy, Dashboard header "Nirvana live" chip. Inline brand-flavor microcopy on the Deal page (tooltips/help text) left intact for a separate copy pass once naming is decided. Commit 911f425.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Tag dropdown + "Share with buyer" portal button (2026-05-26)</div>
-              <div class="card-tags"><span class="tag tag-id">qa-feedback</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Two QA-driven fixes on top of P6 expansion. (1) Tag editor was `window.prompt` — now a glass popover dropdown with 8 preset checkboxes (Discovery / Pricing / Case study / Proposal / Contract / Transcript / Reference / Onboarding) + custom-tag input + removable chips inside the popover. (2) PortalLink component existed but was never mounted — wired into Deal header row. No-portal state = MissionButton "Share with buyer" that mints the magic link on click. Portal-exists state = compact pill with truncated URL + state chip + copy + open-in-new-tab + rotate (with confirm). Commit 3ecad9d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">P6 expansion — tags + search + buyer-visibility (2026-05-26)</div>
-              <div class="card-tags"><span class="tag tag-id">P6-ext</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Closes BUILD §3 B6 tags-and-search half. Schema migration 0003: documents.is_buyer_visible (boolean, indexed) + documents.tags (jsonb&lt;string[]&gt;); sent proposals backfilled to buyer-visible. Server POST /attachments accepts tags + isBuyerVisible; NEW PATCH endpoint for inline edits; portal hydrate filters by isBuyerVisible=true and emits tags. Deal AttachmentsPanel: per-row tag editor + Eye/EyeOff visibility toggle, "Shared" jade pill, "internal only" caption, tag chips inline. Portal ResourcesHub: search input (title + tag substring), tag filter chip strip, filtered list with empty state. Migration applied to both staging + prod branches. Buyer-side upload deferred to V1.1 — different security semantics (unauthenticated POST + virus scan). Commit a6985a1.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">W1 — Pre-meeting brief mobile + competitive coaching tone (2026-05-26)</div>
-              <div class="card-tags"><span class="tag tag-id">W1</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Closes SYSTEM-V1 §9.1 W1 V1.0 scope. (1) AgentBriefPanel migrated to Aurora Glass primitives (GlassCard / Eyebrow / Chip / MissionButton), header now flex-wraps so mobile doesn't squish the meta line, "Phone-friendly" chip pill added, Markdown h2 styled as small mono violet eyebrows. (2) Server briefingService.ts system prompt reframed as a "sports coach giving a 15-second pre-game brief" — added explicit "## Suggested open" section first, talk-time goal, personal recall, business recall, info gaps, one-thing-NOT-to-say. Voice/phone delivery itself stays V1.1. Commit b447768.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">W2 — Post-meeting recap 4-dim sentiment breakdown (2026-05-26)</div>
-              <div class="card-tags"><span class="tag tag-id">W2</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Closes SYSTEM-V1 §9.2 W2 V1.0 scope. RecapModal sentiment was already 4-dim server-side (warmth / engagement / hesitation / commitment) but rendered as 5 flat numbers — read like a stats dump, not a breakdown. New SentimentBreakdown component: hero overall card with plain-English interpretation, 4 dimension rows each with horizontal gradient bar (jade for high warmth/engagement/commitment, amber for high hesitation — colours invert with meaning). Talk-time bar uses violet→coral gradient + coaching microcopy when userPct &gt; 60. Calendar auto-book still needs I1 sync layer (V1.1). Commit dc6ffe7.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">P2 — Day Zero Research panel polish (2026-05-26)</div>
-              <div class="card-tags"><span class="tag tag-id">P2</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Closes BUILD §3 B2. Day Zero body was rendering as one long blob via simpleMd. New DayZeroSections component parses `## ` headings (server's dayZeroService.ts produces five exact ones: Competitor scan / Mini SWOT / Market signals / Search/AI / Conversation seeds) into individual glass mini-cards. Per-section icon lookup picks the right glyph: Swords for competitor, LayoutGrid for SWOT, TrendingUp for market, Search for AI, MessageCircle for seeds. Commit 91d6534.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">P5 — Mutual action plan styling polish (2026-05-26)</div>
-              <div class="card-tags"><span class="tag tag-id">P5</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Closes BUILD §3 B5 Vision-3 "soft, not aggressive" framing. PortalActions list: pending tasks now sort first; per-row status icons (CheckCircle2 / Clock / Circle); a count chip in the header reads "N need attention" / "N/total done" / "all done"; relative-time + formatDate for due dates; empty-state placeholder when nothing's pending. Amber stays amber (no destructive red), emphasis lands on what's pending without nagging. Commit 0bde679.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">I1 — Google Calendar OAuth foundation (2026-05-23)</div>
-              <div class="card-tags"><span class="tag tag-id">I1</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">Real OAuth path wired for the gcal provider — previous stub returned 501 "oauth_flow_not_yet_implemented". New: GCAL_SCOPES=calendar.readonly+openid+email; buildGcalAuthorizeUrl with access_type=offline + prompt=consent (returns refresh_token reliably); exchangeGcalCode posts to oauth2.googleapis.com/token; decodeIdTokenEmail extracts the connected account email as display identifier. POST /api/connectors/gcal/connect now returns { redirectUrl } and marks status='connecting'. New GET /api/connectors/gcal/callback handles the token exchange, stores refresh_token in user_connectors.tokensJson, flips to 'connected', redirects to /settings with success/decline/error markers. State token carries userId so the unauthenticated callback can attach tokens to the right row. Client ConnectionsPanel follows redirectUrl. PENDING DASHBOARD STEP: Mal/Abe add https://velocity.coreshifthq.com/api/connectors/gcal/callback + the staging equivalent to the existing coreshift-velocity OAuth client's Authorized redirect URIs (~30s). After that the Settings → Connect Calendar flow is live. Token storage is plaintext for V1; Vault encryption is V1.1 hardening. Sync layer (auto-populate deal.nextMeetingAt + RSVP-read for "invite accepted" gate) is the next-up V1.1 piece. Commit 8ac4deb.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">P6 — Portal resources hub download (2026-05-23)</div>
-              <div class="card-tags"><span class="tag tag-id">P6</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Portal Resources section is now actually functional — and tightened. Hydrate query filter restricted to docs with storageUrl IS NOT NULL: was previously leaking unpublished proposal drafts (body-only) and Day Zero markdown into the buyer's resources list. Published proposals still surface via LivingProposalPanel as designed; only file uploads (AttachmentsPanel attachments) appear in Resources. New endpoint GET /api/portal/:token/resources/:resourceId/url is token-gated (no internal auth), verifies the resource belongs to the portal's deal + has storageUrl, returns a short-lived signed URL, and writes a portal_activity of type='page_view' with metadata.kind='resource_open' for engagement visibility. Client ResourceItem component replaces the broken `#resource-{id}` anchor with a real "Open" button + per-row error state. Empty state copy when nothing's attached. V1 scope is download-only — tagged/searchable/buyer-upload deferred to V1.1. Commit 3e3878d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">P3 — Last-meeting summary amend flow (2026-05-23)</div>
-              <div class="card-tags"><span class="tag tag-id">P3</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Buyer-side affordance under the "Last conversation" portal card so they can flag "this isn't quite right" + capture a correction. New endpoint POST /api/portal/:token/amend-meeting validates the magic-link token (active + non-expired), accepts a {correction} body (1–2000 chars), inserts an inbound note_text activity on the deal (subject: "Buyer correction to last meeting summary", source=portal_amendment in metadata) — surfaces naturally in Mal's Deal page activity timeline. Also inserts a portal_activities row of type='comment' for audit/analytics. Client MeetingAmendBlock component (idle/editing/saving/saved/error states) replaces the previous static "Drop a note in the chat below" italic. V1 scope is the latest meeting only — multi-meeting amend ledger is V1.1. Commit a63721c.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Optimistic drag on Pipeline — Sentinel-style snap (2026-05-23)</div>
-              <div class="card-tags"><span class="tag tag-id">U-polish</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Pipeline drag-and-drop was server-bound: drop → wait → invalidate → card moves. Felt laggy. Lifted the TanStack onMutate/onError/onSettled pattern verbatim from Sentinel's BRIEF-sentinel-v3-drag-and-drop.md. Cache patches the deal's stage code on drop → card jumps instantly. On server reject, snapshot reverts + amber toast. PointerSensor activation 6px → 5px to match Sentinel's tuned value. Commit 344fb44.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">"Your next move" autoloads on Dashboard (2026-05-23)</div>
-              <div class="card-tags"><span class="tag tag-id">U-polish</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">DailyKickoffPanel renamed from "Your one move today" → "Your next move" and now auto-fires on mount via useEffect — Mal hits the dashboard, the move appears immediately. No "Show me" click. "Another" button still re-fires. Commit b439b0d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Document + transcript upload on Deal page (2026-05-22)</div>
-              <div class="card-tags"><span class="tag tag-id">deal-attach</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Demo-ready criterion #2 closed. New server/routes/attachments.ts: POST/GET/DELETE for /api/deals/:id/attachments + a /text endpoint for the Use-for-Recap flow. Client AttachmentsPanel: Aurora Glass card, "Upload file" + "Add transcript" buttons, file list with icon-per-type + relative time + size, per-file Download (signed URL) + Delete + Recap (on .txt/.md transcripts, pipes content into RecapModal). Broader MIME allowlist (PDF/DOC/DOCX/PPT/PPTX/XLS/XLSX/CSV/TXT/MD/images, 25MB). Bucket MIME allowlist on Supabase Storage expanded to match on both staging + prod branches via new scripts/update-bucket-mime.ts (idempotent). Commits 8b51640 + 819ae5a.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Lifecycle gate-criterion blockers closed (2026-05-22)</div>
-              <div class="card-tags"><span class="tag tag-id">lifecycle</span><span class="tag tag-ws-d">delight</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Three blockers preventing Mal from progressing a deal Prospect→Won via UI without override checkbox: (1) Proposal publish now auto-sets deal.documentsSentAt (the "docs out" moment per spec §7) → unblocks Verbal→Won gate. (2) Inline schedule-next-meeting EditDealField on Deal hero, datetime-local input → unblocks next_meeting/third_meeting/kickoff_scheduled criteria at Qualified+ gates. (3) "Score the ICP →" entry point under GateProgressCard opens existing IcpModal → unblocks pain_motivation + icp_threshold. End-to-end demo flow now possible with zero overrides. Commit d8f64bc.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">GateProgressCard + 5-question proposal template (2026-05-22)</div>
-              <div class="card-tags"><span class="tag tag-id">lifecycle</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Two spec-fidelity uplifts. (1) New GateProgressCard always-on view of next-stage criteria: "X of Y met" pill (jade if all), violet→coral progress bar, two-column criterion grid with auto/manual badges, detail line on failures, evidence-snippet quotes from extractor pre-tick, "Promote to X" button (primary when all met). Closes the "structural fields" gap from spec §7. (2) Proposal v1 body now seeded with the 5-framing-question template from spec §5 — "Start v1" no longer drops Mal into a blank textarea. Company name interpolated, default title becomes "Proposal for {Company} — v1". Commit e0afde0.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">7 Deal lifecycle controls restored in Aurora Glass (2026-05-22)</div>
-              <div class="card-tags"><span class="tag tag-id">restore-1-7</span><span class="tag tag-ws-u">UX</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Claude Design's Aurora Glass dropped a lot of working controls. Restored all seven in seven commits: (1) Action plan checkbox toggle — Square/CheckSquare flips via PATCH /api/action-items/:id. (2-3) Interactive StageTrack — each segment clickable with hover hints ("← back" / "promote →" / "★ mark won"); Closed Won segment only enabled at ≥75%; quiet "Mark this deal lost" pill below the track. (4) Inline-edit value + probability via EditDealField; owner surfaced in hero (read-only — needs picker, see V1.0 polish). (5) Edit Personal + Business via pencil-on-hover on ProfileCards (EditCompanyModal / EditPersonModal). (6) "✦ Recap from transcript" violet chip in Activity SectionHeader. (7) Real HTML5 drag-and-drop via @dnd-kit/core on the Pipeline kanban. Commits efabb0e + 52806ee + 1ef41c4 + 674671e + d4bad6c.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Pipeline Filter (stage / risk / owner / date) (2026-05-22)</div>
-              <div class="card-tags"><span class="tag tag-id">pipeline-filter</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Glass-popover with four filter dimensions, applied client-side. Stage: All / Prospect / Qualified / Presented / Verbal / Closed Won. Risk: All / At-risk / Honest pass. Owner: Anyone / You / specific (derived from loaded deals). Date: All / Meeting today / Meeting this week / Overdue actions. Active filters show as dismissable chips below header; Filter button shows count when active; "Clear all" in both the popover footer and the chip strip. Deal interface gained owner field. Commit 71fca81.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Custom DNS — velocity.coreshifthq.com live (2026-05-22)</div>
-              <div class="card-tags"><span class="tag tag-id">infra</span><span class="tag tag-ws-c">CI</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Replaced the auto-generated Railway domains with branded custom DNS. Prod: velocity.coreshifthq.com (CNAME → a4135o7d.up.railway.app). Staging: velocity-staging.coreshifthq.com (CNAME → cx8klqaf.up.railway.app). Both Cloudflare records DNS-only (grey cloud) so Railway's Let's Encrypt cert issuance worked. SSL provisioned within minutes. Supabase Auth Redirect URLs updated on BOTH branches (main + staging) for the new origins + `/**` wildcard. Site URL bumped from localhost:3000 to the production custom domain. Magic-link + Google OAuth verified working end-to-end on both URLs.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">🟢 First production deploy — Velocity is live (2026-05-22)</div>
-              <div class="card-tags"><span class="tag tag-id">C3</span><span class="tag tag-ws-c">CI</span><span class="tag tag-v10">V1.0</span></div>
-              <div class="card-desc">Promoted staging → main and Velocity is now live in production at velocity-production-b772.up.railway.app. Three blockers cleared in one session: (1) prod Supabase main was already migrated to schema v0001+v0002 (verified via new scripts/bootstrap-prod-main.ts — idempotent + safe to re-run), (2) deploy-production.yml now uses --force-with-lease so the first staging-to-main push could succeed (main had been at the orphan "Initialize main" commit 2506973), (3) staging 92b0b50 force-pushed to main, Railway auto-deployed, /health returned 200 with 15s uptime. Aurora Glass bundle confirmed serving (Geist+Mono in HTML, CSS hash index-Cg1k16aT.css matches staging). Service domain: velocity-production-b772.up.railway.app. Google OAuth env var set (VITE_ENABLE_GOOGLE_AUTH=true) — pending: Mal/Abe to add the prod redirect URL to the existing Google Cloud OAuth client and toggle Google provider on in Supabase main branch (~2 min of dashboard work).</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Aurora Glass design package landed (2026-05-22)</div>
-              <div class="card-tags"><span class="tag tag-id">U2/U3/U4</span><span class="tag tag-ws-u">UX</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Replaced the stock shadcn slate look with Claude Design's "Aurora Glass" — glassmorphic light theme over a soft aurora backdrop (violet · coral · jade gradients). Six commits, applied per the HANDOFF order: (1) tokens — oklch palette (violet 285 / coral 30 / jade 165 / amber 75 / ink 285), HSL channel compat for shadcn opacity modifiers, four glass surface tiers (.glass / .glass-strong / .glass-mission / .aurora), Geist Mono added alongside Inter. (2) glass primitives — Money, GlassCard, Chip, MissionButton, LetterAvatar, ProgressRing, Eyebrow + new lib/utils.ts (cn helper) + lib/api.ts (apiFetch alias). (3) AppShell — glass panel stack sidebar, violet→coral active nav pill, full-bleed main (kills max-w-5xl right-side gap). (4) Dashboard — greeting hero, W4 mission card lead, today's plate as visual card grid (avatars+rings), forecast strip with raw-vs-honest bar, dot+number stage cards, ember-tinted alerts. (5) Deal — 64px letter avatar + tracking-tight name + progress ring + stage track + coral mission CTA. (6) Pipeline — full-bleed kanban with violet→coral column heads. (7) Portal — coral-led aurora-portal backdrop, 820px reading-width. (8) Login — two-pane desktop, MailCheck confirmation, Google gated. Data flow preserved exactly. DailyKickoffPanel adapted to existing POST /api/agent/daily-kickoff endpoint (design assumed richer GET shape). Brief at docs/playbook/design-brief.md.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Aurora Glass null-safety fixes — Deal + Pipeline (2026-05-22)</div>
-              <div class="card-tags"><span class="tag tag-id">U-hotfix</span><span class="tag tag-ws-u">UX</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Two same-class bugs caught in the verification pass right after Aurora Glass shipped. The design assumed company/playbook/stage/handover were always non-null but they're left-joined on the server. Deal page rendered EMPTY for any deal without an initialized handover doc (HandoverCard.completenessPct → TypeError → entire subtree unmounted). Pipeline cards would have crashed the moment any deal arrived with a missing left-join. Fixed both: HandoverCard renders a quiet "Not started" surface when null; Deal hero pre-computes companyName/playbookName/stageCode/stageDisplay with fallbacks; Pipeline Deal interface marks the joined fields as nullable and DealCard guards every risk-chip + days-in-stage label. Then a verification pass walked every Aurora Glass surface (Dashboard, Deal, Pipeline, Portal, Login, AppShell, DailyKickoffPanel) — no more of the pattern. Commits 869d1fe + 2204b99.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">U2 dashboard polish + U3 deal page softening + how-to-use playbook (2026-05-22)</div>
-              <div class="card-tags"><span class="tag tag-id">U2, U3</span><span class="tag tag-ws-u">UX</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Internal UX overhaul shipped. U2 Dashboard.tsx rewritten — calmer hierarchy, W4 "one thing" leads, pipeline shape as quiet 3-up below, today's queue at the bottom; soft amber palette (no destructive red) on at-risk card to match U1's "page Mal opens with coffee" framing; new DashboardSection wrapper gives each block a circle-icon avatar. U3 Deal.tsx targeted polish — hero gets playbook eyebrow + 2-3xl tracking-tight, risk banner softened to amber, "No future meeting" warning softened, "Mark lost" button neutralised. Plus new docs/playbook/how-to-use-velocity.md (~7000 words): full end-to-end usage guide covering sign-in, daily routine, 6-stage deal lifecycle with test+gift table, customer portal panels, W5 handover hard gate, commissions, anti-stall scheduler, AI feature firing matrix, environments, V1.0 decisions log, conventions. Linked in Quick Links above. ~commit 92cdd47.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">W4 daily kickoff "one thing" reshape + W5 auto-progressive handover (2026-05-22)</div>
-              <div class="card-tags"><span class="tag tag-id">W4 + W5</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Two SYSTEM-V1 §9 wow factors in one push. W4: dailyKickoff.ts rewritten to a 7-tier priority ranking (`pickTopPriority`) that surfaces ONE thing each morning, not a deluge — fed by the anti-stall scheduler. DailyKickoffPanel renamed "The one thing today" with a priorityType chip. W5: new server/services/handoverAuto.ts synthesises 6 auto_* fields from commitments/people/objections/actionItems/companies/documents; init endpoint pre-populates; new /api/handovers/:id/refresh endpoint re-derives auto fields preserving manual edits. HandoverModal restructured into 3 sections — completeness+checklist, auto-derived (read-only with sparkle icon + "auto" tag), manual fields — with a "Refresh from signals" button. 100% checklist remains the hard gate for Closed Won. ~commit 97dae41.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Second delight quartet — D5 + D6 + D7 + D8 (2026-05-21)</div>
-              <div class="card-tags"><span class="tag tag-id">D5, D6, D7, D8</span><span class="tag tag-ws-d">delight</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Four more 25/50% delight payloads in the portal. D5 FullInsightPack (Day Zero "we already know this" expanded view, V1.0 stub-quality with TemplateBadge per locked decision). D6 audio button on LivingProposalPanel ("Listen to a walkthrough" — TTS stub for V1.0). D7 MatchedCaseStudy panel (industry-matched case study surface, V1.0 stub-quality with TemplateBadge — library seed still blocked on Mal but the framing ships). D8 DecisionToolkit (buyer-side compare/justify tooling). All Aditi-portal-visible by demo week. ~commit 041dcca.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Playbook switcher state share fix (2026-05-21)</div>
-              <div class="card-tags"><span class="tag tag-neutral">bugfix</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Each `usePlaybook()` call previously returned a fresh useState, so changing the sidebar dropdown didn't refresh the dashboard or pipeline without a hard reload. Fixed with a module-level singleton + subscriber set pattern — every consumer hook now reads from + writes to the same source. ~commit 628ae1a.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">First delight trio — D1 + D4 + D9 (2026-05-21)</div>
-              <div class="card-tags"><span class="tag tag-id">D1, D4, D9</span><span class="tag tag-ws-d">delight</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">First three 25/50% delight payloads land in the portal. D1: Day Zero "we already know this" body now renders (was previously generated but unsaved — dayZeroService.ts now persists to documents.body, portal hydrate returns it). D4: JourneyOverview panel — soft demo of the journey/track-record framing. D9: portal proposal demo framing — empty-state guidance + unified mobile diff on LivingProposalPanel. Plus /portal/approve endpoint. ~commit b582d1a.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Staging / prod DB split — via branches (2026-05-21)</div>
-              <div class="card-tags"><span class="tag tag-id">H9</span><span class="tag tag-ws-h">hardening</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Iteration story: first pass created a separate velocity-prod Supabase project. Abe pushed back — Coreshift pattern (confirmed at keycontent-v2) uses single project with main + staging branches. Reversed: deleted velocity-prod, created `staging` branch on uodsmyystkaxoogitvsw (ref pdawstndulfnydvesmdm), inherited 32-table schema, bootstrapped drizzle.__drizzle_migrations (3 rows), re-seeded everything via npx tsx scripts/seed.ts + seed-aditi-extras.ts + seed-demo-data.ts (Coreshift tenant, GP/CS playbooks, 6 demo deals incl. Aditi portal, commission rules, Mal + Abe admin rows). Railway prod env vars revert to main; Railway staging env vars point at staging branch. Aditi portal at /portal/aditi-demo-portal-2026 verified loading. ~$9.68/mo for the always-on branch (Pro plan). main branch keeps pre-split seed for now — clean before C3 cutover.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Google OAuth wired on main + staging (2026-05-21)</div>
-              <div class="card-tags"><span class="tag tag-id">auth</span><span class="tag tag-neutral">auth</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Login.tsx + AuthCallback.tsx were already coded; just needed Google Cloud OAuth client (project: coreshift-velocity, Internal user type for @coreshifthq.com Workspace) + Supabase provider config on both main and staging branches + redirect URLs. Hybrid auth decision locked: internal Sales OS uses Google OAuth (+ email/password + magic link fallbacks), customer-facing portal stays magic-link-only (capability-based, no OAuth gate). Abe signed in via Google to staging end-to-end on 2026-05-21 — middleware auto-linked his new Supabase ID to the pre-seeded admin row by email match.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Bucket name cleanup (PR #8, 2026-05-21)</div>
-              <div class="card-tags"><span class="tag tag-id">H8</span><span class="tag tag-ws-h">hardening</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Purged `my-app-files` everywhere — .env.example default, server/lib/storage.ts fallback, README, all docs/setup + docs/standards. `velocity-files` is now the single consistent bucket name across .env, code, docs, and both Supabase branches. H7 (drizzle 0.38→0.45 audit fix) deferred to its own PR — exploit surface theoretical (typed query builder, no user-supplied identifier strings), and 9 of 10 vulns are dev-only.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Portal UX redesign — journey-first, soft, mobile (PR #7, 2026-05-20)</div>
-              <div class="card-tags"><span class="tag tag-id">U1</span><span class="tag tag-ws-u">UX</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">The X-factor surface that Aditi sees on demo day. Refactored Portal.tsx from a flat list of sections to a journey-first narrative: greets buyer by first name, leads with 5-stop journey track (First chat → Discovery → Proposal → Agreement → Onboarding) with current step highlighted, prominent "Right now" status card, every section gets a circle-icon avatar + journey-position subtitle ("On the table — what we're proposing", "Where we left off"). Soft palette pass: amber-on-amber for overdue actions (no red), emerald for done, generous spacing. Coreshift/GP attribution moved to a quiet footer signature. Mobile responsive throughout — LivingProposalPanel diff view also goes unified single-column on &lt;md so side-by-side doesn't crowd narrow screens. 44px tap targets on Send + Approve.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">B4 Living Proposal panel — built end-to-end (PR #6, 2026-05-20)</div>
-              <div class="card-tags"><span class="tag tag-id">P4</span><span class="tag tag-ws-p">portal</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">The single biggest V1 gap is closed. Salesperson side: ProposalSection on the Deal page — textarea editor, save-on-blur, Publish button, Revise creates v+1 (seeds body from prior). Buyer side: LivingProposalPanel in the portal — markdown-rendered current version, "See what changed" toggle flips to side-by-side diff (rose removed / emerald added) using hand-rolled LCS in shared/diff.ts, "Approve this version" button writes a portal_activities row of type approval. Published versions are immutable (state machine: draft → publish → approved). Migration 0002 adds documents.body + updated_at, applied to staging.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Six V1 decisions locked (2026-05-20)</div>
-              <div class="card-tags"><span class="tag tag-id">decisions</span><span class="tag tag-neutral">planning</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Mal delegated V1 scope authority to Abe. All six previously-open decisions resolved: I5 e-sign → V1.1; W3 voice → V1.1; D5/D7 ship stub-quality with template markers; GST → ex-GST default; personal data → default-restrictive (things-to-avoid recorded but internalOnly); multi-buyer portal → V2; Closed Lost → leave with stage=Lost; mobile-first → V2. Full log in docs/planning/v1-work.md.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Commission errors surfaced + Day Zero scan scoped (PR #5, 2026-05-19)</div>
-              <div class="card-tags"><span class="tag tag-id">H5 + H6</span><span class="tag tag-ws-h">hardening</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">H5: commissionsResult now carries an optional error field — UI can show "Deal moved to Won, but commissions failed: &lt;reason&gt;" instead of silent {0,0}. H6: added documents.company_id column + index + migration 0001 with backfill; portal hydrate now filters at SQL level (WHERE company_id=? AND title LIKE 'Day Zero — %' ORDER BY created_at DESC LIMIT 1) instead of full tenant scan + JS filter; also fixed dormant bug in dayZeroService where version-counting query compared deal_id to companyId (never matched).</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">CI tests gating staging (PR #4, 2026-05-16)</div>
-              <div class="card-tags"><span class="tag tag-id">C1</span><span class="tag tag-ws-c">CI</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">deploy-staging.yml now runs `npm run check` (tsc, hard gate — compile errors block promotion) and `npx tsx scripts/smoke-test.ts` (soft gate, continue-on-error: true) before pushing dev to staging. Smoke kept soft because its assertions are seeded-data-coupled ("Aditi @ 25%", "GP has 6 stages") and will go red on normal data changes — surfaces as yellow warning without blocking. Needs DATABASE_URL repo secret (gh secret set, not in Claude's PAT scope).</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Scheduler advisory lock (PR #3, 2026-05-16)</div>
-              <div class="card-tags"><span class="tag tag-id">H2</span><span class="tag tag-ws-h">hardening</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Every scheduler tick (hourly anti-stall, daily forecast snapshot, daily nurture demotion, boot-time anti-stall) wrapped in withAdvisoryLock helper using pg_try_advisory_xact_lock inside an explicit BEGIN/COMMIT. Transaction-scoped (not session-scoped) because Supabase's Transaction Pooler routes statements across backends — session locks failed the race test. Three stable job IDs reserved. Race-test script at scripts/test-advisory-lock.ts (4/4 assertions pass).</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">drizzle-kit push → generate + migrate (PR #2, 2026-05-15)</div>
-              <div class="card-tags"><span class="tag tag-id">H1</span><span class="tag tag-ws-h">hardening</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">Swapped the destructive db:push for a reviewable migration workflow. migrations/0000_brave_prism.sql captures the current 32-table schema; scripts/migrate.ts wraps Drizzle's migrator; .gitattributes locks LF on SQL files so the SHA-256 hash matches across Windows dev + Linux Railway hosts. Shared staging Supabase bootstrapped: one row in drizzle.__drizzle_migrations marks 0000 as already-applied. AGENTS.md, README.md, architecture.md, supabase.md all updated to use the new flow + warn off db:push. .gitignore un-ignored migrations/.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Security ship-blockers closed (PR #1, 2026-05-15)</div>
-              <div class="card-tags"><span class="tag tag-id">H3 + H4</span><span class="tag tag-ws-h">hardening</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">H3: deleted unauthed GET /objects/* file route + rewrote storage.md snippet so future agents copy the authed pattern. H4: portal magic-link now 90d (was 365 + never compared), expiry checked on all 3 public routes (410 expired), new POST /api/deals/:id/portal/rotate auth-gated endpoint + Regenerate button in PortalLink.tsx.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">V1 planning docs landed (2026-05-15)</div>
-              <div class="card-tags"><span class="tag tag-id">docs</span><span class="tag tag-neutral">docs</span><span class="tag tag-demo">Demo</span></div>
-              <div class="card-desc">docs/planning/v1-work.md (spec-grounded breakdown, H/I/P/W/D/A/U/C taxonomy), v1-timeline.md (3-milestone framing + Mal email draft), handover.md (exhaustive next-session brief). H9 (split staging Supabase) added.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">deploy-staging.yml workflow validated end-to-end</div>
-              <div class="card-tags"><span class="tag tag-id">C2</span><span class="tag tag-ws-c">CI</span></div>
-              <div class="card-desc">Push to dev auto-promotes to staging via GitHub Actions. Default GITHUB_TOKEN scope sufficient. Confirmed 2026-05-15 16:25 PST. Hardened in PR #4 (tsc gate + soft smoke test added).</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">🚀 First staging deploy live (2026-05-15)</div>
-              <div class="card-tags"><span class="tag tag-neutral">infra</span></div>
-              <div class="card-desc">https://velocity-staging-staging.up.railway.app · /health 200 · DB connected · real Claude wired · SPA serves. Build via Railpack (railpack v0.23, node 22.22.3, ap-southeast-2 region).</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Railway project + envs + services</div>
-              <div class="card-tags"><span class="tag tag-neutral">infra</span></div>
-              <div class="card-desc">Project velocity (id 269e6e9a…) in Coreshift HQ workspace. Two envs: production (watches main) + staging (watches staging). Auto-deploy on branch push.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Supabase Storage bucket velocity-files</div>
-              <div class="card-tags"><span class="tag tag-neutral">infra</span></div>
-              <div class="card-desc">Created private, 10MB limit, MIME allowlist matches server/routes/files.ts (jpeg/png/webp/gif/pdf/csv).</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Env vars on both Railway services</div>
-              <div class="card-tags"><span class="tag tag-neutral">infra</span></div>
-              <div class="card-desc">DATABASE_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, STORAGE_BUCKET=velocity-files, ANTHROPIC_API_KEY, NODE_ENV=production. PORT deliberately unset (Railway provides). DNS stays on *.up.railway.app for now.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Velocity kanban added to coreshift-kanbans</div>
-              <div class="card-tags"><span class="tag tag-neutral">docs</span></div>
-              <div class="card-desc">Published at coreshifthqnz.github.io/coreshift-kanbans/velocity/. Linked from root index. Refreshed 2026-05-15 evening with V1 milestone framing.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">GitHub repo + branches</div>
-              <div class="card-tags"><span class="tag tag-neutral">infra</span></div>
-              <div class="card-desc">CoreshiftHQNZ/velocity with dev / staging / main. Deploy workflows committed (dev → staging auto, staging → main manual via workflow_dispatch).</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Spec docs (Nirvana → Code handoff)</div>
-              <div class="card-tags"><span class="tag tag-neutral">docs</span></div>
-              <div class="card-desc">3 docs in /docs/specs: BUILD-HANDOFF (60KB), SYSTEM-V1, SALES-CYCLE-V1. Plus standards: architecture, auth, storage. Treated as source of truth.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Supabase project + schema</div>
-              <div class="card-tags"><span class="tag tag-neutral">infra</span></div>
-              <div class="card-desc">ref uodsmyystkaxoogitvsw, ap-southeast-2. 32 tables pushed via drizzle-kit push. Multi-tenant from day one (tenant_id + playbook_id on every scoped row). H9 will split this into separate staging + prod projects.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Backend (Express + Drizzle)</div>
-              <div class="card-tags"><span class="tag tag-neutral">backend</span></div>
-              <div class="card-desc">Auth via Supabase JWT (JWKS verified). 20 route files in flat /server/routes/. Tenant scoping in middleware (no Supabase RLS by convention). Audit logging on every agent call.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Frontend (React + Vite + Wouter)</div>
-              <div class="card-tags"><span class="tag tag-neutral">frontend</span></div>
-              <div class="card-desc">Dashboard, Pipeline kanban, Deal detail, Companies, Win/Loss, Commissions, Settings, Portal. Cmd+K search across deals/companies/people. AppShell with sidebar + playbook switcher.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">5 AI features + extractor</div>
-              <div class="card-tags"><span class="tag tag-neutral">AI</span></div>
-              <div class="card-desc">Today's brief, pre-meeting brief, post-meeting recap, Day Zero insight pack, portal chat. Plus rolling-profile extractor from notes/transcripts/emails. Stub mode when no API key.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Customer portal with Nirvana hard rails</div>
-              <div class="card-tags"><span class="tag tag-ws-p">portal</span></div>
-              <div class="card-desc">Magic-link gated at /portal/:token. Buyer-safe projection strips internal fields. AI chat refuses to negotiate price/scope, never reveals internal data, never pretends to be human. Price/scope keywords auto-flag for Mal. Expiry now enforced (H4).</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Anti-stall scheduler + commission engine</div>
-              <div class="card-tags"><span class="tag tag-neutral">scheduler</span></div>
-              <div class="card-desc">In-process setInterval: hourly Rules 1-7 evaluation, daily forecast snapshots + nurture demotion. Commission rules auto-fire on Closed Won. Multi-replica safe as of PR #3 (pg_try_advisory_xact_lock per tick).</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Seed data + smoke test</div>
-              <div class="card-tags"><span class="tag tag-neutral">data</span></div>
-              <div class="card-desc">6 demo deals across GP + CS (Aditi, Storepro, Hilltop Honey, Bright &amp; Bold, Mission Control, Equippers). 36-assertion smoke test all passing.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Local POC verified (Abe, 2026-05-15)</div>
-              <div class="card-tags"><span class="tag tag-neutral">verification</span></div>
-              <div class="card-desc">Ran on Windows pointing at Mal's seeded Supabase. Abe added as admin in Coreshift tenant. Real Claude wired via Anthropic key. Five AI features confirmed live.</div>
-            </div>
-
           </div>
         </section>
 
+        <!-- IN PROGRESS -->
         <section class="column col-in-progress">
-          <header class="col-head">
-            <h2>🟡 In flight</h2>
-            <span class="col-count">0</span>
-          </header>
+          <header class="col-head"><h2>🟡 In progress</h2><span class="col-count">1</span></header>
           <div class="cards">
-            <p class="empty">Nothing claimed yet. V1.1 is underway — Calendar (connect + sync + in-app scheduling/reschedule), the gate checklist, sales-cycle Deltas 1–4, the Engaged 10% stage + Qualified gate rebuild (Phases 1–3 + Option A), and source auto-populate (Phase 4) are all shipped to staging. See Up Next for remaining integrations + wow factors.</p>
+            <div class="card">
+              <div class="card-title">End-to-end pipeline QA on staging</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-neutral">QA</span></div>
+              <div class="card-desc">Walking "Abe Test 3" through Prospect → Engaged → Qualified → … with sample docs, verifying gates, the confirm loop, and notifications before the prod promotion.</div>
+            </div>
           </div>
         </section>
 
+        <!-- BLOCKED -->
         <section class="column col-blocked">
-          <header class="col-head">
-            <h2>🚫 Blocked / awaiting operator</h2>
-            <span class="col-count">0</span>
-          </header>
+          <header class="col-head"><h2>🚫 Blocked</h2><span class="col-count">0</span></header>
           <div class="cards">
-            <p class="empty">Nothing blocked. Prod's healthy, pipeline's clean.</p>
+            <p class="empty">Nothing blocked.</p>
           </div>
         </section>
 
-        <section class="column col-up-next">
-          <header class="col-head">
-            <h2>🔵 Up next</h2>
-            <span class="col-count">13</span>
-          </header>
+        <!-- THIS WEEK -->
+        <section class="column col-this-week">
+          <header class="col-head"><h2>🔵 This week</h2><span class="col-count">2</span></header>
           <div class="cards">
-
-            <div class="pending-group-head">V1.0 nice-to-haves (not spec-locked, deferable)</div>
-
             <div class="card">
-              <div class="card-title">V1.0 polish backlog (3 small items)</div>
-              <div class="card-tags"><span class="tag tag-id">polish</span><span class="tag tag-ws-u">UX</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">Surfaced during testing — none are V1.0 spec items, none are blockers. (a) Owner editing in Deal hero (read-only today; needs a user-picker popover — EditDealField doesn't support select). (b) PDF/DOCX → text extraction so Recap works on .pdf/.docx attachments, not just .txt/.md (server-side via `mammoth` + `pdf-parse`). (c) Portal D-workstream sub-components (JourneyOverview, FullInsightPack, MatchedCaseStudy, DecisionToolkit, LivingProposalPanel) still wear pre-Aurora classes inside the new portal shell — swap their card wrappers for &lt;GlassCard&gt; + &lt;Eyebrow&gt; for visual consistency. ~2–3d total — punted into V1.1 since V1.0 spec is now fully closed.</div>
+              <div class="card-title">Promote V1.1 batch to production</div>
+              <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">PR staging → main (Abe's sign-off) + apply migrations 0011–0013 to the prod Supabase branch, then smoke-test prod. See the Ops Playbook → Promotion checklist.</div>
             </div>
-
-            <div class="pending-group-head">V1.1 — remaining</div>
-
             <div class="card">
-              <div class="card-title">I2 — Gmail OAuth (outbound recap)</div>
-              <div class="card-tags"><span class="tag tag-id">I2</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">SYSTEM-V1 §8. Send the W2 post-meeting recap emails from Mal's actual Gmail account (instead of via a generic SMTP relay). Same Google OAuth client; add gmail.send scope. ~2–3d.</div>
+              <div class="card-title">Finish Engaged → Qualified → Won QA</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-neutral">QA</span></div>
+              <div class="card-desc">Complete the walkthrough with the second-meeting forcing event + kill-criteria check, then the Presented/Verbal/Won legs.</div>
             </div>
+          </div>
+        </section>
 
-            <div class="card">
-              <div class="card-title">I3 — Gmail inbound → mirror to portal</div>
-              <div class="card-tags"><span class="tag tag-id">I3</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">SYSTEM-V1 §5: "every email received from buyer outside portal gets mirrored back" — buyer sees a unified view in the portal regardless of how communication happened. Pub/Sub on Gmail or polling per connected user. ~2–3d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">I4 — Fireflies/Otter transcription pipeline</div>
-              <div class="card-tags"><span class="tag tag-id">I4</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">SYSTEM-V1 §8 "every sales call auto-transcribed and routed to the right deal." Webhook → match meeting via attendee email → pipe transcript into RecapModal-equivalent server flow. Manual paste works for V1.0 demo. ~3–4d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">I5 — Native e-sign in portal</div>
-              <div class="card-tags"><span class="tag tag-id">I5</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">SYSTEM-V1 §11 explicitly: "DocuSign dropped." SALES-CYCLE §10 names one-click sign as the 75% gift. Pull in if Mal closes Aditi via portal during demo cycle. ~5–7d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">I6 — Xero push (commissions + invoices)</div>
-              <div class="card-tags"><span class="tag tag-id">I6</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">SYSTEM-V1 §6: approved commissions push to Xero as bills payable; Closed Won → invoice. Velocity already calculates commission rules; this just plumbs the API write. ~3–4d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">I7 — LinkedIn enrichment</div>
-              <div class="card-tags"><span class="tag tag-id">I7</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">SYSTEM-V1 §8. Person enrichment + recent-activity signals. LinkedIn API access is limited so may need fallback (e.g. ProxyCurl). ~2–3d API-access-dependent.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">I8 — Google Drive archive layer</div>
-              <div class="card-tags"><span class="tag tag-id">I8</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">SYSTEM-V1 §8. Long-term archive for transcripts + recordings + documents older than 90d, pushed to Mal's Drive automatically. Velocity's storage stays hot; Drive holds the cold archive. ~1–2d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Onboarding banner — auto-prompt to Connect Calendar</div>
-              <div class="card-tags"><span class="tag tag-id">I1-follow</span><span class="tag tag-ws-i">integrations</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">Decision pinned 2026-05-23. Sign-in OAuth (Supabase, identity-only scopes) and Calendar OAuth (our own flow, calendar.readonly + refresh_token) deliberately stay TWO steps — bundling them at sign-in expands the initial consent surface and violates Google's incremental-authorisation guidance. Discoverability lift instead: dismissable Dashboard banner when user_connectors.gcal.status='not_connected'. Ships alongside the I1 sync layer so the banner's promise is true. ~0.5d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">W3 — Voice capture from anywhere</div>
-              <div class="card-tags"><span class="tag tag-id">W3</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">SYSTEM-V1 §9.3 — "Hey Nirvana, Mary at Aditi just told me…" routes to deal, updates field, sets reminder. Spec calls it "load-bearing for v1." Mobile native + transcription pipeline. Locked-decision call 2026-05-20: V1.1 (Aditi demo runs on Mal-on-keyboard). ~7–10d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">P8 — Quiet data capture (agent asks gentle questions)</div>
-              <div class="card-tags"><span class="tag tag-id">P8</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">BUILD §3 B8. The portal agent surfaces gentle conversational questions over time to capture information Mal didn't get directly (preferred meeting time, budget calibration, internal stakeholder map). Extractor already exists; this is the prompt-the-buyer half. ~2–3d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">A2 — "Do we understand them yet?" pre-proposal readiness</div>
-              <div class="card-tags"><span class="tag tag-id">A2</span><span class="tag tag-ws-a">anti-overselling</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">SYSTEM-V1 §3. Score from extracted signals: do we have success definition in their words, budget, decision-maker, compelling event? &lt;80% recommends more discovery before proposal goes out. Gates the 50% transition implicitly. ~2–3d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">D10–D11 + D13 + D15 — remaining delight payloads</div>
-              <div class="card-tags"><span class="tag tag-id">D10–D15</span><span class="tag tag-ws-d">delight</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">D10 Week One walkthrough (75% gift), D11 AI execution team intro (75% gift), D13 Welcome pack (100% gift), D15 industry keep-warm content for nurture-database deals. D12 covered by I5 e-sign; D14 is the manual Mal-touch (not a code item). ~5–8d combined.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">C4 — Wire Velocity into Sentinel monitoring</div>
-              <div class="card-tags"><span class="tag tag-id">C4</span><span class="tag tag-ws-c">CI</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">Not Velocity's scope — lives in the Sentinel project. Mention here for accountability. Once Sentinel ships its monitoring tap, Velocity needs the equivalent of a /api/health-detail endpoint or webhook integration. ~0.5d when Sentinel side is ready.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Voice capture from anywhere</div>
-              <div class="card-tags"><span class="tag tag-id">W3</span><span class="tag tag-ws-w">wow factor</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">SYSTEM-V1 §9.3: "Hey Nirvana, Mary at Aditi just told me…" routes to deal, updates field, sets reminder. Spec calls it "load-bearing for v1." Not built. Mobile native + transcription pipeline. ~7–10d. May pull into Demo if Mal insists.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Quiet data capture (agent asks gentle Qs)</div>
-              <div class="card-tags"><span class="tag tag-id">P8</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">BUILD §3 B8: extractor exists but agent doesn't prompt buyer with gentle questions over time. ~2–3d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Anti-overselling guardrails</div>
-              <div class="card-tags"><span class="tag tag-id">A1, A2</span><span class="tag tag-ws-a">anti-overselling</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">SYSTEM-V1 §3: A1 "Should we walk?" surfaces wrong-fit deals before delivery failure. A2 "Do we understand them yet?" pre-proposal readiness score — &lt;80% recommends more discovery. ~4–6d.</div>
-            </div>
-
-            <div class="card">
-              <div class="card-title">Remaining delight payloads</div>
-              <div class="card-tags"><span class="tag tag-id">D10–D15</span><span class="tag tag-ws-d">delight</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">D10 Week One walkthrough, D11 AI execution team intro, D13 Welcome pack, D15 industry keep-warm content. D12 covered by I5 e-sign. ~5–8d.</div>
-            </div>
-
+        <!-- BACKLOG -->
+        <section class="column col-backlog">
+          <header class="col-head"><h2>⚪ Backlog</h2><span class="col-count">14</span></header>
+          <div class="cards">
+            <div class="card"><div class="card-title">I2 — Gmail OAuth (outbound recap)</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">Send W2 recap emails from Mal's Gmail. Same Google client + gmail.send scope.</div></div>
+            <div class="card"><div class="card-title">I3 — Gmail inbound → portal mirror</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">Mirror buyer emails into the portal for a unified view (Pub/Sub or poll).</div></div>
+            <div class="card"><div class="card-title">I4 — Fireflies/Otter transcription</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">Auto-transcribe calls → match by attendee → pipe into the recap/extractor flow.</div></div>
+            <div class="card"><div class="card-title">PDF/DOCX/image source parsing</div><div class="card-tags"><span class="tag tag-portal">extractor</span></div><div class="card-desc">Phase 4 fast-follow — extract text from uploaded files (pdf-parse / mammoth / vision) so they feed the confirm loop too.</div></div>
+            <div class="card"><div class="card-title">W3 — Voice capture from anywhere</div><div class="card-tags"><span class="tag tag-neutral">wow</span></div><div class="card-desc">"Hey Nirvana, Mary at Aditi just told me…" → routes to deal, updates field, sets reminder. Mobile + transcription.</div></div>
+            <div class="card"><div class="card-title">P8 — Quiet data capture</div><div class="card-tags"><span class="tag tag-portal">portal</span></div><div class="card-desc">The buyer-prompted half of the confirm loop — the agent asks gentle questions over time to fill gaps.</div></div>
+            <div class="card"><div class="card-title">A2 — Pre-proposal readiness</div><div class="card-tags"><span class="tag tag-gate">gate</span></div><div class="card-desc">"Do we understand them yet?" score from captured signals; &lt;80% recommends more discovery.</div></div>
+            <div class="card"><div class="card-title">I5 — Native e-sign in portal</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">One-click sign as the 75% gift. Pull in if Aditi closes via portal.</div></div>
+            <div class="card"><div class="card-title">I6 — Xero push</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">Approved commissions → bills payable; Closed Won → invoice.</div></div>
+            <div class="card"><div class="card-title">I7 — LinkedIn enrichment</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">Person enrichment + recent-activity signals (API-access dependent).</div></div>
+            <div class="card"><div class="card-title">I8 — Google Drive archive</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">Cold archive of transcripts/recordings/docs &gt; 90d to Mal's Drive.</div></div>
+            <div class="card"><div class="card-title">D10–D15 — remaining delight payloads</div><div class="card-tags"><span class="tag tag-neutral">delight</span></div><div class="card-desc">Week-one walkthrough, AI execution-team intro, welcome pack, keep-warm nurture content.</div></div>
+            <div class="card"><div class="card-title">Notifications v2</div><div class="card-tags"><span class="tag tag-portal">portal</span></div><div class="card-desc">More event types (meeting scheduled, proposal published) + optional email/daily digest.</div></div>
+            <div class="card"><div class="card-title">Vite 5 → 6 upgrade</div><div class="card-tags"><span class="tag tag-infra">infra</span></div><div class="card-desc">Closes the remaining dev-only esbuild advisories deferred from H7.</div></div>
           </div>
         </section>
 
@@ -1278,9 +500,9 @@
   </main>
 
   <footer class="page-foot">
-    Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a>
-    &nbsp;·&nbsp;
-    Last refresh: 2026-05-28 PM — V1.0 shipped, V1.1 underway. Since the V1.0 close: Google Calendar live (OAuth creds + Calendar API + sync layer with RSVP gate), in-Velocity meeting scheduling + true reschedule (calendar.events write), persistent stage-gate checklist + guided Plan-the-move, the V1.1 sales-cycle spec draft + implementation plan (for Mal's review), and sales-cycle Deltas 1–4 (5 fixed lost reasons · dropped "approach presented" · kill criteria / "Should we walk?" · forcing-event framing). All in staging. Held: Engaged 10% stage (Delta 5) — awaiting Mal, given its enum + portal-journey blast radius.
+    Velocity build board · curated by Coreshift HQ + Growth Partners ·
+    <a href="roadmap.html">Roadmap</a> · <a href="ops-playbook.html">Ops Playbook</a> ·
+    edit <code style="font-size:11px;">coreshift-kanbans/velocity/index.html</code>
   </footer>
 </body>
 </html>

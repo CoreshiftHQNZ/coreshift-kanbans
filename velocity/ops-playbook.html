@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Velocity — Operations Playbook</title>
+  <style>
+    :root {
+      --navy: #1A1140; --navy-deep: #0E0826; --teal: #7C5CFC; --teal-dark: #5B3FD9; --teal-light: #EDE9FE;
+      --coral: #FF6B5B; --amber: #F59E0B; --amber-light:#FEF3C7; --green: #10B981; --green-light:#D1FAE5;
+      --red:#DC2626; --red-light:#FEE2E2; --blue:#3B82F6; --blue-light:#DBEAFE;
+      --gray: #64748B; --gray-light: #E2E8F0; --gray-lighter: #F1F5F9;
+      --bg: #F8FAFC; --card: #FFFFFF; --text: #1E293B; --text-muted: #475569; --text-soft: #94A3B8;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Arial, sans-serif; color: var(--text); background: var(--bg); font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    header.page-head { background: var(--navy); color: #fff; padding: 22px 32px; position: sticky; top: 0; z-index: 10; }
+    .head-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; max-width: 1040px; margin: 0 auto; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark { width: 32px; height: 32px; background: linear-gradient(135deg, var(--teal), var(--coral)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+    .brand-title { font-size: 16px; font-weight: 700; }
+    .brand-sub { font-size: 10.5px; color: var(--teal); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+    .nav { display: flex; gap: 16px; font-size: 13px; }
+    .nav a { color: #C9BCF0; text-decoration: none; }
+    .nav a:hover { color: #fff; }
+    .nav a.active { color: #fff; font-weight: 700; }
+    main { max-width: 1040px; margin: 0 auto; padding: 36px 32px 60px; }
+    .hero-eyebrow { color: var(--teal-dark); font-size: 11px; font-weight: 700; letter-spacing: 0.18em; }
+    h1 { color: var(--navy); font-size: 40px; font-weight: 800; letter-spacing: -0.02em; margin: 10px 0 8px; }
+    .lede { font-size: 17px; color: var(--text-muted); max-width: 800px; }
+    .toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 36px; }
+    .toc a { font-size: 12.5px; font-weight: 600; color: var(--teal-dark); background: var(--teal-light); border: 1px solid #D9CFFB; border-radius: 999px; padding: 5px 12px; text-decoration: none; }
+    .toc a:hover { background: #E2DBFC; }
+    section.play { background: var(--card); border: 1px solid var(--gray-light); border-radius: 14px; padding: 24px 28px; margin-bottom: 20px; scroll-margin-top: 80px; }
+    section.play h2 { color: var(--navy); font-size: 21px; font-weight: 800; letter-spacing: -0.01em; margin: 0 0 4px; }
+    section.play .sub { color: var(--text-soft); font-size: 12.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 16px; }
+    section.play h3 { color: var(--navy); font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin: 0 0 12px; }
+    ul, ol { margin: 0 0 12px; padding-left: 22px; }
+    li { margin: 5px 0; }
+    code { background: var(--gray-lighter); border: 1px solid var(--gray-light); border-radius: 4px; padding: 1px 6px; font-size: 12.5px; color: var(--navy); }
+    pre { background: var(--navy-deep); color: #E7E0FF; border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; margin: 0 0 14px; }
+    pre code { background: none; border: none; color: inherit; padding: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 0 0 14px; font-size: 13px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--gray-light); vertical-align: top; }
+    th { color: var(--text-soft); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+    td code { font-size: 12px; }
+    .flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 14px; }
+    .flow .node { background: var(--teal-light); color: var(--teal-dark); border: 1px solid #D9CFFB; border-radius: 8px; padding: 8px 12px; font-weight: 700; font-size: 12.5px; }
+    .flow .node.prod { background: var(--green-light); color: #065F46; border-color: #A7F3D0; }
+    .flow .arrow { color: var(--text-soft); font-weight: 800; }
+    .note { border-radius: 10px; padding: 12px 16px; margin: 0 0 14px; font-size: 13px; }
+    .note-warn { background: var(--red-light); border: 1px solid #FCA5A5; color: #7F1D1D; }
+    .note-info { background: var(--blue-light); border: 1px solid #BFDBFE; color: #1E3A8A; }
+    .checklist { list-style: none; padding: 0; }
+    .checklist li { padding-left: 26px; position: relative; margin: 8px 0; }
+    .checklist li::before { content: "☐"; position: absolute; left: 0; color: var(--teal); font-size: 15px; }
+    footer { text-align: center; color: var(--text-soft); font-size: 12px; padding: 20px; }
+    footer a { color: var(--teal-dark); text-decoration: none; }
+    @media (max-width: 700px) { main { padding: 24px 16px 40px; } h1 { font-size: 30px; } section.play { padding: 18px; } }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="head-inner">
+      <div class="brand">
+        <div class="brand-mark">V</div>
+        <div><div class="brand-title">Velocity</div><div class="brand-sub">Operations Playbook</div></div>
+      </div>
+      <nav class="nav">
+        <a href="index.html">Board</a>
+        <a href="roadmap.html">Roadmap</a>
+        <a href="ops-playbook.html" class="active">Ops Playbook</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero-eyebrow">HOW VELOCITY IS BUILT &amp; RUN</div>
+    <h1>Operations Playbook</h1>
+    <p class="lede">The operating manual for Velocity: where everything lives, how code reaches production, how the database moves with it, how to QA, and what to do when something breaks. If you're shipping a change, start at "Branch &amp; deploy flow" and "Database &amp; migrations".</p>
+
+    <div class="toc">
+      <a href="#env">1 · Environments</a>
+      <a href="#flow">2 · Branch &amp; deploy flow</a>
+      <a href="#db">3 · Database &amp; migrations</a>
+      <a href="#qa">4 · How to QA</a>
+      <a href="#promote">5 · Promotion checklist</a>
+      <a href="#connectors">6 · Connectors</a>
+      <a href="#incident">7 · Incidents &amp; rollback</a>
+      <a href="#map">8 · Where things live</a>
+    </div>
+
+    <!-- 1 ENVIRONMENTS -->
+    <section class="play" id="env">
+      <h2>1 · Environments</h2>
+      <div class="sub">Code · hosting · database · DNS</div>
+      <p>Velocity is one codebase deployed to two environments. Hosting is Railway (auto-deploy from branches); the database is a single Supabase project with two branches; DNS is Cloudflare.</p>
+      <table>
+        <tr><th>Layer</th><th>Production</th><th>Staging</th></tr>
+        <tr><td><strong>App URL</strong></td><td><code>velocity.coreshifthq.com</code></td><td><code>velocity-staging.coreshifthq.com</code></td></tr>
+        <tr><td><strong>Git branch</strong></td><td><code>main</code></td><td><code>staging</code></td></tr>
+        <tr><td><strong>Railway env</strong></td><td>production</td><td>staging</td></tr>
+        <tr><td><strong>Supabase branch</strong></td><td><code>main</code> · ref <code>uodsmyystkaxoogitvsw</code></td><td><code>staging</code> · ref <code>pdawstndulfnydvesmdm</code></td></tr>
+      </table>
+      <div class="note note-info">Both Supabase branches live under the one project <code>velocity</code> (org <em>CoreShift</em>). They are <strong>separate databases</strong> — data and schema do not sync automatically. A migration applied to staging is <em>not</em> on prod until you apply it there too (see §3).</div>
+      <p>Health check: <code>GET /health</code> returns uptime — a low uptime confirms a fresh deploy landed.</p>
+    </section>
+
+    <!-- 2 FLOW -->
+    <section class="play" id="flow">
+      <h2>2 · Branch &amp; deploy flow</h2>
+      <div class="sub">local → dev → staging → main</div>
+      <div class="flow">
+        <span class="node">local</span><span class="arrow">→</span>
+        <span class="node">dev</span><span class="arrow">→</span>
+        <span class="node">staging</span><span class="arrow">→</span>
+        <span class="node prod">main (prod)</span>
+      </div>
+      <ul>
+        <li>Work locally, commit on a feature/work branch.</li>
+        <li>Push to <code>staging</code> → Railway auto-deploys the <strong>staging</strong> environment. (Small changes push straight to <code>staging</code>; the <code>dev</code> branch + GitHub Actions build-gate is the path for larger PR-reviewed work.)</li>
+        <li>Promote <code>staging → main</code> by PR → Railway auto-deploys <strong>production</strong>.</li>
+      </ul>
+      <div class="note note-warn"><strong>Rules.</strong> Never push directly to <code>main</code> — always go through <code>staging</code>. Production promotion needs Abe's sign-off. CI runs <code>tsc</code> + <code>build</code> as a hard gate; it does <em>not</em> run DB migrations (see §3).</div>
+      <p>Before any ship: <code>npx tsc --noEmit</code> and <code>npm run build</code> must both be green.</p>
+    </section>
+
+    <!-- 3 DB -->
+    <section class="play" id="db">
+      <h2>3 · Database &amp; migrations</h2>
+      <div class="sub">Drizzle + Supabase branches</div>
+      <p>Schema lives in <code>shared/schema.ts</code>. Migrations are SQL files in <code>migrations/NNNN_*.sql</code> with a matching entry in <code>migrations/meta/_journal.json</code>.</p>
+      <h3>Writing a migration</h3>
+      <ul>
+        <li>Add the column/table to <code>shared/schema.ts</code> (+ an <code>insert…Schema</code> export if needed).</li>
+        <li>Create <code>migrations/00NN_name.sql</code> — make it <strong>idempotent</strong> (<code>CREATE TABLE IF NOT EXISTS</code>, <code>ADD COLUMN IF NOT EXISTS</code>, <code>CREATE INDEX IF NOT EXISTS</code>) so it's safe to re-run.</li>
+        <li>Append the entry to <code>_journal.json</code>.</li>
+      </ul>
+      <h3>Applying it</h3>
+      <p>Deploys do <strong>not</strong> auto-run migrations. Apply the SQL to each Supabase branch out-of-band (idempotent SQL via the Supabase MCP / SQL editor), in step with the code:</p>
+      <table>
+        <tr><th>When</th><th>Where</th></tr>
+        <tr><td>Ship to staging</td><td>Apply to the <strong>staging</strong> branch <code>pdawstndulfnydvesmdm</code></td></tr>
+        <tr><td>Promote to prod</td><td>Apply to the <strong>main</strong> branch <code>uodsmyystkaxoogitvsw</code></td></tr>
+      </table>
+      <div class="note note-warn"><strong>The #1 thing not to forget:</strong> when promoting to production, apply the new migrations to the prod (<code>main</code>) Supabase branch <em>before/with</em> the code deploy. If the app deploys expecting a table/column the prod DB doesn't have, requests 500. Current batch awaiting prod: <code>0011</code> shared facts, <code>0012</code> source_field, <code>0013</code> notifications.</div>
+    </section>
+
+    <!-- 4 QA -->
+    <section class="play" id="qa">
+      <h2>4 · How to QA</h2>
+      <div class="sub">Verify on staging before promoting</div>
+      <ol>
+        <li>Confirm the deploy landed: <code>GET /health</code> shows a fresh (low) uptime, and the served JS bundle contains the new strings.</li>
+        <li>Probe new routes unauthenticated — expect <code>401</code> (auth-guarded &amp; live), not <code>404</code> (missing route).</li>
+        <li>Exercise the change in the app on <code>velocity-staging.coreshifthq.com</code> with a test deal (e.g. "Abe Test 3").</li>
+        <li>For gated flows, check the gate progress card + the server actually enforces it (a forward drag opens the checklist; an unmet forward move is refused).</li>
+        <li>For buyer-facing changes, open the deal's portal via its magic link in a separate/incognito tab.</li>
+      </ol>
+      <div class="note note-info">The extractor and AI features run in real mode only when <code>ANTHROPIC_API_KEY</code> is set on the environment; otherwise they fall back to a labelled "stub" mode (keyword-only).</div>
+    </section>
+
+    <!-- 5 PROMOTION -->
+    <section class="play" id="promote">
+      <h2>5 · Production promotion checklist</h2>
+      <div class="sub">staging → main</div>
+      <ul class="checklist">
+        <li><code>tsc</code> + <code>build</code> green on the staging head commit.</li>
+        <li>Staging QA passed for everything in the batch.</li>
+        <li>List the migrations in the batch (diff <code>migrations/</code> since the last prod release).</li>
+        <li>Get Abe's sign-off to promote.</li>
+        <li>Apply each new migration's idempotent SQL to the <strong>prod</strong> Supabase branch (<code>uodsmyystkaxoogitvsw</code>).</li>
+        <li>Open + merge the PR <code>staging → main</code> (gated).</li>
+        <li>Wait for Railway prod deploy; confirm <code>GET /health</code> uptime reset.</li>
+        <li>Smoke-test prod: a probe route returns <code>401</code>, the bundle has the new code, a key page loads without 500.</li>
+        <li>Update the build board (move cards from "on staging" → "in prod").</li>
+      </ul>
+    </section>
+
+    <!-- 6 CONNECTORS -->
+    <section class="play" id="connectors">
+      <h2>6 · Connectors</h2>
+      <div class="sub">Google OAuth · per-user tokens</div>
+      <p>Google Calendar uses a single OAuth client. Credentials live in Railway env vars on <em>both</em> environments: <code>GOOGLE_OAUTH_CLIENT_ID</code>, <code>GOOGLE_OAUTH_CLIENT_SECRET</code>, <code>GOOGLE_OAUTH_REDIRECT_URI_GCAL</code>. Tokens are stored per-user in <code>user_connectors</code>; <code>connectorTokens.ts</code> auto-refreshes and flips a connector to <code>expired</code> on <code>invalid_grant</code>.</p>
+      <ul>
+        <li>Each environment's redirect URI must be registered on the Google OAuth client (the callback can only be added by an operator with GCP access).</li>
+        <li>The Calendar API must be enabled in the GCP project (operator-only).</li>
+        <li>Settings only shows a live "Connect" for built connectors (an <code>implemented</code> flag); others read "Coming soon".</li>
+      </ul>
+    </section>
+
+    <!-- 7 INCIDENTS -->
+    <section class="play" id="incident">
+      <h2>7 · Incidents &amp; rollback</h2>
+      <div class="sub">When prod misbehaves</div>
+      <ol>
+        <li><strong>Confirm scope:</strong> <code>GET /health</code>, then <code>railway logs</code> for the prod service.</li>
+        <li><strong>If it's a bad deploy:</strong> roll back by reverting the offending commit on <code>main</code> (CI redeploys), or redeploy the previous good commit in Railway. Prefer revert over force-push.</li>
+        <li><strong>If it's a missing migration</strong> (most likely cause of a fresh-deploy 500): apply the migration's idempotent SQL to the prod branch — that usually resolves it without a code rollback.</li>
+        <li><strong>Never</strong> run destructive DB operations on prod to "fix" an incident; additive/idempotent only.</li>
+      </ol>
+      <div class="note note-info">Railway is used for logs + env vars only — never deploy manually; CI handles deploys from the branches.</div>
+    </section>
+
+    <!-- 8 MAP -->
+    <section class="play" id="map">
+      <h2>8 · Where things live</h2>
+      <div class="sub">Code map</div>
+      <table>
+        <tr><th>Area</th><th>Path</th></tr>
+        <tr><td>Schema + migrations</td><td><code>shared/schema.ts</code> · <code>migrations/</code></td></tr>
+        <tr><td>Stage gate engine</td><td><code>server/services/stageGate.ts</code> · <code>killCriteria.ts</code></td></tr>
+        <tr><td>Extractor + apply</td><td><code>server/services/extractor.ts</code> · <code>applyExtraction.ts</code> · <code>dealSources.ts</code></td></tr>
+        <tr><td>Notifications</td><td><code>server/services/notify.ts</code> · <code>routes/notifications.ts</code></td></tr>
+        <tr><td>Deal routes</td><td><code>server/routes/deals.ts</code> (transitions, criteria, shared-facts, suggested-facts)</td></tr>
+        <tr><td>Buyer portal</td><td><code>server/routes/portal.ts</code> · <code>client/src/pages/Portal.tsx</code></td></tr>
+        <tr><td>Deal page</td><td><code>client/src/pages/Deal.tsx</code> + <code>client/src/components/*</code></td></tr>
+        <tr><td>Cache invalidation helper</td><td><code>client/src/lib/invalidateDeal.ts</code></td></tr>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    Velocity operations playbook · <a href="index.html">Build board</a> · <a href="roadmap.html">Roadmap</a>
+  </footer>
+</body>
+</html>
