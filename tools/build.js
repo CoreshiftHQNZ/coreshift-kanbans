@@ -865,10 +865,10 @@ const html = `<!DOCTYPE html>
   <header class="page-head">
     <div class="page-head-inner">
       <div class="page-brand">
-        <div class="brand-mark">🛡</div>
+        <div class="brand-mark">${esc(META.brandMark || "🛡")}</div>
         <div>
           <div class="brand-title">${esc(META.title)}</div>
-          <div class="brand-sub">Operations Dashboard</div>
+          <div class="brand-sub">${esc(META.brandSub || "Operations Dashboard")}</div>
         </div>
       </div>
       <div class="page-meta">
@@ -1016,9 +1016,9 @@ const html = `<!DOCTYPE html>
   </main>
 
   <footer class="page-foot">
-    Edit <code>KANBAN.md</code> and run <code>update-kanban.cmd</code> to refresh this view.
+    ${META.footerHtml || `Edit <code>KANBAN.md</code> and run <code>update-kanban.cmd</code> to refresh this view.
     &nbsp;·&nbsp;
-    Companion to <a href="ops-playbook.html">ops-playbook.html</a> &amp; <a href="ROADMAP.md">ROADMAP.md</a>.
+    Companion to <a href="ops-playbook.html">ops-playbook.html</a> &amp; <a href="ROADMAP.md">ROADMAP.md</a>.`}
   </footer>
 </body>
 </html>`;

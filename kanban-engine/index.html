@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coreshift HQ Ops — Kanban</title>
+  <style>
+    :root {
+      --navy: #0F1E3D;
+      --navy-deep: #081530;
+      --navy-soft: #1A2A4F;
+      --teal: #14B8A6;
+      --teal-dark: #0D9488;
+      --teal-light: #CCFBF1;
+      --amber: #F59E0B;
+      --amber-light: #FEF3C7;
+      --red: #DC2626;
+      --red-light: #FEE2E2;
+      --green: #10B981;
+      --green-light: #D1FAE5;
+      --purple: #8B5CF6;
+      --purple-light: #EDE9FE;
+      --blue: #3B82F6;
+      --blue-light: #DBEAFE;
+      --indigo: #6366F1;
+      --indigo-light: #E0E7FF;
+      --pink: #EC4899;
+      --pink-light: #FCE7F3;
+      --gray: #64748B;
+      --gray-light: #E2E8F0;
+      --gray-lighter: #F1F5F9;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #475569;
+      --text-soft: #94A3B8;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 14px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    header.page-head {
+      background: var(--navy);
+      color: #FFFFFF;
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--navy-deep);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .page-head-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .page-brand { display: flex; align-items: center; gap: 14px; }
+    .brand-mark {
+      width: 36px; height: 36px;
+      background: var(--teal);
+      color: var(--navy);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 18px;
+    }
+    .brand-title {
+      font-size: 18px; font-weight: 700; letter-spacing: -0.01em;
+    }
+    .brand-sub {
+      font-size: 11px; color: var(--teal);
+      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .page-meta {
+      font-size: 12px; color: #8EA5C8;
+      display: flex; gap: 24px; flex-wrap: wrap;
+    }
+    .page-meta strong { color: #FFFFFF; font-weight: 600; }
+
+    /* Main layout */
+    .page-main {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 32px 32px 48px;
+    }
+
+    /* Section headings */
+    .section-head {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 16px;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: -8px 0 16px;
+    }
+    .section-sub code {
+      background: var(--gray-lighter);
+      border: 1px solid var(--gray-light);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 12px;
+      color: var(--navy);
+    }
+
+    /* Hero */
+    .hero {
+      margin-bottom: 48px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .hero-eyebrow {
+      color: var(--teal-dark);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      margin-bottom: 14px;
+    }
+    .hero-title {
+      color: var(--navy);
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin: 0 0 12px;
+    }
+    .hero-tagline {
+      color: var(--teal-dark);
+      font-size: 22px;
+      font-style: italic;
+      font-weight: 500;
+      margin: 0 0 16px;
+      line-height: 1.35;
+    }
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 17px;
+      line-height: 1.5;
+      max-width: 880px;
+      margin: 0;
+    }
+    .hero-phase-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .phase-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 13px;
+    }
+    .phase-pill-label {
+      color: var(--text-soft);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .phase-pill-value {
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .phase-pill-date {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 4px;
+    }
+    .phase-pill-milestone {
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+    .phase-pill-milestone .phase-pill-label { color: var(--teal); }
+    .phase-pill-milestone .phase-pill-value { color: #FFFFFF; }
+    .phase-pill-milestone .phase-pill-date { color: #CADCFC; }
+
+    /* Goals */
+    .goals { margin-bottom: 40px; }
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .goal-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 24px;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .goal-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .goal-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .goal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .goal-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Phases */
+    .phases { margin-bottom: 40px; }
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .phase-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .phase-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .phase-card.phase-done       { border-top: 4px solid var(--green); }
+    .phase-card.phase-in-progress{ border-top: 4px solid var(--amber); }
+    .phase-card.phase-planned    { border-top: 4px solid var(--blue); }
+    .phase-card.phase-future     { border-top: 4px solid var(--gray); opacity: 0.88; }
+    .phase-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .phase-marker {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .phase-card.phase-done .phase-marker        { background: var(--green); }
+    .phase-card.phase-in-progress .phase-marker { background: var(--amber); }
+    .phase-status-pill {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .phase-status-done        { background: var(--green-light); color: #065F46; }
+    .phase-status-in-progress { background: var(--amber-light); color: #B45309; }
+    .phase-status-planned     { background: var(--blue-light); color: #1D4ED8; }
+    .phase-status-future      { background: var(--gray-light); color: var(--gray); }
+    .phase-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 2px;
+      letter-spacing: -0.01em;
+    }
+    .phase-subtitle {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+    .phase-window {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+    .phase-desc {
+      font-size: 12.5px;
+      color: var(--text);
+      line-height: 1.5;
+      margin: 0 0 12px;
+    }
+    .phase-deliverables {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-top: 1px solid var(--gray-light);
+      padding-top: 10px;
+    }
+    .phase-deliverables li {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      padding: 3px 0 3px 14px;
+      position: relative;
+    }
+    .phase-deliverables li::before {
+      content: "•";
+      position: absolute;
+      left: 4px;
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    /* Status strip */
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 20px 8px;
+    }
+    .status-stat {
+      text-align: center;
+      padding: 8px 12px;
+      border-right: 1px solid var(--gray-light);
+    }
+    .status-stat:last-child { border-right: none; }
+    .status-num {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+    .status-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-top: 8px;
+    }
+    .status-done .status-num        { color: var(--green); }
+    .status-in-progress .status-num { color: var(--amber); }
+    .status-blocked .status-num     { color: var(--red); }
+    .status-this-week .status-num   { color: var(--blue); }
+    .status-backlog .status-num     { color: var(--gray); }
+
+    /* Links */
+    .links { margin-bottom: 40px; }
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+    }
+    .link-card:hover {
+      box-shadow: 0 4px 14px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+      border-color: var(--teal);
+    }
+    .link-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .link-text { flex: 1; }
+    .link-title {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+    .link-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .link-arrow {
+      color: var(--teal);
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Roles */
+    .roles { margin-bottom: 40px; }
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .role-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+    .role-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .role-text { flex: 1; }
+    .role-name {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .role-person {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 6px;
+      font-size: 13px;
+    }
+    .role-verbs {
+      font-size: 12px;
+      color: var(--text-soft);
+      font-weight: 500;
+    }
+
+    /* Recently shipped */
+    .recent { margin-bottom: 40px; }
+    .recent-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+    .recent-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+    }
+    .recent-check {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .recent-text { flex: 1; min-width: 0; }
+    .recent-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+    .recent-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    /* Board section */
+    .board-section { margin-top: 8px; }
+
+    /* Kanban board */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(280px, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .column {
+      background: var(--gray-lighter);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--gray-light);
+    }
+    .col-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 4px 4px 12px;
+      border-bottom: 2px solid transparent;
+    }
+    .col-head h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.02em;
+    }
+    .col-count {
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--gray-light);
+    }
+
+    /* Column accents */
+    .col-done .col-head        { border-bottom-color: var(--green); }
+    .col-in-progress .col-head { border-bottom-color: var(--amber); }
+    .col-blocked .col-head     { border-bottom-color: var(--red); }
+    .col-this-week .col-head   { border-bottom-color: var(--blue); }
+    .col-backlog .col-head     { border-bottom-color: var(--gray); }
+
+    .col-done .col-count        { color: var(--green); border-color: var(--green-light); }
+    .col-in-progress .col-count { color: #B45309; border-color: var(--amber-light); }
+    .col-blocked .col-count     { color: var(--red); border-color: var(--red-light); }
+    .col-this-week .col-count   { color: #1D4ED8; border-color: var(--blue-light); }
+    .col-backlog .col-count     { color: var(--gray); border-color: var(--gray-light); }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 12px 14px;
+      border: 1px solid var(--gray-light);
+      box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04);
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+    }
+    .card-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 4px 0;
+    }
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 12.5px;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+    .empty {
+      color: var(--text-soft);
+      font-size: 12px;
+      text-align: center;
+      padding: 16px 0;
+      font-style: italic;
+    }
+
+    /* Tags */
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .tag-shipped     { background: var(--green-light); color: #065F46; }
+    .tag-phase-0     { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-phase-1     { background: var(--blue-light); color: #1D4ED8; }
+    .tag-phase-2     { background: var(--purple-light); color: #6D28D9; }
+    .tag-phase-4     { background: var(--pink-light); color: #BE185D; }
+    .tag-phase-3     { background: var(--indigo-light); color: #4338CA; }
+    .tag-deliverable { background: var(--green-light); color: #047857; }
+    .tag-playbook    { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-milestone   { background: #FEE2E2; color: #991B1B; }
+    .tag-infra       { background: var(--amber-light); color: #B45309; }
+    .tag-ops         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-recurring   { background: var(--gray-light); color: var(--gray); }
+    .tag-blocked     { background: var(--red-light); color: var(--red); }
+    .tag-est         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-neutral     { background: var(--gray-light); color: var(--text-muted); }
+
+    /* Footer */
+    footer.page-foot {
+      padding: 16px 32px 32px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+    footer.page-foot a {
+      color: var(--teal-dark);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(13, 148, 136, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .board { grid-template-columns: repeat(3, minmax(280px, 1fr)); }
+      .links-grid { grid-template-columns: 1fr; }
+      .recent-list { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 1300px) {
+      .phases-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 1100px) {
+      .goals-grid { grid-template-columns: 1fr; }
+      .roles-grid { grid-template-columns: 1fr; }
+      .phases-grid { grid-template-columns: repeat(2, 1fr); }
+      .status-strip { grid-template-columns: repeat(2, 1fr); }
+      .status-stat { border-right: none; border-bottom: 1px solid var(--gray-light); }
+      .status-stat:nth-last-child(-n+2) { border-bottom: none; }
+    }
+    @media (max-width: 700px) {
+      .phases-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .page-main { padding: 24px 16px 32px; }
+      .board { grid-template-columns: 1fr; }
+      header.page-head { padding: 16px; }
+      .hero-title { font-size: 32px; }
+      .hero-tagline { font-size: 17px; }
+      .hero-desc { font-size: 15px; }
+    }
+
+    /* Print */
+    @media print {
+      header.page-head { background: var(--card); color: var(--navy); border-bottom: 2px solid var(--gray-light); position: static; }
+      .brand-mark { background: var(--navy); color: #FFFFFF; }
+      .brand-title, .page-meta strong { color: var(--navy); }
+      .page-meta, .brand-sub { color: var(--text-muted); }
+      .board { grid-template-columns: repeat(2, 1fr); padding: 16px; }
+      .column { break-inside: avoid; background: var(--card); border: 1px solid var(--gray-light); }
+      .card:hover { transform: none; box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04); }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="page-head-inner">
+      <div class="page-brand">
+        <div class="brand-mark">📋</div>
+        <div>
+          <div class="brand-title">Coreshift Kanban Engine</div>
+          <div class="brand-sub">Build System</div>
+        </div>
+      </div>
+      <div class="page-meta">
+        <div><strong>53%</strong> complete</div>
+        <div><strong>9</strong>/17 cards done</div>
+        <div>Updated <strong>2026-05-28 17:29 UTC</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-main">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">INTERNAL · LIVE OPS DASHBOARD</div>
+      <h1 class="hero-title">Coreshift Kanban Engine</h1>
+      <p class="hero-tagline">Build once. Clone for every project. Stays in sync as part of the work.</p>
+      <p class="hero-desc">The shared rendering engine + template kit that turns project-by-project boards into one system. Built first for Sentinel; every Coreshift project that follows gets the same board structure for free. This board tracks improvements to the tool itself.</p>
+      <div class="hero-phase-row">
+        <div class="phase-pill">
+          <span class="phase-pill-label">Current phase</span>
+          <span class="phase-pill-value">Phase 1 · Engine + template shipped</span>
+        </div>
+        <div class="phase-pill phase-pill-milestone">
+          <span class="phase-pill-label">Next milestone</span>
+          <span class="phase-pill-value">Operator demo <span class="phase-pill-date">Before retrofitting other boards</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOALS -->
+    <section class="goals">
+      <h2 class="section-head">The Three Goals</h2>
+      <div class="goals-grid">
+        
+        <div class="goal-card">
+          <div class="goal-icon">🧰</div>
+          <div class="goal-title">Build once, clone everywhere</div>
+          <div class="goal-desc">The engine is reusable. Adding a project is three files copied from tools/template — no surgery on the renderer.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">📝</div>
+          <div class="goal-title">Markdown is the source of truth</div>
+          <div class="goal-desc">Cards live in KANBAN.md (version-controlled), not in rendered HTML. Edit the file, run the build, push.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">⚡</div>
+          <div class="goal-title">Stays in sync as part of the work</div>
+          <div class="goal-desc">The kanban refresh is part of every ship — not a separate doc pass. If the board lags the code, the convention is broken.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASES -->
+    <section class="phases">
+      <h2 class="section-head">Development & Production Phases</h2>
+      <p class="section-sub">Where the project has been, where it is now, and where it's going. Each phase delivers value on its own — no big-bang.</p>
+      <div class="phases-grid">
+        
+        <div class="phase-card phase-done">
+          <div class="phase-card-head">
+            <div class="phase-marker">0</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
+          </div>
+          <div class="phase-title">Phase 0 <span class="phase-subtitle">Sentinel proves the format</span></div>
+          <div class="phase-window">May 2026</div>
+          <p class="phase-desc">Built first as a 1088-line build_kanban.js + KANBAN.md inside the Sentinel folder. The gold standard that earned the request to template it.</p>
+          <ul class="phase-deliverables">
+            <li>build_kanban.js renderer + parser</li><li>5-column kanban convention (Done / In Progress / Blocked / This Week / Backlog)</li><li>Card format spec — `- **Title** \`tag\` — Description.`</li><li>Phase + Goals + Links + Roles + Recently Shipped sections</li><li>Public push to GitHub Pages</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-done">
+          <div class="phase-card-head">
+            <div class="phase-marker">1</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
+          </div>
+          <div class="phase-title">Phase 1 <span class="phase-subtitle">Extract + template</span></div>
+          <div class="phase-window">Shipped 2026-05-29</div>
+          <p class="phase-desc">Engine separated from config; template kit added; Sentinel migrated to verify zero visual regression. The keystone change — everything downstream depends on this.</p>
+          <ul class="phase-deliverables">
+            <li>tools/build.js (project-agnostic engine)</li><li>tools/template/ starter kit (config + KANBAN + README)</li><li>sentinel/kanban.config.js extracted from META</li><li>sentinel/KANBAN.md moved into version-controlled source of truth</li><li>Byte-identical Sentinel output verified</li><li>brandMark / brandSub / footerHtml config overrides</li><li>Pushed to main · commit 3df58a5</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">2</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">Phase 2 <span class="phase-subtitle">Demo, then expand</span></div>
+          <div class="phase-window">Next presentation slot</div>
+          <p class="phase-desc">Operator presents the kanban + template as the gold-standard pattern. Retrofitting other boards waits until after — until then, no other project&#39;s board is touched.</p>
+          <ul class="phase-deliverables">
+            <li>Operator presentation</li><li>Decision to retrofit existing boards</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">3</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">Phase 3 <span class="phase-subtitle">Retrofit existing</span></div>
+          <div class="phase-window">After demo · ~15 min/board</div>
+          <p class="phase-desc">Each existing project board (digital-architect, planner, velocity, sow, sponsored-listicle-writer, storepro-component-count) gets a kanban.config.js + KANBAN.md and uses the shared engine.</p>
+          <ul class="phase-deliverables">
+            <li>digital-architect retrofit</li><li>planner retrofit</li><li>velocity retrofit</li><li>sow retrofit</li><li>sponsored-listicle-writer retrofit</li><li>storepro-component-count retrofit</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-future">
+          <div class="phase-card-head">
+            <div class="phase-marker">4</div>
+            <div class="phase-status-pill phase-status-future">Future</div>
+          </div>
+          <div class="phase-title">Phase 4 <span class="phase-subtitle">Playbook + roadmap engines</span></div>
+          <div class="phase-window">When needed</div>
+          <p class="phase-desc">Apply the same engine/config/content split to build_playbook.js and build_roadmap.js. Same payoff: build once, clone everywhere.</p>
+          <ul class="phase-deliverables">
+            <li>tools/build-playbook.js engine</li><li>tools/build-roadmap.js engine</li><li>Per-project playbook + roadmap configs</li><li>HOW-WE-DO-KANBANS.md playbook entry</li><li>Optional: GitHub Action auto-build on push</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATUS STRIP -->
+    <section class="status-strip">
+      <div class="status-stat status-done">
+        <div class="status-num">9</div>
+        <div class="status-label">Done</div>
+      </div>
+      <div class="status-stat status-in-progress">
+        <div class="status-num">0</div>
+        <div class="status-label">In Progress</div>
+      </div>
+      <div class="status-stat status-blocked">
+        <div class="status-num">0</div>
+        <div class="status-label">Blocked</div>
+      </div>
+      <div class="status-stat status-this-week">
+        <div class="status-num">1</div>
+        <div class="status-label">This Week</div>
+      </div>
+      <div class="status-stat status-backlog">
+        <div class="status-num">7</div>
+        <div class="status-label">Backlog</div>
+      </div>
+    </section>
+
+    <!-- KEY ARTIFACTS / QUICK LINKS -->
+    <section class="links">
+      <h2 class="section-head">Key Artifacts</h2>
+      <div class="links-grid">
+        
+        <a class="link-card" href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/blob/main/tools/build.js" target="_blank" rel="noopener">
+          <div class="link-icon">🧰</div>
+          <div class="link-text">
+            <div class="link-title">Engine source</div>
+            <div class="link-desc">tools/build.js — the project-agnostic renderer</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/tree/main/tools/template" target="_blank" rel="noopener">
+          <div class="link-icon">📦</div>
+          <div class="link-text">
+            <div class="link-title">Template starter kit</div>
+            <div class="link-desc">tools/template/ — copy this to start a new project board</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/blob/main/tools/template/README.md" target="_blank" rel="noopener">
+          <div class="link-icon">📖</div>
+          <div class="link-text">
+            <div class="link-title">How to add a project</div>
+            <div class="link-desc">Six-step guide in tools/template/README.md</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/" target="_blank" rel="noopener">
+          <div class="link-icon">🛡</div>
+          <div class="link-text">
+            <div class="link-title">Sentinel board (proof case)</div>
+            <div class="link-desc">The first board built on this engine — and the gold standard the template inherits from</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ROLES -->
+    <section class="roles">
+      <h2 class="section-head">Who's Involved</h2>
+      <div class="roles-grid">
+        
+        <div class="role-card">
+          <div class="role-avatar">O</div>
+          <div class="role-text">
+            <div class="role-name">Operator <span class="role-person">Abe</span></div>
+            <div class="role-verbs">Decide · present · approve retrofits</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-avatar">I</div>
+          <div class="role-text">
+            <div class="role-name">Implementer <span class="role-person">Claude Code</span></div>
+            <div class="role-verbs">Extract · refactor · ship</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-avatar">P</div>
+          <div class="role-text">
+            <div class="role-name">The Pipeline <span class="role-person">Markdown → engine → Pages</span></div>
+            <div class="role-verbs">Parse · render · publish</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECENTLY SHIPPED -->
+    
+    <section class="recent">
+      <h2 class="section-head">Recently Shipped</h2>
+      <div class="recent-list">
+        
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Sentinel kanban (hand-rolled origin)</div>
+            <div class="recent-desc">Built first as a 1088-line `build_kanban.js` + `KANBAN.md` in the Sentinel folder. The board format, card convention, 5 columns, hero / goals / phases / links / roles / recently-shipped sections all proven here before being templated</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Engine extracted from `build_kanban.js`</div>
+            <div class="recent-desc">Renderer + parser pulled into `tools/build.js` as a project-agnostic function. Takes a project slug, reads `&lt;slug&gt;/kanban.config.js` + `&lt;slug&gt;/KANBAN.md`, writes `&lt;slug&gt;/index.html`</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Per-project config split out</div>
+            <div class="recent-desc">Sentinel&#39;s 105-line `META` object lifted into `sentinel/kanban.config.js` with documented fields. The engine reads it; the config has no engine logic</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">`KANBAN.md` moved to source-of-truth</div>
+            <div class="recent-desc">Was previously in the local Sentinel folder (not in any git repo). Now in `coreshift-kanbans/sentinel/KANBAN.md` — version-controlled, available across machines, single source</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Template starter kit</div>
+            <div class="recent-desc">`tools/template/` contains `kanban.config.js` (documented placeholder), `KANBAN.md` (5-column skeleton + example cards), and `README.md` (6-step &quot;add a project&quot; guide)</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">brandMark / brandSub / footerHtml config overrides</div>
+            <div class="recent-desc">Three previously-hardcoded Sentinel-specific strings now overrideable per project; defaults preserve Sentinel&#39;s exact current output. The kanban-engine board uses them to show its own 📋 mark and &quot;Build System&quot; subtitle</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KANBAN BOARD -->
+    <section class="board-section">
+      <h2 class="section-head">Live Rollout Board</h2>
+      <p class="section-sub">Every task across every phase. Updated by editing <code>KANBAN.md</code> and running <code>update-kanban.cmd</code>.</p>
+      <div class="board">
+        
+    <section class="column col-done">
+      <header class="col-head">
+        <h2>✅ Done</h2>
+        <span class="col-count">9</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Sentinel kanban (hand-rolled origin)</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">build_kanban.js</span><span class="tag tag-neutral">KANBAN.md</span></div>
+        <div class="card-desc">Built first as a 1088-line `build_kanban.js` + `KANBAN.md` in the Sentinel folder. The board format, card convention, 5 columns, hero / goals / phases / links / roles / recently-shipped sections all proven here before being templated</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Engine extracted from `build_kanban.js`</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">tools/build.js</span><span class="tag tag-neutral">&lt;slug&gt;/kanban.config.js</span><span class="tag tag-neutral">&lt;slug&gt;/KANBAN.md</span><span class="tag tag-neutral">&lt;slug&gt;/index.html</span></div>
+        <div class="card-desc">Renderer + parser pulled into `tools/build.js` as a project-agnostic function. Takes a project slug, reads `&lt;slug&gt;/kanban.config.js` + `&lt;slug&gt;/KANBAN.md`, writes `&lt;slug&gt;/index.html`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Per-project config split out</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">META</span><span class="tag tag-neutral">sentinel/kanban.config.js</span></div>
+        <div class="card-desc">Sentinel&#39;s 105-line `META` object lifted into `sentinel/kanban.config.js` with documented fields. The engine reads it; the config has no engine logic</div>
+      </div>
+      <div class="card">
+        <div class="card-title">`KANBAN.md` moved to source-of-truth</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">coreshift-kanbans/sentinel/KANBAN.md</span></div>
+        <div class="card-desc">Was previously in the local Sentinel folder (not in any git repo). Now in `coreshift-kanbans/sentinel/KANBAN.md` — version-controlled, available across machines, single source</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Template starter kit</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">tools/template/</span><span class="tag tag-neutral">kanban.config.js</span><span class="tag tag-neutral">KANBAN.md</span><span class="tag tag-neutral">README.md</span></div>
+        <div class="card-desc">`tools/template/` contains `kanban.config.js` (documented placeholder), `KANBAN.md` (5-column skeleton + example cards), and `README.md` (6-step &quot;add a project&quot; guide)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">brandMark / brandSub / footerHtml config overrides</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Three previously-hardcoded Sentinel-specific strings now overrideable per project; defaults preserve Sentinel&#39;s exact current output. The kanban-engine board uses them to show its own 📋 mark and &quot;Build System&quot; subtitle</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Byte-identical Sentinel output verified</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">sentinel/index.html</span><span class="tag tag-neutral">Updated &lt;timestamp&gt;</span></div>
+        <div class="card-desc">Fresh build of Sentinel via the new engine produces a 107,246-byte HTML matching the previously-shipped `sentinel/index.html` exactly, modulo the `Updated &lt;timestamp&gt;` line. Zero visual regression — the keystone proof</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Public push</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">3df58a5</span><span class="tag tag-neutral">coreshift-kanbans/main</span></div>
+        <div class="card-desc">Commit `3df58a5` on `coreshift-kanbans/main`. GitHub Pages republished automatically; existing Sentinel board URL serves identical content from the new pipeline</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Kanban-engine board itself (this page)</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">meta</span></div>
+        <div class="card-desc">Dogfood: the kanban engine has its own kanban, built on the engine, using the template. Second consumer of the template kit and the proof that it generalizes</div>
+      </div></div>
+    </section>
+    <section class="column col-in-progress">
+      <header class="col-head">
+        <h2>🟡 In Progress</h2>
+        <span class="col-count">0</span>
+      </header>
+      <div class="cards"><div class="empty">No items</div></div>
+    </section>
+    <section class="column col-blocked">
+      <header class="col-head">
+        <h2>🚫 Blocked</h2>
+        <span class="col-count">0</span>
+      </header>
+      <div class="cards"><div class="empty">No items</div></div>
+    </section>
+    <section class="column col-this-week">
+      <header class="col-head">
+        <h2>🔵 This Week</h2>
+        <span class="col-count">1</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Operator presentation</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-ops">ops</span></div>
+        <div class="card-desc">Abe presents the kanban + template as the gold-standard pattern for Coreshift project visibility. Gate to start retrofitting existing boards</div>
+      </div></div>
+    </section>
+    <section class="column col-backlog">
+      <header class="col-head">
+        <h2>⚪ Backlog</h2>
+        <span class="col-count">7</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Retrofit existing project boards</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">gated-on-demo</span><span class="tag tag-neutral">digital-architect</span><span class="tag tag-neutral">planner</span><span class="tag tag-neutral">velocity</span><span class="tag tag-neutral">sow</span><span class="tag tag-neutral">sponsored-listicle-writer</span><span class="tag tag-neutral">storepro-component-count</span><span class="tag tag-neutral">kanban.config.js</span><span class="tag tag-neutral">KANBAN.md</span></div>
+        <div class="card-desc">`digital-architect`, `planner`, `velocity`, `sow`, `sponsored-listicle-writer`, `storepro-component-count` each get a `kanban.config.js` + `KANBAN.md` and use the shared engine. ~15 min per board. Waits until the operator demo lands</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Extract `build_playbook.js` engine</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">build_kanban.js</span><span class="tag tag-neutral">tools/build-playbook.js</span><span class="tag tag-neutral">D:\Coreshift HQ\Sentinel\scripts\</span></div>
+        <div class="card-desc">Same treatment as `build_kanban.js`: project-agnostic engine in `tools/build-playbook.js` + per-project config. Source currently lives in `D:\Coreshift HQ\Sentinel\scripts\`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Extract `build_roadmap.js` engine</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">scripts/</span></div>
+        <div class="card-desc">Same treatment again. After this lands, the Sentinel folder&#39;s `scripts/` directory can be retired entirely</div>
+      </div>
+      <div class="card">
+        <div class="card-title">`HOW-WE-DO-KANBANS.md` playbook entry</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">docs</span></div>
+        <div class="card-desc">Codify the convention so the next Claude Code session that needs to add a project board finds the playbook entry without having to re-discover</div>
+      </div>
+      <div class="card">
+        <div class="card-title">GitHub Action auto-build on push</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">node tools/build.js</span><span class="tag tag-neutral">index.html</span></div>
+        <div class="card-desc">Workflow that runs `node tools/build.js` on push, commits any HTML changes. Optional — manual run is fast and visible; only worth doing if frequent config edits start drifting from committed `index.html` files</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tag color mapping in config</div>
+        <div class="card-tags"><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">tagClass()</span></div>
+        <div class="card-desc">`tagClass()` currently has Sentinel-specific phase mappings hardcoded in the engine. Could move to per-project config so each project defines its own tag→color palette</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Delete obsolete Sentinel-folder files</div>
+        <div class="card-tags"><span class="tag tag-neutral">cleanup</span><span class="tag tag-neutral">D:\Coreshift HQ\Sentinel\scripts\build_kanban.js</span><span class="tag tag-neutral">D:\Coreshift HQ\Sentinel\KANBAN.md</span></div>
+        <div class="card-desc">`D:\Coreshift HQ\Sentinel\scripts\build_kanban.js` and `D:\Coreshift HQ\Sentinel\KANBAN.md` are now obsolete (the canonical versions are in this repo). Delete locally to remove the divergence risk</div>
+      </div></div>
+    </section>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="page-foot">
+    Edit <code>KANBAN.md</code> and run <code>node tools/build.js kanban-engine</code> to refresh this view. &nbsp;·&nbsp; Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans">CoreshiftHQNZ/coreshift-kanbans</a>.
+  </footer>
+</body>
+</html>
