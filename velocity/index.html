@@ -578,7 +578,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">71</div>
+        <div class="status-num">72</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -691,9 +691,15 @@
         <section class="column col-done">
           <header class="col-head">
             <h2>✅ Done</h2>
-            <span class="col-count">71</span>
+            <span class="col-count">72</span>
           </header>
           <div class="cards">
+
+            <div class="card">
+              <div class="card-title">Add-all shared facts · manual action-plan add · confirm item in plan (2026-05-28)</div>
+              <div class="card-tags"><span class="tag tag-id">qa-feedback</span><span class="tag tag-ws-p">portal</span><span class="tag tag-v11">V1.1</span></div>
+              <div class="card-desc">Three QA asks (Abe). (1) "Add all N" button on the Shared Understanding card + POST /api/deals/:id/shared-facts/bulk to share every available captured fact in one click instead of chip-by-chip. (2) The mutual action plan had no way to ADD items from the UI (only a post-meeting recap auto-created them) — that's why it always looked empty in testing; added an inline "add item" composer to each side of the plan on the Deal page (POST /api/action-items). (3) Sharing facts for confirmation now keeps ONE self-updating buyer-side action — "Review & confirm the details we've shared" (source=agent + sourceRefId) — present while any shared fact awaits the buyer, auto-completing once they've answered all; synced from share/bulk/unshare (rep) + the portal respond (buyer). Commit 29113f9.</div>
+            </div>
 
             <div class="card">
               <div class="card-title">Buyer corrections drive engagement, attention + one-click accept (2026-05-28)</div>
