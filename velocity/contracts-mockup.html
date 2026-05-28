@@ -148,6 +148,43 @@
 
     footer { color: var(--text-soft); font-size: 12px; padding: 24px 0; text-align: center; }
 
+    /* Side nav — sticky on the left of the centred main column on wide screens */
+    .side-nav {
+      position: fixed;
+      top: 110px;
+      left: max(20px, calc((100vw - 1180px) / 2 - 196px));
+      width: 184px;
+      max-height: calc(100vh - 140px);
+      overflow-y: auto;
+      z-index: 5;
+      font-size: 12px;
+    }
+    .side-nav-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--text-soft);
+      margin: 0 0 10px 12px;
+    }
+    .side-nav ul { list-style: none; padding: 0; margin: 0; }
+    .side-nav li { margin: 2px 0; }
+    .side-nav a {
+      display: block;
+      padding: 7px 12px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 12.5px;
+      border-left: 2px solid transparent;
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+    .side-nav a:hover { background: rgba(124, 92, 252, 0.08); color: var(--violet-dark); }
+    .side-nav a.active {
+      color: var(--navy); font-weight: 700;
+      background: var(--violet-light);
+      border-left-color: var(--violet);
+    }
+    .team-panel, h2.part { scroll-margin-top: 90px; }
+    @media (max-width: 1280px) { .side-nav { display: none; } }
+
     /* For-the-team panel */
     .team-panel { background: linear-gradient(135deg, var(--violet-light), #FCE7E2); border: 1px solid #D9CFFB; border-radius: 16px; padding: 28px 32px; margin: 0 0 36px; }
     .team-eyebrow { color: var(--violet-dark); font-size: 11px; font-weight: 700; letter-spacing: 0.18em; margin-bottom: 8px; }
@@ -226,6 +263,17 @@
     </div>
   </header>
 
+  <nav class="side-nav" aria-label="On this page">
+    <div class="side-nav-label">On this page</div>
+    <ul>
+      <li><a href="#talking-points">Talking points</a></li>
+      <li><a href="#flow">1 · The flow</a></li>
+      <li><a href="#fields">2 · Merge fields</a></li>
+      <li><a href="#scopes">3 · Scope shapes</a></li>
+      <li><a href="#questions">4 · Open questions</a></li>
+    </ul>
+  </nav>
+
   <main>
 
     <section class="intro">
@@ -242,10 +290,10 @@
     </section>
 
     <!-- ====================== FOR THE TEAM ====================== -->
-    <section class="team-panel">
-      <div class="team-eyebrow">FOR THE TEAM · ASYNC</div>
-      <h2 class="team-title">Talking points · and how to leave feedback</h2>
-      <p class="team-lede">Read at your own pace. Below: 10 talking points (the gist of what we're building), then 8 open questions Abe is taking into a chat with Keitha tomorrow.</p>
+    <section class="team-panel" id="talking-points">
+      <div class="team-eyebrow">FOR THE TEAM</div>
+      <h2 class="team-title">Talking points</h2>
+      <p class="team-lede">The gist of what we're building, in plain English. The 8 open questions Abe is taking into the chat with Keitha tomorrow sit at the bottom of the page (or jump to <a href="#questions" style="color:var(--violet-dark);">Open questions</a>).</p>
 
       <ol class="talking-list">
         <li id="tp-1"><strong>What we're building.</strong> A step inside Velocity where the rep picks the right contract Type using Keitha's 3-question wizard, and Velocity pre-fills the customer's details. Reps see a near-ready draft instead of a blank Word doc.
@@ -310,73 +358,10 @@
         </li>
       </ol>
 
-      <div class="open-qs">
-        <strong>Eight things we'd like your view on:</strong>
-
-        <div style="margin-top:14px; font-size:10.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#BE3D2E;">Blocking · build needs these to move</div>
-        <ul style="list-style:none; padding-left:0; margin:6px 0 0;">
-          <li id="oq-1" style="padding:8px 0; border-bottom:1px solid var(--gray-light);"><strong>1 · Combined doc or separate?</strong> GP's examples combine proposal + contract in one signable thing. Coreshift the same — one signature — or proposal first, contract following?
-            <div class="item-comments">
-              <button class="giscus-toggle" data-giscus-term="vcm-oq-1" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
-              <div class="giscus-panel"><div class="giscus-container"></div></div>
-            </div>
-          </li>
-          <li id="oq-2" style="padding:8px 0; border-bottom:1px solid var(--gray-light);"><strong>2 · Who marks up the four PDFs with merge fields?</strong> Engineering does it once + you review, or you do it yourself? Affects who starts and the timeline.
-            <div class="item-comments">
-              <button class="giscus-toggle" data-giscus-term="vcm-oq-2" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
-              <div class="giscus-panel"><div class="giscus-container"></div></div>
-            </div>
-          </li>
-          <li id="oq-3" style="padding:8px 0; border-bottom:1px solid var(--gray-light);"><strong>3 · Per-deal wording change — rep autonomy or your sign-off?</strong> When a rep removes an IP clause for Storepro, does it just go through, or wait for your nod? (Compliance shape.)
-            <div class="item-comments">
-              <button class="giscus-toggle" data-giscus-term="vcm-oq-3" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
-              <div class="giscus-panel"><div class="giscus-container"></div></div>
-            </div>
-          </li>
-          <li id="oq-4" style="padding:8px 0; border-bottom:1px solid var(--gray-light);"><strong>4 · Scope sections per Type — right shape?</strong> See Part 3 below. The starter sections I sketched for each Type — anything missing, extra, or in the wrong order?
-            <div class="item-comments">
-              <button class="giscus-toggle" data-giscus-term="vcm-oq-4" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
-              <div class="giscus-panel"><div class="giscus-container"></div></div>
-            </div>
-          </li>
-          <li id="oq-5" style="padding:8px 0;"><strong>5 · Workflow shift — comfortable editing templates inside Velocity?</strong> Replaces Word as the master. Real habit/tool change — if it doesn't feel right, we adjust.
-            <div class="item-comments">
-              <button class="giscus-toggle" data-giscus-term="vcm-oq-5" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
-              <div class="giscus-panel"><div class="giscus-container"></div></div>
-            </div>
-          </li>
-        </ul>
-
-        <div style="margin-top:18px; font-size:10.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--violet-dark);">Lighter · nice to nail, not blocking</div>
-        <ul style="list-style:none; padding-left:0; margin:6px 0 0;">
-          <li id="oq-6" style="padding:8px 0; border-bottom:1px solid var(--gray-light);"><strong>6 · Which of the two GP examples is the "flimsy" one?</strong> <em>(Keitha)</em> — so we model the good one.
-            <div class="item-comments">
-              <button class="giscus-toggle" data-giscus-term="vcm-oq-6" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
-              <div class="giscus-panel"><div class="giscus-container"></div></div>
-            </div>
-          </li>
-          <li id="oq-7" style="padding:8px 0; border-bottom:1px solid var(--gray-light);"><strong>7 · Cover letter + "How we work" copy — your voice or a starter draft from us?</strong> GP's wording is GP's. Coreshift needs its own. Either you write fresh, or we draft something for you to redline.
-            <div class="item-comments">
-              <button class="giscus-toggle" data-giscus-term="vcm-oq-7" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
-              <div class="giscus-panel"><div class="giscus-container"></div></div>
-            </div>
-          </li>
-          <li id="oq-8" style="padding:8px 0;"><strong>8 · Type-picker UX — 3-question wizard, or a simple Type dropdown?</strong> The wizard is yours (Email 1), but maybe reps who already know the right Type prefer to pick directly.
-            <div class="item-comments">
-              <button class="giscus-toggle" data-giscus-term="vcm-oq-8" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
-              <div class="giscus-panel"><div class="giscus-container"></div></div>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      <div class="cta-row" style="font-size:13px;color:var(--text-muted);">
-        Drop thoughts to Abe directly for now (Slack / email / next chat) — a proper async feedback channel will land if the volume of input warrants it.
-      </div>
     </section>
 
     <!-- ====================== PART 1 : THE FLOW ====================== -->
-    <h2 class="part"><span class="num">1 ·</span> The deal-side flow</h2>
+    <h2 class="part" id="flow"><span class="num">1 ·</span> The deal-side flow</h2>
     <p>Six steps from "I'm ready to send this" to "It's signed and filed." Each screen is a wireframe of what the rep sees.</p>
 
     <!-- STEP 1 -->
@@ -550,7 +535,7 @@
     </div>
 
     <!-- ====================== PART 2 : MERGE FIELDS ====================== -->
-    <h2 class="part"><span class="num">2 ·</span> What we already have — merge field map</h2>
+    <h2 class="part" id="fields"><span class="num">2 ·</span> What we already have — merge field map</h2>
     <p>Real values from <strong>Tasman Fitouts (Abe Test 3)</strong>. The pattern: green is solid, violet is from extraction, orange is ICP/qualification, coral needs the rep to type it, grey we don't capture yet.</p>
 
     <table class="merge-table">
@@ -584,7 +569,7 @@
     </p>
 
     <!-- ====================== PART 3 : 4 SCOPE SHAPES ====================== -->
-    <h2 class="part"><span class="num">3 ·</span> The 4 scope shapes</h2>
+    <h2 class="part" id="scopes"><span class="num">3 ·</span> The 4 scope shapes</h2>
     <p>One scope section per Type. They share the cover, cover letter, "How we work together", investment schedule, Terms and signature blocks (as partials) — but the <strong>scope</strong> section reflects what kind of engagement it actually is.</p>
 
     <div class="scope-grid">
@@ -668,6 +653,70 @@
 
     </div>
 
+    <!-- ====================== PART 4 : OPEN QUESTIONS ====================== -->
+    <h2 class="part" id="questions"><span class="num">4 ·</span> Open questions for Keitha</h2>
+    <p>Eight things we'd like her view on. <strong>Blocking</strong> ones need answers before we build; <strong>lighter</strong> ones can come back after the chat.</p>
+
+    <div class="open-qs">
+      <div style="font-size:10.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#BE3D2E;">Blocking · build needs these to move</div>
+      <ul style="list-style:none; padding-left:0; margin:6px 0 0;">
+        <li id="oq-1" style="padding:10px 0; border-bottom:1px solid var(--gray-light);"><strong>1 · Combined doc or separate?</strong> GP's examples combine proposal + contract in one signable thing. Coreshift the same — one signature — or proposal first, contract following?
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-oq-1" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="oq-2" style="padding:10px 0; border-bottom:1px solid var(--gray-light);"><strong>2 · Who marks up the four PDFs with merge fields?</strong> Engineering does it once + you review, or you do it yourself? Affects who starts and the timeline.
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-oq-2" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="oq-3" style="padding:10px 0; border-bottom:1px solid var(--gray-light);"><strong>3 · Per-deal wording change — rep autonomy or your sign-off?</strong> When a rep removes an IP clause for Storepro, does it just go through, or wait for your nod? (Compliance shape.)
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-oq-3" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="oq-4" style="padding:10px 0; border-bottom:1px solid var(--gray-light);"><strong>4 · Scope sections per Type — right shape?</strong> See Part 3 above. The starter sections I sketched for each Type — anything missing, extra, or in the wrong order?
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-oq-4" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="oq-5" style="padding:10px 0;"><strong>5 · Workflow shift — comfortable editing templates inside Velocity?</strong> Replaces Word as the master. Real habit/tool change — if it doesn't feel right, we adjust.
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-oq-5" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+      </ul>
+
+      <div style="margin-top:18px; font-size:10.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--violet-dark);">Lighter · nice to nail, not blocking</div>
+      <ul style="list-style:none; padding-left:0; margin:6px 0 0;">
+        <li id="oq-6" style="padding:10px 0; border-bottom:1px solid var(--gray-light);"><strong>6 · Which of the two GP examples is the "flimsy" one?</strong> <em>(Keitha)</em> — so we model the good one.
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-oq-6" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="oq-7" style="padding:10px 0; border-bottom:1px solid var(--gray-light);"><strong>7 · Cover letter + "How we work" copy — your voice or a starter draft from us?</strong> GP's wording is GP's. Coreshift needs its own. Either you write fresh, or we draft something for you to redline.
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-oq-7" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+        <li id="oq-8" style="padding:10px 0;"><strong>8 · Type-picker UX — 3-question wizard, or a simple Type dropdown?</strong> The wizard is yours (Email 1), but maybe reps who already know the right Type prefer to pick directly.
+          <div class="item-comments">
+            <button class="giscus-toggle" data-giscus-term="vcm-oq-8" aria-expanded="false">💬 Comments<span class="giscus-badge"></span></button>
+            <div class="giscus-panel"><div class="giscus-container"></div></div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <p style="font-size:13px; color:var(--text-muted); margin-top:18px;">Drop thoughts to Abe directly for now (Slack / email / next chat) — a proper async feedback channel will land if the volume of input warrants it.</p>
+
   </main>
 
   <footer>
@@ -701,6 +750,25 @@
       s.async = true;
       container.appendChild(s);
     }
+
+    // Side-nav active-section highlighting
+    (function () {
+      var ids = ['talking-points', 'flow', 'fields', 'scopes', 'questions'];
+      var targets = ids.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+      var links = Array.prototype.slice.call(document.querySelectorAll('.side-nav a'));
+      if (!('IntersectionObserver' in window) || links.length === 0) return;
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            var id = entry.target.id;
+            links.forEach(function (a) {
+              a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+            });
+          }
+        });
+      }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+      targets.forEach(function (t) { observer.observe(t); });
+    })();
 
     Array.prototype.forEach.call(document.querySelectorAll('.giscus-toggle'), function (btn) {
       btn.addEventListener('click', function () {
