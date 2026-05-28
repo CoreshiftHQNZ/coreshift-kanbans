@@ -1,464 +1,1166 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex" />
-    <title>Storepro Component Count — Build Kanban</title>
-    <meta name="description" content="Live build status for the Storepro Component Count app — automated component counting + racking design review." />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📐%3C/text%3E%3C/svg%3E" />
-    <style>
-      :root {
-        --bg: #fafaf9;
-        --card: #ffffff;
-        --ink: #18181b;
-        --ink-muted: #71717a;
-        --ink-subtle: #a1a1aa;
-        --border: #e4e4e7;
-        --done: #059669;
-        --doing: #d97706;
-        --next: #2563eb;
-        --back: #475569;
-        --back-bg: #f1f5f9;
-        --ricky: #7c3aed;
-        --ricky-bg: #f5f3ff;
-        --ricky-border: #ddd6fe;
-        --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
-        --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
-        --radius: 10px;
-      }
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --bg: #0a0a0a;
-          --card: #18181b;
-          --ink: #fafafa;
-          --ink-muted: #a1a1aa;
-          --ink-subtle: #71717a;
-          --border: #27272a;
-          --done: #10b981;
-          --doing: #f59e0b;
-          --next: #3b82f6;
-          --back: #94a3b8;
-          --back-bg: #0f172a;
-          --ricky: #a78bfa;
-          --ricky-bg: #1e1b4b;
-          --ricky-border: #312e81;
-        }
-      }
-      * { box-sizing: border-box; }
-      html, body { margin: 0; padding: 0; }
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
-        background: var(--bg);
-        color: var(--ink);
-        line-height: 1.5;
-        -webkit-font-smoothing: antialiased;
-      }
-      .wrap { max-width: 1400px; margin: 0 auto; padding: 32px 24px 80px; }
-      header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
-      h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 4px; }
-      .subtitle { color: var(--ink-muted); font-size: 14px; margin: 0; }
-      .meta { text-align: right; font-size: 13px; color: var(--ink-muted); }
-      .meta a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
-      .meta a:hover { color: var(--ink); }
-      h2.section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); margin: 0 0 12px; }
-      .progress { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; box-shadow: var(--shadow); }
-      .progress-bars { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 8px; }
-      .pbar { font-size: 12px; color: var(--ink-muted); }
-      .pbar-label { margin-bottom: 4px; }
-      .pbar-label strong { color: var(--ink); font-weight: 600; }
-      .pbar-track { background: var(--back-bg); height: 6px; border-radius: 999px; overflow: hidden; }
-      .pbar-fill { background: var(--done); height: 100%; border-radius: 999px; }
-      .pbar.active .pbar-fill { background: var(--doing); }
-      .pbar.future .pbar-fill { background: var(--ink-subtle); opacity: 0.4; }
-      .ricky-panel { background: var(--ricky-bg); border: 1px solid var(--ricky-border); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 28px; }
-      .ricky-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
-      .ricky-panel h2 { font-size: 16px; font-weight: 700; color: var(--ricky); margin: 0; }
-      .ricky-panel .badge { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ricky); background: var(--card); border: 1px solid var(--ricky-border); padding: 3px 8px; border-radius: 999px; }
-      .ricky-panel .intro { font-size: 13px; color: var(--ink-muted); margin: 0 0 14px; }
-      .ricky-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-      @media (max-width: 800px) { .ricky-grid { grid-template-columns: 1fr; } }
-      .ricky-section h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ricky); margin: 0 0 8px; }
-      .ricky-section.later h3 { color: var(--ink-muted); }
-      .ricky-section .helper { font-size: 12px; color: var(--ink-muted); margin: 0 0 12px; }
-      .task { background: var(--card); border: 1px solid var(--ricky-border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
-      .ricky-section.later .task { border-color: var(--border); }
-      .task-title { font-size: 13px; font-weight: 600; margin: 0 0 4px; line-height: 1.4; }
-      .task-when { font-size: 11px; color: var(--ink-subtle); font-weight: 500; margin-left: 6px; }
-      .task-body { font-size: 12px; color: var(--ink-muted); margin: 0; line-height: 1.45; }
-      .task-link { color: var(--ricky); text-decoration: none; }
-      .task-link:hover { text-decoration: underline; }
-      code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11px; background: var(--back-bg); padding: 1px 5px; border-radius: 4px; }
-      .board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-      @media (max-width: 1100px) { .board { grid-template-columns: repeat(2, 1fr); } }
-      @media (max-width: 640px)  { .board { grid-template-columns: 1fr; } .progress-bars { grid-template-columns: repeat(2, 1fr); } }
-      .col { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
-      .col-head { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-      .col-head .dot { width: 8px; height: 8px; border-radius: 999px; margin-right: 8px; }
-      .col-title { font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; }
-      .col-count { font-size: 12px; color: var(--ink-muted); background: var(--back-bg); padding: 2px 8px; border-radius: 999px; min-width: 24px; text-align: center; }
-      .col.done .dot { background: var(--done); }
-      .col.doing .dot { background: var(--doing); }
-      .col.next .dot { background: var(--next); }
-      .col.back .dot { background: var(--back); }
-      .col-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 280px); overflow-y: auto; }
-      .card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; transition: transform 80ms ease, box-shadow 120ms ease; }
-      .card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
-      .card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-      .card-id { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11px; font-weight: 600; color: var(--ink-muted); }
-      .card-title { font-size: 14px; font-weight: 500; margin: 0 0 4px; line-height: 1.4; }
-      .card-note { font-size: 12px; color: var(--ink-muted); margin: 0; line-height: 1.45; }
-      .chip { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 999px; background: var(--back-bg); color: var(--back); text-transform: uppercase; letter-spacing: 0.04em; }
-      .chip.m0 { background: #fce7f3; color: #be185d; }
-      .chip.m1 { background: #ede9fe; color: #6d28d9; }
-      .chip.m2 { background: #e0e7ff; color: #3730a3; }
-      .chip.m3 { background: #ccfbf1; color: #115e59; }
-      .chip.m4 { background: #fef3c7; color: #92400e; }
-      @media (prefers-color-scheme: dark) {
-        .chip.m0 { background: #500724; color: #f9a8d4; }
-        .chip.m1 { background: #2e1065; color: #c4b5fd; }
-        .chip.m2 { background: #1e1b4b; color: #a5b4fc; }
-        .chip.m3 { background: #042f2e; color: #5eead4; }
-        .chip.m4 { background: #451a03; color: #fcd34d; }
-      }
-      footer { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--ink-subtle); text-align: center; }
-      footer a { color: var(--ink-muted); text-decoration: underline; text-underline-offset: 3px; }
-    </style>
-  </head>
-  <body>
-    <div class="wrap">
-      <header>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coreshift HQ Ops — Kanban</title>
+  <style>
+    :root {
+      --navy: #0F1E3D;
+      --navy-deep: #081530;
+      --navy-soft: #1A2A4F;
+      --teal: #14B8A6;
+      --teal-dark: #0D9488;
+      --teal-light: #CCFBF1;
+      --amber: #F59E0B;
+      --amber-light: #FEF3C7;
+      --red: #DC2626;
+      --red-light: #FEE2E2;
+      --green: #10B981;
+      --green-light: #D1FAE5;
+      --purple: #8B5CF6;
+      --purple-light: #EDE9FE;
+      --blue: #3B82F6;
+      --blue-light: #DBEAFE;
+      --indigo: #6366F1;
+      --indigo-light: #E0E7FF;
+      --pink: #EC4899;
+      --pink-light: #FCE7F3;
+      --gray: #64748B;
+      --gray-light: #E2E8F0;
+      --gray-lighter: #F1F5F9;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #475569;
+      --text-soft: #94A3B8;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 14px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    header.page-head {
+      background: var(--navy);
+      color: #FFFFFF;
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--navy-deep);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .page-head-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .page-brand { display: flex; align-items: center; gap: 14px; }
+    .brand-mark {
+      width: 36px; height: 36px;
+      background: var(--teal);
+      color: var(--navy);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 18px;
+    }
+    .brand-title {
+      font-size: 18px; font-weight: 700; letter-spacing: -0.01em;
+    }
+    .brand-sub {
+      font-size: 11px; color: var(--teal);
+      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .page-meta {
+      font-size: 12px; color: #8EA5C8;
+      display: flex; gap: 24px; flex-wrap: wrap;
+    }
+    .page-meta strong { color: #FFFFFF; font-weight: 600; }
+
+    /* Main layout */
+    .page-main {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 32px 32px 48px;
+    }
+
+    /* Section headings */
+    .section-head {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 16px;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: -8px 0 16px;
+    }
+    .section-sub code {
+      background: var(--gray-lighter);
+      border: 1px solid var(--gray-light);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 12px;
+      color: var(--navy);
+    }
+
+    /* Hero */
+    .hero {
+      margin-bottom: 48px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .hero-eyebrow {
+      color: var(--teal-dark);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      margin-bottom: 14px;
+    }
+    .hero-title {
+      color: var(--navy);
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin: 0 0 12px;
+    }
+    .hero-tagline {
+      color: var(--teal-dark);
+      font-size: 22px;
+      font-style: italic;
+      font-weight: 500;
+      margin: 0 0 16px;
+      line-height: 1.35;
+    }
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 17px;
+      line-height: 1.5;
+      max-width: 880px;
+      margin: 0;
+    }
+    .hero-phase-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .phase-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 13px;
+    }
+    .phase-pill-label {
+      color: var(--text-soft);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .phase-pill-value {
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .phase-pill-date {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 4px;
+    }
+    .phase-pill-milestone {
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+    .phase-pill-milestone .phase-pill-label { color: var(--teal); }
+    .phase-pill-milestone .phase-pill-value { color: #FFFFFF; }
+    .phase-pill-milestone .phase-pill-date { color: #CADCFC; }
+
+    /* Goals */
+    .goals { margin-bottom: 40px; }
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .goal-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 24px;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .goal-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .goal-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .goal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .goal-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Phases */
+    .phases { margin-bottom: 40px; }
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .phase-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .phase-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .phase-card.phase-done       { border-top: 4px solid var(--green); }
+    .phase-card.phase-in-progress{ border-top: 4px solid var(--amber); }
+    .phase-card.phase-planned    { border-top: 4px solid var(--blue); }
+    .phase-card.phase-future     { border-top: 4px solid var(--gray); opacity: 0.88; }
+    .phase-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .phase-marker {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .phase-card.phase-done .phase-marker        { background: var(--green); }
+    .phase-card.phase-in-progress .phase-marker { background: var(--amber); }
+    .phase-status-pill {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .phase-status-done        { background: var(--green-light); color: #065F46; }
+    .phase-status-in-progress { background: var(--amber-light); color: #B45309; }
+    .phase-status-planned     { background: var(--blue-light); color: #1D4ED8; }
+    .phase-status-future      { background: var(--gray-light); color: var(--gray); }
+    .phase-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 2px;
+      letter-spacing: -0.01em;
+    }
+    .phase-subtitle {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+    .phase-window {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+    .phase-desc {
+      font-size: 12.5px;
+      color: var(--text);
+      line-height: 1.5;
+      margin: 0 0 12px;
+    }
+    .phase-deliverables {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-top: 1px solid var(--gray-light);
+      padding-top: 10px;
+    }
+    .phase-deliverables li {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      padding: 3px 0 3px 14px;
+      position: relative;
+    }
+    .phase-deliverables li::before {
+      content: "•";
+      position: absolute;
+      left: 4px;
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    /* Status strip */
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 20px 8px;
+    }
+    .status-stat {
+      text-align: center;
+      padding: 8px 12px;
+      border-right: 1px solid var(--gray-light);
+    }
+    .status-stat:last-child { border-right: none; }
+    .status-num {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+    .status-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-top: 8px;
+    }
+    .status-done .status-num        { color: var(--green); }
+    .status-in-progress .status-num { color: var(--amber); }
+    .status-blocked .status-num     { color: var(--red); }
+    .status-this-week .status-num   { color: var(--blue); }
+    .status-backlog .status-num     { color: var(--gray); }
+
+    /* Links */
+    .links { margin-bottom: 40px; }
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+    }
+    .link-card:hover {
+      box-shadow: 0 4px 14px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+      border-color: var(--teal);
+    }
+    .link-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .link-text { flex: 1; }
+    .link-title {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+    .link-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .link-arrow {
+      color: var(--teal);
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Roles */
+    .roles { margin-bottom: 40px; }
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .role-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+    .role-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .role-text { flex: 1; }
+    .role-name {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .role-person {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 6px;
+      font-size: 13px;
+    }
+    .role-verbs {
+      font-size: 12px;
+      color: var(--text-soft);
+      font-weight: 500;
+    }
+
+    /* Recently shipped */
+    .recent { margin-bottom: 40px; }
+    .recent-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+    .recent-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+    }
+    .recent-check {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .recent-text { flex: 1; min-width: 0; }
+    .recent-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+    .recent-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    /* Board section */
+    .board-section { margin-top: 8px; }
+
+    /* Kanban board */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(280px, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .column {
+      background: var(--gray-lighter);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--gray-light);
+    }
+    .col-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 4px 4px 12px;
+      border-bottom: 2px solid transparent;
+    }
+    .col-head h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.02em;
+    }
+    .col-count {
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--gray-light);
+    }
+
+    /* Column accents */
+    .col-done .col-head        { border-bottom-color: var(--green); }
+    .col-in-progress .col-head { border-bottom-color: var(--amber); }
+    .col-blocked .col-head     { border-bottom-color: var(--red); }
+    .col-this-week .col-head   { border-bottom-color: var(--blue); }
+    .col-backlog .col-head     { border-bottom-color: var(--gray); }
+
+    .col-done .col-count        { color: var(--green); border-color: var(--green-light); }
+    .col-in-progress .col-count { color: #B45309; border-color: var(--amber-light); }
+    .col-blocked .col-count     { color: var(--red); border-color: var(--red-light); }
+    .col-this-week .col-count   { color: #1D4ED8; border-color: var(--blue-light); }
+    .col-backlog .col-count     { color: var(--gray); border-color: var(--gray-light); }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 12px 14px;
+      border: 1px solid var(--gray-light);
+      box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04);
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+    }
+    .card-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 4px 0;
+    }
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 12.5px;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+    .empty {
+      color: var(--text-soft);
+      font-size: 12px;
+      text-align: center;
+      padding: 16px 0;
+      font-style: italic;
+    }
+
+    /* Tags */
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .tag-shipped     { background: var(--green-light); color: #065F46; }
+    .tag-phase-0     { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-phase-1     { background: var(--blue-light); color: #1D4ED8; }
+    .tag-phase-2     { background: var(--purple-light); color: #6D28D9; }
+    .tag-phase-4     { background: var(--pink-light); color: #BE185D; }
+    .tag-phase-3     { background: var(--indigo-light); color: #4338CA; }
+    .tag-deliverable { background: var(--green-light); color: #047857; }
+    .tag-playbook    { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-milestone   { background: #FEE2E2; color: #991B1B; }
+    .tag-infra       { background: var(--amber-light); color: #B45309; }
+    .tag-ops         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-recurring   { background: var(--gray-light); color: var(--gray); }
+    .tag-blocked     { background: var(--red-light); color: var(--red); }
+    .tag-est         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-neutral     { background: var(--gray-light); color: var(--text-muted); }
+
+    /* Footer */
+    footer.page-foot {
+      padding: 16px 32px 32px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+    footer.page-foot a {
+      color: var(--teal-dark);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(13, 148, 136, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .board { grid-template-columns: repeat(3, minmax(280px, 1fr)); }
+      .links-grid { grid-template-columns: 1fr; }
+      .recent-list { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 1300px) {
+      .phases-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 1100px) {
+      .goals-grid { grid-template-columns: 1fr; }
+      .roles-grid { grid-template-columns: 1fr; }
+      .phases-grid { grid-template-columns: repeat(2, 1fr); }
+      .status-strip { grid-template-columns: repeat(2, 1fr); }
+      .status-stat { border-right: none; border-bottom: 1px solid var(--gray-light); }
+      .status-stat:nth-last-child(-n+2) { border-bottom: none; }
+    }
+    @media (max-width: 700px) {
+      .phases-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .page-main { padding: 24px 16px 32px; }
+      .board { grid-template-columns: 1fr; }
+      header.page-head { padding: 16px; }
+      .hero-title { font-size: 32px; }
+      .hero-tagline { font-size: 17px; }
+      .hero-desc { font-size: 15px; }
+    }
+
+    /* Print */
+    @media print {
+      header.page-head { background: var(--card); color: var(--navy); border-bottom: 2px solid var(--gray-light); position: static; }
+      .brand-mark { background: var(--navy); color: #FFFFFF; }
+      .brand-title, .page-meta strong { color: var(--navy); }
+      .page-meta, .brand-sub { color: var(--text-muted); }
+      .board { grid-template-columns: repeat(2, 1fr); padding: 16px; }
+      .column { break-inside: avoid; background: var(--card); border: 1px solid var(--gray-light); }
+      .card:hover { transform: none; box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04); }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="page-head-inner">
+      <div class="page-brand">
+        <div class="brand-mark">🛡</div>
         <div>
-          <h1>Storepro Component Count — Build Kanban</h1>
-          <p class="subtitle">Automated component counting + racking design review · Storepro App Module 3</p>
+          <div class="brand-title">Storepro Component Count</div>
+          <div class="brand-sub">Operations Dashboard</div>
         </div>
-        <div class="meta">
-          Last updated <strong>2026-05-14 (late evening)</strong><br />
-          <a href="https://github.com/CoreshiftHQNZ/storepro-component-count" target="_blank" rel="noopener">repo</a> ·
-          <a href="https://github.com/CoreshiftHQNZ/storepro-component-count/blob/main/docs/build-proposal.md" target="_blank" rel="noopener">build proposal</a>
+      </div>
+      <div class="page-meta">
+        <div><strong>43%</strong> complete</div>
+        <div><strong>13</strong>/30 cards done</div>
+        <div>Updated <strong>2026-05-28 21:16 UTC</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-main">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">INTERNAL · LIVE OPS DASHBOARD</div>
+      <h1 class="hero-title">Storepro Component Count</h1>
+      <p class="hero-tagline">Drop a DWG, get back a Storepro-format BOM. Pre-prod ready.</p>
+      <p class="hero-desc">Reads DWG / DXF / PDF warehouse layouts. Cross-validates a deterministic DWG-block parse with a Claude-vision per-bay-type recipe. Applies the Storepro counting rules (frames = bays + runs, splice kits at 11,400 mm, back ties × 2, frame-end protectors per run, copy-paste anomaly detection). Outputs an Excel + PDF matrix matching Storepro&#39;s Phase 1 Stage 2 working sheet — no Excel hand-editing, no second-person re-check.</p>
+      <div class="hero-phase-row">
+        <div class="phase-pill">
+          <span class="phase-pill-label">Current phase</span>
+          <span class="phase-pill-value">Phase 1 · Pre-prod ship complete</span>
         </div>
-      </header>
-
-      <section class="progress">
-        <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Build phases</div>
-        <div class="progress-bars">
-          <div class="pbar"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar"><div class="pbar-label"><strong>M1</strong> Vision pipeline</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar"><div class="pbar-label"><strong>M2</strong> Rules + AI reviewer</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Review UI</div><div class="pbar-track"><div class="pbar-fill" style="width: 95%"></div></div></div>
-          <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Integration + pilot</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+        <div class="phase-pill phase-pill-milestone">
+          <span class="phase-pill-label">Next milestone</span>
+          <span class="phase-pill-value">First job through with Storepro&#39;s standardised drawings <span class="phase-pill-date">Once Storepro delivers the new files</span></span>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="ricky-panel">
-        <div class="ricky-panel-head">
-          <h2>Ricky's tasks</h2>
-          <span class="badge">Action items</span>
+    <!-- GOALS -->
+    <section class="goals">
+      <h2 class="section-head">The Three Goals</h2>
+      <div class="goals-grid">
+        
+        <div class="goal-card">
+          <div class="goal-icon">📐</div>
+          <div class="goal-title">Eliminate the manual count</div>
+          <div class="goal-desc">Today a Storepro designer prints the PDF and tallies every frame, beam, brace, mesh deck and protector by hand. We replace that with a job that runs in ~3 min and produces a matrix in the exact shape they already use.</div>
         </div>
-        <p class="intro">
-          Things that need a human (you) to make a call or chase a person. None are technical. <strong>Don't worry about the "Later" column</strong> — Claude will tell you when each becomes time-sensitive.
-        </p>
-        <div class="ricky-grid">
-          <div class="ricky-section">
-            <h3>Do now</h3>
-            <p class="helper">M1 (vision pipeline) can start without these, but they unblock M3/M4.</p>
+        <div class="goal-card">
+          <div class="goal-icon">⚖️</div>
+          <div class="goal-title">Catch ambiguity before the quote</div>
+          <div class="goal-desc">DWG-block count + vision-derived recipe must agree. When they don&#39;t (e.g. designer copy-pasted a bay), the system surfaces a clarification rather than picking one silently.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">📊</div>
+          <div class="goal-title">Matrix → quote, in one flow</div>
+          <div class="goal-desc">End state: the Excel matches Storepro&#39;s Phase 1 Stage 2 sheet 1:1 — bay-type rows, component columns, totals row — ready to drop straight into Gareth + Gino&#39;s quoting workflow.</div>
+        </div>
+      </div>
+    </section>
 
-            <div class="task">
-              <p class="task-title">🏢 Confirm Storepro's Microsoft 365 tenant <span class="task-when">~10 min · needed before M3 auth wiring</span></p>
-              <p class="task-body">
-                Ask Storepro (or check NetSuite for it) which M365 tenant the team logs in with. We need the tenant ID + a service account / app registration with read access to user directory. This is what auth will SSO against.
-              </p>
-            </div>
-
-            <div class="task">
-              <p class="task-title">📑 Get 2 more sample DWGs from Storepro <span class="task-when">~5 min · ask, then wait</span></p>
-              <p class="task-body">
-                Sigma is one job; we need 2–3 more representative job DWGs so the vision pipeline isn't overfit to one drawing's style. Specifically: <strong>one job with a different bay-type mix</strong> (not just S6/S8/S1/S2) and <strong>one job with extra bracing / sprinkler beams</strong> so we can validate the overlay detection.
-              </p>
-            </div>
-
-            <div class="task">
-              <p class="task-title">🎯 Nominate 3 pilot jobs <span class="task-when">~5 min · needed for M4 validation</span></p>
-              <p class="task-body">
-                For pilot we need 3 jobs Storepro has <em>already counted manually</em>. Ideally varied: one straightforward selective rack, one with double-deep, one with mesh / sprinkler / unusual extras. The pilot compares our count to their manual count and tunes from there.
-              </p>
-            </div>
+    <!-- PHASES -->
+    <section class="phases">
+      <h2 class="section-head">Development & Production Phases</h2>
+      <p class="section-sub">Where the project has been, where it is now, and where it's going. Each phase delivers value on its own — no big-bang.</p>
+      <div class="phases-grid">
+        
+        <div class="phase-card phase-done">
+          <div class="phase-card-head">
+            <div class="phase-marker">0</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
           </div>
-
-          <div class="ricky-section later">
-            <h3>Later — heads-up only</h3>
-            <p class="helper">Each becomes time-sensitive when its phase starts. I'll prompt you.</p>
-
-            <div class="task">
-              <p class="task-title">Schedule Gino for the validation pass <span class="task-when">end of M3, before pilot</span></p>
-              <p class="task-body">
-                We don't need Gino to <em>build</em> — recipes come from the elevation drawings, not from his head. We need ~2 hours of his time to <strong>review the app's output on the 3 pilot jobs</strong> and tell us where it got it wrong. Post-M3.
-              </p>
-            </div>
-
-            <div class="task">
-              <p class="task-title">NetSuite integration approach <span class="task-when">M4 — once Phase 1 is shipping</span></p>
-              <p class="task-body">
-                Decide: RESTlets, SuiteTalk, or third-party iPaaS for write-back? Sandbox access needed. Same decision applies to the rest of the Storepro App modules.
-              </p>
-            </div>
-
-            <div class="task">
-              <p class="task-title">Storepro product catalogue cleanup <span class="task-when">Phase 2 (BOM) — not Phase 1</span></p>
-              <p class="task-body">
-                For Phase 2 (BOM → Job Coaster) to work, every component needs a SKU. Phase 1 ships without this; Phase 2 is gated on it. Worth flagging to Storepro now so they can scope the cleanup in parallel.
-              </p>
-            </div>
-          </div>
+          <div class="phase-title">Phase 0 <span class="phase-subtitle">Prove the parse</span></div>
+          <div class="phase-window">Complete · 2026-05-14</div>
+          <p class="phase-desc">Validate that DWGs are structured enough to count from. Wrote prototype/storepro_count.py against the Sigma Healthcare drawing, confirmed named blocks + StorePro_ layer convention give a clean component count. Direction confirmed: build the full app.</p>
+          <ul class="phase-deliverables">
+            <li>DWG → libredwg → JSON → block-name + layer parse</li><li>component_library.yaml + rules.yaml as Storepro-editable config</li><li>Validated component counts against Sigma drawing (counts match expected magnitudes)</li><li>Discovered model-space contains both plan + elevation views (different coordinate regions)</li>
+          </ul>
         </div>
-      </section>
-
-      <h2 class="section-title">Kanban</h2>
-      <div class="board">
-        <!-- DONE -->
-        <div class="col done">
-          <div class="col-head">
-            <div class="col-title"><span class="dot"></span>Done</div>
-            <div class="col-count">28</div>
+        <div class="phase-card phase-done">
+          <div class="phase-card-head">
+            <div class="phase-marker">1</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
           </div>
-          <div class="col-body">
-            <div class="card">
-              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-1</span></div>
-              <p class="card-title">Phase 0 prototype — DWG/DXF parser</p>
-              <p class="card-note">libredwg + ezdxf pipeline. Reads DXF strict-mode; falls back to dwgread minJSON + iconv for DWG-only inputs. Validated against Sigma Healthcare DWG.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-2</span></div>
-              <p class="card-title">Storepro-editable component library (YAML)</p>
-              <p class="card-note">Block-name → canonical-component alias table. Seeded from Sigma block names; safe-substring matcher to avoid Revit XREF false positives. Editable by Storepro admins without dev support.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-3</span></div>
-              <p class="card-title">Rules engine (YAML)</p>
-              <p class="card-note">Counting rules (row spacer industry-standard, mesh connector 4-vs-6) + compliance flags (11m upright, cutdown protector, double-deep backstop). Pattern-based ignore for AutoCAD anonymous noise (*U/*D/*X). Captures the ruleset Ricky provided 2026-05-13.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-4</span></div>
-              <p class="card-title">Architectural understanding locked</p>
-              <p class="card-note">Plan view → bay count by type. Elevation view → recipe per type. Storepro already produces this manually (the capacity table on every plan-view sheet). App automates + adds compliance layer.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-5</span></div>
-              <p class="card-title">Build proposal approved by Storepro</p>
-              <p class="card-note">Phase 1 (read &amp; count + design review): NZ$32-48k. Phase 2 (BOM → Job Coaster): NZ$8-14k. Standalone repo, independent of platform layer for now. Full doc: <code>docs/build-proposal.md</code>.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-6</span></div>
-              <p class="card-title">Repo scaffolded at CoreshiftHQNZ/storepro-component-count</p>
-              <p class="card-note">main + dev + staging branches up. Phase 0 prototype ported into <code>parser/</code>. <code>api/</code> and <code>web/</code> placeholders for next iteration. README, CLAUDE.md, .gitignore in.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-7</span></div>
-              <p class="card-title">Kanban entry (this page)</p>
-              <p class="card-note">Added to coreshift-kanbans index. Will be kept in sync as part of the work, not as a separate pass.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-8</span></div>
-              <p class="card-title">Sheet rasterisation pipeline (PDF → high-res PNG)</p>
-              <p class="card-note">poppler's pdftoppm wrapped in <code>parser/vision/rasterize.py</code>. 300 DPI default, configurable per-call. Emits per-page PNGs next to the source PDF.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-9</span></div>
-              <p class="card-title">Bay-rectangle detector v1 (colour + OCR + scanline) — partial</p>
-              <p class="card-note">Three approaches landed: hue-based (<code>detect_bays.py</code>), OCR-based via Tesseract (<code>ocr_bays.py</code>), scanline-based (<code>segment_bays.py</code>). First pass on Sigma plan view at ~57% recall — preprocessing tuning is next-session work. Architecture is sound; numbers improve with tuning, not refactoring.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-16</span></div>
-              <p class="card-title">FastAPI backend scaffolded</p>
-              <p class="card-note">api/main.py with <code>/api/health</code>, <code>POST /api/jobs</code>, <code>GET /api/jobs/{id}</code>. DXF parse path wired end-to-end (parser → rules → flags → JSON). DWG/PDF paths return an M1-work sentinel.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-17</span></div>
-              <p class="card-title">Next.js frontend scaffolded</p>
-              <p class="card-note">Next.js 15 + TypeScript + Tailwind 4. Single-page upload UI with component count table, rules trace, and compliance flags display. <code>NEXT_PUBLIC_API_URL</code> env var for the API origin.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-19</span></div>
-              <p class="card-title">Railway deploy config + GitHub Actions CI</p>
-              <p class="card-note">nixpacks.toml installs Python 3.11 + poppler + tesseract + libredwg system deps. railway.json for the web service. CI workflow runs parser smoke test + api import check + web typecheck/build on every push to dev/staging/main.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-14</span></div>
-              <p class="card-title">AI design-reviewer stubbed</p>
-              <p class="card-note"><code>api/services/reviewer.py</code> defines the interface, gates on <code>ANTHROPIC_API_KEY</code>, returns a placeholder until M2 wires the actual Claude vision call. Architecture sketch (request shape, model choice) captured in the module's docstring.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-26</span></div>
-              <p class="card-title">DWG path wired into the API (libredwg → JSON → parser)</p>
-              <p class="card-note">POST /api/jobs now accepts a DWG directly. Internal pipeline: dwgread minJSON → iconv UTF-8 sanitise → JSON parser. Verified with the Sigma DWG: counts match prototype output (428 post protector, 341 beam, 324 FEP, 319 backstop, etc).</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-17b</span></div>
-              <p class="card-title">Web UI polished for demos</p>
-              <p class="card-note">Drag-and-drop upload. Sidebar with auto-refreshing recent jobs list. Detailed result view: 3-stat summary, canonical count table, per-block breakdown with unmapped flagging, rules trace, compliance flags with severity badges. Light + dark themes.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-27</span></div>
-              <p class="card-title">End-to-end DWG regression test passing</p>
-              <p class="card-note"><code>tests/e2e_dwg_count.sh</code> boots the API, uploads Sigma DWG, asserts every canonical component matches ground truth — 7/7 PASS. Proves the full chain (uvicorn → multipart → libredwg → JSON parser → rules engine → response) works end-to-end.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-28</span></div>
-              <p class="card-title">Drawing-conventions recommendations doc</p>
-              <p class="card-note"><code>docs/drawing-conventions.md</code> — 13 recommendations for Storepro to author drawings the app parses more reliably. Three tiers (low-effort high-impact → nice-to-have). The two biggest leverage items: consistent block library + bay-type rectangles as real blocks.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m0">M0</span><span class="card-id">SCC-29</span></div>
-              <p class="card-title">Rules-engine unit tests (6/6 PASS)</p>
-              <p class="card-note">tests/test_rules_engine.py guards: library loads with expected canonicals, alias lookup canonicalises known names, alias rejection of short generic substrings (XREF regression), rules.yaml has required keys, apply_rules emits expected output on Sigma-like counts, mesh_back_connectors maths is correct. Wired into <code>make test</code> + GitHub Actions CI.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-30</span></div>
-              <p class="card-title">Makefile for one-command local dev</p>
-              <p class="card-note"><code>make dev</code> boots API + web together. <code>make test</code> runs parser smoke + API import + 6 unit tests. <code>make e2e</code> runs the full-stack regression. <code>make install</code> installs both stacks. <code>make clean</code> nukes caches.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-31</span></div>
-              <p class="card-title">v3 vision approach: glyph-detection</p>
-              <p class="card-note">parser/vision/ocr_glyphs.py finds dark text-glyph blobs in row bands, groups adjacent glyphs into labels, OCRs each. Best location accuracy of any approach so far: 376 candidates vs 289 expected bays. OCR engine resolution still the bottleneck — captured in vision/README + path-forward options.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-32</span></div>
-              <p class="card-title">Designer-practices doc (companion to drawing-conventions)</p>
-              <p class="card-note">docs/designer-practices.md — 17 habits across "before drawing → while drawing → before sign-off → at export → quarterly". TL;DR: insert from library never type, every component on its semantic layer every time, re-count visually before sign-off.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-33</span></div>
-              <p class="card-title">AI design-reviewer wired (Claude vision)</p>
-              <p class="card-note">api/services/reviewer.py now makes the actual Claude vision call — structured prompt with parsed count + rules + flags, optional sheet PNG images, returns JSON array of severity-tagged comments. Gated on ANTHROPIC_API_KEY (disabled path is a no-op). API attaches ai_comments to every job result. Verified E2E still passes (7/7 components match) in the disabled path.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-34</span></div>
-              <p class="card-title">Claude vision OCR fallback module</p>
-              <p class="card-note">parser/vision/claude_ocr.py — when Tesseract can't read a label crop, route it to Claude vision in batches of 20. anthropic SDK installed; activates when ANTHROPIC_API_KEY is set. Disabled path returns aligned None values without any API call.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-35</span></div>
-              <p class="card-title">AI reviewer LIVE on Sigma DWG</p>
-              <p class="card-note">ANTHROPIC_API_KEY set, .env auto-loaded. AI reviewer produced 11 substantive comments on Sigma: AS 4084 compliance gaps (zero row spacers + 660 beams, only 28 anchors vs 162+ frames), naming variance (Backstop beam vs Stop Beam), BOM completeness (1,330 unmapped *U blocks). Exactly the differentiated value scoped in the proposal.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-36</span></div>
-              <p class="card-title">Recipe extractor LIVE: full S6 + S8 recipes from elevation PDF</p>
-              <p class="card-note">Claude vision extracted complete recipes for S6(LSS) and S8/S10: 11 + 10 beam levels with heights (304mm to 13035mm), weight ratings (260kg / 2000kg / 1800kg), upright profile (114x100x2.5mm), backing mesh detection, front bay load rating (13840 kg). All from the rendered PDF.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-37</span></div>
-              <p class="card-title">S-type alias resolver (S6 → S6(LSS), S8 → S8/S10)</p>
-              <p class="card-note">Plan-view labels use bare names (S6, S8); elevation labels are decorated (S6(LSS), S8/S10). Resolver handles exact / parenthesised-suffix / compound-slash patterns. 5 unit tests, wired into Makefile + CI.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-38</span></div>
-              <p class="card-title">Single-call Claude vision bay counter</p>
-              <p class="card-note">parser/vision/bay_count_vision.py — one Claude API call on the whole plan-view PNG returns {S-type: count} dict. 3-10 seconds vs 2 min for the per-crop pipeline. Reads either the capacity table or counts rectangles directly. Auto-wired into the API as the primary bay-counter when sheet PDFs are uploaded.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-39</span></div>
-              <p class="card-title">FULL PIPELINE WORKING: DWG → BOM end-to-end (~90s)</p>
-              <p class="card-note">Verified locally: upload DWG + plan PDF + elevation PDF → returns deterministic count + bay counts (auto-extracted) + recipes (auto-extracted) + alias-resolved expanded BOM (4,202 beams, 436 uprights, 872 anchors, etc.) + 11 AI design-reviewer comments. The Phase 1 deliverable is functioning end-to-end against the Sigma drawing.</p>
-            </div>
+          <div class="phase-title">Phase 1 <span class="phase-subtitle">Build the app</span></div>
+          <div class="phase-window">Complete · 2026-05-28</div>
+          <p class="phase-desc">The full v1: high-fidelity UI, real upload + processing + matrix pipeline, Storepro rules from the Gino/Gareth meeting, Microsoft SSO, Excel + PDF export, persistent notes. All on staging. Ready for first real job once Storepro delivers standardised drawings.</p>
+          <ul class="phase-deliverables">
+            <li>FastAPI backend with libredwg parse + Claude vision per-bay-type recipe</li><li>Cross-source reconciler applying Storepro rules + emitting clarifications</li><li>Next.js 6-screen UI ported from the high-fidelity prototype (Storepro.zip)</li><li>Microsoft Azure AD SSO + HTTP Basic fallback</li><li>Real .xlsx (3-sheet matrix) + .pdf (A4 landscape) export endpoints</li><li>Job metadata persisted (client / site / reference); notes with author + timestamp</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-in-progress">
+          <div class="phase-card-head">
+            <div class="phase-marker">2</div>
+            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+          </div>
+          <div class="phase-title">Phase 2 <span class="phase-subtitle">Pilot with new drawings</span></div>
+          <div class="phase-window">Blocked on Storepro delivering standardised files</div>
+          <p class="phase-desc">Run the live app against Storepro&#39;s NEW standardised drawings (with a fixed component library + consistent naming). Verify accuracy against their manual counts on 3+ real jobs. Tune rules where needed. Close the loop with Gareth + Gino on any remaining ambiguities.</p>
+          <ul class="phase-deliverables">
+            <li>First standardised drawing accepted from Storepro</li><li>Matrix accuracy benchmarked against manual count on ≥ 3 real jobs</li><li>Rules + alias library tuned where the standardised drawings need different handling</li><li>Clarifications workflow validated — Gareth/Gino can resolve in-app, not via email</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">3</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">Phase 3 <span class="phase-subtitle">Production rollout</span></div>
+          <div class="phase-window">After Phase 2 pilot is signed off</div>
+          <p class="phase-desc">Move from staging-only to production. Retire the shared admin password, enforce Microsoft SSO, set up Railway production env, hand the app to Storepro&#39;s daily operators.</p>
+          <ul class="phase-deliverables">
+            <li>Production Railway environment provisioned (api + web services)</li><li>Microsoft SSO enforced — admin-password toggle removed from UI</li><li>Storepro&#39;s operator team onboarded (training note + cheat-sheet)</li><li>Anthropic key rotated (still using the chat-exposed key on staging)</li><li>Operator dashboard for spot-checking job health + downloads</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-future">
+          <div class="phase-card-head">
+            <div class="phase-marker">4</div>
+            <div class="phase-status-pill phase-status-future">Future</div>
+          </div>
+          <div class="phase-title">Phase 4 <span class="phase-subtitle">Module 4 — BOM rollup</span></div>
+          <div class="phase-window">Next module in the Storepro App program</div>
+          <p class="phase-desc">Roll the per-bay matrix up into Storepro&#39;s final salesy quote (the &#39;Sigma ALL IN.xls&#39; shape — verbose product descriptions, profile specs, finish, RAL codes, multi-section grouping). This is the next module in the wider Storepro App program; specced in the build proposal.</p>
+          <ul class="phase-deliverables">
+            <li>Per-job catalogue inference engine (S-type → product family)</li><li>Verbose description template engine (matches Sigma ALL IN style)</li><li>Multi-section grouping (Pallet Rack / LSS / Carton Live / RUT / Mesh)</li><li>SKU rollup with finish + profile + alternates</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATUS STRIP -->
+    <section class="status-strip">
+      <div class="status-stat status-done">
+        <div class="status-num">13</div>
+        <div class="status-label">Done</div>
+      </div>
+      <div class="status-stat status-in-progress">
+        <div class="status-num">0</div>
+        <div class="status-label">In Progress</div>
+      </div>
+      <div class="status-stat status-blocked">
+        <div class="status-num">1</div>
+        <div class="status-label">Blocked</div>
+      </div>
+      <div class="status-stat status-this-week">
+        <div class="status-num">3</div>
+        <div class="status-label">This Week</div>
+      </div>
+      <div class="status-stat status-backlog">
+        <div class="status-num">13</div>
+        <div class="status-label">Backlog</div>
+      </div>
+    </section>
+
+    <!-- KEY ARTIFACTS / QUICK LINKS -->
+    <section class="links">
+      <h2 class="section-head">Key Artifacts</h2>
+      <div class="links-grid">
+        
+        <a class="link-card" href="https://storepro-component-count-staging.up.railway.app" target="_blank" rel="noopener">
+          <div class="link-icon">🚀</div>
+          <div class="link-text">
+            <div class="link-title">Live on staging</div>
+            <div class="link-desc">Microsoft SSO active. Login storepro / Sigma2026-O2FtB7 as fallback.</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://storepro-component-count-api-staging.up.railway.app/api/health" target="_blank" rel="noopener">
+          <div class="link-icon">🔧</div>
+          <div class="link-text">
+            <div class="link-title">API on staging</div>
+            <div class="link-desc">FastAPI service — health, jobs, export.xlsx, export.pdf, /auth/microsoft/*</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://github.com/CoreshiftHQNZ/storepro-component-count" target="_blank" rel="noopener">
+          <div class="link-icon">📦</div>
+          <div class="link-text">
+            <div class="link-title">Repo</div>
+            <div class="link-desc">Code, deploy pipeline, ops docs, parser rules</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ROLES -->
+    <section class="roles">
+      <h2 class="section-head">Who's Involved</h2>
+      <div class="roles-grid">
+        
+        <div class="role-card">
+          <div class="role-avatar">R</div>
+          <div class="role-text">
+            <div class="role-name">Owner <span class="role-person">Ricky · Coreshift</span></div>
+            <div class="role-verbs">Scope · prioritise · client relationship</div>
           </div>
         </div>
-
-        <!-- DOING -->
-        <div class="col doing">
-          <div class="col-head">
-            <div class="col-title"><span class="dot"></span>Doing</div>
-            <div class="col-count">1</div>
-          </div>
-          <div class="col-body">
-            <div class="card">
-              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-40</span></div>
-              <p class="card-title">Prompt tuning: catch S1/S2 reliably</p>
-              <p class="card-note">First-shot single-call bay counter sometimes only returns the larger types (S6, S8). The simpler prompt during prototype testing returned all 4 perfectly. Worth a focused 30-min tuning session with the production prompt to ensure consistent extraction of every type in the capacity table.</p>
-            </div>
+        <div class="role-card">
+          <div class="role-avatar">S</div>
+          <div class="role-text">
+            <div class="role-name">Storepro principals <span class="role-person">Gareth + Gino</span></div>
+            <div class="role-verbs">Confirm rules · supply drawings · validate matrix</div>
           </div>
         </div>
-
-        <!-- NEXT -->
-        <div class="col next">
-          <div class="col-head">
-            <div class="col-title"><span class="dot"></span>Next</div>
-            <div class="col-count">5</div>
-          </div>
-          <div class="col-body">
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-11</span></div>
-              <p class="card-title">Elevation recipe extractor (per S-type)</p>
-              <p class="card-note">For each S-type, parse its elevation drawing: count beam levels, OCR weight ratings, detect mesh presence (red hatch pattern), differentiate mid-frame vs end-frame, read upright spec from dimension text. Same OCR + scanline tools as the bay detector.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-12</span></div>
-              <p class="card-title">Overlay detector (red bracing, sprinkler beams, etc.)</p>
-              <p class="card-note">Per-bay overlays that aren't in the base recipe — extra bracing in red, sprinkler beams at specific bays, cutdown post protector requirement (per the height-vs-lowest-beam rule).</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m1">M1</span><span class="card-id">SCC-13</span></div>
-              <p class="card-title">End-frame sharing logic</p>
-              <p class="card-note">Detect end-of-row bays geometrically; apply frame-sharing rule (row of N bays → N+1 frames, not 2N). Reads end vs mid from the elevation drawing's frame variants.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m2">M2</span><span class="card-id">SCC-14c</span></div>
-              <p class="card-title">Set ANTHROPIC_API_KEY and demo the AI reviewer</p>
-              <p class="card-note">Wiring is in place (SCC-33). Setting the env var unblocks the actual Claude vision call. Will produce JSON-array comments per job. Test path: run e2e_dwg_count.sh with the env var set, observe ai_comments in the response.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-23</span></div>
-              <p class="card-title">Sheet preview in the review UI</p>
-              <p class="card-note">Render each parsed sheet inline with the detected bays highlighted. Lets the estimator visually verify before locking the count. Reuses the rasterize.py output + detection bounding boxes.</p>
-            </div>
+        <div class="role-card">
+          <div class="role-avatar">C</div>
+          <div class="role-text">
+            <div class="role-name">Implementer <span class="role-person">Claude Code</span></div>
+            <div class="role-verbs">Parse · count · ship</div>
           </div>
         </div>
-
-        <!-- BACKLOG -->
-        <div class="col back">
-          <div class="col-head">
-            <div class="col-title"><span class="dot"></span>Backlog</div>
-            <div class="col-count">6</div>
-          </div>
-          <div class="col-body">
-            <div class="card">
-              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-18</span></div>
-              <p class="card-title">Microsoft 365 SSO via Supabase auth</p>
-              <p class="card-note">Storepro logs in with their existing M365 tenant. Standard Coreshift auth pattern — Supabase OIDC against Azure AD. Blocked on Storepro IT providing tenant ID + app-registration credentials.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-24</span></div>
-              <p class="card-title">Job persistence (Supabase)</p>
-              <p class="card-note">Currently jobs are in-memory in the API process. Move to a <code>jobs</code> table in Supabase so jobs survive restarts and can be listed across users.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m3">M3</span><span class="card-id">SCC-25</span></div>
-              <p class="card-title">Background job queue (Arq + Redis)</p>
-              <p class="card-note">Parses run inline today. Once the vision + AI reviewer are wired in, request latency will be too high for a sync flow — switch to a queue + worker model.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m4">M4</span><span class="card-id">SCC-20</span></div>
-              <p class="card-title">NetSuite write-back</p>
-              <p class="card-note">Count + PDF summary attaches to the opportunity record. Format TBD with Storepro (custom record? PDF attachment? both?). Phase 2 (Job Coaster integration) builds on this.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m4">M4</span><span class="card-id">SCC-21</span></div>
-              <p class="card-title">Audit trail</p>
-              <p class="card-note">Every run versioned: file hash, rule-set version, AI model version, reviewer identity, timestamp. Re-runs reproducible. Required for accountability when a count drives a quote.</p>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="chip m4">M4</span><span class="card-id">SCC-22</span></div>
-              <p class="card-title">Pilot on 3 real jobs</p>
-              <p class="card-note">Run the app on 3 Storepro jobs that already have manual counts. Compare. Gino reviews the AI commentary. Tune accuracy. Cutover when >= 98% on standard jobs.</p>
-            </div>
+        <div class="role-card">
+          <div class="role-avatar">T</div>
+          <div class="role-text">
+            <div class="role-name">The Tools <span class="role-person">libredwg · Claude vision · FastAPI · Next.js · Railway · Azure AD</span></div>
+            <div class="role-verbs">Read · render · deploy · authenticate</div>
           </div>
         </div>
       </div>
+    </section>
 
-      <footer>
-        <a href="../">← all kanbans</a> · <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/blob/main/storepro-component-count/index.html" target="_blank" rel="noopener">edit this page</a>
-      </footer>
-    </div>
-  </body>
+    <!-- RECENTLY SHIPPED -->
+    
+    <section class="recent">
+      <h2 class="section-head">Recently Shipped</h2>
+      <div class="recent-list">
+        
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">DWG parse prototype against Sigma</div>
+            <div class="recent-desc">Validated that Storepro DWGs are structured enough to count from. Named blocks + StorePro_ layer convention produce clean counts. Direction confirmed → build the app</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">component_library.yaml + rules.yaml</div>
+            <div class="recent-desc">Storepro-editable config: block-name aliases, layer-substring filters, deterministic counting rules. Iterated through 3 sample drawings (Sigma, Arlec, Suntory) — added S-type frame markers, BBSL beam variants, Chinese-named blocks (offshore designer), architect-XREF ignore patterns</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Cross-job comparison study</div>
+            <div class="recent-desc">Parsed all 3 sample drawings end-to-end, generated matrix outputs, diffed against the golden Sigma Phase 1 Stage 2 spreadsheet. Found the bay-count → frame-count rule (frames = bays + runs, NOT 2 × bays) and the per-level beam profile variation. Locked these with Gino + Gareth on 2026-05-28</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Storepro rules confirmed (Gino + Gareth meeting)</div>
+            <div class="recent-desc">Locked: frames = bays + runs; splice kit threshold = 11,400 mm; back ties = 2 per frame default; frame-end protectors = 1 LH + 1 RH per run; beam profile varies per level (no fixed pattern); copy-paste anomaly when DWG &gt; 1.5× rule expectation flags clarification; post-protector spec asked per job</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">FastAPI backend with libredwg + vision pipeline</div>
+            <div class="recent-desc">Streaming 500 MB uploads, DWG → JSON via libredwg, vision pass via Claude (component_count_vision reads per-level beam profile + run_count), recipe extractor, AI reviewer, job storage. Dockerfile builds libredwg from source; runs on Railway</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Reconciler + matrix builder</div>
+            <div class="recent-desc">Combines DWG-block parse + vision recipe into a unified bay-type × component matrix. Applies the meeting rules. Emits clarifications (post-protector spec, copy-paste anomaly). Confidence flag per cell</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KANBAN BOARD -->
+    <section class="board-section">
+      <h2 class="section-head">Live Rollout Board</h2>
+      <p class="section-sub">Every task across every phase. Updated by editing <code>KANBAN.md</code> and running <code>update-kanban.cmd</code>.</p>
+      <div class="board">
+        
+    <section class="column col-done">
+      <header class="col-head">
+        <h2>✅ Done</h2>
+        <span class="col-count">13</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">DWG parse prototype against Sigma</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Validated that Storepro DWGs are structured enough to count from. Named blocks + StorePro_ layer convention produce clean counts. Direction confirmed → build the app</div>
+      </div>
+      <div class="card">
+        <div class="card-title">component_library.yaml + rules.yaml</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Storepro-editable config: block-name aliases, layer-substring filters, deterministic counting rules. Iterated through 3 sample drawings (Sigma, Arlec, Suntory) — added S-type frame markers, BBSL beam variants, Chinese-named blocks (offshore designer), architect-XREF ignore patterns</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cross-job comparison study</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">analysis</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Parsed all 3 sample drawings end-to-end, generated matrix outputs, diffed against the golden Sigma Phase 1 Stage 2 spreadsheet. Found the bay-count → frame-count rule (frames = bays + runs, NOT 2 × bays) and the per-level beam profile variation. Locked these with Gino + Gareth on 2026-05-28</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Storepro rules confirmed (Gino + Gareth meeting)</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Locked: frames = bays + runs; splice kit threshold = 11,400 mm; back ties = 2 per frame default; frame-end protectors = 1 LH + 1 RH per run; beam profile varies per level (no fixed pattern); copy-paste anomaly when DWG &gt; 1.5× rule expectation flags clarification; post-protector spec asked per job</div>
+      </div>
+      <div class="card">
+        <div class="card-title">FastAPI backend with libredwg + vision pipeline</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Streaming 500 MB uploads, DWG → JSON via libredwg, vision pass via Claude (component_count_vision reads per-level beam profile + run_count), recipe extractor, AI reviewer, job storage. Dockerfile builds libredwg from source; runs on Railway</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Reconciler + matrix builder</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Combines DWG-block parse + vision recipe into a unified bay-type × component matrix. Applies the meeting rules. Emits clarifications (post-protector spec, copy-paste anomaly). Confidence flag per cell</div>
+      </div>
+      <div class="card">
+        <div class="card-title">High-fidelity UI ported</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Designer&#39;s 6-screen prototype (Storepro.zip) ported to Next.js: Dashboard → Upload → Processing → Review → Clarify → Export. IBM Plex Sans/Mono + industrial-yellow + paper-white palette. CAD-scanner Processing animation. Live job-list filter strip + tabs</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Real upload → matrix → export flow on staging</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Suntory smoke test: 32 MB DWG + 2 MB PDF uploaded, pipeline completed in 144 s, 350 bays detected (matches capacity table exactly), 367 frames vs golden 384 (95.6% accuracy — was previously 2× over with the old rule)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Microsoft Azure AD SSO</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-neutral">auth</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/api/auth/microsoft/exchange</span></div>
+        <div class="card-desc">Sign-in with Microsoft button, OAuth code flow via `/api/auth/microsoft/exchange`, opaque session token in localStorage, server-side revoke on logout. HTTP Basic kept behind toggle for CLI. Tenant + client + secret all verified against Microsoft directly</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Excel + PDF export</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">.xlsx</span><span class="tag tag-neutral">.pdf</span></div>
+        <div class="card-desc">`.xlsx` is a 3-sheet workbook (Matrix, Assumptions &amp; Questions, Rules &amp; Clarifications) via openpyxl. `.pdf` is A4 landscape print-ready via reportlab (pure Python, no native deps). Both download from real endpoints on the Review screen</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Job metadata + notes persistence</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">POST /api/jobs/{id}/notes</span></div>
+        <div class="card-desc">Client / Site / Reference / Racking-system captured on upload, stored with the job, shown on Dashboard rows + Review header. Notes posted via `POST /api/jobs/{id}/notes` with auth-derived author + timestamp; surfaced in Review right-rail activity feed</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Dashboard search filter</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Top-bar search filters jobs by ID / client / site in real time</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sample drawings comparison artifacts</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">analysis</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">samples/</span></div>
+        <div class="card-desc">Parsed JSON + matrix outputs + golden spreadsheets retained under `samples/` (gitignored — multi-GB) for future regression checks once Storepro standardised drawings land</div>
+      </div></div>
+    </section>
+    <section class="column col-in-progress">
+      <header class="col-head">
+        <h2>🟡 In Progress</h2>
+        <span class="col-count">0</span>
+      </header>
+      <div class="cards"><div class="empty">No items</div></div>
+    </section>
+    <section class="column col-blocked">
+      <header class="col-head">
+        <h2>🚫 Blocked</h2>
+        <span class="col-count">1</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">First job through with Storepro&#39;s standardised drawings</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">blocked-on-storepro</span></div>
+        <div class="card-desc">Storepro confirmed (2026-05-28 meeting) they will standardise their component library + drawing naming convention before the next test round. Until those files arrive we can&#39;t benchmark accuracy on the &quot;non-test&quot; baseline or confirm whether any rules still need tuning</div>
+      </div></div>
+    </section>
+    <section class="column col-this-week">
+      <header class="col-head">
+        <h2>🔵 This Week</h2>
+        <span class="col-count">3</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Rotate Anthropic API key</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">railway variables --set &quot;ANTHROPIC_API_KEY=…&quot;</span></div>
+        <div class="card-desc">Key was pasted in chat history weeks ago. Still live in Railway staging env (powers the vision pipeline). Generate a new one in Anthropic Console, set via `railway variables --set &quot;ANTHROPIC_API_KEY=…&quot;`, revoke the old</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Investigate Railway GitHub auto-deploy</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">railway up --path-as-root</span><span class="tag tag-neutral">railway.json</span><span class="tag tag-neutral">web/railway.json</span></div>
+        <div class="card-desc">Auto-deploys have been silent for the last three pushes; current workaround is manual `railway up --path-as-root` per service. Worth fixing before the team scales. Could be a webhook re-auth on the Railway GitHub app, or a config drift between root `railway.json` and `web/railway.json`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Ping Zoltan with confirmed SSO setup</div>
+        <div class="card-tags"><span class="tag tag-ops">ops</span></div>
+        <div class="card-desc">Loop back to Marksmen IT now that all three Azure AD env vars are wired and verified against Microsoft. Confirms his side of the work is complete and unlocks production redirect URI registration when Phase 3 starts</div>
+      </div></div>
+    </section>
+    <section class="column col-backlog">
+      <header class="col-head">
+        <h2>⚪ Backlog</h2>
+        <span class="col-count">13</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Production Railway environment</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">https://storepro-component-count.up.railway.app/auth/callback</span></div>
+        <div class="card-desc">Provision the production service for both api + web. Will need a separate Microsoft redirect URI registered with Zoltan (`https://storepro-component-count.up.railway.app/auth/callback`)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Retire HTTP Basic</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">security</span></div>
+        <div class="card-desc">Once SSO has been used in earnest for a few sessions and Storepro confirms it&#39;s stable, hide the &quot;Use admin password instead&quot; toggle on /login</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Pre-existing `test_recipe_extractor.py` CI failure</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">tech-debt</span></div>
+        <div class="card-desc">Has been red in GitHub Actions since 2026-05-20. Unrelated to the recent SSO/export work, but means CI hasn&#39;t been green for any push this month. Worth fixing so a real CI failure stands out</div>
+      </div>
+      <div class="card">
+        <div class="card-title">PDF letterhead + Storepro branding</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">polish</span></div>
+        <div class="card-desc">Right now the .pdf header uses a generic three-bar racking icon. Once Storepro shares an official logo (SVG or transparent PNG), swap it in to both the PDF header and the web TopBar</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Per-row confidence from the real reconciler</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">confidenceFor()</span></div>
+        <div class="card-desc">Web adapter currently uses a heuristic (`confidenceFor()`) for the per-row confidence bar. The reconciler already produces real per-cell confidence — expose it via JobResult so the bar reflects actual cross-source agreement</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Hide demo job rows once usage builds</div>
+        <div class="card-tags"><span class="tag tag-neutral">polish</span><span class="tag tag-neutral">low-priority</span></div>
+        <div class="card-desc">Dashboard falls back to sample rows when the API has few real jobs. Trivial to remove the fallback once Storepro has ~10 real jobs running through</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Email + share-link delivery on Export</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">low-priority</span></div>
+        <div class="card-desc">Buttons currently inert (download covers the workflow). Email path needs SMTP + recipient field; share-link needs a signed-URL endpoint with expiry. Adds when the operator team asks for it</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Pricing column</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">blocked-on-storepro</span></div>
+        <div class="card-desc">Hidden by default (showPricing=false). Needs Storepro&#39;s per-SKU price list before the column has anything real to show</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Auto-render DWG → PDF in the pipeline</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">low-priority</span></div>
+        <div class="card-desc">Today users supply a plan-view PDF (or export from Autodesk&#39;s free online viewer). The DWG already gives us the geometry — could render our own plan view via libredwg → SVG → PNG and feed vision directly. dwg2svg works but rsvg-convert / cairosvg currently fight back; needs revisiting on Linux (the Railway environment)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Storage backend for jobs</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">JOBS dict is in-memory per API container. Survives until a deploy. Move to Supabase or Postgres once we want jobs to outlive redeploys</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Module 4 — BOM rollup (salesy quote)</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">program</span></div>
+        <div class="card-desc">Next module in the wider Storepro App program. Roll the per-bay matrix up into Storepro&#39;s verbose quote (Sigma ALL IN.xls shape). Specced in the build proposal — pick up when Phase 3 has bedded in</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Two more sample drawings</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">low-priority</span></div>
+        <div class="card-desc">Once standardised. Lets us test rule generalisation beyond the first standardised file</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Quarterly review rhythm</div>
+        <div class="card-tags"><span class="tag tag-recurring">recurring</span></div>
+        <div class="card-desc">Once the app is in real use, schedule a quarterly check-in with Gareth + Gino to revisit rules + sample new edge cases</div>
+      </div></div>
+    </section>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="page-foot">
+    Edit <code>KANBAN.md</code> and run <code>update-kanban.cmd</code> to refresh this view.
+    &nbsp;·&nbsp;
+    Companion to <a href="ops-playbook.html">ops-playbook.html</a> &amp; <a href="ROADMAP.md">ROADMAP.md</a>.
+  </footer>
+</body>
 </html>
