@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>80%</strong> complete</div>
-        <div><strong>84</strong>/105 cards done</div>
-        <div>Updated <strong>2026-05-28 17:26 UTC</strong></div>
+        <div><strong>68%</strong> complete</div>
+        <div><strong>84</strong>/124 cards done</div>
+        <div>Updated <strong>2026-05-28 21:40 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,11 +833,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">2</div>
+        <div class="status-num">9</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">19</div>
+        <div class="status-num">31</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -1404,7 +1404,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">9</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1416,12 +1416,47 @@
         <div class="card-title">Sentinel UI/UX design pass</div>
         <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">design</span></div>
         <div class="card-desc">Hand the ONBOARDING.md link to Claude Design (or a human designer). Scope: typography scale, spacing rhythm, color token consolidation, ReportDetailPanel vs MaintenanceEntryPanel consistency audit</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Privacy &amp; security plan kickoff</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">meta</span><span class="tag tag-neutral">playbook/SECURITY-PRIVACY-PLAN.md</span></div>
+        <div class="card-desc">New `playbook/SECURITY-PRIVACY-PLAN.md` published 2026-05-29 with phased plan (A: quick wins this week; B: foundation 2-4 weeks; C: Sentinel security briefs 14-18; D: trigger-gated compliance). Operator forks listed inside the doc</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A1: fix bug_reports_set_updated_at mutable search_path</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">quick-win</span><span class="tag tag-neutral">ALTER FUNCTION public.bug_reports_set_updated_at() SET search_path = &#39;&#39;</span></div>
+        <div class="card-desc">KC prod. `ALTER FUNCTION public.bug_reports_set_updated_at() SET search_path = &#39;&#39;`. Closes Supabase advisor Lint 0011 on KC. Ship via migration file + PR per playbook</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A2: fix maintenance_set_updated_at mutable search_path</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">quick-win</span></div>
+        <div class="card-desc">Sentinel prod. Same fix as A1, different function. Closes Sentinel advisor Lint 0011</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A3: investigate + lock down rls_auto_enable() exposure</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">P1</span><span class="tag tag-neutral">/rest/v1/rpc/rls_auto_enable</span><span class="tag tag-neutral">REVOKE EXECUTE</span></div>
+        <div class="card-desc">Sentinel prod. SECURITY DEFINER function callable by anon + authenticated via `/rest/v1/rpc/rls_auto_enable`. Read what it does, then `REVOKE EXECUTE` from public roles or convert to SECURITY INVOKER. Closes advisor Lints 0028 + 0029. The one open finding worth treating as more than cosmetic</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A4: clean advisor baseline + snapshot</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">audit</span><span class="tag tag-neutral">get_advisors</span></div>
+        <div class="card-desc">Re-run `get_advisors` on both KC + Sentinel prod after A1-A3. Refresh the &quot;Current findings snapshot&quot; section in HOW-WE-DO-SECURITY.md. Goal: zero open findings as the new baseline</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A5: document bug_reports end-to-end data flow</div>
+        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">docs</span></div>
+        <div class="card-desc">Diagram + narrative: widget → KC bug_reports → Sentinel read → GitHub issue → Postmark ack/resolution → Sentry. First privacy artifact; seed for B1 (data inventory)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A6: audit current KC privacy notice + cookies</div>
+        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-ops">ops</span></div>
+        <div class="card-desc">Verify the public privacy notice exists, capture what it currently says, list cookies KC actually sets. Output: known-state, ready for the Phase B refresh</div>
       </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">19</span>
+        <span class="col-count">31</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1518,6 +1553,66 @@
         <div class="card-title">Quarterly stale-issue prune</div>
         <div class="card-tags"><span class="tag tag-recurring">recurring</span></div>
         <div class="card-desc">Close aged P3s</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B1: data inventory &amp; classification</div>
+        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">foundation</span></div>
+        <div class="card-desc">Living table listing every table/bucket/external system holding user data across every Coreshift app. Columns: app, source, classification (Public/Internal/Confidential/Restricted), retention target, backup status, encryption, sub-processors, RLS status. Unlocks B2-B7. See [SECURITY-PRIVACY-PLAN](playbook/SECURITY-PRIVACY-PLAN.md)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B2: retention policy</div>
+        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">docs</span></div>
+        <div class="card-desc">New HOW-WE-DO-RETENTION.md. Per-classification rules: active content / bug reports / logs / backups. Vendor-default lookups (Sentry 90d, Railway 7d, Supabase backups 8d)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B3: data deletion path</div>
+        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">scripts/delete-user-data.ts</span></div>
+        <div class="card-desc">Per-table delete steps. `scripts/delete-user-data.ts` in keycontent-app + HOW-WE-DO-DATA-DELETION.md playbook. Honor a deletion request within 30 days without engineering scrambling = the bar</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B4: breach response plan</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">docs</span></div>
+        <div class="card-desc">New HOW-WE-DO-BREACH-RESPONSE.md. 4h / 24h / 72h playbook. NZ Privacy Act notifiable-breach definitions. Different muscle from incident response</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B5: threat models (lite) per app</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">docs</span></div>
+        <div class="card-desc">STRIDE-ish one-pager per Coreshift app. Top 5-7 threats, current mitigations, residual risk. KC first, then Sentinel, then template for new apps</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B6: storage object backup</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">audit-followup</span><span class="tag tag-neutral">job-assets</span></div>
+        <div class="card-desc">Close the `job-assets` gap (~890 user objects, no backup). Operator picks: periodic R2/S3 export, Supabase paid-tier Storage backup, or backed-up bucket alternative</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B7: sub-processor inventory</div>
+        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">docs</span></div>
+        <div class="card-desc">New SUB-PROCESSORS.md. Every third party touching user data: Supabase, Railway, Cloudflare, Postmark, Sentry, Better Stack, GitHub, Zernio, Google, OpenAI/Anthropic, Akahu. Jurisdiction + DPA + retention. Linked from public privacy notice</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 14: Security advisor surface in Sentinel</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">/security</span><span class="tag tag-neutral">get_advisors</span></div>
+        <div class="card-desc">`/security` sub-page. Runs `get_advisors` on a cron across every onboarded app&#39;s Supabase project. Surfaces findings by severity. Folds ERROR-level into the Monday digest. Plumbing identical to Briefs 9b + 12. Highest leverage in Phase C — closes the reactive-only-detection gap that produced webhook_events + maintenance-GRANT misses</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 15: Data inventory surface in Sentinel</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">/data-inventory</span></div>
+        <div class="card-desc">`/data-inventory` sub-page reading B1 from a Sentinel-owned table. Auto-discovers tables via Supabase API; manual classification + retention annotations. Drift detection (new public table appears → alert)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 16: Pen-test cadence tracking</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">maintenance_entries</span></div>
+        <div class="card-desc">Stores last pen test / next due / scope / report link per app in `maintenance_entries`. Surfaces in digest when overdue. Doesn&#39;t run the test (that&#39;s external). Same shape as Brief 10&#39;s vendor lifecycle reference</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 17: Breach response runbook surfacing</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">/breach-response</span></div>
+        <div class="card-desc">`/breach-response` sub-page; clickable B4 card with a &quot;Start incident&quot; button that scaffolds a structured incident folder + customer/regulator notification draft templates. Turns a doc into a tool</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 18: Sentry heartbeat</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">observability</span><span class="tag tag-neutral">/__sentry-server-test</span></div>
+        <div class="card-desc">Daily cron pings every project&#39;s Sentry via a `/__sentry-server-test` endpoint that always throws a tagged event. Alert if expected events don&#39;t arrive within 6h. Closes the 2026-05-22 Sentry env-var drift incident class</div>
       </div></div>
     </section>
       </div>
