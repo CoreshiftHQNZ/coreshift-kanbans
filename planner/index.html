@@ -699,7 +699,7 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>BRIEF-1</strong> in review</div>
+        <div><strong>BRIEF-1</strong> on staging</div>
         <div><strong>1</strong>/9 briefs underway</div>
         <div>Updated <strong>2026-05-28</strong></div>
       </div>
@@ -717,7 +717,7 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">BRIEF-1 · Walking skeleton (in review)</span>
+          <span class="phase-pill-value">BRIEF-1 · Walking skeleton (live on staging)</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
@@ -753,10 +753,10 @@
       <h2 class="section-head">The Build Arc</h2>
       <div class="phases-grid">
 
-        <div class="phase-card phase-in-progress">
+        <div class="phase-card phase-done">
           <div class="phase-card-head">
             <div class="phase-marker">1</div>
-            <span class="phase-status-pill phase-status-in-progress">In progress</span>
+            <span class="phase-status-pill phase-status-done">Done</span>
           </div>
           <div class="phase-title">Walking skeleton</div>
           <div class="phase-subtitle">BRIEF-1</div>
@@ -832,15 +832,15 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">3</div>
+        <div class="status-num">4</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">1</div>
+        <div class="status-num">0</div>
         <div class="status-label">In progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">1</div>
+        <div class="status-num">0</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
@@ -913,15 +913,15 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
-            <div class="recent-title">Railway project created</div>
-            <div class="recent-desc">planner-app in the Coreshift HQ workspace</div>
+            <div class="recent-title">Railway envs wired</div>
+            <div class="recent-desc">staging + prod env vars set; staging DB on a persistent Supabase branch</div>
           </div>
         </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
-            <div class="recent-title">PR #1 opened into dev</div>
-            <div class="recent-desc">AC-by-AC test plan; awaiting review + operator pre-flight</div>
+            <div class="recent-title">PR #1 merged → staging live</div>
+            <div class="recent-desc">dev → staging deployed; /health 200 at planner-staging.coreshifthq.com</div>
           </div>
         </div>
       </div>
@@ -936,9 +936,14 @@
         <section class="column col-done">
           <header class="col-head">
             <h2>✅ Done</h2>
-            <span class="col-count">3</span>
+            <span class="col-count">4</span>
           </header>
           <div class="cards">
+            <div class="card">
+              <div class="card-title">BRIEF-1 — scaffold + auth + board</div>
+              <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">on staging</span></div>
+              <div class="card-desc">Live at planner-staging.coreshifthq.com — /health 200, SPA served, auth gate returns 401. Google sign-in + create/reload pending a manual check. Awaiting prod promotion.</div>
+            </div>
             <div class="card">
               <div class="card-title">Supabase project + migration</div>
               <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">done</span></div>
@@ -960,28 +965,20 @@
         <section class="column col-in-progress">
           <header class="col-head">
             <h2>🔨 In Progress</h2>
-            <span class="col-count">1</span>
+            <span class="col-count">0</span>
           </header>
           <div class="cards">
-            <div class="card">
-              <div class="card-title">BRIEF-1 — scaffold + auth + board</div>
-              <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-est">~1 day</span></div>
-              <div class="card-desc">PR #1 open into dev. Google-OAuth + domain gate, initiatives spine, empty board, create-initiative. check/test/build green.</div>
-            </div>
+            <div class="empty">Nothing in progress</div>
           </div>
         </section>
 
         <section class="column col-blocked">
           <header class="col-head">
             <h2>⛔ Blocked</h2>
-            <span class="col-count">1</span>
+            <span class="col-count">0</span>
           </header>
           <div class="cards">
-            <div class="card">
-              <div class="card-title">BRIEF-1 staging deploy</div>
-              <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-blocked">operator</span></div>
-              <div class="card-desc">Needs operator: Google OAuth in Supabase, SUPABASE_SERVICE_ROLE_KEY, Railway repo connect + env vars.</div>
-            </div>
+            <div class="empty">Nothing blocked</div>
           </div>
         </section>
 
@@ -992,14 +989,14 @@
           </header>
           <div class="cards">
             <div class="card">
-              <div class="card-title">Operator: OAuth + Railway env</div>
+              <div class="card-title">Manual AC sign-in test on staging</div>
               <div class="card-tags"><span class="tag tag-ops">ops</span></div>
-              <div class="card-desc">Wire the Google provider, set service_role + Sentry DSNs, connect the repo to Railway (staging watches staging).</div>
+              <div class="card-desc">Sign in at planner-staging.coreshifthq.com; create an initiative, reload, confirm the non-Coreshift bounce.</div>
             </div>
             <div class="card">
-              <div class="card-title">Review + merge PR #1 to dev</div>
+              <div class="card-title">Promote staging → prod when ready</div>
               <div class="card-tags"><span class="tag tag-ops">ops</span></div>
-              <div class="card-desc">Then dev → staging auto-deploys; run the AC test plan on staging.</div>
+              <div class="card-desc">Run the Deploy to Production workflow (staging → main) once the loop is proven.</div>
             </div>
           </div>
         </section>
