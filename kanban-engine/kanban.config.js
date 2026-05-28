@@ -56,8 +56,8 @@ module.exports = {
     {
       icon: "📖",
       title: "How to add a project",
-      desc: "Six-step guide in tools/template/README.md",
-      url: "https://github.com/CoreshiftHQNZ/coreshift-kanbans/blob/main/tools/template/README.md",
+      desc: "Paste-and-go Claude Code prompt + six-step manual setup",
+      url: "how-to-add-a-project.html",
     },
     {
       icon: "🛡",

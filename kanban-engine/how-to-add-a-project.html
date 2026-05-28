@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Add a project board — Coreshift Kanban Engine</title>
+    <meta name="description" content="How to add a new project to the Coreshift kanban system — paste-and-go Claude Code prompt, or manual six-step setup." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📋%3C/text%3E%3C/svg%3E" />
+    <style>
+      :root {
+        --bg: #fafaf9;
+        --card: #ffffff;
+        --ink: #18181b;
+        --ink-muted: #71717a;
+        --ink-subtle: #a1a1aa;
+        --border: #e4e4e7;
+        --accent: #2563eb;
+        --code-bg: #f4f4f5;
+        --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+        --radius: 10px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0a0a;
+          --card: #18181b;
+          --ink: #fafafa;
+          --ink-muted: #a1a1aa;
+          --ink-subtle: #71717a;
+          --border: #27272a;
+          --accent: #3b82f6;
+          --code-bg: #1f1f23;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
+      .back {
+        display: inline-block;
+        font-size: 13px;
+        color: var(--ink-muted);
+        text-decoration: none;
+        margin-bottom: 24px;
+      }
+      .back:hover { color: var(--accent); }
+      h1 {
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0 0 8px;
+      }
+      .lede { color: var(--ink-muted); font-size: 15px; margin: 0 0 36px; max-width: 60ch; }
+      h2 {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin: 40px 0 10px;
+      }
+      h3 {
+        font-size: 15px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink-muted);
+        margin: 28px 0 8px;
+      }
+      p { margin: 0 0 14px; }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      ol, ul { padding-left: 22px; margin: 8px 0 16px; }
+      li { margin-bottom: 8px; }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        background: var(--code-bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 1px 5px;
+        font-size: 0.88em;
+      }
+      pre {
+        background: var(--code-bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 18px;
+        overflow-x: auto;
+        font-size: 13px;
+        line-height: 1.55;
+        margin: 0;
+      }
+      pre code { background: none; border: none; padding: 0; font-size: inherit; }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 22px 24px;
+        margin-bottom: 20px;
+        box-shadow: var(--shadow);
+      }
+      .card.feature {
+        border-left: 3px solid var(--accent);
+      }
+      .card h2 { margin-top: 0; }
+      .prompt-wrap { position: relative; }
+      .copy-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        background: var(--card);
+        color: var(--ink-muted);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+      .copy-btn.copied { color: #16a34a; border-color: #16a34a; }
+      .hint {
+        font-size: 13px;
+        color: var(--ink-muted);
+        background: var(--code-bg);
+        border-left: 3px solid var(--ink-subtle);
+        padding: 10px 14px;
+        margin: 14px 0;
+        border-radius: 4px;
+      }
+      footer {
+        margin-top: 56px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--ink-subtle);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <a class="back" href="./">← Coreshift Kanban Engine</a>
+
+      <h1>Add a project board</h1>
+      <p class="lede">Two paths. Easy way: paste the prompt below into Claude Code and let it do the work. Harder way: follow the six manual steps. Both end in the same place — a board live at <code>coreshifthqnz.github.io/coreshift-kanbans/&lt;project-slug&gt;/</code>.</p>
+
+      <div class="card feature">
+        <h2>🤖 Easy way — paste into Claude Code</h2>
+        <p>Open Claude Code in any directory, paste this, fill in the two placeholders. Claude reads the template, drafts the config + cards, builds, and pushes.</p>
+        <div class="prompt-wrap">
+          <button class="copy-btn" id="copy-btn" type="button">Copy</button>
+<pre id="prompt-text"><code>Set up a new kanban board for &lt;PROJECT_NAME&gt; using the Coreshift standard format.
+
+Repo: https://github.com/CoreshiftHQNZ/coreshift-kanbans (clone or cd into your local copy)
+
+Steps:
+1. Read tools/template/kanban.config.js and tools/template/KANBAN.md to learn the
+   convention. Read sentinel/kanban.config.js + sentinel/KANBAN.md as the gold-standard
+   example.
+2. Copy tools/template/ to &lt;project-slug&gt;/ (lowercase-kebab-case slug).
+3. Fill in &lt;project-slug&gt;/kanban.config.js: title, tagline, description, current
+   phase, nextMilestone, 3 goals, links (repo, app URL, docs), 3 roles, and 3-5
+   phases (typically phase-0 prove → phase-1 ship → phase-2 expand → ...).
+4. Replace the example cards in &lt;project-slug&gt;/KANBAN.md with real ones. Read this
+   project's actual source / README / recent commits to populate Done. Be honest
+   about what's In Progress, Blocked, This Week, and Backlog. Card format:
+   - **Title** `tag` `tag` — Description.
+   Keep the five column headings exactly: ✅ Done / 🟡 In Progress / 🚫 Blocked
+   / 🔵 This Week / ⚪ Backlog.
+5. Run: node tools/build.js &lt;project-slug&gt;
+   Open &lt;project-slug&gt;/index.html locally and check it. Refine config until
+   the hero, phases, and roles read clean.
+6. Edit the root index.html to add a project card linking to ./&lt;project-slug&gt;/,
+   slotted alphabetically.
+7. Commit (message: "&lt;project-slug&gt;: add kanban board") and push to main.
+   GitHub Pages republishes in ~10s.
+
+Context for filling in the config:
+- This project is &lt;PROJECT_CONTEXT — paste a paragraph or link to a README/spec&gt;.
+- Treat the kanban as a real working board, not marketing copy. Cards should let
+  a future Claude Code session orient immediately on where the work stands.</code></pre>
+        </div>
+        <p class="hint">Replace <code>&lt;PROJECT_NAME&gt;</code>, <code>&lt;project-slug&gt;</code>, and the <code>&lt;PROJECT_CONTEXT&gt;</code> block with real values before running. Claude will do the rest, including the commit + push.</p>
+      </div>
+
+      <div class="card">
+        <h2>🛠 Manual way — six steps</h2>
+
+        <h3>1. Copy the template</h3>
+<pre><code>cp -r tools/template &lt;project-slug&gt;</code></pre>
+
+        <h3>2. Fill in kanban.config.js</h3>
+        <p>Edit <code>&lt;project-slug&gt;/kanban.config.js</code>. Set the title, tagline, description, goals, links, roles, and phases. Inline comments in the template explain every field; <a href="../sentinel/kanban.config.js">sentinel/kanban.config.js</a> is a fully-populated reference.</p>
+
+        <h3>3. Replace the example cards</h3>
+        <p>Edit <code>&lt;project-slug&gt;/KANBAN.md</code>. The card format is:</p>
+<pre><code>- **Title** `tag` `tag` — Description.</code></pre>
+        <p>The five column headings must stay exactly: <code>✅ Done</code>, <code>🟡 In Progress</code>, <code>🚫 Blocked</code>, <code>🔵 This Week</code>, <code>⚪ Backlog</code> — the renderer keys off the leading emoji to color the column.</p>
+
+        <h3>4. Build it</h3>
+<pre><code>node tools/build.js &lt;project-slug&gt;</code></pre>
+        <p>That writes <code>&lt;project-slug&gt;/index.html</code>. Open it locally to check; refine the config until it looks right.</p>
+
+        <h3>5. Link it from the root</h3>
+        <p>Edit <code>coreshift-kanbans/index.html</code> to add a project card pointing at the new project's <code>index.html</code>, slotted alphabetically.</p>
+
+        <h3>6. Commit + push</h3>
+        <p>Commit and push to <code>main</code>. GitHub Pages republishes in ~10 seconds.</p>
+      </div>
+
+      <div class="card">
+        <h2>🎨 Tag colors</h2>
+        <p><a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/blob/main/tools/build.js">tools/build.js</a> → <code>tagClass(tag)</code> maps tag strings to colors. Current mappings include <code>shipped</code>, <code>phase-0</code> through <code>phase-4</code>, <code>deliverable</code>, <code>playbook</code>, <code>milestone</code>, <code>infra</code>, <code>ops</code>, <code>recurring</code>, and prefixes <code>blocked-by:*</code> and <code>est:*</code>. Anything else falls through to a neutral grey. Add new mappings there if you want a new tag to get its own color across every board.</p>
+      </div>
+
+      <div class="card">
+        <h2>🔁 Updating an existing board</h2>
+        <p>Edit <code>&lt;project-slug&gt;/KANBAN.md</code> (or <code>kanban.config.js</code> for hero/phase changes), then:</p>
+<pre><code>node tools/build.js &lt;project-slug&gt;
+# or to rebuild every project at once:
+node tools/build.js</code></pre>
+        <p>Commit, push, done.</p>
+      </div>
+
+      <div class="card">
+        <h2>🔒 Building locally with internal links</h2>
+        <p>The published build filters out any links flagged <code>{ internal: true }</code> in config (so the public site doesn't expose internal-only artifacts like pitch decks). To include them when building locally:</p>
+<pre><code>INTERNAL=1 node tools/build.js &lt;project-slug&gt;</code></pre>
+        <p>The output still goes to <code>&lt;project-slug&gt;/index.html</code> — be careful not to commit that variant, or use a different <code>output:</code> path in the config when building locally.</p>
+      </div>
+
+      <footer>
+        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans">CoreshiftHQNZ/coreshift-kanbans</a>
+        &nbsp;·&nbsp;
+        Engine: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/blob/main/tools/build.js">tools/build.js</a>
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        var btn = document.getElementById('copy-btn');
+        var pre = document.getElementById('prompt-text');
+        if (!btn || !pre) return;
+        btn.addEventListener('click', function () {
+          var text = pre.innerText;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () {
+              btn.textContent = 'Copied';
+              btn.classList.add('copied');
+              setTimeout(function () {
+                btn.textContent = 'Copy';
+                btn.classList.remove('copied');
+              }, 1800);
+            });
+          } else {
+            var r = document.createRange();
+            r.selectNode(pre);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(r);
+            try { document.execCommand('copy'); btn.textContent = 'Copied'; btn.classList.add('copied'); } catch (e) {}
+            window.getSelection().removeAllRanges();
+            setTimeout(function () {
+              btn.textContent = 'Copy';
+              btn.classList.remove('copied');
+            }, 1800);
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
