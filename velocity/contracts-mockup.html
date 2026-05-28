@@ -167,8 +167,9 @@
     .cta-mini { color: var(--violet-dark); text-decoration: none; font-size: 12.5px; border-bottom: 1px solid rgba(91, 63, 217, 0.3); }
     .cta-mini:hover { border-bottom-color: var(--violet-dark); }
 
-    /* Per-item Giscus comments */
-    .item-comments { margin-top: 10px; }
+    /* Per-item Giscus comments — deferred for now (kept wired, just hidden).
+       Re-enable by removing the display:none rule below. */
+    .item-comments { display: none; margin-top: 10px; }
     .giscus-toggle {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 4px 10px; border-radius: 999px;
@@ -328,9 +329,7 @@
       </div>
 
       <div class="cta-row" style="font-size:13px;color:var(--text-muted);">
-        Per-item threads are below each talking point, open question, and scope shape — just click the <strong>💬 Comments</strong> button on the item you want to discuss.
-        &nbsp;·&nbsp;
-        <a class="cta-mini" href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/discussions" target="_blank" rel="noopener">browse all discussions on GitHub →</a>
+        Drop thoughts to Abe directly for now (Slack / email / next chat) — a proper async feedback channel will land if the volume of input warrants it.
       </div>
     </section>
 
