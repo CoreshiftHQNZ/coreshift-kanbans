@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Velocity — Contracts &amp; Proposals · v1.1 mockup</title>
+  <style>
+    :root {
+      --navy: #1A1140; --navy-deep: #0E0826;
+      --violet: #7C5CFC; --violet-dark: #5B3FD9; --violet-light: #EDE9FE;
+      --coral: #FF6B5B; --coral-light: #FFE4E0;
+      --green: #10B981; --green-light: #D1FAE5;
+      --amber: #F59E0B; --amber-light: #FEF3C7;
+      --jade: #14B8A6; --jade-light: #CCFBF1;
+      --gray: #64748B; --gray-light: #E2E8F0; --gray-lighter: #F1F5F9;
+      --bg: #F8FAFC; --card: #FFFFFF;
+      --text: #1E293B; --text-muted: #475569; --text-soft: #94A3B8;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Arial, sans-serif; color: var(--text); background: var(--bg); font-size: 14px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+    code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    header.page-head { background: var(--navy); color: #fff; padding: 22px 32px; position: sticky; top: 0; z-index: 10; }
+    .head-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; max-width: 1180px; margin: 0 auto; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark { width: 32px; height: 32px; background: linear-gradient(135deg, var(--violet), var(--coral)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+    .brand-title { font-size: 16px; font-weight: 700; }
+    .brand-sub { font-size: 10.5px; color: var(--violet); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+    .meta { display: flex; gap: 18px; font-size: 12px; color: #C9BCF0; flex-wrap: wrap; }
+    .meta strong { color: #fff; }
+
+    main { max-width: 1180px; margin: 0 auto; padding: 36px 32px 60px; }
+    .intro { margin-bottom: 36px; }
+    .eyebrow { color: var(--violet-dark); font-size: 11px; font-weight: 700; letter-spacing: 0.18em; }
+    h1 { color: var(--navy); font-size: 38px; font-weight: 800; letter-spacing: -0.02em; margin: 10px 0 6px; }
+    .lede { font-size: 16px; color: var(--text-muted); max-width: 800px; margin: 0 0 8px; }
+    .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); margin-top: 14px; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+    .legend .dot.deal { background: var(--green); }
+    .legend .dot.extr { background: var(--violet); }
+    .legend .dot.user { background: var(--coral); }
+    .legend .dot.rep  { background: var(--amber); }
+    .legend .dot.miss { background: var(--gray); }
+
+    h2.part { color: var(--navy); font-size: 22px; font-weight: 800; letter-spacing: -0.01em; margin: 48px 0 6px; padding-top: 16px; border-top: 1px solid var(--gray-light); }
+    h2.part .num { color: var(--violet); }
+    h2.part + p { color: var(--text-muted); font-size: 14px; margin: 0 0 22px; }
+
+    /* Step rows */
+    .step { display: grid; grid-template-columns: 56px minmax(0, 1fr) minmax(220px, 320px); gap: 22px; align-items: start; margin: 20px 0; }
+    .step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--violet); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; margin-top: 12px; }
+    .step-note { font-size: 13px; color: var(--text-muted); padding-top: 12px; }
+    .step-note strong { color: var(--navy); display: block; margin-bottom: 6px; }
+    .step-note p { margin: 6px 0; }
+
+    /* Wireframe screen */
+    .wf { background: var(--card); border: 1px solid var(--gray-light); border-radius: 12px; box-shadow: 0 4px 16px rgba(26, 17, 64, 0.06); overflow: hidden; }
+    .wf-header { background: var(--navy); color: #fff; padding: 10px 16px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    .wf-header .dot3 { display: flex; gap: 5px; }
+    .wf-header .dot3 i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.35); display: inline-block; }
+    .wf-body { padding: 18px 20px; }
+    .wf-label { font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 8px; }
+    .wf-row { display: flex; gap: 8px; align-items: center; margin: 8px 0; flex-wrap: wrap; }
+
+    .wf-stagetrack { display: flex; gap: 4px; align-items: center; margin: 0 0 14px; }
+    .wf-stagetrack .seg { flex: 1; height: 6px; border-radius: 3px; background: var(--gray-light); }
+    .wf-stagetrack .seg.done { background: var(--violet); }
+    .wf-stagetrack .seg.cur { background: linear-gradient(90deg, var(--violet), var(--coral)); }
+    .wf-stagetrack .lbl { font-size: 10px; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.05em; min-width: 60px; text-align: center; }
+
+    .wf-btn { background: var(--violet); color: #fff; border-radius: 999px; padding: 8px 14px; font-size: 12.5px; font-weight: 600; border: none; cursor: default; display: inline-flex; align-items: center; gap: 6px; }
+    .wf-btn.ghost { background: transparent; color: var(--violet-dark); border: 1px solid var(--violet); }
+    .wf-btn.coral { background: var(--coral); }
+    .wf-btn.dark { background: var(--navy); }
+
+    .wf-chip { font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
+    .wf-chip.green { background: var(--green-light); color: #065F46; }
+    .wf-chip.amber { background: var(--amber-light); color: #B45309; }
+    .wf-chip.coral { background: var(--coral-light); color: #BE3D2E; }
+    .wf-chip.violet{ background: var(--violet-light); color: var(--violet-dark); }
+    .wf-chip.jade  { background: var(--jade-light); color: #0F766E; }
+
+    .wf-input { display: block; width: 100%; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--gray-light); background: var(--gray-lighter); font-size: 12.5px; color: var(--text); }
+    .wf-input.missing { border-style: dashed; color: var(--gray); background: #FAFBFD; }
+
+    .wf-q { background: var(--gray-lighter); border: 1px solid var(--gray-light); border-radius: 8px; padding: 10px 14px; margin: 6px 0; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+    .wf-q .pick { font-size: 11px; color: var(--violet-dark); font-weight: 700; }
+
+    .wf-result { background: var(--violet-light); border: 1px solid #D9CFFB; border-radius: 10px; padding: 12px 16px; margin: 14px 0 4px; }
+    .wf-result strong { color: var(--violet-dark); }
+
+    /* Split view (step 3) */
+    .wf-split { display: grid; grid-template-columns: 1fr 1.2fr; gap: 1px; background: var(--gray-light); }
+    .wf-split > div { background: var(--card); padding: 14px 16px; }
+    .wf-fieldrow { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; padding: 6px 0; font-size: 12.5px; border-bottom: 1px dashed var(--gray-light); }
+    .wf-fieldrow:last-child { border-bottom: none; }
+    .wf-fieldrow .k { color: var(--text-muted); font-size: 11.5px; }
+    .wf-fieldrow .v { color: var(--text); font-weight: 600; }
+    .src { font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; }
+    .src.deal { background: var(--green-light); color: #065F46; }
+    .src.extr { background: var(--violet-light); color: var(--violet-dark); }
+    .src.user { background: var(--coral-light); color: #BE3D2E; }
+    .src.rep  { background: var(--amber-light); color: #B45309; }
+    .src.miss { background: var(--gray-light); color: var(--gray); }
+
+    .wf-doc { font-size: 12px; line-height: 1.55; color: var(--text); }
+    .wf-doc h4 { color: var(--navy); font-size: 13px; margin: 4px 0 6px; }
+    .wf-doc .ph { background: var(--violet-light); color: var(--violet-dark); padding: 0 4px; border-radius: 3px; font-weight: 600; }
+    .wf-doc .ph.miss { background: var(--gray-light); color: var(--gray); font-style: italic; }
+
+    /* Wording editor (step 4) */
+    .wf-toolbar { display: flex; gap: 4px; padding: 6px 12px; border-bottom: 1px solid var(--gray-light); background: var(--gray-lighter); font-size: 12px; }
+    .wf-toolbar .tb { padding: 3px 8px; border-radius: 4px; color: var(--text-muted); font-weight: 700; }
+    .wf-toolbar .tb.active { background: var(--violet); color: #fff; }
+    .wf-editor-body { padding: 14px 18px; font-size: 12.5px; line-height: 1.6; }
+    .wf-editor-body h4 { color: var(--navy); font-size: 13px; margin: 8px 0 4px; }
+    .wf-editor-body .edited { background: #FFF8E6; border-left: 3px solid var(--amber); padding: 6px 10px; margin: 6px 0; }
+    .wf-editor-body .cursor::after { content: ""; display: inline-block; width: 1px; height: 14px; background: var(--violet); margin-left: 2px; vertical-align: text-bottom; animation: blink 1s steps(2) infinite; }
+    @keyframes blink { 50% { background: transparent; } }
+
+    /* Drive folder representation (step 6) */
+    .wf-drive { background: #f6f8fc; border: 1px solid var(--gray-light); border-radius: 8px; padding: 12px 14px; font-size: 12.5px; }
+    .wf-drive .crumb { color: var(--text-muted); font-size: 11.5px; }
+    .wf-drive .file { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
+    .wf-drive .ic { width: 16px; height: 16px; background: var(--violet-light); border-radius: 3px; display: inline-block; }
+    .wf-drive .ic.signed { background: var(--green-light); }
+
+    /* Merge field table */
+    .merge-table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--gray-light); border-radius: 12px; overflow: hidden; }
+    .merge-table th, .merge-table td { text-align: left; padding: 10px 14px; vertical-align: top; }
+    .merge-table th { background: var(--gray-lighter); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-soft); }
+    .merge-table tr + tr td { border-top: 1px solid var(--gray-light); }
+    .merge-table .v-name { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--violet-dark); }
+    .merge-table .v-val { color: var(--navy); font-weight: 600; font-size: 13px; }
+    .merge-table .v-val.miss { color: var(--gray); font-style: italic; font-weight: 500; }
+    .merge-table .v-src { font-size: 12px; color: var(--text-muted); }
+
+    /* Scope shapes grid */
+    .scope-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .scope-card { background: var(--card); border: 1px solid var(--gray-light); border-radius: 12px; padding: 18px 22px; }
+    .scope-card .num { display: inline-block; background: var(--navy); color: #fff; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-weight: 700; font-size: 13px; }
+    .scope-card h3 { color: var(--navy); font-size: 16px; font-weight: 800; margin: 8px 0 2px; }
+    .scope-card .sub { font-size: 12px; color: var(--text-muted); font-style: italic; margin-bottom: 12px; }
+    .scope-card ol { padding-left: 18px; margin: 0; }
+    .scope-card ol li { font-size: 13px; color: var(--text); padding: 4px 0; }
+    .scope-card ol li small { display: block; color: var(--text-soft); font-size: 11.5px; }
+
+    footer { color: var(--text-soft); font-size: 12px; padding: 24px 0; text-align: center; }
+
+    @media (max-width: 900px) {
+      .step { grid-template-columns: 40px minmax(0, 1fr); }
+      .step-note { grid-column: 2; padding-top: 6px; }
+      .wf-split { grid-template-columns: 1fr; }
+      .scope-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="head-inner">
+      <div class="brand">
+        <div class="brand-mark">V</div>
+        <div><div class="brand-title">Velocity</div><div class="brand-sub">Contracts &amp; Proposals · v1.1 mockup</div></div>
+      </div>
+      <div class="meta">
+        <div>Discussion artifact · <strong>not yet built</strong></div>
+        <div>2026-05-28</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="intro">
+      <div class="eyebrow">VELOCITY v1.1 · CONTRACTS &amp; PROPOSALS</div>
+      <h1>The picture, on paper</h1>
+      <p class="lede">Where the rep starts, what they see, where the signed contract ends up. Read top-to-bottom. Tasman Fitouts (your test deal) is used as the worked example so the field values are real, not made up.</p>
+      <div class="legend">
+        <span><span class="dot deal"></span> deal record</span>
+        <span><span class="dot extr"></span> extracted (Phase 4)</span>
+        <span><span class="dot user"></span> ICP / qualification</span>
+        <span><span class="dot rep"></span> rep types in</span>
+        <span><span class="dot miss"></span> not captured yet</span>
+      </div>
+    </section>
+
+    <!-- ====================== PART 1 : THE FLOW ====================== -->
+    <h2 class="part"><span class="num">1 ·</span> The deal-side flow</h2>
+    <p>Six steps from "I'm ready to send this" to "It's signed and filed." Each screen is a wireframe of what the rep sees.</p>
+
+    <!-- STEP 1 -->
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="wf">
+        <div class="wf-header"><span class="dot3"><i></i><i></i><i></i></span> Deal · Tasman Fitouts</div>
+        <div class="wf-body">
+          <div class="wf-stagetrack">
+            <div class="seg done"></div><div class="seg done"></div><div class="seg done"></div>
+            <div class="seg cur"></div><div class="seg"></div><div class="seg"></div>
+          </div>
+          <div class="wf-row" style="justify-content:space-between">
+            <div>
+              <div class="wf-label">Gate progress · Presented</div>
+              <div style="font-size:13px;color:var(--text-muted);">5 of 6 met · proposal-review meeting booked</div>
+            </div>
+            <span class="wf-chip violet">presented</span>
+          </div>
+          <div class="wf-row" style="margin-top:14px">
+            <button class="wf-btn">↗ Promote to Verbal</button>
+            <button class="wf-btn coral">📄 Send proposal / contract</button>
+          </div>
+        </div>
+      </div>
+      <div class="step-note"><strong>Where it lives.</strong>
+        <p>The <em>"Send proposal/contract"</em> button appears on the Deal page from Presented onwards. Distinct from <em>Promote</em> — different intents (one moves the gate, the other generates a document).</p>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="wf">
+        <div class="wf-header">Pick the engagement type</div>
+        <div class="wf-body">
+          <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">Keitha's 3-question decision tree:</div>
+          <div class="wf-q"><span>1 · Any technology involved?</span><span class="pick">Yes ✓</span></div>
+          <div class="wf-q"><span>2 · Will the customer own what we build?</span><span class="pick">No ✓</span></div>
+          <div class="wf-q"><span>3 · Will they onsell to their own customers?</span><span class="pick">No ✓</span></div>
+          <div class="wf-result"><strong>→ Type 3 — Platform Subscription Agreement</strong><br><span style="font-size:12px;color:var(--text-muted);">(They use a platform we own, for their own business.)</span></div>
+          <div class="wf-row" style="margin-top:14px">
+            <button class="wf-btn">Continue with Type 3 →</button>
+            <button class="wf-btn ghost">Override — pick a different Type ⌄</button>
+          </div>
+        </div>
+      </div>
+      <div class="step-note"><strong>Keitha's wizard, exactly as she wrote it.</strong>
+        <p>Three taps to a recommendation. The rep can override if they already know which Type applies. Same picker drives both the scope shape <em>and</em> which Terms get attached.</p>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="wf">
+        <div class="wf-header">Review the draft · Type 3 · Tasman Fitouts</div>
+        <div class="wf-split">
+          <div>
+            <div class="wf-label">Field values</div>
+            <div class="wf-fieldrow"><div><div class="k">Client name</div><div class="v">Tasman Fitouts</div></div><span class="src deal">deal</span></div>
+            <div class="wf-fieldrow"><div><div class="k">Contact</div><div class="v">Sarah Whitcombe</div></div><span class="src deal">deal</span></div>
+            <div class="wf-fieldrow"><div><div class="k">Contact role</div><div class="v">Managing Director</div></div><span class="src deal">deal</span></div>
+            <div class="wf-fieldrow"><div><div class="k">Why now</div><div class="v" style="font-weight:500;font-size:12px;">"Lost Apex (≈22% of revenue) to Formline…"</div></div><span class="src extr">extr</span></div>
+            <div class="wf-fieldrow"><div><div class="k">Turnover</div><div class="v">$4.2M</div></div><span class="src user">icp</span></div>
+            <div class="wf-fieldrow"><div><div class="k">Growth goal</div><div class="v" style="font-weight:500;font-size:12px;">"$7M in 3 years, predictable pipeline"</div></div><span class="src extr">extr</span></div>
+            <div class="wf-fieldrow"><div><div class="k">Investment / mo</div><div class="v" style="color:var(--coral)">$&nbsp;_____&nbsp;+ GST</div></div><span class="src rep">rep</span></div>
+            <div class="wf-fieldrow"><div><div class="k">Start date</div><div class="v" style="color:var(--coral)">__ / __ / ____</div></div><span class="src rep">rep</span></div>
+            <div class="wf-fieldrow"><div><div class="k">Client address</div><div class="v" style="color:var(--gray);font-style:italic;font-weight:500">not captured yet</div></div><span class="src miss">add</span></div>
+          </div>
+          <div>
+            <div class="wf-label">Live preview</div>
+            <div class="wf-doc">
+              <h4>Platform Subscription Agreement</h4>
+              <p style="color:var(--text-muted);font-size:11.5px;">Prepared for: <span class="ph">Sarah Whitcombe</span>, <span class="ph">Managing Director</span>, <span class="ph">Tasman Fitouts</span></p>
+              <p>Dear <span class="ph">Sarah</span>,</p>
+              <p style="margin:6px 0">Thank you for our recent conversations. This proposal sets out how Coreshift will support <span class="ph">Tasman Fitouts</span> in addressing <span class="ph">"Lost Apex … to Formline"</span> and reaching <span class="ph">"$7M in 3 years"</span>…</p>
+              <p style="margin:6px 0;color:var(--text-muted);font-size:11px">Investment: <span class="ph miss">$ ____ + GST</span> per month · starts <span class="ph miss">__ / __ / ____</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="step-note"><strong>Auto-fill, live preview.</strong>
+        <p>Left: every merge field, its source, and whether it's ready. Coral = rep still needs to type something in. Right: the document, updating as fields change.</p>
+        <p>The two coral fields are the only ones we don't already have — price and start date.</p>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="wf">
+        <div class="wf-header">Edit wording (per-deal · master template unchanged)</div>
+        <div class="wf-toolbar">
+          <span class="tb"><b>B</b></span><span class="tb"><i>I</i></span><span class="tb">U</span>
+          <span class="tb">• ¶</span><span class="tb">⌗ H</span><span class="tb active">Edit</span>
+          <span style="margin-left:auto;color:var(--text-soft);font-size:11px">Editing: Tasman Fitouts · Type 3 · v1</span>
+        </div>
+        <div class="wf-editor-body">
+          <h4>Clause 1 — Definitions</h4>
+          <p>"Confidential Information" means all information relating to the existence of this agreement…</p>
+          <h4>Clause 4 — Outcomes &amp; Intellectual Property</h4>
+          <div class="edited">
+            <span style="font-size:10.5px;color:#B45309;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">rep edit</span><br>
+            <span style="text-decoration:line-through;color:var(--gray)">The Business will own all rights, title and interest, including any Intellectual Property Rights, in the output produced under this agreement.</span><br>
+            <span class="cursor">Output produced under this agreement remains the property of Coreshift; the Business receives a perpetual licence to use it.</span>
+          </div>
+          <h4>Clause 5 — Subcontracting</h4>
+          <p style="color:var(--text-muted)">…</p>
+        </div>
+      </div>
+      <div class="step-note"><strong>Editable wording, this deal only.</strong>
+        <p>Same editor Keitha uses to author the master. Here the rep is changing the IP clause — like Dalila asked at Storepro. <em>Keitha's master is untouched.</em></p>
+        <p>Edits are highlighted so reviewers can see at a glance what's been changed from the standard.</p>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="wf">
+        <div class="wf-header">Generate &amp; send</div>
+        <div class="wf-body">
+          <div class="wf-row"><span class="wf-chip violet">Type 3 · Platform Subscription</span><span class="wf-chip jade">Tasman Fitouts</span><span class="wf-chip amber">1 wording change · IP clause</span></div>
+          <div style="font-size:12.5px;color:var(--text-muted);margin:10px 0;">
+            All 9 fields filled. 1 clause edited (Clause 4 — IP). Ready to render.
+          </div>
+          <div class="wf-row">
+            <button class="wf-btn dark">📄 Generate PDF</button>
+            <button class="wf-btn ghost">Save draft</button>
+            <button class="wf-btn ghost">Preview as buyer</button>
+          </div>
+          <div style="margin-top:14px;padding:12px;border:1px dashed var(--gray-light);border-radius:8px;font-size:12px;color:var(--text-muted);">
+            <strong style="color:var(--navy);">After signing, this will land at:</strong><br>
+            <span class="mono">Coreshift HQ ▸ Customers ▸ Tasman Fitouts ▸ Contracts ▸ Type-3 Platform Subscription · 2026-05-28.pdf</span>
+          </div>
+        </div>
+      </div>
+      <div class="step-note"><strong>One last check.</strong>
+        <p>Summary of the picked Type, the field state, and any edits. Generate produces the PDF; the rep then sends it via whatever they use today (DocuSign / Dropbox Sign).</p>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="wf">
+        <div class="wf-header">Signed &amp; filed</div>
+        <div class="wf-body">
+          <div class="wf-row" style="justify-content:space-between">
+            <div>
+              <div class="wf-label">Document status</div>
+              <div style="font-size:13px;color:var(--text);font-weight:600">Signed by Sarah Whitcombe · 2026-06-04</div>
+            </div>
+            <span class="wf-chip green">✓ signed</span>
+          </div>
+          <div style="margin:14px 0 8px;font-size:12px;color:var(--text-muted)">
+            Stored on the deal, and pushed to Drive for anyone who needs it:
+          </div>
+          <div class="wf-drive">
+            <div class="crumb">📁 Coreshift HQ &gt; Customers &gt; <strong>Tasman Fitouts</strong> &gt; Contracts</div>
+            <div class="file"><span class="ic signed"></span><span>Type-3 Platform Subscription · <strong>signed</strong> · 2026-06-04.pdf</span></div>
+            <div class="file"><span class="ic"></span><span>Type-3 Platform Subscription · draft · 2026-05-28.pdf</span></div>
+          </div>
+          <div class="wf-row" style="margin-top:12px"><button class="wf-btn ghost">Open in Drive ↗</button></div>
+        </div>
+      </div>
+      <div class="step-note"><strong>Two homes, one source.</strong>
+        <p>The signed PDF lives on the deal in Velocity <em>and</em> in the shared Drive folder — so Lauren, Ricky, anyone with Drive access can find it without a Velocity login. (This is what fixes the NZIE / Storepro pain Keitha raised.)</p>
+      </div>
+    </div>
+
+    <!-- ====================== PART 2 : MERGE FIELDS ====================== -->
+    <h2 class="part"><span class="num">2 ·</span> What we already have — merge field map</h2>
+    <p>Real values from <strong>Tasman Fitouts (Abe Test 3)</strong>. The pattern: green is solid, violet is from extraction, orange is ICP/qualification, coral needs the rep to type it, grey we don't capture yet.</p>
+
+    <table class="merge-table">
+      <thead><tr><th style="width:24%">Merge field</th><th style="width:38%">Value (Tasman example)</th><th style="width:26%">Source</th><th style="width:12%">Status</th></tr></thead>
+      <tbody>
+        <tr><td class="v-name">{{client.name}}</td><td class="v-val">Tasman Fitouts</td><td class="v-src">company record (set at deal creation)</td><td><span class="src deal">deal</span></td></tr>
+        <tr><td class="v-name">{{client.contact.name}}</td><td class="v-val">Sarah Whitcombe</td><td class="v-src">primary contact</td><td><span class="src deal">deal</span></td></tr>
+        <tr><td class="v-name">{{client.contact.role}}</td><td class="v-val">Managing Director</td><td class="v-src">primary contact role</td><td><span class="src deal">deal</span></td></tr>
+        <tr><td class="v-name">{{client.contact.email}}</td><td class="v-val">sarah@tasmanfitouts.co.nz</td><td class="v-src">primary contact email</td><td><span class="src deal">deal</span></td></tr>
+        <tr><td class="v-name">{{client.address}}</td><td class="v-val miss">— not captured yet</td><td class="v-src">add field to Company record</td><td><span class="src miss">add</span></td></tr>
+        <tr><td class="v-name">{{compelling_event}}</td><td class="v-val">"Lost Apex Property Group (≈22% of revenue) to Formline last month."</td><td class="v-src">extractor → deal.compellingEvent</td><td><span class="src extr">extr</span></td></tr>
+        <tr><td class="v-name">{{challenge_area}}</td><td class="v-val">Sales (reactive, referral-only, no pipeline)</td><td class="v-src">Qualification modal → deal.challengeArea</td><td><span class="src user">icp</span></td></tr>
+        <tr><td class="v-name">{{turnover}}</td><td class="v-val">$4.2M</td><td class="v-src">company.turnoverCents</td><td><span class="src user">icp</span></td></tr>
+        <tr><td class="v-name">{{growth_goal}}</td><td class="v-val">"$4.2M → $7M in 3 years; predictable pipeline."</td><td class="v-src">extractor → company.growthGoals</td><td><span class="src extr">extr</span></td></tr>
+        <tr><td class="v-name">{{decision_maker}}</td><td class="v-val">Sarah Whitcombe (+ co-owner Daniel)</td><td class="v-src">primaryContact.isDecisionMaker + extractor</td><td><span class="src extr">extr</span></td></tr>
+        <tr><td class="v-name">{{success_definition}}</td><td class="v-val">"3–4 qualified opportunities a week without me chasing."</td><td class="v-src">extractor → dealSignals.success_definition</td><td><span class="src extr">extr</span></td></tr>
+        <tr><td class="v-name">{{investment.amount}}</td><td class="v-val miss">$&nbsp;_____&nbsp;</td><td class="v-src">rep types in (per-deal pricing)</td><td><span class="src rep">rep</span></td></tr>
+        <tr><td class="v-name">{{investment.currency}}</td><td class="v-val">NZD</td><td class="v-src">playbook setting</td><td><span class="src deal">cfg</span></td></tr>
+        <tr><td class="v-name">{{investment.gst}}</td><td class="v-val">+ GST</td><td class="v-src">playbook.gstTreatment</td><td><span class="src deal">cfg</span></td></tr>
+        <tr><td class="v-name">{{date.start}}</td><td class="v-val miss">__ / __ / ____</td><td class="v-src">rep types in</td><td><span class="src rep">rep</span></td></tr>
+        <tr><td class="v-name">{{date.prepared}}</td><td class="v-val">28 May 2026</td><td class="v-src">today</td><td><span class="src deal">sys</span></td></tr>
+        <tr><td class="v-name">{{rep.name}}</td><td class="v-val">Abe Navarrete</td><td class="v-src">user profile (signed-in rep)</td><td><span class="src deal">user</span></td></tr>
+        <tr><td class="v-name">{{rep.role}}</td><td class="v-val">Co-Founder</td><td class="v-src">user profile</td><td><span class="src deal">user</span></td></tr>
+        <tr><td class="v-name">{{rep.email}}</td><td class="v-val">abe@coreshifthq.com</td><td class="v-src">user profile</td><td><span class="src deal">user</span></td></tr>
+        <tr><td class="v-name">{{competitor}}</td><td class="v-val">Formline Interiors</td><td class="v-src">extractor → company.competitiveSet[0]</td><td><span class="src extr">extr</span></td></tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:13px;color:var(--text-muted);margin-top:14px">
+      <strong>Net:</strong> of ~20 merge fields, the rep only needs to type <em>2</em> (price + start date). <strong>One field</strong> (<code>client.address</code>) isn't captured yet — easy add to the Company record. Everything else is auto-pulled from data we already have on the deal.
+    </p>
+
+    <!-- ====================== PART 3 : 4 SCOPE SHAPES ====================== -->
+    <h2 class="part"><span class="num">3 ·</span> The 4 scope shapes</h2>
+    <p>One scope section per Type. They share the cover, cover letter, "How we work together", investment schedule, Terms and signature blocks (as partials) — but the <strong>scope</strong> section reflects what kind of engagement it actually is.</p>
+
+    <div class="scope-grid">
+
+      <div class="scope-card" style="border-top:4px solid var(--jade)">
+        <span class="num" style="background:var(--jade)">1</span>
+        <h3>Business Consultation</h3>
+        <div class="sub">Pure advisory. Nothing built. SOW-driven.</div>
+        <ol>
+          <li>Engagement objective(s) <small>What problem are we solving</small></li>
+          <li>Scope of Work — this engagement <small>Bulleted deliverables for this SOW</small></li>
+          <li>Approach <small>Workshops / sessions / reviews · cadence</small></li>
+          <li>Timeline &amp; milestones <small>Typical: 4–12 weeks, dated milestones</small></li>
+          <li>Outputs <small>What the customer ends up with (report, plan, model)</small></li>
+          <li>Out of scope <small>What we won't touch in this SOW</small></li>
+        </ol>
+      </div>
+
+      <div class="scope-card" style="border-top:4px solid var(--violet)">
+        <span class="num" style="background:var(--violet)">2</span>
+        <h3>Bespoke Build</h3>
+        <div class="sub">Custom build. Customer owns it. Milestone payments.</div>
+        <ol>
+          <li>Project objective <small>What we're building, in plain words</small></li>
+          <li>Solution overview <small>What it does · high-level shape</small></li>
+          <li>Deliverables <small>Concrete artifacts (app, workflow, tool)</small></li>
+          <li>Milestones &amp; payments <small>30 / 40 / 30 (or as agreed)</small></li>
+          <li>Acceptance criteria <small>What "done" means</small></li>
+          <li>Warranty <small>60 days post-acceptance (per Terms)</small></li>
+          <li>Ongoing support (optional) <small>Refers to SLA annexure if taken</small></li>
+          <li>Out of scope</li>
+        </ol>
+      </div>
+
+      <div class="scope-card" style="border-top:4px solid var(--coral)">
+        <span class="num" style="background:var(--coral)">3</span>
+        <h3>Platform Subscription</h3>
+        <div class="sub">Customer subscribes to a platform we own. Example: Noozey.</div>
+        <ol>
+          <li>Platform overview <small>What they're getting access to</small></li>
+          <li>Customisations for this customer <small>Anything specific to them</small></li>
+          <li>Onboarding <small>Setup, training, data import</small></li>
+          <li>Ongoing service <small>Support tier · release cadence</small></li>
+          <li>Data ownership <small>Their data, their control — friendly recap</small></li>
+          <li>Roadmap <small>What's coming next that they'll benefit from</small></li>
+          <li>Out of scope</li>
+        </ol>
+      </div>
+
+      <div class="scope-card" style="border-top:4px solid var(--amber)">
+        <span class="num" style="background:var(--amber)">4</span>
+        <h3>Platform Resale</h3>
+        <div class="sub">Customer onsells access to <em>their</em> End Users. Example: Key Content.</div>
+        <ol>
+          <li>Platform overview <small>What they're licensing to resell</small></li>
+          <li>End User model <small>How they package it for their End Users</small></li>
+          <li>Pricing structure <small>Per-End-User pricing · how it scales</small></li>
+          <li>Customer's responsibilities <small>Onboarding, billing, support, ToS for End Users</small></li>
+          <li>Coreshift's responsibilities <small>Platform uptime, releases, security</small></li>
+          <li>Onboarding (the customer themselves) <small>Setup of their reseller environment</small></li>
+          <li>Reporting <small>End User metrics shared back to them</small></li>
+          <li>Out of scope</li>
+        </ol>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    Velocity v1.1 mockup · contracts &amp; proposals integration · discussion draft 2026-05-28
+  </footer>
+</body>
+</html>

@@ -286,7 +286,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done"><div class="status-num">15</div><div class="status-label">Done</div></div>
-      <div class="status-stat status-in-progress"><div class="status-num">1</div><div class="status-label">In Progress</div></div>
+      <div class="status-stat status-in-progress"><div class="status-num">2</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked</div></div>
       <div class="status-stat status-this-week"><div class="status-num">2</div><div class="status-label">This Week</div></div>
       <div class="status-stat status-backlog"><div class="status-num">14</div><div class="status-label">Backlog</div></div>
@@ -309,6 +309,14 @@
           <div class="link-text">
             <div class="link-title">Operations Playbook</div>
             <div class="link-desc">How Velocity is built &amp; run — environments, branch flow, migrations, QA, promotion, incidents</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="contracts-mockup.html">
+          <div class="link-icon">📄</div>
+          <div class="link-text">
+            <div class="link-title">Contracts &amp; Proposals · v1.1 mockup</div>
+            <div class="link-desc">Discussion artifact — the rep flow, merge-field map, &amp; the 4 scope shapes. Not yet built.</div>
           </div>
           <div class="link-arrow">→</div>
         </a>
@@ -438,12 +446,17 @@
 
         <!-- IN PROGRESS -->
         <section class="column col-in-progress">
-          <header class="col-head"><h2>🟡 In progress</h2><span class="col-count">1</span></header>
+          <header class="col-head"><h2>🟡 In progress</h2><span class="col-count">2</span></header>
           <div class="cards">
             <div class="card">
               <div class="card-title">End-to-end pipeline QA on staging</div>
               <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-neutral">QA</span></div>
               <div class="card-desc">Walking "Abe Test 3" through Prospect → Engaged → Qualified → … with sample docs, verifying gates, the confirm loop, and notifications before the prod promotion.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Contracts &amp; proposals — design discussion</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-portal">templates</span></div>
+              <div class="card-desc">Designing the contract/proposal template engine for Coreshift Types 1–4 (GP held for v1.2 pending Mal's product reset). Locks so far: HTML/MD templates + merge fields + in-app WYSIWYG, composable partials, Settings CRUD with import-as-starter, 4 scope shapes (1 per Type), per-client Drive folders, external sign + upload-and-mark-signed. Roles: super-admin (Abe/Ricky), template author cross-tenant (Keitha/Mal), rep (default). See <a href="contracts-mockup.html" style="color:var(--teal-dark);">the mockup</a> for the full picture. Next: Abe + Keitha chat to lock combined-vs-separate doc + identify the "flimsy" example.</div>
             </div>
           </div>
         </section>
