@@ -699,8 +699,8 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>BRIEF-1</strong> on staging</div>
-        <div><strong>1</strong>/9 briefs underway</div>
+        <div><strong>BRIEF-2</strong> dormant on staging</div>
+        <div><strong>2</strong>/9 briefs underway</div>
         <div>Updated <strong>2026-05-28</strong></div>
       </div>
     </div>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">BRIEF-1 · Walking skeleton (live on staging)</span>
+          <span class="phase-pill-value">BRIEF-2 · Grill engine (built; dormant on staging)</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Grill engine <span class="phase-pill-date">BRIEF-2 — one working Shape turn</span></span>
+          <span class="phase-pill-value">Isolation + resume <span class="phase-pill-date">BRIEF-3 — keep context sealed; restore on reopen</span></span>
         </div>
       </div>
     </section>
@@ -836,7 +836,7 @@
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
+        <div class="status-num">1</div>
         <div class="status-label">In progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -848,7 +848,7 @@
         <div class="status-label">This week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">8</div>
+        <div class="status-num">7</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -896,6 +896,13 @@
     <section class="recent">
       <h2 class="section-head">Recently Done</h2>
       <div class="recent-list">
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">BRIEF-2 grill engine — merged to dev</div>
+            <div class="recent-desc">PR #2 in: modes (saas/client/internal), conversations + messages schema, SSE route, chat + live-doc UI. Dormant on staging until the Anthropic API key lands.</div>
+          </div>
+        </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
@@ -965,10 +972,14 @@
         <section class="column col-in-progress">
           <header class="col-head">
             <h2>🔨 In Progress</h2>
-            <span class="col-count">0</span>
+            <span class="col-count">1</span>
           </header>
           <div class="cards">
-            <div class="empty">Nothing in progress</div>
+            <div class="card">
+              <div class="card-title">BRIEF-2 — Grill engine</div>
+              <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-est">PR #2 merged</span></div>
+              <div class="card-desc">One working Shape turn built + merged to dev. Deployed to staging but dormant (503 "not configured") until ANTHROPIC_API_KEY lands. Modes folded in (saas/client/internal).</div>
+            </div>
           </div>
         </section>
 
@@ -1004,14 +1015,9 @@
         <section class="column col-backlog">
           <header class="col-head">
             <h2>📋 Backlog</h2>
-            <span class="col-count">8</span>
+            <span class="col-count">7</span>
           </header>
           <div class="cards">
-            <div class="card">
-              <div class="card-title">BRIEF-2 — Grill engine</div>
-              <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-est">spec cut</span></div>
-              <div class="card-desc">One working Shape turn: Claude tool-use loop filling the doc via update_section. Spec cut (PR #2) — ready to build; modes folded in.</div>
-            </div>
             <div class="card">
               <div class="card-title">BRIEF-3 — Isolation + resume</div>
               <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
