@@ -288,7 +288,7 @@
       <div class="status-stat status-done"><div class="status-num">15</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">2</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked</div></div>
-      <div class="status-stat status-this-week"><div class="status-num">2</div><div class="status-label">This Week</div></div>
+      <div class="status-stat status-this-week"><div class="status-num">3</div><div class="status-label">This Week</div></div>
       <div class="status-stat status-backlog"><div class="status-num">14</div><div class="status-label">Backlog</div></div>
     </section>
 
@@ -471,17 +471,22 @@
 
         <!-- THIS WEEK -->
         <section class="column col-this-week">
-          <header class="col-head"><h2>🔵 This week</h2><span class="col-count">2</span></header>
+          <header class="col-head"><h2>🔵 This week</h2><span class="col-count">3</span></header>
           <div class="cards">
             <div class="card">
               <div class="card-title">Promote V1.1 batch to production</div>
               <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-v11">V1.1</span></div>
-              <div class="card-desc">PR staging → main (Abe's sign-off) + apply migrations 0011–0013 to the prod Supabase branch, then smoke-test prod. See the Ops Playbook → Promotion checklist.</div>
+              <div class="card-desc">PR staging → main (Abe's sign-off) + apply migrations 0011–0016 to the prod Supabase branch, then smoke-test prod. See the Ops Playbook → Promotion checklist.</div>
             </div>
             <div class="card">
               <div class="card-title">Finish Engaged → Qualified → Won QA</div>
               <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-neutral">QA</span></div>
               <div class="card-desc">Complete the walkthrough with the second-meeting forcing event + kill-criteria check, then the Presented/Verbal/Won legs.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Invoicing + client-level deal view</div>
+              <div class="card-tags"><span class="tag tag-portal">feature</span></div>
+              <div class="card-desc">Build the invoice send flow and a client-level view that aggregates multiple deals under one buyer (data model already supports it via <code>deals.company_id</code> — gap is UI + the invoice-can-span-deals shape). Design forks open: Xero-native vs Velocity-source-of-truth, single-deal vs multi-deal-bundled invoices, manual paid-toggle vs Stripe, recurring for subscriptions, NZ/AU GST handling, buyer-portal pay link. Locked once Abe + Ricky settle scope.</div>
             </div>
           </div>
         </section>
@@ -497,7 +502,7 @@
             <div class="card"><div class="card-title">W3 — Voice capture from anywhere</div><div class="card-tags"><span class="tag tag-neutral">wow</span></div><div class="card-desc">"Hey Nirvana, Mary at Aditi just told me…" → routes to deal, updates field, sets reminder. Mobile + transcription.</div></div>
             <div class="card"><div class="card-title">P8 — Quiet data capture</div><div class="card-tags"><span class="tag tag-portal">portal</span></div><div class="card-desc">The buyer-prompted half of the confirm loop — the agent asks gentle questions over time to fill gaps.</div></div>
             <div class="card"><div class="card-title">A2 — Pre-proposal readiness</div><div class="card-tags"><span class="tag tag-gate">gate</span></div><div class="card-desc">"Do we understand them yet?" score from captured signals; &lt;80% recommends more discovery.</div></div>
-            <div class="card"><div class="card-title">I5 — Native e-sign in portal</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">One-click sign as the 75% gift. Pull in if Aditi closes via portal.</div></div>
+            <div class="card"><div class="card-title">I5 — Native e-sign in portal</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">Native signing loop replacing DocuSign for the Tier-1 case. Three tiers scoped: <strong>Tier 1</strong> (~4d) — visual signature on PDF (canvas-drawn or typed), magic-link auth (reuses portal infra), audit log with IP/timestamp/UA, signed PDF + certificate-of-completion page, auto-sets <code>documentsSignedAt</code>. Covers our own outbound contracts (subscription / SOW / NDA). <strong>Tier 2</strong> (~1w later) — PKI-backed digital signatures using <code>node-signpdf</code> so Adobe Reader shows the green check. <strong>Tier 3</strong> (deferred indefinitely) — ESIGN / eIDAS compliance, KBA / SMS auth, ID verification. For customers whose legal teams require a certified provider, integrate DocuSign instead. Decision per customer cohort: Coreshift+GP B2B services contracts mostly Tier 1 territory.</div></div>
             <div class="card"><div class="card-title">I6 — Xero push</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">Approved commissions → bills payable; Closed Won → invoice.</div></div>
             <div class="card"><div class="card-title">I7 — LinkedIn enrichment</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">Person enrichment + recent-activity signals (API-access dependent).</div></div>
             <div class="card"><div class="card-title">I8 — Google Drive archive</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">Cold archive of transcripts/recordings/docs &gt; 90d to Mal's Drive.</div></div>
