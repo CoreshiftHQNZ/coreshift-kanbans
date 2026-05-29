@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>68%</strong> complete</div>
-        <div><strong>84</strong>/124 cards done</div>
-        <div>Updated <strong>2026-05-28 21:40 UTC</strong></div>
+        <div><strong>69%</strong> complete</div>
+        <div><strong>86</strong>/125 cards done</div>
+        <div>Updated <strong>2026-05-29 13:38 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">84</div>
+        <div class="status-num">86</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,11 +833,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">9</div>
+        <div class="status-num">7</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">31</div>
+        <div class="status-num">32</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">84</span>
+        <span class="col-count">86</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1385,6 +1385,16 @@
         <div class="card-title">esbuild banner: __dirname/__filename polyfill</div>
         <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">const daemonPath = \</span><span class="tag tag-neutral">;</span><span class="tag tag-neutral">createRequire</span><span class="tag tag-neutral">fileURLToPath</span><span class="tag tag-neutral">dirname</span><span class="tag tag-neutral">git diff HEAD</span></div>
         <div class="card-desc">The hidden root cause behind Brief 9b&#39;s two earlier deploy crashes. node-cron (both v3 and v4) has `const daemonPath = \`${__dirname}/daemon.js\`;` at module top level — ReferenceError in an ESM bundle. The polyfill banner via `createRequire`/`fileURLToPath`/`dirname` was sitting **uncommitted in the local working tree** the whole time. Once committed (PR #40), Brief 9b deployed cleanly on third attempt. Lesson: when a local build passes but CI crashes the same way twice, `git diff HEAD` is the first diagnostic</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A5: bug_reports end-to-end data flow documented</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">playbook/data-flows/bug_reports.md</span></div>
+        <div class="card-desc">`playbook/data-flows/bug_reports.md` published 2026-05-29. ASCII diagram + table of every field, sub-processor (region + retention), RLS posture, and 8 identified privacy gaps rolled up for Phase B. First entry in the eventual data-flows library; template for the next ones (social_accounts, clients, jobs)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A6: KC privacy notice + cookies audited</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">audit</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">playbook/audits/2026-05-29-kc-privacy-notice.md</span></div>
+        <div class="card-desc">`playbook/audits/2026-05-29-kc-privacy-notice.md` published. Headline: KC has **no published privacy notice, no terms of service, no consent prompt, no cookie banner** — and also no analytics/tracking SDKs. Cookies/storage set are operational only (auth JWT, impersonation flag, selected-client UUID, two sessionStorage flags). Sentry session replay is enabled but with strong defaults (error-only, fully masked, media-blocked, sendDefaultPii=false). Open questions raised for operator: whether keycontent.ai marketing site already hosts a notice, NZ-vs-GDPR jurisdiction scope, Postmark archive retention</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1404,7 +1414,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">9</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1424,39 +1434,29 @@
       </div>
       <div class="card">
         <div class="card-title">Phase A1: fix bug_reports_set_updated_at mutable search_path</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">quick-win</span><span class="tag tag-neutral">ALTER FUNCTION public.bug_reports_set_updated_at() SET search_path = &#39;&#39;</span></div>
-        <div class="card-desc">KC prod. `ALTER FUNCTION public.bug_reports_set_updated_at() SET search_path = &#39;&#39;`. Closes Supabase advisor Lint 0011 on KC. Ship via migration file + PR per playbook</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">quick-win</span><span class="tag tag-neutral">pr-open</span><span class="tag tag-neutral">ALTER FUNCTION public.bug_reports_set_updated_at() SET search_path = &#39;&#39;</span><span class="tag tag-neutral">supabase db push</span></div>
+        <div class="card-desc">KC prod. `ALTER FUNCTION public.bug_reports_set_updated_at() SET search_path = &#39;&#39;`. Closes Supabase advisor Lint 0011 on KC. **PR [keycontent-app#114](https://github.com/CoreshiftHQNZ/keycontent-app/pull/114) open against dev — awaiting merge → staging → main + `supabase db push` to prod.**</div>
       </div>
       <div class="card">
         <div class="card-title">Phase A2: fix maintenance_set_updated_at mutable search_path</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">quick-win</span></div>
-        <div class="card-desc">Sentinel prod. Same fix as A1, different function. Closes Sentinel advisor Lint 0011</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">quick-win</span><span class="tag tag-neutral">pr-open</span></div>
+        <div class="card-desc">Sentinel prod. Same fix as A1, different function. Closes Sentinel advisor Lint 0011. **PR [sentinel-app#64](https://github.com/CoreshiftHQNZ/sentinel-app/pull/64) open against dev.**</div>
       </div>
       <div class="card">
-        <div class="card-title">Phase A3: investigate + lock down rls_auto_enable() exposure</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">P1</span><span class="tag tag-neutral">/rest/v1/rpc/rls_auto_enable</span><span class="tag tag-neutral">REVOKE EXECUTE</span></div>
-        <div class="card-desc">Sentinel prod. SECURITY DEFINER function callable by anon + authenticated via `/rest/v1/rpc/rls_auto_enable`. Read what it does, then `REVOKE EXECUTE` from public roles or convert to SECURITY INVOKER. Closes advisor Lints 0028 + 0029. The one open finding worth treating as more than cosmetic</div>
+        <div class="card-title">Phase A3: lock down rls_auto_enable() exposure</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">P1</span><span class="tag tag-neutral">pr-open</span><span class="tag tag-neutral">ensure_rls</span><span class="tag tag-neutral">/rest/v1/rpc/rls_auto_enable</span><span class="tag tag-neutral">REVOKE EXECUTE ... FROM PUBLIC</span></div>
+        <div class="card-desc">Sentinel prod. Pre-flight against prod confirmed: SECURITY DEFINER event-trigger function, owned by postgres, bound to event trigger `ensure_rls`, EXECUTE granted to PUBLIC by default → reachable via `/rest/v1/rpc/rls_auto_enable`. Migration `REVOKE EXECUTE ... FROM PUBLIC` — safe because event triggers fire via the engine and don&#39;t consult routine_privileges. Closes advisor Lints 0028 + 0029. **PR [sentinel-app#65](https://github.com/CoreshiftHQNZ/sentinel-app/pull/65) open against dev.**</div>
       </div>
       <div class="card">
         <div class="card-title">Phase A4: clean advisor baseline + snapshot</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">audit</span><span class="tag tag-neutral">get_advisors</span></div>
-        <div class="card-desc">Re-run `get_advisors` on both KC + Sentinel prod after A1-A3. Refresh the &quot;Current findings snapshot&quot; section in HOW-WE-DO-SECURITY.md. Goal: zero open findings as the new baseline</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Phase A5: document bug_reports end-to-end data flow</div>
-        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">docs</span></div>
-        <div class="card-desc">Diagram + narrative: widget → KC bug_reports → Sentinel read → GitHub issue → Postmark ack/resolution → Sentry. First privacy artifact; seed for B1 (data inventory)</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Phase A6: audit current KC privacy notice + cookies</div>
-        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-ops">ops</span></div>
-        <div class="card-desc">Verify the public privacy notice exists, capture what it currently says, list cookies KC actually sets. Output: known-state, ready for the Phase B refresh</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">audit</span><span class="tag tag-blocked">blocked-by:A1-A3</span><span class="tag tag-neutral">get_advisors</span></div>
+        <div class="card-desc">Re-run `get_advisors` on KC + Sentinel prod after A1-A3 deploy. Refresh &quot;Current findings snapshot&quot; in HOW-WE-DO-SECURITY.md. Goal: zero open findings = the new baseline</div>
       </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">31</span>
+        <span class="col-count">32</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1588,6 +1588,11 @@
         <div class="card-title">Phase B7: sub-processor inventory</div>
         <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">docs</span></div>
         <div class="card-desc">New SUB-PROCESSORS.md. Every third party touching user data: Supabase, Railway, Cloudflare, Postmark, Sentry, Better Stack, GitHub, Zernio, Google, OpenAI/Anthropic, Akahu. Jurisdiction + DPA + retention. Linked from public privacy notice</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B8: publish KC privacy notice + ToS</div>
+        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">docs</span><span class="tag tag-neutral">P1-finding-from-A6</span><span class="tag tag-neutral">/privacy</span><span class="tag tag-neutral">/terms</span></div>
+        <div class="card-desc">A6 audit found KC has NO published privacy notice, NO terms of service, NO consent prompt at signup. The app posture is internally consistent (no surveillance) but indefensible legally. Drafted notice depends on B1 (inventory) + B7 (sub-processors). Then: add `/privacy` + `/terms` routes, footer links visible site-wide, signup consent checkbox. Re-run A6 as closing audit. **Operator question first: does coreshifthq.com or keycontent.ai already host a privacy page outside the SPA?**</div>
       </div>
       <div class="card">
         <div class="card-title">Brief 14: Security advisor surface in Sentinel</div>
