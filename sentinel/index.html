@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>72%</strong> complete</div>
-        <div><strong>98</strong>/137 cards done</div>
-        <div>Updated <strong>2026-05-29 14:45 UTC</strong></div>
+        <div><strong>102</strong>/141 cards done</div>
+        <div>Updated <strong>2026-05-29 23:15 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">98</div>
+        <div class="status-num">102</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">98</span>
+        <span class="col-count">102</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1455,6 +1455,26 @@
         <div class="card-title">Meeting brief shipped</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">playbook/PRIVACY-SECURITY-MEETING-BRIEF.md</span></div>
         <div class="card-desc">`playbook/PRIVACY-SECURITY-MEETING-BRIEF.md` — operator-ready single doc for next week&#39;s meeting. TL;DR + before/after narrative + 9-item risk register sorted by what-to-do-about-each + state-table (done/pending/scoped/blocked) + meeting questions to surface + answers to &quot;are you secure&quot;/&quot;biggest risk&quot;/&quot;biggest gap&quot;. Consolidates everything done in this Phase A+B sweep into one shareable document</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Schema migrations drift cleanup (Sentinel) — backfill</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">audit-followup</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">20260522010000</span><span class="tag tag-neutral">20260522020000</span><span class="tag tag-neutral">supabase_migrations.schema_migrations</span><span class="tag tag-neutral">supabase db push</span></div>
+        <div class="card-desc">INSERTed the two missing rows (`20260522010000`, `20260522020000`) into Sentinel prod&#39;s `supabase_migrations.schema_migrations`. Statements populated from the actual migration files. Drift closed; future `supabase db push` won&#39;t trip</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 18 — Sentry heartbeat shipped to prod</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">observability</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">sentry_heartbeat_pings</span><span class="tag tag-neutral">/api/__sentry-test</span><span class="tag tag-neutral">SENTRY_HEARTBEAT_TOKEN</span><span class="tag tag-neutral">SENTRY_AUTH_TOKEN</span><span class="tag tag-neutral">SENTRY_ORG</span></div>
+        <div class="card-desc">Pairs of PRs merged through dev→staging→main (KC [#117/#118/#119](https://github.com/CoreshiftHQNZ/keycontent-app), Sentinel [#68/#69/#70](https://github.com/CoreshiftHQNZ/sentinel-app)) + `sentry_heartbeat_pings` migration applied + stamped on Sentinel prod. Endpoint `/api/__sentry-test` live on both apps (returns 503 by default — safe until SENTRY_HEARTBEAT_TOKEN env var set). Sentinel scheduler registers daily 4am NZ ping + 11am NZ verify when token present. 18 new tests; full Sentinel suite 280/280. **Operator activation Tuesday:** add `SENTRY_HEARTBEAT_TOKEN` to Railway prod + staging for both apps (any opaque random string, same value in both). Optional: `SENTRY_AUTH_TOKEN` + `SENTRY_ORG` in Sentinel only to enable Sentry-API verification</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B3 retention sweep scripts shipped to prod</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">script/retention-sweep-daily.ts</span><span class="tag tag-neutral">script/retention-sweep-monthly.ts</span><span class="tag tag-neutral">--confirm</span><span class="tag tag-neutral">ai_call_logs</span></div>
+        <div class="card-desc">KC PRs [#120/#121/#122](https://github.com/CoreshiftHQNZ/keycontent-app) merged dev → staging → main. `script/retention-sweep-daily.ts` (TTL review_tokens / team_invitations / social_connect_tokens past expires_at) + `script/retention-sweep-monthly.ts` (anonymise bug_reports past 24m, delete webhook_events past 6m, delete audit_logs past 6m). **Dry-run by default**; operator must pass `--confirm` to actually delete. `ai_call_logs` aggregation deferred to V2 (table small + near-PII-free, safe to defer). **Operator activation Tuesday:** dry-run on staging → review counts → confirm-run on staging → first prod run. Wire scheduling via Railway scheduled jobs / GH Actions cron / manual cadence</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B9 — OWASP ZAP DAST CI shipped to prod</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">pen-testing</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">.github/workflows/zap-baseline.yml</span><span class="tag tag-neutral">workflow_dispatch</span><span class="tag tag-neutral">ZAP_TARGET_STAGING</span></div>
+        <div class="card-desc">KC PRs [#123/#124/#125](https://github.com/CoreshiftHQNZ/keycontent-app) + Sentinel PRs [#71/#72/#73](https://github.com/CoreshiftHQNZ/sentinel-app) all merged through dev → staging → main. `.github/workflows/zap-baseline.yml` on both apps: weekly Sunday 11pm UTC (= Monday morning NZ) + `workflow_dispatch` for manual runs. **V1 informational only** — fail_action=false, rolling GitHub Issue receives findings per repo. **First real pen-testing motion for Coreshift.** First scheduled run: next Sunday 23:00 UTC. Operator can override target via repo variable `ZAP_TARGET_STAGING`. V2 (separate brief): authenticated context for protected routes, active scan with operator approval, per-PR gating</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1493,9 +1513,9 @@
         <div class="card-desc">New `playbook/SECURITY-PRIVACY-PLAN.md` published 2026-05-29 with phased plan (A: quick wins this week; B: foundation 2-4 weeks; C: Sentinel security briefs 14-18; D: trigger-gated compliance). Operator forks listed inside the doc</div>
       </div>
       <div class="card">
-        <div class="card-title">Phase B foundation complete — meeting brief ready to share</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">meta</span><span class="tag tag-neutral">playbook/PRIVACY-SECURITY-MEETING-BRIEF.md</span></div>
-        <div class="card-desc">All docs delivered in a single sweep: B1 inventory, B7 sub-processors, B2 retention, B3 deletion path, B4 breach response, B5 threat models (KC + Sentinel), B8b privacy notice draft. **`playbook/PRIVACY-SECURITY-MEETING-BRIEF.md` is the share-ready single doc** with 9-item risk register, before/after narrative, state table, and meeting questions. Remaining Phase B work is CODE not docs: B3-implementation (~4d, scripts), Brief 19 R2 backup (~2d), B9 ZAP DAST CI (~1-2d), Brief 14 advisor surface (~3d). Operator decisions for the meeting: Kling (drop/disclose), publish timing for privacy notice, repo-public posture, pen-testing investment level</div>
+        <div class="card-title">Phase B foundation complete + autonomous weekend sprint</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">meta</span><span class="tag tag-neutral">playbook/PRIVACY-SECURITY-MEETING-BRIEF.md</span><span class="tag tag-neutral">req.scoped()</span></div>
+        <div class="card-desc">All Phase B docs done + 4 substantial code/infra shipments landed autonomously this session: schema_migrations drift backfill, Brief 18 Sentry heartbeat (both apps, prod), B3 retention sweep scripts (KC, prod), B9 OWASP ZAP DAST CI (both apps, prod). 12 PRs merged through full dev → staging → main pipeline. Meeting brief `playbook/PRIVACY-SECURITY-MEETING-BRIEF.md` ready to share. **What&#39;s still queued (operator-decisional or larger):** B3 deletion scripts (export-user-data + delete-user-data + close-account — cascade map needs operator eyes before code lands), Brief 19 R2 backup (~2d), Brief 14 Sentinel advisor surface (~3d), `req.scoped()` query builder + route audit (highest residual KC risk T3, quarter-budget work). Operator decisions for the meeting unchanged: Kling, privacy notice publish timing, repo-public posture</div>
       </div>
       <div class="card">
         <div class="card-title">🚨 Kling sub-processor decision needed</div>
