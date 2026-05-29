@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>69%</strong> complete</div>
-        <div><strong>92</strong>/133 cards done</div>
-        <div>Updated <strong>2026-05-29 14:09 UTC</strong></div>
+        <div><strong>72%</strong> complete</div>
+        <div><strong>98</strong>/137 cards done</div>
+        <div>Updated <strong>2026-05-29 14:45 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">92</div>
+        <div class="status-num">98</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -837,7 +837,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">35</div>
+        <div class="status-num">33</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">92</span>
+        <span class="col-count">98</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1425,6 +1425,36 @@
         <div class="card-title">Phase B7: sub-processor inventory shipped</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">foundation</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">playbook/data-flows/SUB-PROCESSORS.md</span></div>
         <div class="card-desc">`playbook/data-flows/SUB-PROCESSORS.md` published 2026-05-29. 18 third parties classified with jurisdiction, data class, retention, DPA status, and per-app applicability matrix. **🚨 P1 finding: Kling (Chinese video AI) is an active KC sub-processor — direct Privacy Act 2020 IPP 12 overseas-transfer concern. Recommendation: drop Kling in favour of Veo (already in use).** 8 operator action items captured (Postmark TTL, Sentry region, OpenAI no-train opt-out, Gemini tier check, Kling decision, Zernio DPA ask, repo-private decision, Annexure 2 fill). Doc is ready to copy into Type 3 agreement Annexure 2 once verifications close. Long-term home: Brief 15</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B2: retention policy shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">playbook/HOW-WE-DO-RETENTION.md</span></div>
+        <div class="card-desc">`playbook/HOW-WE-DO-RETENTION.md` published 2026-05-29. Per-classification retention rules covering Restricted (tokens — active session + 7d), Confidential-active-content (account lifetime + 30d), Confidential-comms (24m), Confidential-tokens/invites (30d TTL), Financial (7y per NZ Companies Office), Internal LLM logs (12m detail then aggregate), Internal webhook/audit (6m), and backup tiers. Privacy Act 2020 IPP 9 aligned. Code implementation queued in B3</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B3: deletion path doc shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">playbook/HOW-WE-DO-DATA-DELETION.md</span><span class="tag tag-neutral">export-user-data.ts</span><span class="tag tag-neutral">delete-user-data.ts</span><span class="tag tag-neutral">close-account.ts</span><span class="tag tag-neutral">retention-sweep-{daily,monthly}.ts</span></div>
+        <div class="card-desc">`playbook/HOW-WE-DO-DATA-DELETION.md` published 2026-05-29. Three deletion scenarios (end-user IPP 7 request 30d SLA, agency Type-3 closure with 60d Export Window, retention-policy expiry). Cascade map for every KC table noting anonymise vs hard-delete. Four scripts scoped: `export-user-data.ts`, `delete-user-data.ts`, `close-account.ts`, `retention-sweep-{daily,monthly}.ts`. **Code implementation ~4 days — queued as separate B3-code brief.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B4: breach response plan shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">playbook/HOW-WE-DO-BREACH-RESPONSE.md</span></div>
+        <div class="card-desc">`playbook/HOW-WE-DO-BREACH-RESPONSE.md` published 2026-05-29. Privacy Act 2020 Part 6 aligned: definitions (s 112, 114, 113), four-stage flow (Detect / Contain / Assess / Notify), notifiable-breach decision matrix, OPC notification template (s 117 fields), affected-individual notification template (s 115), three rehearsed scenarios drawn from real KC incidents. Tabletop exercise within 60 days of publish</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B5: threat models shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">playbook/threat-models/keycontent.md</span><span class="tag tag-neutral">playbook/threat-models/sentinel.md</span><span class="tag tag-neutral">req.scoped()</span></div>
+        <div class="card-desc">`playbook/threat-models/keycontent.md` (8 threats with risk register) + `playbook/threat-models/sentinel.md` (8 threats). KC top residual risk: **T3 cross-agency data leak via missing scope filter** (med-high) — recommend `req.scoped()` query builder as next-quarter work. Sentinel top residual risk: **T1 Sentinel-as-cross-app trust-anchor** (med — single-point-of-failure for service-role keys across every onboarded Coreshift app)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B8b: KC privacy notice (draft v1) shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">playbook/drafts/PRIVACY-NOTICE-KC-DRAFT.md</span><span class="tag tag-neutral">/privacy</span></div>
+        <div class="card-desc">`playbook/drafts/PRIVACY-NOTICE-KC-DRAFT.md` published. 12 sections covering everything per NZ Privacy Act 2020 (IPP 6 access, IPP 7 correction/deletion, IPP 9 retention, IPP 12 overseas disclosures), discloses all 18 sub-processors, references HOW-WE-DO-BREACH-RESPONSE for breach pathway. **Blocked from publish on:** Kling decision, 7 vendor verifications, `/privacy` route + footer link + signup consent checkbox implementation in KC app</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Meeting brief shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">playbook/PRIVACY-SECURITY-MEETING-BRIEF.md</span></div>
+        <div class="card-desc">`playbook/PRIVACY-SECURITY-MEETING-BRIEF.md` — operator-ready single doc for next week&#39;s meeting. TL;DR + before/after narrative + 9-item risk register sorted by what-to-do-about-each + state-table (done/pending/scoped/blocked) + meeting questions to surface + answers to &quot;are you secure&quot;/&quot;biggest risk&quot;/&quot;biggest gap&quot;. Consolidates everything done in this Phase A+B sweep into one shareable document</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1463,9 +1493,9 @@
         <div class="card-desc">New `playbook/SECURITY-PRIVACY-PLAN.md` published 2026-05-29 with phased plan (A: quick wins this week; B: foundation 2-4 weeks; C: Sentinel security briefs 14-18; D: trigger-gated compliance). Operator forks listed inside the doc</div>
       </div>
       <div class="card">
-        <div class="card-title">Phase B momentum</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">meta</span></div>
-        <div class="card-desc">Phase A closed; B1 (data inventory) + B7 (sub-processors) both shipped today. Privacy notice scope locked to NZ Privacy Act 2020 only. Storage backup = R2 export (Brief 19). Pen-testing first rung = B9 (ZAP DAST CI). Two open P1 findings worth operator attention: **(1) Kling Chinese-AI sub-processor (IPP 12 overseas-transfer concern; recommend drop), (2) 8 verification items in SUB-PROCESSORS.md before Annexure 2 / privacy notice can ship truthfully.** Next pickup recommendation: B2 (retention policy) — builds on B1/B7 to give every data class a concrete keep-for-how-long answer</div>
+        <div class="card-title">Phase B foundation complete — meeting brief ready to share</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">meta</span><span class="tag tag-neutral">playbook/PRIVACY-SECURITY-MEETING-BRIEF.md</span></div>
+        <div class="card-desc">All docs delivered in a single sweep: B1 inventory, B7 sub-processors, B2 retention, B3 deletion path, B4 breach response, B5 threat models (KC + Sentinel), B8b privacy notice draft. **`playbook/PRIVACY-SECURITY-MEETING-BRIEF.md` is the share-ready single doc** with 9-item risk register, before/after narrative, state table, and meeting questions. Remaining Phase B work is CODE not docs: B3-implementation (~4d, scripts), Brief 19 R2 backup (~2d), B9 ZAP DAST CI (~1-2d), Brief 14 advisor surface (~3d). Operator decisions for the meeting: Kling (drop/disclose), publish timing for privacy notice, repo-public posture, pen-testing investment level</div>
       </div>
       <div class="card">
         <div class="card-title">🚨 Kling sub-processor decision needed</div>
@@ -1481,7 +1511,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">35</span>
+        <span class="col-count">33</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1595,24 +1625,14 @@
         <div class="card-desc">Implementation of B6 decision. Sentinel-owned node-cron job: list Supabase Storage `job-assets`, diff against R2 bucket, copy new/changed objects, prune versions per retention policy. Companion CLI `script/restore-from-r2.ts`. ~2 days V1. Reusable pattern for any future bucket (Noozey when onboarded)</div>
       </div>
       <div class="card">
-        <div class="card-title">Phase B2: retention policy</div>
-        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">docs</span></div>
-        <div class="card-desc">New HOW-WE-DO-RETENTION.md. Per-classification rules: active content / bug reports / logs / backups. Vendor-default lookups (Sentry 90d, Railway 7d, Supabase backups 8d)</div>
+        <div class="card-title">Phase B3-code: deletion + retention scripts in keycontent-app</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">~4d</span><span class="tag tag-neutral">keycontent-app/script/</span><span class="tag tag-neutral">export-user-data.ts</span><span class="tag tag-neutral">delete-user-data.ts</span><span class="tag tag-neutral">close-account.ts</span><span class="tag tag-neutral">retention-sweep-{daily,monthly}.ts</span></div>
+        <div class="card-desc">Implementation of B3 doc. Four scripts in `keycontent-app/script/`: `export-user-data.ts` (IPP 6 access, ~1d), `delete-user-data.ts` (IPP 7 cascade + anonymise, ~1.5d), `close-account.ts` (Type 3 clause 11/12 — agency closure flow, ~0.5d), `retention-sweep-{daily,monthly}.ts` (TTL tokens/invites; archive bug_reports past 24m; aggregate ai_call_logs past 12m; delete webhook_events past 6m — ~1d). + tests + staging dry-run. **Unblocks the 30-day deletion SLA promise.**</div>
       </div>
       <div class="card">
-        <div class="card-title">Phase B3: data deletion path</div>
-        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">scripts/delete-user-data.ts</span></div>
-        <div class="card-desc">Per-table delete steps. `scripts/delete-user-data.ts` in keycontent-app + HOW-WE-DO-DATA-DELETION.md playbook. Honor a deletion request within 30 days without engineering scrambling = the bar</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Phase B4: breach response plan</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">docs</span></div>
-        <div class="card-desc">New HOW-WE-DO-BREACH-RESPONSE.md. 4h / 24h / 72h playbook. NZ Privacy Act notifiable-breach definitions. Different muscle from incident response</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Phase B5: threat models (lite) per app</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">docs</span></div>
-        <div class="card-desc">STRIDE-ish one-pager per Coreshift app. Top 5-7 threats, current mitigations, residual risk. KC first, then Sentinel, then template for new apps</div>
+        <div class="card-title">Phase B5 follow-on: req.scoped() query builder + route audit</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">~2-3d</span></div>
+        <div class="card-desc">Highest residual risk from KC threat model (T3): multi-tenant scope filter is in-code, not in-DB. Closes the gap by introducing an Express middleware-bound query builder that refuses queries without an explicit agency_id. Plus targeted audit of every existing route for the pattern. Quarter-budget work, not urgent — but the highest-ROI security investment KC could make</div>
       </div>
       <div class="card">
         <div class="card-title">Phase B6: storage object backup</div>
