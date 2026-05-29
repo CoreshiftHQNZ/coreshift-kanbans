@@ -288,8 +288,8 @@
       <div class="status-stat status-done"><div class="status-num">15</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">2</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked</div></div>
-      <div class="status-stat status-this-week"><div class="status-num">3</div><div class="status-label">This Week</div></div>
-      <div class="status-stat status-backlog"><div class="status-num">14</div><div class="status-label">Backlog</div></div>
+      <div class="status-stat status-this-week"><div class="status-num">2</div><div class="status-label">This Week</div></div>
+      <div class="status-stat status-backlog"><div class="status-num">15</div><div class="status-label">Backlog</div></div>
     </section>
 
     <!-- KEY ARTIFACTS -->
@@ -471,7 +471,7 @@
 
         <!-- THIS WEEK -->
         <section class="column col-this-week">
-          <header class="col-head"><h2>🔵 This week</h2><span class="col-count">3</span></header>
+          <header class="col-head"><h2>🔵 This week</h2><span class="col-count">2</span></header>
           <div class="cards">
             <div class="card">
               <div class="card-title">Promote V1.1 batch to production</div>
@@ -483,18 +483,14 @@
               <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-neutral">QA</span></div>
               <div class="card-desc">Complete the walkthrough with the second-meeting forcing event + kill-criteria check, then the Presented/Verbal/Won legs.</div>
             </div>
-            <div class="card">
-              <div class="card-title">Invoicing + client-level deal view</div>
-              <div class="card-tags"><span class="tag tag-portal">feature</span></div>
-              <div class="card-desc">Build the invoice send flow and a client-level view that aggregates multiple deals under one buyer (data model already supports it via <code>deals.company_id</code> — gap is UI + the invoice-can-span-deals shape). Design forks open: Xero-native vs Velocity-source-of-truth, single-deal vs multi-deal-bundled invoices, manual paid-toggle vs Stripe, recurring for subscriptions, NZ/AU GST handling, buyer-portal pay link. Locked once Abe + Ricky settle scope.</div>
-            </div>
           </div>
         </section>
 
         <!-- BACKLOG -->
         <section class="column col-backlog">
-          <header class="col-head"><h2>⚪ Backlog</h2><span class="col-count">14</span></header>
+          <header class="col-head"><h2>⚪ Backlog</h2><span class="col-count">15</span></header>
           <div class="cards">
+            <div class="card"><div class="card-title">Invoicing + client-level deal view</div><div class="card-tags"><span class="tag tag-portal">feature</span></div><div class="card-desc">Native invoice engine with multi-deal aggregation under a single client. Decisions locked 2026-05-29: Velocity-native source of truth (Xero later), invoices can span multiple deals at the same client, recurring auto-generates with a rep approval queue, bank transfer default + Stripe-ready architecture. Open forks before build: tenant-scoped vs per-currency GST + bank details. ~2.25 days in 3 phases (CRUD+send, recurring schedules, Stripe+Gmail integration).</div></div>
             <div class="card"><div class="card-title">I2 — Gmail OAuth (outbound recap)</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">Send W2 recap emails from Mal's Gmail. Same Google client + gmail.send scope.</div></div>
             <div class="card"><div class="card-title">I3 — Gmail inbound → portal mirror</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">Mirror buyer emails into the portal for a unified view (Pub/Sub or poll).</div></div>
             <div class="card"><div class="card-title">I4 — Fireflies/Otter transcription</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">Auto-transcribe calls → match by attendee → pipe into the recap/extractor flow.</div></div>
