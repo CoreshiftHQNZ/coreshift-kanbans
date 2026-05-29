@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coreshift HQ Ops — Kanban</title>
+  <style>
+    :root {
+      --navy: #0F1E3D;
+      --navy-deep: #081530;
+      --navy-soft: #1A2A4F;
+      --teal: #14B8A6;
+      --teal-dark: #0D9488;
+      --teal-light: #CCFBF1;
+      --amber: #F59E0B;
+      --amber-light: #FEF3C7;
+      --red: #DC2626;
+      --red-light: #FEE2E2;
+      --green: #10B981;
+      --green-light: #D1FAE5;
+      --purple: #8B5CF6;
+      --purple-light: #EDE9FE;
+      --blue: #3B82F6;
+      --blue-light: #DBEAFE;
+      --indigo: #6366F1;
+      --indigo-light: #E0E7FF;
+      --pink: #EC4899;
+      --pink-light: #FCE7F3;
+      --gray: #64748B;
+      --gray-light: #E2E8F0;
+      --gray-lighter: #F1F5F9;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #475569;
+      --text-soft: #94A3B8;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 14px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    header.page-head {
+      background: var(--navy);
+      color: #FFFFFF;
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--navy-deep);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .page-head-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .page-brand { display: flex; align-items: center; gap: 14px; }
+    .brand-mark {
+      width: 36px; height: 36px;
+      background: var(--teal);
+      color: var(--navy);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 18px;
+    }
+    .brand-title {
+      font-size: 18px; font-weight: 700; letter-spacing: -0.01em;
+    }
+    .brand-sub {
+      font-size: 11px; color: var(--teal);
+      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .page-meta {
+      font-size: 12px; color: #8EA5C8;
+      display: flex; gap: 24px; flex-wrap: wrap;
+    }
+    .page-meta strong { color: #FFFFFF; font-weight: 600; }
+
+    /* Main layout */
+    .page-main {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 32px 32px 48px;
+    }
+
+    /* Section headings */
+    .section-head {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 16px;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: -8px 0 16px;
+    }
+    .section-sub code {
+      background: var(--gray-lighter);
+      border: 1px solid var(--gray-light);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 12px;
+      color: var(--navy);
+    }
+
+    /* Hero */
+    .hero {
+      margin-bottom: 48px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .hero-eyebrow {
+      color: var(--teal-dark);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      margin-bottom: 14px;
+    }
+    .hero-title {
+      color: var(--navy);
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin: 0 0 12px;
+    }
+    .hero-tagline {
+      color: var(--teal-dark);
+      font-size: 22px;
+      font-style: italic;
+      font-weight: 500;
+      margin: 0 0 16px;
+      line-height: 1.35;
+    }
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 17px;
+      line-height: 1.5;
+      max-width: 880px;
+      margin: 0;
+    }
+    .hero-phase-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .phase-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 13px;
+    }
+    .phase-pill-label {
+      color: var(--text-soft);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .phase-pill-value {
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .phase-pill-date {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 4px;
+    }
+    .phase-pill-milestone {
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+    .phase-pill-milestone .phase-pill-label { color: var(--teal); }
+    .phase-pill-milestone .phase-pill-value { color: #FFFFFF; }
+    .phase-pill-milestone .phase-pill-date { color: #CADCFC; }
+
+    /* Goals */
+    .goals { margin-bottom: 40px; }
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .goal-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 24px;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .goal-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .goal-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .goal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .goal-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Phases */
+    .phases { margin-bottom: 40px; }
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .phase-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .phase-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .phase-card.phase-done       { border-top: 4px solid var(--green); }
+    .phase-card.phase-in-progress{ border-top: 4px solid var(--amber); }
+    .phase-card.phase-planned    { border-top: 4px solid var(--blue); }
+    .phase-card.phase-future     { border-top: 4px solid var(--gray); opacity: 0.88; }
+    .phase-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .phase-marker {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .phase-card.phase-done .phase-marker        { background: var(--green); }
+    .phase-card.phase-in-progress .phase-marker { background: var(--amber); }
+    .phase-status-pill {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .phase-status-done        { background: var(--green-light); color: #065F46; }
+    .phase-status-in-progress { background: var(--amber-light); color: #B45309; }
+    .phase-status-planned     { background: var(--blue-light); color: #1D4ED8; }
+    .phase-status-future      { background: var(--gray-light); color: var(--gray); }
+    .phase-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 2px;
+      letter-spacing: -0.01em;
+    }
+    .phase-subtitle {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+    .phase-window {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+    .phase-desc {
+      font-size: 12.5px;
+      color: var(--text);
+      line-height: 1.5;
+      margin: 0 0 12px;
+    }
+    .phase-deliverables {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-top: 1px solid var(--gray-light);
+      padding-top: 10px;
+    }
+    .phase-deliverables li {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      padding: 3px 0 3px 14px;
+      position: relative;
+    }
+    .phase-deliverables li::before {
+      content: "•";
+      position: absolute;
+      left: 4px;
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    /* Status strip */
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 20px 8px;
+    }
+    .status-stat {
+      text-align: center;
+      padding: 8px 12px;
+      border-right: 1px solid var(--gray-light);
+    }
+    .status-stat:last-child { border-right: none; }
+    .status-num {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+    .status-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-top: 8px;
+    }
+    .status-done .status-num        { color: var(--green); }
+    .status-in-progress .status-num { color: var(--amber); }
+    .status-blocked .status-num     { color: var(--red); }
+    .status-this-week .status-num   { color: var(--blue); }
+    .status-backlog .status-num     { color: var(--gray); }
+
+    /* Links */
+    .links { margin-bottom: 40px; }
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+    }
+    .link-card:hover {
+      box-shadow: 0 4px 14px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+      border-color: var(--teal);
+    }
+    .link-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .link-text { flex: 1; }
+    .link-title {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+    .link-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .link-arrow {
+      color: var(--teal);
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Roles */
+    .roles { margin-bottom: 40px; }
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .role-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+    .role-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .role-text { flex: 1; }
+    .role-name {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .role-person {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 6px;
+      font-size: 13px;
+    }
+    .role-verbs {
+      font-size: 12px;
+      color: var(--text-soft);
+      font-weight: 500;
+    }
+
+    /* Recently shipped */
+    .recent { margin-bottom: 40px; }
+    .recent-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+    .recent-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+    }
+    .recent-check {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .recent-text { flex: 1; min-width: 0; }
+    .recent-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+    .recent-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    /* Board section */
+    .board-section { margin-top: 8px; }
+
+    /* Kanban board */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(280px, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .column {
+      background: var(--gray-lighter);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--gray-light);
+    }
+    .col-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 4px 4px 12px;
+      border-bottom: 2px solid transparent;
+    }
+    .col-head h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.02em;
+    }
+    .col-count {
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--gray-light);
+    }
+
+    /* Column accents */
+    .col-done .col-head        { border-bottom-color: var(--green); }
+    .col-in-progress .col-head { border-bottom-color: var(--amber); }
+    .col-blocked .col-head     { border-bottom-color: var(--red); }
+    .col-this-week .col-head   { border-bottom-color: var(--blue); }
+    .col-backlog .col-head     { border-bottom-color: var(--gray); }
+
+    .col-done .col-count        { color: var(--green); border-color: var(--green-light); }
+    .col-in-progress .col-count { color: #B45309; border-color: var(--amber-light); }
+    .col-blocked .col-count     { color: var(--red); border-color: var(--red-light); }
+    .col-this-week .col-count   { color: #1D4ED8; border-color: var(--blue-light); }
+    .col-backlog .col-count     { color: var(--gray); border-color: var(--gray-light); }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 12px 14px;
+      border: 1px solid var(--gray-light);
+      box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04);
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+    }
+    .card-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 4px 0;
+    }
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 12.5px;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+    .empty {
+      color: var(--text-soft);
+      font-size: 12px;
+      text-align: center;
+      padding: 16px 0;
+      font-style: italic;
+    }
+
+    /* Tags */
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .tag-shipped     { background: var(--green-light); color: #065F46; }
+    .tag-phase-0     { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-phase-1     { background: var(--blue-light); color: #1D4ED8; }
+    .tag-phase-2     { background: var(--purple-light); color: #6D28D9; }
+    .tag-phase-4     { background: var(--pink-light); color: #BE185D; }
+    .tag-phase-3     { background: var(--indigo-light); color: #4338CA; }
+    .tag-deliverable { background: var(--green-light); color: #047857; }
+    .tag-playbook    { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-milestone   { background: #FEE2E2; color: #991B1B; }
+    .tag-infra       { background: var(--amber-light); color: #B45309; }
+    .tag-ops         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-recurring   { background: var(--gray-light); color: var(--gray); }
+    .tag-blocked     { background: var(--red-light); color: var(--red); }
+    .tag-est         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-neutral     { background: var(--gray-light); color: var(--text-muted); }
+
+    /* Footer */
+    footer.page-foot {
+      padding: 16px 32px 32px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+    footer.page-foot a {
+      color: var(--teal-dark);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(13, 148, 136, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .board { grid-template-columns: repeat(3, minmax(280px, 1fr)); }
+      .links-grid { grid-template-columns: 1fr; }
+      .recent-list { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 1300px) {
+      .phases-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 1100px) {
+      .goals-grid { grid-template-columns: 1fr; }
+      .roles-grid { grid-template-columns: 1fr; }
+      .phases-grid { grid-template-columns: repeat(2, 1fr); }
+      .status-strip { grid-template-columns: repeat(2, 1fr); }
+      .status-stat { border-right: none; border-bottom: 1px solid var(--gray-light); }
+      .status-stat:nth-last-child(-n+2) { border-bottom: none; }
+    }
+    @media (max-width: 700px) {
+      .phases-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .page-main { padding: 24px 16px 32px; }
+      .board { grid-template-columns: 1fr; }
+      header.page-head { padding: 16px; }
+      .hero-title { font-size: 32px; }
+      .hero-tagline { font-size: 17px; }
+      .hero-desc { font-size: 15px; }
+    }
+
+    /* Print */
+    @media print {
+      header.page-head { background: var(--card); color: var(--navy); border-bottom: 2px solid var(--gray-light); position: static; }
+      .brand-mark { background: var(--navy); color: #FFFFFF; }
+      .brand-title, .page-meta strong { color: var(--navy); }
+      .page-meta, .brand-sub { color: var(--text-muted); }
+      .board { grid-template-columns: repeat(2, 1fr); padding: 16px; }
+      .column { break-inside: avoid; background: var(--card); border: 1px solid var(--gray-light); }
+      .card:hover { transform: none; box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04); }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="page-head-inner">
+      <div class="page-brand">
+        <div class="brand-mark">🔐</div>
+        <div>
+          <div class="brand-title">Coreshift Privacy &amp; Security</div>
+          <div class="brand-sub">Privacy &amp; Security Program</div>
+        </div>
+      </div>
+      <div class="page-meta">
+        <div><strong>55%</strong> complete</div>
+        <div><strong>21</strong>/38 cards done</div>
+        <div>Updated <strong>2026-05-29 23:24 UTC</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-main">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">INTERNAL · LIVE OPS DASHBOARD</div>
+      <h1 class="hero-title">Coreshift Privacy &amp; Security</h1>
+      <p class="hero-tagline">NZ Privacy Act 2020-aligned program: foundation first, automation next, compliance trigger-gated.</p>
+      <p class="hero-desc">The cross-cutting privacy + security + pen-testing track that spans every Coreshift app — KeyContent, Sentinel, Noozey, and downstream products. Bench-test the things you&#39;d say to a customer asking &#39;are you secure&#39;, the regulator asking &#39;do you comply&#39;, or a future ourselves asking &#39;why did we choose that.&#39;</p>
+      <div class="hero-phase-row">
+        <div class="phase-pill">
+          <span class="phase-pill-label">Current phase</span>
+          <span class="phase-pill-value">Phase B · Foundation</span>
+        </div>
+        <div class="phase-pill phase-pill-milestone">
+          <span class="phase-pill-label">Next milestone</span>
+          <span class="phase-pill-value">Kling decision + meeting <span class="phase-pill-date">Next week</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOALS -->
+    <section class="goals">
+      <h2 class="section-head">The Three Goals</h2>
+      <div class="goals-grid">
+        
+        <div class="goal-card">
+          <div class="goal-icon">🛡</div>
+          <div class="goal-title">Defensible posture today</div>
+          <div class="goal-desc">Zero open advisor findings, RLS + service-role grants on every table, conservative Sentry config, Cloudflare WAF + Bot Fight. The mechanical stuff is done.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">📖</div>
+          <div class="goal-title">Documented posture</div>
+          <div class="goal-desc">Data inventory + sub-processor list + retention policy + deletion path + breach response plan + threat models. Privacy Act 2020 alignment at both contract (Type 3 agreement) and end-user (notice) layers.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">🤖</div>
+          <div class="goal-title">Automated detection</div>
+          <div class="goal-desc">OWASP ZAP weekly baseline, Sentry heartbeat, advisor auto-monitoring (Brief 14 next). &#39;Make the platform come find you&#39; — Sentinel becomes the security surface, not a separate spreadsheet.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASES -->
+    <section class="phases">
+      <h2 class="section-head">Development & Production Phases</h2>
+      <p class="section-sub">Where the project has been, where it is now, and where it's going. Each phase delivers value on its own — no big-bang.</p>
+      <div class="phases-grid">
+        
+        <div class="phase-card phase-done">
+          <div class="phase-card-head">
+            <div class="phase-marker">A</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
+          </div>
+          <div class="phase-title">Phase A <span class="phase-subtitle">Stop the bleeding</span></div>
+          <div class="phase-window">Shipped 2026-05-29</div>
+          <p class="phase-desc">DB advisor findings closed; data flow + privacy audit documented; T&amp;Cs reviewed; zero-findings baseline established on KC + Sentinel prod.</p>
+          <ul class="phase-deliverables">
+            <li>bug_reports_set_updated_at search_path hardened (KC)</li><li>maintenance_set_updated_at search_path hardened (Sentinel)</li><li>rls_auto_enable() PUBLIC EXECUTE revoked (Sentinel)</li><li>Zero open advisor findings on both prod</li><li>bug_reports end-to-end data flow doc</li><li>KC privacy notice + cookies audit</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-in-progress">
+          <div class="phase-card-head">
+            <div class="phase-marker">B</div>
+            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+          </div>
+          <div class="phase-title">Phase B <span class="phase-subtitle">Build the spine</span></div>
+          <div class="phase-window">Mostly shipped · code track live</div>
+          <p class="phase-desc">Docs + foundation code: inventory, sub-processors, retention policy, deletion path, breach response, threat models, draft privacy notice. Code: retention sweeps + Sentry heartbeat + ZAP DAST CI all live on prod.</p>
+          <ul class="phase-deliverables">
+            <li>DATA-INVENTORY.md (30 KC tables + 3 Sentinel + 2 buckets)</li><li>SUB-PROCESSORS.md (18 third parties + applicability matrix)</li><li>HOW-WE-DO-RETENTION.md + retention sweep scripts (shipped to prod)</li><li>HOW-WE-DO-DATA-DELETION.md (deletion scripts deferred pending review)</li><li>HOW-WE-DO-BREACH-RESPONSE.md (Part 6 aligned)</li><li>Threat models (KC + Sentinel)</li><li>PRIVACY-NOTICE-KC-DRAFT.md</li><li>OWASP ZAP DAST CI (Phase B9) — shipped to prod</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">C</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">Phase C <span class="phase-subtitle">Sentinel automation</span></div>
+          <div class="phase-window">Next sprints</div>
+          <p class="phase-desc">Turn every doc + every signal into a Sentinel surface. Make the platform come find you instead of us remembering to check.</p>
+          <ul class="phase-deliverables">
+            <li>Brief 14 — Security advisor surface (/security page in Sentinel)</li><li>Brief 15 — Data inventory surface (/data-inventory page)</li><li>Brief 16 — Pen-test cadence tracking</li><li>Brief 17 — Breach response runbook surfacing</li><li>Brief 18 — Sentry heartbeat (shipped — needs operator env-var to activate)</li><li>Brief 19 — R2 backup for KC job-assets bucket</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-future">
+          <div class="phase-card-head">
+            <div class="phase-marker">D</div>
+            <div class="phase-status-pill phase-status-future">Future</div>
+          </div>
+          <div class="phase-title">Phase D <span class="phase-subtitle">Trigger-gated compliance</span></div>
+          <div class="phase-window">Only when triggered</div>
+          <p class="phase-desc">NZ Privacy Act formal review · GDPR posture · SOC 2 · annual third-party pen test · automated DAST in CI · cyber-insurance · bug-bounty. Each item has its own trigger condition; we don&#39;t pursue any of them by calendar.</p>
+          <ul class="phase-deliverables">
+            <li>First enterprise security questionnaire → SOC 2 prep</li><li>First EU customer → GDPR DPA + SCCs</li><li>Notifiable breach or scale-up → formal Privacy Act review</li><li>Enterprise contract or SOC 2 path → annual third-party pen test</li><li>Pre-SOC2 / pre-pentest → automated DAST in CI</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATUS STRIP -->
+    <section class="status-strip">
+      <div class="status-stat status-done">
+        <div class="status-num">21</div>
+        <div class="status-label">Done</div>
+      </div>
+      <div class="status-stat status-in-progress">
+        <div class="status-num">0</div>
+        <div class="status-label">In Progress</div>
+      </div>
+      <div class="status-stat status-blocked">
+        <div class="status-num">2</div>
+        <div class="status-label">Blocked</div>
+      </div>
+      <div class="status-stat status-this-week">
+        <div class="status-num">5</div>
+        <div class="status-label">This Week</div>
+      </div>
+      <div class="status-stat status-backlog">
+        <div class="status-num">10</div>
+        <div class="status-label">Backlog</div>
+      </div>
+    </section>
+
+    <!-- KEY ARTIFACTS / QUICK LINKS -->
+    <section class="links">
+      <h2 class="section-head">Key Artifacts</h2>
+      <div class="links-grid">
+        
+        <a class="link-card" href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/" target="_blank" rel="noopener">
+          <div class="link-icon">🛡</div>
+          <div class="link-text">
+            <div class="link-title">Sentinel kanban</div>
+            <div class="link-desc">Where the platform-level work lives (Briefs 14-19 surface this program in-app)</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://coreshifthqnz.github.io/coreshift-kanbans/" target="_blank" rel="noopener">
+          <div class="link-icon">🧭</div>
+          <div class="link-text">
+            <div class="link-title">Root board</div>
+            <div class="link-desc">All Coreshift project kanbans</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ROLES -->
+    <section class="roles">
+      <h2 class="section-head">Who's Involved</h2>
+      <div class="roles-grid">
+        
+        <div class="role-card">
+          <div class="role-avatar">O</div>
+          <div class="role-text">
+            <div class="role-name">Operator <span class="role-person">Abe</span></div>
+            <div class="role-verbs">Decide · sign DPAs · run prod scripts</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-avatar">C</div>
+          <div class="role-text">
+            <div class="role-name">Claude Code <span class="role-person">AI pair</span></div>
+            <div class="role-verbs">Draft · implement · audit · stamp migrations</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-avatar">S</div>
+          <div class="role-text">
+            <div class="role-name">Sentinel <span class="role-person">The platform</span></div>
+            <div class="role-verbs">Monitor · alert · digest · surface</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECENTLY SHIPPED -->
+    
+    <section class="recent">
+      <h2 class="section-head">Recently Shipped</h2>
+      <div class="recent-list">
+        
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Privacy &amp; security plan kickoff</div>
+            <div class="recent-desc">`Sentinel/playbook/SECURITY-PRIVACY-PLAN.md` published 2026-05-29 with phased plan (A: quick wins; B: foundation; C: Sentinel briefs 14-18; D: trigger-gated compliance). Operator forks listed inside the doc</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Phase A1: KC `bug_reports_set_updated_at` search_path hardened</div>
+            <div class="recent-desc">`ALTER FUNCTION public.bug_reports_set_updated_at() SET search_path = &#39;&#39;`. Closes [Supabase advisor Lint 0011](https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable). Migration through dev→staging→main + applied to prod via `execute_sql` + `schema_migrations` stamped</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Phase A2: Sentinel `maintenance_set_updated_at` search_path hardened</div>
+            <div class="recent-desc">Same fix on Sentinel prod. Closes Lint 0011 there</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Phase A3: Sentinel `rls_auto_enable()` PUBLIC EXECUTE revoked</div>
+            <div class="recent-desc">Pre-flight verified: SECURITY DEFINER event-trigger function exposed to anon + authenticated via PostgREST `/rest/v1/rpc/`. `REVOKE EXECUTE ... FROM PUBLIC` — safe because event triggers fire via engine, bypassing routine_privileges. Closes Lints [0028](https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable) + [0029](https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable)</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Phase A4: clean advisor baseline established</div>
+            <div class="recent-desc">`get_advisors(security)` returns `lints: []` on both KC prod (`keycontent-v2`) and Sentinel prod. HOW-WE-DO-SECURITY.md &quot;Current findings snapshot&quot; refreshed to the new zero-findings baseline</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Phase A5: bug_reports end-to-end data flow documented</div>
+            <div class="recent-desc">`Sentinel/playbook/data-flows/bug_reports.md` published. ASCII diagram + table of every field, sub-processor (region + retention), RLS posture, 8 identified privacy gaps. Template for the next ones (social_accounts, clients, jobs)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KANBAN BOARD -->
+    <section class="board-section">
+      <h2 class="section-head">Live Rollout Board</h2>
+      <p class="section-sub">Every task across every phase. Updated by editing <code>KANBAN.md</code> and running <code>update-kanban.cmd</code>.</p>
+      <div class="board">
+        
+    <section class="column col-done">
+      <header class="col-head">
+        <h2>✅ Done</h2>
+        <span class="col-count">21</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Privacy &amp; security plan kickoff</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">meta</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/SECURITY-PRIVACY-PLAN.md</span></div>
+        <div class="card-desc">`Sentinel/playbook/SECURITY-PRIVACY-PLAN.md` published 2026-05-29 with phased plan (A: quick wins; B: foundation; C: Sentinel briefs 14-18; D: trigger-gated compliance). Operator forks listed inside the doc</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A1: KC `bug_reports_set_updated_at` search_path hardened</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">ALTER FUNCTION public.bug_reports_set_updated_at() SET search_path = &#39;&#39;</span><span class="tag tag-neutral">execute_sql</span><span class="tag tag-neutral">schema_migrations</span></div>
+        <div class="card-desc">`ALTER FUNCTION public.bug_reports_set_updated_at() SET search_path = &#39;&#39;`. Closes [Supabase advisor Lint 0011](https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable). Migration through dev→staging→main + applied to prod via `execute_sql` + `schema_migrations` stamped</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A2: Sentinel `maintenance_set_updated_at` search_path hardened</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Same fix on Sentinel prod. Closes Lint 0011 there</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A3: Sentinel `rls_auto_enable()` PUBLIC EXECUTE revoked</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/rest/v1/rpc/</span><span class="tag tag-neutral">REVOKE EXECUTE ... FROM PUBLIC</span></div>
+        <div class="card-desc">Pre-flight verified: SECURITY DEFINER event-trigger function exposed to anon + authenticated via PostgREST `/rest/v1/rpc/`. `REVOKE EXECUTE ... FROM PUBLIC` — safe because event triggers fire via engine, bypassing routine_privileges. Closes Lints [0028](https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable) + [0029](https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A4: clean advisor baseline established</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">audit</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">get_advisors(security)</span><span class="tag tag-neutral">lints: []</span><span class="tag tag-neutral">keycontent-v2</span></div>
+        <div class="card-desc">`get_advisors(security)` returns `lints: []` on both KC prod (`keycontent-v2`) and Sentinel prod. HOW-WE-DO-SECURITY.md &quot;Current findings snapshot&quot; refreshed to the new zero-findings baseline</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A5: bug_reports end-to-end data flow documented</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/data-flows/bug_reports.md</span></div>
+        <div class="card-desc">`Sentinel/playbook/data-flows/bug_reports.md` published. ASCII diagram + table of every field, sub-processor (region + retention), RLS posture, 8 identified privacy gaps. Template for the next ones (social_accounts, clients, jobs)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A6: KC privacy notice + cookies audited</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">audit</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/audits/2026-05-29-kc-privacy-notice.md</span></div>
+        <div class="card-desc">`Sentinel/playbook/audits/2026-05-29-kc-privacy-notice.md`. Headline: KC app has NO published privacy notice, ToS, consent prompt, or cookie banner — but also no analytics/tracking SDKs. Cookies/storage are operational only</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Coreshift T&amp;Cs reviewed for Privacy Act 2020 coverage</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">audit</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Verified the Type 3 Platform Subscription Agreement template covers Privacy Act 2020 (clause 7), notifiable breach under Part 6 (clause 7.4), data exit (clause 12, 60-day Export Window), Sentinel named (clause 8), customer data ownership (clause 5.4), sub-processor framework (Annexure 2 placeholder). **Insight:** the privacy gap is NOT contract-layer — it&#39;s end-user-facing notice on the app</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Public privacy/ToS hosting probed</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">audit</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">coreshifthq.com</span><span class="tag tag-neutral">keycontent.ai</span></div>
+        <div class="card-desc">Confirmed: nothing published at `coreshifthq.com` or `keycontent.ai` (both SPAs catch-all to 1.7-1.9KB shells). B8b is &quot;publish new,&quot; not &quot;link existing.&quot;</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B1: data inventory</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">foundation</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/data-flows/DATA-INVENTORY.md</span></div>
+        <div class="card-desc">`Sentinel/playbook/data-flows/DATA-INVENTORY.md`. Classification scheme + all 30 KC tables + 2 Storage buckets (job-assets 935 objects, bug-report-screenshots 1) + 3 Sentinel tables + 7 sub-processor stub apps + 12 identified gaps</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B7: sub-processor inventory</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">foundation</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/data-flows/SUB-PROCESSORS.md</span></div>
+        <div class="card-desc">`Sentinel/playbook/data-flows/SUB-PROCESSORS.md`. 18 third parties classified with jurisdiction, data class, retention, DPA status, per-app applicability matrix. **🚨 P1 finding: Kling (Chinese video AI) is an active KC sub-processor — IPP 12 overseas-transfer concern.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B2: retention policy</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/HOW-WE-DO-RETENTION.md</span></div>
+        <div class="card-desc">`Sentinel/playbook/HOW-WE-DO-RETENTION.md`. Per-class retention rules. Privacy Act 2020 IPP 9 aligned</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B3: deletion path doc</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/HOW-WE-DO-DATA-DELETION.md</span></div>
+        <div class="card-desc">`Sentinel/playbook/HOW-WE-DO-DATA-DELETION.md`. Three scenarios (IPP 7 request 30d SLA · agency Type-3 closure 60d Export Window · retention expiry). Cascade map for every KC table. Four scripts scoped</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B4: breach response plan</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/HOW-WE-DO-BREACH-RESPONSE.md</span></div>
+        <div class="card-desc">`Sentinel/playbook/HOW-WE-DO-BREACH-RESPONSE.md`. Privacy Act 2020 Part 6 aligned: detect → contain → assess → notify. OPC + affected-individual notification templates. Three rehearsed scenarios from real KC incidents</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B5: threat models (KC + Sentinel)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/threat-models/keycontent.md</span><span class="tag tag-neutral">sentinel.md</span></div>
+        <div class="card-desc">`Sentinel/playbook/threat-models/keycontent.md` + `sentinel.md`. Top 8 threats each, ranked, mitigations + residual risk. KC top: **T3 cross-agency data leak via missing scope filter**. Sentinel top: **T1 Sentinel-as-cross-app trust-anchor**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B8b: KC privacy notice (draft v1)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/drafts/PRIVACY-NOTICE-KC-DRAFT.md</span><span class="tag tag-neutral">/privacy</span></div>
+        <div class="card-desc">`Sentinel/playbook/drafts/PRIVACY-NOTICE-KC-DRAFT.md`. 12 sections, NZ Privacy Act 2020 framing only, all 18 sub-processors disclosed. Blocked on Kling decision + 7 vendor verifications + `/privacy` route + footer link + signup consent</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A4 follow-up: schema_migrations drift cleanup</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">audit-followup</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">supabase_migrations.schema_migrations</span><span class="tag tag-neutral">supabase db push</span></div>
+        <div class="card-desc">Backfilled 2 missing rows on Sentinel prod `supabase_migrations.schema_migrations`. Future `supabase db push` won&#39;t trip</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 18 — Sentry heartbeat shipped to prod</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">observability</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">sentry_heartbeat_pings</span></div>
+        <div class="card-desc">Endpoints on both apps + Sentinel scheduler + `sentry_heartbeat_pings` table on Sentinel prod. Safe-by-default until SENTRY_HEARTBEAT_TOKEN is set in Railway. Closes the 2026-05-22 Sentry env-var drift incident class. **Operator activation Tuesday.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B3 retention sweep scripts shipped to prod</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">script/retention-sweep-{daily,monthly}.ts</span><span class="tag tag-neutral">--confirm</span></div>
+        <div class="card-desc">`script/retention-sweep-{daily,monthly}.ts` in keycontent-app. Dry-run by default; `--confirm` to delete. TTL: review_tokens, team_invitations, social_connect_tokens. Anonymise: bug_reports past 24m. Delete: webhook_events + audit_logs past 6m. **Operator activation: dry-run on staging, then confirm-run, then schedule.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B9 — OWASP ZAP DAST CI shipped to prod</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">pen-testing</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">.github/workflows/zap-baseline.yml</span><span class="tag tag-neutral">workflow_dispatch</span></div>
+        <div class="card-desc">`.github/workflows/zap-baseline.yml` on KC + Sentinel. Weekly Sunday 11pm UTC + `workflow_dispatch`. V1 informational only; findings post to rolling GitHub Issue. **First real pen-testing motion for Coreshift.** First scheduled run next Sunday</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Meeting brief</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/PRIVACY-SECURITY-MEETING-BRIEF.md</span></div>
+        <div class="card-desc">`Sentinel/playbook/PRIVACY-SECURITY-MEETING-BRIEF.md` — operator-ready single doc for team review. TL;DR + before/after + 9-item risk register + state-table + decisions needed + stock answers to common questions</div>
+      </div></div>
+    </section>
+    <section class="column col-in-progress">
+      <header class="col-head">
+        <h2>🟡 In Progress</h2>
+        <span class="col-count">0</span>
+      </header>
+      <div class="cards"><div class="empty">No items</div></div>
+    </section>
+    <section class="column col-blocked">
+      <header class="col-head">
+        <h2>🚫 Blocked</h2>
+        <span class="col-count">2</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Phase B8b: end-user privacy notice (publish)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-blocked">blocked-by:kling+verifications</span><span class="tag tag-neutral">/privacy</span></div>
+        <div class="card-desc">Draft v1 ready (see Done). Blocked on: (1) Kling decision (drop vs. disclose); (2) 7 vendor verifications (Postmark TTL, Sentry region, OpenAI no-train opt-out, Gemini tier, Zernio DPA, repo-private call, plus operator email confirmation); (3) `/privacy` route + footer link + signup consent checkbox in KC app</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Annexure 2 fill on Type 3 agreement</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-blocked">blocked-by:verifications</span></div>
+        <div class="card-desc">SUB-PROCESSORS.md is ready to copy into Annexure 2 once Kling decision + DPA confirmations close</div>
+      </div></div>
+    </section>
+    <section class="column col-this-week">
+      <header class="col-head">
+        <h2>🔵 This Week</h2>
+        <span class="col-count">5</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">🚨 Kling sub-processor decision</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">P1-finding</span><span class="tag tag-neutral">ai_providers</span></div>
+        <div class="card-desc">KC&#39;s `ai_providers` table lists Kling (Kuaishou, China) for video generation. Privacy Act 2020 IPP 12 overseas-transfer concern — PRC has no comparable privacy regime. Three options: **(a)** drop Kling, route all video through Veo (already wired and in active use; ~half-day removal); **(b)** keep Kling, gate behind explicit user authorisation in privacy notice; **(c)** accept the IPP 12 risk with an explicit policy memo. **Recommendation: (a).** Blocks Annexure 2 fill + B8b publish</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 18 activation — operator adds env vars</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">SENTRY_HEARTBEAT_TOKEN</span><span class="tag tag-neutral">SENTRY_AUTH_TOKEN</span><span class="tag tag-neutral">SENTRY_ORG</span></div>
+        <div class="card-desc">Set `SENTRY_HEARTBEAT_TOKEN` (any opaque string, same in both apps) in Railway prod + staging for KC and Sentinel. Optional: `SENTRY_AUTH_TOKEN` + `SENTRY_ORG` in Sentinel only to enable Sentry-API verification of pings. ~5 min total</div>
+      </div>
+      <div class="card">
+        <div class="card-title">B3 retention sweeps — first dry-run on staging</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">railway run --service keycontent-app -e staging -- npx tsx script/retention-sweep-daily.ts</span><span class="tag tag-neutral">monthly</span><span class="tag tag-neutral">--confirm</span></div>
+        <div class="card-desc">`railway run --service keycontent-app -e staging -- npx tsx script/retention-sweep-daily.ts` (and `monthly`). Verify counts. Then `--confirm` on staging. Then first prod run. ~15 min</div>
+      </div>
+      <div class="card">
+        <div class="card-title">B9 ZAP — manual first run</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">zap-baseline.yml</span><span class="tag tag-neutral">workflow_dispatch</span></div>
+        <div class="card-desc">Trigger `zap-baseline.yml` once via `workflow_dispatch` on KC and Sentinel to get the first baseline report before next Sunday&#39;s auto-run. ~2 min</div>
+      </div>
+      <div class="card">
+        <div class="card-title">7 vendor verifications</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">keycontent-app</span><span class="tag tag-neutral">hello@coreshifthq.com</span></div>
+        <div class="card-desc">Postmark plan TTL · Sentry org region · OpenAI no-train opt-out · Gemini paid-tier · Zernio DPA + jurisdiction + retention · `keycontent-app` repo-private decision · `hello@coreshifthq.com` address confirm. From SUB-PROCESSORS.md action items</div>
+      </div></div>
+    </section>
+    <section class="column col-backlog">
+      <header class="col-head">
+        <h2>⚪ Backlog</h2>
+        <span class="col-count">10</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Phase B3-code: deletion + access scripts</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">~4d</span><span class="tag tag-neutral">keycontent-app/script/</span><span class="tag tag-neutral">export-user-data.ts</span><span class="tag tag-neutral">delete-user-data.ts</span><span class="tag tag-neutral">close-account.ts</span><span class="tag tag-neutral">ai_call_logs</span></div>
+        <div class="card-desc">Implementation of B3 doc. Four scripts in `keycontent-app/script/`: `export-user-data.ts` (IPP 6 access), `delete-user-data.ts` (IPP 7 cascade + anonymise), `close-account.ts` (Type 3 clause 11/12), monthly aggregation step for `ai_call_logs`. **Needs operator review of cascade semantics before code lands.** Unblocks the 30-day deletion SLA promise</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B5 follow-on: req.scoped() query builder + KC route audit</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">~2-3d</span><span class="tag tag-neutral">agency_id</span></div>
+        <div class="card-desc">Highest residual KC risk per threat model (T3): multi-tenant scope filter is in-code, not in-DB. Closes the gap with an Express middleware-bound query builder that refuses queries without an explicit `agency_id`. Plus targeted audit of every existing route for the pattern. Quarter-budget work — not urgent but highest ROI</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 14 — Security advisor surface in Sentinel</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">/security</span><span class="tag tag-neutral">get_advisors</span></div>
+        <div class="card-desc">`/security` sub-page. Runs `get_advisors` on cron across every onboarded app. Surfaces findings by severity. Folds ERROR into Monday digest. **Highest leverage in Phase C** — closes the reactive-only-detection gap</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 15 — Data inventory surface in Sentinel</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">/data-inventory</span></div>
+        <div class="card-desc">`/data-inventory` sub-page reading B1 from a Sentinel-owned table. Drift detection (new public table → alert)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 16 — Pen-test cadence tracking</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">maintenance_entries</span></div>
+        <div class="card-desc">Stores last pen test / next due / scope / report link per app in `maintenance_entries`. Surfaces in digest when overdue. Same shape as Brief 10 lifecycle reference</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 17 — Breach response runbook surfacing</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">/breach-response</span></div>
+        <div class="card-desc">`/breach-response` sub-page; clickable B4 card with &quot;Start incident&quot; button that scaffolds incident folder + notification draft templates</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 19 — KC `job-assets` daily R2 backup</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">job-assets</span><span class="tag tag-neutral">script/restore-from-r2.ts</span></div>
+        <div class="card-desc">Sentinel-owned node-cron: list Supabase Storage `job-assets`, diff against R2 bucket, copy new/changed objects, prune versions per retention policy. Companion CLI `script/restore-from-r2.ts`. R2 export decision locked</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 18 V2 — heartbeat dashboard in Sentinel</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">observability</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">/heartbeats</span><span class="tag tag-neutral">sentry_heartbeat_pings</span></div>
+        <div class="card-desc">Add a `/heartbeats` page that shows recent ping + verification status from `sentry_heartbeat_pings`. Today the data is DB-only. UI elevates &quot;Sentry is healthy&quot; to a glanceable status pill</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentry alert &quot;heartbeat&quot; detection follow-up</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">missing</span></div>
+        <div class="card-desc">V2 of Brief 18: if Sentinel-side verify pass reports `missing`, fold into Monday digest as a P1 alert. Today operator inspects pings manually</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase D triggers</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-D</span><span class="tag tag-neutral">future</span></div>
+        <div class="card-desc">Compliance escalations. Each is trigger-gated, not calendar: NZ Privacy Act formal review · GDPR posture for EU customers · SOC 2 Type I / II · annual third-party pen test · automated DAST in CI · cyber-insurance · bug-bounty</div>
+      </div></div>
+    </section>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="page-foot">
+    Cross-cutting program board. Strategy: <code>Sentinel/playbook/SECURITY-PRIVACY-PLAN.md</code> (local) · Meeting brief: <code>Sentinel/playbook/PRIVACY-SECURITY-MEETING-BRIEF.md</code> (local) · Platform briefs land on the <a href="../sentinel/">Sentinel kanban</a>.
+  </footer>
+</body>
+</html>
