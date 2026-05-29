@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>69%</strong> complete</div>
-        <div><strong>86</strong>/125 cards done</div>
-        <div>Updated <strong>2026-05-29 13:38 UTC</strong></div>
+        <div><strong>70%</strong> complete</div>
+        <div><strong>89</strong>/127 cards done</div>
+        <div>Updated <strong>2026-05-29 13:51 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">86</div>
+        <div class="status-num">89</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,11 +833,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">7</div>
+        <div class="status-num">5</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">32</div>
+        <div class="status-num">33</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">86</span>
+        <span class="col-count">89</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1395,6 +1395,21 @@
         <div class="card-title">Phase A6: KC privacy notice + cookies audited</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">audit</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">playbook/audits/2026-05-29-kc-privacy-notice.md</span></div>
         <div class="card-desc">`playbook/audits/2026-05-29-kc-privacy-notice.md` published. Headline: KC has **no published privacy notice, no terms of service, no consent prompt, no cookie banner** — and also no analytics/tracking SDKs. Cookies/storage set are operational only (auth JWT, impersonation flag, selected-client UUID, two sessionStorage flags). Sentry session replay is enabled but with strong defaults (error-only, fully masked, media-blocked, sendDefaultPii=false). Open questions raised for operator: whether keycontent.ai marketing site already hosts a notice, NZ-vs-GDPR jurisdiction scope, Postmark archive retention</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A1-A3: three advisor warnings closed on prod</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">schema_migrations</span><span class="tag tag-neutral">bug_reports_set_updated_at</span><span class="tag tag-neutral">maintenance_set_updated_at</span><span class="tag tag-neutral">REVOKE EXECUTE ... FROM PUBLIC</span><span class="tag tag-neutral">rls_auto_enable</span><span class="tag tag-neutral">keycontent-v2</span><span class="tag tag-neutral">ayipiwqupgtaiirmmjjr</span><span class="tag tag-neutral">KeyContent</span><span class="tag tag-neutral">kzitegcealxdljvkyefp</span><span class="tag tag-neutral">supabase-prod</span></div>
+        <div class="card-desc">Three migration PRs (KC [#114](https://github.com/CoreshiftHQNZ/keycontent-app/pull/114), Sentinel [#64](https://github.com/CoreshiftHQNZ/sentinel-app/pull/64), Sentinel [#65](https://github.com/CoreshiftHQNZ/sentinel-app/pull/65)) promoted dev → staging → main (PRs KC #115/#116 + Sentinel #66/#67) and SQL applied to both prod Supabase projects with `schema_migrations` stamped. Fixes: `bug_reports_set_updated_at` search_path on KC ([Lint 0011](https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable)); `maintenance_set_updated_at` search_path on Sentinel ([Lint 0011](https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable)); `REVOKE EXECUTE ... FROM PUBLIC` on `rls_auto_enable` event-trigger function on Sentinel ([Lints 0028](https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable) + [0029](https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable)). **Discovered along the way:** the canonical KC prod project is `keycontent-v2` (`ayipiwqupgtaiirmmjjr`), not the original `KeyContent` (`kzitegcealxdljvkyefp`) — `supabase-prod` MCP was correctly bound but the project list label is stale</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase A4: clean advisor baseline established</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">audit</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">get_advisors(type=security)</span><span class="tag tag-neutral">lints: []</span><span class="tag tag-neutral">keycontent-v2</span></div>
+        <div class="card-desc">`get_advisors(type=security)` returns `lints: []` on both KC prod (`keycontent-v2`) and Sentinel prod. HOW-WE-DO-SECURITY.md &quot;Current findings snapshot&quot; refreshed with the post-fix verification (proconfig values + has_function_privilege checks). New baseline: zero open findings</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Coreshift T&amp;Cs reviewed for Privacy Act 2020 coverage</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">audit</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">velocity/Contracts and Proposals/CoreShift_Type3_Platform_Subscription_Agreement.pdf</span></div>
+        <div class="card-desc">Operator pointed at `velocity/Contracts and Proposals/CoreShift_Type3_Platform_Subscription_Agreement.pdf`. Verified: existing B2B subscription agreement template **does** cover Privacy Act 2020 obligations (clause 7), notifiable breach notification under Part 6 (clause 7.4), data exit (clause 12, 60-day Export Window), Sentinel&#39;s named role (clause 8), customer data ownership (clause 5.4), sub-processor framework (Annexure 2 placeholder). **Key insight:** the privacy gap is NOT contract-layer — it&#39;s the END-USER-FACING privacy notice on the app (different audience: individuals using KC, not the subscribing agency). Phase B8 split into B8a (signed-customer T&amp;C deployment status) and B8b (end-user-facing privacy notice on the app)</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1414,7 +1429,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1433,30 +1448,20 @@
         <div class="card-desc">New `playbook/SECURITY-PRIVACY-PLAN.md` published 2026-05-29 with phased plan (A: quick wins this week; B: foundation 2-4 weeks; C: Sentinel security briefs 14-18; D: trigger-gated compliance). Operator forks listed inside the doc</div>
       </div>
       <div class="card">
-        <div class="card-title">Phase A1: fix bug_reports_set_updated_at mutable search_path</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">quick-win</span><span class="tag tag-neutral">pr-open</span><span class="tag tag-neutral">ALTER FUNCTION public.bug_reports_set_updated_at() SET search_path = &#39;&#39;</span><span class="tag tag-neutral">supabase db push</span></div>
-        <div class="card-desc">KC prod. `ALTER FUNCTION public.bug_reports_set_updated_at() SET search_path = &#39;&#39;`. Closes Supabase advisor Lint 0011 on KC. **PR [keycontent-app#114](https://github.com/CoreshiftHQNZ/keycontent-app/pull/114) open against dev — awaiting merge → staging → main + `supabase db push` to prod.**</div>
+        <div class="card-title">Phase A complete — ready to start Phase B</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">meta</span><span class="tag tag-neutral">playbook/SECURITY-PRIVACY-PLAN.md</span></div>
+        <div class="card-desc">All 6 Phase A items shipped (see Done column). New baseline: zero open advisor findings on KC + Sentinel prod, bug_reports data flow documented, KC privacy + cookie audit complete, existing T&amp;C coverage of Privacy Act 2020 verified. Operator forks pending: compliance horizon, Storage backup approach, B8b sequencing. See `playbook/SECURITY-PRIVACY-PLAN.md`</div>
       </div>
       <div class="card">
-        <div class="card-title">Phase A2: fix maintenance_set_updated_at mutable search_path</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">quick-win</span><span class="tag tag-neutral">pr-open</span></div>
-        <div class="card-desc">Sentinel prod. Same fix as A1, different function. Closes Sentinel advisor Lint 0011. **PR [sentinel-app#64](https://github.com/CoreshiftHQNZ/sentinel-app/pull/64) open against dev.**</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Phase A3: lock down rls_auto_enable() exposure</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">P1</span><span class="tag tag-neutral">pr-open</span><span class="tag tag-neutral">ensure_rls</span><span class="tag tag-neutral">/rest/v1/rpc/rls_auto_enable</span><span class="tag tag-neutral">REVOKE EXECUTE ... FROM PUBLIC</span></div>
-        <div class="card-desc">Sentinel prod. Pre-flight against prod confirmed: SECURITY DEFINER event-trigger function, owned by postgres, bound to event trigger `ensure_rls`, EXECUTE granted to PUBLIC by default → reachable via `/rest/v1/rpc/rls_auto_enable`. Migration `REVOKE EXECUTE ... FROM PUBLIC` — safe because event triggers fire via the engine and don&#39;t consult routine_privileges. Closes advisor Lints 0028 + 0029. **PR [sentinel-app#65](https://github.com/CoreshiftHQNZ/sentinel-app/pull/65) open against dev.**</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Phase A4: clean advisor baseline + snapshot</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">audit</span><span class="tag tag-blocked">blocked-by:A1-A3</span><span class="tag tag-neutral">get_advisors</span></div>
-        <div class="card-desc">Re-run `get_advisors` on KC + Sentinel prod after A1-A3 deploy. Refresh &quot;Current findings snapshot&quot; in HOW-WE-DO-SECURITY.md. Goal: zero open findings = the new baseline</div>
+        <div class="card-title">Schema migrations drift cleanup (Sentinel)</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">audit-followup</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">supabase_migrations.schema_migrations</span><span class="tag tag-neutral">20260522010000_grant_service_role_on_maintenance_tables</span><span class="tag tag-neutral">20260522020000_create_vendor_lifecycle_reference</span></div>
+        <div class="card-desc">Discovered during A2/A3 application: Sentinel prod&#39;s `supabase_migrations.schema_migrations` is missing rows for `20260522010000_grant_service_role_on_maintenance_tables` and `20260522020000_create_vendor_lifecycle_reference` (both applied via dashboard per kanban history). Phase A1-A3 used the stamp-on-apply pattern to avoid extending this drift. Backfill: INSERT the two missing rows with statements pulled from the migration files. ~5 min</div>
       </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">32</span>
+        <span class="col-count">33</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1590,9 +1595,14 @@
         <div class="card-desc">New SUB-PROCESSORS.md. Every third party touching user data: Supabase, Railway, Cloudflare, Postmark, Sentry, Better Stack, GitHub, Zernio, Google, OpenAI/Anthropic, Akahu. Jurisdiction + DPA + retention. Linked from public privacy notice</div>
       </div>
       <div class="card">
-        <div class="card-title">Phase B8: publish KC privacy notice + ToS</div>
-        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">docs</span><span class="tag tag-neutral">P1-finding-from-A6</span><span class="tag tag-neutral">/privacy</span><span class="tag tag-neutral">/terms</span></div>
-        <div class="card-desc">A6 audit found KC has NO published privacy notice, NO terms of service, NO consent prompt at signup. The app posture is internally consistent (no surveillance) but indefensible legally. Drafted notice depends on B1 (inventory) + B7 (sub-processors). Then: add `/privacy` + `/terms` routes, footer links visible site-wide, signup consent checkbox. Re-run A6 as closing audit. **Operator question first: does coreshifthq.com or keycontent.ai already host a privacy page outside the SPA?**</div>
+        <div class="card-title">Phase B8a: T&amp;C deployment status</div>
+        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-ops">ops</span></div>
+        <div class="card-desc">Coreshift has a robust Type 3 Platform Subscription Agreement template covering Privacy Act 2020 (clause 7), breach notification under Part 6 (clause 7.4), data exit (clause 12), Sentinel&#39;s named role (clause 8), customer data ownership (clause 5.4), sub-processor framework (Annexure 2). **Operator action:** confirm whether KC&#39;s signed customers are on this template (or a predecessor); for any signed customer not on Type 3 yet, plan the rev. Annexure 2 needs to be filled from B7 (sub-processor inventory)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B8b: end-user-facing privacy notice on KC app</div>
+        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">docs</span><span class="tag tag-neutral">P1-finding-from-A6</span><span class="tag tag-neutral">/privacy</span><span class="tag tag-neutral">/terms</span><span class="tag tag-neutral">/privacy</span><span class="tag tag-neutral">/terms</span></div>
+        <div class="card-desc">Separate from B8a (contract layer for the subscribing agency): the app needs a notice for **individual end users** (authorised users of KC who interact with the platform but don&#39;t sign the master agreement). Today: zero published notice, no `/privacy` or `/terms` route, no consent prompt at signup, no footer link. Plumbing posture is good (no surveillance, masked Sentry replay, sendDefaultPii=false) but undocumented. Depends on B1 (inventory) + B7 (sub-processors). Output: `/privacy` + `/terms` routes, footer links, signup consent checkbox, alignment with the master agreement (clause 7.2(b) requires the customer to have informed individuals — the public notice supports them doing that). Re-run A6 as closing audit. **Operator question first: does coreshifthq.com or keycontent.ai already host a public privacy page outside the SPA?**</div>
       </div>
       <div class="card">
         <div class="card-title">Brief 14: Security advisor surface in Sentinel</div>
