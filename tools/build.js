@@ -35,18 +35,44 @@ function loadConfig(slug) {
 }
 
 function listProjects() {
-  return fs
+  // Top-level project directories (e.g. "sentinel", "planner") AND one
+  // level of nesting (e.g. "sentinel/privacy-security"). One level is
+  // enough today; if a deeper nesting is needed later, generalise this
+  // to a recursive walk with a depth cap.
+  //
+  // Filters out tools/, node_modules/, dotfile dirs, and any directory
+  // that doesn't itself contain a kanban.config.js.
+  const slugs = [];
+  const ignoredTop = new Set(["tools", "node_modules"]);
+
+  const topDirs = fs
     .readdirSync(ROOT, { withFileTypes: true })
     .filter(
       (d) =>
         d.isDirectory() &&
         !d.name.startsWith(".") &&
-        d.name !== "tools" &&
-        d.name !== "node_modules",
-    )
-    .map((d) => d.name)
-    .filter((slug) => fs.existsSync(path.join(ROOT, slug, "kanban.config.js")))
-    .sort();
+        !ignoredTop.has(d.name),
+    );
+
+  for (const topDir of topDirs) {
+    // Direct child with kanban.config.js → top-level project.
+    if (fs.existsSync(path.join(ROOT, topDir.name, "kanban.config.js"))) {
+      slugs.push(topDir.name);
+    }
+    // Look one level deeper for nested project boards (e.g. sentinel/privacy-security).
+    const subDirs = fs
+      .readdirSync(path.join(ROOT, topDir.name), { withFileTypes: true })
+      .filter((d) => d.isDirectory() && !d.name.startsWith("."));
+    for (const subDir of subDirs) {
+      const nestedSlug = `${topDir.name}/${subDir.name}`;
+      if (
+        fs.existsSync(path.join(ROOT, nestedSlug, "kanban.config.js"))
+      ) {
+        slugs.push(nestedSlug);
+      }
+    }
+  }
+  return slugs.sort();
 }
 
 function buildOne(slug) {

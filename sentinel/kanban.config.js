@@ -43,6 +43,12 @@ module.exports = {
   // Set INTERNAL=1 in the env to include them when building locally.
   links: [
     {
+      icon: "🔐",
+      title: "Privacy & Security Program",
+      desc: "Cross-cutting program board — NZ Privacy Act 2020 alignment, retention, breach response, pen-testing motion across every Coreshift app",
+      url: "privacy-security/",
+    },
+    {
       icon: "📊",
       title: "Pitch Deck",
       desc: "14 slides — the system, the elevation, the ask",

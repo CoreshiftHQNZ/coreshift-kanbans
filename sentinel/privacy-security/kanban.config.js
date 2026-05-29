@@ -44,6 +44,12 @@ module.exports = {
 
   links: [
     {
+      icon: "🛡",
+      title: "↑ Sentinel (parent board)",
+      desc: "Sentinel platform work + Briefs 14-19 that surface this program in-app",
+      url: "../",
+    },
+    {
       icon: "📋",
       title: "Meeting brief",
       desc: "Single doc for team review — TL;DR, risk register, decisions needed",
@@ -58,16 +64,10 @@ module.exports = {
       internal: true,
     },
     {
-      icon: "🛡",
-      title: "Sentinel kanban",
-      desc: "Where the platform-level work lives (Briefs 14-19 surface this program in-app)",
-      url: "https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/",
-    },
-    {
       icon: "🧭",
-      title: "Root board",
-      desc: "All Coreshift project kanbans",
-      url: "https://coreshifthqnz.github.io/coreshift-kanbans/",
+      title: "All Coreshift kanbans",
+      desc: "Root project listing",
+      url: "../../",
     },
   ],
 
@@ -146,5 +146,5 @@ module.exports = {
   ],
 
   footerHtml:
-    'Cross-cutting program board. Strategy: <code>Sentinel/playbook/SECURITY-PRIVACY-PLAN.md</code> (local) · Meeting brief: <code>Sentinel/playbook/PRIVACY-SECURITY-MEETING-BRIEF.md</code> (local) · Platform briefs land on the <a href="../sentinel/">Sentinel kanban</a>.',
+    'Cross-cutting program board, nested under the <a href="../">Sentinel kanban</a>. Strategy: <code>Sentinel/playbook/SECURITY-PRIVACY-PLAN.md</code> (local) · Meeting brief: <code>Sentinel/playbook/PRIVACY-SECURITY-MEETING-BRIEF.md</code> (local) · Platform briefs (14-19) land on Sentinel.',
 };
