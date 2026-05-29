@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Velocity — How to walk a deal from Prospect to Closed Won</title>
+  <style>
+    :root {
+      --navy: #1A1140; --navy-deep: #0E0826; --teal: #7C5CFC; --teal-dark: #5B3FD9; --teal-light: #EDE9FE;
+      --coral: #FF6B5B; --amber: #F59E0B; --amber-light:#FEF3C7; --green: #10B981; --green-light:#D1FAE5;
+      --red:#DC2626; --red-light:#FEE2E2; --blue:#3B82F6; --blue-light:#DBEAFE;
+      --gray: #64748B; --gray-light: #E2E8F0; --gray-lighter: #F1F5F9;
+      --bg: #F8FAFC; --card: #FFFFFF; --text: #1E293B; --text-muted: #475569; --text-soft: #94A3B8;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Arial, sans-serif; color: var(--text); background: var(--bg); font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    header.page-head { background: var(--navy); color: #fff; padding: 22px 32px; position: sticky; top: 0; z-index: 10; }
+    .head-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; max-width: 1040px; margin: 0 auto; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark { width: 32px; height: 32px; background: linear-gradient(135deg, var(--teal), var(--coral)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+    .brand-title { font-size: 16px; font-weight: 700; }
+    .brand-sub { font-size: 10.5px; color: var(--teal); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+    .nav { display: flex; gap: 16px; font-size: 13px; }
+    .nav a { color: #C9BCF0; text-decoration: none; }
+    .nav a:hover { color: #fff; }
+    .nav a.active { color: #fff; font-weight: 700; }
+    main { max-width: 1040px; margin: 0 auto; padding: 36px 32px 60px; }
+    .hero-eyebrow { color: var(--teal-dark); font-size: 11px; font-weight: 700; letter-spacing: 0.18em; }
+    h1 { color: var(--navy); font-size: 38px; font-weight: 800; letter-spacing: -0.02em; margin: 10px 0 8px; line-height: 1.15; }
+    .lede { font-size: 17px; color: var(--text-muted); max-width: 800px; }
+    .toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 36px; }
+    .toc a { font-size: 12.5px; font-weight: 600; color: var(--teal-dark); background: var(--teal-light); border: 1px solid #D9CFFB; border-radius: 999px; padding: 5px 12px; text-decoration: none; }
+    .toc a:hover { background: #E2DBFC; }
+    section.play { background: var(--card); border: 1px solid var(--gray-light); border-radius: 14px; padding: 24px 28px; margin-bottom: 20px; scroll-margin-top: 80px; }
+    section.play h2 { color: var(--navy); font-size: 21px; font-weight: 800; letter-spacing: -0.01em; margin: 0 0 4px; }
+    section.play .sub { color: var(--text-soft); font-size: 12.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 16px; }
+    section.play h3 { color: var(--navy); font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin: 0 0 12px; }
+    ul, ol { margin: 0 0 12px; padding-left: 22px; }
+    li { margin: 5px 0; }
+    code { background: var(--gray-lighter); border: 1px solid var(--gray-light); border-radius: 4px; padding: 1px 6px; font-size: 12.5px; color: var(--navy); }
+    .stage { background: var(--gray-lighter); border: 1px solid var(--gray-light); border-radius: 10px; padding: 16px 20px; margin: 0 0 14px; }
+    .stage-meta { font-size: 11px; color: var(--text-soft); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+    .stage h3 { color: var(--teal-dark); font-size: 17px; font-weight: 700; margin: 0 0 8px; }
+    .stage h3 .count { color: var(--text-soft); font-size: 13px; font-weight: 500; margin-left: 6px; }
+    .stage p { font-size: 13.5px; margin: 0 0 8px; }
+    .tip { background: var(--amber-light); border-left: 3px solid var(--amber); border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 12.5px; color: #78350F; margin: 8px 0 0; }
+    .tip strong { color: #78350F; }
+    .step { background: #FAFAFB; border: 1px solid var(--gray-light); border-left: 3px solid var(--teal); border-radius: 10px; padding: 16px 20px; margin: 0 0 14px; }
+    .step-meta { font-size: 11px; color: var(--text-soft); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+    .step h3 { color: var(--navy); font-size: 16px; font-weight: 700; margin: 0 0 8px; }
+    .step p { margin: 0 0 8px; font-size: 13.5px; }
+    .note { border-radius: 10px; padding: 12px 16px; margin: 0 0 14px; font-size: 13px; }
+    .note-info { background: var(--blue-light); border: 1px solid #BFDBFE; color: #1E3A8A; }
+    .note-warn { background: var(--amber-light); border: 1px solid #FCD34D; color: #78350F; }
+    footer { text-align: center; color: var(--text-soft); font-size: 12px; padding: 20px; }
+    footer a { color: var(--teal-dark); text-decoration: none; }
+    @media (max-width: 700px) { main { padding: 24px 16px 40px; } h1 { font-size: 28px; } section.play { padding: 18px; } }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="head-inner">
+      <div class="brand">
+        <div class="brand-mark">V</div>
+        <div><div class="brand-title">Velocity</div><div class="brand-sub">Walkthrough — Prospect to Won</div></div>
+      </div>
+      <nav class="nav">
+        <a href="index.html">Board</a>
+        <a href="roadmap.html">Roadmap</a>
+        <a href="ops-playbook.html">Ops Playbook</a>
+        <a href="walkthrough.html" class="active">Walkthrough</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero-eyebrow">HOW TO USE VELOCITY</div>
+    <h1>Walking a deal from Prospect to Closed Won</h1>
+    <p class="lede">Velocity tracks every deal through six stages — Prospect → Engaged → Qualified → Presented → Verbal → Closed Won — and holds you to gate criteria at every stage that prove you're ready to move forward. This page walks you through the whole motion. Start at the top, work down.</p>
+
+    <div class="toc">
+      <a href="#how-it-works">How it works</a>
+      <a href="#first-10-min">Your first 10 minutes</a>
+      <a href="#stage-1">Stage 1 · Prospect → Engaged</a>
+      <a href="#stage-2">Stage 2 · Engaged → Qualified</a>
+      <a href="#stage-3">Stage 3 · Qualified → Presented</a>
+      <a href="#stage-4">Stage 4 · Presented → Verbal</a>
+      <a href="#stage-5">Stage 5 · Verbal → Closed Won</a>
+      <a href="#portal">The buyer portal</a>
+      <a href="#gotchas">Things worth knowing</a>
+    </div>
+
+    <section class="play" id="how-it-works">
+      <h2>How it works</h2>
+      <div class="sub">The three ideas behind every gate</div>
+      <p>Velocity replaces the patchwork of spreadsheets, sticky notes, and "I'll follow up next week" intentions that used to run your pipeline. No pushing deals on optimism — if the buyer hasn't done the thing that proves real intent, the gate stays closed.</p>
+      <ol>
+        <li><strong>Forcing events.</strong> Every stage has one buyer-side action that proves the deal is real — a meeting on the calendar, a verbal yes, a contract signed. Without it, the deal can't progress.</li>
+        <li><strong>Honest forecasts.</strong> A deal is in your forecast only if buyer signals back it up. No phantom pipeline.</li>
+        <li><strong>Buyer in the loop.</strong> Every deal has a portal link the buyer opens to see what you've discussed, confirm what you understood, and review documents you send. Signals flow back automatically.</li>
+      </ol>
+    </section>
+
+    <section class="play" id="first-10-min">
+      <h2>Your first 10 minutes</h2>
+      <div class="sub">Four steps, each stand-alone</div>
+
+      <div class="step">
+        <div class="step-meta">Step 1 · 30 seconds</div>
+        <h3>Sign in with Google</h3>
+        <p>Open <a href="https://velocity.coreshifthq.com" style="color:var(--teal-dark);">velocity.coreshifthq.com</a> → click <strong>Sign in with Google</strong> → pick your Coreshift Google account → grant access. You'll land on the Dashboard. That's your auth done.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-meta">Step 2 · 2 minutes</div>
+        <h3>Connect your Google Calendar</h3>
+        <p>This is a separate connector (different OAuth scope than sign-in) — it's what lets Velocity create meetings, send invites, and read buyer RSVPs.</p>
+        <ul>
+          <li><strong>Settings</strong> (left sidebar, near the bottom)</li>
+          <li><strong>Connections</strong> → <strong>Google Calendar</strong></li>
+          <li>Click <strong>Connect</strong>, grant the <code>calendar.events</code> permission</li>
+        </ul>
+        <p>Velocity now creates real events from inside deals, emails invites, tracks RSVPs, and syncs hourly + on-demand via the <strong>Sync</strong> button on the deal page.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-meta">Step 3 · 10 seconds (optional)</div>
+        <h3>Turn on Larger Text</h3>
+        <p>Bumps every label, button, and chip one notch above standard. <strong>Settings</strong> (left sidebar) → <strong>Accessibility</strong> → flip <strong>Larger Text</strong> on. Saves to your account — follows you across devices and survives logging out.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-meta">Step 4 · 1 minute</div>
+        <h3>Add your first prospect</h3>
+        <p>Click <strong>+ New prospect</strong> (top-right of the Dashboard or Pipeline page) → pick a playbook → fill in company, contact, value → <strong>Create prospect</strong>. You'll land on the deal page, ready to work.</p>
+      </div>
+    </section>
+
+    <section class="play" id="walkthrough">
+      <h2>The full walkthrough</h2>
+      <div class="sub">Every stage has a clear "next move" surfaced at the top of the deal page</div>
+      <p>The <strong>Gate Progress</strong> card on every deal shows exactly which criteria still need to be met before you can promote. Auto-checkable criteria turn green on their own as you do the work elsewhere; manual ones you tick yourself.</p>
+
+      <div class="stage" id="stage-1">
+        <div class="stage-meta">Stage 1</div>
+        <h3>Prospect → Engaged</h3>
+        <p><strong>What it means</strong>: You've identified a target. Nothing happens until you have a first conversation.</p>
+        <p><strong>Forcing event</strong>: A discovery call booked.</p>
+        <p><strong>What to do</strong>: Click <strong>Schedule meeting</strong> on the deal (Mission CTA up top), pick a date with the buyer's primary contact, send the invite. Once the meeting is on the calendar and the buyer accepts, the gate goes green.</p>
+        <p><strong>Discovery call already happened?</strong> Click <strong>Already happened? Log notes</strong> — the secondary button next to Schedule meeting. Captures the past date + your meeting notes. Counts toward the gate the same as a scheduled call.</p>
+        <div class="tip"><strong>Tip:</strong> Capture industry, region, and turnover as you book — the ICP score picks these up automatically.</div>
+      </div>
+
+      <div class="stage" id="stage-2">
+        <div class="stage-meta">Stage 2</div>
+        <h3>Engaged → Qualified <span class="count">· 8 criteria</span></h3>
+        <p><strong>What it means</strong>: You've had the first conversation. Now decide whether this deal is real enough to invest more time in.</p>
+        <ul>
+          <li>Opening 3 qualifiers (turnover, growth on agenda, challenge area)</li>
+          <li>Lean decision-making — no committee</li>
+          <li>ICP score above threshold</li>
+          <li>Compelling event identified — <em>why now</em></li>
+          <li>Decision-maker named with access confirmed</li>
+          <li>Pain motivation ≥ 8/10</li>
+          <li>Willingness to invest validated</li>
+          <li><strong>Second meeting (qualification call) on calendar</strong> — <em>forcing event</em></li>
+        </ul>
+        <p><strong>What to do</strong>: Open the <strong>ICP</strong> card and score them. Open <strong>Qualifiers</strong> and tick what you confirmed on discovery. Mark the decision-maker. Schedule the qualification call.</p>
+        <div class="tip"><strong>Tip:</strong> Drop a note (button: <strong>Add note</strong>) summarising the discovery call. Velocity's extractor reads it and pre-ticks several gate criteria for you to confirm. Less form-filling.</div>
+      </div>
+
+      <div class="stage" id="stage-3">
+        <div class="stage-meta">Stage 3</div>
+        <h3>Qualified → Presented <span class="count">· 5 criteria (6 on Coreshift HQ)</span></h3>
+        <p><strong>What it means</strong>: They're qualified and ready to see a proposal. The stage is named for the artefact you'll bring.</p>
+        <ul>
+          <li>Second meeting happened with the people we said would be there</li>
+          <li>Explicit agreement to receive a proposal</li>
+          <li>Their definition of success captured in their own words</li>
+          <li><strong>Proposal drafted and shared with the buyer ahead of the review meeting</strong></li>
+          <li><strong>Third meeting (proposal review) on calendar — proposal sent ahead</strong> — <em>forcing event</em></li>
+          <li><em>(Coreshift HQ only)</em> Scope of first-build agreed in principle</li>
+        </ul>
+        <p><strong>What to do</strong>: Tick the manual criteria as you confirm them (or drop a note). Draft the proposal — use the Living Proposal section, or attach a PDF and tag it <code>Proposal</code>. Share it with the buyer (eye icon → visible in portal). Schedule the review meeting.</p>
+        <div class="tip"><strong>Tip:</strong> The buyer can mark the proposal as reviewed in their portal — that signal flows back to you and pre-ticks the next gate's <code>proposal_reviewed</code>. Wait for them to do it; chasing "did you see it?" is the kind of friction Velocity is built to remove.</div>
+      </div>
+
+      <div class="stage" id="stage-4">
+        <div class="stage-meta">Stage 4</div>
+        <h3>Presented → Verbal <span class="count">· 3 criteria</span></h3>
+        <p><strong>What it means</strong>: All about buyer commitment. You're not building anything new; you're closing.</p>
+        <ul>
+          <li>Proposal reviewed with the decision-maker</li>
+          <li>Verbal yes from the decision-maker</li>
+          <li><strong>Buyer asked for the contract — we didn't have to push</strong> — <em>forcing event</em></li>
+        </ul>
+        <p><strong>What to do</strong>: Run the proposal review meeting. Drop a note capturing what was said: <em>"Sam gave a clear verbal yes. Dan asked us to send the contract documents."</em> The extractor pre-ticks two; click to confirm. Manually tick <code>docs_requested</code> — your judgment call.</p>
+        <div class="tip"><strong>Tip:</strong> The forcing event here is specifically <em>buyer-initiated</em>. If you find yourself sending the contract without them asking, the deal is weaker than it looks. Pause and ask.</div>
+      </div>
+
+      <div class="stage" id="stage-5">
+        <div class="stage-meta">Stage 5</div>
+        <h3>Verbal → Closed Won <span class="count">· 3 criteria</span></h3>
+        <ul>
+          <li><strong>Buyer signed the contract</strong> — <em>forcing event</em></li>
+          <li>Handover doc passes quality checklist (HARD GATE)</li>
+          <li>Kickoff scheduled</li>
+        </ul>
+        <p><strong>What to do</strong>: Send the contract (publish a Living Proposal, or attach + tag <code>Signed contract</code>). When the buyer's signature comes back, click <strong>Mark signed</strong> under the stage track on the deal. Open the Handover modal and complete all 6 required items: scope locked, stakeholders mapped, kickoff date, exec team assigned, billing setup, success criteria documented. Schedule the kickoff meeting. Click <strong>Mark Won</strong> on the stage track → fills in win-reason tags → transitions cleanly.</p>
+        <div class="tip"><strong>Tip:</strong> "Mark Won" is the official close — it creates the win-loss record that drives <code>/win-loss</code> analytics and triggers commission generation. Don't just drag the card; click Mark Won so the reason capture happens. The drag-to-Won path now also routes through the reason-capture modal automatically.</div>
+      </div>
+    </section>
+
+    <section class="play" id="portal">
+      <h2>The buyer's view (the portal)</h2>
+      <div class="sub">A magic-link URL the buyer opens — no password</div>
+      <p>Every deal has a buyer portal — a magic-link URL the buyer opens to see:</p>
+      <ul>
+        <li>Where the deal is in the process</li>
+        <li>What's been discussed and agreed</li>
+        <li>Documents you've shared</li>
+        <li>Outstanding action items</li>
+        <li>A list of "things to confirm" you've extracted from your conversations</li>
+      </ul>
+      <p>Share the portal link from the deal page (top-right of the Deal hero). The buyer doesn't need a password — the link itself is the access.</p>
+      <h3>Things the buyer can do</h3>
+      <ul>
+        <li>Confirm or correct facts you've shared</li>
+        <li>Mark shared documents as reviewed (with optional feedback)</li>
+        <li>See the next milestone date</li>
+        <li>Ask a question (routes to you, never bound by the AI on price/scope)</li>
+      </ul>
+      <p>Every buyer action notifies you — bell icon in the left sidebar + per-deal notifications card.</p>
+    </section>
+
+    <section class="play" id="gotchas">
+      <h2>Things worth knowing</h2>
+      <div class="sub">Patterns reps hit in QA — surface them before they bite you</div>
+      <ul>
+        <li><strong>Rescheduling resets the buyer's RSVP</strong> to "needs action" — intentional, they haven't confirmed the new time. Updated invite goes out automatically; chase if the new time was critical.</li>
+        <li><strong>Discovery counts as meeting #1</strong> — the Qualified gate's "second meeting" means meeting #2. If you skip discovery, the count's off — log it as a past meeting to fix.</li>
+        <li><strong>The gate is mostly buyer-driven on purpose.</strong> If you find yourself manually ticking a lot of boxes to push a deal forward, slow down. The forcing events are designed to be uncomfortable when the deal isn't real.</li>
+        <li><strong><code>/win-loss</code> and <code>/commissions</code></strong> only populate from the <strong>Mark Won</strong> (or Mark Lost) flow. Drag-to-Won now routes through reason capture automatically.</li>
+        <li><strong>"Should we walk?"</strong> appears when an ICP disqualifier trips. If a kill is real, click Mark Closed Lost; if you ticked the wrong toggle, click <strong>Update ICP score</strong> next to it to fix.</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>
+    Velocity walkthrough · <a href="index.html">Board</a> · <a href="roadmap.html">Roadmap</a> · <a href="ops-playbook.html">Ops Playbook</a>
+  </footer>
+</body>
+</html>

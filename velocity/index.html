@@ -296,6 +296,14 @@
     <section class="links">
       <h2 class="section-head">Key Artifacts</h2>
       <div class="links-grid">
+        <a class="link-card" href="walkthrough.html">
+          <div class="link-icon">⚡</div>
+          <div class="link-text">
+            <div class="link-title">Walkthrough — Prospect to Won</div>
+            <div class="link-desc">How to walk a deal end-to-end. First-10-min setup, every stage, the gates, the buyer portal, gotchas. Start here.</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
         <a class="link-card" href="roadmap.html">
           <div class="link-icon">🗺</div>
           <div class="link-text">
@@ -317,6 +325,62 @@
           <div class="link-text">
             <div class="link-title">Contracts &amp; Proposals · v1.1 mockup</div>
             <div class="link-desc">Discussion artifact — the rep flow, merge-field map, &amp; the 4 scope shapes. Not yet built.</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- COMING SOON (curated highlight) -->
+    <section class="links">
+      <h2 class="section-head">Coming Soon</h2>
+      <p class="section-sub">The next big things on the roadmap — featured here for visibility. Full backlog below has these + the rest.</p>
+      <div class="links-grid">
+        <a class="link-card" href="#col-backlog">
+          <div class="link-icon">💸</div>
+          <div class="link-text">
+            <div class="link-title">Invoicing + client view</div>
+            <div class="link-desc">Multi-deal invoicing per client (one invoice can span multiple engagements at the same company), recurring auto-generation for subscriptions, bank transfer flow with Stripe-ready architecture. Design locked; ~2.25 days to build.</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="#col-backlog">
+          <div class="link-icon">✍️</div>
+          <div class="link-text">
+            <div class="link-title">Native e-sign in portal (I5)</div>
+            <div class="link-desc">Replace DocuSign for our own outbound contracts (subscription, SOW, NDA). Visual signature on PDF, audit log, auto-sets <code style="font-size:11px;">documentsSignedAt</code>. ~4 days for Tier 1.</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="#col-backlog">
+          <div class="link-icon">📧</div>
+          <div class="link-text">
+            <div class="link-title">Gmail integration (I2 + I3)</div>
+            <div class="link-desc">Outbound: send recap + invoice emails directly from Velocity, signed as you. Inbound: mirror buyer emails into the deal so the portal becomes the single thread.</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="#col-backlog">
+          <div class="link-icon">🎙️</div>
+          <div class="link-text">
+            <div class="link-title">Auto-transcription (I4)</div>
+            <div class="link-desc">Fireflies/Otter integration. Calls get transcribed, matched to a deal by attendee, fed into the recap + extractor flow. Less typing, more selling.</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="#col-backlog">
+          <div class="link-icon">📊</div>
+          <div class="link-text">
+            <div class="link-title">Xero push (I6)</div>
+            <div class="link-desc">Approved commissions → Xero bills payable. Closed Won → Xero invoice (once invoicing ships). Single source of truth for the books.</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="#col-backlog">
+          <div class="link-icon">🔮</div>
+          <div class="link-text">
+            <div class="link-title">Further out</div>
+            <div class="link-desc">Voice capture from anywhere ("Hey Nirvana, Sam at Tasman just said…"), pre-proposal readiness score (A2), LinkedIn enrichment (I7), PDF/DOCX source parsing for the extractor, quiet data capture in the portal (P8).</div>
           </div>
           <div class="link-arrow">→</div>
         </a>
@@ -487,7 +551,7 @@
         </section>
 
         <!-- BACKLOG -->
-        <section class="column col-backlog">
+        <section class="column col-backlog" id="col-backlog">
           <header class="col-head"><h2>⚪ Backlog</h2><span class="col-count">15</span></header>
           <div class="cards">
             <div class="card"><div class="card-title">Invoicing + client-level deal view</div><div class="card-tags"><span class="tag tag-portal">feature</span></div><div class="card-desc">Native invoice engine with multi-deal aggregation under a single client. Decisions locked 2026-05-29: Velocity-native source of truth (Xero later), invoices can span multiple deals at the same client, recurring auto-generates with a rep approval queue, bank transfer default + Stripe-ready architecture. Open forks before build: tenant-scoped vs per-currency GST + bank details. ~2.25 days in 3 phases (CRUD+send, recurring schedules, Stripe+Gmail integration).</div></div>
@@ -515,7 +579,7 @@
 
   <footer class="page-foot">
     Velocity build board · curated by Coreshift HQ + Growth Partners ·
-    <a href="roadmap.html">Roadmap</a> · <a href="ops-playbook.html">Ops Playbook</a> ·
+    <a href="walkthrough.html">Walkthrough</a> · <a href="roadmap.html">Roadmap</a> · <a href="ops-playbook.html">Ops Playbook</a> ·
     edit <code style="font-size:11px;">coreshift-kanbans/velocity/index.html</code>
   </footer>
 </body>
