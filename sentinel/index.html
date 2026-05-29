@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>69%</strong> complete</div>
-        <div><strong>91</strong>/131 cards done</div>
-        <div>Updated <strong>2026-05-29 14:05 UTC</strong></div>
+        <div><strong>92</strong>/133 cards done</div>
+        <div>Updated <strong>2026-05-29 14:09 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">91</div>
+        <div class="status-num">92</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">5</div>
+        <div class="status-num">6</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">91</span>
+        <span class="col-count">92</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1420,6 +1420,11 @@
         <div class="card-title">Phase B1: data inventory shipped</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">foundation</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">playbook/data-flows/DATA-INVENTORY.md</span><span class="tag tag-neutral">public</span><span class="tag tag-neutral">job-assets</span><span class="tag tag-neutral">bug-report-screenshots</span></div>
         <div class="card-desc">`playbook/data-flows/DATA-INVENTORY.md` published 2026-05-29. Comprehensive: classification scheme (Restricted/Confidential/Internal/Public), all 30 KC `public` tables + both Storage buckets (`job-assets` now at 935 objects, `bug-report-screenshots` at 1), all 3 Sentinel tables, sub-processor cross-table, stubs for the other 7 Coreshift Supabase projects awaiting Sentinel onboarding. **12 identified gaps surfaced** — feeds B2/B3/B5/B6/B7. Brief 15 (data inventory surface in Sentinel) is the long-term durable home</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B7: sub-processor inventory shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">foundation</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">playbook/data-flows/SUB-PROCESSORS.md</span></div>
+        <div class="card-desc">`playbook/data-flows/SUB-PROCESSORS.md` published 2026-05-29. 18 third parties classified with jurisdiction, data class, retention, DPA status, and per-app applicability matrix. **🚨 P1 finding: Kling (Chinese video AI) is an active KC sub-processor — direct Privacy Act 2020 IPP 12 overseas-transfer concern. Recommendation: drop Kling in favour of Veo (already in use).** 8 operator action items captured (Postmark TTL, Sentry region, OpenAI no-train opt-out, Gemini tier check, Kling decision, Zernio DPA ask, repo-private decision, Annexure 2 fill). Doc is ready to copy into Type 3 agreement Annexure 2 once verifications close. Long-term home: Brief 15</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1439,7 +1444,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1458,9 +1463,14 @@
         <div class="card-desc">New `playbook/SECURITY-PRIVACY-PLAN.md` published 2026-05-29 with phased plan (A: quick wins this week; B: foundation 2-4 weeks; C: Sentinel security briefs 14-18; D: trigger-gated compliance). Operator forks listed inside the doc</div>
       </div>
       <div class="card">
-        <div class="card-title">Phase B kicked off</div>
+        <div class="card-title">Phase B momentum</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">meta</span></div>
-        <div class="card-desc">Phase A closed; B1 (data inventory) shipped. Operator forks resolved: privacy notice scope = NZ Privacy Act 2020 only; Storage backup approach = Cloudflare R2 export from Sentinel (becomes Brief 19); pen-testing posture = add B9 (OWASP ZAP DAST CI) to Phase B alongside foundation work. Next pickup: B7 (sub-processor inventory) — directly feeds B8a Annexure 2 + B8b notice + B2 retention claims</div>
+        <div class="card-desc">Phase A closed; B1 (data inventory) + B7 (sub-processors) both shipped today. Privacy notice scope locked to NZ Privacy Act 2020 only. Storage backup = R2 export (Brief 19). Pen-testing first rung = B9 (ZAP DAST CI). Two open P1 findings worth operator attention: **(1) Kling Chinese-AI sub-processor (IPP 12 overseas-transfer concern; recommend drop), (2) 8 verification items in SUB-PROCESSORS.md before Annexure 2 / privacy notice can ship truthfully.** Next pickup recommendation: B2 (retention policy) — builds on B1/B7 to give every data class a concrete keep-for-how-long answer</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🚨 Kling sub-processor decision needed</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">P1-finding-from-B7</span><span class="tag tag-neutral">ai_providers</span></div>
+        <div class="card-desc">KC&#39;s active `ai_providers` table includes Kling (Kuaishou, China) for video generation. Direct Privacy Act 2020 IPP 12 overseas-transfer concern — PRC has no comparable privacy regime under the Act. Three options: (a) drop Kling in favour of Veo (already in active use; Kling looks redundant), (b) gate Kling specifically behind explicit user authorisation in the privacy notice, (c) accept the IPP 12 risk with an explicit operator policy memo. Recommend (a). Operator decision blocks Annexure 2 + B8b notice draft</div>
       </div>
       <div class="card">
         <div class="card-title">Schema migrations drift cleanup (Sentinel)</div>
