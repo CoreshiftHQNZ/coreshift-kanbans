@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>55%</strong> complete</div>
-        <div><strong>21</strong>/38 cards done</div>
-        <div>Updated <strong>2026-05-29 23:41 UTC</strong></div>
+        <div><strong>53%</strong> complete</div>
+        <div><strong>26</strong>/49 cards done</div>
+        <div>Updated <strong>2026-05-30 00:00 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">21</div>
+        <div class="status-num">26</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -821,11 +821,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">5</div>
+        <div class="status-num">7</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">10</div>
+        <div class="status-num">14</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -943,7 +943,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">21</span>
+        <span class="col-count">26</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1050,6 +1050,31 @@
         <div class="card-title">Meeting brief</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/PRIVACY-SECURITY-MEETING-BRIEF.md</span></div>
         <div class="card-desc">`Sentinel/playbook/PRIVACY-SECURITY-MEETING-BRIEF.md` — operator-ready single doc for team review. TL;DR + before/after + 9-item risk register + state-table + decisions needed + stock answers to common questions</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B+ #6: gitleaks secret scanning CI</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Workflows live on both repos via dev → staging → main (KC PRs #126/#127/#128, Sentinel #74/#75/#76). Scans PRs (diff only) + pushes (new commits only) + manual workflow_dispatch for full-history. Uses the upstream binary directly so we avoid the gitleaks-action v2 org licensing requirement. Closes the 2026-05-19 service-role-leak incident class</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B+ #5: Dependabot + npm audit</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">.github/dependabot.yml</span><span class="tag tag-neutral">npm audit</span></div>
+        <div class="card-desc">`.github/dependabot.yml` weekly grouped updates (npm + GitHub Actions) Monday 9am NZ on both repos. `npm audit` workflow gates on high+ for Sentinel (passes); ships informational-only for KC (continue-on-error) until Dependabot files the cleanup PRs for pre-existing high-severity advisories. Closes threat T4 supply-chain blind spot</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B+ #4: per-route rate limiting on KC</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">server/middleware/rate-limit.ts</span><span class="tag tag-neutral">strictAuthLimiter</span><span class="tag tag-neutral">heavyAiLimiter</span><span class="tag tag-neutral">bugWidgetLimiter</span><span class="tag tag-neutral">standardApiLimiter</span></div>
+        <div class="card-desc">KC PRs #132/#133/#134 promoted dev → staging → main. New `server/middleware/rate-limit.ts` adds Layer 2 (per-user, RFC-9239 headers) on top of existing per-IP global limiter in services/security.ts: `strictAuthLimiter` (5/min IP), `heavyAiLimiter` (20/min user — applied to POST /api/jobs + :id/generate + :id/regenerate), `bugWidgetLimiter` (5/hr user — ready for widget rewrite), `standardApiLimiter` (60/min user). Memory store (KC is single-instance Railway today). 42/42 tests pass</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B+ #2: HOW-WE-DO-DR.md</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/HOW-WE-DO-DR.md</span></div>
+        <div class="card-desc">`Sentinel/playbook/HOW-WE-DO-DR.md`. Seven scenario runbooks (Supabase, Railway, Cloudflare, DNS, Postmark, operator-account-compromise, catastrophic data loss). RTO/RPO per service tier. Honest about gaps: no practiced playbook, no automated failover, no multi-region anything</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B+ #1a: HOW-WE-DO-BACKUP-RESTORE.md (tabletop)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">docs</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/HOW-WE-DO-BACKUP-RESTORE.md</span></div>
+        <div class="card-desc">`Sentinel/playbook/HOW-WE-DO-BACKUP-RESTORE.md`. 60-minute tabletop walkthrough + supervised staging-drill procedure + paste-into-incident-channel checklist. Surfaces that we have backups but have never restored, and that Storage has no backup until Brief 19 ships</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1079,13 +1104,23 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">🚨 Kling sub-processor decision</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">P1-finding</span><span class="tag tag-neutral">ai_providers</span></div>
         <div class="card-desc">KC&#39;s `ai_providers` table lists Kling (Kuaishou, China) for video generation. Privacy Act 2020 IPP 12 overseas-transfer concern — PRC has no comparable privacy regime. Three options: **(a)** drop Kling, route all video through Veo (already wired and in active use; ~half-day removal); **(b)** keep Kling, gate behind explicit user authorisation in privacy notice; **(c)** accept the IPP 12 risk with an explicit policy memo. **Recommendation: (a).** Blocks Annexure 2 fill + B8b publish</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tighten KC npm audit threshold to `high`</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">keycontent-app/.github/workflows/npm-audit.yml</span><span class="tag tag-neutral">continue-on-error: true</span></div>
+        <div class="card-desc">After Dependabot files the cleanup PRs for the pre-existing high-severity advisories (next Monday 9am NZ cycle), flip `keycontent-app/.github/workflows/npm-audit.yml`: remove `continue-on-error: true` so the workflow gates rather than informs. ~2 min change</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B+ #1a: run the backup-restore tabletop</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">Sentinel/playbook/HOW-WE-DO-BACKUP-RESTORE.md</span></div>
+        <div class="card-desc">`Sentinel/playbook/HOW-WE-DO-BACKUP-RESTORE.md` is ready. Operator + Claude run the 60-min tabletop together (no destructive ops). Output: friction points captured + plan for the supervised staging drill</div>
       </div>
       <div class="card">
         <div class="card-title">Brief 18 activation — operator adds env vars</div>
@@ -1111,7 +1146,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">10</span>
+        <span class="col-count">14</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1123,6 +1158,26 @@
         <div class="card-title">Phase B5 follow-on: req.scoped() query builder + KC route audit</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">~2-3d</span><span class="tag tag-neutral">agency_id</span></div>
         <div class="card-desc">Highest residual KC risk per threat model (T3): multi-tenant scope filter is in-code, not in-DB. Closes the gap with an Express middleware-bound query builder that refuses queries without an explicit `agency_id`. Plus targeted audit of every existing route for the pattern. Quarter-budget work — not urgent but highest ROI</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B+ #3: audit logging of sensitive events</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">~2d</span><span class="tag tag-neutral">logAuditEvent()</span><span class="tag tag-neutral">keycontent-app/server/services/security.ts</span></div>
+        <div class="card-desc">`logAuditEvent()` helper already exists in `keycontent-app/server/services/security.ts` (currently unused). Wire it in at: admin impersonation actions, exports of user data, service-role queries scoped to a particular agency, deletion operations. Privacy Act 2020 IPP 6 traceability comes from this</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B+ #7: account-takeover detection (basic)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">~1.5d</span></div>
+        <div class="card-desc">Builds on B+ #3. &quot;New device login&quot; email via Postmark + per-user login audit-log row + Sentinel-side dashboard for review. Common SaaS attack vector. Operator design call on email copy + which signals fire alerts vs. silently log</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B+ #8: privacy-contact channel SLA-backed</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">privacy</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">~30 min operator</span><span class="tag tag-neutral">hello@coreshifthq.com</span></div>
+        <div class="card-desc">Draft privacy notice promises `hello@coreshifthq.com` + 5-business-day acknowledgement. Operator confirms address, sets Gmail filters routing to priority + auto-acknowledgement. Templates ready when Brief request comes</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B+ #1b: backup-restore drill on staging</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">supervised</span></div>
+        <div class="card-desc">After the tabletop closes (item in This Week), schedule the operator-supervised destructive drill on staging Supabase. Drop a low-risk table, restore from backup, time each step. Worst-case findings update HOW-WE-DO-BACKUP-RESTORE.md</div>
       </div>
       <div class="card">
         <div class="card-title">Brief 14 — Security advisor surface in Sentinel</div>
