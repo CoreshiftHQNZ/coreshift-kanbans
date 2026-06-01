@@ -4,177 +4,463 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <title>Coreshift — Project Kanbans</title>
-    <meta name="description" content="Live kanban boards for active Coreshift projects." />
+    <title>Coreshift HQ — Project Boards</title>
+    <meta name="description" content="Live build status across every Coreshift project. Internal only." />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📋%3C/text%3E%3C/svg%3E" />
     <style>
       :root {
-        --bg: #fafaf9;
-        --card: #ffffff;
-        --ink: #18181b;
-        --ink-muted: #71717a;
-        --ink-subtle: #a1a1aa;
-        --border: #e4e4e7;
-        --accent: #2563eb;
-        --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
-        --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
-        --radius: 10px;
-      }
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --bg: #0a0a0a;
-          --card: #18181b;
-          --ink: #fafafa;
-          --ink-muted: #a1a1aa;
-          --ink-subtle: #71717a;
-          --border: #27272a;
-          --accent: #3b82f6;
-        }
+        --navy: #0F1E3D;
+        --navy-deep: #081530;
+        --navy-soft: #1A2A4F;
+        --teal: #14B8A6;
+        --teal-dark: #0D9488;
+        --teal-light: #CCFBF1;
+        --bg: #F8FAFC;
+        --card: #FFFFFF;
+        --text: #1E293B;
+        --text-muted: #475569;
+        --text-soft: #94A3B8;
+        --border: #E2E8F0;
+        --border-strong: #CBD5E1;
+
+        /* Status pill palette */
+        --pill-prod-bg: #ECFEFF;
+        --pill-prod-fg: #0D9488;
+        --pill-prod-ring: #5EEAD4;
+
+        --pill-internal-bg: #EFF3FB;
+        --pill-internal-fg: #1E3A8A;
+        --pill-internal-ring: #C7D2FE;
+
+        --pill-build-bg: #FEF3C7;
+        --pill-build-fg: #92400E;
+        --pill-build-ring: #FDE68A;
+
+        --pill-program-bg: #F5F3FF;
+        --pill-program-fg: #6D28D9;
+        --pill-program-ring: #DDD6FE;
+
+        --pill-planning-bg: #F1F5F9;
+        --pill-planning-fg: #475569;
+        --pill-planning-ring: #CBD5E1;
       }
       * { box-sizing: border-box; }
       html, body { margin: 0; padding: 0; }
       body {
         font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
         background: var(--bg);
-        color: var(--ink);
+        color: var(--text);
         line-height: 1.5;
         -webkit-font-smoothing: antialiased;
       }
-      .wrap { max-width: 880px; margin: 0 auto; padding: 64px 24px 80px; }
-      header { margin-bottom: 32px; }
+
+      /* ── Dark header bar — mirrors the kanban boards ──────────── */
+      .page-head {
+        background: var(--navy);
+        color: #FFFFFF;
+        border-bottom: 1px solid var(--navy-deep);
+      }
+      .page-head-inner {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 18px 28px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        background: var(--teal);
+        color: var(--navy);
+        font-size: 19px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .brand-title {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        line-height: 1.2;
+      }
+      .brand-sub {
+        font-size: 11px;
+        color: var(--teal);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-top: 2px;
+      }
+      .page-meta {
+        margin-left: auto;
+        font-size: 12px;
+        color: #8EA5C8;
+        display: flex;
+        gap: 18px;
+        align-items: center;
+      }
+      .page-meta strong {
+        color: #FFFFFF;
+        font-weight: 600;
+      }
+      .page-meta-divider {
+        width: 1px;
+        height: 14px;
+        background: var(--navy-soft);
+      }
+
+      /* ── Wrap ─────────────────────────────────────────────────── */
+      .wrap { max-width: 1040px; margin: 0 auto; padding: 48px 28px 64px; }
+
+      /* ── Hero ─────────────────────────────────────────────────── */
+      .hero { margin-bottom: 40px; }
       h1 {
         font-size: 32px;
         font-weight: 700;
         letter-spacing: -0.02em;
-        margin: 0 0 8px;
+        margin: 0 0 10px;
+        color: var(--navy);
       }
-      .subtitle { color: var(--ink-muted); font-size: 15px; margin: 0; max-width: 56ch; }
+      .subtitle {
+        color: var(--text-muted);
+        font-size: 15px;
+        margin: 0;
+        max-width: 64ch;
+      }
+
+      /* ── Section heading ──────────────────────────────────────── */
+      .section-head {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--teal-dark);
+        margin: 36px 0 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section-head::after {
+        content: "";
+        height: 1px;
+        flex: 1;
+        background: var(--border);
+      }
+
+      /* ── Grid ─────────────────────────────────────────────────── */
       .grid {
         display: grid;
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
         gap: 16px;
       }
+
+      /* ── Project card ─────────────────────────────────────────── */
       a.project-card {
-        display: block;
+        position: relative;
+        display: flex;
+        flex-direction: column;
         background: var(--card);
         border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 22px 24px;
+        border-radius: 12px;
+        padding: 22px 24px 20px;
         text-decoration: none;
         color: inherit;
-        box-shadow: var(--shadow);
-        transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+        box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+        transition: transform 130ms ease, box-shadow 130ms ease, border-color 130ms ease;
       }
       a.project-card:hover {
         transform: translateY(-1px);
-        box-shadow: var(--shadow-md);
-        border-color: var(--ink-subtle);
+        box-shadow: 0 6px 18px -6px rgb(15 23 42 / 0.12), 0 2px 4px -2px rgb(15 23 42 / 0.06);
+        border-color: var(--teal);
+      }
+      /* Teal accent bar on the left of the card (matches board accent lines) */
+      a.project-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 22px;
+        bottom: 22px;
+        width: 3px;
+        background: var(--teal);
+        border-radius: 0 3px 3px 0;
+        opacity: 0;
+        transition: opacity 130ms ease;
+      }
+      a.project-card:hover::before { opacity: 1; }
+
+      .card-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 6px;
       }
       .project-name {
         font-size: 18px;
         font-weight: 700;
-        margin: 0 0 4px;
+        margin: 0;
         letter-spacing: -0.01em;
+        color: var(--navy);
       }
       .project-tagline {
         font-size: 13px;
-        color: var(--ink-muted);
-        margin: 0 0 10px;
+        color: var(--text-muted);
+        margin: 0 0 14px;
+        line-height: 1.55;
       }
       .project-meta {
         font-size: 12px;
-        color: var(--ink-subtle);
+        color: var(--text-soft);
         display: flex;
         gap: 14px;
         flex-wrap: wrap;
+        align-items: center;
+        margin-top: auto;
       }
-      .project-meta a { color: var(--accent); text-decoration: none; }
+      .project-meta a {
+        color: var(--teal-dark);
+        text-decoration: none;
+        font-weight: 500;
+      }
       .project-meta a:hover { text-decoration: underline; }
-      footer {
-        margin-top: 48px;
-        font-size: 12px;
-        color: var(--ink-subtle);
+      .meta-dot {
+        width: 3px;
+        height: 3px;
+        background: var(--border-strong);
+        border-radius: 50%;
       }
-      footer a { color: var(--ink-muted); text-decoration: underline; text-underline-offset: 3px; }
+
+      /* ── Status pills ─────────────────────────────────────────── */
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        font-size: 10.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 3px 9px;
+        border-radius: 999px;
+        border: 1px solid;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .pill-prod {
+        background: var(--pill-prod-bg);
+        color: var(--pill-prod-fg);
+        border-color: var(--pill-prod-ring);
+      }
+      .pill-internal {
+        background: var(--pill-internal-bg);
+        color: var(--pill-internal-fg);
+        border-color: var(--pill-internal-ring);
+      }
+      .pill-build {
+        background: var(--pill-build-bg);
+        color: var(--pill-build-fg);
+        border-color: var(--pill-build-ring);
+      }
+      .pill-program {
+        background: var(--pill-program-bg);
+        color: var(--pill-program-fg);
+        border-color: var(--pill-program-ring);
+      }
+      .pill-planning {
+        background: var(--pill-planning-bg);
+        color: var(--pill-planning-fg);
+        border-color: var(--pill-planning-ring);
+      }
+
+      /* ── Footer ───────────────────────────────────────────────── */
+      footer {
+        margin-top: 56px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--text-soft);
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      footer a {
+        color: var(--text-muted);
+        text-decoration: none;
+        border-bottom: 1px solid var(--border-strong);
+      }
+      footer a:hover { color: var(--teal-dark); border-bottom-color: var(--teal-dark); }
+
+      /* ── Small responsive tweaks ──────────────────────────────── */
+      @media (max-width: 640px) {
+        .page-head-inner { padding: 14px 18px; gap: 10px; }
+        .page-meta { display: none; }
+        .wrap { padding: 32px 18px 56px; }
+        h1 { font-size: 26px; }
+        .grid { grid-template-columns: 1fr; }
+      }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <header>
-        <h1>Coreshift — Project Kanbans</h1>
-        <p class="subtitle">Live build status for active Coreshift projects. Each board is the source of truth for that project's progress.</p>
-      </header>
+    <!-- Dark navy header bar — matches the project boards ──────────────── -->
+    <header class="page-head">
+      <div class="page-head-inner">
+        <div class="brand-mark">📋</div>
+        <div>
+          <div class="brand-title">Coreshift HQ</div>
+          <div class="brand-sub">Project Boards</div>
+        </div>
+        <div class="page-meta">
+          <span><strong>9</strong> projects</span>
+          <span class="page-meta-divider"></span>
+          <span>Internal · <code style="background:transparent;color:#8EA5C8">noindex</code></span>
+        </div>
+      </div>
+    </header>
 
+    <div class="wrap">
+      <!-- Hero ────────────────────────────────────────────────────────── -->
+      <div class="hero">
+        <h1>Where the work shows.</h1>
+        <p class="subtitle">
+          A live kanban per Coreshift project. Each board is the source of truth
+          for that project's progress — visible to anyone with the link, edited
+          inline with the work, never out of sync.
+        </p>
+      </div>
+
+      <!-- ── In production ────────────────────────────────────────────── -->
+      <div class="section-head">Live in production</div>
       <div class="grid">
-        <a class="project-card" href="./digital-architect/">
-          <p class="project-name">DigitalArchitect</p>
-          <p class="project-tagline">Coreshift internal tool for Growth Partners — productizes the DigitalArchitect® audit methodology.</p>
-          <div class="project-meta">
-            <span>Coreshift × Growth Partners</span>
-            <a href="https://github.com/CoreshiftHQNZ/digital-architect" target="_blank" rel="noopener">repo →</a>
-          </div>
-        </a>
-        <a class="project-card" href="./kanban-engine/">
-          <p class="project-name">Kanban Engine</p>
-          <p class="project-tagline">The shared rendering engine + template kit that turns every Coreshift project into a consistent live board. Built once for Sentinel; this board tracks improvements to the tool itself.</p>
-          <div class="project-meta">
-            <span>Coreshift HQ — Internal Tooling</span>
-            <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">repo →</a>
-          </div>
-        </a>
         <a class="project-card" href="./keycontent/">
-          <p class="project-name">KeyContent</p>
+          <div class="card-row">
+            <p class="project-name">KeyContent</p>
+            <span class="pill pill-prod">Production</span>
+          </div>
           <p class="project-tagline">AI content creation SaaS for agencies and their clients — blog, social video, social image, calendar scheduling, client review portal, and social publishing via Zernio.</p>
           <div class="project-meta">
-            <span>Coreshift HQ — Live in Production</span>
+            <span>Coreshift HQ — Live</span>
+            <span class="meta-dot"></span>
             <a href="https://keycontent.ai" target="_blank" rel="noopener">keycontent.ai →</a>
             <a href="https://github.com/CoreshiftHQNZ/keycontent-app" target="_blank" rel="noopener">repo →</a>
           </div>
         </a>
+      </div>
+
+      <!-- ── Internal platforms ──────────────────────────────────────── -->
+      <div class="section-head">Coreshift internal platforms</div>
+      <div class="grid">
+        <a class="project-card" href="./sentinel/">
+          <div class="card-row">
+            <p class="project-name">Sentinel</p>
+            <span class="pill pill-internal">Internal · Phase 4</span>
+          </div>
+          <p class="project-tagline">Coreshift's internal ops platform — monitors every Coreshift HQ app from one place. Bug-report pipeline, maintenance scanning, social-token health, and the hosted home of the Privacy &amp; Security program.</p>
+          <div class="project-meta">
+            <span>Coreshift HQ — Internal</span>
+            <span class="meta-dot"></span>
+            <a href="./sentinel/privacy-security/" rel="noopener">Privacy &amp; Security →</a>
+            <a href="https://github.com/CoreshiftHQNZ/sentinel-app" target="_blank" rel="noopener">repo →</a>
+          </div>
+        </a>
+        <a class="project-card" href="./kanban-engine/">
+          <div class="card-row">
+            <p class="project-name">Kanban Engine</p>
+            <span class="pill pill-internal">Internal · Tooling</span>
+          </div>
+          <p class="project-tagline">The shared rendering engine + template kit that turns every Coreshift project into a consistent live board. Built once for Sentinel; every board on this page renders through it.</p>
+          <div class="project-meta">
+            <span>Coreshift HQ — Tooling</span>
+            <span class="meta-dot"></span>
+            <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">repo →</a>
+          </div>
+        </a>
         <a class="project-card" href="./planner/">
-          <p class="project-name">Planner</p>
+          <div class="card-row">
+            <p class="project-name">Planner</p>
+            <span class="pill pill-internal">Internal · Build</span>
+          </div>
           <p class="project-tagline">Coreshift's internal pipeline app — runs Spark → Shape → Spec → briefs as a guided, sign-in conversation that writes execution briefs back to the repo.</p>
           <div class="project-meta">
             <span>Coreshift HQ — Internal</span>
+            <span class="meta-dot"></span>
             <a href="https://github.com/CoreshiftHQNZ/planner-app" target="_blank" rel="noopener">repo →</a>
           </div>
         </a>
-        <a class="project-card" href="./sentinel/">
-          <p class="project-name">Sentinel</p>
-          <p class="project-tagline">Coreshift's internal ops platform — monitors every Coreshift HQ app from one place. Currently watching KeyContent (Phase 0).</p>
-          <div class="project-meta">
-            <span>Coreshift HQ — Internal</span>
-            <a href="https://github.com/CoreshiftHQNZ/keycontent-app" target="_blank" rel="noopener">tracked app →</a>
+      </div>
+
+      <!-- ── Partner builds ──────────────────────────────────────────── -->
+      <div class="section-head">Partner &amp; customer builds</div>
+      <div class="grid">
+        <a class="project-card" href="./digital-architect/">
+          <div class="card-row">
+            <p class="project-name">DigitalArchitect</p>
+            <span class="pill pill-build">Build</span>
           </div>
-        </a>
-        <a class="project-card" href="./sponsored-listicle-writer/">
-          <p class="project-name">Sponsored Listicle Writer</p>
-          <p class="project-tagline">Generates paid-placement listicles for authoritative host sites. Operator gives a keyword + top-pick URLs; chain researches competitors, writes the article, and produces a hero image.</p>
+          <p class="project-tagline">Coreshift internal tool for Growth Partners — productizes the DigitalArchitect® audit methodology.</p>
           <div class="project-meta">
-            <span>Coreshift HQ — Internal</span>
-            <a href="https://github.com/core-ricky/sponsored-listicle-writer" target="_blank" rel="noopener">repo →</a>
-          </div>
-        </a>
-        <a class="project-card" href="./storepro-component-count/">
-          <p class="project-name">Storepro Component Count</p>
-          <p class="project-tagline">Drop a DWG → get a Storepro-format BOM (Excel + PDF). Cross-validates a deterministic DWG block parse with a Claude-vision per-bay-type recipe; applies the locked-in Storepro counting rules. Module 3 of the wider Storepro App program.</p>
-          <div class="project-meta">
-            <span>Coreshift × Storepro</span>
-            <a href="https://github.com/CoreshiftHQNZ/storepro-component-count" target="_blank" rel="noopener">repo →</a>
+            <span>Coreshift × Growth Partners</span>
+            <span class="meta-dot"></span>
+            <a href="https://github.com/CoreshiftHQNZ/digital-architect" target="_blank" rel="noopener">repo →</a>
           </div>
         </a>
         <a class="project-card" href="./velocity/">
-          <p class="project-name">Velocity</p>
+          <div class="card-row">
+            <p class="project-name">Velocity</p>
+            <span class="pill pill-build">Build</span>
+          </div>
           <p class="project-tagline">Agentic sales operating system for Growth Partners and Coreshift HQ — one engine, two playbooks. Internal pipeline + customer-facing portal with Nirvana AI agent under hard rails.</p>
           <div class="project-meta">
             <span>Coreshift HQ × Growth Partners</span>
+            <span class="meta-dot"></span>
             <a href="https://github.com/CoreshiftHQNZ/velocity" target="_blank" rel="noopener">repo →</a>
+          </div>
+        </a>
+        <a class="project-card" href="./storepro-component-count/">
+          <div class="card-row">
+            <p class="project-name">Storepro Component Count</p>
+            <span class="pill pill-build">Build</span>
+          </div>
+          <p class="project-tagline">Drop a DWG → get a Storepro-format BOM (Excel + PDF). Cross-validates a deterministic DWG block parse with a Claude-vision per-bay-type recipe; applies the locked-in Storepro counting rules. Module 3 of the wider Storepro App program.</p>
+          <div class="project-meta">
+            <span>Coreshift × Storepro</span>
+            <span class="meta-dot"></span>
+            <a href="https://github.com/CoreshiftHQNZ/storepro-component-count" target="_blank" rel="noopener">repo →</a>
+          </div>
+        </a>
+        <a class="project-card" href="./sponsored-listicle-writer/">
+          <div class="card-row">
+            <p class="project-name">Sponsored Listicle Writer</p>
+            <span class="pill pill-build">Build</span>
+          </div>
+          <p class="project-tagline">Generates paid-placement listicles for authoritative host sites. Operator gives a keyword + top-pick URLs; chain researches competitors, writes the article, and produces a hero image.</p>
+          <div class="project-meta">
+            <span>Coreshift HQ — Internal</span>
+            <span class="meta-dot"></span>
+            <a href="https://github.com/core-ricky/sponsored-listicle-writer" target="_blank" rel="noopener">repo →</a>
+          </div>
+        </a>
+        <a class="project-card" href="./sow/">
+          <div class="card-row">
+            <p class="project-name">Sow</p>
+            <span class="pill pill-planning">Planning</span>
+          </div>
+          <p class="project-tagline">4-pillar church-aligned budgeting app — Stewarding / Seeding / Saving / Spending. Akahu bank sync, swipe categorisation, 8-week cashflow forecast, goal allocations.</p>
+          <div class="project-meta">
+            <span>Ricky — personal, then Equippers Church</span>
+            <span class="meta-dot"></span>
+            <a href="https://github.com/CoreshiftHQNZ/sow" target="_blank" rel="noopener">repo →</a>
           </div>
         </a>
       </div>
 
       <footer>
-        Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">CoreshiftHQNZ/coreshift-kanbans</a>
+        <span>
+          Edit a board: <code style="background:#E2E8F0;color:#1E293B;padding:1px 5px;border-radius:3px">&lt;slug&gt;/KANBAN.md</code>
+          &nbsp;·&nbsp;
+          Build all: <code style="background:#E2E8F0;color:#1E293B;padding:1px 5px;border-radius:3px">node tools/build.js</code>
+        </span>
+        <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">Source: CoreshiftHQNZ/coreshift-kanbans</a>
       </footer>
     </div>
   </body>
