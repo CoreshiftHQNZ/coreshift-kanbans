@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>62%</strong> complete</div>
-        <div><strong>33</strong>/53 cards done</div>
-        <div>Updated <strong>2026-06-03 20:56 UTC</strong></div>
+        <div><strong>65%</strong> complete</div>
+        <div><strong>37</strong>/57 cards done</div>
+        <div>Updated <strong>2026-06-03 21:13 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">33</div>
+        <div class="status-num">37</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -943,7 +943,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">33</span>
+        <span class="col-count">37</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1035,6 +1035,26 @@
         <div class="card-title">Phase B5: req.scoped() helpers (T3 closure foundation) shipped</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B5</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">server/middleware/scoped.ts</span><span class="tag tag-neutral">requireAgencyContext</span><span class="tag tag-neutral">scopedAgencyId(req)</span><span class="tag tag-neutral">MissingAgencyScopeError</span><span class="tag tag-neutral">req.user?.agencyId</span><span class="tag tag-neutral">scopedAgencyId(req)</span></div>
         <div class="card-desc">KC PRs #152/#153/#154 merged dev → staging → main. New `server/middleware/scoped.ts`: `requireAgencyContext` middleware (401 if no user, 403 if no agency) + `scopedAgencyId(req)` helper (returns agency_id or throws `MissingAgencyScopeError`). 7 new unit tests; full suite 49/49. HOW-WE-DO-SECURITY.md gains a &quot;Multi-tenant scope enforcement&quot; section documenting the migration pattern + the `req.user?.agencyId` → `scopedAgencyId(req)` swap rationale (throw beats silent undefined). **Phase B5b — actual route-by-route migration — is the follow-up sweep on Backlog.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel /audit-events page shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">observability</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">audit_logs</span><span class="tag tag-neutral">login_fingerprints</span></div>
+        <div class="card-desc">Sentinel PRs #91/#92/#93 merged dev → staging → main. Surfaces KC&#39;s `audit_logs` + `login_fingerprints` via service-role. 4 count cards (admin mutations / impersonations / new-device sign-ins / distinct fingerprints in 14d window), recent audit events table, login fingerprints inventory. Closes the DB-only gap from B+ #3 + B+ #7. Navigation: Sentinel → Audit events</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel /retention page shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">observability</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Sentinel PRs #94/#95/#96 merged dev → staging → main. Informational view of retention policy + live counts of rows currently eligible for the next sweep (best-effort live query via KC service-role). Copy-to-clipboard buttons for the railway run sweep commands. Surfaces the B3 retention sweep scripts in the Sentinel UI</div>
+      </div>
+      <div class="card">
+        <div class="card-title">KC /privacy page (draft v1) shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">KC PRs #155/#156/#157 merged dev → staging → main. Publicly accessible at /privacy (mirrors the /review and /invite token-route pattern — checked early in the router before the auth state machine). Content matches the SUB-PROCESSORS-aware draft 1:1 — 12 sections, NZ Privacy Act 2020 framing only, post-Kling sub-processor list (10 vendors), IPP 6/7/9 rights, OPC contact. Flagged DRAFT in the page eyebrow until the 6 vendor verifications close</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Monday digest — privacy + security extension shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">observability</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Sentinel PRs #97/#98/#99 merged dev → staging → main. Existing 10am NZ Monday maintenance digest now includes a &quot;Privacy &amp; Security&quot; section: active security_findings counts + newly-resolved this week, heartbeat health across all apps, KC audit-trail counts (admin mutations / impersonations / new-device sign-ins). Subject line promotes ERROR-level findings (&quot;Sentinel digest — 2 security ERRORs + 5 maintenance&quot;). Best-effort — section drops silently if any underlying fetch fails. **The operator now reads ONE email a week to see Brief 14 + Brief 18 + B+ #3 + B+ #7 signals roll up.**</div>
       </div>
       <div class="card">
         <div class="card-title">Phase B2: retention policy</div>
