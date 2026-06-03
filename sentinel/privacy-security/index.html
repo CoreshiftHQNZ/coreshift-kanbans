@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>53%</strong> complete</div>
-        <div><strong>26</strong>/49 cards done</div>
-        <div>Updated <strong>2026-05-30 00:00 UTC</strong></div>
+        <div><strong>55%</strong> complete</div>
+        <div><strong>27</strong>/49 cards done</div>
+        <div>Updated <strong>2026-06-03 19:44 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">26</div>
+        <div class="status-num">27</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -821,7 +821,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">7</div>
+        <div class="status-num">6</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -943,7 +943,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">26</span>
+        <span class="col-count">27</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -998,8 +998,13 @@
       </div>
       <div class="card">
         <div class="card-title">Phase B7: sub-processor inventory</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">foundation</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/data-flows/SUB-PROCESSORS.md</span></div>
-        <div class="card-desc">`Sentinel/playbook/data-flows/SUB-PROCESSORS.md`. 18 third parties classified with jurisdiction, data class, retention, DPA status, per-app applicability matrix. **🚨 P1 finding: Kling (Chinese video AI) is an active KC sub-processor — IPP 12 overseas-transfer concern.**</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">foundation</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/data-flows/SUB-PROCESSORS.md</span><span class="tag tag-neutral">is_active=true</span><span class="tag tag-neutral">ai_providers</span><span class="tag tag-neutral">ai_call_logs</span></div>
+        <div class="card-desc">`Sentinel/playbook/data-flows/SUB-PROCESSORS.md`. 18 third parties classified with jurisdiction, data class, retention, DPA status, per-app applicability matrix. ~~Originally flagged Kling as a P1 IPP 12 concern based on its `is_active=true` flag in `ai_providers`~~ — closer audit (2026-05-30) found the adapter was a stub and `ai_call_logs` showed 0 Kling invocations across 1,269 historical provider calls. False positive resolved via Path A (see Done)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Kling scaffolding removed</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">path-a</span><span class="tag tag-neutral">server/services/ai/kling.ts</span><span class="tag tag-neutral">runKlingPrompt</span><span class="tag tag-neutral">services/ai/index.ts</span><span class="tag tag-neutral">AIProviderName</span><span class="tag tag-neutral">execute_sql</span><span class="tag tag-neutral">20260530010000_drop_kling_provider</span><span class="tag tag-neutral">kling_rows_remaining: 0</span><span class="tag tag-neutral">ai_providers</span><span class="tag tag-neutral">ai_call_logs</span></div>
+        <div class="card-desc">Operator chose Path A in response to the audit-method correction: delete the dead code + DB rows. **KC PRs #140 → #141 → #142** merged dev → staging → main. Code changes: deleted `server/services/ai/kling.ts` (stub), removed `runKlingPrompt` dispatch branch in `services/ai/index.ts`, narrowed `AIProviderName` union, removed kling seed entries. DB cleanup applied to KC prod via `execute_sql` + stamped (migration `20260530010000_drop_kling_provider`): `kling_rows_remaining: 0`. **Audit-method lesson:** the next sub-processor inventory should join `ai_providers` (configuration) with `ai_call_logs` (actual invocations) — registered ≠ in use. Captured in SUB-PROCESSORS.md operator-action #5</div>
       </div>
       <div class="card">
         <div class="card-title">Phase B2: retention policy</div>
@@ -1092,26 +1097,21 @@
       <div class="cards">
       <div class="card">
         <div class="card-title">Phase B8b: end-user privacy notice (publish)</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-blocked">blocked-by:kling+verifications</span><span class="tag tag-neutral">/privacy</span></div>
-        <div class="card-desc">Draft v1 ready (see Done). Blocked on: (1) Kling decision (drop vs. disclose); (2) 7 vendor verifications (Postmark TTL, Sentry region, OpenAI no-train opt-out, Gemini tier, Zernio DPA, repo-private call, plus operator email confirmation); (3) `/privacy` route + footer link + signup consent checkbox in KC app</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-blocked">blocked-by:verifications</span><span class="tag tag-neutral">/privacy</span></div>
+        <div class="card-desc">Draft v1 ready (see Done). ~~Kling block resolved 2026-05-30 (Path A).~~ Remaining blockers: (1) 6 vendor verifications (Postmark TTL, Sentry region, OpenAI no-train opt-out, Gemini tier, Zernio DPA, repo-private call); (2) `/privacy` route + footer link + signup consent checkbox in KC app</div>
       </div>
       <div class="card">
         <div class="card-title">Annexure 2 fill on Type 3 agreement</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-blocked">blocked-by:verifications</span></div>
-        <div class="card-desc">SUB-PROCESSORS.md is ready to copy into Annexure 2 once Kling decision + DPA confirmations close</div>
+        <div class="card-desc">SUB-PROCESSORS.md is ready to copy into Annexure 2 once DPA confirmations close. Kling line removed from the source doc 2026-05-30; Annexure 2 will be simpler as a result</div>
       </div></div>
     </section>
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">🚨 Kling sub-processor decision</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">P1-finding</span><span class="tag tag-neutral">ai_providers</span></div>
-        <div class="card-desc">KC&#39;s `ai_providers` table lists Kling (Kuaishou, China) for video generation. Privacy Act 2020 IPP 12 overseas-transfer concern — PRC has no comparable privacy regime. Three options: **(a)** drop Kling, route all video through Veo (already wired and in active use; ~half-day removal); **(b)** keep Kling, gate behind explicit user authorisation in privacy notice; **(c)** accept the IPP 12 risk with an explicit policy memo. **Recommendation: (a).** Blocks Annexure 2 fill + B8b publish</div>
-      </div>
       <div class="card">
         <div class="card-title">Tighten KC npm audit threshold to `high`</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">keycontent-app/.github/workflows/npm-audit.yml</span><span class="tag tag-neutral">continue-on-error: true</span></div>
