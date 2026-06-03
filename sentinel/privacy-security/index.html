@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>55%</strong> complete</div>
-        <div><strong>27</strong>/49 cards done</div>
-        <div>Updated <strong>2026-06-03 19:44 UTC</strong></div>
+        <div><strong>62%</strong> complete</div>
+        <div><strong>33</strong>/53 cards done</div>
+        <div>Updated <strong>2026-06-03 20:56 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">27</div>
+        <div class="status-num">33</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -821,11 +821,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">6</div>
+        <div class="status-num">7</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">14</div>
+        <div class="status-num">11</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -943,7 +943,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">27</span>
+        <span class="col-count">33</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1005,6 +1005,36 @@
         <div class="card-title">Kling scaffolding removed</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">path-a</span><span class="tag tag-neutral">server/services/ai/kling.ts</span><span class="tag tag-neutral">runKlingPrompt</span><span class="tag tag-neutral">services/ai/index.ts</span><span class="tag tag-neutral">AIProviderName</span><span class="tag tag-neutral">execute_sql</span><span class="tag tag-neutral">20260530010000_drop_kling_provider</span><span class="tag tag-neutral">kling_rows_remaining: 0</span><span class="tag tag-neutral">ai_providers</span><span class="tag tag-neutral">ai_call_logs</span></div>
         <div class="card-desc">Operator chose Path A in response to the audit-method correction: delete the dead code + DB rows. **KC PRs #140 → #141 → #142** merged dev → staging → main. Code changes: deleted `server/services/ai/kling.ts` (stub), removed `runKlingPrompt` dispatch branch in `services/ai/index.ts`, narrowed `AIProviderName` union, removed kling seed entries. DB cleanup applied to KC prod via `execute_sql` + stamped (migration `20260530010000_drop_kling_provider`): `kling_rows_remaining: 0`. **Audit-method lesson:** the next sub-processor inventory should join `ai_providers` (configuration) with `ai_call_logs` (actual invocations) — registered ≠ in use. Captured in SUB-PROCESSORS.md operator-action #5</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 18 V2: heartbeat dashboard shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">observability</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/heartbeats</span><span class="tag tag-neutral">sentry_heartbeat_pings</span></div>
+        <div class="card-desc">Sentinel `/heartbeats` page surfacing the existing `sentry_heartbeat_pings` table. Per-app rollup pills (healthy / unverified / missing / ping_failed), 14-day window stats, recent pings table. Empty state documents Brief 18 activation steps. PRs #85/#86/#87 merged dev → staging → main on Sentinel. 280/280 tests pass</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B+ #3: audit logging wired in</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">server/middleware/audit.ts</span><span class="tag tag-neutral">auditAdminMutation</span><span class="tag tag-neutral">audit_logs</span><span class="tag tag-neutral">auditImpersonation()</span><span class="tag tag-neutral">isAuthenticated</span><span class="tag tag-neutral">GET /api/admin/audit-logs</span></div>
+        <div class="card-desc">KC PRs #143/#144/#145 merged dev → staging → main. New `server/middleware/audit.ts` with `auditAdminMutation` middleware (appended to adminGuard) records every mutating admin call to `audit_logs`. `auditImpersonation()` fires inline from `isAuthenticated` when the impersonation header is present on a mutating request. New `GET /api/admin/audit-logs` admin route lists the most recent 200 entries. Privacy Act 2020 IPP 6 traceability is now real, not aspirational. Body content is NEVER logged (path + method + metadata only)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B3-code partial: export-user-data.ts shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">keycontent-app/script/</span><span class="tag tag-neutral">npx tsx script/export-user-data.ts (--uid &lt;auth-uid&gt; | --email &lt;email&gt;) [--output &lt;path&gt;]</span><span class="tag tag-neutral">bug_reports</span><span class="tag tag-neutral">delete-user-data.ts</span></div>
+        <div class="card-desc">KC PRs #146/#147/#148 merged dev → staging → main. Read-only IPP 6 access script in `keycontent-app/script/`. `npx tsx script/export-user-data.ts (--uid &lt;auth-uid&gt; | --email &lt;email&gt;) [--output &lt;path&gt;]`. Walks 16 tables to assemble a JSON dump (parameter-bound SQL for the non-Drizzle `bug_reports` table). The matching `delete-user-data.ts` write-path script remains deferred pending operator cascade review</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 14: Sentinel /security advisor surface shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/security</span><span class="tag tag-neutral">maintained_apps</span><span class="tag tag-neutral">supabase_project_ref</span><span class="tag tag-neutral">/v1/projects/{ref}/advisors</span><span class="tag tag-neutral">security_findings</span><span class="tag tag-neutral">execute_sql</span><span class="tag tag-neutral">20260603040000</span><span class="tag tag-neutral">supabase_project_ref = ayipiwqupgtaiirmmjjr</span><span class="tag tag-neutral">SUPABASE_ACCESS_TOKEN</span></div>
+        <div class="card-desc">**Closes the highest-leverage piece of the Sentinel-UI-gap.** Sentinel PRs #88/#89/#90 merged dev → staging → main. New `/security` page with per-app rollup cards + active findings list + recently-resolved tail. Daily 5am NZ cron walks every `maintained_apps` row that has a `supabase_project_ref` set, calls Supabase Management API `/v1/projects/{ref}/advisors`, upserts into a new `security_findings` table (RLS deny + service_role grant + active/resolved/first-seen/last-seen semantics). Migration applied to Sentinel prod via `execute_sql` + stamped (`20260603040000`). KC&#39;s `supabase_project_ref = ayipiwqupgtaiirmmjjr` pre-populated. **Operator activation Tuesday:** set `SUPABASE_ACCESS_TOKEN` in Sentinel Railway prod + staging</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B+ #7: account-takeover detection (basic) shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">login_fingerprints</span><span class="tag tag-neutral">server/lib/login-fingerprint.ts</span><span class="tag tag-neutral">xmax</span><span class="tag tag-neutral">auth:new_device_login</span><span class="tag tag-neutral">POST /api/auth/sync</span><span class="tag tag-neutral">execute_sql</span><span class="tag tag-neutral">20260603050000</span></div>
+        <div class="card-desc">KC PRs #149/#150/#151 merged dev → staging → main. New `login_fingerprints` table (RLS deny + service_role grant). `server/lib/login-fingerprint.ts` SHA-256-hashes the User-Agent, atomic upsert returning isNew via Postgres `xmax` pseudo-column, sends a Postmark &quot;new device sign-in&quot; email + writes an `auth:new_device_login` audit row on first-seen fingerprints. Hook point: `POST /api/auth/sync` (called right after Supabase sign-in succeeds). Best-effort — failures never block sign-in. Migration applied to KC prod via `execute_sql` + stamped (`20260603050000`)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B5: req.scoped() helpers (T3 closure foundation) shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B5</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">server/middleware/scoped.ts</span><span class="tag tag-neutral">requireAgencyContext</span><span class="tag tag-neutral">scopedAgencyId(req)</span><span class="tag tag-neutral">MissingAgencyScopeError</span><span class="tag tag-neutral">req.user?.agencyId</span><span class="tag tag-neutral">scopedAgencyId(req)</span></div>
+        <div class="card-desc">KC PRs #152/#153/#154 merged dev → staging → main. New `server/middleware/scoped.ts`: `requireAgencyContext` middleware (401 if no user, 403 if no agency) + `scopedAgencyId(req)` helper (returns agency_id or throws `MissingAgencyScopeError`). 7 new unit tests; full suite 49/49. HOW-WE-DO-SECURITY.md gains a &quot;Multi-tenant scope enforcement&quot; section documenting the migration pattern + the `req.user?.agencyId` → `scopedAgencyId(req)` swap rationale (throw beats silent undefined). **Phase B5b — actual route-by-route migration — is the follow-up sweep on Backlog.**</div>
       </div>
       <div class="card">
         <div class="card-title">Phase B2: retention policy</div>
@@ -1109,7 +1139,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1126,6 +1156,11 @@
         <div class="card-title">Brief 18 activation — operator adds env vars</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">SENTRY_HEARTBEAT_TOKEN</span><span class="tag tag-neutral">SENTRY_AUTH_TOKEN</span><span class="tag tag-neutral">SENTRY_ORG</span></div>
         <div class="card-desc">Set `SENTRY_HEARTBEAT_TOKEN` (any opaque string, same in both apps) in Railway prod + staging for KC and Sentinel. Optional: `SENTRY_AUTH_TOKEN` + `SENTRY_ORG` in Sentinel only to enable Sentry-API verification of pings. ~5 min total</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 14 activation — operator adds Supabase access token</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">SUPABASE_ACCESS_TOKEN</span><span class="tag tag-neutral">runDailyScan()</span><span class="tag tag-neutral">supabase_project_ref</span></div>
+        <div class="card-desc">Set `SUPABASE_ACCESS_TOKEN` (personal access token from supabase.com/dashboard/account/tokens) in Sentinel Railway prod + staging. Then trigger the daily 5am NZ cron OR call `runDailyScan()` from a one-shot script. KC&#39;s `supabase_project_ref` already pre-populated. ~2 min</div>
       </div>
       <div class="card">
         <div class="card-title">B3 retention sweeps — first dry-run on staging</div>
@@ -1146,7 +1181,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">14</span>
+        <span class="col-count">11</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1155,19 +1190,14 @@
         <div class="card-desc">Implementation of B3 doc. Four scripts in `keycontent-app/script/`: `export-user-data.ts` (IPP 6 access), `delete-user-data.ts` (IPP 7 cascade + anonymise), `close-account.ts` (Type 3 clause 11/12), monthly aggregation step for `ai_call_logs`. **Needs operator review of cascade semantics before code lands.** Unblocks the 30-day deletion SLA promise</div>
       </div>
       <div class="card">
-        <div class="card-title">Phase B5 follow-on: req.scoped() query builder + KC route audit</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">~2-3d</span><span class="tag tag-neutral">agency_id</span></div>
-        <div class="card-desc">Highest residual KC risk per threat model (T3): multi-tenant scope filter is in-code, not in-DB. Closes the gap with an Express middleware-bound query builder that refuses queries without an explicit `agency_id`. Plus targeted audit of every existing route for the pattern. Quarter-budget work — not urgent but highest ROI</div>
+        <div class="card-title">Phase B5b: route-by-route migration to req.scoped() helpers</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B5</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">~2d</span><span class="tag tag-neutral">server/middleware/scoped.ts</span><span class="tag tag-neutral">getUserFromRequest(req)!.agencyId</span><span class="tag tag-neutral">scopedAgencyId(req)</span><span class="tag tag-neutral">requireAgencyContext</span></div>
+        <div class="card-desc">Foundation shipped (see Done — `server/middleware/scoped.ts`). This sweep migrates existing KC routes from `getUserFromRequest(req)!.agencyId` to `scopedAgencyId(req)` with `requireAgencyContext` middleware. Each route is small; the sweep is ~25 routes across calendar / clients / jobs / etc. Defensible to do incrementally as routes are touched for other reasons; the explicit sweep makes the threat model T3 close real instead of theoretical</div>
       </div>
       <div class="card">
-        <div class="card-title">Phase B+ #3: audit logging of sensitive events</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">~2d</span><span class="tag tag-neutral">logAuditEvent()</span><span class="tag tag-neutral">keycontent-app/server/services/security.ts</span></div>
-        <div class="card-desc">`logAuditEvent()` helper already exists in `keycontent-app/server/services/security.ts` (currently unused). Wire it in at: admin impersonation actions, exports of user data, service-role queries scoped to a particular agency, deletion operations. Privacy Act 2020 IPP 6 traceability comes from this</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Phase B+ #7: account-takeover detection (basic)</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">~1.5d</span></div>
-        <div class="card-desc">Builds on B+ #3. &quot;New device login&quot; email via Postmark + per-user login audit-log row + Sentinel-side dashboard for review. Common SaaS attack vector. Operator design call on email copy + which signals fire alerts vs. silently log</div>
+        <div class="card-title">Phase B+ #7 V2: surface login fingerprints in Sentinel</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">/auth-events</span><span class="tag tag-neutral">login_fingerprints</span><span class="tag tag-neutral">auth:new_device_login</span><span class="tag tag-neutral">audit_logs</span></div>
+        <div class="card-desc">Today login fingerprints are visible only via DB query / Postmark inbox. Add a `/auth-events` page in Sentinel reading from KC&#39;s `login_fingerprints` (via service-role) plus the `auth:new_device_login` rows from `audit_logs`. Glanceable &quot;is anyone signing in from unexpected places&quot; surface</div>
       </div>
       <div class="card">
         <div class="card-title">Phase B+ #8: privacy-contact channel SLA-backed</div>
@@ -1178,11 +1208,6 @@
         <div class="card-title">Phase B+ #1b: backup-restore drill on staging</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">supervised</span></div>
         <div class="card-desc">After the tabletop closes (item in This Week), schedule the operator-supervised destructive drill on staging Supabase. Drop a low-risk table, restore from backup, time each step. Worst-case findings update HOW-WE-DO-BACKUP-RESTORE.md</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Brief 14 — Security advisor surface in Sentinel</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">/security</span><span class="tag tag-neutral">get_advisors</span></div>
-        <div class="card-desc">`/security` sub-page. Runs `get_advisors` on cron across every onboarded app. Surfaces findings by severity. Folds ERROR into Monday digest. **Highest leverage in Phase C** — closes the reactive-only-detection gap</div>
       </div>
       <div class="card">
         <div class="card-title">Brief 15 — Data inventory surface in Sentinel</div>
@@ -1203,11 +1228,6 @@
         <div class="card-title">Brief 19 — KC `job-assets` daily R2 backup</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">job-assets</span><span class="tag tag-neutral">script/restore-from-r2.ts</span></div>
         <div class="card-desc">Sentinel-owned node-cron: list Supabase Storage `job-assets`, diff against R2 bucket, copy new/changed objects, prune versions per retention policy. Companion CLI `script/restore-from-r2.ts`. R2 export decision locked</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Brief 18 V2 — heartbeat dashboard in Sentinel</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">observability</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">/heartbeats</span><span class="tag tag-neutral">sentry_heartbeat_pings</span></div>
-        <div class="card-desc">Add a `/heartbeats` page that shows recent ping + verification status from `sentry_heartbeat_pings`. Today the data is DB-only. UI elevates &quot;Sentry is healthy&quot; to a glanceable status pill</div>
       </div>
       <div class="card">
         <div class="card-title">Sentry alert &quot;heartbeat&quot; detection follow-up</div>
