@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>50%</strong> complete</div>
-        <div><strong>14</strong>/28 cards done</div>
-        <div>Updated <strong>2026-06-05 05:02 UTC</strong></div>
+        <div><strong>56%</strong> complete</div>
+        <div><strong>15</strong>/27 cards done</div>
+        <div>Updated <strong>2026-06-05 05:18 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,11 +821,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">14</div>
+        <div class="status-num">15</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">2</div>
+        <div class="status-num">1</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">4</div>
+        <div class="status-num">3</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -954,7 +954,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">14</span>
+        <span class="col-count">15</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1023,26 +1023,26 @@
         <div class="card-desc">`notify-lead` edge function + pg_net AFTER INSERT trigger on `leads`. Verified end-to-end (insert → function ran, HTTP 200). Emails go out via Resend the moment `RESEND_API_KEY` + `LEAD_NOTIFY_TO` secrets are added (gated on an email sender domain)</div>
       </div>
       <div class="card">
-        <div class="card-title">Railway project + service</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">heygem</span><span class="tag tag-neutral">marketing</span></div>
-        <div class="card-desc">`heygem` project created (production env) with a `marketing` service, Supabase build vars preloaded, railway.json build/serve config, and a generated URL (marketing-production-6048.up.railway.app). Connecting the GitHub repo is the one dashboard step left (below)</div>
+        <div class="card-title">Marketing LIVE</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Repo connected; both **heygem.co.nz** (production / main) and **staging.heygem.co.nz** (staging) are live (HTTP 200), serving the built site with the Supabase env inlined. DNS to Cloudflare resolved</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Fixed blank-page deploy</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-neutral">fix</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">VITE_SUPABASE_*</span></div>
+        <div class="card-desc">First deploy white-screened: `VITE_SUPABASE_*` weren&#39;t set on the Railway services, so the Supabase client threw at import. Fixed by setting the vars on both services/envs **and** making the client lazy/resilient so a missing env degrades the lead form instead of blanking the whole page</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">1</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Cloudflare DNS verify</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">heygem.co.nz still resolves to 1st Domains nameservers; the move to Cloudflare hasn&#39;t propagated/taken yet. Must land before Railway can attach the domain</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Connect heygem repo in Railway</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">needs-ricky</span></div>
-        <div class="card-desc">Railway&#39;s GitHub app must be granted access to CoreshiftHQNZ/heygem (couldn&#39;t link headlessly). In the heygem project → marketing service → connect repo (branch main); railway.json drives build + serve. Then the site is live on the railway.app URL</div>
+        <div class="card-title">Consolidate Railway to one service</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">tech-debt</span><span class="tag tag-neutral">marketing</span><span class="tag tag-neutral">heygem</span></div>
+        <div class="card-desc">Setup ended up with TWO services: `marketing` serves heygem.co.nz (production), `heygem` serves staging.heygem.co.nz (staging). Both work, but collapse to a single service with production (main) + staging (staging) environments and move the staging domain across — one build pipeline, less confusion/cost</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1060,7 +1060,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1071,12 +1071,7 @@
       <div class="card">
         <div class="card-title">SEO + analytics</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1</span></div>
-        <div class="card-desc">Meta/OG tags, sitemap, and analytics before the site goes public</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Staging environment + custom domain</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Formalise a Railway staging env (staging branch) and attach heygem.co.nz to production once DNS lands</div>
+        <div class="card-desc">Meta/OG tags, sitemap, and analytics now that the site is publicly reachable</div>
       </div>
       <div class="card">
         <div class="card-title">Interim ops view</div>
