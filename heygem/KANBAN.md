@@ -17,6 +17,7 @@
 - **Monorepo + design system** `phase-0` `shipped` — pnpm workspace with three Vite/React-TS apps (marketing, customer, staff) + `@heygem/ui` shared design system (emerald tokens + Facet/Icon/Logo/GemPhoto/Button ported from the prototype). All three apps build green; GemPhoto supports real photos with a branded fallback.
 - **GitHub repo created** `phase-0` `shipped` — `CoreshiftHQNZ/heygem` (private). `main` / `dev` / `staging` branches pushed; dev → staging → main flow.
 - **Supabase project created** `phase-0` `shipped` — `heygem` (ref `ysdikfmlqgyuvmwtkrun`, ap-southeast-2). URL + publishable key wired into `.env.example` on `dev`.
+- **Real brand assets wired** `phase-0` `shipped` `brand` — Client-supplied pop-art diamond logo + favicon added to `@heygem/ui` (new Logo + Mark components, logo downscaled 1.4MB→106KB). Accent repointed emerald→amethyst purple to match; amber + deep-teal kept for a jewel palette. Verified rendering on the live marketing build.
 
 ## 🟡 In Progress
 
@@ -40,4 +41,4 @@
 - **Stripe metered billing** `phase-4` — Subscriptions + usage-based overage, weekly billing run, self-serve cancel/plan change.
 - **Real Gem photos** `phase-4` `content` — Swap brand-avatar fallback for real staff photos when supplied.
 - **Real testimonials & stats** `phase-1` `content` — Replace prototype placeholders once first clients land.
-- **Final logo & brand** `low-priority` `content` — Replace placeholder facet mark/wordmark when design is delivered.
+- **Brand polish pass** `low-priority` `content` — Logo + favicon now live (amethyst). Later: optional on-dark logo variant, full brand guide, type/spacing refinements once a designer is involved.
