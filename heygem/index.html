@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>32%</strong> complete</div>
-        <div><strong>6</strong>/19 cards done</div>
-        <div>Updated <strong>2026-06-05 04:05 UTC</strong></div>
+        <div><strong>43%</strong> complete</div>
+        <div><strong>9</strong>/21 cards done</div>
+        <div>Updated <strong>2026-06-05 04:22 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,11 +821,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">6</div>
+        <div class="status-num">9</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
+        <div class="status-num">1</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">4</div>
+        <div class="status-num">2</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -954,7 +954,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">9</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -986,14 +986,34 @@
         <div class="card-title">Logistics confirmed</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">decision</span></div>
         <div class="card-desc">New Stripe acct (business registers ~wk of 8 Jun); DNS moving to Cloudflare; keep prototype logo for now; multi-user per business; self-serve cancel/plan-change; named tools are trust signals only (no v1 integrations)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Monorepo + design system</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">@heygem/ui</span></div>
+        <div class="card-desc">pnpm workspace with three Vite/React-TS apps (marketing, customer, staff) + `@heygem/ui` shared design system (emerald tokens + Facet/Icon/Logo/GemPhoto/Button ported from the prototype). All three apps build green; GemPhoto supports real photos with a branded fallback</div>
+      </div>
+      <div class="card">
+        <div class="card-title">GitHub repo created</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">CoreshiftHQNZ/heygem</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">dev</span><span class="tag tag-neutral">staging</span></div>
+        <div class="card-desc">`CoreshiftHQNZ/heygem` (private). `main` / `dev` / `staging` branches pushed; dev → staging → main flow</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Supabase project created</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">heygem</span><span class="tag tag-neutral">ysdikfmlqgyuvmwtkrun</span><span class="tag tag-neutral">.env.example</span><span class="tag tag-neutral">dev</span></div>
+        <div class="card-desc">`heygem` (ref `ysdikfmlqgyuvmwtkrun`, ap-southeast-2). URL + publishable key wired into `.env.example` on `dev`</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">0</span>
+        <span class="col-count">1</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Cloudflare DNS verify</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">heygem.co.nz still resolves to 1st Domains nameservers; the move to Cloudflare hasn&#39;t propagated/taken yet. Must land before Railway can attach the domain</div>
+      </div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -1010,28 +1030,18 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Create GitHub repo</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">setup</span><span class="tag tag-neutral">heygem</span></div>
-        <div class="card-desc">`heygem` under CoreshiftHQNZ, dev → staging → main branch flow</div>
+        <div class="card-title">Railway wiring</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">Deferred to land with Phase 1: create the marketing service (deploys on push to staging/main) when there&#39;s a real site to ship; customer/staff services follow as their apps come online</div>
       </div>
       <div class="card">
-        <div class="card-title">Create Supabase project</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">setup</span></div>
-        <div class="card-desc">One project under CoreShift org; plan role-based RLS for the two apps</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Verify Cloudflare DNS</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">setup</span></div>
-        <div class="card-desc">Confirm NS moved off 1st Domains and propagated for heygem.co.nz</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Extract design system</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">build</span></div>
-        <div class="card-desc">Pull the emerald theme, fonts, and Icon/Logo/GemPhoto components from the prototype into a shared Vite component library</div>
+        <div class="card-title">Kick off Phase 1 — marketing port</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span></div>
+        <div class="card-desc">Port the full marketing prototype (problem, how-it-works, what-your-Gem-does, pricing on-ramp + 3 cards, trust, callback form) onto the new scaffold</div>
       </div></div>
     </section>
     <section class="column col-backlog">

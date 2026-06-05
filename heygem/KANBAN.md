@@ -14,10 +14,13 @@
 - **Billing model locked** `phase-0` `decision` — Real Stripe, metered: weekly plan + $1/min overage; PAYG $1/min capped $60/hr. GST exclusive (+15% at checkout).
 - **Brand model locked** `phase-0` `decision` — Every assistant is just "Gem" (no names); pooled team all present as Gem; real staff photos with a brand-avatar fallback.
 - **Logistics confirmed** `phase-0` `decision` — New Stripe acct (business registers ~wk of 8 Jun); DNS moving to Cloudflare; keep prototype logo for now; multi-user per business; self-serve cancel/plan-change; named tools are trust signals only (no v1 integrations).
+- **Monorepo + design system** `phase-0` `shipped` — pnpm workspace with three Vite/React-TS apps (marketing, customer, staff) + `@heygem/ui` shared design system (emerald tokens + Facet/Icon/Logo/GemPhoto/Button ported from the prototype). All three apps build green; GemPhoto supports real photos with a branded fallback.
+- **GitHub repo created** `phase-0` `shipped` — `CoreshiftHQNZ/heygem` (private). `main` / `dev` / `staging` branches pushed; dev → staging → main flow.
+- **Supabase project created** `phase-0` `shipped` — `heygem` (ref `ysdikfmlqgyuvmwtkrun`, ap-southeast-2). URL + publishable key wired into `.env.example` on `dev`.
 
 ## 🟡 In Progress
 
-_None — awaiting kick-off of Phase 0 foundations._
+- **Cloudflare DNS verify** `phase-0` `infra` — heygem.co.nz still resolves to 1st Domains nameservers; the move to Cloudflare hasn't propagated/taken yet. Must land before Railway can attach the domain.
 
 ## 🚫 Blocked
 
@@ -25,10 +28,8 @@ _None — awaiting kick-off of Phase 0 foundations._
 
 ## 🔵 This Week
 
-- **Create GitHub repo** `phase-0` `setup` — `heygem` under CoreshiftHQNZ, dev → staging → main branch flow.
-- **Create Supabase project** `phase-0` `setup` — One project under CoreShift org; plan role-based RLS for the two apps.
-- **Verify Cloudflare DNS** `phase-0` `setup` — Confirm NS moved off 1st Domains and propagated for heygem.co.nz.
-- **Extract design system** `phase-0` `build` — Pull the emerald theme, fonts, and Icon/Logo/GemPhoto components from the prototype into a shared Vite component library.
+- **Railway wiring** `phase-0` `phase-1` `infra` — Deferred to land with Phase 1: create the marketing service (deploys on push to staging/main) when there's a real site to ship; customer/staff services follow as their apps come online.
+- **Kick off Phase 1 — marketing port** `phase-1` — Port the full marketing prototype (problem, how-it-works, what-your-Gem-does, pricing on-ramp + 3 cards, trust, callback form) onto the new scaffold.
 
 ## ⚪ Backlog
 
