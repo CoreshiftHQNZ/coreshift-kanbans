@@ -20,10 +20,13 @@
 - **Real brand assets wired** `phase-0` `shipped` `brand` — Client-supplied pop-art diamond logo + favicon added to `@heygem/ui` (new Logo + Mark components, logo downscaled 1.4MB→106KB). Accent repointed emerald→amethyst purple to match; amber + deep-teal kept for a jewel palette. Verified rendering on the live marketing build.
 - **Marketing site ported** `phase-1` `shipped` — Full homepage on the new scaffold + design system: hero, the 9pm problem, how-it-works, what-your-Gem-does, pricing on-ramp + 3 plan cards, trust/testimonials, callback CTA, footer. GST-exclusive note added; copy de-named to the single-"Gem" brand.
 - **Lead capture wired** `phase-1` `shipped` — Callback form writes to a Supabase `leads` table via anon-insert RLS. Verified end-to-end in a real build (form submit → row in DB, then cleaned up).
+- **Lead notification pipeline** `phase-1` `shipped` — `notify-lead` edge function + pg_net AFTER INSERT trigger on `leads`. Verified end-to-end (insert → function ran, HTTP 200). Emails go out via Resend the moment `RESEND_API_KEY` + `LEAD_NOTIFY_TO` secrets are added (gated on an email sender domain).
+- **Railway project + service** `phase-1` `infra` `shipped` — `heygem` project created (production env) with a `marketing` service, Supabase build vars preloaded, railway.json build/serve config, and a generated URL (marketing-production-6048.up.railway.app). Connecting the GitHub repo is the one dashboard step left (below).
 
 ## 🟡 In Progress
 
 - **Cloudflare DNS verify** `phase-0` `infra` — heygem.co.nz still resolves to 1st Domains nameservers; the move to Cloudflare hasn't propagated/taken yet. Must land before Railway can attach the domain.
+- **Connect heygem repo in Railway** `phase-1` `infra` `needs-ricky` — Railway's GitHub app must be granted access to CoreshiftHQNZ/heygem (couldn't link headlessly). In the heygem project → marketing service → connect repo (branch main); railway.json drives build + serve. Then the site is live on the railway.app URL.
 
 ## 🚫 Blocked
 
@@ -31,9 +34,10 @@
 
 ## 🔵 This Week
 
-- **Deploy marketing to Railway** `phase-1` `infra` — Marketing app is built + verified; stand up the Railway service (staging→main), set Supabase env vars, and attach heygem.co.nz once DNS lands. This is what makes Phase 1 actually "live".
-- **Lead notifications + ops view** `phase-1` — Leads land in the DB but nobody's alerted yet. Email/Slack notify on new lead, and a simple ops list to read them (interim until the Phase 3 ops workspace).
-- **SEO + analytics** `phase-1` — Meta/OG tags, sitemap, and analytics on the marketing site before it goes public.
+- **Activate lead emails** `phase-1` `needs-ricky` — Add `RESEND_API_KEY` + `LEAD_NOTIFY_TO` (+ verified sender) as edge-function secrets to turn on lead emails. Pipeline is built + tested; just needs the sender (likely post-registration). Until then, read leads in Supabase Studio.
+- **SEO + analytics** `phase-1` — Meta/OG tags, sitemap, and analytics before the site goes public.
+- **Staging environment + custom domain** `phase-1` `infra` — Formalise a Railway staging env (staging branch) and attach heygem.co.nz to production once DNS lands.
+- **Interim ops view** `phase-1` `low-priority` — Real lead inbox arrives with the Phase 3 ops workspace; for now leads are visible in Supabase Studio.
 
 ## ⚪ Backlog
 

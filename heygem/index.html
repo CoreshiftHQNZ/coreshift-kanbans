@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>50%</strong> complete</div>
-        <div><strong>12</strong>/24 cards done</div>
-        <div>Updated <strong>2026-06-05 04:44 UTC</strong></div>
+        <div><strong>14</strong>/28 cards done</div>
+        <div>Updated <strong>2026-06-05 05:02 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,11 +821,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">12</div>
+        <div class="status-num">14</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">1</div>
+        <div class="status-num">2</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">3</div>
+        <div class="status-num">4</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -954,7 +954,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">12</span>
+        <span class="col-count">14</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1016,18 +1016,33 @@
         <div class="card-title">Lead capture wired</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">leads</span></div>
         <div class="card-desc">Callback form writes to a Supabase `leads` table via anon-insert RLS. Verified end-to-end in a real build (form submit → row in DB, then cleaned up)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Lead notification pipeline</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">notify-lead</span><span class="tag tag-neutral">leads</span><span class="tag tag-neutral">RESEND_API_KEY</span><span class="tag tag-neutral">LEAD_NOTIFY_TO</span></div>
+        <div class="card-desc">`notify-lead` edge function + pg_net AFTER INSERT trigger on `leads`. Verified end-to-end (insert → function ran, HTTP 200). Emails go out via Resend the moment `RESEND_API_KEY` + `LEAD_NOTIFY_TO` secrets are added (gated on an email sender domain)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Railway project + service</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">heygem</span><span class="tag tag-neutral">marketing</span></div>
+        <div class="card-desc">`heygem` project created (production env) with a `marketing` service, Supabase build vars preloaded, railway.json build/serve config, and a generated URL (marketing-production-6048.up.railway.app). Connecting the GitHub repo is the one dashboard step left (below)</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">Cloudflare DNS verify</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span></div>
         <div class="card-desc">heygem.co.nz still resolves to 1st Domains nameservers; the move to Cloudflare hasn&#39;t propagated/taken yet. Must land before Railway can attach the domain</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Connect heygem repo in Railway</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">needs-ricky</span></div>
+        <div class="card-desc">Railway&#39;s GitHub app must be granted access to CoreshiftHQNZ/heygem (couldn&#39;t link headlessly). In the heygem project → marketing service → connect repo (branch main); railway.json drives build + serve. Then the site is live on the railway.app URL</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1045,23 +1060,28 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Deploy marketing to Railway</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Marketing app is built + verified; stand up the Railway service (staging→main), set Supabase env vars, and attach heygem.co.nz once DNS lands. This is what makes Phase 1 actually &quot;live&quot;</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Lead notifications + ops view</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span></div>
-        <div class="card-desc">Leads land in the DB but nobody&#39;s alerted yet. Email/Slack notify on new lead, and a simple ops list to read them (interim until the Phase 3 ops workspace)</div>
+        <div class="card-title">Activate lead emails</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">RESEND_API_KEY</span><span class="tag tag-neutral">LEAD_NOTIFY_TO</span></div>
+        <div class="card-desc">Add `RESEND_API_KEY` + `LEAD_NOTIFY_TO` (+ verified sender) as edge-function secrets to turn on lead emails. Pipeline is built + tested; just needs the sender (likely post-registration). Until then, read leads in Supabase Studio</div>
       </div>
       <div class="card">
         <div class="card-title">SEO + analytics</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1</span></div>
-        <div class="card-desc">Meta/OG tags, sitemap, and analytics on the marketing site before it goes public</div>
+        <div class="card-desc">Meta/OG tags, sitemap, and analytics before the site goes public</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Staging environment + custom domain</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">Formalise a Railway staging env (staging branch) and attach heygem.co.nz to production once DNS lands</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Interim ops view</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-neutral">low-priority</span></div>
+        <div class="card-desc">Real lead inbox arrives with the Phase 3 ops workspace; for now leads are visible in Supabase Studio</div>
       </div></div>
     </section>
     <section class="column col-backlog">
