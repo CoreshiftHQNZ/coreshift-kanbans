@@ -13,10 +13,10 @@ module.exports = {
     "and an internal staff/ops workspace where pooled “Gems” log their work and minutes. " +
     "Those logged minutes are the single source of truth for both the dashboard and weekly metered billing.",
 
-  phase: "Phase 0 · Foundations",
+  phase: "Phase 1 · Marketing site",
   nextMilestone: {
-    name: "Marketing site live",
-    date: "Phase 1",
+    name: "Marketing live on heygem.co.nz",
+    date: "needs Railway deploy + Cloudflare DNS",
   },
 
   // ── Goals ─────────────────────────────────────────────────────
@@ -67,7 +67,7 @@ module.exports = {
   phases: [
     {
       key: "phase-0",
-      status: "in-progress",
+      status: "done",
       title: "Phase 0",
       subtitle: "Foundations",
       window: "In progress · Jun 2026",
@@ -82,7 +82,7 @@ module.exports = {
     },
     {
       key: "phase-1",
-      status: "planned",
+      status: "in-progress",
       title: "Phase 1",
       subtitle: "Marketing site live",
       window: "Ships independently — first",

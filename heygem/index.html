@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>45%</strong> complete</div>
-        <div><strong>10</strong>/22 cards done</div>
-        <div>Updated <strong>2026-06-05 04:32 UTC</strong></div>
+        <div><strong>50%</strong> complete</div>
+        <div><strong>12</strong>/24 cards done</div>
+        <div>Updated <strong>2026-06-05 04:44 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">Phase 0 · Foundations</span>
+          <span class="phase-pill-value">Phase 1 · Marketing site</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Marketing site live <span class="phase-pill-date">Phase 1</span></span>
+          <span class="phase-pill-value">Marketing live on heygem.co.nz <span class="phase-pill-date">needs Railway deploy + Cloudflare DNS</span></span>
         </div>
       </div>
     </section>
@@ -755,10 +755,10 @@
       <p class="section-sub">Where the project has been, where it is now, and where it's going. Each phase delivers value on its own — no big-bang.</p>
       <div class="phases-grid">
         
-        <div class="phase-card phase-in-progress">
+        <div class="phase-card phase-done">
           <div class="phase-card-head">
             <div class="phase-marker">0</div>
-            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
           </div>
           <div class="phase-title">Phase 0 <span class="phase-subtitle">Foundations</span></div>
           <div class="phase-window">In progress · Jun 2026</div>
@@ -767,10 +767,10 @@
             <li>GitHub repo + dev → staging → main flow</li><li>Supabase project (one DB, role-based RLS for both apps)</li><li>Railway services wired to CI</li><li>Cloudflare DNS for heygem.co.nz (verify propagation)</li><li>Design system extracted from prototype (theme, Icon/Logo/GemPhoto)</li>
           </ul>
         </div>
-        <div class="phase-card phase-planned">
+        <div class="phase-card phase-in-progress">
           <div class="phase-card-head">
             <div class="phase-marker">1</div>
-            <div class="phase-status-pill phase-status-planned">Planned</div>
+            <div class="phase-status-pill phase-status-in-progress">In progress</div>
           </div>
           <div class="phase-title">Phase 1 <span class="phase-subtitle">Marketing site live</span></div>
           <div class="phase-window">Ships independently — first</div>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">10</div>
+        <div class="status-num">12</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,11 +833,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">2</div>
+        <div class="status-num">3</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">8</div>
+        <div class="status-num">7</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -954,7 +954,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">10</span>
+        <span class="col-count">12</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1006,6 +1006,16 @@
         <div class="card-title">Real brand assets wired</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">brand</span><span class="tag tag-neutral">@heygem/ui</span></div>
         <div class="card-desc">Client-supplied pop-art diamond logo + favicon added to `@heygem/ui` (new Logo + Mark components, logo downscaled 1.4MB→106KB). Accent repointed emerald→amethyst purple to match; amber + deep-teal kept for a jewel palette. Verified rendering on the live marketing build</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Marketing site ported</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Full homepage on the new scaffold + design system: hero, the 9pm problem, how-it-works, what-your-Gem-does, pricing on-ramp + 3 plan cards, trust/testimonials, callback CTA, footer. GST-exclusive note added; copy de-named to the single-&quot;Gem&quot; brand</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Lead capture wired</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">leads</span></div>
+        <div class="card-desc">Callback form writes to a Supabase `leads` table via anon-insert RLS. Verified end-to-end in a real build (form submit → row in DB, then cleaned up)</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1035,31 +1045,31 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Railway wiring</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Deferred to land with Phase 1: create the marketing service (deploys on push to staging/main) when there&#39;s a real site to ship; customer/staff services follow as their apps come online</div>
+        <div class="card-title">Deploy marketing to Railway</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">Marketing app is built + verified; stand up the Railway service (staging→main), set Supabase env vars, and attach heygem.co.nz once DNS lands. This is what makes Phase 1 actually &quot;live&quot;</div>
       </div>
       <div class="card">
-        <div class="card-title">Kick off Phase 1 — marketing port</div>
+        <div class="card-title">Lead notifications + ops view</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1</span></div>
-        <div class="card-desc">Port the full marketing prototype (problem, how-it-works, what-your-Gem-does, pricing on-ramp + 3 cards, trust, callback form) onto the new scaffold</div>
+        <div class="card-desc">Leads land in the DB but nobody&#39;s alerted yet. Email/Slack notify on new lead, and a simple ops list to read them (interim until the Phase 3 ops workspace)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">SEO + analytics</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span></div>
+        <div class="card-desc">Meta/OG tags, sitemap, and analytics on the marketing site before it goes public</div>
       </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">8</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Port marketing site</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span></div>
-        <div class="card-desc">marketing.jsx → production build on heygem.co.nz with lead-capture form wired to Supabase</div>
-      </div>
       <div class="card">
         <div class="card-title">Auth + accounts</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>

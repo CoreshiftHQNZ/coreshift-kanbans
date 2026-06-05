@@ -18,6 +18,8 @@
 - **GitHub repo created** `phase-0` `shipped` — `CoreshiftHQNZ/heygem` (private). `main` / `dev` / `staging` branches pushed; dev → staging → main flow.
 - **Supabase project created** `phase-0` `shipped` — `heygem` (ref `ysdikfmlqgyuvmwtkrun`, ap-southeast-2). URL + publishable key wired into `.env.example` on `dev`.
 - **Real brand assets wired** `phase-0` `shipped` `brand` — Client-supplied pop-art diamond logo + favicon added to `@heygem/ui` (new Logo + Mark components, logo downscaled 1.4MB→106KB). Accent repointed emerald→amethyst purple to match; amber + deep-teal kept for a jewel palette. Verified rendering on the live marketing build.
+- **Marketing site ported** `phase-1` `shipped` — Full homepage on the new scaffold + design system: hero, the 9pm problem, how-it-works, what-your-Gem-does, pricing on-ramp + 3 plan cards, trust/testimonials, callback CTA, footer. GST-exclusive note added; copy de-named to the single-"Gem" brand.
+- **Lead capture wired** `phase-1` `shipped` — Callback form writes to a Supabase `leads` table via anon-insert RLS. Verified end-to-end in a real build (form submit → row in DB, then cleaned up).
 
 ## 🟡 In Progress
 
@@ -29,12 +31,12 @@
 
 ## 🔵 This Week
 
-- **Railway wiring** `phase-0` `phase-1` `infra` — Deferred to land with Phase 1: create the marketing service (deploys on push to staging/main) when there's a real site to ship; customer/staff services follow as their apps come online.
-- **Kick off Phase 1 — marketing port** `phase-1` — Port the full marketing prototype (problem, how-it-works, what-your-Gem-does, pricing on-ramp + 3 cards, trust, callback form) onto the new scaffold.
+- **Deploy marketing to Railway** `phase-1` `infra` — Marketing app is built + verified; stand up the Railway service (staging→main), set Supabase env vars, and attach heygem.co.nz once DNS lands. This is what makes Phase 1 actually "live".
+- **Lead notifications + ops view** `phase-1` — Leads land in the DB but nobody's alerted yet. Email/Slack notify on new lead, and a simple ops list to read them (interim until the Phase 3 ops workspace).
+- **SEO + analytics** `phase-1` — Meta/OG tags, sitemap, and analytics on the marketing site before it goes public.
 
 ## ⚪ Backlog
 
-- **Port marketing site** `phase-1` — marketing.jsx → production build on heygem.co.nz with lead-capture form wired to Supabase.
 - **Auth + accounts** `phase-2` — Magic-link (customers) / password (staff); businesses → many users; RLS.
 - **Staff/ops workspace** `phase-3` — Lead queue, pooled assignment, per-task time + activity logging, weekly note.
 - **Customer dashboard on real data** `phase-4` — Port portal.jsx; hours ring, weekly bill, timeline, Gem note from real logged data.
