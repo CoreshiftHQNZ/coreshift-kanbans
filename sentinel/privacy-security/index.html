@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>72%</strong> complete</div>
-        <div><strong>42</strong>/58 cards done</div>
-        <div>Updated <strong>2026-06-07 21:30 UTC</strong></div>
+        <div><strong>76%</strong> complete</div>
+        <div><strong>44</strong>/58 cards done</div>
+        <div>Updated <strong>2026-06-07 22:00 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1080,6 +1080,16 @@
         <div class="card-title">B3 retention sweeps — dry-run validated on KC staging</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B3</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">ops</span><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">First operator-led activation of the B3 retention sweep scripts. Daily sweep on KC staging found 8 expired `social_connect_tokens` eligible (designed-for-deletion OAuth handshake data with ~10-min TTL) and 0 expired review_tokens / team_invitations. Monthly sweep: 0 rows across bug_reports / webhook_events / audit_logs (staging dataset is too young for any 6-month-old data). Scripts compile, connect, and correctly identify expired rows. **Prod confirm-run still gated on operator approval.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 18 fix: heartbeat verify query format (plain-text marker)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">sentry-heartbeat.ts</span></div>
+        <div class="card-desc">Sentinel PRs #114 → #116 merged dev → staging → main. Every heartbeat verification was returning `missing` since Brief 18 first activated. Diagnosed via railway-run probe against Sentry's API (token never left Railway): the `/api/0/projects/{org}/{project}/events/` endpoint does NOT support structured tag queries (`heartbeat_marker:"X"`, `tag.heartbeat_marker:"X"`, `message:"X"`, etc. all return 0 results). Only plain-text search of the marker matches — the captureMessage in routes/sentryTest.ts uses the marker AS the message body, so plain-text match works. Fix: drop the `heartbeat_marker:"..."` syntax, query the plain marker. Marker strings are unique by design so plain-text collides with at most one event. Validated empirically (probe returned count=1 for a real prod marker). Next verify cron at 11am NZ will flip status from "missing" to "found".</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 14 fix: security scanner advisor API URL path</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">supabase-advisors.ts</span></div>
+        <div class="card-desc">Sentinel PRs #117 → #119 merged dev → staging → main. Daily security scans had been reporting `error=1 active_findings_total=0` since Brief 14 first shipped — meaning the `/security` page was showing stale/empty data. Diagnosed via railway-run probe: original URL `/v1/projects/{ref}/advisors?type=security` returns 404; the type goes in the PATH (`/advisors/security`). Cross-checked against supabase/mcp source for the correct shape. Fix: one-line URL correction. Validated end-to-end: result is now `ok=1 error=0 active_findings_total=0` (KC's current baseline is 0 findings, matching Phase A4 clean state). Tomorrow's 5am NZ cron and onwards will populate `security_findings` with real KC advisor data.</div>
       </div>
       <div class="card">
         <div class="card-title">Tuesday Railway activations confirmed (heartbeat + advisor + Sentry tokens)</div>
