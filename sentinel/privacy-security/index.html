@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>65%</strong> complete</div>
-        <div><strong>37</strong>/57 cards done</div>
-        <div>Updated <strong>2026-06-03 21:13 UTC</strong></div>
+        <div><strong>72%</strong> complete</div>
+        <div><strong>42</strong>/58 cards done</div>
+        <div>Updated <strong>2026-06-07 21:30 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1055,6 +1055,36 @@
         <div class="card-title">Monday digest — privacy + security extension shipped</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">observability</span><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">Sentinel PRs #97/#98/#99 merged dev → staging → main. Existing 10am NZ Monday maintenance digest now includes a &quot;Privacy &amp; Security&quot; section: active security_findings counts + newly-resolved this week, heartbeat health across all apps, KC audit-trail counts (admin mutations / impersonations / new-device sign-ins). Subject line promotes ERROR-level findings (&quot;Sentinel digest — 2 security ERRORs + 5 maintenance&quot;). Best-effort — section drops silently if any underlying fetch fails. **The operator now reads ONE email a week to see Brief 14 + Brief 18 + B+ #3 + B+ #7 signals roll up.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B9 follow-up: security headers (helmet) shipped — Sentinel + KC</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B9</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">helmet</span><span class="tag tag-neutral">CSP</span><span class="tag tag-neutral">HSTS</span><span class="tag tag-neutral">Permissions-Policy</span></div>
+        <div class="card-desc">Sentinel PRs #107 → #109 + KC PRs #160 → #162 merged dev → staging → main. Adds `helmet` middleware (production only) on both Express apps with a CSP tuned for `self` + Supabase + Sentry, HSTS (2y + includeSubDomains + preload), explicit Permissions-Policy denying all sensor / payment / device APIs, COOP + CORP `same-origin`, X-Powered-By removed. Closes 10 high-impact ZAP findings per app from the original baseline (CSP not set, anti-clickjacking, HSTS, X-Content-Type-Options, X-Powered-By, Permissions-Policy, COOP, CORP). Live verification on both staging envs.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B9 follow-up: per-route Cache-Control headers shipped — Sentinel + KC</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B9</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Cache-Control</span></div>
+        <div class="card-desc">Sentinel PRs #110 → #112 + KC (same combined PR with helmet). Per-URL-pattern Cache-Control middleware: `/api/*` → `no-store`; `/assets/*` → `public, max-age=1y, immutable` (Vite content-hashes the filenames); `/sitemap.xml` + `/robots.txt` → `public, max-age=3600`; SPA shell + everything else → `no-cache, must-revalidate` so browsers always refetch to pick up new bundle hashes. Closes ZAP findings 10015 (Re-examine Cache-control) + 10049 (Storable/Non-Cacheable Content) for everything not Cloudflare-served.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel ZAP workflow URL fixed (DNS mismatch)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B9</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">.github/workflows/zap-baseline.yml</span></div>
+        <div class="card-desc">Sentinel PRs #103 → #104. First manual `workflow_dispatch` failed because the workflow default target was hardcoded to `staging.sentinel.coreshifthq.com` (no DNS record). Real URL: `sentinel-staging.coreshifthq.com` (verified live, /health returns 200). Pattern: KC uses `staging.&lt;domain&gt;`, Sentinel uses `&lt;app&gt;-staging.&lt;domain&gt;`. Repo variable `ZAP_TARGET_STAGING` still overrides if ever needed.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">ZAP DAST triage + remediation pass — Sentinel + KC</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B9</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">pen-testing</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Each app: first manual dispatch surfaced ~19 (Sentinel) / 11 (KC) finding types. ~70% closed by the helmet + cache PRs above. Remaining triaged into 3 buckets, documented as permanent comments on the rolling ZAP issues (Sentinel #113, KC #158): **(1)** intentional CSP trade-offs (`https:` wildcard for images, `unsafe-inline` for Tailwind dynamic styles) — accepted with reasoning; **(2)** informational findings (Modern Web App, Sec-Fetch-* request headers, Base64 data URIs) — accepted; **(3)** Cloudflare-served `/robots.txt` findings — out of our app's control, account-wide Cloudflare AI Audit / Content Signals feature intercepts before requests reach Railway. **Net result: every actionable security-header finding closed.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">B3 retention sweeps — dry-run validated on KC staging</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B3</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">ops</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">First operator-led activation of the B3 retention sweep scripts. Daily sweep on KC staging found 8 expired `social_connect_tokens` eligible (designed-for-deletion OAuth handshake data with ~10-min TTL) and 0 expired review_tokens / team_invitations. Monthly sweep: 0 rows across bug_reports / webhook_events / audit_logs (staging dataset is too young for any 6-month-old data). Scripts compile, connect, and correctly identify expired rows. **Prod confirm-run still gated on operator approval.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tuesday Railway activations confirmed (heartbeat + advisor + Sentry tokens)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">SENTRY_HEARTBEAT_TOKEN</span><span class="tag tag-neutral">SUPABASE_ACCESS_TOKEN</span><span class="tag tag-neutral">SENTRY_AUTH_TOKEN</span><span class="tag tag-neutral">SENTRY_ORG</span></div>
+        <div class="card-desc">Verified all 7 env vars are set across the 4 envs (KC prod + staging × Sentinel prod + staging) — operator had already added them. Cross-env heartbeat pings are succeeding in prod logs (`[sentry-heartbeat] ✓ pinged keycontent / ✓ pinged sentinel`), which proves the token matches across all 4 envs. SENTRY_ORG resolved = `coreshift-hq`. Sentry data region = US (banked for the IPP-12 cross-border register). Repo privacy check: both KC + Sentinel = PRIVATE. **Open follow-ups:** heartbeat verifications all returning `missing` (Sentry-API side, needs investigation) + security scanner `error=1` per run (needs investigation).</div>
       </div>
       <div class="card">
         <div class="card-title">Phase B2: retention policy</div>
