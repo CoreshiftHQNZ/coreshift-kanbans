@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>76%</strong> complete</div>
-        <div><strong>44</strong>/58 cards done</div>
-        <div>Updated <strong>2026-06-07 22:00 UTC</strong></div>
+        <div><strong>78%</strong> complete</div>
+        <div><strong>45</strong>/58 cards done</div>
+        <div>Updated <strong>2026-06-07 23:00 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1080,6 +1080,11 @@
         <div class="card-title">B3 retention sweeps — dry-run validated on KC staging</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B3</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">ops</span><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">First operator-led activation of the B3 retention sweep scripts. Daily sweep on KC staging found 8 expired `social_connect_tokens` eligible (designed-for-deletion OAuth handshake data with ~10-min TTL) and 0 expired review_tokens / team_invitations. Monthly sweep: 0 rows across bug_reports / webhook_events / audit_logs (staging dataset is too young for any 6-month-old data). Scripts compile, connect, and correctly identify expired rows. **Prod confirm-run still gated on operator approval.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B8b CLOSED: privacy notice v1 LIVE on keycontent.ai</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B8b</span><span class="tag tag-neutral">privacy</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/privacy</span><span class="tag tag-neutral">/sub-processors</span></div>
+        <div class="card-desc">KC PRs #165 → #166 → #167 → #168 → #169 merged dev → staging → main. Phase B8b end-user privacy notice promoted from DRAFT v1 to v1 LIVE. **Changes shipped together:** (1) signup-consent line ("By creating an account, you agree to our Privacy Notice"); (2) login-page "Privacy Notice" link; (3) Section 5 of the notice rewritten from a 12-row named-vendor table to an 8-row category table (less brittle to vendor swaps; pattern matches Stripe/Linear/Atlassian); (4) new public `/sub-processors` page at `https://keycontent.ai/sub-processors` with the 12-row named list, certifications, IPP-12 paragraph, "What we don't do." Source markdown + SUB-PROCESSORS.md updated in lockstep. **The privacy notice is now fully discoverable + linked + accurate + non-brittle.**</div>
       </div>
       <div class="card">
         <div class="card-title">Brief 18 fix: heartbeat verify query format (plain-text marker)</div>
