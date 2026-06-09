@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Merlin — Build Kanban</title>
+    <meta name="description" content="Live build status for Merlin — CoreShift's AI Implementation Wizard." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧙%3C/text%3E%3C/svg%3E" />
+    <style>
+      :root {
+        --bg: #fafaf9;
+        --card: #ffffff;
+        --ink: #18181b;
+        --ink-muted: #71717a;
+        --ink-subtle: #a1a1aa;
+        --border: #e4e4e7;
+        --done: #059669;
+        --doing: #d97706;
+        --next: #2563eb;
+        --back: #475569;
+        --back-bg: #f1f5f9;
+        --ricky: #7c3aed;
+        --ricky-bg: #f5f3ff;
+        --ricky-border: #ddd6fe;
+        --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+        --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+        --radius: 10px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0a0a;
+          --card: #18181b;
+          --ink: #fafafa;
+          --ink-muted: #a1a1aa;
+          --ink-subtle: #71717a;
+          --border: #27272a;
+          --done: #10b981;
+          --doing: #f59e0b;
+          --next: #3b82f6;
+          --back: #94a3b8;
+          --back-bg: #0f172a;
+          --ricky: #a78bfa;
+          --ricky-bg: #1e1b4b;
+          --ricky-border: #312e81;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 1400px; margin: 0 auto; padding: 32px 24px 80px; }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0 0 4px;
+      }
+      .subtitle { color: var(--ink-muted); font-size: 14px; margin: 0; }
+      .meta { text-align: right; font-size: 13px; color: var(--ink-muted); }
+      .meta a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+      .meta a:hover { color: var(--ink); }
+
+      h2.section-title {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink-muted);
+        margin: 0 0 12px;
+      }
+
+      .progress {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        box-shadow: var(--shadow);
+      }
+      .progress-bars {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .pbar { font-size: 12px; }
+      .pbar-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+        color: var(--ink-muted);
+      }
+      .pbar-label strong { color: var(--ink); font-weight: 600; }
+      .pbar-track { height: 6px; background: var(--back-bg); border-radius: 999px; overflow: hidden; }
+      .pbar-fill { height: 100%; background: var(--done); border-radius: 999px; transition: width 200ms ease; }
+      .pbar.active .pbar-fill { background: var(--doing); }
+      .pbar.future .pbar-fill { background: var(--ink-subtle); opacity: 0.3; }
+
+      .ricky-panel {
+        background: var(--ricky-bg);
+        border: 1px solid var(--ricky-border);
+        border-radius: var(--radius);
+        padding: 22px 24px;
+        margin-bottom: 28px;
+      }
+      .ricky-panel-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .ricky-panel-head h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .ricky-panel-head .badge {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        background: var(--ricky);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 999px;
+      }
+      .ricky-panel p.intro { font-size: 14px; color: var(--ink-muted); margin: 0 0 18px; }
+      .ricky-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+      @media (max-width: 740px) { .ricky-grid { grid-template-columns: 1fr; } }
+      .ricky-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px 18px;
+      }
+      .ricky-section h3 {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 0 0 4px;
+        color: var(--ricky);
+      }
+      .ricky-section .helper { font-size: 12px; color: var(--ink-muted); margin: 0 0 14px; }
+      .task {
+        border-top: 1px solid var(--border);
+        padding: 14px 0;
+      }
+      .task:first-of-type { border-top: 0; padding-top: 4px; }
+      .task:last-of-type { padding-bottom: 4px; }
+      .task .task-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 0 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .task .task-title::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--ricky);
+        flex-shrink: 0;
+      }
+      .ricky-section.later .task .task-title::before { background: var(--ink-subtle); }
+      .task .task-body {
+        font-size: 13px;
+        color: var(--ink-muted);
+        margin: 0;
+        line-height: 1.5;
+        padding-left: 16px;
+      }
+      .task .task-body code {
+        font-size: 12px;
+        background: var(--back-bg);
+        padding: 1px 6px;
+        border-radius: 4px;
+        color: var(--ink);
+      }
+      .task .task-when {
+        font-size: 11px;
+        color: var(--ink-subtle);
+        font-weight: 500;
+        margin-left: auto;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .task .task-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: var(--ricky);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        margin-top: 6px;
+        margin-left: 16px;
+      }
+
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      .chip {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: var(--back-bg);
+        color: var(--back);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .chip.m0 { background: #fce7f3; color: #be185d; }
+      .chip.m1 { background: #ede9fe; color: #6d28d9; }
+      .chip.m2 { background: #e0e7ff; color: #3730a3; }
+      .chip.m3 { background: #cffafe; color: #155e75; }
+      .chip.m4 { background: #ccfbf1; color: #115e59; }
+      .chip.m5 { background: #fef3c7; color: #b45309; }
+      .chip.m6 { background: #fee2e2; color: #b91c1c; }
+      .chip.m7 { background: #f1f5f9; color: #475569; }
+      .chip.ext { background: var(--back-bg); color: var(--back); }
+      @media (prefers-color-scheme: dark) {
+        .chip.m0 { background: #500724; color: #f9a8d4; }
+        .chip.m1 { background: #2e1065; color: #c4b5fd; }
+        .chip.m2 { background: #1e1b4b; color: #a5b4fc; }
+        .chip.m3 { background: #083344; color: #67e8f9; }
+        .chip.m4 { background: #042f2e; color: #5eead4; }
+        .chip.m5 { background: #422006; color: #fcd34d; }
+        .chip.m6 { background: #450a0a; color: #fca5a5; }
+        .chip.m7 { background: #1e293b; color: #cbd5e1; }
+      }
+
+      .board {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+      }
+      @media (max-width: 1100px) { .board { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 640px)  { .board { grid-template-columns: 1fr; } .progress-bars { grid-template-columns: repeat(2, 1fr); } }
+
+      .col {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .col-head {
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .col-head .dot { width: 8px; height: 8px; border-radius: 999px; margin-right: 8px; }
+      .col-title {
+        font-weight: 600;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: flex;
+        align-items: center;
+      }
+      .col-count {
+        font-size: 12px;
+        color: var(--ink-muted);
+        background: var(--back-bg);
+        padding: 2px 8px;
+        border-radius: 999px;
+        min-width: 24px;
+        text-align: center;
+      }
+      .col.done .dot { background: var(--done); }
+      .col.doing .dot { background: var(--doing); }
+      .col.next .dot { background: var(--next); }
+      .col.back .dot { background: var(--back); }
+
+      .col-body {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: calc(100vh - 280px);
+        overflow-y: auto;
+      }
+
+      .card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 14px;
+        transition: transform 80ms ease, box-shadow 120ms ease;
+      }
+      .card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+      .card-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+      .card-id {
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--ink-muted);
+      }
+      .card-date { font-size: 11px; color: var(--ink-subtle); margin-left: auto; }
+      .card-title { font-size: 14px; font-weight: 500; margin: 0 0 4px; line-height: 1.4; }
+      .card-note { font-size: 12px; color: var(--ink-muted); margin: 0; line-height: 1.45; }
+      .card.ext { background: transparent; border-style: dashed; }
+      .card.ext .card-id::before { content: '⚙ '; }
+
+      .phases {
+        margin-top: 40px;
+        padding: 18px 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 12px;
+        line-height: 1.7;
+        white-space: pre;
+        overflow-x: auto;
+        color: var(--ink-muted);
+      }
+      .phases strong { color: var(--ink); font-weight: 600; }
+
+      footer {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--ink-subtle);
+        text-align: center;
+      }
+      footer a { color: var(--ink-muted); text-decoration: underline; text-underline-offset: 3px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div>
+          <h1>🧙 Merlin — Build Kanban</h1>
+          <p class="subtitle">CoreShift&rsquo;s AI Implementation Wizard · live build status</p>
+        </div>
+        <div class="meta">
+          Last updated <strong>2026-06-10</strong><br />
+          <a href="https://github.com/core-ricky/merlin" target="_blank" rel="noopener">repo</a> ·
+          <a href="https://github.com/core-ricky/merlin/blob/main/docs/Merlin%20-%20Brief%20-%2025_05_26.md" target="_blank" rel="noopener">build brief</a> ·
+          <a href="https://github.com/core-ricky/merlin/blob/main/docs/Merlin%20-%20Design%20Brief%20v1.md" target="_blank" rel="noopener">design brief</a>
+        </div>
+      </header>
+
+      <section class="progress">
+        <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Build phases — <span style="color: var(--ink);">concept / brief stage</span>, greenfield. Infrastructure landed; app build not yet started.</div>
+        <div class="progress-bars">
+          <div class="pbar active"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 35%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M1</strong> Onboarding</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M2</strong> Intake</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M3</strong> Pathway + tasks</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Progress + manager</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+        </div>
+      </section>
+
+      <!-- Ricky's tasks: front-and-centre -->
+      <section class="ricky-panel">
+        <div class="ricky-panel-head">
+          <h2>Ricky&rsquo;s tasks</h2>
+          <span class="badge">Decisions &amp; action items</span>
+        </div>
+        <p class="intro">
+          Merlin is at concept/brief stage. The infrastructure is set up (repo, branches, Supabase, this board). Before the build proper starts, a few <strong>decisions</strong> need you (and in places Abe / Keitha). Nothing here is technical setup — Claude can do that. These are the calls only you can make. <strong>Don&rsquo;t worry about the &ldquo;Later&rdquo; column</strong> — Claude will flag each when it becomes time-sensitive.
+        </p>
+
+        <div class="ricky-grid">
+          <div class="ricky-section">
+            <h3>Do now</h3>
+            <p class="helper"><strong>10 Jun: infrastructure stood up.</strong> Private repo <code>core-ricky/merlin</code> with <code>dev → staging → main</code> branch flow, the four briefs moved into <code>docs/</code>, Supabase project <code>merlin</code> (ap-southeast-2) created, this board published. The build is gated on two things below — the design, and the bridge decision.</p>
+
+            <div class="task">
+              <p class="task-title">🎨 Hand over the design <span class="task-when">unblocks all UI work</span></p>
+              <p class="task-body">
+                You mentioned a design to look at. Drop it in (Figma link, files, or screenshots) and Claude will reconcile it against the Design Brief v1 + Functional Notes and turn it into the front-end build plan. Until then the app scaffold is deliberately held — no point guessing the look when a design exists.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">🌉 Land the Merlin&ndash;Claude bridge decision <span class="task-when">blocks architecture · you + Abe, sign-off Keitha</span></p>
+              <p class="task-body">
+                The brief&rsquo;s biggest open architectural call. v1 default is <strong>copy-paste</strong> (Merlin generates a prompt, learner pastes into their AI tool, returns to close the loop). You flagged a tighter idea &mdash; a Cowork skill that injects prompts directly, or an MCP-style integration. This decision shapes the data model, the hand-off UX and onboarding. The architecture will leave room for the tighter path, but v1 needs a committed default. <strong>Decision required before the build starts.</strong>
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">🤖 Confirm the v1 target AI tool <span class="task-when">affects hand-off screenshots + tooltips</span></p>
+              <p class="task-body">
+                Claude/Cowork is the v1 default per the brief. Confirm whether the first customers are all on Claude, since the hand-off screen needs tool-specific copy (&ldquo;switch to your <em>[tool]</em> window&rdquo;), paste tooltips and screenshots. Platform-agnostic in principle, but v1 ships against one concrete tool.
+              </p>
+            </div>
+          </div>
+
+          <div class="ricky-section later">
+            <h3>Later — heads-up only</h3>
+            <p class="helper">Each becomes time-sensitive when its milestone starts. Claude will prompt you. No action now.</p>
+
+            <div class="task">
+              <p class="task-title">Reconcile playful progression with formal accreditation <span class="task-when">M4 starts</span></p>
+              <p class="task-body">
+                The brief defines three formal levels (Foundation / Practitioner / Implementer). The design wants a playful &ldquo;spells / spellbook&rdquo; progression. Decide: one underlying progression shown softly to the learner and formally on a certificate (the brief&rsquo;s recommendation), or two separate layers. Drives the levelling data model.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">Weekly manager report: emailed, in-app, or both? <span class="task-when">M4 manager view</span></p>
+              <p class="task-body">
+                The manager centrepiece is a warm weekly digest of how Merlin is helping the team. Decide the delivery (auto-emailed / in-app only / both) and the generation cadence + trigger. Affects whether we wire an email provider (Postmark, per the Coreshift default).
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">&ldquo;Frustration / trend&rdquo; threshold <span class="task-when">M4 manager view</span></p>
+              <p class="task-body">
+                Manager view surfaces recurring blockers across learners (&ldquo;several people are blocked by the CRM&rdquo;). Decide how many recurring signals constitute a trend worth surfacing, and how tightly this links to the CoreShift build-idea / nomination pipeline.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">Domain + Cloudflare DNS <span class="task-when">before first customer</span></p>
+              <p class="task-body">
+                DNS is deferred for now &mdash; staging/prod run on Railway default URLs. When a domain is chosen (e.g. <code>merlin.coreshift.co.nz</code>), Claude wires the Cloudflare records to the Railway services. Just pick the domain when you&rsquo;re ready.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">Brand identity (logo, palette, type) <span class="task-when">design pass</span></p>
+              <p class="task-body">
+                The design brief says brand identity is the designer&rsquo;s to own; a placeholder palette (deep blue, warm gold, cream) is illustrative only. Lock the real identity as part of the design hand-over so the build uses final tokens, not placeholders.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <h2 class="section-title">Build board</h2>
+
+      <div class="legend">
+        <span class="chip m0">M0 Foundation</span>
+        <span class="chip m1">M1 Onboarding</span>
+        <span class="chip m2">M2 Intake</span>
+        <span class="chip m3">M3 Pathway + tasks</span>
+        <span class="chip m4">M4 Progress + manager</span>
+        <span class="chip m5">M5 Ask Merlin</span>
+        <span class="chip ext">⚙ Setup / external</span>
+      </div>
+
+      <div class="board">
+        <!-- Backlog -->
+        <section class="col back">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Backlog</div>
+            <div class="col-count">12</div>
+          </div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-ONBOARD</span></div><h3 class="card-title">Business setup + learner invite flow</h3><p class="card-note">Parent/child model: CoreShift (or self-service) creates the business account; owner completes a business profile (industry, size, AI platform of choice, tools in use, manager identification, billing contact). Owner invites learners by email; learners set up a login (email/password or magic link in v1) and join the workspace. Owner sees the team populate as learners accept. Optional activator kick-off session is priced separately. <strong>Data:</strong> Business (owner, managers, tier/billing, shared Cowork projects) → Learner (profile, role, manager, prior AI experience).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2-INTAKE</span></div><h3 class="card-title">The intake — conversational interview</h3><p class="card-note">The heart of the system. One question at a time, Merlin acknowledging each answer before the next — feels like a chat, never a form. A few minutes. Captures enough about the learner&rsquo;s real job to design a meaningful pathway, including an explicit &ldquo;how comfortable are you with AI&rdquo; read. <strong>Must save-and-resume</strong> — leave mid-flow and return without losing place. Infers + stores the learner&rsquo;s confidence/skill level on the profile (drives scaffolding depth later).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3-PATHWAY</span></div><h3 class="card-title">Pathway generation + reveal</h3><p class="card-note">Merlin reflects back what it heard and generates a personalised module sequence for the learner&rsquo;s specific role, tools and pain points — then previews it (what&rsquo;s first and why, what&rsquo;s coming). This is the &ldquo;this gets me&rdquo; delight moment. Architecturally light: pathways are generated fresh per learner, nothing static to maintain. <strong>Propose, don&rsquo;t interrogate</strong> — concrete suggestions, not &ldquo;what do you want AI to do?&rdquo;</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3-TASK</span></div><h3 class="card-title">Task screen</h3><p class="card-note">Per module: why this matters for <em>their</em> day; what they&rsquo;ll build; the steps; the ready-to-use prompt with a <strong>Copy</strong> button; a &ldquo;here&rsquo;s what it&rsquo;ll look like&rdquo; preview; gentle recovery instructions in every step. Scaffolding depth, prompt verbosity and step granularity flex to the learner&rsquo;s stored confidence level.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3-HANDOFF</span></div><h3 class="card-title">⭐ The hand-off (design this most carefully)</h3><p class="card-note">The make-or-break of the product. Narrate the whole round-trip <em>before</em> they move. One-click &ldquo;Copy this&rdquo; with an unmistakable confirmation. OS-aware paste tooltip (Cmd+V / Ctrl+V) with a pre-emptive recovery line. Teach side-by-side windows as an early low-stakes win. Don&rsquo;t make them copy output back — the return is a conversation. <strong>Constraint:</strong> Merlin has no visibility into the AI tool&rsquo;s session, so all guidance is given before they leave; the return relies on self-report. <em>Shape depends on the bridge decision.</em></p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3-LOOP</span></div><h3 class="card-title">The return / loop-closure (&ldquo;did it work?&rdquo;)</h3><p class="card-note">Warm welcome-back, every time — &ldquo;Merlin was waiting for me,&rdquo; never &ldquo;starting over.&rdquo; Low-pressure check-in with honest, unpunished options (&ldquo;Yes, lots / Yes, once / I just tested it / Not yet&rdquo;), leading into celebration and the next unlock. Loop-closure responses (did they use it, what for, what changed) + a confidence read are the data substrate for levelling + the manager view.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-PROGRESS</span></div><h3 class="card-title">Progression — spells / spellbook (private, non-comparable)</h3><p class="card-note">Make everyone feel they&rsquo;re levelling up, in their own context, privately. <strong>No leaderboards, no public scores, no ranking. Ever.</strong> Growth framed against the user&rsquo;s own starting point. Milestones personal + contextual to their role. Levels driven by demonstrated real use (loop-closure + confidence), not time or clicks — and deliberately non-comparable across users at the <em>data</em> level (different roles → different pathways → no shared scale). Spells/spellbook is the playful skin; reconcile with formal accreditation (Ricky&rsquo;s task).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-MANAGER</span></div><h3 class="card-title">Manager view — outcomes dashboard</h3><p class="card-note">A separate, calmer surface. Leads with <strong>outcomes, not activity</strong> (&ldquo;five workflows implemented, three hours/week saved&rdquo; — not logins). Per-person + team roll-up. <strong>Privacy boundary is a hard rule, enforced in the data layer:</strong> manager sees outcomes, progress and aggregated trends only — never the learner&rsquo;s actual conversations or individual fumbles. The trust line must be visible in the UI too.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-WEEKLY</span></div><h3 class="card-title">Weekly manager report</h3><p class="card-note">The manager centrepiece: a warm, scannable weekly digest in plain language — &ldquo;a thoughtful update from a good team lead,&rdquo; not an analytics console. Workflows implemented, time saved, confidence movement, things built and shared. Cadence/trigger + delivery (email/in-app/both) is Ricky&rsquo;s decision.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-TRENDS</span></div><h3 class="card-title">Frustration / constraint detection</h3><p class="card-note">A real capability to build: Merlin watches for <em>recurring</em> signals across learners (the same blocker at loop-closure or in Ask Merlin, a tool/process people keep hitting limits with) and surfaces them to the manager as constructive insight (&ldquo;several people are blocked by the CRM&rdquo;) — pattern-spotting over aggregated signals, never one person&rsquo;s complaint. Candidates for the CoreShift build-idea / nomination pipeline.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">M5</span><span class="card-id">M5-ASK</span></div><h3 class="card-title">Ask Merlin — always-available help</h3><p class="card-note">Friendly help outside the task flow, always reachable. Conversations are saved and resumable from the user&rsquo;s history. A source of frustration/trend signals (M4-TRENDS) when blockers recur here.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-LEVELDETECT</span></div><h3 class="card-title">Pace / level re-evaluation over time</h3><p class="card-note">The stored confidence level isn&rsquo;t static — re-evaluate as the learner demonstrates growing capability, and make it explicitly steerable (&ldquo;slow down&rdquo; / &ldquo;I&rsquo;ve got this, move faster&rdquo;) with dignity. Default warm and a touch slow, with an easy way to speed up.</p></article>
+          </div>
+        </section>
+
+        <!-- Up Next -->
+        <section class="col next">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Up next</div>
+            <div class="col-count">2</div>
+          </div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m0">M0</span><span class="card-id">M0-DESIGN</span></div><h3 class="card-title">Design hand-over → front-end build plan</h3><p class="card-note">Blocked on Ricky handing over the design. Once in, reconcile against Design Brief v1 + Functional Notes, lock brand tokens, and turn it into the component/build plan. Gates all UI work — see the &ldquo;Do now&rdquo; panel.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">M0</span><span class="card-id">M0-SCHEMA</span></div><h3 class="card-title">Data model + schema (Business / Learner / Pathway)</h3><p class="card-note">Design the core schema from the brief&rsquo;s parent/child model: businesses, owners/managers, learners, profiles (incl. stored confidence level), pathways, modules, progress, outcomes/loop-closure log, submitted ideas. Bake the manager-privacy boundary into the data layer (RLS) from day one, not the UI. <em>Shape depends partly on the bridge decision.</em> First real Supabase migration.</p></article>
+          </div>
+        </section>
+
+        <!-- In Progress -->
+        <section class="col doing">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>In progress</div>
+            <div class="col-count">0</div>
+          </div>
+          <div class="col-body">
+          </div>
+        </section>
+
+        <!-- Done -->
+        <section class="col done">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Done</div>
+            <div class="col-count">4</div>
+          </div>
+          <div class="col-body">
+            <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">INFRA-REPO</span><span class="card-date">10 Jun</span></div><h3 class="card-title">GitHub repo + branch flow ✓</h3><p class="card-note">Private repo <a class="task-link" style="display:inline" href="https://github.com/core-ricky/merlin" target="_blank" rel="noopener">core-ricky/merlin</a> created with <code>dev → staging → main</code> branch flow, README documenting architecture + infra, <code>.gitignore</code> and <code>.env.example</code>.</p></article>
+            <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">INFRA-DOCS</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Briefs moved into repo ✓</h3><p class="card-note">Build Brief, Design Brief v1, Functional Notes v1 and &ldquo;Introducing Merlin&rdquo; committed under <code>docs/</code> as the canonical source of truth for the build team.</p></article>
+            <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">INFRA-DB</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Supabase project created ✓</h3><p class="card-note">Project <code>merlin</code> in the CoreShift org (ref <code>egjpqixhwvvekjqldnyz</code>, ap-southeast-2). Empty — no schema yet; first migration lands with M0-SCHEMA. $10/mo.</p></article>
+            <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">INFRA-KANBAN</span><span class="card-date">10 Jun</span></div><h3 class="card-title">This board ✓</h3><p class="card-note">Published under <code>coreshift-kanbans/merlin/</code> and linked from the root index. Kept in sync as the build moves.</p></article>
+          </div>
+        </section>
+      </div>
+
+      <div class="phases">
+<strong>Merlin build phases</strong>
+<strong>M0</strong>  Foundation        repo · branch flow · Supabase · design hand-over · core schema (Business/Learner/Pathway) + RLS privacy boundary
+<strong>M1</strong>  Onboarding        business setup · owner profile · learner email invite · login (magic link / email-password) · workspace join
+<strong>M2</strong>  Intake            conversational interview · save-and-resume · confidence/level inference stored on learner profile
+<strong>M3</strong>  Pathway + tasks   pathway generation + reveal · task screen + Copy · ⭐ hand-off · return / loop-closure
+<strong>M4</strong>  Progress + manager  spells/spellbook progression (private, non-comparable) · level re-eval · manager dashboard · weekly report · frustration/trend detection
+<strong>M5</strong>  Ask Merlin        always-available help · saved + resumable conversations
+
+<strong>Open decisions (Ricky):</strong> Merlin–Claude bridge (copy-paste vs deeper integration) · v1 target AI tool · playful vs formal progression · weekly-report delivery · trend threshold · domain/DNS · brand identity
+      </div>
+
+      <footer>
+        Merlin — CoreShift&rsquo;s AI Implementation Wizard · build kanban · kept in sync with the work ·
+        <a href="https://github.com/core-ricky/merlin" target="_blank" rel="noopener">repo</a>
+      </footer>
+    </div>
+  </body>
+</html>
