@@ -380,7 +380,7 @@
           <div class="pbar"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Commercial + onboarding</div><div class="pbar-track"><div class="pbar-fill" style="width: 55%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M2</strong> Intake + capability</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
-          <div class="pbar future"><div class="pbar-label"><strong>M3</strong> Pathway + delivery</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Pathway + delivery</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Progress + manager</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
         </div>
       </section>
@@ -392,13 +392,20 @@
           <span class="badge">Decisions &amp; action items</span>
         </div>
         <p class="intro">
-          <strong>10 Jun (evening): the identity spine is live.</strong> Magic-link sign-in, invite claiming, and the CoreShift internal console &mdash; a client business can be created, its people invited, and each person lands in their workspace, today. The privacy boundary was <strong>smoke-tested at the database level</strong>: a manager reads zero conversations, an invitee can claim only their own seat, cross-account hijacking is impossible. v1 architecture is in <a href="https://github.com/core-ricky/merlin/blob/main/docs/Merlin%20-%20Build%20Decisions%20v1.md" target="_blank" rel="noopener" style="color:var(--ricky);">Build Decisions v1</a>. <strong>Don&rsquo;t worry about &ldquo;Later&rdquo;</strong> &mdash; Claude flags each when it&rsquo;s time-sensitive.
+          <strong>10 Jun (late): Merlin spoke for the first time.</strong> The conversational intake is live &mdash; a learner signs in, has the seven-question get-to-know-you chat (platform-aware, save/resume, scripted fallback if the AI is unreachable), and the capability engine quietly reads speed / technical / AI-understanding / confidence from how they answer. Verified end-to-end as a test learner: invite claim → full chat → capability vector + Merlin&rsquo;s reflection on the home screen, every database write confirmed, fixtures cleaned up. <strong>Next: pathway generation — which needs one thing from you (top of the list).</strong>
         </p>
 
         <div class="ricky-grid">
           <div class="ricky-section">
             <h3>Do now</h3>
-            <p class="helper">One fun one, two that gate the M1 commercial build. None are technical &mdash; Claude does the wiring once you supply the input.</p>
+            <p class="helper">One two-minute unblock, one fun one, two that gate M1 commercial. None are technical &mdash; Claude does the wiring once you supply the input.</p>
+
+            <div class="task">
+              <p class="task-title">🔑 Paste an Anthropic API key <span class="task-when">2 min · unblocks pathway generation</span></p>
+              <p class="task-body">
+                Merlin&rsquo;s brain is wired and waiting: drop a key into <code>ANTHROPIC_API_KEY</code> in <code>.env.local</code> (and later Railway). The intake instantly switches from its scripted voice to Claude&rsquo;s warm one, and &mdash; more importantly &mdash; <strong>M3 pathway generation can&rsquo;t exist without it</strong>: fully-generative pathways were the locked decision, so there&rsquo;s deliberately no template fallback. Create one at <a class="task-link" style="display:inline" href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com → API keys</a>.
+              </p>
+            </div>
 
             <div class="task">
               <p class="task-title">✨ Try Merlin yourself <span class="task-when">5 min · it works today</span></p>
@@ -482,14 +489,14 @@
         <section class="col back">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Backlog</div>
-            <div class="col-count">10</div>
+            <div class="col-count">9</div>
           </div>
           <div class="col-body">
             <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-SALES-SITE</span></div><h3 class="card-title">Sales / marketing site</h3><p class="card-note">Public site that tells the Merlin story and presents pricing. Lead capture for sales conversations, plus the entry point into self-serve purchase. Positioning + copy steered by Ricky (see &ldquo;Later&rdquo;). Distinct surface from the app.</p></article>
             <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-STRIPE-SEATS</span></div><h3 class="card-title">Stripe seat-based billing + checkout</h3><p class="card-note">Per-seat recurring subscription (monthly/annual). Self-serve uses Stripe Checkout; a webhook provisions the Business + Owner on payment and sets the seat allowance. Internal/manual deals invoiced through the same account. Built rate-agnostic until the price is set. <strong>Blocked on:</strong> seat rate + Stripe access (Ricky, Do-now).</p></article>
             <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-SELFSERVE</span></div><h3 class="card-title">Self-serve signup → workspace</h3><p class="card-note">A company signs up, pays, becomes a Business with an Owner/Admin, picks its AI platform, and lands ready to invite learners. The whole loop with no CoreShift involvement.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3-PATHGEN</span></div><h3 class="card-title">Pathway generator (fully AI-generated)</h3><p class="card-note">Claude generates a personalised pathway per learner, fresh each time &mdash; no fixed module library &mdash; from intake + role + tools + pain points + capability vector. <strong>Autonomous guardrails:</strong> self-checks each pathway against safety/quality/tone rules, filters or regenerates risky output, ships straight to the learner; learner + Merlin can always regenerate. No human approval bottleneck.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3-DELIVERY</span></div><h3 class="card-title">Pathway reveal + task screen</h3><p class="card-note">The &ldquo;this gets me&rdquo; reveal, then the task screen per the prototype: why this matters for their day, the small steps, the ready-to-use prompt (Copy), the optional result peek, gentle recovery. Prompt wording tailored to the org&rsquo;s platform.</p></article>
+            
+            
             <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3-HANDOFF</span></div><h3 class="card-title">⭐ The hand-off (platform-aware)</h3><p class="card-note">The make-or-break round-trip, already designed in the prototype: narrate → teach window-snapping → one-tap copy + unmistakable confirm + OS-aware paste help → warm &ldquo;I&rsquo;ll wait&rdquo;. Copy/tooltips/screenshots tailor to the chosen platform. Merlin has no visibility into the tool&rsquo;s session &mdash; all guidance given before they leave.</p></article>
             <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3-LOOP</span></div><h3 class="card-title">Return / loop-closure + events</h3><p class="card-note">Warm welcome-back, honest unpunished check-in (&ldquo;lots / once / just tested / not yet&rdquo;), celebration + next unlock per the prototype. Every step emits <strong>events</strong> (task started/completed, loop-closure outcome, confidence read, retries) feeding both the capability engine and the manager insight engine.</p></article>
             <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-INSIGHT</span></div><h3 class="card-title">Org insight engine</h3><p class="card-note">Aggregates <strong>in-app events only</strong> per org (never conversation content) &mdash; completions, loop-closure outcomes, confidence movement, retries, Ask-Merlin frequency + topics-as-tags &mdash; and the AI writes the narrative. Powers the manager outcomes + the constructive frustration/trend detection (&ldquo;several people are blocked by the CRM&rdquo;).</p></article>
@@ -506,8 +513,8 @@
             <div class="col-count">2</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2-INTAKE</span></div><h3 class="card-title">Conversational intake (save/resume)</h3><p class="card-note">The heart of the system, and the next build move. Per-learner interview, one question at a time, feels like a chat not a form. Captures role, tools, pain points. In the internal model CoreShift seeds org context but the learner still does their own intake. Pauses and resumes without losing place (state in the privacy-bound <code>conversations</code> table, already in the schema). Claude-powered — first use of <code>ANTHROPIC_API_KEY</code>.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2-CAPABILITY</span></div><h3 class="card-title">Capability engine — the &ldquo;Trojan horse&rdquo; (stage 1)</h3><p class="card-note">Infers three dimensions &mdash; operating <strong>speed</strong>, <strong>technical capability</strong>, <strong>AI understanding</strong>. Stage 1 ships with the intake: seed the vector from intake answers + a light disguised assessment, written to <code>learner_profiles.capability</code> + <code>capability_snapshots</code> (already in the schema). Stage 2 (behavioural refinement) lands with M3 delivery, fed by the events stream.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3-PATHGEN</span></div><h3 class="card-title">Pathway generator (fully AI-generated)</h3><p class="card-note">Claude generates a personalised pathway per learner, fresh each time &mdash; no fixed module library &mdash; from intake + role + tools + pain points + capability vector. <strong>Autonomous guardrails:</strong> self-checks each pathway against safety/quality/tone rules, filters or regenerates risky output, ships straight to the learner; learner + Merlin can always regenerate. No human approval bottleneck. <strong>Needs ANTHROPIC_API_KEY</strong> — fully-generative pathways are Claude or nothing (locked decision; no template fallback).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3-DELIVERY</span></div><h3 class="card-title">Pathway reveal + task screen</h3><p class="card-note">The &ldquo;this gets me&rdquo; reveal, then the task screen per the prototype: why this matters for their day, the small steps, the ready-to-use prompt (Copy), the optional result peek, gentle recovery. Prompt wording tailored to the org&rsquo;s platform.</p></article>
           </div>
         </section>
 
@@ -525,9 +532,11 @@
         <section class="col done">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Done</div>
-            <div class="col-count">13</div>
+            <div class="col-count">15</div>
           </div>
           <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2-INTAKE</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Conversational intake live ✓</h3><p class="card-note">Seven-stage get-to-know-you chat at <code>/intake</code> — role, the chore they&rsquo;d love gone, tools, AI history, an honest comfort read, an explicit pace choice. Save/resume via the privacy-bound <code>conversations</code> table; questions tailor to the org&rsquo;s platform (&ldquo;Have you tried <em>Claude</em>…&rdquo;). Claude (Opus 4.8) voices Merlin with a scripted fallback, so an outage never blocks a learner. <strong>Verified end-to-end as a real learner</strong> — full walk from invite claim to reflection, every DB write confirmed.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">M2-CAPABILITY</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Capability engine stage 1 live ✓</h3><p class="card-note">The Trojan horse works: probes woven into the intake (vocabulary, articulation, tool fluency, answer timings + explicit comfort/pace reads) synthesise into the four-dimension vector — speed / technical / AI-understanding / confidence — written to the profile + <code>capability_snapshots</code> history. Claude synthesis with heuristic fallback. Test learner scored 34/46/45/22 with pace <em>cosy</em> — exactly right for a nervous beginner. Events carry timings only, never words. Stage 2 (behavioural refinement) rides on M3 delivery.</p></article>
             <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-INTERNAL-CONSOLE</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Internal onboarding console live ✓</h3><p class="card-note">CoreShift-only surface at <code>/console</code> (platform-admin gated): create a business (name, industry, size, platform, seats — internal path), business detail with live roster, invite/remove people. Runs entirely on the admin&rsquo;s own session via RLS — <strong>no service key anywhere</strong>. Ricky seeded as platform admin.</p></article>
             <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-INVITES</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Invitations + seat claiming ✓</h3><p class="card-note">Invite by email from the console; the person signs in at <code>/login</code> with a magic link and their seat links up automatically — a tightly-scoped RLS policy lets a user claim only member rows carrying their own verified email. Learner profile auto-created on claim. Smoke-tested: cross-account hijack impossible. (Outbound invite <em>emails</em> arrive with the secret key + SMTP — see Later.)</p></article>
             <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-PLATFORM</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Platform selection (per org) ✓</h3><p class="card-note">Captured at business creation — Claude / Gemini / OpenAI / Copilot — stored on the business and shown through the console. Downstream tailoring (hand-off copy, paste tooltips, generated prompt wording) consumes this in M3.</p></article>
@@ -549,7 +558,7 @@
 <strong>Merlin build phases</strong>
 <strong>M0</strong>  Foundation              design-system port · core schema + RLS privacy boundary · auth (magic-link invite)
 <strong>M1</strong>  Commercial + onboarding  sales site · Stripe seat billing + checkout · self-serve signup · internal console · invitations · platform selection (per org)
-<strong>M2</strong>  Intake + capability      conversational intake (save/resume) · two-stage capability engine (intake seed + behavioural refine)
+<strong>M2</strong>  Intake + capability      ✓ DONE — conversational intake (save/resume, platform-aware) · capability stage 1 (intake seed); stage 2 behavioural refine rides on M3
 <strong>M3</strong>  Pathway + delivery       fully-generative pathway engine + guardrails · reveal + task screen · ⭐ platform-aware hand-off · return / loop-closure + event capture
 <strong>M4</strong>  Progress + manager       spellbook/levels (private, non-comparable) · manager dashboard · org insight engine (events → AI narrative) · weekly note (auto, in-app) · trend detection
 <strong>M5</strong>  Ask Merlin               always-available Claude chat · saved + resumable · topic-tags feed the insight engine
