@@ -375,9 +375,9 @@
       </header>
 
       <section class="progress">
-        <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Build phases — <span style="color: var(--ink);">design approved &amp; v1 decisions locked</span>. Foundation underway; feature build next.</div>
+        <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Build phases — <span style="color: var(--ink);">M0 nearly done</span>: design system ported, schema + RLS live, brand locked. Auth next, then M1.</div>
         <div class="progress-bars">
-          <div class="pbar active"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 40%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 80%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M1</strong> Commercial + onboarding</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M2</strong> Intake + capability</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M3</strong> Pathway + delivery</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
@@ -392,13 +392,13 @@
           <span class="badge">Decisions &amp; action items</span>
         </div>
         <p class="intro">
-          <strong>10 Jun: design approved and the v1 architecture is locked</strong> &mdash; see <a href="https://github.com/core-ricky/merlin/blob/main/docs/Merlin%20-%20Build%20Decisions%20v1.md" target="_blank" rel="noopener" style="color:var(--ricky);">Build Decisions v1</a>. Settled this week: two onboarding paths (self-serve + CoreShift-led) both in v1 · Stripe seat-based billing · the Merlin&ndash;Claude bridge is <em>parked</em> (Merlin stays standalone, just tailors itself to the org&rsquo;s platform) · pathways are fully AI-generated with autonomous guardrails · a two-stage capability engine · Claude as Merlin&rsquo;s brain. A few things now need <strong>you</strong> before they unblock the build. <strong>Don&rsquo;t worry about &ldquo;Later&rdquo;</strong> &mdash; Claude flags each when it&rsquo;s time-sensitive.
+          <strong>10 Jun (later the same day): M0 is building.</strong> Brand locked &mdash; the prototype&rsquo;s look ships as-is. The Next.js app is scaffolded with the full design system ported to production components (<code>/design</code> showcase), and the core schema + RLS privacy boundary is live on Supabase with <strong>zero security-advisor lints</strong>. v1 architecture is in <a href="https://github.com/core-ricky/merlin/blob/main/docs/Merlin%20-%20Build%20Decisions%20v1.md" target="_blank" rel="noopener" style="color:var(--ricky);">Build Decisions v1</a>. Two things still need <strong>you</strong> to unblock M1 commercial. <strong>Don&rsquo;t worry about &ldquo;Later&rdquo;</strong> &mdash; Claude flags each when it&rsquo;s time-sensitive.
         </p>
 
         <div class="ricky-grid">
           <div class="ricky-section">
             <h3>Do now</h3>
-            <p class="helper">These three gate real build work. None are technical &mdash; Claude does the wiring once you supply the input.</p>
+            <p class="helper">These two gate the M1 commercial build. Neither is technical &mdash; Claude does the wiring once you supply the input.</p>
 
             <div class="task">
               <p class="task-title">💷 Set the seat rate (and plan shape) <span class="task-when">blocks Stripe + sales site pricing</span></p>
@@ -414,12 +414,6 @@
               </p>
             </div>
 
-            <div class="task">
-              <p class="task-title">🎨 Lock the final brand identity <span class="task-when">so the build uses real tokens, not placeholders</span></p>
-              <p class="task-body">
-                The prototype&rsquo;s palette (warm paper, indigo accent, gold) is gorgeous but explicitly illustrative. Confirm the real logo, colour palette and type so the design-system port lays down final tokens once, rather than re-skinning later. If you&rsquo;re happy to ship the prototype&rsquo;s look as the real identity, just say so &mdash; that unblocks it immediately.
-              </p>
-            </div>
           </div>
 
           <div class="ricky-section later">
@@ -500,12 +494,10 @@
         <section class="col next">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Up next</div>
-            <div class="col-count">3</div>
+            <div class="col-count">1</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m0">M0</span><span class="card-id">M0-DESIGN-SYSTEM</span></div><h3 class="card-title">Port the design system into real components</h3><p class="card-note">Turn the approved prototype into the production component library: tokens (paper/indigo/gold, radii, shadows), the Orb, Button/Card/Tag/Bubble/GrowthMeter, the typewriter + magic-vocabulary context. Lands final brand tokens once Ricky confirms identity (Do-now).</p></article>
-            <article class="card"><div class="card-head"><span class="chip m0">M0</span><span class="card-id">M0-SCHEMA</span></div><h3 class="card-title">Core schema + RLS privacy boundary</h3><p class="card-note">Businesses, owners/managers/teams, learners, profiles (capability vector), pathways, modules, <strong>events</strong>, outcomes/loop-closure, subscriptions/seats. The manager privacy boundary is enforced in the data layer (RLS) from day one &mdash; managers can never read conversation content. First Supabase migration.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m0">M0</span><span class="card-id">M0-AUTH</span></div><h3 class="card-title">Auth — email invite → magic link</h3><p class="card-note">Supabase Auth: magic-link sign-in for learners and owners/managers, scoped to their business workspace. The foundation invitations (M1) build on.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">M0</span><span class="card-id">M0-AUTH</span></div><h3 class="card-title">Auth — email invite → magic link</h3><p class="card-note">Supabase Auth: magic-link sign-in for learners and owners/managers, scoped to their business workspace. The foundation invitations (M1) build on. Last M0 card.</p></article>
           </div>
         </section>
 
@@ -523,9 +515,12 @@
         <section class="col done">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Done</div>
-            <div class="col-count">6</div>
+            <div class="col-count">9</div>
           </div>
           <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m0">M0</span><span class="card-id">M0-DESIGN-SYSTEM</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Design system ported to production ✓</h3><p class="card-note">Next.js 16 app (App Router, TS, Tailwind) at repo root. Tokens (warm paper, indigo, gold, radii, shadows), the breathing Orb (idle/thinking/celebrating), Button/Card/Tag/Bubble/GrowthMeter/Sparkles/Tooltip/ProTip, typewriter hook, Merlin context with the magic↔plain vocabulary toggle. Live showcase at <code>/design</code>. Clean production build, hydration verified.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">M0</span><span class="card-id">M0-SCHEMA</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Core schema + RLS privacy boundary live ✓</h3><p class="card-note">Two migrations applied: businesses → teams → members (owner/manager/learner), learner profiles + capability snapshots (the engine&rsquo;s history), pathways + modules, conversations + messages, loop-closures, the <code>events</code> stream. <strong>Privacy boundary enforced in the data layer:</strong> conversations/messages have learner-only policies — no admin path exists. RLS helpers hardened into a private schema. <strong>Zero security-advisor lints.</strong> Typed client + generated types wired into the app.</p></article>
+            <article class="card ext"><div class="card-head"><span class="chip ext">decision</span><span class="card-id">BRAND-LOCKED</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Brand identity locked ✓</h3><p class="card-note">Ricky&rsquo;s call: ship the prototype&rsquo;s look as-is. Warm paper, indigo accent, gold celebrations, the Orb, Newsreader voice + Hanken Grotesk are the real identity — tokens laid down once, no re-skin later.</p></article>
             <article class="card ext"><div class="card-head"><span class="chip ext">decision</span><span class="card-id">DECISIONS-v1</span><span class="card-date">10 Jun</span></div><h3 class="card-title">v1 architecture locked ✓</h3><p class="card-note">Onboarding (self-serve + internal), Stripe seat billing, parked platform-aware bridge, fully-generative pathways + guardrails, two-stage capability engine, event-fed insight engine, Claude as Merlin&rsquo;s brain. Written up in <a class="task-link" style="display:inline" href="https://github.com/core-ricky/merlin/blob/main/docs/Merlin%20-%20Build%20Decisions%20v1.md" target="_blank" rel="noopener">Build Decisions v1</a>.</p></article>
             <article class="card ext"><div class="card-head"><span class="chip ext">design</span><span class="card-id">DESIGN-APPROVED</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Design approved + committed ✓</h3><p class="card-note">Ricky: &ldquo;pretty much exactly how I like it.&rdquo; The full React prototype (learner companion + manager view) is committed to the repo as the visual + interaction source of truth.</p></article>
             <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">INFRA-REPO</span><span class="card-date">10 Jun</span></div><h3 class="card-title">GitHub repo + branch flow ✓</h3><p class="card-note">Private repo <a class="task-link" style="display:inline" href="https://github.com/core-ricky/merlin" target="_blank" rel="noopener">core-ricky/merlin</a>, <code>dev → staging → main</code>, README + env template.</p></article>
@@ -545,8 +540,8 @@
 <strong>M4</strong>  Progress + manager       spellbook/levels (private, non-comparable) · manager dashboard · org insight engine (events → AI narrative) · weekly note (auto, in-app) · trend detection
 <strong>M5</strong>  Ask Merlin               always-available Claude chat · saved + resumable · topic-tags feed the insight engine
 
-<strong>Locked:</strong> both onboarding paths in v1 · Stripe seat billing · bridge parked (platform-aware, not integrated) · fully-generative pathways + autonomous guardrails · Claude as Merlin's brain
-<strong>Open (Ricky):</strong> seat rate · Stripe access · final brand identity · sales-site positioning · accreditation reconciliation · domain/DNS
+<strong>Locked:</strong> both onboarding paths in v1 · Stripe seat billing · bridge parked (platform-aware, not integrated) · fully-generative pathways + autonomous guardrails · Claude as Merlin's brain · brand = prototype look as-is
+<strong>Open (Ricky):</strong> seat rate · Stripe access · sales-site positioning · accreditation reconciliation · domain/DNS
       </div>
 
       <footer>
