@@ -381,7 +381,7 @@
           <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Commercial + onboarding</div><div class="pbar-track"><div class="pbar-fill" style="width: 55%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M2</strong> Intake + capability</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>M3</strong>  Pathway + delivery     ✓ DONE — generator (guardrailed, fully generative) · reveal · task screen · ⭐ hand-off · return/celebration · stage-2 capability
-          <div class="pbar active"><div class="pbar-label"><strong>M4</strong> Progress + manager</div><div class="pbar-track"><div class="pbar-fill" style="width: 10%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M4</strong>  Progress + manager     ✓ DONE — insight engine (aggregates only) · weekly note (Claude, honest) · /team dashboard · private progression
         </div>
       </section>
 
@@ -392,7 +392,7 @@
           <span class="badge">Decisions &amp; action items</span>
         </div>
         <p class="intro">
-          <strong>10 Jun (night): the product loop is closed.</strong> Your API key landed, and within the hour Merlin generated his first real pathway — five modules designed by Claude from a test learner&rsquo;s own intake (&ldquo;The Delay Apology Helper&rdquo;, &ldquo;Teaching Claude Your Voice&rdquo;…), guardrail-checked, revealed with the &ldquo;this gets me&rdquo; moment, then walked end-to-end: task screen → hand-off → return → <em>a new spell, earned</em> → next module unlocked, confidence nudged (capability stage 2 is live). Every milestone from invite to celebration now runs on real data. <strong>M4 (manager view + insight engine) is next — nothing needed from you.</strong>
+          <strong>10 Jun (later still): both halves of the product are alive.</strong> The manager view shipped — privacy banner, honest outcome cards, and <em>Merlin&rsquo;s weekly note</em>, written by Claude from aggregates only (events, outcomes, confidence trends — conversations are RLS-invisible to the pipeline by construction). Verified with a seeded org: the note praised what people <em>built</em>, was honest about a quiet week, and correctly declined to invent an insight when the data showed no recurring snag. Learner loop + manager loop both run end-to-end on real AI. <strong>Remaining build: M5 Ask Merlin, then M1 commercial when seat rate + Stripe arrive.</strong>
         </p>
 
         <div class="ricky-grid">
@@ -482,7 +482,7 @@
         <section class="col back">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Backlog</div>
-            <div class="col-count">7</div>
+            <div class="col-count">5</div>
           </div>
           <div class="col-body">
             <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-SALES-SITE</span></div><h3 class="card-title">Sales / marketing site</h3><p class="card-note">Public site that tells the Merlin story and presents pricing. Lead capture for sales conversations, plus the entry point into self-serve purchase. Positioning + copy steered by Ricky (see &ldquo;Later&rdquo;). Distinct surface from the app.</p></article>
@@ -494,8 +494,8 @@
             
             
             
-            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-PROGRESS</span></div><h3 class="card-title">Spellbook / levels (private, non-comparable)</h3><p class="card-note">Levelling driven by demonstrated real use (loop-closure + confidence), non-comparable across users at the data level. No leaderboards. Magic vocabulary toggleable to plain &ldquo;skills&rdquo;. Reconcile with formal accreditation (Ricky, Later).</p></article>
-            <article class="card"><div class="card-head"><span class="chip m5">M5</span><span class="card-id">M5-ASK</span></div><h3 class="card-title">Ask Merlin — saved + resumable</h3><p class="card-note">Always-available LLM conversation (Claude), saved and resumable per learner. Feeds topic-tags (never content) into the insight engine.</p></article>
+            
+            
           </div>
         </section>
 
@@ -503,11 +503,12 @@
         <section class="col next">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Up next</div>
-            <div class="col-count">2</div>
+            <div class="col-count">1</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-INSIGHT</span></div><h3 class="card-title">Org insight engine</h3><p class="card-note">Aggregates <strong>in-app events only</strong> per org (never conversation content) &mdash; completions, loop-closure outcomes, confidence movement, retries, Ask-Merlin frequency + topics-as-tags &mdash; and the AI writes the narrative. Powers the manager outcomes + the constructive frustration/trend detection (&ldquo;several people are blocked by the CRM&rdquo;).</p></article>
-            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-WEEKLY</span></div><h3 class="card-title">Weekly manager note (auto, in-app)</h3><p class="card-note">Generated on a weekly cron and shown in the dashboard &mdash; a warm, plain-language digest, not a chart wall. In-app only for v1 (email parked). Plus the per-person + team roll-up, never ranked.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">M5</span><span class="card-id">M5-ASK</span></div><h3 class="card-title">Ask Merlin — saved + resumable</h3><p class="card-note">Always-available LLM conversation (Claude), saved and resumable per learner. Feeds topic-tags (never content) into the insight engine.</p></article>
+            
+            
             
             
           </div>
@@ -527,9 +528,12 @@
         <section class="col done">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Done</div>
-            <div class="col-count">19</div>
+            <div class="col-count">22</div>
           </div>
           <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-INSIGHT</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Org insight engine live ✓</h3><p class="card-note">Aggregates the event stream + loop closures + capability history per org — <strong>conversations are RLS-invisible to it by construction</strong>. Detects recurring snags (same task stalled for 2+ people) and surfaces them constructively; with no genuine pattern it stays honestly silent rather than inventing one (verified).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-WEEKLY</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Manager dashboard + Merlin&rsquo;s weekly note ✓</h3><p class="card-note"><code>/team</code> (owners/managers land there automatically): the visible privacy boundary, three honest outcome cards, the Claude-written weekly note (&ldquo;a thoughtful update from a good team lead&rdquo;), per-person cards measured against each person&rsquo;s own start — never ranked — and the drawer restating the trust line. Note cached per business+week; first viewer of the week triggers the writer.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-PROGRESS</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Private progression (spells, growth, stage-2) ✓</h3><p class="card-note">Shipped across M3+M4: the spellbook tab, growth meter vs own start, celebration with confidence bumps from real loop closures (capability stage 2), no leaderboards anywhere. Remaining niceness — explicit &ldquo;slow down / speed up&rdquo; steering UI — folded into M5 polish.</p></article>
             <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3-PATHGEN</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Pathway generator live ✓ — the core IP</h3><p class="card-note">Opus 4.8 designs 4-6 modules fresh per learner from intake + capability vector + platform + org context — no template library, exactly as decided. Code-side guardrails (module count, prompt sanity, forbidden-content sweep) recorded to the pathway row; one regenerate attempt; lock + stale-reclaim. Runs in the background the moment intake finishes. First real run: 5 modules built from a test learner&rsquo;s own delayed-parts-email pain, guardrails green.</p></article>
             <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3-DELIVERY</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Reveal + learner shell + task screen ✓</h3><p class="card-note">/home is now the real product: the &ldquo;this gets me&rdquo; reveal (it even quotes the learner&rsquo;s own words back), Pathway / Progress / Spellbook tabs, warm &ldquo;being designed right now&rdquo; state that updates itself. Task screen per the prototype — steps as the hero, per-step hints, recovery strip, result peek.</p></article>
             <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">M3-HANDOFF</span><span class="card-date">10 Jun</span></div><h3 class="card-title">⭐ The hand-off ✓</h3><p class="card-note">The make-or-break screen, live: narrated round-trip before anything moves, side-by-side windows lesson, one-tap copy with unmistakable confirmation + OS-aware paste keys + the &ldquo;click the box first&rdquo; rescue, warm &ldquo;off you go — I&rsquo;m right here&rdquo; wait. All copy platform-aware (says &ldquo;Claude&rdquo;, &ldquo;Gemini&rdquo;… per org).</p></article>
