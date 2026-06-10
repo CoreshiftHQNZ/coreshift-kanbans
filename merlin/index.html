@@ -392,7 +392,7 @@
           <span class="badge">Decisions &amp; action items</span>
         </div>
         <p class="intro">
-          <strong>10 Jun (later still): both halves of the product are alive.</strong> The manager view shipped — privacy banner, honest outcome cards, and <em>Merlin&rsquo;s weekly note</em>, written by Claude from aggregates only (events, outcomes, confidence trends — conversations are RLS-invisible to the pipeline by construction). Verified with a seeded org: the note praised what people <em>built</em>, was honest about a quiet week, and correctly declined to invent an insight when the data showed no recurring snag. Learner loop + manager loop both run end-to-end on real AI. <strong>Remaining build: M5 Ask Merlin, then M1 commercial when seat rate + Stripe arrive.</strong>
+          <strong>10 Jun, final update: every v1 feature milestone is done.</strong> Ask Merlin shipped — the always-available drawer beside the pathway, real saved/resumable conversations, and a quiet trick: each exchange is classified into a content-free topic tag (<code>tone_tuning</code>, <code>paste_help</code>, blocker yes/no) that feeds the weekly note, while the words themselves never cross the boundary. Explicit pace steering (&ldquo;Gently, please / Move quick&rdquo;) landed with it. Verified live: a real Opus answer to a real learner question, correctly classified, pace write confirmed. <strong>What remains is commercial + deploy: the M1 self-serve half (your seat rate + Stripe), Railway staging, weekly-note cron, SMTP.</strong>
         </p>
 
         <div class="ricky-grid">
@@ -506,7 +506,8 @@
             <div class="col-count">1</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m5">M5</span><span class="card-id">M5-ASK</span></div><h3 class="card-title">Ask Merlin — saved + resumable</h3><p class="card-note">Always-available LLM conversation (Claude), saved and resumable per learner. Feeds topic-tags (never content) into the insight engine.</p></article>
+            <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">DEPLOY-STAGING</span></div><h3 class="card-title">Railway staging + release plumbing</h3><p class="card-note">Stand up the Railway service on the <code>staging</code> branch per the Coreshift standard (push-to-deploy via GitHub), env vars (Supabase, Anthropic), a weekly-note cron hitting <code>/team</code>&rsquo;s generator, and merge <code>dev → staging</code>. First time Merlin runs somewhere other than Ricky&rsquo;s machine.</p></article>
+            
             
             
             
@@ -528,9 +529,10 @@
         <section class="col done">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Done</div>
-            <div class="col-count">22</div>
+            <div class="col-count">23</div>
           </div>
           <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m5">M5</span><span class="card-id">M5-ASK</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Ask Merlin + pace steering ✓ — v1 features complete</h3><p class="card-note">The floating orb opens the &ldquo;always here · never judges&rdquo; drawer: real Claude conversation with the learner&rsquo;s context (role, current task, platform), saved + resumable in the privacy-bound tables. Each exchange emits only a topic tag (+ external-blocker flag) to the events stream — the insight engine hears <em>themes</em>, never words. Explicit MY PACE steering (cosy/standard/brisk) with dignity. Verified live end-to-end.</p></article>
             <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-INSIGHT</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Org insight engine live ✓</h3><p class="card-note">Aggregates the event stream + loop closures + capability history per org — <strong>conversations are RLS-invisible to it by construction</strong>. Detects recurring snags (same task stalled for 2+ people) and surfaces them constructively; with no genuine pattern it stays honestly silent rather than inventing one (verified).</p></article>
             <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-WEEKLY</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Manager dashboard + Merlin&rsquo;s weekly note ✓</h3><p class="card-note"><code>/team</code> (owners/managers land there automatically): the visible privacy boundary, three honest outcome cards, the Claude-written weekly note (&ldquo;a thoughtful update from a good team lead&rdquo;), per-person cards measured against each person&rsquo;s own start — never ranked — and the drawer restating the trust line. Note cached per business+week; first viewer of the week triggers the writer.</p></article>
             <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-PROGRESS</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Private progression (spells, growth, stage-2) ✓</h3><p class="card-note">Shipped across M3+M4: the spellbook tab, growth meter vs own start, celebration with confidence bumps from real loop closures (capability stage 2), no leaderboards anywhere. Remaining niceness — explicit &ldquo;slow down / speed up&rdquo; steering UI — folded into M5 polish.</p></article>
@@ -564,7 +566,7 @@
 <strong>M2</strong>  Intake + capability      ✓ DONE — conversational intake (save/resume, platform-aware) · capability stage 1 (intake seed); stage 2 behavioural refine rides on M3
 <strong>M3</strong>  Pathway + delivery       fully-generative pathway engine + guardrails · reveal + task screen · ⭐ platform-aware hand-off · return / loop-closure + event capture
 <strong>M4</strong>  Progress + manager       spellbook/levels (private, non-comparable) · manager dashboard · org insight engine (events → AI narrative) · weekly note (auto, in-app) · trend detection
-<strong>M5</strong>  Ask Merlin               always-available Claude chat · saved + resumable · topic-tags feed the insight engine
+<strong>M5</strong>  Ask Merlin             ✓ DONE — saved/resumable chat · content-free topic signals · explicit pace steering
 
 <strong>Locked:</strong> both onboarding paths in v1 · Stripe seat billing · bridge parked (platform-aware, not integrated) · fully-generative pathways + autonomous guardrails · Claude as Merlin's brain · brand = prototype look as-is
 <strong>Open (Ricky):</strong> seat rate · Stripe access · sales-site positioning · accreditation reconciliation · domain/DNS
