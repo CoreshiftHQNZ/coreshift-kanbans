@@ -398,9 +398,16 @@
         <div class="ricky-grid">
           <div class="ricky-section">
             <h3>Do now</h3>
-            <p class="helper">One genuinely fun one, two that finish M1 commercial. None are technical &mdash; Claude does the wiring once you supply the input.</p>
+            <p class="helper">One five-minute email switch-over, one genuinely fun one, two that finish M1 commercial. None are technical &mdash; Claude does the wiring once you supply the input.</p>
 
                                                 <div class="task">
+              <p class="task-title">📮 Finish the email switch-over <span class="task-when">~5 min · two dashboard pastes + 3 DNS records</span></p>
+              <p class="task-body">
+                Postmark now carries all app email (branded invites verified live). To move <em>auth</em> email onto it too: ① <a class="task-link" style="display:inline" href="https://supabase.com/dashboard/project/egjpqixhwvvekjqldnyz/auth/smtp" target="_blank" rel="noopener">Supabase → SMTP</a>: host <code>smtp.postmarkapp.com</code>, port <code>587</code>, user + pass = the Postmark server token, sender <code>noreply@heymerlin.ai</code> / Merlin — then raise Auth rate limits. ② <a class="task-link" style="display:inline" href="https://supabase.com/dashboard/project/egjpqixhwvvekjqldnyz/auth/templates" target="_blank" rel="noopener">Auth → Templates</a>: paste the five branded files from <code>emails/supabase-templates/</code>. ③ Cloudflare DNS: the DKIM/SPF/DMARC records — exact table in <code>emails/README.md</code> (DKIM value comes from Postmark&rsquo;s domain page).
+              </p>
+            </div>
+
+            <div class="task">
               <p class="task-title">✨ Try Merlin yourself <span class="task-when">5 min · it works today</span></p>
               <p class="task-body">
                 No local dev server needed any more: go to <a class="task-link" style="display:inline" href="https://staging.heymerlin.ai" target="_blank" rel="noopener">staging.heymerlin.ai</a>, hit <strong>Get started</strong>, and walk the whole thing as a stranger would — workspace, invite yourself at another email, the chat, your generated pathway, the first spell. Magic links work out there now (your Supabase URL config did it).
@@ -448,14 +455,7 @@
               </p>
             </div>
 
-            <div class="task">
-              <p class="task-title">Supabase secret key + custom SMTP <span class="task-when">before a real client cohort</span></p>
-              <p class="task-body">
-                Magic-link emails currently go via Supabase&rsquo;s built-in sender (fine for testing, low hourly limits). Before onboarding a real cohort: paste the project&rsquo;s secret key into <code>SUPABASE_SECRET_KEY</code> (Supabase dashboard → Settings → API keys) so Merlin can send proper invite emails, and wire custom SMTP (Postmark) for deliverability.
-              </p>
-            </div>
-
-            <div class="task">
+                        <div class="task">
               <p class="task-title">Domain + Cloudflare DNS <span class="task-when">before first customer</span></p>
               <p class="task-body">
                 DNS is deferred &mdash; staging/prod run on Railway default URLs. When a domain is chosen (e.g. <code>merlin.coreshift.co.nz</code>), Claude wires the Cloudflare records to the Railway services. Just pick the domain when you&rsquo;re ready.
