@@ -14,10 +14,10 @@ module.exports = {
     "never heals an existing fight. Board state is emitted by Claude Code (the scribe) as a byproduct " +
     "of doing the work, so it can never go stale.",
 
-  phase: "Planning · PRD sliced into issues",
+  phase: "Built · Slices 1–3 shipped",
   nextMilestone: {
-    name: "Slice 1 — Sentinel dungeon renders from canonical state (issue #2)",
-    date: "first build session",
+    name: "Legibility verdict on the real Sentinel board (issue #7) + merge PR #12",
+    date: "operator review",
   },
 
   // ── Goals ─────────────────────────────────────────────────────

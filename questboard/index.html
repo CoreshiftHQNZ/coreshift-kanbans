@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>29%</strong> complete</div>
-        <div><strong>5</strong>/17 cards done</div>
-        <div>Updated <strong>2026-06-11 13:58 UTC</strong></div>
+        <div><strong>59%</strong> complete</div>
+        <div><strong>13</strong>/22 cards done</div>
+        <div>Updated <strong>2026-06-11 14:32 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">Planning · PRD sliced into issues</span>
+          <span class="phase-pill-value">Built · Slices 1–3 shipped</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Slice 1 — Sentinel dungeon renders from canonical state (issue #2) <span class="phase-pill-date">first build session</span></span>
+          <span class="phase-pill-value">Legibility verdict on the real Sentinel board (issue #7) + merge PR #12 <span class="phase-pill-date">operator review</span></span>
         </div>
       </div>
     </section>
@@ -809,11 +809,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">5</div>
+        <div class="status-num">13</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
+        <div class="status-num">1</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -825,7 +825,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">10</div>
+        <div class="status-num">6</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -884,35 +884,42 @@
           <div class="recent-check">✓</div>
           <div class="recent-text">
             <div class="recent-title">Design Spec v1 interrogated</div>
-            <div class="recent-desc">Twelve locked decisions, six invariants, data model, week-one ship plan. Every decision made against a real example board (Sentinel), not in the abstract</div>
+            <div class="recent-desc">Twelve locked decisions, six invariants, data model, week-one ship plan. Every decision made against a real example board (Sentinel)</div>
           </div>
         </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
             <div class="recent-title">PRD published</div>
-            <div class="recent-desc">Full-vision scope (world map, continents, multi-kingdom, Critical, tiers). Problem, solution, 40 user stories, implementation + testing decisions. Filed as issue #1 with `ready-for-agent`</div>
+            <div class="recent-desc">Full-vision scope. Filed as issue #1 with `ready-for-agent`; sliced into ten tracer-bullet issues (#2–#11)</div>
           </div>
         </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
-            <div class="recent-title">Repo created + scaffold pushed</div>
-            <div class="recent-desc">`CoreshiftHQNZ/questboard` (private), `main` + `dev`, README + PRD + design spec in `docs/`</div>
+            <div class="recent-title">Repo + scaffold</div>
+            <div class="recent-desc">`CoreshiftHQNZ/questboard` (private), `main` + `dev`, Vite + React 18 + TS + Vitest (matches sentinel-app toolchain)</div>
           </div>
         </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
-            <div class="recent-title">Build sliced into ten tracer-bullet issues</div>
-            <div class="recent-desc">Issues #2–#11 filed in dependency order with real cross-references. Eight AFK (`ready-for-agent`), two HITL (#7 scribe/legibility verdict, #8 storage decision)</div>
+            <div class="recent-title">Walking skeleton (#2)</div>
+            <div class="recent-desc">Canonical types → State Projection → dungeon screen. Hero metric is boss ladder + shipping cadence; segmented HP bars with frozen denominator; no percent bar anywhere</div>
           </div>
         </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
-            <div class="recent-title">Open questions resolved in PRD</div>
-            <div class="recent-desc">A PR spanning two campaigns splits the damage (one DamageEvent per campaign); Critical thresholds are injected config, not constants</div>
+            <div class="recent-title">HP Ledger (#3)</div>
+            <div class="recent-desc">The only module allowed to mutate boss HP/state. Pure reducer; max_hp frozen at spawn, minions never heal, dead stays dead, undefined fights rejected. 19 table-driven tests</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Scope Router (#4)</div>
+            <div class="recent-desc">One mechanical rule: own exit criteria → new parked Boss; chips the objective → Minion. Neither path can move an existing max_hp</div>
           </div>
         </div>
       </div>
@@ -927,41 +934,86 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">13</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">Design Spec v1 interrogated</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">decision</span></div>
-        <div class="card-desc">Twelve locked decisions, six invariants, data model, week-one ship plan. Every decision made against a real example board (Sentinel), not in the abstract</div>
+        <div class="card-desc">Twelve locked decisions, six invariants, data model, week-one ship plan. Every decision made against a real example board (Sentinel)</div>
       </div>
       <div class="card">
         <div class="card-title">PRD published</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">ready-for-agent</span></div>
-        <div class="card-desc">Full-vision scope (world map, continents, multi-kingdom, Critical, tiers). Problem, solution, 40 user stories, implementation + testing decisions. Filed as issue #1 with `ready-for-agent`</div>
+        <div class="card-desc">Full-vision scope. Filed as issue #1 with `ready-for-agent`; sliced into ten tracer-bullet issues (#2–#11)</div>
       </div>
       <div class="card">
-        <div class="card-title">Repo created + scaffold pushed</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">CoreshiftHQNZ/questboard</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">dev</span><span class="tag tag-neutral">docs/</span></div>
-        <div class="card-desc">`CoreshiftHQNZ/questboard` (private), `main` + `dev`, README + PRD + design spec in `docs/`</div>
+        <div class="card-title">Repo + scaffold</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">CoreshiftHQNZ/questboard</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">dev</span></div>
+        <div class="card-desc">`CoreshiftHQNZ/questboard` (private), `main` + `dev`, Vite + React 18 + TS + Vitest (matches sentinel-app toolchain)</div>
       </div>
       <div class="card">
-        <div class="card-title">Build sliced into ten tracer-bullet issues</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">ready-for-agent</span></div>
-        <div class="card-desc">Issues #2–#11 filed in dependency order with real cross-references. Eight AFK (`ready-for-agent`), two HITL (#7 scribe/legibility verdict, #8 storage decision)</div>
+        <div class="card-title">Walking skeleton (#2)</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Canonical types → State Projection → dungeon screen. Hero metric is boss ladder + shipping cadence; segmented HP bars with frozen denominator; no percent bar anywhere</div>
       </div>
       <div class="card">
-        <div class="card-title">Open questions resolved in PRD</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">decision</span></div>
-        <div class="card-desc">A PR spanning two campaigns splits the damage (one DamageEvent per campaign); Critical thresholds are injected config, not constants</div>
+        <div class="card-title">HP Ledger (#3)</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">The only module allowed to mutate boss HP/state. Pure reducer; max_hp frozen at spawn, minions never heal, dead stays dead, undefined fights rejected. 19 table-driven tests</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Scope Router (#4)</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">One mechanical rule: own exit criteria → new parked Boss; chips the objective → Minion. Neither path can move an existing max_hp</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Flee/Resume machine (#5)</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">active ⇄ fled, dead terminal, one active boss per KINGDOM (pinned across campaigns). Plus replay-equivalence test: the whole sample board rebuilt through ledger+machine ops renders identically</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Damage Router (#6)</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Routes by campaign tag, never repo (the keycontent-privacy-PR case is a named test); two-campaign PRs split into one DamageEvent each; untagged/mis-tagged work rejected, never guessed</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Persistence adapter (#8)</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">decision</span></div>
+        <div class="card-desc">v1 = state/&lt;kingdom&gt;.json in the questboard repo behind one StateStore interface. Supabase impl is the documented migration path when kingdoms multiply</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Critical Evaluator + ack/snooze (#9)</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Computed from signals (incident, P0/P1, fled &gt; 7d, deadline &lt; 14d — injected config); humans can only acknowledge, never raise. Verified live: Sentinel&#39;s Phase B auto-fired &#39;blocked 12d&#39;</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Scribe convention + real Sentinel board (#7 built)</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">docs/SCRIBE.md (quest tags, split damage, scope rule, engagement) + state/sentinel.json from real kanban history: 7 bosses across Build + Privacy campaigns, real PR sources. Verdict pending (see This Week)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">World map (#10)</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Continents → Kingdoms from the same projection as the dungeon (test pins the two skins cannot disagree); tiles show active boss HP, critical count, parked fights; drill-down both ways</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tier-scaled fanfare (#11)</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Kill XP mini 50 / boss 150 / raid 500; trophies weighted by tier; 7-day kill banners. No leaderboards, by design. **Closes the PRD&#39;s AFK scope — 56 tests green.**</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">0</span>
+        <span class="col-count">1</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Promotion PR #12 (dev → main)</div>
+        <div class="card-tags"><span class="tag tag-ops">ops</span></div>
+        <div class="card-desc">Full build awaiting review/merge: https://github.com/CoreshiftHQNZ/questboard/pull/12</div>
+      </div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -977,71 +1029,51 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Walking skeleton (issue #2)</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span></div>
-        <div class="card-desc">The only unblocked issue and the tracer bullet: canonical types, hand-authored Sentinel sample state, State Projection, minimal dungeon screen with the hero metric (&quot;Phase X of Y · N shipped this week&quot;). Unblocks the three pure-core modules to run in parallel</div>
+        <div class="card-title">Legibility verdict on the real Sentinel board</div>
+        <div class="card-tags"><span class="tag tag-neutral">needs-abe</span><span class="tag tag-milestone">milestone</span></div>
+        <div class="card-desc">The PRD&#39;s falsifiable test, answered on issue #7: does Sentinel read as a tidy build with a handful of real bosses? Provisional read: yes — 141 cards became 7 bosses / 2 campaigns, and the board surfaced the real bottleneck (Phase B parked 12d on the Kling decision) automatically</div>
       </div>
       <div class="card">
-        <div class="card-title">Storage decision (issue #8)</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-neutral">needs-abe</span></div>
-        <div class="card-desc">state.json per repo vs shared Supabase table set. Deliberately open in the PRD; pick based on kingdoms expected in the first month. Can be decided any time after #2</div>
+        <div class="card-title">Deploy decision</div>
+        <div class="card-tags"><span class="tag tag-neutral">needs-abe</span><span class="tag tag-neutral">npm run dev</span></div>
+        <div class="card-desc">QuestBoard runs locally (`npm run dev`). Decide whether/where to host (Railway per Coreshift standard, or GitHub Pages since v1 is fully static)</div>
       </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">10</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">HP Ledger (issue #3)</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-blocked">blocked-by-2</span></div>
-        <div class="card-desc">The only module allowed to mutate boss HP/state. Pure reducer, TDD&#39;d: frozen max_hp, damage, minions-never-heal, dead-stays-dead</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Scope Router (issue #4)</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-blocked">blocked-by-3</span></div>
-        <div class="card-desc">One mechanical rule: own exit criteria → new Boss; chips the objective → Minion</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Flee/Resume state machine (issue #5)</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-blocked">blocked-by-3</span></div>
-        <div class="card-desc">active ⇄ fled on block/unblock, dead terminal, one active boss per kingdom</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Damage Router (issue #6)</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-blocked">blocked-by-3</span></div>
-        <div class="card-desc">Routes by campaign tag, never repo; splits two-campaign PRs; rejects untagged</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Scribe convention + real Sentinel board (issue #7)</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-blocked">blocked-by-6</span><span class="tag tag-neutral">needs-abe</span></div>
-        <div class="card-desc">HITL. Author Sentinel&#39;s real board with Privacy split into its own campaign, then the falsifiable legibility test</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Critical Evaluator + ack/snooze (issue #9)</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-blocked">blocked-by-2</span></div>
-        <div class="card-desc">Computed from signals, thresholds injected; humans can only acknowledge, never raise. Tests deliberately deferred while thresholds tune</div>
-      </div>
-      <div class="card">
-        <div class="card-title">World map overworld (issue #10)</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by-7</span></div>
-        <div class="card-desc">Continents → Kingdoms from the same canonical state; drill-down into dungeons</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Tier-scaled fanfare (issue #11)</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by-10</span></div>
-        <div class="card-desc">Raid kills visibly outweigh goblin farming. No leaderboards, ever</div>
-      </div>
-      <div class="card">
         <div class="card-title">Critical Evaluator tests</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">low-priority</span></div>
-        <div class="card-desc">Cheapest, most decision-dense module to test; add once thresholds settle</div>
+        <div class="card-tags"><span class="tag tag-neutral">low-priority</span></div>
+        <div class="card-desc">Deliberately deferred by the PRD while thresholds tune; module is pure, tests are cheap once 7d/14d defaults settle</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Supabase StateStore</div>
+        <div class="card-tags"><span class="tag tag-neutral">low-priority</span></div>
+        <div class="card-desc">Second persistence implementation behind the same interface, mirroring Sentinel&#39;s cross-app aggregator. Trigger: kingdoms multiply</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Onboard more kingdoms</div>
+        
+        <div class="card-desc">KeyContent, Noozey, Velocity boards as state/&lt;kingdom&gt;.json, each authored via the scribe convention</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Scribe CLI</div>
+        <div class="card-tags"><span class="tag tag-neutral">low-priority</span></div>
+        <div class="card-desc">Wrap the core ops in a small CLI so scribe sessions apply ops instead of hand-editing JSON</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Live signals for Critical</div>
+        <div class="card-tags"><span class="tag tag-neutral">low-priority</span></div>
+        <div class="card-desc">Wire openIncident / openP0P1 from Sentinel&#39;s real data instead of injected NO_SIGNALS</div>
       </div>
       <div class="card">
         <div class="card-title">&quot;My battles&quot; IC view</div>
         <div class="card-tags"><span class="tag tag-neutral">low-priority</span></div>
-        <div class="card-desc">Deferred by PRD: must stay possible as a filtered slice of the same data, but no separate view ships</div>
+        <div class="card-desc">Deferred by PRD: must stay possible as a filtered slice of the same data; no separate view ships</div>
       </div></div>
     </section>
       </div>
