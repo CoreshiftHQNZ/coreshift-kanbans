@@ -378,7 +378,7 @@
         <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;"><span style="color: var(--ink);">M0 complete.</span> Magic-link auth, internal console + invitations live — a client can be onboarded end-to-end today. M1 self-serve half waits on Stripe; M2 intake is next.</div>
         <div class="progress-bars">
           <div class="pbar"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Commercial + onboarding</div><div class="pbar-track"><div class="pbar-fill" style="width: 55%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Commercial + onboarding</div><div class="pbar-track"><div class="pbar-fill" style="width: 85%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M2</strong> Intake + capability</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>M3</strong>  Pathway + delivery     ✓ DONE — generator (guardrailed, fully generative) · reveal · task screen · ⭐ hand-off · return/celebration · stage-2 capability
           <div class="pbar active"><div class="pbar-label"><strong>M4</strong>  Progress + manager     ✓ DONE — insight engine (aggregates only) · weekly note (Claude, honest) · /team dashboard · private progression
@@ -392,25 +392,18 @@
           <span class="badge">Decisions &amp; action items</span>
         </div>
         <p class="intro">
-          <strong>10 Jun, last word: Merlin is on the internet.</strong> All v1 feature milestones (M0–M5) are done, and the app now runs on Railway staging at <a href="https://web-staging-b960.up.railway.app" target="_blank" rel="noopener" style="color:var(--ricky);">web-staging-b960.up.railway.app</a> — verified serving, routes guarded, dev backdoor confirmed absent in production mode. Two thirty-second clicks from you finish the plumbing (push-to-deploy + staging magic links), then it&rsquo;s only M1 commercial (your seat rate + Stripe) between Merlin and a paying client.
+          <strong>11 Jun: Merlin has a front door.</strong> The sales site is live at <a href="https://staging.heymerlin.ai" target="_blank" rel="noopener" style="color:var(--ricky);">staging.heymerlin.ai</a> (Ricky wired the heymerlin.ai domains + Supabase URLs) — Get started runs <em>real</em> self-serve onboarding: business form → magic link → workspace created with 3 starter seats → owner lands on their dashboard and can invite learners. Billing bolts on the moment the seat rate + Stripe arrive; nothing else stands between a stranger on the internet and a working Merlin workspace. Push-to-deploy carried it all to staging automatically.
         </p>
 
         <div class="ricky-grid">
           <div class="ricky-section">
             <h3>Do now</h3>
-            <p class="helper">One thirty-second unblock, one genuinely fun one, two that gate M1 commercial. None are technical &mdash; Claude does the wiring once you supply the input.</p>
+            <p class="helper">One genuinely fun one, two that finish M1 commercial. None are technical &mdash; Claude does the wiring once you supply the input.</p>
 
-                                    <div class="task">
-              <p class="task-title">🔁 Allow the staging URL for magic links <span class="task-when">1 min · enables sign-in on staging</span></p>
-              <p class="task-body">
-                In <a class="task-link" style="display:inline" href="https://supabase.com/dashboard/project/egjpqixhwvvekjqldnyz/auth/url-configuration" target="_blank" rel="noopener">Supabase → Auth → URL Configuration</a>, add <code>https://web-staging-b960.up.railway.app/auth/callback</code> to Redirect URLs (and optionally set Site URL to the staging domain). Until then, magic-link emails from staging redirect to localhost.
-              </p>
-            </div>
-
-            <div class="task">
+                                                <div class="task">
               <p class="task-title">✨ Try Merlin yourself <span class="task-when">5 min · it works today</span></p>
               <p class="task-body">
-                The whole first-week experience works now. Run <code>npm run dev</code>, sign in as <code>ricky@coreshifthq.com</code>, create a test business in the console, invite yourself at another email, then live it as the learner: the get-to-know-you chat (Claude voices Merlin), watch your pathway get designed for <em>your</em> answers, open task one, do the hand-off, come back, earn the spell. That&rsquo;s the exact journey the first client&rsquo;s staff will take.
+                No local dev server needed any more: go to <a class="task-link" style="display:inline" href="https://staging.heymerlin.ai" target="_blank" rel="noopener">staging.heymerlin.ai</a>, hit <strong>Get started</strong>, and walk the whole thing as a stranger would — workspace, invite yourself at another email, the chat, your generated pathway, the first spell. Magic links work out there now (your Supabase URL config did it).
               </p>
             </div>
 
@@ -489,12 +482,12 @@
         <section class="col back">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Backlog</div>
-            <div class="col-count">5</div>
+            <div class="col-count">3</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-SALES-SITE</span></div><h3 class="card-title">Sales / marketing site</h3><p class="card-note">Public site that tells the Merlin story and presents pricing. Lead capture for sales conversations, plus the entry point into self-serve purchase. Positioning + copy steered by Ricky (see &ldquo;Later&rdquo;). Distinct surface from the app.</p></article>
+            
             <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-STRIPE-SEATS</span></div><h3 class="card-title">Stripe seat-based billing + checkout</h3><p class="card-note">Per-seat recurring subscription (monthly/annual). Self-serve uses Stripe Checkout; a webhook provisions the Business + Owner on payment and sets the seat allowance. Internal/manual deals invoiced through the same account. Built rate-agnostic until the price is set. <strong>Blocked on:</strong> seat rate + Stripe access (Ricky, Do-now).</p></article>
-            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-SELFSERVE</span></div><h3 class="card-title">Self-serve signup → workspace</h3><p class="card-note">A company signs up, pays, becomes a Business with an Owner/Admin, picks its AI platform, and lands ready to invite learners. The whole loop with no CoreShift involvement.</p></article>
+            
             
             
             
@@ -536,9 +529,11 @@
         <section class="col done">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Done</div>
-            <div class="col-count">24</div>
+            <div class="col-count">26</div>
           </div>
           <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-SALES-SITE</span><span class="card-date">11 Jun</span></div><h3 class="card-title">Sales site live at heymerlin.ai ✓</h3><p class="card-note">The landing in Merlin&rsquo;s own design system — Orb hero (&ldquo;AI adoption for the people who actually do the work&rdquo;), the three moments, how-it-works, the privacy promise, Get started + Log in in the nav. Pricing section arrives with the seat rate.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-SELFSERVE</span><span class="card-date">11 Jun</span></div><h3 class="card-title">Self-serve onboarding ✓ (billing pending)</h3><p class="card-note"><code>/start</code>: business details → magic link → workspace created via a validated definer RPC (3 starter seats) → owner lands on /team and invites learners. E2E verified including the cross-device edge. Stripe checkout bolts onto this exact flow when the seat rate lands.</p></article>
             <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">DEPLOY-STAGING</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Merlin is live on staging ✓</h3><p class="card-note"><a class="task-link" style="display:inline" href="https://web-staging-b960.up.railway.app" target="_blank" rel="noopener">web-staging-b960.up.railway.app</a> — Railway project <code>merlin</code>, staging environment, env vars set (Supabase, Anthropic). Verified: app serves, auth middleware guards routes, and <code>/dev-login</code> correctly 404s in production mode. Build fix en route: the lockfile is now generated on linux (darwin npm silently drops nested wasm optionals — npm ci proven green in Docker before pushing). Repo now lives at <code>CoreshiftHQNZ/merlin</code> (house standard) — and the org transfer unlocked push-to-deploy automatically: pushes to <code>staging</code> build themselves (verified). Only the magic-link allow-list still needs a click.</p></article>
             <article class="card"><div class="card-head"><span class="chip m5">M5</span><span class="card-id">M5-ASK</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Ask Merlin + pace steering ✓ — v1 features complete</h3><p class="card-note">The floating orb opens the &ldquo;always here · never judges&rdquo; drawer: real Claude conversation with the learner&rsquo;s context (role, current task, platform), saved + resumable in the privacy-bound tables. Each exchange emits only a topic tag (+ external-blocker flag) to the events stream — the insight engine hears <em>themes</em>, never words. Explicit MY PACE steering (cosy/standard/brisk) with dignity. Verified live end-to-end.</p></article>
             <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-INSIGHT</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Org insight engine live ✓</h3><p class="card-note">Aggregates the event stream + loop closures + capability history per org — <strong>conversations are RLS-invisible to it by construction</strong>. Detects recurring snags (same task stalled for 2+ people) and surfaces them constructively; with no genuine pattern it stays honestly silent rather than inventing one (verified).</p></article>
