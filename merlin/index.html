@@ -392,15 +392,29 @@
           <span class="badge">Decisions &amp; action items</span>
         </div>
         <p class="intro">
-          <strong>10 Jun, final update: every v1 feature milestone is done.</strong> Ask Merlin shipped — the always-available drawer beside the pathway, real saved/resumable conversations, and a quiet trick: each exchange is classified into a content-free topic tag (<code>tone_tuning</code>, <code>paste_help</code>, blocker yes/no) that feeds the weekly note, while the words themselves never cross the boundary. Explicit pace steering (&ldquo;Gently, please / Move quick&rdquo;) landed with it. Verified live: a real Opus answer to a real learner question, correctly classified, pace write confirmed. <strong>What remains is commercial + deploy: the M1 self-serve half (your seat rate + Stripe), Railway staging, weekly-note cron, SMTP.</strong>
+          <strong>10 Jun, last word: Merlin is on the internet.</strong> All v1 feature milestones (M0–M5) are done, and the app now runs on Railway staging at <a href="https://web-staging-b960.up.railway.app" target="_blank" rel="noopener" style="color:var(--ricky);">web-staging-b960.up.railway.app</a> — verified serving, routes guarded, dev backdoor confirmed absent in production mode. Two thirty-second clicks from you finish the plumbing (push-to-deploy + staging magic links), then it&rsquo;s only M1 commercial (your seat rate + Stripe) between Merlin and a paying client.
         </p>
 
         <div class="ricky-grid">
           <div class="ricky-section">
             <h3>Do now</h3>
-            <p class="helper">One genuinely fun one, two that gate M1 commercial. None are technical &mdash; Claude does the wiring once you supply the input.</p>
+            <p class="helper">Two thirty-second unblocks, one genuinely fun one, two that gate M1 commercial. None are technical &mdash; Claude does the wiring once you supply the input.</p>
 
                         <div class="task">
+              <p class="task-title">🔗 Grant Railway access to the merlin repo <span class="task-when">30 sec · enables push-to-deploy</span></p>
+              <p class="task-body">
+                Staging currently deploys via CLI upload. For the standard push-to-deploy flow, open <a class="task-link" style="display:inline" href="https://github.com/settings/installations" target="_blank" rel="noopener">github.com/settings/installations</a> → Railway → Repository access → add <code>core-ricky/merlin</code>. (GitHub App grants can&rsquo;t be done with a personal token — needs your click.) After that, every push to <code>staging</code> deploys itself.
+              </p>
+            </div>
+
+            <div class="task">
+              <p class="task-title">🔁 Allow the staging URL for magic links <span class="task-when">1 min · enables sign-in on staging</span></p>
+              <p class="task-body">
+                In <a class="task-link" style="display:inline" href="https://supabase.com/dashboard/project/egjpqixhwvvekjqldnyz/auth/url-configuration" target="_blank" rel="noopener">Supabase → Auth → URL Configuration</a>, add <code>https://web-staging-b960.up.railway.app/auth/callback</code> to Redirect URLs (and optionally set Site URL to the staging domain). Until then, magic-link emails from staging redirect to localhost.
+              </p>
+            </div>
+
+            <div class="task">
               <p class="task-title">✨ Try Merlin yourself <span class="task-when">5 min · it works today</span></p>
               <p class="task-body">
                 The whole first-week experience works now. Run <code>npm run dev</code>, sign in as <code>ricky@coreshifthq.com</code>, create a test business in the console, invite yourself at another email, then live it as the learner: the get-to-know-you chat (Claude voices Merlin), watch your pathway get designed for <em>your</em> answers, open task one, do the hand-off, come back, earn the spell. That&rsquo;s the exact journey the first client&rsquo;s staff will take.
@@ -503,10 +517,10 @@
         <section class="col next">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Up next</div>
-            <div class="col-count">1</div>
+            <div class="col-count">0</div>
           </div>
           <div class="col-body">
-            <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">DEPLOY-STAGING</span></div><h3 class="card-title">Railway staging + release plumbing</h3><p class="card-note">Stand up the Railway service on the <code>staging</code> branch per the Coreshift standard (push-to-deploy via GitHub), env vars (Supabase, Anthropic), a weekly-note cron hitting <code>/team</code>&rsquo;s generator, and merge <code>dev → staging</code>. First time Merlin runs somewhere other than Ricky&rsquo;s machine.</p></article>
+            
             
             
             
@@ -529,9 +543,10 @@
         <section class="col done">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Done</div>
-            <div class="col-count">23</div>
+            <div class="col-count">24</div>
           </div>
           <div class="col-body">
+            <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">DEPLOY-STAGING</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Merlin is live on staging ✓</h3><p class="card-note"><a class="task-link" style="display:inline" href="https://web-staging-b960.up.railway.app" target="_blank" rel="noopener">web-staging-b960.up.railway.app</a> — Railway project <code>merlin</code>, staging environment, env vars set (Supabase, Anthropic). Verified: app serves, auth middleware guards routes, and <code>/dev-login</code> correctly 404s in production mode. Build fix en route: the lockfile is now generated on linux (darwin npm silently drops nested wasm optionals — npm ci proven green in Docker before pushing). Push-to-deploy + staging magic links each need one click from Ricky (Do now).</p></article>
             <article class="card"><div class="card-head"><span class="chip m5">M5</span><span class="card-id">M5-ASK</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Ask Merlin + pace steering ✓ — v1 features complete</h3><p class="card-note">The floating orb opens the &ldquo;always here · never judges&rdquo; drawer: real Claude conversation with the learner&rsquo;s context (role, current task, platform), saved + resumable in the privacy-bound tables. Each exchange emits only a topic tag (+ external-blocker flag) to the events stream — the insight engine hears <em>themes</em>, never words. Explicit MY PACE steering (cosy/standard/brisk) with dignity. Verified live end-to-end.</p></article>
             <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-INSIGHT</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Org insight engine live ✓</h3><p class="card-note">Aggregates the event stream + loop closures + capability history per org — <strong>conversations are RLS-invisible to it by construction</strong>. Detects recurring snags (same task stalled for 2+ people) and surfaces them constructively; with no genuine pattern it stays honestly silent rather than inventing one (verified).</p></article>
             <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">M4-WEEKLY</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Manager dashboard + Merlin&rsquo;s weekly note ✓</h3><p class="card-note"><code>/team</code> (owners/managers land there automatically): the visible privacy boundary, three honest outcome cards, the Claude-written weekly note (&ldquo;a thoughtful update from a good team lead&rdquo;), per-person cards measured against each person&rsquo;s own start — never ranked — and the drawer restating the trust line. Note cached per business+week; first viewer of the week triggers the writer.</p></article>
