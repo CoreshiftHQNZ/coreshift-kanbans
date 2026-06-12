@@ -367,7 +367,7 @@
           <p class="subtitle">CoreShift&rsquo;s AI Implementation Wizard · live build status</p>
         </div>
         <div class="meta">
-          Last updated <strong>2026-06-10</strong><br />
+          Last updated <strong>2026-06-12</strong><br />
           <a href="https://github.com/CoreshiftHQNZ/merlin" target="_blank" rel="noopener">repo</a> ·
           <a href="https://github.com/CoreshiftHQNZ/merlin/blob/main/docs/Merlin%20-%20Build%20Decisions%20v1.md" target="_blank" rel="noopener">build decisions</a> ·
           <a href="https://github.com/CoreshiftHQNZ/merlin/blob/main/docs/Merlin%20-%20Design%20Brief%20v1.md" target="_blank" rel="noopener">design brief</a>
@@ -375,10 +375,10 @@
       </header>
 
       <section class="progress">
-        <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;"><span style="color: var(--ink);">M0 complete.</span> Magic-link auth, internal console + invitations live — a client can be onboarded end-to-end today. M1 self-serve half waits on Stripe; M2 intake is next.</div>
+        <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;"><span style="color: var(--ink);">Phase A complete (12 Jun).</span> Individuals AND teams can sign up; teams give Merlin business context that provably shapes every pathway; usage is metered with 80/100% admin alerts and a billing panel. Roles are now admin / manager / team member. Only Stripe checkout (waiting on the accountant&rsquo;s rate) stands between M1 and done.</div>
         <div class="progress-bars">
           <div class="pbar"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Commercial + onboarding</div><div class="pbar-track"><div class="pbar-fill" style="width: 85%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Commercial + onboarding</div><div class="pbar-track"><div class="pbar-fill" style="width: 92%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M2</strong> Intake + capability</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>M3</strong>  Pathway + delivery     ✓ DONE — generator (guardrailed, fully generative) · reveal · task screen · ⭐ hand-off · return/celebration · stage-2 capability
           <div class="pbar active"><div class="pbar-label"><strong>M4</strong>  Progress + manager     ✓ DONE — insight engine (aggregates only) · weekly note (Claude, honest) · /team dashboard · private progression
@@ -392,15 +392,22 @@
           <span class="badge">Decisions &amp; action items</span>
         </div>
         <p class="intro">
-          <strong>11 Jun: Merlin has a front door.</strong> The sales site is live at <a href="https://staging.heymerlin.ai" target="_blank" rel="noopener" style="color:var(--ricky);">staging.heymerlin.ai</a> (Ricky wired the heymerlin.ai domains + Supabase URLs) — Get started runs <em>real</em> self-serve onboarding: business form → magic link → workspace created with 3 starter seats → owner lands on their dashboard and can invite learners. Billing bolts on the moment the seat rate + Stripe arrive; nothing else stands between a stranger on the internet and a working Merlin workspace. Push-to-deploy carried it all to staging automatically.
+          <strong>12 Jun: Phase A shipped.</strong> Get started now asks the first real question — <em>&ldquo;Just me&rdquo;</em> or <em>&ldquo;Me and my team&rdquo;</em>. Individuals go straight from magic link into Merlin&rsquo;s chat (their own pathway, their own plan &amp; usage page). Team admins get the new onboarding wizard — &ldquo;Give Merlin the tour&rdquo;: a guided form, paste box and PDF upload that Claude distils into an org brief flavouring <em>every</em> team member&rsquo;s Merlin (E2E proof: a test vet clinic&rsquo;s &ldquo;no medical advice without a vet&rdquo; rule surfaced, unprompted, in a receptionist&rsquo;s generated pathway). Invites moved onto /team with a per-person role-context note (transparent to the learner). Every Merlin interaction is metered into a pooled monthly allowance with 80%/100% admin alert emails and a billing panel — so the moment your accountant lands the rate, Stripe is a checkout away, with real usage data already accrued. Roles renamed: <strong>admin / manager / team member</strong> (multiple admins fine; only admins see billing).
         </p>
 
         <div class="ricky-grid">
           <div class="ricky-section">
             <h3>Do now</h3>
-            <p class="helper">One genuinely fun one, two that finish M1 commercial. None are technical &mdash; Claude does the wiring once you supply the input.</p>
+            <p class="helper">One five-minute email switch-over, one genuinely fun one, two that finish M1 commercial. None are technical &mdash; Claude does the wiring once you supply the input.</p>
 
                                                 <div class="task">
+              <p class="task-title">📮 Add the email DNS records <span class="task-when">~3 min · the only email step left</span></p>
+              <p class="task-body">
+                <strong>12 Jun: Claude did the rest via the Management API</strong> — Supabase SMTP now runs on Postmark (verified: a real magic link arrived branded, through Postmark), all five branded auth templates are live, the rate limit is lifted, and the broken-link bug Ricky hit is fixed (Site URL was missing <code>https://</code>). Remaining: Cloudflare DNS for deliverability — DKIM TXT (value from <a class="task-link" style="display:inline" href="https://account.postmarkapp.com/signature_domains" target="_blank" rel="noopener">Postmark&rsquo;s domain page</a>), CNAME <code>pm-bounces → pm.mtasv.net</code> (proxy OFF), and the DMARC TXT — exact table in <code>emails/README.md</code>. Email already <em>sends</em>; these records protect inbox placement.
+              </p>
+            </div>
+
+            <div class="task">
               <p class="task-title">✨ Try Merlin yourself <span class="task-when">5 min · it works today</span></p>
               <p class="task-body">
                 No local dev server needed any more: go to <a class="task-link" style="display:inline" href="https://staging.heymerlin.ai" target="_blank" rel="noopener">staging.heymerlin.ai</a>, hit <strong>Get started</strong>, and walk the whole thing as a stranger would — workspace, invite yourself at another email, the chat, your generated pathway, the first spell. Magic links work out there now (your Supabase URL config did it).
@@ -448,14 +455,7 @@
               </p>
             </div>
 
-            <div class="task">
-              <p class="task-title">Supabase secret key + custom SMTP <span class="task-when">before a real client cohort</span></p>
-              <p class="task-body">
-                Magic-link emails currently go via Supabase&rsquo;s built-in sender (fine for testing, low hourly limits). Before onboarding a real cohort: paste the project&rsquo;s secret key into <code>SUPABASE_SECRET_KEY</code> (Supabase dashboard → Settings → API keys) so Merlin can send proper invite emails, and wire custom SMTP (Postmark) for deliverability.
-              </p>
-            </div>
-
-            <div class="task">
+                        <div class="task">
               <p class="task-title">Domain + Cloudflare DNS <span class="task-when">before first customer</span></p>
               <p class="task-body">
                 DNS is deferred &mdash; staging/prod run on Railway default URLs. When a domain is chosen (e.g. <code>merlin.coreshift.co.nz</code>), Claude wires the Cloudflare records to the Railway services. Just pick the domain when you&rsquo;re ready.
@@ -486,7 +486,7 @@
           </div>
           <div class="col-body">
             
-            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-STRIPE-SEATS</span></div><h3 class="card-title">Stripe seat-based billing + checkout</h3><p class="card-note">Per-seat recurring subscription (monthly/annual). Self-serve uses Stripe Checkout; a webhook provisions the Business + Owner on payment and sets the seat allowance. Internal/manual deals invoiced through the same account. Built rate-agnostic until the price is set. <strong>Blocked on:</strong> seat rate + Stripe access (Ricky, Do-now).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-STRIPE-SEATS</span></div><h3 class="card-title">Stripe seat-based billing + checkout</h3><p class="card-note">Per-seat subscription ($99/seat/mo agreed; included usage + $39 overage, exact shape with the accountant). Phase A already laid the rails: kind-aware signup, pooled usage metering with alerts, the /billing panel and the seat-enforced invite path — the webhook now just flips <code>subscription_status</code>/seat counts and switches the meter to the Stripe billing period. <strong>Blocked on:</strong> accountant&rsquo;s rate + Stripe access (Ricky, Do-now).</p></article>
             
             
             
@@ -529,9 +529,12 @@
         <section class="col done">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Done</div>
-            <div class="col-count">26</div>
+            <div class="col-count">29</div>
           </div>
           <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">PHASE-A-SIGNUP</span><span class="card-date">12 Jun</span></div><h3 class="card-title">Individual OR team signup ✓ + roles renamed</h3><p class="card-note"><code>/start</code> forks: <strong>Just me</strong> (workspace named after them, 1 seat, straight into Merlin&rsquo;s chat — the intake IS their onboarding) or <strong>Me and my team</strong> (existing flow → team onboarding). Roles are now <strong>admin / manager / team member</strong> across DB enum, RLS helpers and UI — multiple admins allowed, billing scoped to admins only. An individual&rsquo;s admin IS the learner everywhere. E2E bonus catch: an admin session could silently claim the whole team&rsquo;s pending invites through the admin-update RLS path — claim is now scoped to the signed-in email.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">PHASE-A-CONTEXT</span><span class="card-date">12 Jun</span></div><h3 class="card-title">Team onboarding: the context engine ✓</h3><p class="card-note">&ldquo;Give Merlin the tour&rdquo; at <code>/team/setup</code>: guided form + paste + PDF/txt upload (Claude reads PDFs), distilled ONCE into a structured org brief in <code>org_context</code> — raw docs kept for re-synthesis, admins-only by RLS. Invites moved onto /team with a per-person <strong>role-context</strong> note, shown verbatim to the learner (&ldquo;full transparency&rdquo;). Brief + note feed intake, synthesis, Ask Merlin and pathway generation. <strong>Proof:</strong> test clinic&rsquo;s &ldquo;no medical advice without a vet&rdquo; caution appeared unprompted in the receptionist&rsquo;s generated pathway.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">PHASE-A-METERING</span><span class="card-date">12 Jun</span></div><h3 class="card-title">Usage metering + alerts + billing panel ✓</h3><p class="card-note">Every Merlin interaction (intake turn, Ask Merlin, pathway gen, weekly note, doc reading) drops a unit into a pooled monthly allowance (seats × per-seat, placeholder 200 until pricing). Definer RPC sums + records 80%/100% markers exactly once per month; admins get a branded alert email + dashboard banner at the crossing moment. <code>/billing</code>: plan, meter, by-kind breakdown — admins only (team members see <em>zero</em> usage rows, verified by RLS). Metering never blocks the product. Stripe now bolts onto live data.</p></article>
             <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-SALES-SITE</span><span class="card-date">11 Jun</span></div><h3 class="card-title">Sales site live at heymerlin.ai ✓</h3><p class="card-note">The landing in Merlin&rsquo;s own design system — Orb hero (&ldquo;AI adoption for the people who actually do the work&rdquo;), the three moments, how-it-works, the privacy promise, Get started + Log in in the nav. Pricing section arrives with the seat rate.</p></article>
             <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">M1-SELFSERVE</span><span class="card-date">11 Jun</span></div><h3 class="card-title">Self-serve onboarding ✓ (billing pending)</h3><p class="card-note"><code>/start</code>: business details → magic link → workspace created via a validated definer RPC (3 starter seats) → owner lands on /team and invites learners. E2E verified including the cross-device edge. Stripe checkout bolts onto this exact flow when the seat rate lands.</p></article>
             <article class="card ext"><div class="card-head"><span class="chip ext">setup</span><span class="card-id">DEPLOY-STAGING</span><span class="card-date">10 Jun</span></div><h3 class="card-title">Merlin is live on staging ✓</h3><p class="card-note"><a class="task-link" style="display:inline" href="https://web-staging-b960.up.railway.app" target="_blank" rel="noopener">web-staging-b960.up.railway.app</a> — Railway project <code>merlin</code>, staging environment, env vars set (Supabase, Anthropic). Verified: app serves, auth middleware guards routes, and <code>/dev-login</code> correctly 404s in production mode. Build fix en route: the lockfile is now generated on linux (darwin npm silently drops nested wasm optionals — npm ci proven green in Docker before pushing). Repo now lives at <code>CoreshiftHQNZ/merlin</code> (house standard) — and the org transfer unlocked push-to-deploy automatically: pushes to <code>staging</code> build themselves (verified). Only the magic-link allow-list still needs a click.</p></article>
