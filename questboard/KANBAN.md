@@ -8,6 +8,7 @@
 
 ## ✅ Done
 
+- **3D facelift — full WebGL game layer** `phase-3` `design` `shipped` — Replaced the flat UI with a real Three.js (react-three-fiber) overworld + battle screens per design direction: extruded-island terrain (beach/grass/mountains/forests/river/clouds), 3D castles whose roofs go red on critical, drag-to-pan / scroll-to-zoom, click-castle → camera-fly → battle-swirl transition. Each boss is a 3D arena with a tier monster (slime / horned knight / dragon), lighting + shadows, parked/critical states. Core logic untouched; 56 tests still green. On `dev` (5933525), rides PR #12.
 - **Design Spec v1 interrogated** `phase-0` `decision` — Twelve locked decisions, six invariants, data model, week-one ship plan. Every decision made against a real example board (Sentinel).
 - **PRD published** `phase-0` `shipped` `milestone` — Full-vision scope. Filed as issue #1 with `ready-for-agent`; sliced into ten tracer-bullet issues (#2–#11).
 - **Repo + scaffold** `phase-0` `shipped` — `CoreshiftHQNZ/questboard` (private), `main` + `dev`, Vite + React 18 + TS + Vitest (matches sentinel-app toolchain).

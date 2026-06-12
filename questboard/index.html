@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>59%</strong> complete</div>
-        <div><strong>13</strong>/22 cards done</div>
-        <div>Updated <strong>2026-06-11 14:32 UTC</strong></div>
+        <div><strong>61%</strong> complete</div>
+        <div><strong>14</strong>/23 cards done</div>
+        <div>Updated <strong>2026-06-12 13:26 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">13</div>
+        <div class="status-num">14</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -883,6 +883,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">3D facelift — full WebGL game layer</div>
+            <div class="recent-desc">Replaced the flat UI with a real Three.js (react-three-fiber) overworld + battle screens per design direction: extruded-island terrain (beach/grass/mountains/forests/river/clouds), 3D castles whose roofs go red on critical, drag-to-pan / scroll-to-zoom, click-castle → camera-fly → battle-swirl transition. Each boss is a 3D arena with a tier monster (slime / horned knight / dragon), lighting + shadows, parked/critical states. Core logic untouched; 56 tests still green. On `dev` (5933525), rides PR #12</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Design Spec v1 interrogated</div>
             <div class="recent-desc">Twelve locked decisions, six invariants, data model, week-one ship plan. Every decision made against a real example board (Sentinel)</div>
           </div>
@@ -915,13 +922,6 @@
             <div class="recent-desc">The only module allowed to mutate boss HP/state. Pure reducer; max_hp frozen at spawn, minions never heal, dead stays dead, undefined fights rejected. 19 table-driven tests</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Scope Router (#4)</div>
-            <div class="recent-desc">One mechanical rule: own exit criteria → new parked Boss; chips the objective → Minion. Neither path can move an existing max_hp</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -934,9 +934,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">13</span>
+        <span class="col-count">14</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">3D facelift — full WebGL game layer</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">design</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">dev</span></div>
+        <div class="card-desc">Replaced the flat UI with a real Three.js (react-three-fiber) overworld + battle screens per design direction: extruded-island terrain (beach/grass/mountains/forests/river/clouds), 3D castles whose roofs go red on critical, drag-to-pan / scroll-to-zoom, click-castle → camera-fly → battle-swirl transition. Each boss is a 3D arena with a tier monster (slime / horned knight / dragon), lighting + shadows, parked/critical states. Core logic untouched; 56 tests still green. On `dev` (5933525), rides PR #12</div>
+      </div>
       <div class="card">
         <div class="card-title">Design Spec v1 interrogated</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">decision</span></div>
