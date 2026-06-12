@@ -8,6 +8,8 @@
 
 ## ✅ Done
 
+- **R2: schema v2 (jobs/chat) verified** `phase-r2` `shipped` — businesses → profiles, pooled gems, jobs (status machine), per-job message threads, quotes, ratings, push devices. RLS throughout (cross-business isolation proven in a rolled-back impersonation test); customer transitions via SECURITY DEFINER RPCs (setup_account, create_job, approve/decline_quote, cancel_job); Realtime on jobs/messages/quotes.
+- **R2: customer chat app verified** `phase-r2` `shipped` — apps/customer: magic-link sign-in, onboarding, job list (active/archived), live per-job thread with the quote card (GST breakdown) + approve/decline. Drove the whole loop through the real UI with a seeded session — request → live Gem quote via Realtime → approve → "On it". Not deployed yet (app.heygem.co.nz comes with the Railway consolidation).
 - **R1: coming-soon splash LIVE** `phase-r1` `shipped` — heygem.co.nz + staging now serve a "Business Concierge & Errands" coming-soon page. Example requests rendered as chat bubbles (morning tea, Terry's $500 gift, branded water bottles, Christmas party, team building, Sydney conference travel). Early-access form (name + email + "what would you ask your Gem?") → leads table with new `email` column, source `coming_soon`; notify pipeline updated + verified e2e. Old plans-model marketing removed.
 - **Apple Developer account: DONE** `phase-r5` `unblocked` — Registered under CORESHIFT LIMITED (D-U-N-S on file). Apple-side store submission is no longer gated; Google Play org account still to set up.
 - **PIVOT: concierge model locked** `pivot` `decision` — HeyGem is now a chat-first concierge/errands service for NZ small businesses ("organise team morning tea for Friday"). Thread-per-job chat with auto status/archiving; all-in quote in chat → approve → card charged on completion → push for star rating + feedback + photo. Purely pay-per-job (weekly plans + $1/min dead). Customers get web + native iOS/Android from one React codebase via Capacitor; Gems stay on a web workspace.
@@ -18,7 +20,7 @@
 
 ## 🟡 In Progress
 
-- **Phase R2: schema v2 + jobs/chat core** `phase-r2` — Next up: businesses→users, gems, jobs (status machine), per-job message threads (Realtime), quotes, ratings, devices; RLS. Then the customer web app on top.
+- **Phase R3: Gem web workspace** `phase-r3` — The other side of the chat: pooled queue of incoming requests, claim a job (all present as "Gem"), reply, send a quote (the composer that creates what R2 verified by hand), move status, mark complete. Lead inbox from the splash lands here too.
 
 ## 🚫 Blocked
 
@@ -27,8 +29,8 @@
 
 ## 🔵 This Week
 
-- **Schema v2 migrations** `phase-r2` — businesses→users, gems, jobs (status machine), messages (Realtime), quotes, ratings, devices; RLS. Replaces the old time-logging model.
-- **Customer app: chat core** `phase-r2` — Magic-link sign-in, request composer, job list, live per-job thread with quote-approve.
+- **Gem workspace: queue + quote composer** `phase-r3` — Web app for staff: request queue, claim, chat, quote composer, status transitions, complete.
+- **Deploy customer app + consolidate Railway** `phase-r2` `infra` — Stand up app.heygem.co.nz for the customer app and collapse the duplicate marketing services into one service / two envs at the same time.
 - **Google Play account** `phase-r5` `needs-ricky` — US$25 + verification under CORESHIFT LIMITED.
 
 ## ⚪ Backlog

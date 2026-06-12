@@ -13,10 +13,10 @@ module.exports = {
     "followed by a push notification for a star rating, feedback and a photo. One React codebase ships the customer " +
     "experience as a web app AND native iOS/Android apps via Capacitor; Gems work from a web workspace.",
 
-  phase: "Phase R2 · jobs/chat core",
+  phase: "Phase R3 · Gem workspace",
   nextMilestone: {
-    name: "Customer chat core (request → quote → approve)",
-    date: "Phase R2",
+    name: "Gem workspace (claim → quote → complete)",
+    date: "Phase R3",
   },
 
   // ── Goals ─────────────────────────────────────────────────────
@@ -93,7 +93,7 @@ module.exports = {
     },
     {
       key: "phase-r2",
-      status: "planned",
+      status: "done",
       title: "Phase R2",
       subtitle: "Accounts + job/chat core",
       window: "The new heart of the product",
@@ -106,7 +106,7 @@ module.exports = {
     },
     {
       key: "phase-r3",
-      status: "planned",
+      status: "in-progress",
       title: "Phase R3",
       subtitle: "Gem workspace",
       window: "Web only",

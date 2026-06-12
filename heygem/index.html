@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>33%</strong> complete</div>
-        <div><strong>7</strong>/21 cards done</div>
-        <div>Updated <strong>2026-06-12 00:39 UTC</strong></div>
+        <div><strong>39%</strong> complete</div>
+        <div><strong>9</strong>/23 cards done</div>
+        <div>Updated <strong>2026-06-12 02:56 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">Phase R2 · jobs/chat core</span>
+          <span class="phase-pill-value">Phase R3 · Gem workspace</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Customer chat core (request → quote → approve) <span class="phase-pill-date">Phase R2</span></span>
+          <span class="phase-pill-value">Gem workspace (claim → quote → complete) <span class="phase-pill-date">Phase R3</span></span>
         </div>
       </div>
     </section>
@@ -779,10 +779,10 @@
             <li>Splash live on production + staging</li><li>Chat-bubble example requests (the product demo)</li><li>Early-access capture w/ email column + notify pipeline</li>
           </ul>
         </div>
-        <div class="phase-card phase-planned">
+        <div class="phase-card phase-done">
           <div class="phase-card-head">
             <div class="phase-marker">R2</div>
-            <div class="phase-status-pill phase-status-planned">Planned</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
           </div>
           <div class="phase-title">Phase R2 <span class="phase-subtitle">Accounts + job/chat core</span></div>
           <div class="phase-window">The new heart of the product</div>
@@ -791,10 +791,10 @@
             <li>Schema v2 migrations + RLS</li><li>Job status machine (requested→quoted→approved→in_progress→completed→charged→closed)</li><li>Customer app: chat thread per job, auto-archive</li>
           </ul>
         </div>
-        <div class="phase-card phase-planned">
+        <div class="phase-card phase-in-progress">
           <div class="phase-card-head">
             <div class="phase-marker">R3</div>
-            <div class="phase-status-pill phase-status-planned">Planned</div>
+            <div class="phase-status-pill phase-status-in-progress">In progress</div>
           </div>
           <div class="phase-title">Phase R3 <span class="phase-subtitle">Gem workspace</span></div>
           <div class="phase-window">Web only</div>
@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">7</div>
+        <div class="status-num">9</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -923,6 +923,20 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">R2: schema v2 (jobs/chat) verified</div>
+            <div class="recent-desc">businesses → profiles, pooled gems, jobs (status machine), per-job message threads, quotes, ratings, push devices. RLS throughout (cross-business isolation proven in a rolled-back impersonation test); customer transitions via SECURITY DEFINER RPCs (setup_account, create_job, approve/decline_quote, cancel_job); Realtime on jobs/messages/quotes</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">R2: customer chat app verified</div>
+            <div class="recent-desc">apps/customer: magic-link sign-in, onboarding, job list (active/archived), live per-job thread with the quote card (GST breakdown) + approve/decline. Drove the whole loop through the real UI with a seeded session — request → live Gem quote via Realtime → approve → &quot;On it&quot;. Not deployed yet (app.heygem.co.nz comes with the Railway consolidation)</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">R1: coming-soon splash LIVE</div>
             <div class="recent-desc">heygem.co.nz + staging now serve a &quot;Business Concierge &amp; Errands&quot; coming-soon page. Example requests rendered as chat bubbles (morning tea, Terry&#39;s $500 gift, branded water bottles, Christmas party, team building, Sydney conference travel). Early-access form (name + email + &quot;what would you ask your Gem?&quot;) → leads table with new `email` column, source `coming_soon`; notify pipeline updated + verified e2e. Old plans-model marketing removed</div>
           </div>
@@ -948,20 +962,6 @@
             <div class="recent-desc">Monorepo + @heygem/ui design system (amethyst brand, real logo/favicon/hero art), GitHub `CoreshiftHQNZ/heygem` (dev→staging→main), Supabase project (ap-southeast-2), Railway deploys</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Marketing site LIVE</div>
-            <div class="recent-desc">heygem.co.nz (production/main) + staging.heygem.co.nz (staging), HTTP 200, env inlined. Sells the OLD model — repositioning is Phase R1</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Lead capture + notifications</div>
-            <div class="recent-desc">Callback form → Supabase `leads` (anon-insert RLS), `notify-lead` edge function + pg_net trigger, verified e2e. Emails activate when `RESEND_API_KEY` + `LEAD_NOTIFY_TO` secrets are set</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -974,9 +974,19 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">9</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">R2: schema v2 (jobs/chat) verified</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">businesses → profiles, pooled gems, jobs (status machine), per-job message threads, quotes, ratings, push devices. RLS throughout (cross-business isolation proven in a rolled-back impersonation test); customer transitions via SECURITY DEFINER RPCs (setup_account, create_job, approve/decline_quote, cancel_job); Realtime on jobs/messages/quotes</div>
+      </div>
+      <div class="card">
+        <div class="card-title">R2: customer chat app verified</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">apps/customer: magic-link sign-in, onboarding, job list (active/archived), live per-job thread with the quote card (GST breakdown) + approve/decline. Drove the whole loop through the real UI with a seeded session — request → live Gem quote via Realtime → approve → &quot;On it&quot;. Not deployed yet (app.heygem.co.nz comes with the Railway consolidation)</div>
+      </div>
       <div class="card">
         <div class="card-title">R1: coming-soon splash LIVE</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-r1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">email</span><span class="tag tag-neutral">coming_soon</span></div>
@@ -1020,9 +1030,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Phase R2: schema v2 + jobs/chat core</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span></div>
-        <div class="card-desc">Next up: businesses→users, gems, jobs (status machine), per-job message threads (Realtime), quotes, ratings, devices; RLS. Then the customer web app on top</div>
+        <div class="card-title">Phase R3: Gem web workspace</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r3</span></div>
+        <div class="card-desc">The other side of the chat: pooled queue of incoming requests, claim a job (all present as &quot;Gem&quot;), reply, send a quote (the composer that creates what R2 verified by hand), move status, mark complete. Lead inbox from the splash lands here too</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1049,14 +1059,14 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Schema v2 migrations</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span></div>
-        <div class="card-desc">businesses→users, gems, jobs (status machine), messages (Realtime), quotes, ratings, devices; RLS. Replaces the old time-logging model</div>
+        <div class="card-title">Gem workspace: queue + quote composer</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r3</span></div>
+        <div class="card-desc">Web app for staff: request queue, claim, chat, quote composer, status transitions, complete</div>
       </div>
       <div class="card">
-        <div class="card-title">Customer app: chat core</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span></div>
-        <div class="card-desc">Magic-link sign-in, request composer, job list, live per-job thread with quote-approve</div>
+        <div class="card-title">Deploy customer app + consolidate Railway</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">Stand up app.heygem.co.nz for the customer app and collapse the duplicate marketing services into one service / two envs at the same time</div>
       </div>
       <div class="card">
         <div class="card-title">Google Play account</div>
