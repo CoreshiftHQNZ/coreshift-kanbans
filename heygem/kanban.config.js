@@ -13,10 +13,10 @@ module.exports = {
     "followed by a push notification for a star rating, feedback and a photo. One React codebase ships the customer " +
     "experience as a web app AND native iOS/Android apps via Capacitor; Gems work from a web workspace.",
 
-  phase: "Rebuild · pivot to concierge",
+  phase: "Phase R2 · jobs/chat core",
   nextMilestone: {
-    name: "Marketing repositioned (live site sells the old model)",
-    date: "Phase R1",
+    name: "Customer chat core (request → quote → approve)",
+    date: "Phase R2",
   },
 
   // ── Goals ─────────────────────────────────────────────────────
@@ -80,15 +80,15 @@ module.exports = {
     },
     {
       key: "phase-r1",
-      status: "planned",
+      status: "done",
       title: "Phase R1",
-      subtitle: "Reposition marketing",
-      window: "First — site sells a dead model",
-      desc: "Rewrite the live site around the concierge model for NZ small businesses: chat-quote-approve-done story, no plans/$1-min. Keep design system + lead form.",
+      subtitle: "Coming-soon splash",
+      window: "Shipped 2026-06-12",
+      desc: "heygem.co.nz repositioned as a coming-soon splash: “Business Concierge & Errands”, example requests as chat bubbles, early-access form (name + email + example ask) into the leads pipeline.",
       deliverables: [
-        "New hero/problem/how-it-works copy",
-        "Pricing section → how quoting works",
-        "Audience broadened: offices, clinics, agencies, tradies",
+        "Splash live on production + staging",
+        "Chat-bubble example requests (the product demo)",
+        "Early-access capture w/ email column + notify pipeline",
       ],
     },
     {

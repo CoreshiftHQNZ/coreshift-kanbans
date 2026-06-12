@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>25%</strong> complete</div>
-        <div><strong>5</strong>/20 cards done</div>
-        <div>Updated <strong>2026-06-12 00:21 UTC</strong></div>
+        <div><strong>33%</strong> complete</div>
+        <div><strong>7</strong>/21 cards done</div>
+        <div>Updated <strong>2026-06-12 00:39 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">Rebuild · pivot to concierge</span>
+          <span class="phase-pill-value">Phase R2 · jobs/chat core</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Marketing repositioned (live site sells the old model) <span class="phase-pill-date">Phase R1</span></span>
+          <span class="phase-pill-value">Customer chat core (request → quote → approve) <span class="phase-pill-date">Phase R2</span></span>
         </div>
       </div>
     </section>
@@ -767,16 +767,16 @@
             <li>pnpm monorepo + @heygem/ui (amethyst brand)</li><li>Supabase project + leads pipeline (verified e2e)</li><li>Railway deploys: heygem.co.nz + staging.heygem.co.nz</li><li>Old-model marketing site live (to be repositioned)</li>
           </ul>
         </div>
-        <div class="phase-card phase-planned">
+        <div class="phase-card phase-done">
           <div class="phase-card-head">
             <div class="phase-marker">R1</div>
-            <div class="phase-status-pill phase-status-planned">Planned</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
           </div>
-          <div class="phase-title">Phase R1 <span class="phase-subtitle">Reposition marketing</span></div>
-          <div class="phase-window">First — site sells a dead model</div>
-          <p class="phase-desc">Rewrite the live site around the concierge model for NZ small businesses: chat-quote-approve-done story, no plans/$1-min. Keep design system + lead form.</p>
+          <div class="phase-title">Phase R1 <span class="phase-subtitle">Coming-soon splash</span></div>
+          <div class="phase-window">Shipped 2026-06-12</div>
+          <p class="phase-desc">heygem.co.nz repositioned as a coming-soon splash: “Business Concierge &amp; Errands”, example requests as chat bubbles, early-access form (name + email + example ask) into the leads pipeline.</p>
           <ul class="phase-deliverables">
-            <li>New hero/problem/how-it-works copy</li><li>Pricing section → how quoting works</li><li>Audience broadened: offices, clinics, agencies, tradies</li>
+            <li>Splash live on production + staging</li><li>Chat-bubble example requests (the product demo)</li><li>Early-access capture w/ email column + notify pipeline</li>
           </ul>
         </div>
         <div class="phase-card phase-planned">
@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">5</div>
+        <div class="status-num">7</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -849,7 +849,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">9</div>
+        <div class="status-num">8</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -923,6 +923,20 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">R1: coming-soon splash LIVE</div>
+            <div class="recent-desc">heygem.co.nz + staging now serve a &quot;Business Concierge &amp; Errands&quot; coming-soon page. Example requests rendered as chat bubbles (morning tea, Terry&#39;s $500 gift, branded water bottles, Christmas party, team building, Sydney conference travel). Early-access form (name + email + &quot;what would you ask your Gem?&quot;) → leads table with new `email` column, source `coming_soon`; notify pipeline updated + verified e2e. Old plans-model marketing removed</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Apple Developer account: DONE</div>
+            <div class="recent-desc">Registered under CORESHIFT LIMITED (D-U-N-S on file). Apple-side store submission is no longer gated; Google Play org account still to set up</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">PIVOT: concierge model locked</div>
             <div class="recent-desc">HeyGem is now a chat-first concierge/errands service for NZ small businesses (&quot;organise team morning tea for Friday&quot;). Thread-per-job chat with auto status/archiving; all-in quote in chat → approve → card charged on completion → push for star rating + feedback + photo. Purely pay-per-job (weekly plans + $1/min dead). Customers get web + native iOS/Android from one React codebase via Capacitor; Gems stay on a web workspace</div>
           </div>
@@ -948,13 +962,6 @@
             <div class="recent-desc">Callback form → Supabase `leads` (anon-insert RLS), `notify-lead` edge function + pg_net trigger, verified e2e. Emails activate when `RESEND_API_KEY` + `LEAD_NOTIFY_TO` secrets are set</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Blank-page deploy fixed</div>
-            <div class="recent-desc">Vite env vars were missing on Railway services; vars set on both services/envs and the Supabase client made lazy/resilient (missing env degrades the lead form, never blanks the page)</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -967,9 +974,19 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">R1: coming-soon splash LIVE</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">email</span><span class="tag tag-neutral">coming_soon</span></div>
+        <div class="card-desc">heygem.co.nz + staging now serve a &quot;Business Concierge &amp; Errands&quot; coming-soon page. Example requests rendered as chat bubbles (morning tea, Terry&#39;s $500 gift, branded water bottles, Christmas party, team building, Sydney conference travel). Early-access form (name + email + &quot;what would you ask your Gem?&quot;) → leads table with new `email` column, source `coming_soon`; notify pipeline updated + verified e2e. Old plans-model marketing removed</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Apple Developer account: DONE</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">unblocked</span></div>
+        <div class="card-desc">Registered under CORESHIFT LIMITED (D-U-N-S on file). Apple-side store submission is no longer gated; Google Play org account still to set up</div>
+      </div>
       <div class="card">
         <div class="card-title">PIVOT: concierge model locked</div>
         <div class="card-tags"><span class="tag tag-neutral">pivot</span><span class="tag tag-neutral">decision</span></div>
@@ -1003,9 +1020,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Rebuild planning → Phase R1 kickoff</div>
-        <div class="card-tags"><span class="tag tag-neutral">pivot</span></div>
-        <div class="card-desc">Plan agreed; next concrete step is repositioning the live marketing site (it currently sells weekly admin plans)</div>
+        <div class="card-title">Phase R2: schema v2 + jobs/chat core</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span></div>
+        <div class="card-desc">Next up: businesses→users, gems, jobs (status machine), per-job message threads (Realtime), quotes, ratings, devices; RLS. Then the customer web app on top</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1020,9 +1037,9 @@
         <div class="card-desc">Gated on company registration + bank + GST (~week of 8 Jun 2026). Build in test mode meanwhile</div>
       </div>
       <div class="card">
-        <div class="card-title">Store submissions</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">blocked</span><span class="tag tag-neutral">needs-ricky</span></div>
-        <div class="card-desc">Apple Developer org account needs the registered company + D-U-N-S number (the long pole — start the D-U-N-S request the day the company exists; US$99/yr). Google Play org account US$25 + verification. Build isn&#39;t gated — only submission</div>
+        <div class="card-title">Google Play org account</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">needs-ricky</span></div>
+        <div class="card-desc">Apple is DONE (CORESHIFT LIMITED + D-U-N-S). Remaining: Google Play Console org account (US$25 + identity verification, wants the same D-U-N-S). Only gates Android store submission, not the build</div>
       </div></div>
     </section>
     <section class="column col-this-week">
@@ -1032,32 +1049,27 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Phase R1: reposition marketing</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r1</span></div>
-        <div class="card-desc">Rewrite the live site to the concierge model (SMB audience, chat-quote-approve-done story, pay-per-job). Keep lead form + design system</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Kick off store accounts</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">needs-ricky</span></div>
-        <div class="card-desc">As soon as the company registers: request D-U-N-S, enrol Apple Developer (org) + Google Play Console (org)</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Schema v2 design</div>
+        <div class="card-title">Schema v2 migrations</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-r2</span></div>
         <div class="card-desc">businesses→users, gems, jobs (status machine), messages (Realtime), quotes, ratings, devices; RLS. Replaces the old time-logging model</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Customer app: chat core</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span></div>
+        <div class="card-desc">Magic-link sign-in, request composer, job list, live per-job thread with quote-approve</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Google Play account</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">needs-ricky</span></div>
+        <div class="card-desc">US$25 + verification under CORESHIFT LIMITED</div>
       </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">9</span>
+        <span class="col-count">8</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Customer app: job/chat core</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span></div>
-        <div class="card-desc">Magic-link sign-in, request composer, job list (active/archived), live per-job chat with quote-approve</div>
-      </div>
       <div class="card">
         <div class="card-title">Gem web workspace</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-r3</span></div>
