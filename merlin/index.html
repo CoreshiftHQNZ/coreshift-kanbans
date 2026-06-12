@@ -401,9 +401,9 @@
             <p class="helper">One five-minute email switch-over, one genuinely fun one, two that finish M1 commercial. None are technical &mdash; Claude does the wiring once you supply the input.</p>
 
                                                 <div class="task">
-              <p class="task-title">📮 Finish the email switch-over <span class="task-when">~5 min · two dashboard pastes + 3 DNS records</span></p>
+              <p class="task-title">📮 Add the email DNS records <span class="task-when">~3 min · the only email step left</span></p>
               <p class="task-body">
-                Postmark now carries all app email (branded invites verified live). To move <em>auth</em> email onto it too: ① <a class="task-link" style="display:inline" href="https://supabase.com/dashboard/project/egjpqixhwvvekjqldnyz/auth/smtp" target="_blank" rel="noopener">Supabase → SMTP</a>: host <code>smtp.postmarkapp.com</code>, port <code>587</code>, user + pass = the Postmark server token, sender <code>hello@heymerlin.ai</code> / Merlin — then raise Auth rate limits. ② <a class="task-link" style="display:inline" href="https://supabase.com/dashboard/project/egjpqixhwvvekjqldnyz/auth/templates" target="_blank" rel="noopener">Auth → Templates</a>: paste the five branded files from <code>emails/supabase-templates/</code>. ③ Cloudflare DNS: the DKIM/SPF/DMARC records — exact table in <code>emails/README.md</code> (DKIM value comes from Postmark&rsquo;s domain page).
+                <strong>12 Jun: Claude did the rest via the Management API</strong> — Supabase SMTP now runs on Postmark (verified: a real magic link arrived branded, through Postmark), all five branded auth templates are live, the rate limit is lifted, and the broken-link bug Ricky hit is fixed (Site URL was missing <code>https://</code>). Remaining: Cloudflare DNS for deliverability — DKIM TXT (value from <a class="task-link" style="display:inline" href="https://account.postmarkapp.com/signature_domains" target="_blank" rel="noopener">Postmark&rsquo;s domain page</a>), CNAME <code>pm-bounces → pm.mtasv.net</code> (proxy OFF), and the DMARC TXT — exact table in <code>emails/README.md</code>. Email already <em>sends</em>; these records protect inbox placement.
               </p>
             </div>
 
