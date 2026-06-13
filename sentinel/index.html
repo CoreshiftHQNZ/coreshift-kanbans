@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>72%</strong> complete</div>
-        <div><strong>102</strong>/141 cards done</div>
-        <div>Updated <strong>2026-05-29 23:41 UTC</strong></div>
+        <div><strong>105</strong>/145 cards done</div>
+        <div>Updated <strong>2026-06-13 00:40 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -721,7 +721,7 @@
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Noozey onboarding <span class="phase-pill-date">After operator sets up Sentry alert rules</span></span>
+          <span class="phase-pill-value">Velocity onboarding <span class="phase-pill-date">PLAY 9 proven on Digital Architect — now config-only</span></span>
         </div>
       </div>
     </section>
@@ -821,11 +821,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">102</div>
+        <div class="status-num">105</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
+        <div class="status-num">1</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -971,7 +971,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">102</span>
+        <span class="col-count">105</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1483,14 +1483,34 @@
         <div class="card-title">Phase B9 — OWASP ZAP DAST CI shipped to prod</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">pen-testing</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">.github/workflows/zap-baseline.yml</span><span class="tag tag-neutral">workflow_dispatch</span><span class="tag tag-neutral">ZAP_TARGET_STAGING</span></div>
         <div class="card-desc">KC PRs [#123/#124/#125](https://github.com/CoreshiftHQNZ/keycontent-app) + Sentinel PRs [#71/#72/#73](https://github.com/CoreshiftHQNZ/sentinel-app) all merged through dev → staging → main. `.github/workflows/zap-baseline.yml` on both apps: weekly Sunday 11pm UTC (= Monday morning NZ) + `workflow_dispatch` for manual runs. **V1 informational only** — fail_action=false, rolling GitHub Issue receives findings per repo. **First real pen-testing motion for Coreshift.** First scheduled run: next Sunday 23:00 UTC. Operator can override target via repo variable `ZAP_TARGET_STAGING`. V2 (separate brief): authenticated context for protected routes, active scan with operator approval, per-PR gating</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Track A — generalize fileIssue target repo + GitHub PAT</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">server/routes/fileIssue.ts</span><span class="tag tag-neutral">maintained_apps</span><span class="tag tag-neutral">app_id</span><span class="tag tag-neutral">keycontent-app</span><span class="tag tag-neutral">server/lib/github.ts</span><span class="tag tag-neutral">GITHUB_TOKEN</span><span class="tag tag-neutral">GITHUB_TOKEN_KC</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">CoreshiftHQNZ/digital-architect</span></div>
+        <div class="card-desc">The two pre-onboarding code changes PLAY 9 gated app #2 on. (1) `server/routes/fileIssue.ts` resolves the target repo from `maintained_apps` by the report&#39;s `app_id` (== slug) instead of the hardcoded `keycontent-app`; unregistered app_id → 400 before any GitHub call, lookup failure → 500. (2) `server/lib/github.ts` reads `GITHUB_TOKEN` (org-wide PAT) first, legacy `GITHUB_TOKEN_KC` fallback — operator widened the PAT to all CoreshiftHQNZ repos (single-org-PAT model from PLAY 9, recommended once app #2&#39;s pattern proven). 6 new tests; suite 285→291. Sentinel PR [#133](https://github.com/CoreshiftHQNZ/sentinel-app/pull/133) → #134 → #137 promoted dev → staging → main (admin-merge — `main` requires a review a solo operator can&#39;t self-supply). **Verified in prod:** a DA bug report&#39;s &quot;File issue&quot; landed in `CoreshiftHQNZ/digital-architect`, not keycontent-app</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel — per-app response email branding</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">app_id</span><span class="tag tag-neutral">APP_EMAIL_BRANDING</span><span class="tag tag-neutral">postmark.ts</span></div>
+        <div class="card-desc">Compose Response emails resolve sender + sign-off from the report&#39;s `app_id` via an `APP_EMAIL_BRANDING` registry in `postmark.ts` (mirrors the Edge Function registry — keep both in sync per onboard). keycontent → hello@keycontent.ai / &quot;The KeyContent team&quot;; digital-architect → noreply@digitalarchitect.co.nz / &quot;The DigitalArchitect team&quot;; unknown → KC fallback. Sentinel PR [#135](https://github.com/CoreshiftHQNZ/sentinel-app/pull/135) → #136 → #137 (prod)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🚀 Digital Architect onboarded to Sentinel (app #2 — PLAY 9 proven)</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-milestone">milestone</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">app_id=&quot;digital-architect&quot;</span><span class="tag tag-neutral">gpUser</span><span class="tag tag-neutral">&lt;app_id&gt;/&lt;user_id&gt;/...</span><span class="tag tag-neutral">verify_jwt=false</span><span class="tag tag-neutral">config.toml</span><span class="tag tag-neutral">maintained_apps</span><span class="tag tag-neutral">digital-architect</span><span class="tag tag-neutral">supabase_project_ref</span><span class="tag tag-neutral">txkgwrnzaxwtrlxkhpdl</span><span class="tag tag-neutral">app.staging.digitalarchitect.co.nz/login</span><span class="tag tag-neutral">digitalarchitect.co.nz</span></div>
+        <div class="card-desc">First app onboarded via the cloning playbook; pressure-tested the whole runbook end-to-end. **Widget:** DA-native Report Issue button in the GP realm (`app_id=&quot;digital-architect&quot;`), built on DA&#39;s own Modal/Button primitives + ink/violet tokens (dark+light safe), reporter identity from the server layout&#39;s `gpUser`. DA PR [#43](https://github.com/CoreshiftHQNZ/digital-architect/pull/43) → #44 (staging). **Edge Function (KC, shared backend):** multi-app rewrite — app registry as allowlist (unknown app_id → 400), per-app JWT validation (each reporter&#39;s token validated against the project that issued it), per-app Postmark sender, inline base64 screenshot ingest for non-KC reporters (stored under `&lt;app_id&gt;/&lt;user_id&gt;/...` in the same bucket). KC PR [#191](https://github.com/CoreshiftHQNZ/keycontent-app/pull/191) → #192; deployed to KC prod project + `verify_jwt=false` pinned in `config.toml` (the platform gateway was rejecting non-KC JWTs before the function ran). **Registered** in `maintained_apps` (slug `digital-architect`, repo + `supabase_project_ref` `txkgwrnzaxwtrlxkhpdl` so the security-advisor scan covers it). **Better Stack** monitor on `app.staging.digitalarchitect.co.nz/login` → status pill live. **Smoke test passed in prod:** widget → auth → insert → both DA-branded emails → dashboard card + screenshot → file issue into the correct repo. Test artifacts cleaned up after. **Deviations folded into PLAY 9:** single-org-PAT adopted; Postmark sender-domain verification is now a required step (DA&#39;s first send 422&#39;d until `digitalarchitect.co.nz` was verified on the main Postmark account — DA&#39;s own Postmark account is still in pending-approval sandbox); inline-base64 screenshots for apps whose users have no identity in the backend project</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">0</span>
+        <span class="col-count">1</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Digital Architect onboarding — remaining tails</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">sentry-heartbeat.ts</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">report-issue</span><span class="tag tag-neutral">main</span></div>
+        <div class="card-desc">Functionally complete + smoke-tested in prod. Open tails: (1) **operator** to confirm DA&#39;s Sentry projects + 3-rule alert recipe exist in the org → then add DA to Sentinel&#39;s `sentry-heartbeat.ts` config (small follow-up PR); (2) DA widget is on staging+dev only — DA `main` is ~91 commits behind and DA prod is an empty Railway shell, so the widget rides along whenever DA does its own prod stand-up (no action now); (3) KC `report-issue` function source is on dev+staging but not KC `main` (4 commits) — deployed to the prod project directly, so it&#39;s source-vs-deploy drift to align when convenient, not a functional gap</div>
+      </div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -1558,14 +1578,14 @@
         <div class="card-desc">User-facing transparency. Deferred until Dashboard polish phase</div>
       </div>
       <div class="card">
-        <div class="card-title">Pre-onboarding code changes (Track A of PLAY 9)</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">sentinel-app</span><span class="tag tag-neutral">server/routes/fileIssue.ts:45-46</span><span class="tag tag-neutral">keycontent-app</span><span class="tag tag-neutral">report.app_id</span><span class="tag tag-neutral">maintained_apps</span><span class="tag tag-neutral">server/lib/github.ts:41-44</span><span class="tag tag-neutral">GITHUB_TOKEN_KC</span><span class="tag tag-neutral">GITHUB_TOKEN_&lt;SLUG&gt;</span><span class="tag tag-neutral">keycontent-app</span></div>
-        <div class="card-desc">Two PRs in `sentinel-app` before Noozey can land: (1) generalize `server/routes/fileIssue.ts:45-46` hardcoded `keycontent-app` target → lookup by `report.app_id` from `maintained_apps`; (2) generalize `server/lib/github.ts:41-44` `GITHUB_TOKEN_KC` → per-app `GITHUB_TOKEN_&lt;SLUG&gt;` lookup with KC fallback. Recommend single org-wide PAT instead once the second app&#39;s pattern is proven. Without these, filing a GitHub issue from a Noozey bug report would create the issue in `keycontent-app` instead of the correct repo</div>
+        <div class="card-title">Onboard Velocity to Sentinel</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">maintained_apps</span><span class="tag tag-neutral">velocity</span></div>
+        <div class="card-desc">Apply [PLAY 9](playbook/PLAYBOOK-cloning-to-new-app.md), now proven on Digital Architect. Track A (code generalizations) + single-org-PAT are already done, so Velocity is pure config: register in `maintained_apps`, add the widget, add `velocity` to the Edge Function registry + verify its Postmark sender, Better Stack monitor, Sentry confirm. Velocity is leaner than DA (6 sub-processors, no client-realm) so it should be faster. Sub-processor briefing for Keitha already drafted</div>
       </div>
       <div class="card">
         <div class="card-title">Onboard Noozey to Sentinel</div>
         <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
-        <div class="card-desc">Apply [PLAY 9](playbook/PLAYBOOK-cloning-to-new-app.md) (cloning playbook). Each piece auto-flows into Dashboard + /maintenance as it lands. Closes Phase 4 once shipped. Blocked on Track A above</div>
+        <div class="card-desc">Apply [PLAY 9](playbook/PLAYBOOK-cloning-to-new-app.md). Same now-proven config-only path as Velocity. Each piece auto-flows into Dashboard + /maintenance as it lands</div>
       </div>
       <div class="card">
         <div class="card-title">V2 onboarding automation (Tracks B + C of PLAY 9)</div>

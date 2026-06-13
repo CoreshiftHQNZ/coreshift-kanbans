@@ -15,8 +15,8 @@ module.exports = {
     "An internal operating system for catching bugs before users do, shipping fixes in hours, and scaling to every Coreshift HQ app. Built once for KeyContent. Cloned in an afternoon for every app after.",
   phase: "Phase 4 · Multi-app + Maintenance",
   nextMilestone: {
-    name: "Noozey onboarding",
-    date: "After operator sets up Sentry alert rules",
+    name: "Velocity onboarding",
+    date: "PLAY 9 proven on Digital Architect — now config-only",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
