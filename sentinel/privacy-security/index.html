@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coreshift HQ Ops — Kanban</title>
+  <title>Coreshift Privacy &amp; Security — Kanban</title>
   <style>
     :root {
       --navy: #0F1E3D;
@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>78%</strong> complete</div>
-        <div><strong>45</strong>/58 cards done</div>
-        <div>Updated <strong>2026-06-07 23:00 UTC</strong></div>
+        <div><strong>66%</strong> complete</div>
+        <div><strong>39</strong>/59 cards done</div>
+        <div>Updated <strong>2026-06-14 19:41 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">37</div>
+        <div class="status-num">39</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -892,6 +892,20 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Velocity RLS exposure closed</div>
+            <div class="recent-desc">Surfaced by a Supabase advisor email Mal forwarded (2026-06-13). Live advisor check found **all 35 public tables on Velocity (`uodsmyystkaxoogitvsw`) had RLS disabled** — the anon key (shipped in Velocity&#39;s browser bundle) could read/write everything via PostgREST (`deals`, `users`, `transcripts`, `commission_records`, `tenants`…). **Fix:** enabled RLS on all 35 with no policies — safe because the browser uses Supabase for auth only (no `supabase.from` data queries) and all data is server-side via Drizzle over the pooler `DATABASE_URL` (owner role, bypasses RLS). Applied to live prod via `execute_sql`; recorded in repo as `script/enable-rls.sql` ([velocity#8](https://github.com/CoreshiftHQNZ/velocity/pull/8)) since drizzle-kit `push` doesn&#39;t manage RLS. **Verified:** 35/35 RLS on; advisor ERRORs cleared (now benign INFO `rls_enabled_no_policy`); anon-key probe returns 0 rows. Also enabled **HIBP leaked-password protection** via Management API (cleared the remaining WARN). Velocity advisor now 0 ERROR / 0 WARN. **Reusable pattern:** auth-only-client + server-owner-connection apps → enable-RLS-no-policy is the safe one-shot fix</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">🚨 Org-wide Supabase advisor finding — remaining apps</div>
+            <div class="recent-desc">The same advisor email flagged RLS-off across **8 Coreshift projects** (Velocity now fixed). Still open: **go-chiro** (`movfypgjqdosvacrinbq`) — **most urgent: patient health data** (`patient_messages` exposed w/ `patient_id`, `clinical_notes`; plus ~15 tables with `USING(true)` policies = effectively open). go-chiro is NOT the easy fix — it reads via the client with (broken) policies, so it needs real per-table policies written, not enable-RLS-no-policy. **mission-control** (`hwugqukvovfjsviqxqpj`) — ~15 RLS-off tables; likely the same architecture as Velocity (worth confirming for the one-shot fix). **Plus 5 more projects / 26 tables** not yet enumerated. **Meta:** none of these are onboarded to Sentinel, which is why the daily advisor scanner never saw them — onboarding closes the gap. go-chiro gated on ownership/authority confirmation (Abe)</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Privacy &amp; security plan kickoff</div>
             <div class="recent-desc">`Sentinel/playbook/SECURITY-PRIVACY-PLAN.md` published 2026-05-29 with phased plan (A: quick wins; B: foundation; C: Sentinel briefs 14-18; D: trigger-gated compliance). Operator forks listed inside the doc</div>
           </div>
@@ -917,20 +931,6 @@
             <div class="recent-desc">Pre-flight verified: SECURITY DEFINER event-trigger function exposed to anon + authenticated via PostgREST `/rest/v1/rpc/`. `REVOKE EXECUTE ... FROM PUBLIC` — safe because event triggers fire via engine, bypassing routine_privileges. Closes Lints [0028](https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable) + [0029](https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable)</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Phase A4: clean advisor baseline established</div>
-            <div class="recent-desc">`get_advisors(security)` returns `lints: []` on both KC prod (`keycontent-v2`) and Sentinel prod. HOW-WE-DO-SECURITY.md &quot;Current findings snapshot&quot; refreshed to the new zero-findings baseline</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Phase A5: bug_reports end-to-end data flow documented</div>
-            <div class="recent-desc">`Sentinel/playbook/data-flows/bug_reports.md` published. ASCII diagram + table of every field, sub-processor (region + retention), RLS posture, 8 identified privacy gaps. Template for the next ones (social_accounts, clients, jobs)</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -943,9 +943,19 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">37</span>
+        <span class="col-count">39</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Velocity RLS exposure closed</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">P1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-neutral">uodsmyystkaxoogitvsw</span><span class="tag tag-neutral">deals</span><span class="tag tag-neutral">users</span><span class="tag tag-neutral">transcripts</span><span class="tag tag-neutral">commission_records</span><span class="tag tag-neutral">tenants</span><span class="tag tag-neutral">supabase.from</span><span class="tag tag-neutral">DATABASE_URL</span><span class="tag tag-neutral">execute_sql</span><span class="tag tag-neutral">script/enable-rls.sql</span><span class="tag tag-neutral">push</span><span class="tag tag-neutral">rls_enabled_no_policy</span></div>
+        <div class="card-desc">Surfaced by a Supabase advisor email Mal forwarded (2026-06-13). Live advisor check found **all 35 public tables on Velocity (`uodsmyystkaxoogitvsw`) had RLS disabled** — the anon key (shipped in Velocity&#39;s browser bundle) could read/write everything via PostgREST (`deals`, `users`, `transcripts`, `commission_records`, `tenants`…). **Fix:** enabled RLS on all 35 with no policies — safe because the browser uses Supabase for auth only (no `supabase.from` data queries) and all data is server-side via Drizzle over the pooler `DATABASE_URL` (owner role, bypasses RLS). Applied to live prod via `execute_sql`; recorded in repo as `script/enable-rls.sql` ([velocity#8](https://github.com/CoreshiftHQNZ/velocity/pull/8)) since drizzle-kit `push` doesn&#39;t manage RLS. **Verified:** 35/35 RLS on; advisor ERRORs cleared (now benign INFO `rls_enabled_no_policy`); anon-key probe returns 0 rows. Also enabled **HIBP leaked-password protection** via Management API (cleared the remaining WARN). Velocity advisor now 0 ERROR / 0 WARN. **Reusable pattern:** auth-only-client + server-owner-connection apps → enable-RLS-no-policy is the safe one-shot fix</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🚨 Org-wide Supabase advisor finding — remaining apps</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">P1</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-neutral">in-progress</span><span class="tag tag-neutral">movfypgjqdosvacrinbq</span><span class="tag tag-neutral">patient_messages</span><span class="tag tag-neutral">patient_id</span><span class="tag tag-neutral">clinical_notes</span><span class="tag tag-neutral">USING(true)</span><span class="tag tag-neutral">hwugqukvovfjsviqxqpj</span></div>
+        <div class="card-desc">The same advisor email flagged RLS-off across **8 Coreshift projects** (Velocity now fixed). Still open: **go-chiro** (`movfypgjqdosvacrinbq`) — **most urgent: patient health data** (`patient_messages` exposed w/ `patient_id`, `clinical_notes`; plus ~15 tables with `USING(true)` policies = effectively open). go-chiro is NOT the easy fix — it reads via the client with (broken) policies, so it needs real per-table policies written, not enable-RLS-no-policy. **mission-control** (`hwugqukvovfjsviqxqpj`) — ~15 RLS-off tables; likely the same architecture as Velocity (worth confirming for the one-shot fix). **Plus 5 more projects / 26 tables** not yet enumerated. **Meta:** none of these are onboarded to Sentinel, which is why the daily advisor scanner never saw them — onboarding closes the gap. go-chiro gated on ownership/authority confirmation (Abe)</div>
+      </div>
       <div class="card">
         <div class="card-title">Privacy &amp; security plan kickoff</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-A</span><span class="tag tag-neutral">meta</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/SECURITY-PRIVACY-PLAN.md</span></div>
@@ -1055,51 +1065,6 @@
         <div class="card-title">Monday digest — privacy + security extension shipped</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">observability</span><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">Sentinel PRs #97/#98/#99 merged dev → staging → main. Existing 10am NZ Monday maintenance digest now includes a &quot;Privacy &amp; Security&quot; section: active security_findings counts + newly-resolved this week, heartbeat health across all apps, KC audit-trail counts (admin mutations / impersonations / new-device sign-ins). Subject line promotes ERROR-level findings (&quot;Sentinel digest — 2 security ERRORs + 5 maintenance&quot;). Best-effort — section drops silently if any underlying fetch fails. **The operator now reads ONE email a week to see Brief 14 + Brief 18 + B+ #3 + B+ #7 signals roll up.**</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Phase B9 follow-up: security headers (helmet) shipped — Sentinel + KC</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B9</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">helmet</span><span class="tag tag-neutral">CSP</span><span class="tag tag-neutral">HSTS</span><span class="tag tag-neutral">Permissions-Policy</span></div>
-        <div class="card-desc">Sentinel PRs #107 → #109 + KC PRs #160 → #162 merged dev → staging → main. Adds `helmet` middleware (production only) on both Express apps with a CSP tuned for `self` + Supabase + Sentry, HSTS (2y + includeSubDomains + preload), explicit Permissions-Policy denying all sensor / payment / device APIs, COOP + CORP `same-origin`, X-Powered-By removed. Closes 10 high-impact ZAP findings per app from the original baseline (CSP not set, anti-clickjacking, HSTS, X-Content-Type-Options, X-Powered-By, Permissions-Policy, COOP, CORP). Live verification on both staging envs.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Phase B9 follow-up: per-route Cache-Control headers shipped — Sentinel + KC</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B9</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Cache-Control</span></div>
-        <div class="card-desc">Sentinel PRs #110 → #112 + KC (same combined PR with helmet). Per-URL-pattern Cache-Control middleware: `/api/*` → `no-store`; `/assets/*` → `public, max-age=1y, immutable` (Vite content-hashes the filenames); `/sitemap.xml` + `/robots.txt` → `public, max-age=3600`; SPA shell + everything else → `no-cache, must-revalidate` so browsers always refetch to pick up new bundle hashes. Closes ZAP findings 10015 (Re-examine Cache-control) + 10049 (Storable/Non-Cacheable Content) for everything not Cloudflare-served.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Sentinel ZAP workflow URL fixed (DNS mismatch)</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B9</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">.github/workflows/zap-baseline.yml</span></div>
-        <div class="card-desc">Sentinel PRs #103 → #104. First manual `workflow_dispatch` failed because the workflow default target was hardcoded to `staging.sentinel.coreshifthq.com` (no DNS record). Real URL: `sentinel-staging.coreshifthq.com` (verified live, /health returns 200). Pattern: KC uses `staging.&lt;domain&gt;`, Sentinel uses `&lt;app&gt;-staging.&lt;domain&gt;`. Repo variable `ZAP_TARGET_STAGING` still overrides if ever needed.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">ZAP DAST triage + remediation pass — Sentinel + KC</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B9</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">pen-testing</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Each app: first manual dispatch surfaced ~19 (Sentinel) / 11 (KC) finding types. ~70% closed by the helmet + cache PRs above. Remaining triaged into 3 buckets, documented as permanent comments on the rolling ZAP issues (Sentinel #113, KC #158): **(1)** intentional CSP trade-offs (`https:` wildcard for images, `unsafe-inline` for Tailwind dynamic styles) — accepted with reasoning; **(2)** informational findings (Modern Web App, Sec-Fetch-* request headers, Base64 data URIs) — accepted; **(3)** Cloudflare-served `/robots.txt` findings — out of our app's control, account-wide Cloudflare AI Audit / Content Signals feature intercepts before requests reach Railway. **Net result: every actionable security-header finding closed.**</div>
-      </div>
-      <div class="card">
-        <div class="card-title">B3 retention sweeps — dry-run validated on KC staging</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B3</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">ops</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">First operator-led activation of the B3 retention sweep scripts. Daily sweep on KC staging found 8 expired `social_connect_tokens` eligible (designed-for-deletion OAuth handshake data with ~10-min TTL) and 0 expired review_tokens / team_invitations. Monthly sweep: 0 rows across bug_reports / webhook_events / audit_logs (staging dataset is too young for any 6-month-old data). Scripts compile, connect, and correctly identify expired rows. **Prod confirm-run still gated on operator approval.**</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Phase B8b CLOSED: privacy notice v1 LIVE on keycontent.ai</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B8b</span><span class="tag tag-neutral">privacy</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/privacy</span><span class="tag tag-neutral">/sub-processors</span></div>
-        <div class="card-desc">KC PRs #165 → #166 → #167 → #168 → #169 merged dev → staging → main. Phase B8b end-user privacy notice promoted from DRAFT v1 to v1 LIVE. **Changes shipped together:** (1) signup-consent line ("By creating an account, you agree to our Privacy Notice"); (2) login-page "Privacy Notice" link; (3) Section 5 of the notice rewritten from a 12-row named-vendor table to an 8-row category table (less brittle to vendor swaps; pattern matches Stripe/Linear/Atlassian); (4) new public `/sub-processors` page at `https://keycontent.ai/sub-processors` with the 12-row named list, certifications, IPP-12 paragraph, "What we don't do." Source markdown + SUB-PROCESSORS.md updated in lockstep. **The privacy notice is now fully discoverable + linked + accurate + non-brittle.**</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Brief 18 fix: heartbeat verify query format (plain-text marker)</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">sentry-heartbeat.ts</span></div>
-        <div class="card-desc">Sentinel PRs #114 → #116 merged dev → staging → main. Every heartbeat verification was returning `missing` since Brief 18 first activated. Diagnosed via railway-run probe against Sentry's API (token never left Railway): the `/api/0/projects/{org}/{project}/events/` endpoint does NOT support structured tag queries (`heartbeat_marker:"X"`, `tag.heartbeat_marker:"X"`, `message:"X"`, etc. all return 0 results). Only plain-text search of the marker matches — the captureMessage in routes/sentryTest.ts uses the marker AS the message body, so plain-text match works. Fix: drop the `heartbeat_marker:"..."` syntax, query the plain marker. Marker strings are unique by design so plain-text collides with at most one event. Validated empirically (probe returned count=1 for a real prod marker). Next verify cron at 11am NZ will flip status from "missing" to "found".</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Brief 14 fix: security scanner advisor API URL path</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">code</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">supabase-advisors.ts</span></div>
-        <div class="card-desc">Sentinel PRs #117 → #119 merged dev → staging → main. Daily security scans had been reporting `error=1 active_findings_total=0` since Brief 14 first shipped — meaning the `/security` page was showing stale/empty data. Diagnosed via railway-run probe: original URL `/v1/projects/{ref}/advisors?type=security` returns 404; the type goes in the PATH (`/advisors/security`). Cross-checked against supabase/mcp source for the correct shape. Fix: one-line URL correction. Validated end-to-end: result is now `ok=1 error=0 active_findings_total=0` (KC's current baseline is 0 findings, matching Phase A4 clean state). Tomorrow's 5am NZ cron and onwards will populate `security_findings` with real KC advisor data.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Tuesday Railway activations confirmed (heartbeat + advisor + Sentry tokens)</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">SENTRY_HEARTBEAT_TOKEN</span><span class="tag tag-neutral">SUPABASE_ACCESS_TOKEN</span><span class="tag tag-neutral">SENTRY_AUTH_TOKEN</span><span class="tag tag-neutral">SENTRY_ORG</span></div>
-        <div class="card-desc">Verified all 7 env vars are set across the 4 envs (KC prod + staging × Sentinel prod + staging) — operator had already added them. Cross-env heartbeat pings are succeeding in prod logs (`[sentry-heartbeat] ✓ pinged keycontent / ✓ pinged sentinel`), which proves the token matches across all 4 envs. SENTRY_ORG resolved = `coreshift-hq`. Sentry data region = US (banked for the IPP-12 cross-border register). Repo privacy check: both KC + Sentinel = PRIVATE. **Open follow-ups:** heartbeat verifications all returning `missing` (Sentry-API side, needs investigation) + security scanner `error=1` per run (needs investigation).</div>
       </div>
       <div class="card">
         <div class="card-title">Phase B2: retention policy</div>
