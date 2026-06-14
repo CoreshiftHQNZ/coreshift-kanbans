@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>66%</strong> complete</div>
-        <div><strong>39</strong>/59 cards done</div>
-        <div>Updated <strong>2026-06-14 19:41 UTC</strong></div>
+        <div><strong>67%</strong> complete</div>
+        <div><strong>40</strong>/60 cards done</div>
+        <div>Updated <strong>2026-06-14 23:59 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">39</div>
+        <div class="status-num">40</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -892,6 +892,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Migration-parity guardrail in the Monday digest</div>
+            <div class="recent-desc">Detection guardrail for the recurring prod/staging migration-drift incident class (login_fingerprints 2026-06-14, Sentry-env, Zernio — a migration applied to prod while staging is skipped, surfacing later as a confusing staging-only error). New `server/lib/migration-parity.ts` reads applied migration **names** from each app&#39;s staging + prod Supabase projects via the Management API run-query endpoint (reuses `SUPABASE_ACCESS_TOKEN`) and diffs them; the Monday digest flags any app where **staging is behind prod**. Sentinel PRs [#140](https://github.com/CoreshiftHQNZ/sentinel-app/pull/140) → #141 → #142 dev→staging→main (admin-merge). New `supabase_staging_ref` column on `maintained_apps` (applied + stamped on the shared Sentinel project; KC staging ref `hireapkvjkadlzzpcitx` populated; single-project apps like DA null → skipped). **Design notes:** compare by NAME not version (version diff false-positived 16× on KC due to divergent early-bootstrap timestamps); alert ONLY on staging-behind-prod — staging-ahead is normal pending-promotion. **Bonus fix:** the digest renderers early-returned on a zero-maintenance week, silently dropping the entire Privacy &amp; Security section — now it always renders. 16 new tests, suite 301 passing. This is the &quot;guardrail over habit&quot; decision (operator: drift detection that doesn&#39;t depend on remembering, on-brand for Sentinel). The deeper source-fix (frictionless db-push so the prod shortcut isn&#39;t needed) remains a someday-item</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Velocity RLS exposure closed</div>
             <div class="recent-desc">Surfaced by a Supabase advisor email Mal forwarded (2026-06-13). Live advisor check found **all 35 public tables on Velocity (`uodsmyystkaxoogitvsw`) had RLS disabled** — the anon key (shipped in Velocity&#39;s browser bundle) could read/write everything via PostgREST (`deals`, `users`, `transcripts`, `commission_records`, `tenants`…). **Fix:** enabled RLS on all 35 with no policies — safe because the browser uses Supabase for auth only (no `supabase.from` data queries) and all data is server-side via Drizzle over the pooler `DATABASE_URL` (owner role, bypasses RLS). Applied to live prod via `execute_sql`; recorded in repo as `script/enable-rls.sql` ([velocity#8](https://github.com/CoreshiftHQNZ/velocity/pull/8)) since drizzle-kit `push` doesn&#39;t manage RLS. **Verified:** 35/35 RLS on; advisor ERRORs cleared (now benign INFO `rls_enabled_no_policy`); anon-key probe returns 0 rows. Also enabled **HIBP leaked-password protection** via Management API (cleared the remaining WARN). Velocity advisor now 0 ERROR / 0 WARN. **Reusable pattern:** auth-only-client + server-owner-connection apps → enable-RLS-no-policy is the safe one-shot fix</div>
           </div>
@@ -924,13 +931,6 @@
             <div class="recent-desc">Same fix on Sentinel prod. Closes Lint 0011 there</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Phase A3: Sentinel `rls_auto_enable()` PUBLIC EXECUTE revoked</div>
-            <div class="recent-desc">Pre-flight verified: SECURITY DEFINER event-trigger function exposed to anon + authenticated via PostgREST `/rest/v1/rpc/`. `REVOKE EXECUTE ... FROM PUBLIC` — safe because event triggers fire via engine, bypassing routine_privileges. Closes Lints [0028](https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable) + [0029](https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable)</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -943,9 +943,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">39</span>
+        <span class="col-count">40</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Migration-parity guardrail in the Monday digest</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">guardrail</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-neutral">server/lib/migration-parity.ts</span><span class="tag tag-neutral">SUPABASE_ACCESS_TOKEN</span><span class="tag tag-neutral">supabase_staging_ref</span><span class="tag tag-neutral">maintained_apps</span><span class="tag tag-neutral">hireapkvjkadlzzpcitx</span></div>
+        <div class="card-desc">Detection guardrail for the recurring prod/staging migration-drift incident class (login_fingerprints 2026-06-14, Sentry-env, Zernio — a migration applied to prod while staging is skipped, surfacing later as a confusing staging-only error). New `server/lib/migration-parity.ts` reads applied migration **names** from each app&#39;s staging + prod Supabase projects via the Management API run-query endpoint (reuses `SUPABASE_ACCESS_TOKEN`) and diffs them; the Monday digest flags any app where **staging is behind prod**. Sentinel PRs [#140](https://github.com/CoreshiftHQNZ/sentinel-app/pull/140) → #141 → #142 dev→staging→main (admin-merge). New `supabase_staging_ref` column on `maintained_apps` (applied + stamped on the shared Sentinel project; KC staging ref `hireapkvjkadlzzpcitx` populated; single-project apps like DA null → skipped). **Design notes:** compare by NAME not version (version diff false-positived 16× on KC due to divergent early-bootstrap timestamps); alert ONLY on staging-behind-prod — staging-ahead is normal pending-promotion. **Bonus fix:** the digest renderers early-returned on a zero-maintenance week, silently dropping the entire Privacy &amp; Security section — now it always renders. 16 new tests, suite 301 passing. This is the &quot;guardrail over habit&quot; decision (operator: drift detection that doesn&#39;t depend on remembering, on-brand for Sentinel). The deeper source-fix (frictionless db-push so the prod shortcut isn&#39;t needed) remains a someday-item</div>
+      </div>
       <div class="card">
         <div class="card-title">Velocity RLS exposure closed</div>
         <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">P1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-neutral">uodsmyystkaxoogitvsw</span><span class="tag tag-neutral">deals</span><span class="tag tag-neutral">users</span><span class="tag tag-neutral">transcripts</span><span class="tag tag-neutral">commission_records</span><span class="tag tag-neutral">tenants</span><span class="tag tag-neutral">supabase.from</span><span class="tag tag-neutral">DATABASE_URL</span><span class="tag tag-neutral">execute_sql</span><span class="tag tag-neutral">script/enable-rls.sql</span><span class="tag tag-neutral">push</span><span class="tag tag-neutral">rls_enabled_no_policy</span></div>
