@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>67%</strong> complete</div>
-        <div><strong>40</strong>/60 cards done</div>
-        <div>Updated <strong>2026-06-14 23:59 UTC</strong></div>
+        <div><strong>63%</strong> complete</div>
+        <div><strong>40</strong>/63 cards done</div>
+        <div>Updated <strong>2026-06-15 23:35 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -813,7 +813,7 @@
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
+        <div class="status-num">1</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -825,7 +825,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">11</div>
+        <div class="status-num">13</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -1150,9 +1150,14 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">0</span>
+        <span class="col-count">1</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Phase B5b: route-by-route migration to req.scoped() helpers</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B5</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-neutral">server/middleware/scoped.ts</span><span class="tag tag-neutral">requireAgencyContext</span><span class="tag tag-neutral">scopedAgencyId(req)</span><span class="tag tag-neutral">getUserFromRequest(req)!.agencyId</span><span class="tag tag-neutral">scopedAgencyId(req)</span><span class="tag tag-neutral">assertClientAccess</span><span class="tag tag-neutral">requireAgencyContext</span><span class="tag tag-neutral">scopedAgencyId</span><span class="tag tag-neutral">WHERE agency_id</span></div>
+        <div class="card-desc">**Tier 1 workstream #1 — closes threat model T3 (cross-agency leak via missing scope filter) at the code layer.** Foundation shipped (`server/middleware/scoped.ts` — `requireAgencyContext` + `scopedAgencyId(req)`). This sweep migrates ~18 KC route files from `getUserFromRequest(req)!.agencyId` (silent-undefined on no agency) to `scopedAgencyId(req)` (throws). Per the [2026-06-07 B5b migration plan](Sentinel/playbook/audits/2026-06-07-b5b-migration-plan.md), priority order: **business-context.ts (#1, Variant B — migrate the `assertClientAccess` helper once → covers 8 routes)** → topics → invites → jobs → agency-linking → clients → rest. Acceptance per file: `requireAgencyContext` middleware + `scopedAgencyId` only + `WHERE agency_id` + a new 403-on-no-agency test. agencies.ts already done</div>
+      </div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -1184,8 +1189,8 @@
       </div>
       <div class="card">
         <div class="card-title">Phase B+ #1a: run the backup-restore tabletop</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">Sentinel/playbook/HOW-WE-DO-BACKUP-RESTORE.md</span></div>
-        <div class="card-desc">`Sentinel/playbook/HOW-WE-DO-BACKUP-RESTORE.md` is ready. Operator + Claude run the 60-min tabletop together (no destructive ops). Output: friction points captured + plan for the supervised staging drill</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-neutral">Sentinel/playbook/HOW-WE-DO-BACKUP-RESTORE.md</span></div>
+        <div class="card-desc">**Tier 1 workstream #3 (part 2 of 3).** `Sentinel/playbook/HOW-WE-DO-BACKUP-RESTORE.md` is ready. Operator + Claude run the 60-min tabletop together (no destructive ops). Output: friction points captured + plan for the supervised staging drill</div>
       </div>
       <div class="card">
         <div class="card-title">Brief 18 activation — operator adds env vars</div>
@@ -1216,18 +1221,28 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">11</span>
+        <span class="col-count">13</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">DA → KC security parity</div>
+        <div class="card-tags"><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-neutral">auditAdminMutation</span><span class="tag tag-neutral">login_fingerprints</span><span class="tag tag-neutral">zap-baseline.yml</span><span class="tag tag-neutral">Sentinel/playbook/threat-models/digital-architect.md</span></div>
+        <div class="card-desc">**Tier 1 workstream #2.** Digital Architect is the depth gap; bring it to KC&#39;s bar across five workstreams: (1) audit logging (B+ #3 `auditAdminMutation` pattern, adapted to DA&#39;s Next.js route handlers), (2) account-takeover / new-device detection (B+ #7 `login_fingerprints` pattern), (3) ZAP DAST CI (B9 `zap-baseline.yml`), (4) a DA threat model doc (`Sentinel/playbook/threat-models/digital-architect.md`), (5) security-header (Helmet-equiv) + per-route rate-limit baseline. Each ships as its own PR through DA&#39;s dev→staging→main. Parity = &quot;every app we embed Sentinel into clears the same bar&quot; — the contractual implication of Sentinel being named in the T&amp;Cs and going everywhere</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Fleet-wide DAST / dependency / secret scanning</div>
+        <div class="card-tags"><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-neutral">code</span></div>
+        <div class="card-desc">**Tier 1 workstream #4.** ZAP (B9), Dependabot + npm audit (B+ #5), and gitleaks (B+ #6) run on KC + Sentinel only today. Extend the same three CI motions to every maintained app — DA first, then the rest of the fleet as each onboards. One standard, applied everywhere. Reuses the existing workflow YAML as a template</div>
+      </div>
+      <div class="card">
+        <div class="card-title">MFA on operator + admin accounts</div>
+        <div class="card-tags"><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-2</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span></div>
+        <div class="card-desc">**Tier 2 (operator action).** Enforce MFA on GitHub org, Supabase, Railway, Cloudflare, and Google Workspace operator/admin accounts. Cheap, high-leverage — closes the &quot;operator-account-compromise&quot; DR scenario (HOW-WE-DO-DR.md) at the source. Per-service enrolment by the operator</div>
+      </div>
       <div class="card">
         <div class="card-title">Phase B3-code: deletion + access scripts</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">~4d</span><span class="tag tag-neutral">keycontent-app/script/</span><span class="tag tag-neutral">export-user-data.ts</span><span class="tag tag-neutral">delete-user-data.ts</span><span class="tag tag-neutral">close-account.ts</span><span class="tag tag-neutral">ai_call_logs</span></div>
         <div class="card-desc">Implementation of B3 doc. Four scripts in `keycontent-app/script/`: `export-user-data.ts` (IPP 6 access), `delete-user-data.ts` (IPP 7 cascade + anonymise), `close-account.ts` (Type 3 clause 11/12), monthly aggregation step for `ai_call_logs`. **Needs operator review of cascade semantics before code lands.** Unblocks the 30-day deletion SLA promise</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Phase B5b: route-by-route migration to req.scoped() helpers</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B5</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">~2d</span><span class="tag tag-neutral">server/middleware/scoped.ts</span><span class="tag tag-neutral">getUserFromRequest(req)!.agencyId</span><span class="tag tag-neutral">scopedAgencyId(req)</span><span class="tag tag-neutral">requireAgencyContext</span></div>
-        <div class="card-desc">Foundation shipped (see Done — `server/middleware/scoped.ts`). This sweep migrates existing KC routes from `getUserFromRequest(req)!.agencyId` to `scopedAgencyId(req)` with `requireAgencyContext` middleware. Each route is small; the sweep is ~25 routes across calendar / clients / jobs / etc. Defensible to do incrementally as routes are touched for other reasons; the explicit sweep makes the threat model T3 close real instead of theoretical</div>
       </div>
       <div class="card">
         <div class="card-title">Phase B+ #7 V2: surface login fingerprints in Sentinel</div>
@@ -1241,8 +1256,8 @@
       </div>
       <div class="card">
         <div class="card-title">Phase B+ #1b: backup-restore drill on staging</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">supervised</span></div>
-        <div class="card-desc">After the tabletop closes (item in This Week), schedule the operator-supervised destructive drill on staging Supabase. Drop a low-risk table, restore from backup, time each step. Worst-case findings update HOW-WE-DO-BACKUP-RESTORE.md</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">supervised</span><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span></div>
+        <div class="card-desc">**Tier 1 workstream #3 (part 3 of 3 — proves recoverability).** After the tabletop closes (item in This Week), schedule the operator-supervised destructive drill on staging Supabase. Drop a low-risk table, restore from backup, time each step. Worst-case findings update HOW-WE-DO-BACKUP-RESTORE.md</div>
       </div>
       <div class="card">
         <div class="card-title">Brief 15 — Data inventory surface in Sentinel</div>
@@ -1261,8 +1276,8 @@
       </div>
       <div class="card">
         <div class="card-title">Brief 19 — KC `job-assets` daily R2 backup</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">job-assets</span><span class="tag tag-neutral">script/restore-from-r2.ts</span></div>
-        <div class="card-desc">Sentinel-owned node-cron: list Supabase Storage `job-assets`, diff against R2 bucket, copy new/changed objects, prune versions per retention policy. Companion CLI `script/restore-from-r2.ts`. R2 export decision locked</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-neutral">job-assets</span><span class="tag tag-neutral">script/restore-from-r2.ts</span></div>
+        <div class="card-desc">**Tier 1 workstream #3 (part 1 of 3 — Storage backup).** Sentinel-owned node-cron: list Supabase Storage `job-assets`, diff against R2 bucket, copy new/changed objects, prune versions per retention policy. Companion CLI `script/restore-from-r2.ts`. R2 export decision locked</div>
       </div>
       <div class="card">
         <div class="card-title">Sentry alert &quot;heartbeat&quot; detection follow-up</div>
@@ -1271,8 +1286,8 @@
       </div>
       <div class="card">
         <div class="card-title">Phase D triggers</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-D</span><span class="tag tag-neutral">future</span></div>
-        <div class="card-desc">Compliance escalations. Each is trigger-gated, not calendar: NZ Privacy Act formal review · GDPR posture for EU customers · SOC 2 Type I / II · annual third-party pen test · automated DAST in CI · cyber-insurance · bug-bounty</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-D</span><span class="tag tag-neutral">future</span><span class="tag tag-neutral">tier-2</span></div>
+        <div class="card-desc">Compliance escalations. Each is trigger-gated, not calendar: NZ Privacy Act formal review · GDPR posture for EU customers · SOC 2 Type I / II · annual third-party pen test · automated DAST in CI · cyber-insurance · bug-bounty. **Note:** the Above-Industry-Standard Initiative (2026-06-16) recommends pulling **annual pen test** + **SOC 2 Type I readiness** forward as `tier-2` items (see SECURITY-PRIVACY-PLAN.md) rather than waiting for a hard trigger — &quot;above standard&quot; is the goal, not &quot;compliant once forced.&quot; Still operator-gated on budget/horizon</div>
       </div></div>
     </section>
       </div>
