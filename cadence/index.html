@@ -480,6 +480,46 @@
           </div>
         </section>
       </div>
+
+      <h2 style="margin:36px 0 4px;font-size:20px;color:var(--ink);">Certification workstream &mdash; Xero App Store</h2>
+      <p style="margin:0 0 16px;color:var(--ink-muted);font-size:14px;max-width:760px;">
+        Runs in parallel with the build. Two gates: the <strong>9 certification checkpoints</strong> + a <strong>security assessment</strong>. Prerequisites: OAuth 2.0 (done) and at least <strong>3 customers</strong> live. Until certified, the app can connect up to <strong>25 client orgs</strong> &mdash; enough to run half the roster now.
+      </p>
+      <div class="board">
+        <section class="col back">
+          <div class="col-head"><div class="col-title"><span class="dot"></span>To do</div><div class="col-count">6</div></div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip ext">prereq</span><span class="card-id">3-CUSTOMERS</span></div><h3 class="card-title">3-customer minimum</h3><p class="card-note">Xero requires &ge;3 customers using the app before certification. Onboard 2+ firms beyond Colab Accounting.</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">CP1</span><span class="card-id">SIGNUP-WITH-XERO</span></div><h3 class="card-title">Sign up / Connect with Xero</h3><p class="card-note">Offer "Connect to Xero" onboarding (Xero as entry point). Small add to the auth/connect flow.</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">CP2</span><span class="card-id">APP-STORE-LISTING</span></div><h3 class="card-title">App Store listing + billing</h3><p class="card-note">Marketplace listing. Decision: bill via <strong>Xero App Store subscriptions</strong> (smoother certification) vs Stripe (more control). Affects M5.</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">CP4</span><span class="card-id">BRANDING-NAMING</span></div><h3 class="card-title">Branding &amp; naming</h3><p class="card-note">Xero brand assets + official "Connect to Xero" button; naming rules. Includes resolving the <strong>Cadence</strong> trademark (vs Cadence Bank).</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">SEC</span><span class="card-id">SECURITY-ASSESSMENT</span></div><h3 class="card-title">Security assessment submission</h3><p class="card-note">Xero security team review: API risk rating, authentication, encryption, audit logging, personnel security. The long pole &mdash; start early. (Advanced assessment only at 1,000+ connections &mdash; not us yet.)</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">APPLY</span><span class="card-id">SUBMIT-REVIEW</span></div><h3 class="card-title">Submit app for review</h3><p class="card-note">After the 9 checkpoints pass + 3 customers + security assessment. Xero reviews &rarr; certified &rarr; 25-org cap lifted.</p></article>
+          </div>
+        </section>
+
+        <section class="col doing">
+          <div class="col-head"><div class="col-title"><span class="dot"></span>In build / by design</div><div class="col-count">3</div></div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip ext">CP3</span><span class="card-id">CONNECTION</span></div><h3 class="card-title">Connection</h3><p class="card-note">Clean OAuth connect/disconnect + connection management. Built in M2 (Xero connect).</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">CP6</span><span class="card-id">ERROR-HANDLING</span></div><h3 class="card-title">Error handling</h3><p class="card-note">Graceful API errors, rate-limit backoff, token expiry/refresh, disconnection. M2/M3.</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">SEC</span><span class="card-id">TOKEN-ENCRYPTION</span></div><h3 class="card-title">Token encryption (Supabase Vault)</h3><p class="card-note">Move Xero tokens out of plaintext columns into Vault/pgsodium. Already on the build backlog (TOKEN-VAULT).</p></article>
+          </div>
+        </section>
+
+        <section class="col done">
+          <div class="col-head"><div class="col-title"><span class="dot"></span>Satisfied</div><div class="col-count">7</div></div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip ext">prereq</span><span class="card-id">OAUTH2</span></div><h3 class="card-title">OAuth 2.0</h3><p class="card-note">App uses OAuth 2.0 (not 1.0a). Required baseline &mdash; met.</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">CP5</span><span class="card-id">SCOPES</span></div><h3 class="card-title">Scopes &mdash; minimal</h3><p class="card-note">Granular minimal scopes already chosen; each justifiable by the reconciliation use case.</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">CP7</span><span class="card-id">DATA-INTEGRITY</span></div><h3 class="card-title">Data integrity</h3><p class="card-note">Confidence-gating (only auto-post consistent), idempotent proposals, immutable audit_log. By design.</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">CP8</span><span class="card-id">ACCOUNT-MAPPING</span></div><h3 class="card-title">Account &amp; payment mapping</h3><p class="card-note">Mapping bank lines to the correct GL accounts is the core engine.</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">CP9</span><span class="card-id">TAXES</span></div><h3 class="card-title">Taxes</h3><p class="card-note">Engine carries GST/tax rate per line (15% GST on Expenses etc.).</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">SEC</span><span class="card-id">AUDIT-LOGGING</span></div><h3 class="card-title">Audit logging</h3><p class="card-note"><code>audit_log</code> table built day one &mdash; every post/decision recorded.</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">SEC</span><span class="card-id">AUTHENTICATION</span></div><h3 class="card-title">Authentication</h3><p class="card-note">Supabase Auth for users + OAuth2 for Xero; RLS isolates each firm.</p></article>
+          </div>
+        </section>
+      </div>
     </div>
   </body>
 </html>
