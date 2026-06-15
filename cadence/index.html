@@ -377,8 +377,8 @@
         <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Build milestones</div>
         <div class="progress-bars">
           <div class="pbar"><div class="pbar-label"><strong>Foundation</strong> repo · DB · engine</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Firm auth</div><div class="pbar-track"><div class="pbar-fill" style="width: 5%"></div></div></div>
-          <div class="pbar future"><div class="pbar-label"><strong>M2</strong> Xero connect</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar"><div class="pbar-label"><strong>M1</strong> Firm auth</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Xero connect</div><div class="pbar-track"><div class="pbar-fill" style="width: 5%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M3</strong> Engine jobs</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Review UI</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M5</strong> Billing/launch</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
@@ -454,9 +454,8 @@
         </section>
 
         <section class="col next">
-          <div class="col-head"><div class="col-title"><span class="dot"></span>Next</div><div class="col-count">3</div></div>
+          <div class="col-head"><div class="col-title"><span class="dot"></span>Next</div><div class="col-count">2</div></div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">XERO-OAUTH</span></div><h3 class="card-title">Xero OAuth connect + token refresh</h3><p class="card-note">Firm connects Xero; enumerate client orgs via <code>/connections</code>; store per-firm tokens; backend refresh job. Unblocked by Ricky&rsquo;s client-secret task.</p></article>
             <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">ENGINE-JOBS</span></div><h3 class="card-title">Engine pipeline jobs</h3><p class="card-note">Per client: pull reconciled history + unreconciled lines via Xero API → <code>buildProfile</code> → <code>matchLine</code> → write <code>proposals</code>. Background jobs.</p></article>
             <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">REVIEW-UI</span></div><h3 class="card-title">Review UI + bulk post-back</h3><p class="card-note">Fast per-client triage (keyboard-driven, bulk-approve), grouped by verdict. Approved proposals post to Xero in bulk. CONSISTENT auto-advance when client opts in.</p></article>
           </div>
@@ -465,13 +464,14 @@
         <section class="col doing">
           <div class="col-head"><div class="col-title"><span class="dot"></span>Doing</div><div class="col-count">1</div></div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">FIRM-AUTH</span></div><h3 class="card-title">Firm auth (Supabase Auth)</h3><p class="card-note">Firm signup/login, create <code>firm</code> + owner <code>member</code> on first sign-in, session wiring, protected app shell. RLS already enforces firm isolation.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">XERO-OAUTH</span></div><h3 class="card-title">Xero OAuth connect + token refresh</h3><p class="card-note">Firm connects Xero; enumerate client orgs via <code>/connections</code>; store per-firm tokens; backend refresh job. Client secret wired; building now &mdash; needs the localhost redirect URI added in the Xero portal.</p></article>
           </div>
         </section>
 
         <section class="col done">
-          <div class="col-head"><div class="col-title"><span class="dot"></span>Done</div><div class="col-count">5</div></div>
+          <div class="col-head"><div class="col-title"><span class="dot"></span>Done</div><div class="col-count">6</div></div>
           <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">FIRM-AUTH</span></div><h3 class="card-title">Firm auth ✓</h3><p class="card-note">Supabase SSR clients + middleware, email/password login + signup, firm onboarding via <code>create_firm</code> RPC, protected app shell. Builds clean; on <code>dev</code>. Live-verify pending.</p></article>
             <article class="card"><div class="card-head"><span class="chip f">F</span><span class="card-id">PROTOTYPE</span></div><h3 class="card-title">Validated engine on a real client</h3><p class="card-note">Python prototype proven live on A.K Builders: 8/26 lines auto-reconciled (Liquor Barre, Starlink, Colab, Talisman, Spark, NZ Funding, Waihi Refuse + a Fallohide invoice match); Woolworths/Kmart correctly deferred as conflicted.</p></article>
             <article class="card"><div class="card-head"><span class="chip f">F</span><span class="card-id">REPO</span></div><h3 class="card-title">Repo + branch flow</h3><p class="card-note"><code>core-ricky/cadence</code>, branches <code>main</code>/<code>staging</code>/<code>dev</code> pushed.</p></article>
             <article class="card"><div class="card-head"><span class="chip f">F</span><span class="card-id">SUPABASE</span></div><h3 class="card-title">Supabase project provisioned</h3><p class="card-note">Project <code>cadence</code> (org CoreShift, ap-southeast-2), ACTIVE_HEALTHY.</p></article>
