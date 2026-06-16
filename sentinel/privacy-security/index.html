@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>64%</strong> complete</div>
         <div><strong>41</strong>/64 cards done</div>
-        <div>Updated <strong>2026-06-16 01:46 UTC</strong></div>
+        <div>Updated <strong>2026-06-16 02:04 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -813,7 +813,7 @@
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
+        <div class="status-num">1</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -825,7 +825,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">14</div>
+        <div class="status-num">13</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -1155,9 +1155,14 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">0</span>
+        <span class="col-count">1</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">DA → KC security parity</div>
+        <div class="card-tags"><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-neutral">next.config</span><span class="tag tag-neutral">headers()</span><span class="tag tag-neutral">apps/web/app/api/integrations/callback</span><span class="tag tag-neutral">projectId</span><span class="tag tag-neutral">state</span><span class="tag tag-neutral">verifyIntegrationsState</span><span class="tag tag-neutral">main</span></div>
+        <div class="card-desc">**Tier 1 workstream #2 — in progress.** Survey done 2026-06-16: DA lacked security headers, DAST/dependency/secret-scanning CI, audit logging, ATO/new-device detection, and a threat-model doc. (Auth is a thoughtful dual-realm design — GP Google-SSO + client JWT-cookie; **RLS-deny-all IS live on DA prod tables** as a DB backstop KC lacks, though it&#39;s not in migrations — drift to reconcile.) **✅ Shipped: baseline security headers** (HSTS · X-Frame-Options SAMEORIGIN · nosniff · Referrer-Policy · Permissions-Policy · COOP, via `next.config` `headers()`) to DA dev+staging ([#60](https://github.com/CoreshiftHQNZ/digital-architect/pull/60)→[#61](https://github.com/CoreshiftHQNZ/digital-architect/pull/61)); enforcing **CSP deferred** (needs nonce+allowlist, report-only validation against the live Next.js UI first). **Remaining:** ZAP DAST + Dependabot + gitleaks + npm-audit CI (overlaps Tier-1 #4 — DA is the first fleet app); audit logging (B+ #3 pattern, adapted to Next.js route handlers); ATO/new-device detection (note: client realm shares one password in v1 — different shape); DA threat-model doc; enforcing CSP. **⚠️ Survey flagged** `apps/web/app/api/integrations/callback` as possibly trusting `projectId` from the OAuth `state` without a staff-authorization check — **needs a closer look** (turns on whether `verifyIntegrationsState` is HMAC-signed; not yet confirmed). **Release note:** DA `main` is ~100 commits behind dev/staging — prod promotion is the DA team&#39;s batched release, so security work lands in dev+staging and reaches prod on their cadence</div>
+      </div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -1221,18 +1226,13 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">14</span>
+        <span class="col-count">13</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">Object-level storage authz on `files.ts` (IDOR)</div>
         <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">follow-up:b5b</span><span class="tag tag-neutral">GET /api/files/signed-url?path=…</span><span class="tag tag-neutral">GET /objects/*</span><span class="tag tag-neutral">jobs/</span><span class="tag tag-neutral">clients/</span><span class="tag tag-neutral">products/&lt;agency&gt;/</span><span class="tag tag-neutral">uploads/&lt;user&gt;/</span><span class="tag tag-neutral">compose-media/&lt;agency&gt;/</span></div>
         <div class="card-desc">Surfaced during the B5b sweep (2026-06-16). `GET /api/files/signed-url?path=…` and `GET /objects/*` are auth-gated but serve **any** Supabase Storage path to **any** authenticated user — there&#39;s no check that the path belongs to the caller&#39;s agency. Documented as accepted-risk &quot;audit C1&quot; (relies on id-keyed unguessable paths), but it&#39;s a real object-level IDOR, distinct from B5b&#39;s agency query-scope filters. Fix: map each storage path prefix (`jobs/`, `clients/`, `products/&lt;agency&gt;/`, `uploads/&lt;user&gt;/`, `compose-media/&lt;agency&gt;/`…) to its owning agency and authorize before signing/streaming. Moderate effort (path→owner resolution). Not a leak of agency *rows*, but of stored *assets* if a path is known</div>
-      </div>
-      <div class="card">
-        <div class="card-title">DA → KC security parity</div>
-        <div class="card-tags"><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-neutral">auditAdminMutation</span><span class="tag tag-neutral">login_fingerprints</span><span class="tag tag-neutral">zap-baseline.yml</span><span class="tag tag-neutral">Sentinel/playbook/threat-models/digital-architect.md</span></div>
-        <div class="card-desc">**Tier 1 workstream #2.** Digital Architect is the depth gap; bring it to KC&#39;s bar across five workstreams: (1) audit logging (B+ #3 `auditAdminMutation` pattern, adapted to DA&#39;s Next.js route handlers), (2) account-takeover / new-device detection (B+ #7 `login_fingerprints` pattern), (3) ZAP DAST CI (B9 `zap-baseline.yml`), (4) a DA threat model doc (`Sentinel/playbook/threat-models/digital-architect.md`), (5) security-header (Helmet-equiv) + per-route rate-limit baseline. Each ships as its own PR through DA&#39;s dev→staging→main. Parity = &quot;every app we embed Sentinel into clears the same bar&quot; — the contractual implication of Sentinel being named in the T&amp;Cs and going everywhere</div>
       </div>
       <div class="card">
         <div class="card-title">Fleet-wide DAST / dependency / secret scanning</div>
