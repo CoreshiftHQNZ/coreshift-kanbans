@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>62%</strong> complete</div>
-        <div><strong>41</strong>/66 cards done</div>
-        <div>Updated <strong>2026-06-16 03:08 UTC</strong></div>
+        <div><strong>42</strong>/68 cards done</div>
+        <div>Updated <strong>2026-06-16 22:32 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">41</div>
+        <div class="status-num">42</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -821,7 +821,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">7</div>
+        <div class="status-num">8</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -892,6 +892,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Sentry-surfaced fix sweep (DA + Sentinel)</div>
+            <div class="recent-desc">Triaged the Sentry alert backlog (2026-06-17). **DA:** uuid-guard on `/(gp)/projects/[id]` (a crawler hitting `/projects/sitemap.xml` 500&#39;d the page on a non-uuid id → now `notFound()`s before any DB query — DIGITAL-ARCHITECT-5) + `worker-src &#39;self&#39; blob:` added to the report-only CSP (DIGITAL-ARCHITECT-4 — the report-only policy doing its job: surfacing a Next.js blob: Web Worker to allowlist *before* enforcing) — DA [#66](https://github.com/CoreshiftHQNZ/digital-architect/pull/66) dev→staging. **Sentinel:** advisor-scanner dedupe (the Supabase advisor API returns one lint per affected object → the same code repeats → second insert tripped `security_findings_app_id_lint_code_key`; SENTINEL-BACKEND-8) + audit-events graceful missing-table degradation (SENTINEL-BACKEND-9 — `Could not find the table login_fingerprints`; now returns an empty section instead of 502-ing the whole view) — Sentinel [#153](https://github.com/CoreshiftHQNZ/sentinel-app/pull/153)→[#154](https://github.com/CoreshiftHQNZ/sentinel-app/pull/154) main+staging. **SENTINEL-BACKEND-7** (advisor 404) needed no change — already fixed by the `/advisors/{type}` path correction; stale alert. **Automation:** daily 8:05am NZ scheduled inbox-triage reads new Sentry alert emails and posts a prioritized digest (known-benign patterns like DA staging CSP report-only flagged INFO), so error triage stops being a hand-forward chore</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Phase B5b: T3 tenancy sweep — COMPLETE</div>
             <div class="recent-desc">**Tier 1 workstream #1 done (2026-06-16). Threat model T3 (cross-agency data leak) closed at the KC route layer.** Swept every KC route file (KC PRs #198 → #215, dev→staging→main). **3 REAL LIVE vulns found + fixed:** `jobs.ts` (a non-admin with no agency saw/modified ALL agencies&#39; jobs — `canScopeByAgency` treated `null` as unscoped), `calendar.ts` (a non-admin with no agency could read any agency&#39;s calendar via `?agencyId`), and **`billing.ts` (highest impact — any authenticated user could open another agency&#39;s Stripe Customer Portal / cancel its subscription / attach a Stripe customer, by passing `agencyId` in the body)**. **7 files hardened** (post-load 403 oracle → scope-in-query 404: business-context, topics, clients, products, overlay-templates, social + invites tightened). **9 files audited as already-safe** (agencies, agency-linking, notifications, business, zernio-webhooks, auth, review, support, admin + prompt-rules). **44 new unit tests, suite 102/102**, every batch prod-verified. **Post-sweep exploitation scan: no detectable sign of exploitation** — KC prod has 3 agencies, 0 with a Stripe customer, 0 subscription events; the ~18 no-agency accounts are dormant signups (reads aren&#39;t logged so read-exploit can&#39;t be positively excluded, but practical exposure was minimal). Full detail in `Sentinel/playbook/audits/2026-06-07-b5b-migration-plan.md`. **Follow-up spun out:** `files.ts` object-level storage IDOR (signed-url / `/objects/*` serve any path to any authed user) — separate threat class, see Backlog</div>
           </div>
@@ -924,13 +931,6 @@
             <div class="recent-desc">`Sentinel/playbook/SECURITY-PRIVACY-PLAN.md` published 2026-05-29 with phased plan (A: quick wins; B: foundation; C: Sentinel briefs 14-18; D: trigger-gated compliance). Operator forks listed inside the doc</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Phase A1: KC `bug_reports_set_updated_at` search_path hardened</div>
-            <div class="recent-desc">`ALTER FUNCTION public.bug_reports_set_updated_at() SET search_path = &#39;&#39;`. Closes [Supabase advisor Lint 0011](https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable). Migration through dev→staging→main + applied to prod via `execute_sql` + `schema_migrations` stamped</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -943,9 +943,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">41</span>
+        <span class="col-count">42</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Sentry-surfaced fix sweep (DA + Sentinel)</div>
+        <div class="card-tags"><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">observability</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/(gp)/projects/[id]</span><span class="tag tag-neutral">/projects/sitemap.xml</span><span class="tag tag-neutral">notFound()</span><span class="tag tag-neutral">worker-src &#39;self&#39; blob:</span><span class="tag tag-neutral">security_findings_app_id_lint_code_key</span><span class="tag tag-neutral">Could not find the table login_fingerprints</span><span class="tag tag-neutral">/advisors/{type}</span></div>
+        <div class="card-desc">Triaged the Sentry alert backlog (2026-06-17). **DA:** uuid-guard on `/(gp)/projects/[id]` (a crawler hitting `/projects/sitemap.xml` 500&#39;d the page on a non-uuid id → now `notFound()`s before any DB query — DIGITAL-ARCHITECT-5) + `worker-src &#39;self&#39; blob:` added to the report-only CSP (DIGITAL-ARCHITECT-4 — the report-only policy doing its job: surfacing a Next.js blob: Web Worker to allowlist *before* enforcing) — DA [#66](https://github.com/CoreshiftHQNZ/digital-architect/pull/66) dev→staging. **Sentinel:** advisor-scanner dedupe (the Supabase advisor API returns one lint per affected object → the same code repeats → second insert tripped `security_findings_app_id_lint_code_key`; SENTINEL-BACKEND-8) + audit-events graceful missing-table degradation (SENTINEL-BACKEND-9 — `Could not find the table login_fingerprints`; now returns an empty section instead of 502-ing the whole view) — Sentinel [#153](https://github.com/CoreshiftHQNZ/sentinel-app/pull/153)→[#154](https://github.com/CoreshiftHQNZ/sentinel-app/pull/154) main+staging. **SENTINEL-BACKEND-7** (advisor 404) needed no change — already fixed by the `/advisors/{type}` path correction; stale alert. **Automation:** daily 8:05am NZ scheduled inbox-triage reads new Sentry alert emails and posts a prioritized digest (known-benign patterns like DA staging CSP report-only flagged INFO), so error triage stops being a hand-forward chore</div>
+      </div>
       <div class="card">
         <div class="card-title">Phase B5b: T3 tenancy sweep — COMPLETE</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B5</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">jobs.ts</span><span class="tag tag-neutral">canScopeByAgency</span><span class="tag tag-neutral">null</span><span class="tag tag-neutral">calendar.ts</span><span class="tag tag-neutral">?agencyId</span><span class="tag tag-neutral">billing.ts</span><span class="tag tag-neutral">agencyId</span><span class="tag tag-neutral">Sentinel/playbook/audits/2026-06-07-b5b-migration-plan.md</span><span class="tag tag-neutral">files.ts</span><span class="tag tag-neutral">/objects/*</span></div>
@@ -1184,9 +1189,14 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">8</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Apply KC `login_fingerprints` to KC staging</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">drift</span><span class="tag tag-neutral">login_fingerprints</span><span class="tag tag-neutral">KEYCONTENT_SUPABASE_*</span><span class="tag tag-neutral">/audit-events</span></div>
+        <div class="card-desc">The real fix behind SENTINEL-BACKEND-9 (audit-events now degrades gracefully, but the fingerprints section stays empty until this lands). `login_fingerprints` (B+ #7) exists on KC prod but not KC **staging** — the project Sentinel&#39;s `KEYCONTENT_SUPABASE_*` creds point at — so Sentinel&#39;s `/audit-events` can&#39;t read it. Apply the migration to KC staging (CLI, not MCP — MCP auto-stamps the wrong version). Same prod/staging drift class the migration-parity guardrail (Done) was built to catch. **Task chip spawned.**</div>
+      </div>
       <div class="card">
         <div class="card-title">Tighten KC npm audit threshold to `high`</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">keycontent-app/.github/workflows/npm-audit.yml</span><span class="tag tag-neutral">continue-on-error: true</span></div>
