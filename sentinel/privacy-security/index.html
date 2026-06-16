@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>62%</strong> complete</div>
         <div><strong>41</strong>/66 cards done</div>
-        <div>Updated <strong>2026-06-16 02:45 UTC</strong></div>
+        <div>Updated <strong>2026-06-16 02:57 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1246,8 +1246,8 @@
       </div>
       <div class="card">
         <div class="card-title">Fleet-wide DAST / dependency / secret scanning</div>
-        <div class="card-tags"><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-neutral">code</span></div>
-        <div class="card-desc">**Tier 1 workstream #4.** ZAP (B9), Dependabot + npm audit (B+ #5), and gitleaks (B+ #6) run on KC + Sentinel only today. Extend the same three CI motions to every maintained app. One standard, applied everywhere. Reuses the existing workflow YAML as a template. **Progress 2026-06-16: ✅ DA (first fleet app) done** — gitleaks + pnpm-audit + ZAP + Dependabot shipped to DA dev+staging (DA #62→#63). **Remaining fleet apps:** Velocity, go-chiro, mission-control + the rest as each is onboarded to Sentinel</div>
+        <div class="card-tags"><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">maintained_apps</span></div>
+        <div class="card-desc">**Tier 1 workstream #4.** ZAP (B9), Dependabot + npm audit (B+ #5), and gitleaks (B+ #6) run on KC + Sentinel only today. Extend the same three CI motions to every maintained app. One standard, applied everywhere. Reuses the existing workflow YAML as a template. **✅ COMPLETE for the maintained fleet (2026-06-16).** `maintained_apps` = **{KeyContent, Digital Architect}**; both — plus Sentinel itself — now run gitleaks + dependency-audit + ZAP + Dependabot (DA shipped via #62→#63). So every app Sentinel actually manages is covered. **This card now recurs at onboarding:** the other ~19 Supabase projects in the org are mostly experiments / client one-offs and aren&#39;t Sentinel-managed; each gets the scanning suite when (if) it&#39;s onboarded to Sentinel — scanning is part of the onboarding checklist, not a blind blast across unrelated repos</div>
       </div>
       <div class="card">
         <div class="card-title">MFA on operator + admin accounts</div>
