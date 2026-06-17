@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>62%</strong> complete</div>
-        <div><strong>42</strong>/68 cards done</div>
-        <div>Updated <strong>2026-06-16 22:32 UTC</strong></div>
+        <div><strong>43</strong>/69 cards done</div>
+        <div>Updated <strong>2026-06-17 21:28 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">42</div>
+        <div class="status-num">43</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -892,6 +892,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Sentinel app-first restructure (Phases 0-1)</div>
+            <div class="recent-desc">Reorganized Sentinel from function-first (7 global pages) to **app-first**, so every app gets its own page (operator framing: &quot;multi-tenant like KC&#39;s companies&quot; — though there&#39;s no isolation boundary here; it&#39;s an information-architecture change, not tenancy-security). **Phase 0 — registry:** `maintained_apps` is now the single source of truth — added `public_url`, `heartbeat_url`/`heartbeat_path`, `sentry_project`, and feature flags (`has_audit_logs`, `has_retention`, `liveness_external`, `monitoring_enabled`); migration `20260618010000` via execute_sql + stamped. Onboarded **Velocity** and **Sentinel itself** — both were **never advisor-scanned** (absent from the registry), now they are (closes the &quot;not onboarded = unscanned&quot; gap); backfilled KC + DA. `liveness_external` set from Better Stack (KC / DA / Sentinel ✓ — Sentinel prod has 15d external uptime, so the &quot;who watches the watchman&quot; gap is genuinely covered). **Phase 1 — UI:** new `/api/apps` (fleet) + `/api/apps/:slug` (per-app detail); Fleet overview (a card per app) → per-app page (overview + security findings + heartbeat + governance links gated on the flags). &quot;Apps&quot; is the primary nav entry now; the old function pages stay as fleet-wide views. Sentinel PRs [#159](https://github.com/CoreshiftHQNZ/sentinel-app/pull/159)/[#161](https://github.com/CoreshiftHQNZ/sentinel-app/pull/161) main+staging; tsc clean + vite build passes. **Onboarding made repeatable:** PLAY 9 gained two copy-paste prompts — Prompt A (Day-0 secure+observable baseline) and Prompt B (ship-day register-with-Sentinel). **Deferred (task chips):** generalize Retention/Audit per-app (Phase 2 — they&#39;re KC-coupled today); unify the still-hardcoded heartbeat target list to the registry (no-op functionally — same 3 targets); Velocity full onboarding (heartbeat/widget) held while the operator rebuilds it</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Sentry-surfaced fix sweep (DA + Sentinel)</div>
             <div class="recent-desc">Triaged the Sentry alert backlog (2026-06-17). **DA:** uuid-guard on `/(gp)/projects/[id]` (a crawler hitting `/projects/sitemap.xml` 500&#39;d the page on a non-uuid id → now `notFound()`s before any DB query — DIGITAL-ARCHITECT-5) + `worker-src &#39;self&#39; blob:` added to the report-only CSP (DIGITAL-ARCHITECT-4 — the report-only policy doing its job: surfacing a Next.js blob: Web Worker to allowlist *before* enforcing) — DA [#66](https://github.com/CoreshiftHQNZ/digital-architect/pull/66) dev→staging. **Sentinel:** advisor-scanner dedupe (the Supabase advisor API returns one lint per affected object → the same code repeats → second insert tripped `security_findings_app_id_lint_code_key`; SENTINEL-BACKEND-8) + audit-events graceful missing-table degradation (SENTINEL-BACKEND-9 — `Could not find the table login_fingerprints`; now returns an empty section instead of 502-ing the whole view) — Sentinel [#153](https://github.com/CoreshiftHQNZ/sentinel-app/pull/153)→[#154](https://github.com/CoreshiftHQNZ/sentinel-app/pull/154) main+staging. **SENTINEL-BACKEND-7** (advisor 404) needed no change — already fixed by the `/advisors/{type}` path correction; stale alert. **Automation:** daily 8:05am NZ scheduled inbox-triage reads new Sentry alert emails and posts a prioritized digest (known-benign patterns like DA staging CSP report-only flagged INFO), so error triage stops being a hand-forward chore</div>
           </div>
@@ -924,13 +931,6 @@
             <div class="recent-desc">The same advisor email flagged RLS-off across **8 Coreshift projects** (Velocity now fixed). Still open: **go-chiro** (`movfypgjqdosvacrinbq`) — **most urgent: patient health data** (`patient_messages` exposed w/ `patient_id`, `clinical_notes`; plus ~15 tables with `USING(true)` policies = effectively open). go-chiro is NOT the easy fix — it reads via the client with (broken) policies, so it needs real per-table policies written, not enable-RLS-no-policy. **mission-control** (`hwugqukvovfjsviqxqpj`) — ~15 RLS-off tables; likely the same architecture as Velocity (worth confirming for the one-shot fix). **Plus 5 more projects / 26 tables** not yet enumerated. **Meta:** none of these are onboarded to Sentinel, which is why the daily advisor scanner never saw them — onboarding closes the gap. go-chiro gated on ownership/authority confirmation (Abe)</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Privacy &amp; security plan kickoff</div>
-            <div class="recent-desc">`Sentinel/playbook/SECURITY-PRIVACY-PLAN.md` published 2026-05-29 with phased plan (A: quick wins; B: foundation; C: Sentinel briefs 14-18; D: trigger-gated compliance). Operator forks listed inside the doc</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -943,9 +943,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">42</span>
+        <span class="col-count">43</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Sentinel app-first restructure (Phases 0-1)</div>
+        <div class="card-tags"><span class="tag tag-neutral">restructure</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-neutral">observability</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">maintained_apps</span><span class="tag tag-neutral">public_url</span><span class="tag tag-neutral">heartbeat_url</span><span class="tag tag-neutral">heartbeat_path</span><span class="tag tag-neutral">sentry_project</span><span class="tag tag-neutral">has_audit_logs</span><span class="tag tag-neutral">has_retention</span><span class="tag tag-neutral">liveness_external</span><span class="tag tag-neutral">monitoring_enabled</span><span class="tag tag-neutral">20260618010000</span><span class="tag tag-neutral">liveness_external</span><span class="tag tag-neutral">/api/apps</span><span class="tag tag-neutral">/api/apps/:slug</span></div>
+        <div class="card-desc">Reorganized Sentinel from function-first (7 global pages) to **app-first**, so every app gets its own page (operator framing: &quot;multi-tenant like KC&#39;s companies&quot; — though there&#39;s no isolation boundary here; it&#39;s an information-architecture change, not tenancy-security). **Phase 0 — registry:** `maintained_apps` is now the single source of truth — added `public_url`, `heartbeat_url`/`heartbeat_path`, `sentry_project`, and feature flags (`has_audit_logs`, `has_retention`, `liveness_external`, `monitoring_enabled`); migration `20260618010000` via execute_sql + stamped. Onboarded **Velocity** and **Sentinel itself** — both were **never advisor-scanned** (absent from the registry), now they are (closes the &quot;not onboarded = unscanned&quot; gap); backfilled KC + DA. `liveness_external` set from Better Stack (KC / DA / Sentinel ✓ — Sentinel prod has 15d external uptime, so the &quot;who watches the watchman&quot; gap is genuinely covered). **Phase 1 — UI:** new `/api/apps` (fleet) + `/api/apps/:slug` (per-app detail); Fleet overview (a card per app) → per-app page (overview + security findings + heartbeat + governance links gated on the flags). &quot;Apps&quot; is the primary nav entry now; the old function pages stay as fleet-wide views. Sentinel PRs [#159](https://github.com/CoreshiftHQNZ/sentinel-app/pull/159)/[#161](https://github.com/CoreshiftHQNZ/sentinel-app/pull/161) main+staging; tsc clean + vite build passes. **Onboarding made repeatable:** PLAY 9 gained two copy-paste prompts — Prompt A (Day-0 secure+observable baseline) and Prompt B (ship-day register-with-Sentinel). **Deferred (task chips):** generalize Retention/Audit per-app (Phase 2 — they&#39;re KC-coupled today); unify the still-hardcoded heartbeat target list to the registry (no-op functionally — same 3 targets); Velocity full onboarding (heartbeat/widget) held while the operator rebuilds it</div>
+      </div>
       <div class="card">
         <div class="card-title">Sentry-surfaced fix sweep (DA + Sentinel)</div>
         <div class="card-tags"><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">observability</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/(gp)/projects/[id]</span><span class="tag tag-neutral">/projects/sitemap.xml</span><span class="tag tag-neutral">notFound()</span><span class="tag tag-neutral">worker-src &#39;self&#39; blob:</span><span class="tag tag-neutral">security_findings_app_id_lint_code_key</span><span class="tag tag-neutral">Could not find the table login_fingerprints</span><span class="tag tag-neutral">/advisors/{type}</span></div>
