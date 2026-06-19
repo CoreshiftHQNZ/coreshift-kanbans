@@ -31,7 +31,7 @@
 
 ## 🔵 This Week
 
-- **Deploy customer + staff apps + consolidate Railway** `phase-r2` `infra` — Stand up app.heygem.co.nz (customer) + team.heygem.co.nz (staff), add the Supabase Auth redirect allowlist (real magic links), and collapse the duplicate marketing services into one service / two envs. Also confirms the Stripe Payment Element renders over HTTPS.
+- **Deploy customer + staff apps** `phase-r2` `infra` `needs-ricky` — Railway `customer` (app.heygem.co.nz) + `staff` (team.heygem.co.nz) services created with all env vars + APP config; custom domains attached. 3 dashboard steps left (CLI can't): (1) connect repo CoreshiftHQNZ/heygem to both services, (2) add Cloudflare DNS (app/team CNAMEs + railway-verify TXTs), (3) Supabase Auth redirect allowlist for app.heygem.co.nz. Then both go live (+ confirms Payment Element over HTTPS). Consolidating the duplicate marketing services is a separate later cleanup.
 - **Capacitor wrap** `phase-r5` — Add Capacitor to the customer app; first iOS/Android builds.
 - **Google Play account** `phase-r5` `needs-ricky` — US$25 + verification under CORESHIFT LIMITED.
 - **Postmark token** `needs-ricky` — Add `POSTMARK_SERVER_TOKEN` + verified sender to turn on lead + receipt emails.

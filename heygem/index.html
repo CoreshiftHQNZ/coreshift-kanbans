@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>42%</strong> complete</div>
         <div><strong>11</strong>/26 cards done</div>
-        <div>Updated <strong>2026-06-19 01:18 UTC</strong></div>
+        <div>Updated <strong>2026-06-19 01:35 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1069,9 +1069,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Deploy customer + staff apps + consolidate Railway</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Stand up app.heygem.co.nz (customer) + team.heygem.co.nz (staff), add the Supabase Auth redirect allowlist (real magic links), and collapse the duplicate marketing services into one service / two envs. Also confirms the Stripe Payment Element renders over HTTPS</div>
+        <div class="card-title">Deploy customer + staff apps</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">customer</span><span class="tag tag-neutral">staff</span></div>
+        <div class="card-desc">Railway `customer` (app.heygem.co.nz) + `staff` (team.heygem.co.nz) services created with all env vars + APP config; custom domains attached. 3 dashboard steps left (CLI can&#39;t): (1) connect repo CoreshiftHQNZ/heygem to both services, (2) add Cloudflare DNS (app/team CNAMEs + railway-verify TXTs), (3) Supabase Auth redirect allowlist for app.heygem.co.nz. Then both go live (+ confirms Payment Element over HTTPS). Consolidating the duplicate marketing services is a separate later cleanup</div>
       </div>
       <div class="card">
         <div class="card-title">Capacitor wrap</div>
