@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>63%</strong> complete</div>
-        <div><strong>44</strong>/70 cards done</div>
-        <div>Updated <strong>2026-06-19 08:19 UTC</strong></div>
+        <div><strong>65%</strong> complete</div>
+        <div><strong>45</strong>/69 cards done</div>
+        <div>Updated <strong>2026-06-19 08:43 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">44</div>
+        <div class="status-num">45</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -821,7 +821,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">8</div>
+        <div class="status-num">6</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -927,8 +927,8 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
-            <div class="recent-title">Velocity RLS exposure closed</div>
-            <div class="recent-desc">Surfaced by a Supabase advisor email Mal forwarded (2026-06-13). Live advisor check found **all 35 public tables on Velocity (`uodsmyystkaxoogitvsw`) had RLS disabled** — the anon key (shipped in Velocity&#39;s browser bundle) could read/write everything via PostgREST (`deals`, `users`, `transcripts`, `commission_records`, `tenants`…). **Fix:** enabled RLS on all 35 with no policies — safe because the browser uses Supabase for auth only (no `supabase.from` data queries) and all data is server-side via Drizzle over the pooler `DATABASE_URL` (owner role, bypasses RLS). Applied to live prod via `execute_sql`; recorded in repo as `script/enable-rls.sql` ([velocity#8](https://github.com/CoreshiftHQNZ/velocity/pull/8)) since drizzle-kit `push` doesn&#39;t manage RLS. **Verified:** 35/35 RLS on; advisor ERRORs cleared (now benign INFO `rls_enabled_no_policy`); anon-key probe returns 0 rows. Also enabled **HIBP leaked-password protection** via Management API (cleared the remaining WARN). Velocity advisor now 0 ERROR / 0 WARN. **Reusable pattern:** auth-only-client + server-owner-connection apps → enable-RLS-no-policy is the safe one-shot fix</div>
+            <div class="recent-title">Brief 14 + Brief 18 — activation confirmed live</div>
+            <div class="recent-desc">Verified 2026-06-19 by querying Sentinel prod directly (not assumed from the kanban). **Brief 14:** `SUPABASE_ACCESS_TOKEN` (`sentinel-advisor-prod`) is set + working — all 4 owned apps scanned `ok` daily (last run 2026-06-18 ~14:00 UTC: velocity, sentinel, keycontent, digital-architect), so the fleet advisor scan **and** the new promotion-readiness parity gate run on real data. **Brief 18:** `SENTRY_HEARTBEAT_TOKEN` + the optional `SENTRY_AUTH_TOKEN`/`SENTRY_ORG` are all set — KC, Sentinel, and DA pings land with `verified_status = found` (full Sentry-side verification, not just &quot;unverified&quot;). The two &quot;This Week&quot; activation cards were stale and have been retired. **Gap noted:** Velocity has zero heartbeat pings — no `/api/sentry-heartbeat` endpoint yet / not in the rotation; expected while it&#39;s rebuilt, fold in at Velocity onboarding</div>
           </div>
         </div>
       </div>
@@ -943,7 +943,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">44</span>
+        <span class="col-count">45</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -970,6 +970,11 @@
         <div class="card-title">Promotion-readiness guardrail in the Monday digest</div>
         <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">guardrail</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-neutral">release-process</span><span class="tag tag-neutral">compare main...staging</span><span class="tag tag-neutral">compareBranches()</span><span class="tag tag-neutral">server/lib/github.ts</span><span class="tag tag-neutral">checkAllMigrationParity</span><span class="tag tag-neutral">security_findings</span></div>
         <div class="card-desc">The structural #3 fix from the DA-parity card: detection so prod can&#39;t silently drift behind staging (DA had hit **124 commits behind** before the 2026-06-18 promotion). Extends the Monday digest with a per-app **Promotion readiness** section — for each maintained app, the **staging→main commit gap** (GitHub `compare main...staging`) plus a **release gate**: *ready to promote* only if there are commits to ship AND no active security ERROR findings AND (where checkable) migrations are in staging↔prod parity; otherwise **blocked** with the reason. New `compareBranches()` in `server/lib/github.ts` returns null on any failure (no token / missing staging branch / network) so an app it can&#39;t compare just drops out rather than failing the digest; the gate reuses `checkAllMigrationParity` + per-app `security_findings` ERROR counts. Sentinel PRs [#165](https://github.com/CoreshiftHQNZ/sentinel-app/pull/165) (main) + [#166](https://github.com/CoreshiftHQNZ/sentinel-app/pull/166) (main→staging); 18 digest tests pass (16 + 2 new); server-only. **Validated on the spot:** the staging promotion revealed that Phase 2 ([#163](https://github.com/CoreshiftHQNZ/sentinel-app/pull/163)) had itself never reached staging — exactly the drift the guardrail surfaces. **Cadence (operator-agreed):** promote-when-ready + weekly backstop; never let staging exceed ~1 week / ~20 commits ahead; security fixes fast-track. The digest is now the standing nudge; the deeper source-fix (frictionless db-push) remains a someday-item</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 14 + Brief 18 — activation confirmed live</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">observability</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">SUPABASE_ACCESS_TOKEN</span><span class="tag tag-neutral">sentinel-advisor-prod</span><span class="tag tag-neutral">ok</span><span class="tag tag-neutral">SENTRY_HEARTBEAT_TOKEN</span><span class="tag tag-neutral">SENTRY_AUTH_TOKEN</span><span class="tag tag-neutral">SENTRY_ORG</span><span class="tag tag-neutral">verified_status = found</span><span class="tag tag-neutral">/api/sentry-heartbeat</span></div>
+        <div class="card-desc">Verified 2026-06-19 by querying Sentinel prod directly (not assumed from the kanban). **Brief 14:** `SUPABASE_ACCESS_TOKEN` (`sentinel-advisor-prod`) is set + working — all 4 owned apps scanned `ok` daily (last run 2026-06-18 ~14:00 UTC: velocity, sentinel, keycontent, digital-architect), so the fleet advisor scan **and** the new promotion-readiness parity gate run on real data. **Brief 18:** `SENTRY_HEARTBEAT_TOKEN` + the optional `SENTRY_AUTH_TOKEN`/`SENTRY_ORG` are all set — KC, Sentinel, and DA pings land with `verified_status = found` (full Sentry-side verification, not just &quot;unverified&quot;). The two &quot;This Week&quot; activation cards were stale and have been retired. **Gap noted:** Velocity has zero heartbeat pings — no `/api/sentry-heartbeat` endpoint yet / not in the rotation; expected while it&#39;s rebuilt, fold in at Velocity onboarding</div>
       </div>
       <div class="card">
         <div class="card-title">Velocity RLS exposure closed</div>
@@ -1199,7 +1204,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">8</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1216,16 +1221,6 @@
         <div class="card-title">Phase B+ #1a: run the backup-restore tabletop</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B+</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-neutral">Sentinel/playbook/HOW-WE-DO-BACKUP-RESTORE.md</span></div>
         <div class="card-desc">**Tier 1 workstream #3 (part 2 of 3).** `Sentinel/playbook/HOW-WE-DO-BACKUP-RESTORE.md` is ready. Operator + Claude run the 60-min tabletop together (no destructive ops). Output: friction points captured + plan for the supervised staging drill</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Brief 18 activation — operator adds env vars</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">SENTRY_HEARTBEAT_TOKEN</span><span class="tag tag-neutral">SENTRY_AUTH_TOKEN</span><span class="tag tag-neutral">SENTRY_ORG</span></div>
-        <div class="card-desc">Set `SENTRY_HEARTBEAT_TOKEN` (any opaque string, same in both apps) in Railway prod + staging for KC and Sentinel. Optional: `SENTRY_AUTH_TOKEN` + `SENTRY_ORG` in Sentinel only to enable Sentry-API verification of pings. ~5 min total</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Brief 14 activation — operator adds Supabase access token</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">SUPABASE_ACCESS_TOKEN</span><span class="tag tag-neutral">runDailyScan()</span><span class="tag tag-neutral">supabase_project_ref</span></div>
-        <div class="card-desc">Set `SUPABASE_ACCESS_TOKEN` (personal access token from supabase.com/dashboard/account/tokens) in Sentinel Railway prod + staging. Then trigger the daily 5am NZ cron OR call `runDailyScan()` from a one-shot script. KC&#39;s `supabase_project_ref` already pre-populated. ~2 min</div>
       </div>
       <div class="card">
         <div class="card-title">B3 retention sweeps — first dry-run on staging</div>
