@@ -8,6 +8,7 @@
 
 ## ✅ Done
 
+- **R4: Stripe pay-per-job (test mode) verified** `phase-r4` `shipped` — Card on file at first approval (SetupIntent + Stripe Elements), off-session charge when the Gem marks complete, idempotent. Stripe secret in Supabase Vault (service-role RPC, no plaintext env); 3 edge functions + a charge-on-complete trigger. **Verified with a real Stripe test charge**: complete → PaymentIntent succeeded → job “charged” → customer UI “Paid” live ($95 + GST = $109.25). Live keys still gated on company registration; Payment Element to eyeball on the HTTPS deploy (preview iframe shows it blank).
 - **R3: Gem web workspace verified** `phase-r3` `shipped` — apps/staff: password sign-in + is_gem gate, master-detail workspace (New/Active/Done queues across all businesses), per-job Gem thread, quote composer (ex-GST + live GST preview), status actions. Gem RPCs: claim_job, send_quote, set_in_progress, complete_job. Drove the whole loop through the real UI — open request → send quote → (customer approves, live) → Start → Mark complete. Email also switched Resend → Postmark.
 - **R2: schema v2 (jobs/chat) verified** `phase-r2` `shipped` — businesses → profiles, pooled gems, jobs (status machine), per-job message threads, quotes, ratings, push devices. RLS throughout (cross-business isolation proven in a rolled-back impersonation test); customer transitions via SECURITY DEFINER RPCs (setup_account, create_job, approve/decline_quote, cancel_job); Realtime on jobs/messages/quotes.
 - **R2: customer chat app verified** `phase-r2` `shipped` — apps/customer: magic-link sign-in, onboarding, job list (active/archived), live per-job thread with the quote card (GST breakdown) + approve/decline. Drove the whole loop through the real UI with a seeded session — request → live Gem quote via Realtime → approve → "On it". Not deployed yet (app.heygem.co.nz comes with the Railway consolidation).
@@ -21,18 +22,19 @@
 
 ## 🟡 In Progress
 
-- **Phase R4: Stripe pay-per-job** `phase-r4` `needs-ricky` — Card on file at first quote-approval (SetupIntent), off-session charge when the Gem marks complete, GST receipt (Postmark). Build + test in Stripe TEST mode now. NEEDS: a Stripe account + test keys — Ricky sets `STRIPE_SECRET_KEY` (sk_test) as a Supabase edge-function secret and shares the test publishable key (pk_test) for the client.
+- **Phase R5: native apps + push + ratings** `phase-r5` — Wrap the customer app with Capacitor (iOS/Android), FCM/APNs push (new quote / job done / rate it), and the rating flow (stars + feedback + photo) that fires after a charge. Apple acct ready; Google Play acct still to set up.
 
 ## 🚫 Blocked
 
-- **Live Stripe + real payments** `phase-r4` `blocked` — Gated on company registration + bank + GST (~week of 8 Jun 2026). Build in test mode meanwhile.
+- **Stripe LIVE keys** `phase-r4` `blocked` — Test mode is built + verified. Going live (real charges) is gated on company registration + bank + GST; then swap the Vault secret + client publishable to live keys. Also add a Stripe webhook for hardening + a Postmark GST receipt email.
 - **Google Play org account** `phase-r5` `needs-ricky` — Apple is DONE (CORESHIFT LIMITED + D-U-N-S). Remaining: Google Play Console org account (US$25 + identity verification, wants the same D-U-N-S). Only gates Android store submission, not the build.
 
 ## 🔵 This Week
 
-- **R4: Stripe test keys** `phase-r4` `needs-ricky` — Create/locate the Stripe account, grab TEST keys; set the secret as a Supabase edge-function secret, share the publishable. Unblocks the whole R4 build.
-- **Deploy customer + staff apps + consolidate Railway** `phase-r2` `infra` — Stand up app.heygem.co.nz for the customer app and collapse the duplicate marketing services into one service / two envs at the same time.
+- **Deploy customer + staff apps + consolidate Railway** `phase-r2` `infra` — Stand up app.heygem.co.nz (customer) + team.heygem.co.nz (staff), add the Supabase Auth redirect allowlist (real magic links), and collapse the duplicate marketing services into one service / two envs. Also confirms the Stripe Payment Element renders over HTTPS.
+- **Capacitor wrap** `phase-r5` — Add Capacitor to the customer app; first iOS/Android builds.
 - **Google Play account** `phase-r5` `needs-ricky` — US$25 + verification under CORESHIFT LIMITED.
+- **Postmark token** `needs-ricky` — Add `POSTMARK_SERVER_TOKEN` + verified sender to turn on lead + receipt emails.
 
 ## ⚪ Backlog
 
