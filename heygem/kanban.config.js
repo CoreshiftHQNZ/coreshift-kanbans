@@ -13,10 +13,10 @@ module.exports = {
     "followed by a push notification for a star rating, feedback and a photo. One React codebase ships the customer " +
     "experience as a web app AND native iOS/Android apps via Capacitor; Gems work from a web workspace.",
 
-  phase: "Phase R3 · Gem workspace",
+  phase: "Phase R4 · Stripe pay-per-job",
   nextMilestone: {
-    name: "Gem workspace (claim → quote → complete)",
-    date: "Phase R3",
+    name: "Card on file → charge on completion (test mode)",
+    date: "Phase R4 · needs Stripe test keys",
   },
 
   // ── Goals ─────────────────────────────────────────────────────
@@ -106,7 +106,7 @@ module.exports = {
     },
     {
       key: "phase-r3",
-      status: "in-progress",
+      status: "done",
       title: "Phase R3",
       subtitle: "Gem workspace",
       window: "Web only",
@@ -119,7 +119,7 @@ module.exports = {
     },
     {
       key: "phase-r4",
-      status: "planned",
+      status: "in-progress",
       title: "Phase R4",
       subtitle: "Payments (Stripe test)",
       window: "Live keys gated on company registration",

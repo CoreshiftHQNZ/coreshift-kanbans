@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>39%</strong> complete</div>
-        <div><strong>9</strong>/23 cards done</div>
-        <div>Updated <strong>2026-06-12 02:56 UTC</strong></div>
+        <div><strong>42%</strong> complete</div>
+        <div><strong>10</strong>/24 cards done</div>
+        <div>Updated <strong>2026-06-19 00:54 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">Phase R3 · Gem workspace</span>
+          <span class="phase-pill-value">Phase R4 · Stripe pay-per-job</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Gem workspace (claim → quote → complete) <span class="phase-pill-date">Phase R3</span></span>
+          <span class="phase-pill-value">Card on file → charge on completion (test mode) <span class="phase-pill-date">Phase R4 · needs Stripe test keys</span></span>
         </div>
       </div>
     </section>
@@ -791,10 +791,10 @@
             <li>Schema v2 migrations + RLS</li><li>Job status machine (requested→quoted→approved→in_progress→completed→charged→closed)</li><li>Customer app: chat thread per job, auto-archive</li>
           </ul>
         </div>
-        <div class="phase-card phase-in-progress">
+        <div class="phase-card phase-done">
           <div class="phase-card-head">
             <div class="phase-marker">R3</div>
-            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
           </div>
           <div class="phase-title">Phase R3 <span class="phase-subtitle">Gem workspace</span></div>
           <div class="phase-window">Web only</div>
@@ -803,10 +803,10 @@
             <li>Request queue + claim</li><li>Quote composer (all-in price)</li><li>Complete → triggers charge</li>
           </ul>
         </div>
-        <div class="phase-card phase-planned">
+        <div class="phase-card phase-in-progress">
           <div class="phase-card-head">
             <div class="phase-marker">R4</div>
-            <div class="phase-status-pill phase-status-planned">Planned</div>
+            <div class="phase-status-pill phase-status-in-progress">In progress</div>
           </div>
           <div class="phase-title">Phase R4 <span class="phase-subtitle">Payments (Stripe test)</span></div>
           <div class="phase-window">Live keys gated on company registration</div>
@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">9</div>
+        <div class="status-num">10</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -923,6 +923,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">R3: Gem web workspace verified</div>
+            <div class="recent-desc">apps/staff: password sign-in + is_gem gate, master-detail workspace (New/Active/Done queues across all businesses), per-job Gem thread, quote composer (ex-GST + live GST preview), status actions. Gem RPCs: claim_job, send_quote, set_in_progress, complete_job. Drove the whole loop through the real UI — open request → send quote → (customer approves, live) → Start → Mark complete. Email also switched Resend → Postmark</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">R2: schema v2 (jobs/chat) verified</div>
             <div class="recent-desc">businesses → profiles, pooled gems, jobs (status machine), per-job message threads, quotes, ratings, push devices. RLS throughout (cross-business isolation proven in a rolled-back impersonation test); customer transitions via SECURITY DEFINER RPCs (setup_account, create_job, approve/decline_quote, cancel_job); Realtime on jobs/messages/quotes</div>
           </div>
@@ -955,13 +962,6 @@
             <div class="recent-desc">HeyGem is now a chat-first concierge/errands service for NZ small businesses (&quot;organise team morning tea for Friday&quot;). Thread-per-job chat with auto status/archiving; all-in quote in chat → approve → card charged on completion → push for star rating + feedback + photo. Purely pay-per-job (weekly plans + $1/min dead). Customers get web + native iOS/Android from one React codebase via Capacitor; Gems stay on a web workspace</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Foundations (pre-pivot, all survive)</div>
-            <div class="recent-desc">Monorepo + @heygem/ui design system (amethyst brand, real logo/favicon/hero art), GitHub `CoreshiftHQNZ/heygem` (dev→staging→main), Supabase project (ap-southeast-2), Railway deploys</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -974,9 +974,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">9</span>
+        <span class="col-count">10</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">R3: Gem web workspace verified</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r3</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">apps/staff: password sign-in + is_gem gate, master-detail workspace (New/Active/Done queues across all businesses), per-job Gem thread, quote composer (ex-GST + live GST preview), status actions. Gem RPCs: claim_job, send_quote, set_in_progress, complete_job. Drove the whole loop through the real UI — open request → send quote → (customer approves, live) → Start → Mark complete. Email also switched Resend → Postmark</div>
+      </div>
       <div class="card">
         <div class="card-title">R2: schema v2 (jobs/chat) verified</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-r2</span><span class="tag tag-shipped">shipped</span></div>
@@ -1030,9 +1035,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Phase R3: Gem web workspace</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r3</span></div>
-        <div class="card-desc">The other side of the chat: pooled queue of incoming requests, claim a job (all present as &quot;Gem&quot;), reply, send a quote (the composer that creates what R2 verified by hand), move status, mark complete. Lead inbox from the splash lands here too</div>
+        <div class="card-title">Phase R4: Stripe pay-per-job</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r4</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">STRIPE_SECRET_KEY</span></div>
+        <div class="card-desc">Card on file at first quote-approval (SetupIntent), off-session charge when the Gem marks complete, GST receipt (Postmark). Build + test in Stripe TEST mode now. NEEDS: a Stripe account + test keys — Ricky sets `STRIPE_SECRET_KEY` (sk_test) as a Supabase edge-function secret and shares the test publishable key (pk_test) for the client</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1059,12 +1064,12 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Gem workspace: queue + quote composer</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r3</span></div>
-        <div class="card-desc">Web app for staff: request queue, claim, chat, quote composer, status transitions, complete</div>
+        <div class="card-title">R4: Stripe test keys</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r4</span><span class="tag tag-neutral">needs-ricky</span></div>
+        <div class="card-desc">Create/locate the Stripe account, grab TEST keys; set the secret as a Supabase edge-function secret, share the publishable. Unblocks the whole R4 build</div>
       </div>
       <div class="card">
-        <div class="card-title">Deploy customer app + consolidate Railway</div>
+        <div class="card-title">Deploy customer + staff apps + consolidate Railway</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-r2</span><span class="tag tag-infra">infra</span></div>
         <div class="card-desc">Stand up app.heygem.co.nz for the customer app and collapse the duplicate marketing services into one service / two envs at the same time</div>
       </div>

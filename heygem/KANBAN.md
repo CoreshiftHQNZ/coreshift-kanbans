@@ -8,6 +8,7 @@
 
 ## ✅ Done
 
+- **R3: Gem web workspace verified** `phase-r3` `shipped` — apps/staff: password sign-in + is_gem gate, master-detail workspace (New/Active/Done queues across all businesses), per-job Gem thread, quote composer (ex-GST + live GST preview), status actions. Gem RPCs: claim_job, send_quote, set_in_progress, complete_job. Drove the whole loop through the real UI — open request → send quote → (customer approves, live) → Start → Mark complete. Email also switched Resend → Postmark.
 - **R2: schema v2 (jobs/chat) verified** `phase-r2` `shipped` — businesses → profiles, pooled gems, jobs (status machine), per-job message threads, quotes, ratings, push devices. RLS throughout (cross-business isolation proven in a rolled-back impersonation test); customer transitions via SECURITY DEFINER RPCs (setup_account, create_job, approve/decline_quote, cancel_job); Realtime on jobs/messages/quotes.
 - **R2: customer chat app verified** `phase-r2` `shipped` — apps/customer: magic-link sign-in, onboarding, job list (active/archived), live per-job thread with the quote card (GST breakdown) + approve/decline. Drove the whole loop through the real UI with a seeded session — request → live Gem quote via Realtime → approve → "On it". Not deployed yet (app.heygem.co.nz comes with the Railway consolidation).
 - **R1: coming-soon splash LIVE** `phase-r1` `shipped` — heygem.co.nz + staging now serve a "Business Concierge & Errands" coming-soon page. Example requests rendered as chat bubbles (morning tea, Terry's $500 gift, branded water bottles, Christmas party, team building, Sydney conference travel). Early-access form (name + email + "what would you ask your Gem?") → leads table with new `email` column, source `coming_soon`; notify pipeline updated + verified e2e. Old plans-model marketing removed.
@@ -20,7 +21,7 @@
 
 ## 🟡 In Progress
 
-- **Phase R3: Gem web workspace** `phase-r3` — The other side of the chat: pooled queue of incoming requests, claim a job (all present as "Gem"), reply, send a quote (the composer that creates what R2 verified by hand), move status, mark complete. Lead inbox from the splash lands here too.
+- **Phase R4: Stripe pay-per-job** `phase-r4` `needs-ricky` — Card on file at first quote-approval (SetupIntent), off-session charge when the Gem marks complete, GST receipt (Postmark). Build + test in Stripe TEST mode now. NEEDS: a Stripe account + test keys — Ricky sets `STRIPE_SECRET_KEY` (sk_test) as a Supabase edge-function secret and shares the test publishable key (pk_test) for the client.
 
 ## 🚫 Blocked
 
@@ -29,8 +30,8 @@
 
 ## 🔵 This Week
 
-- **Gem workspace: queue + quote composer** `phase-r3` — Web app for staff: request queue, claim, chat, quote composer, status transitions, complete.
-- **Deploy customer app + consolidate Railway** `phase-r2` `infra` — Stand up app.heygem.co.nz for the customer app and collapse the duplicate marketing services into one service / two envs at the same time.
+- **R4: Stripe test keys** `phase-r4` `needs-ricky` — Create/locate the Stripe account, grab TEST keys; set the secret as a Supabase edge-function secret, share the publishable. Unblocks the whole R4 build.
+- **Deploy customer + staff apps + consolidate Railway** `phase-r2` `infra` — Stand up app.heygem.co.nz for the customer app and collapse the duplicate marketing services into one service / two envs at the same time.
 - **Google Play account** `phase-r5` `needs-ricky` — US$25 + verification under CORESHIFT LIMITED.
 
 ## ⚪ Backlog
