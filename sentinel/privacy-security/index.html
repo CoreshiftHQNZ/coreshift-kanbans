@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>65%</strong> complete</div>
-        <div><strong>45</strong>/69 cards done</div>
-        <div>Updated <strong>2026-06-19 08:43 UTC</strong></div>
+        <div><strong>67%</strong> complete</div>
+        <div><strong>46</strong>/69 cards done</div>
+        <div>Updated <strong>2026-06-19 11:24 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">45</div>
+        <div class="status-num">46</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -825,7 +825,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">15</div>
+        <div class="status-num">14</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -907,7 +907,14 @@
           <div class="recent-check">✓</div>
           <div class="recent-text">
             <div class="recent-title">Phase B5b: T3 tenancy sweep — COMPLETE</div>
-            <div class="recent-desc">**Tier 1 workstream #1 done (2026-06-16). Threat model T3 (cross-agency data leak) closed at the KC route layer.** Swept every KC route file (KC PRs #198 → #215, dev→staging→main). **3 REAL LIVE vulns found + fixed:** `jobs.ts` (a non-admin with no agency saw/modified ALL agencies&#39; jobs — `canScopeByAgency` treated `null` as unscoped), `calendar.ts` (a non-admin with no agency could read any agency&#39;s calendar via `?agencyId`), and **`billing.ts` (highest impact — any authenticated user could open another agency&#39;s Stripe Customer Portal / cancel its subscription / attach a Stripe customer, by passing `agencyId` in the body)**. **7 files hardened** (post-load 403 oracle → scope-in-query 404: business-context, topics, clients, products, overlay-templates, social + invites tightened). **9 files audited as already-safe** (agencies, agency-linking, notifications, business, zernio-webhooks, auth, review, support, admin + prompt-rules). **44 new unit tests, suite 102/102**, every batch prod-verified. **Post-sweep exploitation scan: no detectable sign of exploitation** — KC prod has 3 agencies, 0 with a Stripe customer, 0 subscription events; the ~18 no-agency accounts are dormant signups (reads aren&#39;t logged so read-exploit can&#39;t be positively excluded, but practical exposure was minimal). Full detail in `Sentinel/playbook/audits/2026-06-07-b5b-migration-plan.md`. **Follow-up spun out:** `files.ts` object-level storage IDOR (signed-url / `/objects/*` serve any path to any authed user) — separate threat class, see Backlog</div>
+            <div class="recent-desc">**Tier 1 workstream #1 done (2026-06-16). Threat model T3 (cross-agency data leak) closed at the KC route layer.** Swept every KC route file (KC PRs #198 → #215, dev→staging→main). **3 REAL LIVE vulns found + fixed:** `jobs.ts` (a non-admin with no agency saw/modified ALL agencies&#39; jobs — `canScopeByAgency` treated `null` as unscoped), `calendar.ts` (a non-admin with no agency could read any agency&#39;s calendar via `?agencyId`), and **`billing.ts` (highest impact — any authenticated user could open another agency&#39;s Stripe Customer Portal / cancel its subscription / attach a Stripe customer, by passing `agencyId` in the body)**. **7 files hardened** (post-load 403 oracle → scope-in-query 404: business-context, topics, clients, products, overlay-templates, social + invites tightened). **9 files audited as already-safe** (agencies, agency-linking, notifications, business, zernio-webhooks, auth, review, support, admin + prompt-rules). **44 new unit tests, suite 102/102**, every batch prod-verified. **Post-sweep exploitation scan: no detectable sign of exploitation** — KC prod has 3 agencies, 0 with a Stripe customer, 0 subscription events; the ~18 no-agency accounts are dormant signups (reads aren&#39;t logged so read-exploit can&#39;t be positively excluded, but practical exposure was minimal). Full detail in `Sentinel/playbook/audits/2026-06-07-b5b-migration-plan.md`. **Follow-up CLOSED (2026-06-19):** `files.ts` object-level storage IDOR — removed (see Done card below)</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Object-level storage IDOR on `files.ts` — CLOSED</div>
+            <div class="recent-desc">The B5b audit-C1 follow-up. `server/routes/files.ts` exposed four endpoints taking a caller-supplied storage path with auth but **no per-object authorization**: `GET /api/files/signed-url?path=` + `GET /objects/*` (read **any** tenant&#39;s file), `DELETE /api/files` (**delete** any tenant&#39;s file — destructive), `POST /api/files/upload`. Investigation found **zero callers**: the bug widget uploads screenshots straight to Supabase Storage, and every real asset flow (jobs/clients/products/overlay/social/business-context) calls the storage helpers *inside already-agency-scoped routes* (path comes from an agency-owned DB row, never raw input); legacy `/objects/` paths are re-signed server-side or no longer exist. So these were dead, unauthorized attack surface — **removed entirely** rather than authorized (strictly safer than building an authorizer for uncalled endpoints). Also hardened `docs/standards/storage.md` — the template that propagated the IDOR shape to new apps (Sentinel-everywhere) — to teach the agency-scoped pattern + a &quot;never sign/stream/delete a caller-supplied path&quot; rule. KC PRs [#217](https://github.com/CoreshiftHQNZ/keycontent-app/pull/217) → [#218](https://github.com/CoreshiftHQNZ/keycontent-app/pull/218) → [#219](https://github.com/CoreshiftHQNZ/keycontent-app/pull/219) dev→staging→main; suite 102/102; dev=staging=main verified. **Chip spun out:** KC `dev` had ~12 pre-existing tsc errors (unrelated files — job-status enum drift, VeoAspectRatio) — `npm run check` red on dev</div>
           </div>
         </div>
         <div class="recent-item">
@@ -924,13 +931,6 @@
             <div class="recent-desc">The structural #3 fix from the DA-parity card: detection so prod can&#39;t silently drift behind staging (DA had hit **124 commits behind** before the 2026-06-18 promotion). Extends the Monday digest with a per-app **Promotion readiness** section — for each maintained app, the **staging→main commit gap** (GitHub `compare main...staging`) plus a **release gate**: *ready to promote* only if there are commits to ship AND no active security ERROR findings AND (where checkable) migrations are in staging↔prod parity; otherwise **blocked** with the reason. New `compareBranches()` in `server/lib/github.ts` returns null on any failure (no token / missing staging branch / network) so an app it can&#39;t compare just drops out rather than failing the digest; the gate reuses `checkAllMigrationParity` + per-app `security_findings` ERROR counts. Sentinel PRs [#165](https://github.com/CoreshiftHQNZ/sentinel-app/pull/165) (main) + [#166](https://github.com/CoreshiftHQNZ/sentinel-app/pull/166) (main→staging); 18 digest tests pass (16 + 2 new); server-only. **Validated on the spot:** the staging promotion revealed that Phase 2 ([#163](https://github.com/CoreshiftHQNZ/sentinel-app/pull/163)) had itself never reached staging — exactly the drift the guardrail surfaces. **Cadence (operator-agreed):** promote-when-ready + weekly backstop; never let staging exceed ~1 week / ~20 commits ahead; security fixes fast-track. The digest is now the standing nudge; the deeper source-fix (frictionless db-push) remains a someday-item</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Brief 14 + Brief 18 — activation confirmed live</div>
-            <div class="recent-desc">Verified 2026-06-19 by querying Sentinel prod directly (not assumed from the kanban). **Brief 14:** `SUPABASE_ACCESS_TOKEN` (`sentinel-advisor-prod`) is set + working — all 4 owned apps scanned `ok` daily (last run 2026-06-18 ~14:00 UTC: velocity, sentinel, keycontent, digital-architect), so the fleet advisor scan **and** the new promotion-readiness parity gate run on real data. **Brief 18:** `SENTRY_HEARTBEAT_TOKEN` + the optional `SENTRY_AUTH_TOKEN`/`SENTRY_ORG` are all set — KC, Sentinel, and DA pings land with `verified_status = found` (full Sentry-side verification, not just &quot;unverified&quot;). The two &quot;This Week&quot; activation cards were stale and have been retired. **Gap noted:** Velocity has zero heartbeat pings — no `/api/sentry-heartbeat` endpoint yet / not in the rotation; expected while it&#39;s rebuilt, fold in at Velocity onboarding</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -943,7 +943,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">45</span>
+        <span class="col-count">46</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -958,8 +958,13 @@
       </div>
       <div class="card">
         <div class="card-title">Phase B5b: T3 tenancy sweep — COMPLETE</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-B5</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">jobs.ts</span><span class="tag tag-neutral">canScopeByAgency</span><span class="tag tag-neutral">null</span><span class="tag tag-neutral">calendar.ts</span><span class="tag tag-neutral">?agencyId</span><span class="tag tag-neutral">billing.ts</span><span class="tag tag-neutral">agencyId</span><span class="tag tag-neutral">Sentinel/playbook/audits/2026-06-07-b5b-migration-plan.md</span><span class="tag tag-neutral">files.ts</span><span class="tag tag-neutral">/objects/*</span></div>
-        <div class="card-desc">**Tier 1 workstream #1 done (2026-06-16). Threat model T3 (cross-agency data leak) closed at the KC route layer.** Swept every KC route file (KC PRs #198 → #215, dev→staging→main). **3 REAL LIVE vulns found + fixed:** `jobs.ts` (a non-admin with no agency saw/modified ALL agencies&#39; jobs — `canScopeByAgency` treated `null` as unscoped), `calendar.ts` (a non-admin with no agency could read any agency&#39;s calendar via `?agencyId`), and **`billing.ts` (highest impact — any authenticated user could open another agency&#39;s Stripe Customer Portal / cancel its subscription / attach a Stripe customer, by passing `agencyId` in the body)**. **7 files hardened** (post-load 403 oracle → scope-in-query 404: business-context, topics, clients, products, overlay-templates, social + invites tightened). **9 files audited as already-safe** (agencies, agency-linking, notifications, business, zernio-webhooks, auth, review, support, admin + prompt-rules). **44 new unit tests, suite 102/102**, every batch prod-verified. **Post-sweep exploitation scan: no detectable sign of exploitation** — KC prod has 3 agencies, 0 with a Stripe customer, 0 subscription events; the ~18 no-agency accounts are dormant signups (reads aren&#39;t logged so read-exploit can&#39;t be positively excluded, but practical exposure was minimal). Full detail in `Sentinel/playbook/audits/2026-06-07-b5b-migration-plan.md`. **Follow-up spun out:** `files.ts` object-level storage IDOR (signed-url / `/objects/*` serve any path to any authed user) — separate threat class, see Backlog</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-B5</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">jobs.ts</span><span class="tag tag-neutral">canScopeByAgency</span><span class="tag tag-neutral">null</span><span class="tag tag-neutral">calendar.ts</span><span class="tag tag-neutral">?agencyId</span><span class="tag tag-neutral">billing.ts</span><span class="tag tag-neutral">agencyId</span><span class="tag tag-neutral">Sentinel/playbook/audits/2026-06-07-b5b-migration-plan.md</span><span class="tag tag-neutral">files.ts</span></div>
+        <div class="card-desc">**Tier 1 workstream #1 done (2026-06-16). Threat model T3 (cross-agency data leak) closed at the KC route layer.** Swept every KC route file (KC PRs #198 → #215, dev→staging→main). **3 REAL LIVE vulns found + fixed:** `jobs.ts` (a non-admin with no agency saw/modified ALL agencies&#39; jobs — `canScopeByAgency` treated `null` as unscoped), `calendar.ts` (a non-admin with no agency could read any agency&#39;s calendar via `?agencyId`), and **`billing.ts` (highest impact — any authenticated user could open another agency&#39;s Stripe Customer Portal / cancel its subscription / attach a Stripe customer, by passing `agencyId` in the body)**. **7 files hardened** (post-load 403 oracle → scope-in-query 404: business-context, topics, clients, products, overlay-templates, social + invites tightened). **9 files audited as already-safe** (agencies, agency-linking, notifications, business, zernio-webhooks, auth, review, support, admin + prompt-rules). **44 new unit tests, suite 102/102**, every batch prod-verified. **Post-sweep exploitation scan: no detectable sign of exploitation** — KC prod has 3 agencies, 0 with a Stripe customer, 0 subscription events; the ~18 no-agency accounts are dormant signups (reads aren&#39;t logged so read-exploit can&#39;t be positively excluded, but practical exposure was minimal). Full detail in `Sentinel/playbook/audits/2026-06-07-b5b-migration-plan.md`. **Follow-up CLOSED (2026-06-19):** `files.ts` object-level storage IDOR — removed (see Done card below)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Object-level storage IDOR on `files.ts` — CLOSED</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">follow-up:b5b</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">server/routes/files.ts</span><span class="tag tag-neutral">GET /api/files/signed-url?path=</span><span class="tag tag-neutral">GET /objects/*</span><span class="tag tag-neutral">DELETE /api/files</span><span class="tag tag-neutral">POST /api/files/upload</span><span class="tag tag-neutral">/objects/</span><span class="tag tag-neutral">docs/standards/storage.md</span><span class="tag tag-neutral">dev</span><span class="tag tag-neutral">npm run check</span></div>
+        <div class="card-desc">The B5b audit-C1 follow-up. `server/routes/files.ts` exposed four endpoints taking a caller-supplied storage path with auth but **no per-object authorization**: `GET /api/files/signed-url?path=` + `GET /objects/*` (read **any** tenant&#39;s file), `DELETE /api/files` (**delete** any tenant&#39;s file — destructive), `POST /api/files/upload`. Investigation found **zero callers**: the bug widget uploads screenshots straight to Supabase Storage, and every real asset flow (jobs/clients/products/overlay/social/business-context) calls the storage helpers *inside already-agency-scoped routes* (path comes from an agency-owned DB row, never raw input); legacy `/objects/` paths are re-signed server-side or no longer exist. So these were dead, unauthorized attack surface — **removed entirely** rather than authorized (strictly safer than building an authorizer for uncalled endpoints). Also hardened `docs/standards/storage.md` — the template that propagated the IDOR shape to new apps (Sentinel-everywhere) — to teach the agency-scoped pattern + a &quot;never sign/stream/delete a caller-supplied path&quot; rule. KC PRs [#217](https://github.com/CoreshiftHQNZ/keycontent-app/pull/217) → [#218](https://github.com/CoreshiftHQNZ/keycontent-app/pull/218) → [#219](https://github.com/CoreshiftHQNZ/keycontent-app/pull/219) dev→staging→main; suite 102/102; dev=staging=main verified. **Chip spun out:** KC `dev` had ~12 pre-existing tsc errors (unrelated files — job-status enum drift, VeoAspectRatio) — `npm run check` red on dev</div>
       </div>
       <div class="card">
         <div class="card-title">Migration-parity guardrail in the Monday digest</div>
@@ -1241,14 +1246,9 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">15</span>
+        <span class="col-count">14</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Object-level storage authz on `files.ts` (IDOR)</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">follow-up:b5b</span><span class="tag tag-neutral">GET /api/files/signed-url?path=…</span><span class="tag tag-neutral">GET /objects/*</span><span class="tag tag-neutral">jobs/</span><span class="tag tag-neutral">clients/</span><span class="tag tag-neutral">products/&lt;agency&gt;/</span><span class="tag tag-neutral">uploads/&lt;user&gt;/</span><span class="tag tag-neutral">compose-media/&lt;agency&gt;/</span></div>
-        <div class="card-desc">Surfaced during the B5b sweep (2026-06-16). `GET /api/files/signed-url?path=…` and `GET /objects/*` are auth-gated but serve **any** Supabase Storage path to **any** authenticated user — there&#39;s no check that the path belongs to the caller&#39;s agency. Documented as accepted-risk &quot;audit C1&quot; (relies on id-keyed unguessable paths), but it&#39;s a real object-level IDOR, distinct from B5b&#39;s agency query-scope filters. Fix: map each storage path prefix (`jobs/`, `clients/`, `products/&lt;agency&gt;/`, `uploads/&lt;user&gt;/`, `compose-media/&lt;agency&gt;/`…) to its owning agency and authorize before signing/streaming. Moderate effort (path→owner resolution). Not a leak of agency *rows*, but of stored *assets* if a path is known</div>
-      </div>
       <div class="card">
         <div class="card-title">DA: apply the `gp_audit_logs` migration (+ reconcile migration drift)</div>
         <div class="card-tags"><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">follow-up:da-parity</span><span class="tag tag-neutral">drizzle-kit generate</span><span class="tag tag-neutral">assumption_conflicts</span><span class="tag tag-neutral">db:generate</span><span class="tag tag-neutral">pnpm db:generate</span><span class="tag tag-neutral">gp_audit_logs</span><span class="tag tag-neutral">pnpm db:migrate</span></div>
