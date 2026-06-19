@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>42%</strong> complete</div>
-        <div><strong>11</strong>/26 cards done</div>
-        <div>Updated <strong>2026-06-19 01:35 UTC</strong></div>
+        <div><strong>48%</strong> complete</div>
+        <div><strong>12</strong>/25 cards done</div>
+        <div>Updated <strong>2026-06-19 04:12 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">11</div>
+        <div class="status-num">12</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -845,11 +845,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">4</div>
+        <div class="status-num">3</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">8</div>
+        <div class="status-num">7</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -923,6 +923,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Auth + lead emails via Postmark (branded, verified)</div>
+            <div class="recent-desc">Supabase Auth SMTP switched from built-in to Postmark; branded amethyst templates (magic link / confirm / recovery) live + verified rendering. Email rate limit raised 2→100/hr (the 2/hr default was silently throttling sign-ins). Lead-notification emails switched on (notify-lead edge secrets) and verified end-to-end. site_url + redirect allowlist set (customer magic-link login unblocked)</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">R4: Stripe pay-per-job (test mode) verified</div>
             <div class="recent-desc">Card on file at first approval (SetupIntent + Stripe Elements), off-session charge when the Gem marks complete, idempotent. Stripe secret in Supabase Vault (service-role RPC, no plaintext env); 3 edge functions + a charge-on-complete trigger. **Verified with a real Stripe test charge**: complete → PaymentIntent succeeded → job “charged” → customer UI “Paid” live ($95 + GST = $109.25). Live keys still gated on company registration; Payment Element to eyeball on the HTTPS deploy (preview iframe shows it blank)</div>
           </div>
@@ -955,13 +962,6 @@
             <div class="recent-desc">heygem.co.nz + staging now serve a &quot;Business Concierge &amp; Errands&quot; coming-soon page. Example requests rendered as chat bubbles (morning tea, Terry&#39;s $500 gift, branded water bottles, Christmas party, team building, Sydney conference travel). Early-access form (name + email + &quot;what would you ask your Gem?&quot;) → leads table with new `email` column, source `coming_soon`; notify pipeline updated + verified e2e. Old plans-model marketing removed</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Apple Developer account: DONE</div>
-            <div class="recent-desc">Registered under CORESHIFT LIMITED (D-U-N-S on file). Apple-side store submission is no longer gated; Google Play org account still to set up</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -974,9 +974,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">11</span>
+        <span class="col-count">12</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Auth + lead emails via Postmark (branded, verified)</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Supabase Auth SMTP switched from built-in to Postmark; branded amethyst templates (magic link / confirm / recovery) live + verified rendering. Email rate limit raised 2→100/hr (the 2/hr default was silently throttling sign-ins). Lead-notification emails switched on (notify-lead edge secrets) and verified end-to-end. site_url + redirect allowlist set (customer magic-link login unblocked)</div>
+      </div>
       <div class="card">
         <div class="card-title">R4: Stripe pay-per-job (test mode) verified</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-r4</span><span class="tag tag-shipped">shipped</span></div>
@@ -1065,7 +1070,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1082,17 +1087,12 @@
         <div class="card-title">Google Play account</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">needs-ricky</span></div>
         <div class="card-desc">US$25 + verification under CORESHIFT LIMITED</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Postmark token</div>
-        <div class="card-tags"><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">POSTMARK_SERVER_TOKEN</span></div>
-        <div class="card-desc">Add `POSTMARK_SERVER_TOKEN` + verified sender to turn on lead + receipt emails</div>
       </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">8</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1109,11 +1109,6 @@
         <div class="card-title">Capacitor wrap + push + ratings</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-r5</span></div>
         <div class="card-desc">iOS/Android builds from the same React app, FCM/APNs push (quote/done/rate), rating flow with photo upload, store assets + submission</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Activate lead emails</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r1</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">RESEND_API_KEY</span><span class="tag tag-neutral">LEAD_NOTIFY_TO</span></div>
-        <div class="card-desc">Add `RESEND_API_KEY` + `LEAD_NOTIFY_TO` edge-function secrets once a sender domain exists</div>
       </div>
       <div class="card">
         <div class="card-title">Consolidate Railway to one service</div>

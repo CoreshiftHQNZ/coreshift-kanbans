@@ -8,6 +8,7 @@
 
 ## ✅ Done
 
+- **Auth + lead emails via Postmark (branded, verified)** `infra` `shipped` — Supabase Auth SMTP switched from built-in to Postmark; branded amethyst templates (magic link / confirm / recovery) live + verified rendering. Email rate limit raised 2→100/hr (the 2/hr default was silently throttling sign-ins). Lead-notification emails switched on (notify-lead edge secrets) and verified end-to-end. site_url + redirect allowlist set (customer magic-link login unblocked).
 - **R4: Stripe pay-per-job (test mode) verified** `phase-r4` `shipped` — Card on file at first approval (SetupIntent + Stripe Elements), off-session charge when the Gem marks complete, idempotent. Stripe secret in Supabase Vault (service-role RPC, no plaintext env); 3 edge functions + a charge-on-complete trigger. **Verified with a real Stripe test charge**: complete → PaymentIntent succeeded → job “charged” → customer UI “Paid” live ($95 + GST = $109.25). Live keys still gated on company registration; Payment Element to eyeball on the HTTPS deploy (preview iframe shows it blank).
 - **R3: Gem web workspace verified** `phase-r3` `shipped` — apps/staff: password sign-in + is_gem gate, master-detail workspace (New/Active/Done queues across all businesses), per-job Gem thread, quote composer (ex-GST + live GST preview), status actions. Gem RPCs: claim_job, send_quote, set_in_progress, complete_job. Drove the whole loop through the real UI — open request → send quote → (customer approves, live) → Start → Mark complete. Email also switched Resend → Postmark.
 - **R2: schema v2 (jobs/chat) verified** `phase-r2` `shipped` — businesses → profiles, pooled gems, jobs (status machine), per-job message threads, quotes, ratings, push devices. RLS throughout (cross-business isolation proven in a rolled-back impersonation test); customer transitions via SECURITY DEFINER RPCs (setup_account, create_job, approve/decline_quote, cancel_job); Realtime on jobs/messages/quotes.
@@ -34,14 +35,12 @@
 - **Deploy customer + staff apps** `phase-r2` `infra` `needs-ricky` — Railway `customer` (app.heygem.co.nz) + `staff` (team.heygem.co.nz) services created with all env vars + APP config; custom domains attached. 3 dashboard steps left (CLI can't): (1) connect repo CoreshiftHQNZ/heygem to both services, (2) add Cloudflare DNS (app/team CNAMEs + railway-verify TXTs), (3) Supabase Auth redirect allowlist for app.heygem.co.nz. Then both go live (+ confirms Payment Element over HTTPS). Consolidating the duplicate marketing services is a separate later cleanup.
 - **Capacitor wrap** `phase-r5` — Add Capacitor to the customer app; first iOS/Android builds.
 - **Google Play account** `phase-r5` `needs-ricky` — US$25 + verification under CORESHIFT LIMITED.
-- **Postmark token** `needs-ricky` — Add `POSTMARK_SERVER_TOKEN` + verified sender to turn on lead + receipt emails.
 
 ## ⚪ Backlog
 
 - **Gem web workspace** `phase-r3` — Pooled request queue, claim, chat, quote composer, mark complete (fires the charge). Lead inbox moves here from Supabase Studio.
 - **Stripe pay-per-job** `phase-r4` — Card on file at first approval (SetupIntent), off-session charge on completion, GST receipts, decline handling. Test mode until registered.
 - **Capacitor wrap + push + ratings** `phase-r5` — iOS/Android builds from the same React app, FCM/APNs push (quote/done/rate), rating flow with photo upload, store assets + submission.
-- **Activate lead emails** `phase-r1` `needs-ricky` — Add `RESEND_API_KEY` + `LEAD_NOTIFY_TO` edge-function secrets once a sender domain exists.
 - **Consolidate Railway to one service** `infra` `tech-debt` — Two services exist (`marketing` → heygem.co.nz prod; `heygem` → staging.heygem.co.nz staging). Collapse to one service with two environments.
 - **SEO + analytics** `phase-r1` — Meta/OG, sitemap, analytics on the repositioned site.
 - **Real testimonials & stats** `content` — Replace placeholders with concierge-flavoured proof once first customers land.
