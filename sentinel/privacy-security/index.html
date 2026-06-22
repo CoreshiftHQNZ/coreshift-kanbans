@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>67%</strong> complete</div>
-        <div><strong>47</strong>/70 cards done</div>
-        <div>Updated <strong>2026-06-19 11:38 UTC</strong></div>
+        <div><strong>68%</strong> complete</div>
+        <div><strong>48</strong>/71 cards done</div>
+        <div>Updated <strong>2026-06-22 19:40 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">47</div>
+        <div class="status-num">48</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -892,6 +892,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Privacy program: PIA framework + go-live gate + first PIAs</div>
+            <div class="recent-desc">The Privacy Officer (**Keitha**) delivered CoreShift&#39;s **Privacy Policy** (Privacy Act 2020 + 13 IPPs + the new IPP3A indirect-collection rules + a PIA section; names Keitha as Privacy Officer) and a per-app **PIA template** (2026-06-22). Wired the privacy gate into the ops playbook: new **PLAY 10 — HOW-WE-DO-PRIVACY** (&quot;security locks the data down; privacy decides whether we should hold it at all — don&#39;t let a green dashboard stand in for the judgment call&quot;), plus a **current-signed-off-PIA go-live gate** in PLAY 9 (onboarding — Sentinel [#170](https://github.com/CoreshiftHQNZ/sentinel-app/pull/170)/[#171](https://github.com/CoreshiftHQNZ/sentinel-app/pull/171)) and a PIA tickbox in PLAY 6 (App Audits, v2.3). Privacy is now the second half of the go-live gate, parallel to the App Audit. Drafted the **KeyContent + DigitalArchitect PIAs** against the template (`Sentinel/playbook/PIA-{keycontent,digital-architect}.md`) for the Privacy Officer&#39;s sign-off — filled from the data-inventory / sub-processor / retention / threat-model docs (so PIAs are assembly, not from-scratch). **Security items surfaced + closed:** KC `files.ts` object-IDOR — **already fixed** (operator commit `ab55468`, 2026-06-19, generic endpoints removed); DA **staging** RLS-off on `api_usage` + `assumption_conflicts` — **fixed** (RLS enabled). Reply to Keitha drafted (in operator&#39;s Gmail drafts). **Open (Privacy Officer / operator):** publish the KC + DA privacy notices; close the 5 sub-processor verifications (incl. AI no-train opt-out); define a DA retention policy; apply the `gp_audit_logs` migration; settle the GP/CoreShift controller-processor split for DA; sign off both PIAs</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Sentinel app-first restructure (Phases 0-2)</div>
             <div class="recent-desc">Reorganized Sentinel from function-first (7 global pages) to **app-first**, so every app gets its own page (operator framing: &quot;multi-tenant like KC&#39;s companies&quot; — though there&#39;s no isolation boundary here; it&#39;s an information-architecture change, not tenancy-security). **Phase 0 — registry:** `maintained_apps` is now the single source of truth — added `public_url`, `heartbeat_url`/`heartbeat_path`, `sentry_project`, and feature flags (`has_audit_logs`, `has_retention`, `liveness_external`, `monitoring_enabled`); migration `20260618010000` via execute_sql + stamped. Onboarded **Velocity** and **Sentinel itself** — both were **never advisor-scanned** (absent from the registry), now they are (closes the &quot;not onboarded = unscanned&quot; gap); backfilled KC + DA. `liveness_external` set from Better Stack (KC / DA / Sentinel ✓ — Sentinel prod has 15d external uptime, so the &quot;who watches the watchman&quot; gap is genuinely covered). **Phase 1 — UI:** new `/api/apps` (fleet) + `/api/apps/:slug` (per-app detail); Fleet overview (a card per app) → per-app page (overview + security findings + heartbeat + governance links gated on the flags). &quot;Apps&quot; is the primary nav entry now; the old function pages stay as fleet-wide views. Sentinel PRs [#159](https://github.com/CoreshiftHQNZ/sentinel-app/pull/159)/[#161](https://github.com/CoreshiftHQNZ/sentinel-app/pull/161) main+staging; tsc clean + vite build passes. **Onboarding made repeatable:** PLAY 9 gained two copy-paste prompts — Prompt A (Day-0 secure+observable baseline) and Prompt B (ship-day register-with-Sentinel). **Phase 2 (shipped, [#163](https://github.com/CoreshiftHQNZ/sentinel-app/pull/163)/[#164](https://github.com/CoreshiftHQNZ/sentinel-app/pull/164)):** completed the per-app page — added a per-app **Bugs** section (KC&#39;s shared bug_reports by app_id — works for every app) + inline **Retention/Audit** summaries gated on the registry flags (KC today; flag-gated so any app lights up when it gains them). **DA security check (2026-06-18):** DA **prod** clean (deny-all RLS on every table); DA **staging** had 2 RLS-disabled public tables (`api_usage`, `assumption_conflicts`) — a prod→staging drift — **fixed** by enabling RLS (re-verified clean). Surfaced a blind spot → **FIXED (2026-06-19, see Done card):** the advisor scanner only scanned *prod* refs, so staging-only vulns were invisible to the daily scan — now it scans staging refs too + tags findings by environment. **Deferred (chips):** deeper per-app Retention/Audit (app-scoped endpoints, once an app beyond KC has those features); unify the still-hardcoded heartbeat list to the registry (no-op — same 3 targets); record the DA staging RLS-enable in DA&#39;s repo so it doesn&#39;t drift back; Velocity full onboarding held while the operator rebuilds it</div>
           </div>
@@ -924,13 +931,6 @@
             <div class="recent-desc">The B5b audit-C1 follow-up. `server/routes/files.ts` exposed four endpoints taking a caller-supplied storage path with auth but **no per-object authorization**: `GET /api/files/signed-url?path=` + `GET /objects/*` (read **any** tenant&#39;s file), `DELETE /api/files` (**delete** any tenant&#39;s file — destructive), `POST /api/files/upload`. Investigation found **zero callers**: the bug widget uploads screenshots straight to Supabase Storage, and every real asset flow (jobs/clients/products/overlay/social/business-context) calls the storage helpers *inside already-agency-scoped routes* (path comes from an agency-owned DB row, never raw input); legacy `/objects/` paths are re-signed server-side or no longer exist. So these were dead, unauthorized attack surface — **removed entirely** rather than authorized (strictly safer than building an authorizer for uncalled endpoints). Also hardened `docs/standards/storage.md` — the template that propagated the IDOR shape to new apps (Sentinel-everywhere) — to teach the agency-scoped pattern + a &quot;never sign/stream/delete a caller-supplied path&quot; rule. KC PRs [#217](https://github.com/CoreshiftHQNZ/keycontent-app/pull/217) → [#218](https://github.com/CoreshiftHQNZ/keycontent-app/pull/218) → [#219](https://github.com/CoreshiftHQNZ/keycontent-app/pull/219) dev→staging→main; suite 102/102; dev=staging=main verified. **Chip spun out:** KC `dev` had ~12 pre-existing tsc errors (unrelated files — job-status enum drift, VeoAspectRatio) — `npm run check` red on dev</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Migration-parity guardrail in the Monday digest</div>
-            <div class="recent-desc">Detection guardrail for the recurring prod/staging migration-drift incident class (login_fingerprints 2026-06-14, Sentry-env, Zernio — a migration applied to prod while staging is skipped, surfacing later as a confusing staging-only error). New `server/lib/migration-parity.ts` reads applied migration **names** from each app&#39;s staging + prod Supabase projects via the Management API run-query endpoint (reuses `SUPABASE_ACCESS_TOKEN`) and diffs them; the Monday digest flags any app where **staging is behind prod**. Sentinel PRs [#140](https://github.com/CoreshiftHQNZ/sentinel-app/pull/140) → #141 → #142 dev→staging→main (admin-merge). New `supabase_staging_ref` column on `maintained_apps` (applied + stamped on the shared Sentinel project; KC staging ref `hireapkvjkadlzzpcitx` populated; single-project apps like DA null → skipped). **Design notes:** compare by NAME not version (version diff false-positived 16× on KC due to divergent early-bootstrap timestamps); alert ONLY on staging-behind-prod — staging-ahead is normal pending-promotion. **Bonus fix:** the digest renderers early-returned on a zero-maintenance week, silently dropping the entire Privacy &amp; Security section — now it always renders. 16 new tests, suite 301 passing. This is the &quot;guardrail over habit&quot; decision (operator: drift detection that doesn&#39;t depend on remembering, on-brand for Sentinel). The deeper source-fix (frictionless db-push so the prod shortcut isn&#39;t needed) remains a someday-item</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -943,9 +943,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">47</span>
+        <span class="col-count">48</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Privacy program: PIA framework + go-live gate + first PIAs</div>
+        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Sentinel/playbook/PIA-{keycontent,digital-architect}.md</span><span class="tag tag-neutral">files.ts</span><span class="tag tag-neutral">ab55468</span><span class="tag tag-neutral">api_usage</span><span class="tag tag-neutral">assumption_conflicts</span><span class="tag tag-neutral">gp_audit_logs</span></div>
+        <div class="card-desc">The Privacy Officer (**Keitha**) delivered CoreShift&#39;s **Privacy Policy** (Privacy Act 2020 + 13 IPPs + the new IPP3A indirect-collection rules + a PIA section; names Keitha as Privacy Officer) and a per-app **PIA template** (2026-06-22). Wired the privacy gate into the ops playbook: new **PLAY 10 — HOW-WE-DO-PRIVACY** (&quot;security locks the data down; privacy decides whether we should hold it at all — don&#39;t let a green dashboard stand in for the judgment call&quot;), plus a **current-signed-off-PIA go-live gate** in PLAY 9 (onboarding — Sentinel [#170](https://github.com/CoreshiftHQNZ/sentinel-app/pull/170)/[#171](https://github.com/CoreshiftHQNZ/sentinel-app/pull/171)) and a PIA tickbox in PLAY 6 (App Audits, v2.3). Privacy is now the second half of the go-live gate, parallel to the App Audit. Drafted the **KeyContent + DigitalArchitect PIAs** against the template (`Sentinel/playbook/PIA-{keycontent,digital-architect}.md`) for the Privacy Officer&#39;s sign-off — filled from the data-inventory / sub-processor / retention / threat-model docs (so PIAs are assembly, not from-scratch). **Security items surfaced + closed:** KC `files.ts` object-IDOR — **already fixed** (operator commit `ab55468`, 2026-06-19, generic endpoints removed); DA **staging** RLS-off on `api_usage` + `assumption_conflicts` — **fixed** (RLS enabled). Reply to Keitha drafted (in operator&#39;s Gmail drafts). **Open (Privacy Officer / operator):** publish the KC + DA privacy notices; close the 5 sub-processor verifications (incl. AI no-train opt-out); define a DA retention policy; apply the `gp_audit_logs` migration; settle the GP/CoreShift controller-processor split for DA; sign off both PIAs</div>
+      </div>
       <div class="card">
         <div class="card-title">Sentinel app-first restructure (Phases 0-2)</div>
         <div class="card-tags"><span class="tag tag-neutral">restructure</span><span class="tag tag-neutral">multi-app</span><span class="tag tag-neutral">observability</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">maintained_apps</span><span class="tag tag-neutral">public_url</span><span class="tag tag-neutral">heartbeat_url</span><span class="tag tag-neutral">heartbeat_path</span><span class="tag tag-neutral">sentry_project</span><span class="tag tag-neutral">has_audit_logs</span><span class="tag tag-neutral">has_retention</span><span class="tag tag-neutral">liveness_external</span><span class="tag tag-neutral">monitoring_enabled</span><span class="tag tag-neutral">20260618010000</span><span class="tag tag-neutral">liveness_external</span><span class="tag tag-neutral">/api/apps</span><span class="tag tag-neutral">/api/apps/:slug</span><span class="tag tag-neutral">api_usage</span><span class="tag tag-neutral">assumption_conflicts</span></div>
