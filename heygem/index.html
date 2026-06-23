@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">12</div>
+        <div class="status-num">13</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -919,7 +919,14 @@
     <section class="recent">
       <h2 class="section-head">Recently Shipped</h2>
       <div class="recent-list">
-        
+
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Approval confirm dialog · GST receipt email · account menu (verified)</div>
+            <div class="recent-desc">Three customer-app polish items, verified end-to-end on a real Stripe test charge. (1) Approve now opens a confirmation dialog — "your card is charged automatically once your Gem marks the job complete, nothing before then" — showing the incl-GST total. (2) The "receipt on its way" promise is now real: charge-on-complete emails a branded Postmark receipt with line items + Subtotal/GST 15%/Total paid + card last4 (confirmed in Postmark outbound). (3) New Account screen (header menu) to change payment method (SetupIntent) and browse past receipts, each expandable to its per-quote line-item GST breakdown. Quote line items (added previously) flow through both the email and in-app receipt. Shipped dev→staging→main.</div>
+          </div>
+        </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
