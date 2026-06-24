@@ -254,10 +254,10 @@
         <div class="phase-card phase-in-progress">
           <div class="phase-card-head"><div class="phase-marker">3</div><div class="phase-status-pill phase-status-in-progress">In progress</div></div>
           <div class="phase-title">Phase 3 <span class="phase-subtitle">Integrations</span></div>
-          <div class="phase-window env-staging">● Calendar + Gmail on staging · rest backlog</div>
-          <p class="phase-desc">Connect Velocity to the tools the rep already uses. Google Calendar + Gmail (read → deal intelligence) are live on staging; outbound recap, transcription, and the rest are queued.</p>
+          <div class="phase-window env-staging">● Calendar + Gmail + Fireflies on staging · rest backlog</div>
+          <p class="phase-desc">Connect Velocity to the tools the rep already uses. Google Calendar, Gmail (read → deal intelligence) and Fireflies (transcripts → extraction) are live on staging; Slack, CRM and the rest are queued.</p>
           <ul class="phase-deliverables">
-            <li>Google Calendar — connect + sync + in-app scheduling ✓</li><li>Gmail read → deal intelligence (I2.1) ✓</li><li>I2 outbound recap (queued)</li><li>I3 Gmail inbound → portal mirror</li><li>I4 Fireflies/Otter transcription pipeline</li><li>I6 Xero · I7 LinkedIn · I8 Drive archive</li>
+            <li>Google Calendar — connect + sync + in-app scheduling ✓</li><li>Gmail read → deal intelligence (I2.1) ✓</li><li>I2 outbound recap (queued)</li><li>I3 Gmail inbound → portal mirror</li><li>Fireflies transcripts → deal intelligence (I4) ✓ · Otter queued</li><li>I6 Xero · I7 LinkedIn · I8 Drive archive</li>
           </ul>
         </div>
 
@@ -285,7 +285,7 @@
 
     <!-- STATUS STRIP -->
     <section class="status-strip">
-      <div class="status-stat status-done"><div class="status-num">17</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-done"><div class="status-num">20</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">2</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked</div></div>
       <div class="status-stat status-this-week"><div class="status-num">2</div><div class="status-label">This Week</div></div>
@@ -428,7 +428,7 @@
 
         <!-- DONE -->
         <section class="column col-done">
-          <header class="col-head"><h2>✅ Done</h2><span class="col-count">17</span></header>
+          <header class="col-head"><h2>✅ Done</h2><span class="col-count">20</span></header>
           <div class="cards">
             <div class="card">
               <div class="card-title">V1.0 core — full lifecycle Prospect→Won</div>
@@ -514,6 +514,21 @@
               <div class="card-title">Email → deal intelligence (Gmail I2.1)</div>
               <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-int">integrations</span><span class="tag tag-portal">extractor</span><span class="tag tag-staging">on staging</span></div>
               <div class="card-desc">Connect Gmail (read-only, encrypted tokens) → hourly contact-scoped 30-day sync logs buyer mail onto the matching deal → Nirvana extracts it into gate/field signals, a one-line "what changed" summary, and polished buyer-confirmable shared-fact statements. The rep reviews in the Extractions panel — Apply writes fields + pre-ticks the gate, or one-click "Add to shared understanding". Rep always in the loop; nothing auto-writes.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Velocity Sign — our own e-signature</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-portal">docs</span><span class="tag tag-staging">on staging</span></div>
+              <div class="card-desc">Defensible in-portal signing without a paid provider. Buyer types their name + confirms intent → we capture an audit trail (IP, device, time, view→sign sequence), SHA-256 the document, append a Certificate of Signature page, and store a sealed signed PDF (downloads serve the sealed copy). Fingerprint makes it independently verifiable; any later edit breaks the hash. DocuSign/Adobe stays a future enterprise upgrade.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Fireflies — transcripts → deal intelligence (I4)</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-int">integrations</span><span class="tag tag-portal">extractor</span><span class="tag tag-staging">on staging</span></div>
+              <div class="card-desc">First API-key connector. Paste a Fireflies key → recent meeting transcripts matched to a deal by a buyer attendee → logged as a note + run through the same extractor as email (signals + "what changed" + shared-fact proposals in the Extractions panel). Hourly job + on-connect + manual sync; internal-only standups never match.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Fix — modals no longer clipped to a band</div>
+              <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-fix">fix</span><span class="tag tag-staging">on staging</span></div>
+              <div class="card-desc">Several forms rendered cut off behind a grey band. Cause: the page-entry animation left a transform on .vk-page (fill-mode both), making it the containing block for fixed modal scrims → scrim sized to the page box, not the viewport. Fix: fill-mode backwards → no resting transform. One line, fixes every modal at once.</div>
             </div>
           </div>
         </section>
