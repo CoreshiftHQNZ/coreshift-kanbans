@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">13</div>
+        <div class="status-num">14</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -920,6 +920,13 @@
       <h2 class="section-head">Recently Shipped</h2>
       <div class="recent-list">
 
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Job lifecycle + numbers, and a Gems-only CRM (verified)</div>
+            <div class="recent-desc">Reworked the core model so every job carries one persistent number for its whole life: <strong>Enquiry #1024 → Quote #1024 → Order #1024</strong> (Order = In process → Completed). Collapsed the old 9-status machine; approval now opens the order directly as In process (no manual "Start"); payment state stays in the charges table (no more "charged" job status). Numbers (global seq from #1000) show to both customers and Gems. <strong>New CRM tab</strong> in the Gem workspace ("Customers"): per-company editable facts (industry, approx team size, phone, website, address), multiple contacts (+ primary), gem-only internal notes (separate table so they can't leak to the customer), and full order history with incl-GST totals. Verified the whole lifecycle on both apps end-to-end with a real $506 test charge + receipt. Shipped dev→staging→main (DB migrations applied).</div>
+          </div>
+        </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
