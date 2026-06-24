@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>68%</strong> complete</div>
-        <div><strong>50</strong>/73 cards done</div>
-        <div>Updated <strong>2026-06-23 22:13 UTC</strong></div>
+        <div><strong>51</strong>/75 cards done</div>
+        <div>Updated <strong>2026-06-24 02:53 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">50</div>
+        <div class="status-num">51</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -825,7 +825,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">14</div>
+        <div class="status-num">15</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -899,6 +899,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Sentinel agent v1 — autonomy ladder + action log + harness + Loop 1</div>
+            <div class="recent-desc">**North-star kickoff: Sentinel starts to ACT, not just report (2026-06-24), built ramp-don&#39;t-leap.** **Engine:** an autonomy ladder (`notify`/`propose`/`auto`; conservative defaults; promote a type via `AGENT_AUTONOMY_&lt;type&gt;`; a **hard floor in code** caps deletes / outbound mail / access-control / prod-merge / financial at `propose` regardless of config), a defensive **action log** (`agent_actions` on Sentinel prod), and a **harness** (`runAgentLoop`: decide → act/propose → log). **Loop 1:** active advisor findings → deduped GitHub issue, run after the nightly scan. **Off by default** — set `AGENT_ENABLED=true` to turn on (safe-by-default like the R2 backup); even on it&#39;s quiet until a finding appears (fleet clean). Operator set the autonomy boundary: *propose-by-default, auto on a reversible allowlist, ramp as it earns trust.* Sentinel PRs [#178](https://github.com/CoreshiftHQNZ/sentinel-app/pull/178)/[#179](https://github.com/CoreshiftHQNZ/sentinel-app/pull/179) main+staging; 19 unit tests, build green</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Brief 19b — backup prune + restore + multi-bucket</div>
             <div class="recent-desc">**TIER 1 FULLY CLOSED (2026-06-23).** The Brief 19 tail: (1) **30-day prune** — a copy whose source object has been gone past `R2_BACKUP_RETENTION_DAYS` (default 30) is deleted from R2 (deletion-tombstone tracked in R2, no DB), so the backup honours the privacy-notice file-backup window; pure `planPrune` decision + unit tests, deletes only on a full pass. (2) **Multi-bucket** — now mirrors `bug-report-screenshots` alongside `job-assets`, closing the last unmirrored-bucket gap. (3) **`restore-storage-from-r2.ts`** — the real DR path (dry-run default, `--confirm` to write, `--bucket`/`--prefix` scoping). Sentinel PRs [#176](https://github.com/CoreshiftHQNZ/sentinel-app/pull/176)/[#177](https://github.com/CoreshiftHQNZ/sentinel-app/pull/177) main+staging; 11 storage tests (incl. 5 `planPrune`), build green. Data registers (BACKUP-RESTORE / RETENTION / DATA-INVENTORY / SUB-PROCESSORS / SECURITY-PRIVACY-PLAN) updated to match. **Remaining:** a one-click backup button in the UI (folds into the agent UI) + the operator-supervised restore drill (see #1b) + ⚠️ operator: rotate the R2 S3 token</div>
           </div>
@@ -924,13 +931,6 @@
             <div class="recent-desc">The Brief 14 advisor scanner only scanned each app&#39;s *production* ref, so staging-only vulns were invisible — exactly how DA&#39;s staging RLS drift (2026-06-18) hid from the daily scan. Now `scanOneApp` scans production always + `supabase_staging_ref` when set, tagging each finding with `environment` (migration `20260619030000`: new `(app_id, lint_code, environment)` upsert key); resolution is scoped per (app, env). A `staging` badge marks non-prod findings on `/security` + the per-app page. **Bonus:** the promotion-readiness gate&#39;s &quot;advisors clean&quot; check now covers the staging environment that&#39;s actually about to ship. Verified live: DA staging surfaces 23 INFO `rls_enabled_no_policy` (benign deny-all) the prod scan never recorded; KC staging clean. Sentinel PRs [#167](https://github.com/CoreshiftHQNZ/sentinel-app/pull/167)/[#168](https://github.com/CoreshiftHQNZ/sentinel-app/pull/168) main+staging; suite 308/308. Staging findings populate at the next 5am NZ scan (no manual scan trigger yet — small follow-up)</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Sentry-surfaced fix sweep (DA + Sentinel)</div>
-            <div class="recent-desc">Triaged the Sentry alert backlog (2026-06-17). **DA:** uuid-guard on `/(gp)/projects/[id]` (a crawler hitting `/projects/sitemap.xml` 500&#39;d the page on a non-uuid id → now `notFound()`s before any DB query — DIGITAL-ARCHITECT-5) + `worker-src &#39;self&#39; blob:` added to the report-only CSP (DIGITAL-ARCHITECT-4 — the report-only policy doing its job: surfacing a Next.js blob: Web Worker to allowlist *before* enforcing) — DA [#66](https://github.com/CoreshiftHQNZ/digital-architect/pull/66) dev→staging. **Sentinel:** advisor-scanner dedupe (the Supabase advisor API returns one lint per affected object → the same code repeats → second insert tripped `security_findings_app_id_lint_code_key`; SENTINEL-BACKEND-8) + audit-events graceful missing-table degradation (SENTINEL-BACKEND-9 — `Could not find the table login_fingerprints`; now returns an empty section instead of 502-ing the whole view) — Sentinel [#153](https://github.com/CoreshiftHQNZ/sentinel-app/pull/153)→[#154](https://github.com/CoreshiftHQNZ/sentinel-app/pull/154) main+staging. **SENTINEL-BACKEND-7** (advisor 404) needed no change — already fixed by the `/advisors/{type}` path correction; stale alert. **Automation:** daily 8:05am NZ scheduled inbox-triage reads new Sentry alert emails and posts a prioritized digest (known-benign patterns like DA staging CSP report-only flagged INFO), so error triage stops being a hand-forward chore</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -943,13 +943,18 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">50</span>
+        <span class="col-count">51</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">Brief 19 — KC `job-assets` daily R2 backup (Storage half)</div>
         <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">job-assets</span><span class="tag tag-neutral">kc-job-assets-backup</span><span class="tag tag-neutral">server/lib/r2.ts</span><span class="tag tag-neutral">storage-backup.ts</span><span class="tag tag-neutral">storage-backup-scheduler.ts</span><span class="tag tag-neutral">R2_*</span><span class="tag tag-neutral">POST /api/backups/storage/run {limit?,wait?}</span><span class="tag tag-neutral">GET /api/backups/storage/status</span><span class="tag tag-neutral">limit=5</span><span class="tag tag-neutral">[storage-backup] registered backup cron &quot;0 3 * * *&quot; Pacific/Auckland</span><span class="tag tag-neutral">HOW-WE-DO-BACKUP-RESTORE.md</span></div>
         <div class="card-desc">**Tier 1 workstream #3 (part 1 of 3 — Storage backup) — SHIPPED 2026-06-23.** Supabase backs up the DB but not Storage; KC&#39;s `job-assets` (~960 objects / ~1.8GB) had no off-site copy — the highest-impact unmitigated DR gap. Sentinel now mirrors it to Cloudflare R2 (bucket `kc-job-assets-backup`) **nightly at 3am NZ**, incrementally (recursive Supabase Storage list → pure size-diff → only missing/changed objects upload, so we don&#39;t re-pull 1.8GB of egress nightly). New `server/lib/r2.ts` (lightweight aws4fetch SigV4 client), `storage-backup.ts`, `storage-backup-scheduler.ts`; **safe-by-default** (the cron only registers when the four `R2_*` env vars are present). **Plus a manual trigger** (`POST /api/backups/storage/run {limit?,wait?}` + `GET /api/backups/storage/status`, admin-gated) so a backup runs on demand — before a risky migration, or `limit=5` to prove the path fast. Sentinel PRs [#172](https://github.com/CoreshiftHQNZ/sentinel-app/pull/172)/[#173](https://github.com/CoreshiftHQNZ/sentinel-app/pull/173) (backup) + [#174](https://github.com/CoreshiftHQNZ/sentinel-app/pull/174)/[#175](https://github.com/CoreshiftHQNZ/sentinel-app/pull/175) (trigger), main+staging; 14 unit tests, build green. **Verified live on prod:** the deploy log shows `[storage-backup] registered backup cron &quot;0 3 * * *&quot; Pacific/Auckland` — confirms R2 is configured + the first run fires **3am NZ 2026-06-24**. Restore documented in `HOW-WE-DO-BACKUP-RESTORE.md` → *Storage restore (R2 → Supabase)*; data registers (DR / DATA-INVENTORY / RETENTION / SUB-PROCESSORS / SECURITY-PRIVACY-PLAN) updated. **Follow-ups → Brief 19b (Backlog).** **⚠️ Operator:** rotate the R2 S3 token (was pasted in chat — exposed) + record the chosen bucket region in SUB-PROCESSORS.md</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel agent v1 — autonomy ladder + action log + harness + Loop 1</div>
+        <div class="card-tags"><span class="tag tag-neutral">agent</span><span class="tag tag-neutral">above-standard</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">notify</span><span class="tag tag-neutral">propose</span><span class="tag tag-neutral">auto</span><span class="tag tag-neutral">AGENT_AUTONOMY_&lt;type&gt;</span><span class="tag tag-neutral">propose</span><span class="tag tag-neutral">agent_actions</span><span class="tag tag-neutral">runAgentLoop</span><span class="tag tag-neutral">AGENT_ENABLED=true</span></div>
+        <div class="card-desc">**North-star kickoff: Sentinel starts to ACT, not just report (2026-06-24), built ramp-don&#39;t-leap.** **Engine:** an autonomy ladder (`notify`/`propose`/`auto`; conservative defaults; promote a type via `AGENT_AUTONOMY_&lt;type&gt;`; a **hard floor in code** caps deletes / outbound mail / access-control / prod-merge / financial at `propose` regardless of config), a defensive **action log** (`agent_actions` on Sentinel prod), and a **harness** (`runAgentLoop`: decide → act/propose → log). **Loop 1:** active advisor findings → deduped GitHub issue, run after the nightly scan. **Off by default** — set `AGENT_ENABLED=true` to turn on (safe-by-default like the R2 backup); even on it&#39;s quiet until a finding appears (fleet clean). Operator set the autonomy boundary: *propose-by-default, auto on a reversible allowlist, ramp as it earns trust.* Sentinel PRs [#178](https://github.com/CoreshiftHQNZ/sentinel-app/pull/178)/[#179](https://github.com/CoreshiftHQNZ/sentinel-app/pull/179) main+staging; 19 unit tests, build green</div>
       </div>
       <div class="card">
         <div class="card-title">Brief 19b — backup prune + restore + multi-bucket</div>
@@ -1266,7 +1271,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">14</span>
+        <span class="col-count">15</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1323,6 +1328,11 @@
         <div class="card-title">Brief 17 — Breach response runbook surfacing</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-C</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">/breach-response</span></div>
         <div class="card-desc">`/breach-response` sub-page; clickable B4 card with &quot;Start incident&quot; button that scaffolds incident folder + notification draft templates</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel agent — Loop 2 + 3 + ramp</div>
+        <div class="card-tags"><span class="tag tag-neutral">agent</span><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">follow-up:agent-v1</span><span class="tag tag-neutral">propose</span><span class="tag tag-neutral">AGENT_ENABLED=true</span><span class="tag tag-neutral">auto</span><span class="tag tag-neutral">AGENT_AUTONOMY_&lt;type&gt;</span><span class="tag tag-neutral">/agent</span></div>
+        <div class="card-desc">Next loops on the v1 harness (each is just a new candidate producer — no new policy code): **Loop 2** Sentry-triage → filed issue (needs a Sentry-API client or a hook into the 8am email-triage); **Loop 3** advisor finding → draft remediation PR (`propose`). Then: enable the agent (`AGENT_ENABLED=true`) and start the **ramp** — promote one action-type to `auto` at a time via `AGENT_AUTONOMY_&lt;type&gt;` as the action log proves it reliable. Plus a `/agent` UI surface for the action log (the backup &quot;Run now&quot; button folds in here)</div>
       </div>
       <div class="card">
         <div class="card-title">Brief 19b tail — backup UI button</div>
