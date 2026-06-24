@@ -1,17 +1,22 @@
 /* ============================================================
    Coreshift Wiki — engine
-   One script powers every /wiki/<section>/ article page.
+   One script powers the wiki home and every /wiki/<section>/ article.
 
-   A page only needs a tiny shell:
+   Article page shell:
      <body data-root="../../" data-doc="content.md"
            data-title="Project Tiers" data-active="tech-stack"
            data-crumb="Engineering">
        <script src="../../assets/wiki.js"></script>
      </body>
 
-   This script renders: top bar, left nav, breadcrumbs, the markdown
-   content (via marked.js), a right-hand table of contents, scrollspy,
-   and a mobile nav drawer.
+   Home page shell:
+     <body data-root="" data-home="true" data-active="home" data-title="Home">
+       <script src="assets/wiki.js"></script>
+     </body>
+
+   Articles render: top bar, left nav, breadcrumbs, markdown content (via
+   marked.js), a right-hand table of contents, scrollspy, mobile drawer.
+   The home renders the same top bar + left nav, plus a daily rotating quote.
    ============================================================ */
 
 (function () {
@@ -62,11 +67,12 @@
   const body = document.body;
   const root = body.dataset.root || "";
   const docPath = body.dataset.doc || "";
+  const isHome = body.dataset.home === "true";
   const pageTitle = body.dataset.title || "Coreshift Wiki";
   const activeKey = body.dataset.active || "";
   const crumb = body.dataset.crumb || "";
 
-  document.title = pageTitle + " — Coreshift Wiki";
+  document.title = isHome ? "Coreshift HQ — Internal Wiki" : pageTitle + " — Coreshift Wiki";
 
   // ── Build chrome ──────────────────────────────────────────
   function navHtml() {
@@ -80,6 +86,19 @@
       return `<div class="nav-group"><div class="nav-group-label">${group.label}</div>${links}</div>`;
     }).join("");
   }
+
+  const mainInner = isHome
+    ? `<div class="wiki-content home-stage"><div class="wiki-loading">…</div></div>`
+    : `<div class="crumbs">
+          <a href="${root}index.html">Wiki</a>
+          ${crumb ? `<span class="sep">/</span><span>${crumb}</span>` : ""}
+          <span class="sep">/</span><span>${pageTitle}</span>
+        </div>
+        <article class="wiki-content"><div class="wiki-loading">Loading…</div></article>
+        <div class="wiki-foot">
+          <span>Edit this page: <code>${docPath}</code> in <code>coreshift-kanbans</code></span>
+          <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">Source on GitHub</a>
+        </div>`;
 
   body.insertAdjacentHTML("afterbegin", `
     <header class="wiki-head">
@@ -102,21 +121,10 @@
       </div>
     </header>
     <div class="nav-scrim"></div>
-    <div class="wiki-layout">
+    <div class="wiki-layout${isHome ? " is-home" : ""}">
       <aside class="wiki-side"><nav>${navHtml()}</nav></aside>
-      <main class="wiki-main">
-        <div class="crumbs">
-          <a href="${root}index.html">Wiki</a>
-          ${crumb ? `<span class="sep">/</span><span>${crumb}</span>` : ""}
-          <span class="sep">/</span><span>${pageTitle}</span>
-        </div>
-        <article class="wiki-content"><div class="wiki-loading">Loading…</div></article>
-        <div class="wiki-foot">
-          <span>Edit this page: <code>${docPath}</code> in <code>coreshift-kanbans</code></span>
-          <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">Source on GitHub</a>
-        </div>
-      </main>
-      <aside class="wiki-toc"><div class="toc-label">On this page</div><div id="toc"></div></aside>
+      <main class="wiki-main">${mainInner}</main>
+      ${isHome ? "" : `<aside class="wiki-toc"><div class="toc-label">On this page</div><div id="toc"></div></aside>`}
     </div>
   `);
 
@@ -137,7 +145,7 @@
       .replace(/-+/g, "-");
   }
 
-  // ── Render markdown ───────────────────────────────────────
+  // ── Render markdown article ───────────────────────────────
   function render(md) {
     const html = window.marked ? window.marked.parse(md) : md;
     contentEl.innerHTML = html;
@@ -157,7 +165,7 @@
       tocItems.push({ id, text: h.textContent, level: h.tagName === "H3" ? 3 : 2 });
     });
 
-    if (tocItems.length > 2) {
+    if (tocItems.length > 2 && tocEl) {
       tocEl.innerHTML = tocItems.map((t) =>
         `<a href="#${t.id}" class="lvl-${t.level}" data-id="${t.id}">${t.text}</a>`
       ).join("");
@@ -167,7 +175,7 @@
       if (toc) toc.style.visibility = "hidden";
     }
 
-    // Close mobile drawer when a content/nav link is followed
+    // Close mobile drawer when a content link is followed
     contentEl.addEventListener("click", (e) => {
       if (e.target.closest("a")) body.classList.remove("nav-open");
     });
@@ -189,7 +197,49 @@
     targets.forEach((t) => obs.observe(t));
   }
 
-  // ── Load marked, then the doc ─────────────────────────────
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  // ── Render the daily quote (home) ─────────────────────────
+  function renderHome() {
+    // Same quote all day; rotates daily through the whole list.
+    const now = new Date();
+    const epochDay = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
+    const dateStr = now.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" });
+
+    fetch(root + "assets/quotes.json", { cache: "no-cache" })
+      .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then((list) => {
+        const idx = ((epochDay % list.length) + list.length) % list.length;
+        const item = list[idx] || list[0];
+        contentEl.innerHTML = `
+          <div class="home-eyebrow">Daily note · ${dateStr}</div>
+          <figure class="home-quote-fig">
+            <blockquote class="home-quote">${escapeHtml(item.q)}</blockquote>
+            ${item.a ? `<figcaption class="home-author">${escapeHtml(item.a)}</figcaption>` : ""}
+          </figure>
+          <p class="home-welcome">Welcome to the Coreshift handbook. Everything lives in the menu on the left — pick a section to dive in.</p>
+        `;
+      })
+      .catch((err) => {
+        contentEl.innerHTML = `
+          <div class="home-eyebrow">Welcome</div>
+          <figure class="home-quote-fig">
+            <blockquote class="home-quote">The way to get started is to quit talking and begin doing.</blockquote>
+            <figcaption class="home-author">Walt Disney</figcaption>
+          </figure>
+          <p class="home-welcome">Welcome to the Coreshift handbook. Everything lives in the menu on the left — pick a section to dive in. <span style="opacity:.6">(Daily quote unavailable: ${escapeHtml(err.message)}.)</span></p>
+        `;
+      });
+  }
+
+  // ── Boot ──────────────────────────────────────────────────
+  if (isHome) {
+    renderHome();
+    return;
+  }
+
   function loadDoc() {
     fetch(docPath, { cache: "no-cache" })
       .then((r) => { if (!r.ok) throw new Error(r.status); return r.text(); })

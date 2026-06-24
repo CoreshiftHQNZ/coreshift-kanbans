@@ -250,6 +250,51 @@ a { color: var(--teal-dark); }
 /* loading shimmer */
 .wiki-loading { color: var(--text-soft); font-size: 14px; padding: 40px 0; }
 
+/* ── Home: daily quote ───────────────────────────────────── */
+.wiki-layout.is-home { grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
+.is-home .wiki-main { display: flex; }
+.home-stage {
+  max-width: 760px;
+  margin: 0 auto;
+  min-height: calc(100vh - 66px - 120px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.home-eyebrow {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--teal-dark); margin-bottom: 30px;
+  display: flex; align-items: center; gap: 12px;
+}
+.home-eyebrow::before {
+  content: ""; width: 26px; height: 2px; background: var(--teal); display: inline-block; border-radius: 2px;
+}
+.home-quote-fig { margin: 0; position: relative; }
+.home-quote-fig::before {
+  content: "\201C";
+  position: absolute; top: -54px; left: -10px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 150px; line-height: 1; color: var(--teal); opacity: 0.12;
+  pointer-events: none;
+}
+.home-quote {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 38px; line-height: 1.32; font-weight: 500; letter-spacing: -0.01em;
+  color: var(--navy);
+  position: relative;
+}
+.home-author {
+  margin-top: 26px;
+  font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--teal-dark);
+}
+.home-author::before { content: "— "; opacity: 0.7; }
+.home-welcome {
+  margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--border);
+  font-size: 14px; color: var(--text-soft); max-width: 56ch;
+}
+
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 1100px) {
   .wiki-layout { grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
@@ -257,7 +302,10 @@ a { color: var(--teal-dark); }
   .wiki-main { padding: 36px 36px 70px; }
 }
 @media (max-width: 820px) {
-  .wiki-layout { grid-template-columns: 1fr; }
+  .wiki-layout, .wiki-layout.is-home { grid-template-columns: 1fr; }
+  .home-quote { font-size: 28px; }
+  .home-quote-fig::before { font-size: 110px; top: -40px; }
+  .home-stage { min-height: 0; padding-top: 12px; }
   .menu-toggle { display: block; }
   .head-meta { display: none; }
   .wiki-side {
