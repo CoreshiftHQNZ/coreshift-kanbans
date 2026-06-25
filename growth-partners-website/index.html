@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex" />
+  <title>Growth Partners Website — Build Board</title>
+  <style>
+    :root {
+      --navy: #0E2542;
+      --navy-deep: #081A2E;
+      --navy-soft: #163A66;
+      --teal: #1E4C86;        /* GP brand blue */
+      --teal-dark: #163A66;
+      --teal-light: #E4EAF4;
+      --coral: #E0701E;       /* GP brand orange */
+      --coral-light: #F7E2CC;
+      --amber: #F59E0B;
+      --amber-light: #FEF3C7;
+      --red: #DC2626;
+      --red-light: #FEE2E2;
+      --green: #10B981;
+      --green-light: #D1FAE5;
+      --purple: #8B5CF6;
+      --purple-light: #EDE9FE;
+      --blue: #3B82F6;
+      --blue-light: #DBEAFE;
+      --indigo: #6366F1;
+      --indigo-light: #E0E7FF;
+      --gray: #64748B;
+      --gray-light: #E2E8F0;
+      --gray-lighter: #F1F5F9;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #475569;
+      --text-soft: #94A3B8;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text); background: var(--bg);
+      font-size: 14px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+
+    header.page-head {
+      background: var(--navy); color: #FFFFFF; padding: 24px 32px;
+      border-bottom: 1px solid var(--navy-deep); position: sticky; top: 0; z-index: 10;
+    }
+    .page-head-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .page-brand { display: flex; align-items: center; gap: 14px; }
+    .brand-mark {
+      width: 36px; height: 36px; background: linear-gradient(135deg, var(--teal), var(--coral));
+      color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px;
+    }
+    .brand-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+    .brand-sub { font-size: 11px; color: var(--coral); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 2px; }
+    .page-meta { font-size: 12px; color: #B9C7DC; display: flex; gap: 24px; flex-wrap: wrap; }
+    .page-meta strong { color: #FFFFFF; font-weight: 600; }
+
+    .page-main { max-width: 1600px; margin: 0 auto; padding: 32px 32px 48px; }
+    .section-head { font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 16px; }
+    .section-sub { font-size: 13px; color: var(--text-muted); margin: -8px 0 16px; }
+    .section-sub code { background: var(--gray-lighter); border: 1px solid var(--gray-light); border-radius: 4px; padding: 1px 6px; font-size: 12px; color: var(--navy); }
+
+    .hero { margin-bottom: 44px; padding-bottom: 36px; border-bottom: 1px solid var(--gray-light); }
+    .hero-eyebrow { color: var(--teal-dark); font-size: 11px; font-weight: 700; letter-spacing: 0.18em; margin-bottom: 14px; }
+    .hero-title { color: var(--navy); font-size: 52px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; margin: 0 0 12px; }
+    .hero-tagline { color: var(--teal-dark); font-size: 22px; font-style: italic; font-weight: 500; margin: 0 0 16px; line-height: 1.35; }
+    .hero-desc { color: var(--text-muted); font-size: 17px; line-height: 1.5; max-width: 900px; margin: 0; }
+    .hero-phase-row { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+    .phase-pill { display: inline-flex; align-items: baseline; gap: 10px; background: var(--card); border: 1px solid var(--gray-light); border-radius: 999px; padding: 8px 18px; font-size: 13px; }
+    .phase-pill-label { color: var(--text-soft); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+    .phase-pill-value { color: var(--navy); font-weight: 700; }
+    .phase-pill-date { color: var(--text-muted); font-weight: 500; margin-left: 4px; }
+    .phase-pill-milestone { background: var(--navy); border-color: var(--navy); }
+    .phase-pill-milestone .phase-pill-label { color: var(--coral); }
+    .phase-pill-milestone .phase-pill-value { color: #FFFFFF; }
+    .phase-pill-milestone .phase-pill-date { color: #CADCFC; }
+
+    .phases { margin-bottom: 40px; }
+    .phases-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    .phase-card { background: var(--card); border: 1px solid var(--gray-light); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; position: relative; transition: box-shadow 0.15s, transform 0.15s; }
+    .phase-card:hover { box-shadow: 0 6px 20px rgba(14, 37, 66, 0.08); transform: translateY(-2px); }
+    .phase-card.phase-done        { border-top: 4px solid var(--green); }
+    .phase-card.phase-in-progress { border-top: 4px solid var(--amber); }
+    .phase-card.phase-planned     { border-top: 4px solid var(--blue); }
+    .phase-card.phase-future      { border-top: 4px solid var(--gray); opacity: 0.9; }
+    .phase-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .phase-marker { width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+    .phase-card.phase-done .phase-marker        { background: var(--green); }
+    .phase-card.phase-in-progress .phase-marker { background: var(--amber); }
+    .phase-status-pill { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
+    .phase-status-done        { background: var(--green-light); color: #065F46; }
+    .phase-status-in-progress { background: var(--amber-light); color: #B45309; }
+    .phase-status-planned     { background: var(--blue-light); color: #1D4ED8; }
+    .phase-status-future      { background: var(--gray-light); color: var(--gray); }
+    .phase-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 2px; letter-spacing: -0.01em; }
+    .phase-subtitle { font-size: 13px; font-weight: 500; color: var(--text-muted); margin-left: 2px; }
+    .phase-window { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 10px; }
+    .env-prod    { color: var(--green); }
+    .env-staging { color: var(--amber); }
+    .phase-desc { font-size: 12.5px; color: var(--text); line-height: 1.5; margin: 0 0 12px; }
+    .phase-deliverables { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--gray-light); padding-top: 10px; }
+    .phase-deliverables li { font-size: 12px; color: var(--text-muted); line-height: 1.5; padding: 3px 0 3px 14px; position: relative; }
+    .phase-deliverables li::before { content: "•"; position: absolute; left: 4px; color: var(--teal); font-weight: 700; }
+
+    .status-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 40px; background: var(--card); border: 1px solid var(--gray-light); border-radius: 12px; padding: 20px 8px; }
+    .status-stat { text-align: center; padding: 8px 12px; border-right: 1px solid var(--gray-light); }
+    .status-stat:last-child { border-right: none; }
+    .status-num { font-size: 36px; font-weight: 800; line-height: 1; color: var(--navy); letter-spacing: -0.02em; }
+    .status-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); margin-top: 8px; }
+    .status-done .status-num        { color: var(--green); }
+    .status-in-progress .status-num { color: var(--amber); }
+    .status-blocked .status-num     { color: var(--red); }
+    .status-this-week .status-num   { color: var(--blue); }
+    .status-backlog .status-num     { color: var(--gray); }
+
+    .links { margin-bottom: 40px; }
+    .links-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .link-card { display: flex; align-items: center; gap: 16px; background: var(--card); border: 1px solid var(--gray-light); border-radius: 10px; padding: 16px 20px; text-decoration: none; color: inherit; transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s; }
+    .link-card:hover { box-shadow: 0 4px 14px rgba(14, 37, 66, 0.08); transform: translateY(-1px); border-color: var(--teal); }
+    .link-icon { font-size: 24px; flex-shrink: 0; }
+    .link-text { flex: 1; }
+    .link-title { font-weight: 700; color: var(--navy); font-size: 15px; margin-bottom: 2px; }
+    .link-desc { font-size: 13px; color: var(--text-muted); }
+    .link-arrow { color: var(--teal); font-size: 18px; font-weight: 700; flex-shrink: 0; }
+
+    .board-section { margin-top: 8px; }
+    .board { display: grid; grid-template-columns: repeat(4, minmax(280px, 1fr)); gap: 16px; align-items: start; }
+    .column { background: var(--gray-lighter); border-radius: 12px; padding: 16px; border: 1px solid var(--gray-light); }
+    .col-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 4px 4px 12px; border-bottom: 2px solid transparent; }
+    .col-head h2 { margin: 0; font-size: 14px; font-weight: 700; color: var(--navy); letter-spacing: 0.02em; }
+    .col-count { font-size: 12px; font-weight: 600; background: var(--card); color: var(--text-muted); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--gray-light); }
+    .col-done .col-head        { border-bottom-color: var(--green); }
+    .col-in-progress .col-head { border-bottom-color: var(--amber); }
+    .col-blocked .col-head     { border-bottom-color: var(--red); }
+    .col-this-week .col-head   { border-bottom-color: var(--blue); }
+    .col-backlog .col-head     { border-bottom-color: var(--gray); }
+    .col-done .col-count        { color: var(--green); border-color: var(--green-light); }
+    .col-in-progress .col-count { color: #B45309; border-color: var(--amber-light); }
+    .col-blocked .col-count     { color: var(--red); border-color: var(--red-light); }
+    .col-this-week .col-count   { color: #1D4ED8; border-color: var(--blue-light); }
+    .col-backlog .col-count     { color: var(--gray); border-color: var(--gray-light); }
+    .cards { display: flex; flex-direction: column; gap: 10px; }
+    .card { background: var(--card); border-radius: 8px; padding: 12px 14px; border: 1px solid var(--gray-light); box-shadow: 0 1px 2px rgba(14, 37, 66, 0.04); transition: box-shadow 0.15s, transform 0.15s; }
+    .card:hover { box-shadow: 0 4px 12px rgba(14, 37, 66, 0.08); transform: translateY(-1px); }
+    .card-title { font-weight: 600; color: var(--navy); font-size: 13.5px; line-height: 1.4; margin-bottom: 6px; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0; }
+    .card-desc { color: var(--text-muted); font-size: 12.5px; line-height: 1.5; margin-top: 6px; }
+    .card-desc code { background: var(--gray-lighter); border: 1px solid var(--gray-light); border-radius: 4px; padding: 0 4px; font-size: 11.5px; }
+    .empty { color: var(--text-soft); font-size: 12px; text-align: center; padding: 16px 0; font-style: italic; }
+
+    .tag { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px; letter-spacing: 0.02em; white-space: nowrap; }
+    .tag-prod      { background: var(--green-light); color: #065F46; }
+    .tag-staging   { background: var(--amber-light); color: #B45309; }
+    .tag-build     { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-seo       { background: var(--coral-light); color: #BE3D2E; }
+    .tag-infra     { background: var(--amber-light); color: #B45309; }
+    .tag-content   { background: var(--purple-light); color: #6D28D9; }
+    .tag-int       { background: var(--blue-light); color: #1D4ED8; }
+    .tag-neutral   { background: var(--gray-light); color: var(--text-muted); }
+
+    footer.page-foot { padding: 16px 32px 32px; text-align: center; color: var(--text-soft); font-size: 12px; }
+    footer.page-foot a { color: var(--teal-dark); text-decoration: none; border-bottom: 1px solid rgba(30, 76, 134, 0.3); }
+
+    @media (max-width: 1400px) { .board { grid-template-columns: repeat(2, minmax(280px, 1fr)); } .links-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 1300px) { .phases-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 1100px) { .phases-grid { grid-template-columns: repeat(2, 1fr); } .status-strip { grid-template-columns: repeat(2, 1fr); } .status-stat { border-right: none; border-bottom: 1px solid var(--gray-light); } .status-stat:nth-last-child(-n+2) { border-bottom: none; } }
+    @media (max-width: 900px) { .page-main { padding: 24px 16px 32px; } .board { grid-template-columns: 1fr; } header.page-head { padding: 16px; } .hero-title { font-size: 32px; } .hero-tagline { font-size: 17px; } .hero-desc { font-size: 15px; } .phases-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="page-head-inner">
+      <div class="page-brand">
+        <div class="brand-mark">GP</div>
+        <div>
+          <div class="brand-title">Growth Partners — Website</div>
+          <div class="brand-sub">Marketing Site · Build Board</div>
+        </div>
+      </div>
+      <div class="page-meta">
+        <div><strong>Live</strong> on pages.dev</div>
+        <div>Astro 7 · <strong>Cloudflare Pages</strong></div>
+        <div>Updated <strong>2026-06-25</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-main">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">INTERNAL · WEBSITE BUILD &amp; LAUNCH BOARD</div>
+      <h1 class="hero-title">Growth Partners — Website</h1>
+      <p class="hero-tagline">Growth, marketing &amp; sales for the AI era — the public marketing site.</p>
+      <p class="hero-desc">The approved Claude Design concept rebuilt as a production Astro static site (Tier 1) on Cloudflare Pages: 18 real routes replacing the prototype SPA, full editorial design system, SEO/GEO foundations (per-page meta, canonical, Organisation JSON-LD, sitemap), and a Turnstile + Postmark contact form. The site is live on <code>pages.dev</code>; what's left is auto-deploy secrets, contact-form credentials, and the production domain.</p>
+      <div class="hero-phase-row">
+        <div class="phase-pill">
+          <span class="phase-pill-label">Current phase</span>
+          <span class="phase-pill-value">Phase 4 · Productionise <span class="phase-pill-date">awaiting credentials</span></span>
+        </div>
+        <div class="phase-pill phase-pill-milestone">
+          <span class="phase-pill-label">Next milestone</span>
+          <span class="phase-pill-value">Custom domain live <span class="phase-pill-date">pending production hostname + DNS home</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASES -->
+    <section class="phases">
+      <h2 class="section-head">Build &amp; Launch Phases</h2>
+      <p class="section-sub">From design import to public launch. Each phase delivers something usable on its own.</p>
+      <div class="phases-grid">
+
+        <div class="phase-card phase-done">
+          <div class="phase-card-head"><div class="phase-marker">1</div><div class="phase-status-pill phase-status-done">Done</div></div>
+          <div class="phase-title">Phase 1 <span class="phase-subtitle">Design import</span></div>
+          <div class="phase-window env-prod">● Complete</div>
+          <p class="phase-desc">Pulled the approved concept (HTML + CSS + JS) from the Claude Design project and mapped the prototype's 18 SPA sections to real routes.</p>
+          <ul class="phase-deliverables">
+            <li>Imported via design MCP</li><li>Slug → route map (tools/*, solutions/*)</li><li>Per-page SEO metadata defined</li>
+          </ul>
+        </div>
+
+        <div class="phase-card phase-done">
+          <div class="phase-card-head"><div class="phase-marker">2</div><div class="phase-status-pill phase-status-done">Done</div></div>
+          <div class="phase-title">Phase 2 <span class="phase-subtitle">Astro rebuild</span></div>
+          <div class="phase-window env-prod">● Complete</div>
+          <p class="phase-desc">Production Astro static site: shared Layout, components, design system ported faithfully, real <code>&lt;a&gt;</code> links and lazy-reveal behaviour.</p>
+          <ul class="phase-deliverables">
+            <li>18 routes + /thanks fallback</li><li>Nav dropdowns + active states</li><li>SEO/GEO: JSON-LD, sitemap, robots, OG</li><li>Clean extensionless URLs, 0 vulns</li>
+          </ul>
+        </div>
+
+        <div class="phase-card phase-done">
+          <div class="phase-card-head"><div class="phase-marker">3</div><div class="phase-status-pill phase-status-done">Done</div></div>
+          <div class="phase-title">Phase 3 <span class="phase-subtitle">Deploy</span></div>
+          <div class="phase-window env-prod">● Live on pages.dev</div>
+          <p class="phase-desc">Repo created and pushed; site deployed to Cloudflare Pages (CoreshiftHq). All routes 200, contact Function reachable.</p>
+          <ul class="phase-deliverables">
+            <li>GitHub repo (main/staging/dev)</li><li>Pages project + direct deploy</li><li>Smoke-tested live routes</li>
+          </ul>
+        </div>
+
+        <div class="phase-card phase-in-progress">
+          <div class="phase-card-head"><div class="phase-marker">4</div><div class="phase-status-pill phase-status-in-progress">In progress</div></div>
+          <div class="phase-title">Phase 4 <span class="phase-subtitle">Productionise</span></div>
+          <div class="phase-window env-staging">● Awaiting credentials</div>
+          <p class="phase-desc">Wire the bits that need secrets/decisions: CI auto-deploy, contact email, and the custom domain.</p>
+          <ul class="phase-deliverables">
+            <li>Actions secrets (CF token + account id)</li><li>Postmark + Turnstile env vars</li><li>Confirm production domain + DNS home</li>
+          </ul>
+        </div>
+
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head"><div class="phase-marker">5</div><div class="phase-status-pill phase-status-planned">Planned</div></div>
+          <div class="phase-title">Phase 5 <span class="phase-subtitle">Content &amp; launch</span></div>
+          <div class="phase-window">Next up</div>
+          <p class="phase-desc">Final content pass (copy, pricing sign-off, real logo asset), accessibility/perf check, then point the domain and announce.</p>
+          <ul class="phase-deliverables">
+            <li>Copy + pricing sign-off</li><li>Hosted logo asset (replace CDN URL)</li><li>Lighthouse + a11y pass</li><li>Go live on production domain</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATUS STRIP -->
+    <section class="status-strip">
+      <div class="status-stat status-done"><div class="status-num">10</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-in-progress"><div class="status-num">1</div><div class="status-label">In Progress</div></div>
+      <div class="status-stat status-blocked"><div class="status-num">3</div><div class="status-label">Awaiting input</div></div>
+      <div class="status-stat status-this-week"><div class="status-num">3</div><div class="status-label">This Week</div></div>
+      <div class="status-stat status-backlog"><div class="status-num">4</div><div class="status-label">Backlog</div></div>
+    </section>
+
+    <!-- KEY ARTIFACTS -->
+    <section class="links">
+      <h2 class="section-head">Key Artifacts</h2>
+      <div class="links-grid">
+        <a class="link-card" href="https://growth-partners-website.pages.dev" target="_blank" rel="noopener">
+          <div class="link-icon">🌐</div>
+          <div class="link-text"><div class="link-title">Live site (pages.dev)</div><div class="link-desc">The deployed marketing site</div></div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://github.com/CoreshiftHQNZ/growth-partners-website" target="_blank" rel="noopener">
+          <div class="link-icon">📦</div>
+          <div class="link-text"><div class="link-title">GitHub repo</div><div class="link-desc">CoreshiftHQNZ/growth-partners-website · main / staging / dev</div></div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://github.com/CoreshiftHQNZ/growth-partners-website/blob/main/DEPLOYMENT.md" target="_blank" rel="noopener">
+          <div class="link-icon">🚀</div>
+          <div class="link-text"><div class="link-title">DEPLOYMENT.md</div><div class="link-desc">Remaining secrets, env vars and DNS steps</div></div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://github.com/CoreshiftHQNZ/growth-partners-website/blob/main/README.md" target="_blank" rel="noopener">
+          <div class="link-icon">📖</div>
+          <div class="link-text"><div class="link-title">README</div><div class="link-desc">Stack, structure, routes, local dev</div></div>
+          <div class="link-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- BOARD -->
+    <section class="board-section">
+      <h2 class="section-head">Task Board</h2>
+      <div class="board">
+
+        <div class="column col-this-week">
+          <div class="col-head"><h2>Do now</h2><span class="col-count">3</span></div>
+          <div class="cards">
+            <div class="card">
+              <div class="card-title">Add CI deploy secrets</div>
+              <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">needs token</span></div>
+              <div class="card-desc">Add <code>CLOUDFLARE_API_TOKEN</code> (Pages:Edit) + <code>CLOUDFLARE_ACCOUNT_ID</code> as repo Actions secrets to enable push → deploy. Workflow already in repo.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Configure contact-form email</div>
+              <div class="card-tags"><span class="tag tag-build">function</span><span class="tag tag-neutral">needs creds</span></div>
+              <div class="card-desc">Set Pages env vars: <code>POSTMARK_TOKEN</code>, <code>CONTACT_FROM</code> (verified sender), <code>CONTACT_TO</code>, Turnstile keys. Form returns 502 until Postmark is set.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Confirm production domain + DNS</div>
+              <div class="card-tags"><span class="tag tag-infra">dns</span></div>
+              <div class="card-desc"><code>growthpartnersgpx.com</code> isn't a zone in any connected Cloudflare account. Confirm the real hostname + where DNS lives, then attach custom domain.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column col-in-progress">
+          <div class="col-head"><h2>In progress</h2><span class="col-count">1</span></div>
+          <div class="cards">
+            <div class="card">
+              <div class="card-title">Phase 4 — Productionise</div>
+              <div class="card-tags"><span class="tag tag-staging">staging</span></div>
+              <div class="card-desc">Site is live on pages.dev; wiring auto-deploy, email and domain. Blocked only on the three "Do now" inputs above.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column col-backlog">
+          <div class="col-head"><h2>Backlog / Later</h2><span class="col-count">4</span></div>
+          <div class="cards">
+            <div class="card">
+              <div class="card-title">Replace logo CDN URL with hosted asset</div>
+              <div class="card-tags"><span class="tag tag-content">content</span></div>
+              <div class="card-desc">Currently loads from the staging Cloudflare Images URL with a wordmark fallback. Host a production logo asset.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Copy &amp; pricing sign-off</div>
+              <div class="card-tags"><span class="tag tag-content">content</span></div>
+              <div class="card-desc">Pricing is indicative (NZD); copy is from the concept. Final review before launch.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Lighthouse + accessibility pass</div>
+              <div class="card-tags"><span class="tag tag-seo">quality</span></div>
+              <div class="card-desc">Perf/SEO/a11y audit on the live build before announcing.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Retain contact submissions (optional)</div>
+              <div class="card-tags"><span class="tag tag-build">tier 2</span></div>
+              <div class="card-desc">If submissions need to be queryable, add Cloudflare D1 (Tier 2). Currently notify-only.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column col-done">
+          <div class="col-head"><h2>Done</h2><span class="col-count">10</span></div>
+          <div class="cards">
+            <div class="card"><div class="card-title">Import design from Claude Design</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
+            <div class="card"><div class="card-title">Astro project scaffold (Astro 7)</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
+            <div class="card"><div class="card-title">Port design system → global.css</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
+            <div class="card"><div class="card-title">Shared Layout, Nav, Footer, BaseHead</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
+            <div class="card"><div class="card-title">18 routes converted from SPA</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
+            <div class="card"><div class="card-title">SEO/GEO: JSON-LD, sitemap, robots, OG</div><div class="card-tags"><span class="tag tag-seo">seo</span></div></div>
+            <div class="card"><div class="card-title">Contact form → Pages Function (Turnstile + Postmark)</div><div class="card-tags"><span class="tag tag-build">function</span></div></div>
+            <div class="card"><div class="card-title">Clean extensionless URLs (no redirects)</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
+            <div class="card"><div class="card-title">GitHub repo + branches + CI workflow</div><div class="card-tags"><span class="tag tag-infra">infra</span></div></div>
+            <div class="card"><div class="card-title">Deploy to Cloudflare Pages (live)</div><div class="card-tags"><span class="tag tag-prod">prod</span></div></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="page-foot">
+    Internal build board · <a href="../boards/">All project boards</a> · <a href="../">Coreshift wiki</a>
+  </footer>
+</body>
+</html>
