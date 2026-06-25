@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>68%</strong> complete</div>
-        <div><strong>51</strong>/75 cards done</div>
-        <div>Updated <strong>2026-06-24 02:53 UTC</strong></div>
+        <div><strong>67%</strong> complete</div>
+        <div><strong>51</strong>/76 cards done</div>
+        <div>Updated <strong>2026-06-25 23:04 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -825,7 +825,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">15</div>
+        <div class="status-num">16</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -1271,7 +1271,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">15</span>
+        <span class="col-count">16</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1292,7 +1292,12 @@
       <div class="card">
         <div class="card-title">MFA on operator + admin accounts</div>
         <div class="card-tags"><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-2</span><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span></div>
-        <div class="card-desc">**Tier 2 (operator action).** Enforce MFA on GitHub org, Supabase, Railway, Cloudflare, and Google Workspace operator/admin accounts. Cheap, high-leverage — closes the &quot;operator-account-compromise&quot; DR scenario (HOW-WE-DO-DR.md) at the source. Per-service enrolment by the operator</div>
+        <div class="card-desc">**Tier 2 (operator action). 🟡 In progress (2026-06-24):** operator&#39;s own 2FA done on all 5 (GitHub, Google, Cloudflare, Supabase, Railway) + **GitHub org-wide 2FA enforced** (secure-methods-only). **Remaining:** Google Workspace + Cloudflare **org-wide** enforcement — needs Ricky&#39;s admin (note drafted in operator&#39;s Gmail). Closes the &quot;operator-account-compromise&quot; DR scenario (HOW-WE-DO-DR.md) at the source</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tier 2 prep — pen-test scope + SOC 2 gap assessment drafted</div>
+        <div class="card-tags"><span class="tag tag-neutral">above-standard</span><span class="tag tag-neutral">tier-2</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">Sentinel/playbook/PENTEST-SCOPE.md</span><span class="tag tag-neutral">SOC2-GAP-ASSESSMENT.md</span></div>
+        <div class="card-desc">Decision-support written (loose: `Sentinel/playbook/PENTEST-SCOPE.md` + `SOC2-GAP-ASSESSMENT.md`). **Pen-test scope** is ready to hand a firm for quotes (names the apps + auth models, points them at tenant-isolation/authz/AI, lists what our ZAP/Dependabot/gitleaks/advisor scans already cover). **SOC 2 readout:** controls ~80% there after this year&#39;s hardening — the gap is formalisation + evidence + MFA, not missing controls; recommend triggering when a customer asks, Type I first. Both are now go/no-go operator calls, not vague projects</div>
       </div>
       <div class="card">
         <div class="card-title">Phase B3-code: deletion + access scripts</div>
