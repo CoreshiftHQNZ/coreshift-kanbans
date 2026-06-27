@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Go-Chiro — Build Kanban</title>
+    <meta name="description" content="Live build status for Go-Chiro — mobile chiropractic patient + practitioner portal. Internal only." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🦴%3C/text%3E%3C/svg%3E" />
+    <style>
+      :root {
+        --bg: #fafaf9;
+        --card: #ffffff;
+        --ink: #18181b;
+        --ink-muted: #71717a;
+        --ink-subtle: #a1a1aa;
+        --border: #e4e4e7;
+        --done: #059669;
+        --doing: #d97706;
+        --next: #2563eb;
+        --back: #475569;
+        --back-bg: #f1f5f9;
+        --ricky: #7c3aed;
+        --ricky-bg: #f5f3ff;
+        --ricky-border: #ddd6fe;
+        --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+        --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+        --radius: 10px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0a0a;
+          --card: #18181b;
+          --ink: #fafafa;
+          --ink-muted: #a1a1aa;
+          --ink-subtle: #71717a;
+          --border: #27272a;
+          --done: #10b981;
+          --doing: #f59e0b;
+          --next: #3b82f6;
+          --back: #94a3b8;
+          --back-bg: #0f172a;
+          --ricky: #a78bfa;
+          --ricky-bg: #1e1b4b;
+          --ricky-border: #312e81;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 1400px; margin: 0 auto; padding: 32px 24px 80px; }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0 0 4px;
+      }
+      .subtitle { color: var(--ink-muted); font-size: 14px; margin: 0; }
+      .meta { text-align: right; font-size: 13px; color: var(--ink-muted); }
+      .meta a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+      .meta a:hover { color: var(--ink); }
+
+      h2.section-title {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink-muted);
+        margin: 0 0 12px;
+      }
+
+      .progress {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        box-shadow: var(--shadow);
+      }
+      .progress-bars {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .pbar { font-size: 12px; }
+      .pbar-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+        color: var(--ink-muted);
+      }
+      .pbar-label strong { color: var(--ink); font-weight: 600; }
+      .pbar-track { height: 6px; background: var(--back-bg); border-radius: 999px; overflow: hidden; }
+      .pbar-fill { height: 100%; background: var(--done); border-radius: 999px; transition: width 200ms ease; }
+      .pbar.active .pbar-fill { background: var(--doing); }
+      .pbar.future .pbar-fill { background: var(--ink-subtle); opacity: 0.3; }
+
+      .ricky-panel {
+        background: var(--ricky-bg);
+        border: 1px solid var(--ricky-border);
+        border-radius: var(--radius);
+        padding: 22px 24px;
+        margin-bottom: 28px;
+      }
+      .ricky-panel-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .ricky-panel-head h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .ricky-panel-head .badge {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        background: var(--ricky);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 999px;
+      }
+      .ricky-panel p.intro { font-size: 14px; color: var(--ink-muted); margin: 0 0 18px; }
+      .ricky-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+      @media (max-width: 740px) { .ricky-grid { grid-template-columns: 1fr; } }
+      .ricky-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px 18px;
+      }
+      .ricky-section h3 {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 0 0 4px;
+        color: var(--ricky);
+      }
+      .ricky-section .helper { font-size: 12px; color: var(--ink-muted); margin: 0 0 14px; }
+      .task {
+        border-top: 1px solid var(--border);
+        padding: 14px 0;
+      }
+      .task:first-of-type { border-top: 0; padding-top: 4px; }
+      .task:last-of-type { padding-bottom: 4px; }
+      .task .task-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 0 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .task .task-title::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--ricky);
+        flex-shrink: 0;
+      }
+      .ricky-section.later .task .task-title::before { background: var(--ink-subtle); }
+      .task .task-body {
+        font-size: 13px;
+        color: var(--ink-muted);
+        margin: 0;
+        line-height: 1.5;
+        padding-left: 16px;
+      }
+      .task .task-body code {
+        font-size: 12px;
+        background: var(--back-bg);
+        padding: 1px 6px;
+        border-radius: 4px;
+        color: var(--ink);
+      }
+      .task .task-when {
+        font-size: 11px;
+        color: var(--ink-subtle);
+        font-weight: 500;
+        margin-left: auto;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .task .task-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: var(--ricky);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        margin-top: 6px;
+        margin-left: 16px;
+      }
+
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      .chip {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: var(--back-bg);
+        color: var(--back);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .chip.m0 { background: #fce7f3; color: #be185d; }
+      .chip.m1 { background: #ede9fe; color: #6d28d9; }
+      .chip.m2 { background: #e0e7ff; color: #3730a3; }
+      .chip.m3 { background: #cffafe; color: #155e75; }
+      .chip.m4 { background: #ccfbf1; color: #115e59; }
+      .chip.m5 { background: #fef3c7; color: #b45309; }
+      .chip.m6 { background: #fee2e2; color: #b91c1c; }
+      .chip.m7 { background: #f1f5f9; color: #475569; }
+      .chip.ext { background: var(--back-bg); color: var(--back); }
+      @media (prefers-color-scheme: dark) {
+        .chip.m0 { background: #500724; color: #f9a8d4; }
+        .chip.m1 { background: #2e1065; color: #c4b5fd; }
+        .chip.m2 { background: #1e1b4b; color: #a5b4fc; }
+        .chip.m3 { background: #083344; color: #67e8f9; }
+        .chip.m4 { background: #042f2e; color: #5eead4; }
+        .chip.m5 { background: #422006; color: #fcd34d; }
+        .chip.m6 { background: #450a0a; color: #fca5a5; }
+        .chip.m7 { background: #1e293b; color: #cbd5e1; }
+      }
+
+      .board {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+      }
+      @media (max-width: 1100px) { .board { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 640px)  { .board { grid-template-columns: 1fr; } .progress-bars { grid-template-columns: repeat(2, 1fr); } }
+
+      .col {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .col-head {
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .col-head .dot { width: 8px; height: 8px; border-radius: 999px; margin-right: 8px; }
+      .col-title {
+        font-weight: 600;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: flex;
+        align-items: center;
+      }
+      .col-count {
+        font-size: 12px;
+        color: var(--ink-muted);
+        background: var(--back-bg);
+        padding: 2px 8px;
+        border-radius: 999px;
+        min-width: 24px;
+        text-align: center;
+      }
+      .col.done .dot { background: var(--done); }
+      .col.doing .dot { background: var(--doing); }
+      .col.next .dot { background: var(--next); }
+      .col.back .dot { background: var(--back); }
+
+      .col-body {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: calc(100vh - 280px);
+        overflow-y: auto;
+      }
+
+      .card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 14px;
+        transition: transform 80ms ease, box-shadow 120ms ease;
+      }
+      .card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+      .card-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+      .card-id {
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--ink-muted);
+      }
+      .card-date { font-size: 11px; color: var(--ink-subtle); margin-left: auto; }
+      .card-title { font-size: 14px; font-weight: 500; margin: 0 0 4px; line-height: 1.4; }
+      .card-note { font-size: 12px; color: var(--ink-muted); margin: 0; line-height: 1.45; }
+      .card.ext { background: transparent; border-style: dashed; }
+      .card.ext .card-id::before { content: '⚙ '; }
+
+      .phases {
+        margin-top: 40px;
+        padding: 18px 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 12px;
+        line-height: 1.7;
+        white-space: pre;
+        overflow-x: auto;
+        color: var(--ink-muted);
+      }
+      .phases strong { color: var(--ink); font-weight: 600; }
+
+      footer {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--ink-subtle);
+        text-align: center;
+      }
+      footer a { color: var(--ink-muted); text-decoration: underline; text-underline-offset: 3px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div>
+          <h1>Go-Chiro — Build Kanban</h1>
+          <p class="subtitle">Mobile chiropractic portal · patient + practitioner · live build status</p>
+        </div>
+        <div class="meta">
+          Last updated <strong>2026-06-27</strong><br />
+          <a href="https://github.com/CoreshiftHQNZ/go-chiro" target="_blank" rel="noopener">repo</a> ·
+          prod on <strong>main</strong> · staging current
+        </div>
+      </header>
+
+      <section class="progress">
+        <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Where the product is</div>
+        <div class="progress-bars">
+          <div class="pbar"><div class="pbar-label"><strong>Core</strong> Clinical loop</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar"><div class="pbar-label"><strong>Booking</strong> Self-serve + venues</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar"><div class="pbar-label"><strong>Splose</strong> Two-way sync</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar"><div class="pbar-label"><strong>ACC</strong> Capture + lodge</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>UX</strong> Edges &amp; trust</div><div class="pbar-track"><div class="pbar-fill" style="width: 15%"></div></div></div>
+        </div>
+      </section>
+
+      <!-- Ricky's tasks: front-and-centre -->
+      <section class="ricky-panel">
+        <div class="ricky-panel-head">
+          <h2>Ricky&rsquo;s decisions / inputs</h2>
+          <span class="badge">Action items</span>
+        </div>
+        <p class="intro">
+          The build work below I can do solo. These few need a call from you — flagged where they gate a card.
+        </p>
+        <div class="ricky-tasks">
+          <div class="task">
+            <p class="task-title">📲 Decide the reminder channel — SMS, email, or both <span class="task-when">gates T1 · reminders</span></p>
+            <p class="task-body">
+              The app <em>tells</em> patients &ldquo;you&rsquo;ll get reminders 48h and 2h before via email and SMS,&rdquo; but nothing sends them. Email I can wire now via the existing Postmark setup. <strong>SMS needs a Twilio account + credentials</strong> (<code>TWILIO_*</code> env vars). Options: (a) email-only reminders now, add SMS when Twilio&rsquo;s set up; (b) get me Twilio creds and I do both. Either way I&rsquo;ll soften the in-app copy to match what actually fires.
+            </p>
+          </div>
+          <div class="task">
+            <p class="task-title">💳 Confirm auto-pay UX wording before it goes live <span class="task-when">T1 · invoices</span></p>
+            <p class="task-body">
+              Fixing the broken auto-pay wire-up means patients&rsquo; saved cards will actually start auto-charging future invoices. Worth a sanity check on the consent copy (&ldquo;Save your card to automatically pay future invoices&rdquo;) and which invoice states should auto-charge, since it now does something real with their money.
+            </p>
+          </div>
+          <div class="task">
+            <p class="task-title">🚦 Sign off the staging → main promotions per tier <span class="task-when">end of each tier</span></p>
+            <p class="task-body">
+              Plan is one PR per tier into <code>dev</code> → staging smoke test → promote to <code>main</code>. I&rsquo;ll check in with you at the end of each tier before promoting to prod. Any prod DB migrations get run via Supabase MCP at promotion time.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <h2 class="section-title">Build board</h2>
+
+      <div class="legend">
+        <span class="chip m6">T1 · Defects / broken promises</span>
+        <span class="chip m5">T2 · High-value UX gaps</span>
+        <span class="chip m4">T3 · Polish</span>
+        <span class="chip m2">Shipped</span>
+        <span class="chip ext">⚙ Decision / external</span>
+      </div>
+
+      <div class="board">
+        <!-- BACKLOG (T3 polish) -->
+        <section class="col back">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Backlog · Tier 3 polish</div>
+            <div class="col-count">7</div>
+          </div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">BOOK-ADDR</span></div><h3 class="card-title">Booking address autocomplete + early validation</h3><p class="card-note">Route-visit address is free-text with no autocomplete — easy to mistype and land in the wrong zone. Validate at step 2 instead of failing on the confirm POST. Google Places (geocoding service already exists server-side) would tighten this.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">EX-VIDEO</span></div><h3 class="card-title">Exercise video upload UI</h3><p class="card-note">Backend schema supports <code>videoUrl</code> + <code>thumbnailUrl</code>; <code>ExercisesPage</code> has the <code>videoFile</code> state but no upload control. Big lever for patient adherence — show the movement, don&rsquo;t just describe it.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">SCHED-CONFLICT</span></div><h3 class="card-title">Schedule config — overlap detection + per-block errors</h3><p class="card-note">Booking config accepts overlapping blocks (e.g. 9–12 HQ + 11–13 route same day) and a save failure shows a generic error with no indication which day/block broke. Add conflict warnings + field-level validation.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">ACC-PREFILL</span></div><h3 class="card-title">ACC claim pre-fill from latest note</h3><p class="card-note">Diagnosis field hints &ldquo;leave blank to pull from latest session note&rdquo; but never auto-fills; provider number loads but doesn&rsquo;t populate the input. Pre-fill both on patient select.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">PDF-EXPORT</span></div><h3 class="card-title">PDF/export for invoices &amp; notes + add-to-calendar</h3><p class="card-note">Patients can&rsquo;t download an invoice or session summary, and appointments have no iCal/Google calendar export. Common expectations for a health portal.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">INVITE-STATE</span></div><h3 class="card-title">Persist invite / read state</h3><p class="card-note">Practitioner &ldquo;Invited&rdquo; badge and patient note unread-dots are client-only state that resets on reload. Persist invite status + note read receipts to the backend.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">NOTE-MD</span></div><h3 class="card-title">Richer note rendering</h3><p class="card-note">Patient summary markdown parser only handles <code>**bold**</code> — headers, lists, links render as raw text. Use a proper minimal markdown renderer.</p></article>
+          </div>
+        </section>
+
+        <!-- UP NEXT (T2) -->
+        <section class="col next">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Up Next · Tier 2</div>
+            <div class="col-count">5</div>
+          </div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m5">T2</span><span class="card-id">CANCEL-RESCHED</span></div><h3 class="card-title">Patient cancel / reschedule</h3><p class="card-note">Patients can only <em>confirm</em> — any change means phoning the practice, pushing load back on the practitioner. The #1 expectation of a booking portal. Needs cancel + reschedule flows + Splose write-back.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">T2</span><span class="card-id">PATIENT-SETTINGS</span></div><h3 class="card-title">Patient account / settings page</h3><p class="card-note">No way to update address, phone, email, notification prefs, or manage saved cards. Preference columns already exist in the DB — this is a UI build. Address especially matters: it drives route-visit zone assignment.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">T2</span><span class="card-id">PRAC-REPLY</span></div><h3 class="card-title">Practitioner can reply to client messages</h3><p class="card-note">Inbox is read-only — practitioner sees client messages and marks read but can&rsquo;t reply. The patient side already has a full thread UI; close the loop.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">T2</span><span class="card-id">PRAC-RESCHED</span></div><h3 class="card-title">Reschedule / edit appointment from dashboard</h3><p class="card-note">Practitioner must drop into Splose to move an appointment. Quick moves are the common case — add inline reschedule on the dashboard.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">T2</span><span class="card-id">HW-HISTORY</span></div><h3 class="card-title">Homework history + real streak logic</h3><p class="card-note">Patients only see the latest assignment; completed historical homework is hidden. And the &ldquo;streak&rdquo; is just today&rsquo;s done-count, not a rolling streak — misleading. Add history view + persisted streak.</p></article>
+          </div>
+        </section>
+
+        <!-- IN PROGRESS (T1) -->
+        <section class="col doing">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>In Progress · Tier 1 defects</div>
+            <div class="col-count">3</div>
+          </div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m6">T1</span><span class="card-id">AUTOPAY-WIRE</span></div><h3 class="card-title">Wire up auto-pay (silently broken)</h3><p class="card-note">Patient confirms a card in Stripe, modal closes, they believe future invoices auto-charge — they don&rsquo;t. The server endpoint <code>POST /api/patients/me/payment-method</code> exists and works; the client (<code>InvoicesPage.tsx:194</code>) just never calls it after <code>confirmSetup</code>. ~10-line fix. Touches money + trust → highest priority.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m6">T1</span><span class="card-id">REMINDERS</span></div><h3 class="card-title">Appointment reminders (promised, never sent)</h3><p class="card-note">Patients are told they&rsquo;ll get reminders 48h + 2h before via email + SMS. The scheduler only runs the Splose sync cycle — no reminder job exists, though the <code>appointment_reminder</code> template does. Build the scheduled job (or remove the promise). <strong>SMS gated on Twilio decision</strong> — see Ricky&rsquo;s tasks.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m6">T1</span><span class="card-id">BOOK-CONFIRM</span></div><h3 class="card-title">Booking confirmation email/SMS</h3><p class="card-note">Self-book + pay → in-app success screen, then silence. The booking endpoint pushes to Splose but never calls <code>sendNotification()</code>. Patients expect an inbox confirmation; its absence reads as &ldquo;did that work?&rdquo;</p></article>
+          </div>
+        </section>
+
+        <!-- DONE (shipped) -->
+        <section class="col done">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Done · Shipped</div>
+            <div class="col-count">14</div>
+          </div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">ACC-CLAIMS</span></div><h3 class="card-title">ACC claims — capture, lodge, patient history</h3><p class="card-note">Point-of-care ACC45 capture, body sites, lodge tracking + claim numbers, patient-visibility toggle, ACC45/ACC18 PDF generation, patient-facing claim history + download. Shipped to staging 2026-06-27.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">CLINICAL-LOOP</span></div><h3 class="card-title">Clinical loop — session → AI SOAP → publish</h3><p class="card-note">Freeform note entry with auto-save, AI formatting into SOAP, editable clinical note + patient-facing summary, publish marks appointment complete and notifies the patient. The core differentiated flow.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">HOMEWORK</span></div><h3 class="card-title">Homework + exercise library</h3><p class="card-note">Practitioner library CRUD; assign per-session with sets/reps/hold overrides + copy-from-last. Patient side: do-the-work UI, descriptions + safety tips, mark-done with confetti/streak, two-way message thread.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">BOOKING</span></div><h3 class="card-title">Patient self-booking wizard</h3><p class="card-note">3–4 step wizard (service → address → day/time → confirm), HQ slots + route days with capacity, Stripe PaymentIntent, Splose push. GST breakdown + ACC eligibility shown upfront.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">BOOKING-CONFIG</span></div><h3 class="card-title">Booking config — types, venues, schedule</h3><p class="card-note">Appointment types, fixed venues with geocoding, weekly + fortnightly schedule blocks (HQ + route zones), one-off date exceptions.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">MULTI-VENUE</span></div><h3 class="card-title">Multi-venue + recurrence</h3><p class="card-note">Venue-aware availability, per-block routing, fortnightly recurrence (V1 + V2).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">ROUTE-TODAY</span></div><h3 class="card-title">Route Today — home-visit run sheet</h3><p class="card-note">Ordered stops, ETAs, drive times, navigate deep-link, re-optimise. Route engine computes shortest path + arrival windows.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">SPLOSE-SYNC</span></div><h3 class="card-title">Splose two-way sync hardening</h3><p class="card-note">Durable write outbox with retries, reliable in-process scheduler (no external cron dependency), visible sync-health status on the dashboard.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">BOOKING-LOOP</span></div><h3 class="card-title">Booking loop completion</h3><p class="card-note">Mark bookings paid + auto-create the Splose patient record on first booking.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">PAYMENTS</span></div><h3 class="card-title">Stripe payments + practitioner dashboard</h3><p class="card-note">Patient Pay Now (PaymentIntent), invoice list with status; practitioner revenue / outstanding / collected cards + paid-invoice table. (Auto-pay setup is the T1 fix.)</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">AUTH</span></div><h3 class="card-title">Auth — login, invite, magic link, reset</h3><p class="card-note">Email/password + magic link + optional Google OAuth, practitioner-invites-patient → set-password flow, password reset, branded Postmark auth emails, role-based route guards.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">NOTIFS</span></div><h3 class="card-title">Notification service + templates</h3><p class="card-note">Postmark/Twilio/push dispatch respecting per-user prefs, with logged delivery. 5 templates live: notes published, homework assigned, invoice issued, payment confirmed, appointment reminder (template ready — trigger is the T1 fix).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">RESKIN</span></div><h3 class="card-title">Design system reskin</h3><p class="card-note">Design typography applied across patient + practitioner screens (batches 1 + 2), mobile-first layouts with bottom nav + safe-area handling.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">CI</span></div><h3 class="card-title">Clean typecheck + green CI</h3><p class="card-note">Resolved all pre-existing tsc errors; GitHub Actions → Railway auto-deploy on staging + main.</p></article>
+          </div>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
