@@ -369,7 +369,7 @@
         <div class="meta">
           Last updated <strong>2026-06-27</strong><br />
           <a href="https://github.com/CoreshiftHQNZ/go-chiro" target="_blank" rel="noopener">repo</a> ·
-          prod on <strong>main</strong> · staging current
+          <strong>Tiers 1–3 live in prod</strong>
         </div>
       </header>
 
@@ -380,7 +380,7 @@
           <div class="pbar"><div class="pbar-label"><strong>Booking</strong> Self-serve + venues</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>Splose</strong> Two-way sync</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>ACC</strong> Capture + lodge</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>UX</strong> Edges &amp; trust</div><div class="pbar-track"><div class="pbar-fill" style="width: 92%"></div></div></div>
+          <div class="pbar"><div class="pbar-label"><strong>UX</strong> Edges &amp; trust</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
         </div>
       </section>
 
@@ -434,7 +434,7 @@
           </div>
           <div class="col-body">
             <article class="card"><div class="card-head"><span class="chip m6">ACC</span><span class="card-id">ACC18-CAPTURE</span></div><h3 class="card-title">ACC18 work-capacity capture form</h3><p class="card-note">ACC45 is done. The ACC18 medical certificate generator exists but its core sections — work-capacity (ability / tolerance / risk) and work modifications — render as hardcoded placeholders with no capture form or data model. Needs a capture form + schema + PDF wiring before ACC18 is lodge-ready. Own workstream, not polish.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">EX-VIDEO</span></div><h3 class="card-title">Exercise video upload</h3><p class="card-note">Storage infra exists (Supabase Storage via <code>/api/files</code>) but the upload route caps at 10&nbsp;MB and images/PDF only. Needs decisions: max video size, host-and-stream vs. link YouTube/Vimeo, thumbnails. Deferred pending those.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">EX-VIDEO</span></div><h3 class="card-title">Exercise videos via YouTube link</h3><p class="card-note"><strong>Decided:</strong> link YouTube videos rather than host/stream uploads — much simpler. Add a YouTube URL field to the exercise form + an embedded player on the patient homework view. No storage/size concerns. Ready to build.</p></article>
             <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">BOOK-ADDR</span></div><h3 class="card-title">Booking address autocomplete</h3><p class="card-note">Route-visit address is free-text — easy to mistype into the wrong zone. <strong>Needs a Google Places API key</strong> + client config. Blocked on the key.</p></article>
             <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">DOC-PDF</span></div><h3 class="card-title">Invoice / session-note PDF download</h3><p class="card-note">Patients can&rsquo;t download an invoice or summary as PDF. Add-to-calendar (.ics) shipped; PDFKit exists server-side for these. Nice-to-have.</p></article>
           </div>
@@ -447,14 +447,14 @@
             <div class="col-count">1</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip ext">release</span><span class="card-id">PROMOTE</span></div><h3 class="card-title">Promote dev → staging → prod</h3><p class="card-note">Tiers 1–3 (bar 3 deferred items) are done in dev. One batched promotion: PR dev → staging, apply migrations <code>0015–0018</code> to staging Supabase, smoke-test (incl. Splose cancel/reschedule write-backs + set <code>VAPID_*</code>), then staging → main + prod migrations. Awaiting go-ahead.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">✓ done</span><span class="card-id">PROMOTE</span></div><h3 class="card-title">Promoted to production ✅</h3><p class="card-note">Shipped 2026-06-27 (PRs #53 → #54). Migrations <code>0015–0018</code> applied to the go-chiro Supabase DB; <code>VAPID_*</code> set on Railway staging + production. Prod verified healthy (site + login + push key endpoint 200).</p></article>
           </div>
         </section>
 
         <!-- IN DEV — Tiers 1 + 2 + push, merged, awaiting batched promotion -->
-        <section class="col doing">
+        <section class="col done">
           <div class="col-head">
-            <div class="col-title"><span class="dot"></span>In dev · awaiting promotion</div>
+            <div class="col-title"><span class="dot"></span>Shipped · this release (prod)</div>
             <div class="col-count">11</div>
           </div>
           <div class="col-body">
