@@ -380,7 +380,7 @@
           <div class="pbar"><div class="pbar-label"><strong>Booking</strong> Self-serve + venues</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>Splose</strong> Two-way sync</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>ACC</strong> Capture + lodge</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>UX</strong> Edges &amp; trust</div><div class="pbar-track"><div class="pbar-fill" style="width: 15%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>UX</strong> Edges &amp; trust</div><div class="pbar-track"><div class="pbar-fill" style="width: 45%"></div></div></div>
         </div>
       </section>
 
@@ -395,9 +395,9 @@
         </p>
         <div class="ricky-tasks">
           <div class="task">
-            <p class="task-title">📲 Decide the reminder channel — SMS, email, or both <span class="task-when">gates T1 · reminders</span></p>
+            <p class="task-title">🔑 Set the VAPID env vars in Railway (staging + prod) <span class="task-when">at promotion · push notifications</span></p>
             <p class="task-body">
-              The app <em>tells</em> patients &ldquo;you&rsquo;ll get reminders 48h and 2h before via email and SMS,&rdquo; but nothing sends them. Email I can wire now via the existing Postmark setup. <strong>SMS needs a Twilio account + credentials</strong> (<code>TWILIO_*</code> env vars). Options: (a) email-only reminders now, add SMS when Twilio&rsquo;s set up; (b) get me Twilio creds and I do both. Either way I&rsquo;ll soften the in-app copy to match what actually fires.
+              <strong>Decided:</strong> reminders go out by <strong>PWA push</strong> (not SMS) plus email. The Web Push stack is built and merged to dev. To turn it on, three env vars need setting in Railway staging + prod: <code>VAPID_PUBLIC_KEY</code>, <code>VAPID_PRIVATE_KEY</code>, <code>VAPID_SUBJECT</code> — I&rsquo;ve generated a keypair and can set them via the Railway CLI for you at promotion. Until they&rsquo;re set the push channel is a graceful no-op (email reminders still send).
             </p>
           </div>
           <div class="task">
@@ -458,16 +458,17 @@
           </div>
         </section>
 
-        <!-- IN PROGRESS (T1) -->
+        <!-- IN DEV — Tier 1 + push, merged, awaiting batched promotion -->
         <section class="col doing">
           <div class="col-head">
-            <div class="col-title"><span class="dot"></span>In Progress · Tier 1 defects</div>
-            <div class="col-count">3</div>
+            <div class="col-title"><span class="dot"></span>In dev · awaiting promotion</div>
+            <div class="col-count">4</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m6">T1</span><span class="card-id">AUTOPAY-WIRE</span></div><h3 class="card-title">Wire up auto-pay (silently broken)</h3><p class="card-note">Patient confirms a card in Stripe, modal closes, they believe future invoices auto-charge — they don&rsquo;t. The server endpoint <code>POST /api/patients/me/payment-method</code> exists and works; the client (<code>InvoicesPage.tsx:194</code>) just never calls it after <code>confirmSetup</code>. ~10-line fix. Touches money + trust → highest priority.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m6">T1</span><span class="card-id">REMINDERS</span></div><h3 class="card-title">Appointment reminders (promised, never sent)</h3><p class="card-note">Patients are told they&rsquo;ll get reminders 48h + 2h before via email + SMS. The scheduler only runs the Splose sync cycle — no reminder job exists, though the <code>appointment_reminder</code> template does. Build the scheduled job (or remove the promise). <strong>SMS gated on Twilio decision</strong> — see Ricky&rsquo;s tasks.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m6">T1</span><span class="card-id">BOOK-CONFIRM</span></div><h3 class="card-title">Booking confirmation email/SMS</h3><p class="card-note">Self-book + pay → in-app success screen, then silence. The booking endpoint pushes to Splose but never calls <code>sendNotification()</code>. Patients expect an inbox confirmation; its absence reads as &ldquo;did that work?&rdquo;</p></article>
+            <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">AUTOPAY-WIRE</span></div><h3 class="card-title">Auto-pay wired up</h3><p class="card-note">Fixed: client now reads the confirmed SetupIntent and POSTs the payment method to <code>/api/patients/me/payment-method</code>, so saving a card actually enables auto-charge. Stale return_url fixed too. <strong>Merged to dev (PR #43).</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">BOOK-CONFIRM</span></div><h3 class="card-title">Booking confirmation sent</h3><p class="card-note">New <code>appointment_booked</code> template (HQ time vs route arrival-window aware), fired after every self-booking. Patients now get an inbox + push confirmation. <strong>Merged to dev (PR #43).</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">REMINDERS</span></div><h3 class="card-title">Appointment reminders sending</h3><p class="card-note">New <code>runReminderCycle()</code> on the scheduler tick using the existing 48h/2h flags. Email sends now; push via VAPID once env vars set. In-app copy softened to match. <strong>Merged to dev (PR #43).</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">PUSH ✓ dev</span><span class="card-id">PWA-PUSH</span></div><h3 class="card-title">PWA push notifications (Web Push / VAPID)</h3><p class="card-note">Lit up the previously-stubbed push channel for <em>all</em> notification types. Service worker, subscription store + endpoints, <code>web-push</code> fan-out with dead-endpoint pruning, and an &ldquo;Enable reminders&rdquo; prompt on the patient dashboard. Needs <code>VAPID_*</code> env vars at promotion. <strong>Merged to dev (PR #44).</strong></p></article>
           </div>
         </section>
 
