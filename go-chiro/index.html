@@ -380,7 +380,7 @@
           <div class="pbar"><div class="pbar-label"><strong>Booking</strong> Self-serve + venues</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>Splose</strong> Two-way sync</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>ACC</strong> Capture + lodge</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>UX</strong> Edges &amp; trust</div><div class="pbar-track"><div class="pbar-fill" style="width: 45%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>UX</strong> Edges &amp; trust</div><div class="pbar-track"><div class="pbar-fill" style="width: 80%"></div></div></div>
         </div>
       </section>
 
@@ -443,32 +443,34 @@
           </div>
         </section>
 
-        <!-- UP NEXT (T2) -->
+        <!-- UP NEXT -->
         <section class="col next">
           <div class="col-head">
-            <div class="col-title"><span class="dot"></span>Up Next · Tier 2</div>
-            <div class="col-count">5</div>
+            <div class="col-title"><span class="dot"></span>Up Next</div>
+            <div class="col-count">1</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m5">T2</span><span class="card-id">CANCEL-RESCHED</span></div><h3 class="card-title">Patient cancel / reschedule</h3><p class="card-note">Patients can only <em>confirm</em> — any change means phoning the practice, pushing load back on the practitioner. The #1 expectation of a booking portal. Needs cancel + reschedule flows + Splose write-back.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m5">T2</span><span class="card-id">PATIENT-SETTINGS</span></div><h3 class="card-title">Patient account / settings page</h3><p class="card-note">No way to update address, phone, email, notification prefs, or manage saved cards. Preference columns already exist in the DB — this is a UI build. Address especially matters: it drives route-visit zone assignment.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m5">T2</span><span class="card-id">PRAC-REPLY</span></div><h3 class="card-title">Practitioner can reply to client messages</h3><p class="card-note">Inbox is read-only — practitioner sees client messages and marks read but can&rsquo;t reply. The patient side already has a full thread UI; close the loop.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m5">T2</span><span class="card-id">PRAC-RESCHED</span></div><h3 class="card-title">Reschedule / edit appointment from dashboard</h3><p class="card-note">Practitioner must drop into Splose to move an appointment. Quick moves are the common case — add inline reschedule on the dashboard.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m5">T2</span><span class="card-id">HW-HISTORY</span></div><h3 class="card-title">Homework history + real streak logic</h3><p class="card-note">Patients only see the latest assignment; completed historical homework is hidden. And the &ldquo;streak&rdquo; is just today&rsquo;s done-count, not a rolling streak — misleading. Add history view + persisted streak.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">Tier 3</span><span class="card-id">POLISH</span></div><h3 class="card-title">Tier 3 polish batch →</h3><p class="card-note">Tiers 1 + 2 are done and in dev. Next up is the Tier 3 polish backlog (left column): booking address autocomplete, exercise video upload, schedule conflict detection, ACC pre-fill, PDF/calendar export, persisted read/invite state, richer note rendering.</p></article>
           </div>
         </section>
 
-        <!-- IN DEV — Tier 1 + push, merged, awaiting batched promotion -->
+        <!-- IN DEV — Tiers 1 + 2 + push, merged, awaiting batched promotion -->
         <section class="col doing">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>In dev · awaiting promotion</div>
-            <div class="col-count">4</div>
+            <div class="col-count">10</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">AUTOPAY-WIRE</span></div><h3 class="card-title">Auto-pay wired up</h3><p class="card-note">Fixed: client now reads the confirmed SetupIntent and POSTs the payment method to <code>/api/patients/me/payment-method</code>, so saving a card actually enables auto-charge. Stale return_url fixed too. <strong>Merged to dev (PR #43).</strong></p></article>
-            <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">BOOK-CONFIRM</span></div><h3 class="card-title">Booking confirmation sent</h3><p class="card-note">New <code>appointment_booked</code> template (HQ time vs route arrival-window aware), fired after every self-booking. Patients now get an inbox + push confirmation. <strong>Merged to dev (PR #43).</strong></p></article>
-            <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">REMINDERS</span></div><h3 class="card-title">Appointment reminders sending</h3><p class="card-note">New <code>runReminderCycle()</code> on the scheduler tick using the existing 48h/2h flags. Email sends now; push via VAPID once env vars set. In-app copy softened to match. <strong>Merged to dev (PR #43).</strong></p></article>
-            <article class="card"><div class="card-head"><span class="chip m4">PUSH ✓ dev</span><span class="card-id">PWA-PUSH</span></div><h3 class="card-title">PWA push notifications (Web Push / VAPID)</h3><p class="card-note">Lit up the previously-stubbed push channel for <em>all</em> notification types. Service worker, subscription store + endpoints, <code>web-push</code> fan-out with dead-endpoint pruning, and an &ldquo;Enable reminders&rdquo; prompt on the patient dashboard. Needs <code>VAPID_*</code> env vars at promotion. <strong>Merged to dev (PR #44).</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">AUTOPAY-WIRE</span></div><h3 class="card-title">Auto-pay wired up</h3><p class="card-note">Client now reads the confirmed SetupIntent and POSTs the payment method to <code>/api/patients/me/payment-method</code>, so saving a card actually enables auto-charge. <strong>PR #43.</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">BOOK-CONFIRM</span></div><h3 class="card-title">Booking confirmation sent</h3><p class="card-note">New <code>appointment_booked</code> template fired after every self-booking — inbox + push confirmation. <strong>PR #43.</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">REMINDERS</span></div><h3 class="card-title">Appointment reminders sending</h3><p class="card-note"><code>runReminderCycle()</code> on the scheduler tick (48h/2h). Email now; push via VAPID once env set. <strong>PR #43.</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">PUSH ✓ dev</span><span class="card-id">PWA-PUSH</span></div><h3 class="card-title">PWA push notifications (VAPID)</h3><p class="card-note">Lit up the push channel for all notification types — service worker, subscription store, <code>web-push</code> fan-out, enable prompt. Needs <code>VAPID_*</code> at promotion. <strong>PR #44.</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">UX ✓ dev</span><span class="card-id">CLIENTS-SORT</span></div><h3 class="card-title">Clients A–Z + paginate 20/page</h3><p class="card-note">Practitioner Clients list sorts case-insensitively and paginates at 20/page with prev/next. <strong>PR #45.</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">T2 ✓ dev</span><span class="card-id">PATIENT-SETTINGS</span></div><h3 class="card-title">Patient account & settings page</h3><p class="card-note">Profile, address (re-geocodes), notification toggles (incl. push), and card/auto-pay management. Implements the stubbed <code>PUT /api/patients/me</code>. <strong>PR #46.</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">T2 ✓ dev</span><span class="card-id">CANCEL-RESCHED</span></div><h3 class="card-title">Patient cancel / reschedule</h3><p class="card-note">Cancel (with Splose <code>cancel_booking</code> write-back + route recompute) and Reschedule (cancel + rebook) on each upcoming appointment. <strong>PR #47.</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">T2 ✓ dev</span><span class="card-id">PRAC-REPLY</span></div><h3 class="card-title">Practitioner reply to messages</h3><p class="card-note">New <code>sender_role</code> column + <code>/api/messages/reply</code>; dashboard reply box; patient thread shows replies. <strong>PR #48.</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">T2 ✓ dev</span><span class="card-id">HW-HISTORY</span></div><h3 class="card-title">Homework history + real streak</h3><p class="card-note">Server-computed consecutive-day streak (replaces the fake one) + a &ldquo;view past homework&rdquo; history list. <strong>PR #49.</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">T2 ✓ dev</span><span class="card-id">PRAC-RESCHED</span></div><h3 class="card-title">Practitioner reschedule from dashboard</h3><p class="card-note">Inline datetime picker → <code>/api/appointments/:id/reschedule</code> with Splose <code>reschedule_booking</code> write-back + route recompute. <strong>PR #50.</strong></p></article>
           </div>
         </section>
 
