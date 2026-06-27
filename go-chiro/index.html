@@ -380,7 +380,7 @@
           <div class="pbar"><div class="pbar-label"><strong>Booking</strong> Self-serve + venues</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>Splose</strong> Two-way sync</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>ACC</strong> Capture + lodge</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>UX</strong> Edges &amp; trust</div><div class="pbar-track"><div class="pbar-fill" style="width: 80%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>UX</strong> Edges &amp; trust</div><div class="pbar-track"><div class="pbar-fill" style="width: 92%"></div></div></div>
         </div>
       </section>
 
@@ -429,17 +429,14 @@
         <!-- BACKLOG (T3 polish) -->
         <section class="col back">
           <div class="col-head">
-            <div class="col-title"><span class="dot"></span>Backlog · Tier 3 polish</div>
-            <div class="col-count">7</div>
+            <div class="col-title"><span class="dot"></span>Backlog</div>
+            <div class="col-count">4</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">BOOK-ADDR</span></div><h3 class="card-title">Booking address autocomplete + early validation</h3><p class="card-note">Route-visit address is free-text with no autocomplete — easy to mistype and land in the wrong zone. Validate at step 2 instead of failing on the confirm POST. Google Places (geocoding service already exists server-side) would tighten this.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">EX-VIDEO</span></div><h3 class="card-title">Exercise video upload UI</h3><p class="card-note">Backend schema supports <code>videoUrl</code> + <code>thumbnailUrl</code>; <code>ExercisesPage</code> has the <code>videoFile</code> state but no upload control. Big lever for patient adherence — show the movement, don&rsquo;t just describe it.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">SCHED-CONFLICT</span></div><h3 class="card-title">Schedule config — overlap detection + per-block errors</h3><p class="card-note">Booking config accepts overlapping blocks (e.g. 9–12 HQ + 11–13 route same day) and a save failure shows a generic error with no indication which day/block broke. Add conflict warnings + field-level validation.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">ACC-PREFILL</span></div><h3 class="card-title">ACC claim pre-fill from latest note</h3><p class="card-note">Diagnosis field hints &ldquo;leave blank to pull from latest session note&rdquo; but never auto-fills; provider number loads but doesn&rsquo;t populate the input. Pre-fill both on patient select.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">PDF-EXPORT</span></div><h3 class="card-title">PDF/export for invoices &amp; notes + add-to-calendar</h3><p class="card-note">Patients can&rsquo;t download an invoice or session summary, and appointments have no iCal/Google calendar export. Common expectations for a health portal.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">INVITE-STATE</span></div><h3 class="card-title">Persist invite / read state</h3><p class="card-note">Practitioner &ldquo;Invited&rdquo; badge and patient note unread-dots are client-only state that resets on reload. Persist invite status + note read receipts to the backend.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">NOTE-MD</span></div><h3 class="card-title">Richer note rendering</h3><p class="card-note">Patient summary markdown parser only handles <code>**bold**</code> — headers, lists, links render as raw text. Use a proper minimal markdown renderer.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m6">ACC</span><span class="card-id">ACC18-CAPTURE</span></div><h3 class="card-title">ACC18 work-capacity capture form</h3><p class="card-note">ACC45 is done. The ACC18 medical certificate generator exists but its core sections — work-capacity (ability / tolerance / risk) and work modifications — render as hardcoded placeholders with no capture form or data model. Needs a capture form + schema + PDF wiring before ACC18 is lodge-ready. Own workstream, not polish.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">EX-VIDEO</span></div><h3 class="card-title">Exercise video upload</h3><p class="card-note">Storage infra exists (Supabase Storage via <code>/api/files</code>) but the upload route caps at 10&nbsp;MB and images/PDF only. Needs decisions: max video size, host-and-stream vs. link YouTube/Vimeo, thumbnails. Deferred pending those.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">BOOK-ADDR</span></div><h3 class="card-title">Booking address autocomplete</h3><p class="card-note">Route-visit address is free-text — easy to mistype into the wrong zone. <strong>Needs a Google Places API key</strong> + client config. Blocked on the key.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">DOC-PDF</span></div><h3 class="card-title">Invoice / session-note PDF download</h3><p class="card-note">Patients can&rsquo;t download an invoice or summary as PDF. Add-to-calendar (.ics) shipped; PDFKit exists server-side for these. Nice-to-have.</p></article>
           </div>
         </section>
 
@@ -450,7 +447,7 @@
             <div class="col-count">1</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m4">Tier 3</span><span class="card-id">POLISH</span></div><h3 class="card-title">Tier 3 polish batch →</h3><p class="card-note">Tiers 1 + 2 are done and in dev. Next up is the Tier 3 polish backlog (left column): booking address autocomplete, exercise video upload, schedule conflict detection, ACC pre-fill, PDF/calendar export, persisted read/invite state, richer note rendering.</p></article>
+            <article class="card"><div class="card-head"><span class="chip ext">release</span><span class="card-id">PROMOTE</span></div><h3 class="card-title">Promote dev → staging → prod</h3><p class="card-note">Tiers 1–3 (bar 3 deferred items) are done in dev. One batched promotion: PR dev → staging, apply migrations <code>0015–0018</code> to staging Supabase, smoke-test (incl. Splose cancel/reschedule write-backs + set <code>VAPID_*</code>), then staging → main + prod migrations. Awaiting go-ahead.</p></article>
           </div>
         </section>
 
@@ -458,7 +455,7 @@
         <section class="col doing">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>In dev · awaiting promotion</div>
-            <div class="col-count">10</div>
+            <div class="col-count">11</div>
           </div>
           <div class="col-body">
             <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">AUTOPAY-WIRE</span></div><h3 class="card-title">Auto-pay wired up</h3><p class="card-note">Client now reads the confirmed SetupIntent and POSTs the payment method to <code>/api/patients/me/payment-method</code>, so saving a card actually enables auto-charge. <strong>PR #43.</strong></p></article>
@@ -471,6 +468,7 @@
             <article class="card"><div class="card-head"><span class="chip m5">T2 ✓ dev</span><span class="card-id">PRAC-REPLY</span></div><h3 class="card-title">Practitioner reply to messages</h3><p class="card-note">New <code>sender_role</code> column + <code>/api/messages/reply</code>; dashboard reply box; patient thread shows replies. <strong>PR #48.</strong></p></article>
             <article class="card"><div class="card-head"><span class="chip m5">T2 ✓ dev</span><span class="card-id">HW-HISTORY</span></div><h3 class="card-title">Homework history + real streak</h3><p class="card-note">Server-computed consecutive-day streak (replaces the fake one) + a &ldquo;view past homework&rdquo; history list. <strong>PR #49.</strong></p></article>
             <article class="card"><div class="card-head"><span class="chip m5">T2 ✓ dev</span><span class="card-id">PRAC-RESCHED</span></div><h3 class="card-title">Practitioner reschedule from dashboard</h3><p class="card-note">Inline datetime picker → <code>/api/appointments/:id/reschedule</code> with Splose <code>reschedule_booking</code> write-back + route recompute. <strong>PR #50.</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">T3 ✓ dev</span><span class="card-id">T3-POLISH</span></div><h3 class="card-title">Tier 3 polish (6 of 7)</h3><p class="card-note">Richer markdown notes, persisted note read-state, ACC pre-fill (provider + diagnosis from latest assessment), add-to-calendar (.ics), schedule overlap detection, persisted &ldquo;Invited&rdquo; badge. <strong>PRs #51, #52.</strong> Remaining 3 in backlog (need decisions/keys).</p></article>
           </div>
         </section>
 
