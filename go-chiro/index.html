@@ -454,9 +454,10 @@
         <section class="col done">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Shipped · this release (prod)</div>
-            <div class="col-count">12</div>
+            <div class="col-count">13</div>
           </div>
           <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m2">post-launch ✓ prod</span><span class="card-id">HARDENING</span></div><h3 class="card-title">Post-launch fixes</h3><p class="card-note">Clients list cap 200→all (practice has 327, were hidden). Live Stripe wired correctly — secret + both publishable keys on one live account + live webhook + signing secret (prod was previously mismatched/broken). Invite button → <strong>Active</strong> badge once a client has signed in (new <code>activated_at</code>). PRs #58, #60–#63.</p></article>
             <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">AUTOPAY-WIRE</span></div><h3 class="card-title">Auto-pay wired up</h3><p class="card-note">Client now reads the confirmed SetupIntent and POSTs the payment method to <code>/api/patients/me/payment-method</code>, so saving a card actually enables auto-charge. <strong>PR #43.</strong></p></article>
             <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">BOOK-CONFIRM</span></div><h3 class="card-title">Booking confirmation sent</h3><p class="card-note">New <code>appointment_booked</code> template fired after every self-booking — inbox + push confirmation. <strong>PR #43.</strong></p></article>
             <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">REMINDERS</span></div><h3 class="card-title">Appointment reminders sending</h3><p class="card-note"><code>runReminderCycle()</code> on the scheduler tick (48h/2h). Email now; push via VAPID once env set. <strong>PR #43.</strong></p></article>
