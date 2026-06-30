@@ -26,7 +26,7 @@
 
 ## 🔵 This Week
 
-- **Unblock chosen AI crawlers** `phase-0` `infra` — Decide policy and stop blocking the answer engines we want citing us — almost certainly the Cloudflare "Block AI Scrapers" toggle injecting the live robots.txt.
+- **Unblock AI crawlers (Cloudflare)** `phase-0` `infra` `blocked-by:dashboard` — Confirmed: AI bots are hard-blocked at the edge — 403 to GPTBot/OAI-SearchBot/ClaudeBot/PerplexityBot, Googlebot 200 — via AI Crawl Control + "Block AI Scrapers" + managed robots.txt (ai-train=no). Decision: allow ALL AI crawlers. Action (dashboard, CoreshiftHq acct): AI Crawl Control → Crawlers → Allow; Security → Bots → Block AI Scrapers = Off; disable managed robots.txt. Not doable via the Workers-only MCP. Until lifted, PR #5 prerender doesn't reach AI engines.
 - **Verify Railway/Chromium build on staging** `phase-0` `infra` `blocked-by:pr-5` — After PR #5 merges, confirm the nixpacks build installs Chromium and prerender runs on the staging deploy (the one thing not testable locally).
 
 ## ⚪ Backlog

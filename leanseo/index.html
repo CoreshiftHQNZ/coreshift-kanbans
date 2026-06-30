@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>25%</strong> complete</div>
         <div><strong>5</strong>/20 cards done</div>
-        <div>Updated <strong>2026-06-30 02:52 UTC</strong></div>
+        <div>Updated <strong>2026-06-30 03:00 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1008,9 +1008,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Unblock chosen AI crawlers</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Decide policy and stop blocking the answer engines we want citing us — almost certainly the Cloudflare &quot;Block AI Scrapers&quot; toggle injecting the live robots.txt</div>
+        <div class="card-title">Unblock AI crawlers (Cloudflare)</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span><span class="tag tag-blocked">blocked-by:dashboard</span></div>
+        <div class="card-desc">Confirmed: AI bots are hard-blocked at the edge — 403 to GPTBot/OAI-SearchBot/ClaudeBot/PerplexityBot, Googlebot 200 — via AI Crawl Control + &quot;Block AI Scrapers&quot; + managed robots.txt (ai-train=no). Decision: allow ALL AI crawlers. Action (dashboard, CoreshiftHq acct): AI Crawl Control → Crawlers → Allow; Security → Bots → Block AI Scrapers = Off; disable managed robots.txt. Not doable via the Workers-only MCP. Until lifted, PR #5 prerender doesn&#39;t reach AI engines</div>
       </div>
       <div class="card">
         <div class="card-title">Verify Railway/Chromium build on staging</div>
