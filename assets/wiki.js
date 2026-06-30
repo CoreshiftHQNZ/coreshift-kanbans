@@ -45,6 +45,7 @@
       items: [
         { key: "access",     icon: "🔑", text: "Account & access", href: "wiki/access/" },
         { key: "setup",      icon: "🧭", text: "Setup & onboarding", href: "wiki/setup/" },
+         { key: "slack",      icon: "💬", text: "Slack",            href: "wiki/slack/" },
         { key: "playbooks",  icon: "📕", text: "Playbooks",        href: "wiki/playbooks/" },
       ],
     },
