@@ -10,6 +10,12 @@ Our living knowledge base for working well with AI — agent skills, coding work
 
 *Last updated: 30 Jun 2026 · Standout — full deck available · Sources: [Building Great Agent Skills: The Missing Manual](https://www.youtube.com/watch?v=UNzCG3lw6O0) (Matt Pocock / AI Engineer) · [mattpocock/skills v1.0 — progressive disclosure](https://www.aihero.dev/posts)*
 
+🎬 *Watch — Matt Pocock / AI Engineer (45 min):*
+
+<div style="position:relative;width:100%;max-width:760px;aspect-ratio:16/9;margin:1.1rem 0;">
+<iframe src="https://www.youtube-nocookie.com/embed/UNzCG3lw6O0" title="Building Great Agent Skills: The Missing Manual" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
 A skill is its **description** + a **SKILL.md** file + any **reference material** that branches off it. Evaluate and improve every skill against four things — trigger, structure, steering, pruning.
 
 **1 · Trigger — how it's invoked.** Decide deliberately between *user-invoked* (no description in context → zero context load, but higher cognitive load on the user; set `disable-model-invocation: true`) and *model-invoked* (description always in context → flexible but adds token + decision load, and may not fire even when it's a perfect fit, forcing you to write evals). Neither is free; choose per skill.
@@ -24,7 +30,13 @@ A skill is its **description** + a **SKILL.md** file + any **reference material*
 
 **How we apply it at Coreshift:** build in vertical slices not horizontal layers; one source of truth (generated Supabase types, shared validation, RLS for authz); a deletion-test prompt in the PR template; human-in-the-loop gates before migrations and prod deploys.
 
-📊 **Deck:** [Building Great Agent Skills (.pptx) →](../../ai-radar/decks/Building-Great-Agent-Skills.pptx)
+📊 *Slides — click through inline (or use fullscreen):*
+
+<div style="position:relative;width:100%;max-width:820px;aspect-ratio:16/9;margin:1.1rem 0;">
+<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FCoreshiftHQNZ%2Fcoreshift-kanbans%2Fmain%2Fai-radar%2Fdecks%2FBuilding-Great-Agent-Skills.pptx" title="Building Great Agent Skills — slides" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;" allowfullscreen></iframe>
+</div>
+
+[Download the deck (.pptx) →](../../ai-radar/decks/Building-Great-Agent-Skills.pptx)
 
 ---
 
@@ -46,7 +58,13 @@ The biggest practice signal this week is a convergence: **agents get reliable wh
 
 **How we apply it at Coreshift:** every agent-run task ships with an explicit success check — typecheck + tests for code, schema/format validation for data, a written rubric for anything fuzzier; V2 tasks (DB migrations, prod deploys, outbound comms) keep their human gate; we treat "we can't verify this yet" as a reason to *not* hand it to an agent.
 
-📊 **Deck:** [Evals & Self-Verifying Agents (.pptx) →](../../ai-radar/decks/Evals-and-Self-Verifying-Agents.pptx)
+📊 *Slides — click through inline (or use fullscreen):*
+
+<div style="position:relative;width:100%;max-width:820px;aspect-ratio:16/9;margin:1.1rem 0;">
+<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FCoreshiftHQNZ%2Fcoreshift-kanbans%2Fmain%2Fai-radar%2Fdecks%2FEvals-and-Self-Verifying-Agents.pptx" title="Evals & Self-Verifying Agents — slides" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;" allowfullscreen></iframe>
+</div>
+
+[Download the deck (.pptx) →](../../ai-radar/decks/Evals-and-Self-Verifying-Agents.pptx)
 
 ---
 
