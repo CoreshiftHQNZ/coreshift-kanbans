@@ -1,0 +1,2 @@
+Submissions land here automatically (mirrored from GitHub issues by .github/workflows/radar-intake.yml).
+The Monday AI Radar run reads any file with "status: pending", decides, and updates the wiki.

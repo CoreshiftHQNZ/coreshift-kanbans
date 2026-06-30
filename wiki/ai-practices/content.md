@@ -8,7 +8,7 @@ Our living knowledge base for working well with AI — agent skills, coding work
 
 ## 📬 Share a find
 
-*Spotted a tool, post, video, or trick worth adding? Drop the link below. The radar reviews submissions in its **Monday run** and replies on your submission to say whether it made it in — and where.*
+*Spotted a tool, post, video, or trick worth adding? Drop the link below. The radar reviews submissions in its **Monday run** and posts the outcome — added or not, and where — in the **Recently reviewed** list further down.*
 
 <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/issues/new?template=radar-submission.yml" target="_blank" rel="noopener" style="display:inline-block;margin:0.4rem 0 0.2rem;padding:10px 18px;background:#028090;color:#ffffff;border-radius:9px;font-weight:600;text-decoration:none;">➕ Submit a link for review</a>
 

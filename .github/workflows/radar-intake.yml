@@ -1,0 +1,34 @@
+name: Radar intake
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: write
+jobs:
+  mirror:
+    if: startsWith(github.event.issue.title, '[Radar]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Mirror submission into repo
+        env:
+          NUM: ${{ github.event.issue.number }}
+          TITLE: ${{ github.event.issue.title }}
+          BODY: ${{ github.event.issue.body }}
+          LOGIN: ${{ github.event.issue.user.login }}
+          URL: ${{ github.event.issue.html_url }}
+        run: |
+          mkdir -p ai-radar/submissions
+          f="ai-radar/submissions/${NUM}.md"
+          {
+            printf '# Submission #%s: %s\n\n' "$NUM" "$TITLE"
+            printf -- '- issue: %s\n' "$URL"
+            printf -- '- from: %s\n' "$LOGIN"
+            printf -- '- status: pending\n\n'
+            printf '%s\n' "$BODY"
+          } > "$f"
+          git config user.name "radar-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$f"
+          git commit -m "Radar intake: submission #${NUM}"
+          git push
