@@ -331,3 +331,21 @@ a { color: var(--teal-dark); }
 .home-digest-body h3 { font-size: 16px; margin: 14px 0 6px; }
 .home-digest-body ul { margin: 6px 0 12px; padding-left: 20px; }
 .home-digest-body li { margin: 4px 0; }
+
+
+/* Inline images / animated GIFs in articles (Slack onboarding page) */
+.wiki-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 14px 0 6px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+.wiki-content img + em {
+  display: block;
+  font-size: 13px;
+  color: var(--text-soft);
+  margin: 0 0 18px;
+}
