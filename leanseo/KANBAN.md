@@ -19,7 +19,7 @@
 
 ## 🟡 In Progress
 
-- **Prerender + GEO foundations** `phase-0` `in-progress` — PR #5 MERGED to dev (efa8379) + promoted to staging branch. CI build check passed = prerender + puppeteer run green in clean CI. Verified locally (real content + JSON-LD per route). Railway staging deploy unverified — staging.leanseo.co.nz returns 404 (env/domain not serving). Not on prod yet.
+- **Prerender + GEO foundations** `phase-0` `in-progress` — PR #5 (prerender + sitemap/llms.txt/Organization schema/og-image) + PR #6 (Dockerfile fix) merged to dev (e3c0447) + promoted to staging branch. CI green (prerender runs in clean CI). Real content + JSON-LD per route verified locally and in a containerized build. On staging branch; not on prod yet.
 
 ## 🚫 Blocked
 
@@ -27,7 +27,7 @@
 
 ## 🔵 This Week
 
-- **Verify Railway/Chromium build** `phase-0` `infra` `blocked-by:railway-access` — CI build (incl. prerender) is green, so logic is sound; only the Railway nixpacks Chromium path is unverified. Blocked: staging.leanseo.co.nz 404s (env not serving) and no Railway CLI/dashboard access here. Need Railway staging deploy log, the *.up.railway.app URL, or a RAILWAY_TOKEN. Safe fallback: if nixpacks Chromium fails, the build fails and Railway keeps the last good deploy (no prod regression).
+- **Confirm Railway staging deploy is green** `phase-0` `infra` — First Railway build of #5 FAILED (Railpack ignored nixpacks.toml; image lacked Chrome libs → `libglib-2.0.so.0` error). Root-caused + fixed in #6: a Dockerfile that installs Debian chromium (apt resolves all libs) + points Puppeteer at it. VERIFIED locally with `docker build` — full client+prerender+server build green, 23 routes written. Just needs a glance at the Railway dashboard to confirm this deploy goes green.
 - **Confirm staging environment exists** `phase-0` `infra` — staging.leanseo.co.nz is a Cloudflare hostname with no live origin. Clarify whether a Railway staging env is actually deployed, or if dev→staging is just a branch gate and prod is the real target.
 
 ## ⚪ Backlog
