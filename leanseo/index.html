@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>27%</strong> complete</div>
-        <div><strong>6</strong>/22 cards done</div>
-        <div>Updated <strong>2026-06-30 04:33 UTC</strong></div>
+        <div><strong>32%</strong> complete</div>
+        <div><strong>7</strong>/22 cards done</div>
+        <div>Updated <strong>2026-06-30 04:36 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">6</div>
+        <div class="status-num">7</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">2</div>
+        <div class="status-num">1</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -955,7 +955,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -987,6 +987,11 @@
         <div class="card-title">Unblocked AI crawlers (Cloudflare)</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">ai-train=no</span><span class="tag tag-neutral">Allow: /</span></div>
         <div class="card-desc">AI bots were hard-blocked (403) at the edge AND disallowed via a Cloudflare-managed robots.txt (`ai-train=no`). Fixed in the Coreshift 2 account: Block AI Bots Scope → Do not block, and Managed robots.txt OFF (AI Crawl Control → Signals). Verified: GPTBot/ClaudeBot/OAI-SearchBot/PerplexityBot/Googlebot all 200; robots.txt back to clean `Allow: /`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Prerender + GEO foundations live on staging</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">PR #5 (prerender of all 23 public routes + sitemap, llms.txt, Organization schema, og-image) and PR #6 (Dockerfile with system Chromium — fixed the Railway build that Railpack broke). Verified end-to-end: staging serves real content + per-page JSON-LD (e.g. /seo-for-plumbers → 200, full content). Prod still on the old shell pending promotion. Staging env confirmed serving</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -996,9 +1001,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Prerender + GEO foundations</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">in-progress</span></div>
-        <div class="card-desc">PR #5 (prerender + sitemap/llms.txt/Organization schema/og-image) + PR #6 (Dockerfile fix) merged to dev (e3c0447) + promoted to staging branch. CI green (prerender runs in clean CI). Real content + JSON-LD per route verified locally and in a containerized build. On staging branch; not on prod yet</div>
+        <div class="card-title">Promote Phase 0 to prod (staging → main)</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-milestone">milestone</span></div>
+        <div class="card-desc">Phase 0 is verified on staging; open the staging → main PR to ship the prerender + GEO foundations to leanseo.co.nz (still serving the old empty SPA shell). Railway build proven green on staging. Awaiting go-ahead</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1016,18 +1021,13 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">1</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Confirm Railway staging deploy is green</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">libglib-2.0.so.0</span><span class="tag tag-neutral">docker build</span></div>
-        <div class="card-desc">First Railway build of #5 FAILED (Railpack ignored nixpacks.toml; image lacked Chrome libs → `libglib-2.0.so.0` error). Root-caused + fixed in #6: a Dockerfile that installs Debian chromium (apt resolves all libs) + points Puppeteer at it. VERIFIED locally with `docker build` — full client+prerender+server build green, 23 routes written. Just needs a glance at the Railway dashboard to confirm this deploy goes green</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Confirm staging environment exists</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">staging.leanseo.co.nz is a Cloudflare hostname with no live origin. Clarify whether a Railway staging env is actually deployed, or if dev→staging is just a branch gate and prod is the real target</div>
+        <div class="card-title">Smoke-test prod after promotion</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span></div>
+        <div class="card-desc">Once staging → main ships, re-run the onpage/schema_lint connectors against leanseo.co.nz to confirm prerendered content + JSON-LD are live (not the old shell), and that AI crawlers still get 200</div>
       </div></div>
     </section>
     <section class="column col-backlog">

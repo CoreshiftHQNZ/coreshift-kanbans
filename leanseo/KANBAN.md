@@ -16,10 +16,11 @@
 - **Tooling QA pass** `phase-0` `shipped` — Ran the seo-geo skill connectors against the live site. Reproduced the audit AND found two new things: AI crawlers (GPTBot/ClaudeBot/Google-Extended/CCBot/Bytespider) blocked at the robots layer, and 0 crawlable internal links (site undiscoverable without JS).
 - **Adoption roadmap agreed** `phase-0` `milestone` — 4-phase plan (fix own house → adopt as internal tool → build into product → recurring value). This board is the canonical state.
 - **Unblocked AI crawlers (Cloudflare)** `phase-0` `infra` `shipped` — AI bots were hard-blocked (403) at the edge AND disallowed via a Cloudflare-managed robots.txt (`ai-train=no`). Fixed in the Coreshift 2 account: Block AI Bots Scope → Do not block, and Managed robots.txt OFF (AI Crawl Control → Signals). Verified: GPTBot/ClaudeBot/OAI-SearchBot/PerplexityBot/Googlebot all 200; robots.txt back to clean `Allow: /`.
+- **Prerender + GEO foundations live on staging** `phase-0` `shipped` — PR #5 (prerender of all 23 public routes + sitemap, llms.txt, Organization schema, og-image) and PR #6 (Dockerfile with system Chromium — fixed the Railway build that Railpack broke). Verified end-to-end: staging serves real content + per-page JSON-LD (e.g. /seo-for-plumbers → 200, full content). Prod still on the old shell pending promotion. Staging env confirmed serving.
 
 ## 🟡 In Progress
 
-- **Prerender + GEO foundations** `phase-0` `in-progress` — PR #5 (prerender + sitemap/llms.txt/Organization schema/og-image) + PR #6 (Dockerfile fix) merged to dev (e3c0447) + promoted to staging branch. CI green (prerender runs in clean CI). Real content + JSON-LD per route verified locally and in a containerized build. On staging branch; not on prod yet.
+- **Promote Phase 0 to prod (staging → main)** `phase-0` `milestone` — Phase 0 is verified on staging; open the staging → main PR to ship the prerender + GEO foundations to leanseo.co.nz (still serving the old empty SPA shell). Railway build proven green on staging. Awaiting go-ahead.
 
 ## 🚫 Blocked
 
@@ -27,8 +28,7 @@
 
 ## 🔵 This Week
 
-- **Confirm Railway staging deploy is green** `phase-0` `infra` — First Railway build of #5 FAILED (Railpack ignored nixpacks.toml; image lacked Chrome libs → `libglib-2.0.so.0` error). Root-caused + fixed in #6: a Dockerfile that installs Debian chromium (apt resolves all libs) + points Puppeteer at it. VERIFIED locally with `docker build` — full client+prerender+server build green, 23 routes written. Just needs a glance at the Railway dashboard to confirm this deploy goes green.
-- **Confirm staging environment exists** `phase-0` `infra` — staging.leanseo.co.nz is a Cloudflare hostname with no live origin. Clarify whether a Railway staging env is actually deployed, or if dev→staging is just a branch gate and prod is the real target.
+- **Smoke-test prod after promotion** `phase-0` — Once staging → main ships, re-run the onpage/schema_lint connectors against leanseo.co.nz to confirm prerendered content + JSON-LD are live (not the old shell), and that AI crawlers still get 200.
 
 ## ⚪ Backlog
 
