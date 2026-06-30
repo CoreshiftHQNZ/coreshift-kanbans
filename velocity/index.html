@@ -285,11 +285,11 @@
 
     <!-- STATUS STRIP -->
     <section class="status-strip">
-      <div class="status-stat status-done"><div class="status-num">25</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-done"><div class="status-num">29</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">2</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked</div></div>
       <div class="status-stat status-this-week"><div class="status-num">2</div><div class="status-label">This Week</div></div>
-      <div class="status-stat status-backlog"><div class="status-num">20</div><div class="status-label">Backlog</div></div>
+      <div class="status-stat status-backlog"><div class="status-num">16</div><div class="status-label">Backlog</div></div>
     </section>
 
     <!-- KEY ARTIFACTS -->
@@ -428,7 +428,7 @@
 
         <!-- DONE -->
         <section class="column col-done">
-          <header class="col-head"><h2>✅ Done</h2><span class="col-count">25</span></header>
+          <header class="col-head"><h2>✅ Done</h2><span class="col-count">29</span></header>
           <div class="cards">
             <div class="card">
               <div class="card-title">V1.0 core — full lifecycle Prospect→Won</div>
@@ -513,7 +513,7 @@
             <div class="card">
               <div class="card-title">Email → deal intelligence (Gmail I2.1)</div>
               <div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-int">integrations</span><span class="tag tag-portal">extractor</span><span class="tag tag-staging">on staging</span></div>
-              <div class="card-desc">Connect Gmail (read-only, encrypted tokens) → hourly contact-scoped 30-day sync logs buyer mail onto the matching deal → Nirvana extracts it into gate/field signals, a one-line "what changed" summary, and polished buyer-confirmable shared-fact statements. The rep reviews in the Extractions panel — Apply writes fields + pre-ticks the gate, or one-click "Add to shared understanding". Rep always in the loop; nothing auto-writes.</div>
+              <div class="card-desc">Connect Gmail (read-only, encrypted tokens) → hourly contact-scoped 30-day sync logs buyer mail onto the matching deal → the extractor pulls it into gate/field signals, a one-line "what changed" summary, and polished buyer-confirmable shared-fact statements. The rep reviews in the Extractions panel — Apply writes fields + pre-ticks the gate, or one-click "Add to shared understanding". Rep always in the loop; nothing auto-writes.</div>
             </div>
             <div class="card">
               <div class="card-title">Velocity Sign — our own e-signature</div>
@@ -535,6 +535,10 @@
             <div class="card"><div class="card-title">Intake transcript extraction (Keitha QA)</div><div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-fix">fix</span><span class="tag tag-staging">on staging</span></div><div class="card-desc">Transcripts uploaded at intake now run through the extractor (txt/md/csv + .docx via mammoth) — same pipeline as the in-deal "Add source", so signals surface on the new deal.</div></div>
             <div class="card"><div class="card-title">Auto-apply extraction (Keitha QA)</div><div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-portal">extractor</span><span class="tag tag-staging">on staging</span></div><div class="card-desc">Internal signals (deal fields + stage gate) auto-apply on ingest — no Apply/Dismiss; edit in post. Buyer-facing shared facts stay one-click. Also keeps Gmail/Fireflies-synced deals current hands-off.</div></div>
             <div class="card"><div class="card-title">Remove "Nirvana" persona (Keitha QA)</div><div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-neutral">change</span><span class="tag tag-staging">on staging</span></div><div class="card-desc">Dropped the "Nirvana" AI-persona name across 25 code spots (7 prompt identities, UI strings, stub markers) → plain/system voice. Internal chat-sender enum id left (no migration needed); no "Nirvana" renders to any user.</div></div>
+            <div class="card"><div class="card-title">Delete a deal — soft delete (Keitha QA)</div><div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-fix">fix</span><span class="tag tag-staging">on staging</span></div><div class="card-desc">Recoverable soft delete (<code style="font-size:11px;">deletedAt</code>) gated to the deal owner + admins. The deal drops out of lists, dashboard, search and the scheduled jobs, but its data is preserved.</div></div>
+            <div class="card"><div class="card-title">Share a proposal made outside Velocity (Keitha QA)</div><div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-portal">portal</span><span class="tag tag-staging">on staging</span></div><div class="card-desc">"Upload made elsewhere" on the proposal panel uploads the file as a buyer-visible, Proposal-tagged attachment → it lands in the buyer portal's Resources hub in one step. Reuses the attachments path; no new endpoint.</div></div>
+            <div class="card"><div class="card-title">Recap email — editable + opt-out (Keitha QA)</div><div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-neutral">change</span><span class="tag tag-staging">on staging</span></div><div class="card-desc">The drafted follow-up is now an editable textarea with a Copy button + a "Sending follow-up / Not sending" opt-out toggle. Breakdown kept as-is (Abe: a good surprise). Actual send still rides on Email delivery (in-app only today) — when that ships it honours the opt-out + edited draft.</div></div>
+            <div class="card"><div class="card-title">Mutual action plan — dedup + dismissible suggestions (Keitha QA)</div><div class="card-tags"><span class="tag tag-v11">V1.1</span><span class="tag tag-portal">portal</span><span class="tag tag-fix">fix</span><span class="tag tag-staging">on staging</span></div><div class="card-desc">Recap no longer re-inserts an item that already exists on the deal (dedup by text + side). New DELETE route + a hover "×" lets the rep dismiss AI items, and a "Suggested" chip marks call-sourced items so they read as suggestions, not fixed commitments. No accept step — consistent with auto-apply extraction.</div></div>
           </div>
         </section>
 
@@ -582,12 +586,8 @@
 
         <!-- BACKLOG -->
         <section class="column col-backlog" id="col-backlog">
-          <header class="col-head"><h2>⚪ Backlog</h2><span class="col-count">20</span></header>
+          <header class="col-head"><h2>⚪ Backlog</h2><span class="col-count">16</span></header>
           <div class="cards">
-            <div class="card"><div class="card-title">Mutual action plan → suggestions + fix duplicates</div><div class="card-tags"><span class="tag tag-portal">portal</span><span class="tag tag-fix">fix</span></div><div class="card-desc">[Keitha QA · 28 Jun] MAP items should be suggestions, not committed items, and items are duplicating. (Keitha also to clarify the add-item flow with Mel.)</div></div>
-            <div class="card"><div class="card-title">Post-meeting recap — edit + opt-out; revisit breakdown</div><div class="card-tags"><span class="tag tag-neutral">change</span></div><div class="card-desc">[Keitha QA · 28 Jun] The recap should be editable and let the rep opt out of sending; Abe was surprised by the recap breakdown/format — revisit the content. Ties to Email delivery (recap can't actually email yet — it's in-app only).</div></div>
-            <div class="card"><div class="card-title">Share a proposal made outside Velocity</div><div class="card-tags"><span class="tag tag-portal">feature</span></div><div class="card-desc">[Keitha QA · 28 Jun] When a proposal is created outside Velocity there's no clear way to share it. Allow uploading an external proposal doc and sharing it to the buyer portal (reuse the doc share / visibility path).</div></div>
-            <div class="card"><div class="card-title">Delete a deal</div><div class="card-tags"><span class="tag tag-portal">feature</span></div><div class="card-desc">[Keitha QA · 28 Jun] No way to delete a deal today. Add a delete with confirm — decide soft vs hard delete + who's allowed.</div></div>
             <div class="card"><div class="card-title">Invoicing + client-level deal view</div><div class="card-tags"><span class="tag tag-portal">feature</span></div><div class="card-desc">Native invoice engine with multi-deal aggregation under a single client. Decisions locked 2026-05-29: Velocity-native source of truth (Xero later), invoices can span multiple deals at the same client, recurring auto-generates with a rep approval queue, bank transfer default + Stripe-ready architecture. Open forks before build: tenant-scoped vs per-currency GST + bank details. ~2.25 days in 3 phases (CRUD+send, recurring schedules, Stripe+Gmail integration).</div></div>
             <div class="card"><div class="card-title">Email delivery (transactional + notifications)</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">The app can't send email yet — every notification is in-app only (<code>deliveredVia: "in_app"</code>) and portal magic-links are shared by hand. Wire a provider (Resend / Postmark) + a sender service, add an <code>"email"</code> delivery channel, and cover: portal invites / "your space is ready", "contract ready to sign" + "buyer signed" (Velocity Sign), and an optional daily digest. The foundation that I2 outbound recap + Notifications v2 email both build on.</div></div>
             <div class="card"><div class="card-title">I2 — Gmail OAuth (outbound recap)</div><div class="card-tags"><span class="tag tag-int">integrations</span></div><div class="card-desc">Send W2 recap emails from Mal's Gmail. Same Google client + gmail.send scope. (Builds on Email delivery above.)</div></div>
