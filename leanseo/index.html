@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lean SEO — Kanban</title>
+  <style>
+    :root {
+      --navy: #0F1E3D;
+      --navy-deep: #081530;
+      --navy-soft: #1A2A4F;
+      --teal: #14B8A6;
+      --teal-dark: #0D9488;
+      --teal-light: #CCFBF1;
+      --amber: #F59E0B;
+      --amber-light: #FEF3C7;
+      --red: #DC2626;
+      --red-light: #FEE2E2;
+      --green: #10B981;
+      --green-light: #D1FAE5;
+      --purple: #8B5CF6;
+      --purple-light: #EDE9FE;
+      --blue: #3B82F6;
+      --blue-light: #DBEAFE;
+      --indigo: #6366F1;
+      --indigo-light: #E0E7FF;
+      --pink: #EC4899;
+      --pink-light: #FCE7F3;
+      --gray: #64748B;
+      --gray-light: #E2E8F0;
+      --gray-lighter: #F1F5F9;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #475569;
+      --text-soft: #94A3B8;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 14px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    header.page-head {
+      background: var(--navy);
+      color: #FFFFFF;
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--navy-deep);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .page-head-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .page-brand { display: flex; align-items: center; gap: 14px; }
+    .brand-mark {
+      width: 36px; height: 36px;
+      background: var(--teal);
+      color: var(--navy);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 18px;
+    }
+    .brand-title {
+      font-size: 18px; font-weight: 700; letter-spacing: -0.01em;
+    }
+    .brand-sub {
+      font-size: 11px; color: var(--teal);
+      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .page-meta {
+      font-size: 12px; color: #8EA5C8;
+      display: flex; gap: 24px; flex-wrap: wrap;
+    }
+    .page-meta strong { color: #FFFFFF; font-weight: 600; }
+
+    /* Main layout */
+    .page-main {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 32px 32px 48px;
+    }
+
+    /* Section headings */
+    .section-head {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 16px;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: -8px 0 16px;
+    }
+    .section-sub code {
+      background: var(--gray-lighter);
+      border: 1px solid var(--gray-light);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 12px;
+      color: var(--navy);
+    }
+
+    /* Hero */
+    .hero {
+      margin-bottom: 48px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .hero-eyebrow {
+      color: var(--teal-dark);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      margin-bottom: 14px;
+    }
+    .hero-title {
+      color: var(--navy);
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin: 0 0 12px;
+    }
+    .hero-tagline {
+      color: var(--teal-dark);
+      font-size: 22px;
+      font-style: italic;
+      font-weight: 500;
+      margin: 0 0 16px;
+      line-height: 1.35;
+    }
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 17px;
+      line-height: 1.5;
+      max-width: 880px;
+      margin: 0;
+    }
+    .hero-phase-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .phase-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 13px;
+    }
+    .phase-pill-label {
+      color: var(--text-soft);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .phase-pill-value {
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .phase-pill-date {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 4px;
+    }
+    .phase-pill-milestone {
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+    .phase-pill-milestone .phase-pill-label { color: var(--teal); }
+    .phase-pill-milestone .phase-pill-value { color: #FFFFFF; }
+    .phase-pill-milestone .phase-pill-date { color: #CADCFC; }
+
+    /* Goals */
+    .goals { margin-bottom: 40px; }
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .goal-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 24px;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .goal-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .goal-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .goal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .goal-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Phases */
+    .phases { margin-bottom: 40px; }
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .phase-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .phase-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .phase-card.phase-done       { border-top: 4px solid var(--green); }
+    .phase-card.phase-in-progress{ border-top: 4px solid var(--amber); }
+    .phase-card.phase-planned    { border-top: 4px solid var(--blue); }
+    .phase-card.phase-future     { border-top: 4px solid var(--gray); opacity: 0.88; }
+    .phase-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .phase-marker {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .phase-card.phase-done .phase-marker        { background: var(--green); }
+    .phase-card.phase-in-progress .phase-marker { background: var(--amber); }
+    .phase-status-pill {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .phase-status-done        { background: var(--green-light); color: #065F46; }
+    .phase-status-in-progress { background: var(--amber-light); color: #B45309; }
+    .phase-status-planned     { background: var(--blue-light); color: #1D4ED8; }
+    .phase-status-future      { background: var(--gray-light); color: var(--gray); }
+    .phase-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 2px;
+      letter-spacing: -0.01em;
+    }
+    .phase-subtitle {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+    .phase-window {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+    .phase-desc {
+      font-size: 12.5px;
+      color: var(--text);
+      line-height: 1.5;
+      margin: 0 0 12px;
+    }
+    .phase-deliverables {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-top: 1px solid var(--gray-light);
+      padding-top: 10px;
+    }
+    .phase-deliverables li {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      padding: 3px 0 3px 14px;
+      position: relative;
+    }
+    .phase-deliverables li::before {
+      content: "•";
+      position: absolute;
+      left: 4px;
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    /* Status strip */
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 20px 8px;
+    }
+    .status-stat {
+      text-align: center;
+      padding: 8px 12px;
+      border-right: 1px solid var(--gray-light);
+    }
+    .status-stat:last-child { border-right: none; }
+    .status-num {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+    .status-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-top: 8px;
+    }
+    .status-done .status-num        { color: var(--green); }
+    .status-in-progress .status-num { color: var(--amber); }
+    .status-blocked .status-num     { color: var(--red); }
+    .status-this-week .status-num   { color: var(--blue); }
+    .status-backlog .status-num     { color: var(--gray); }
+
+    /* Links */
+    .links { margin-bottom: 40px; }
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+    }
+    .link-card:hover {
+      box-shadow: 0 4px 14px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+      border-color: var(--teal);
+    }
+    .link-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .link-text { flex: 1; }
+    .link-title {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+    .link-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .link-arrow {
+      color: var(--teal);
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Roles */
+    .roles { margin-bottom: 40px; }
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .role-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+    .role-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .role-text { flex: 1; }
+    .role-name {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .role-person {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 6px;
+      font-size: 13px;
+    }
+    .role-verbs {
+      font-size: 12px;
+      color: var(--text-soft);
+      font-weight: 500;
+    }
+
+    /* Recently shipped */
+    .recent { margin-bottom: 40px; }
+    .recent-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+    .recent-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+    }
+    .recent-check {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .recent-text { flex: 1; min-width: 0; }
+    .recent-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+    .recent-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    /* Board section */
+    .board-section { margin-top: 8px; }
+
+    /* Kanban board */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(280px, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .column {
+      background: var(--gray-lighter);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--gray-light);
+    }
+    .col-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 4px 4px 12px;
+      border-bottom: 2px solid transparent;
+    }
+    .col-head h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.02em;
+    }
+    .col-count {
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--gray-light);
+    }
+
+    /* Column accents */
+    .col-done .col-head        { border-bottom-color: var(--green); }
+    .col-in-progress .col-head { border-bottom-color: var(--amber); }
+    .col-blocked .col-head     { border-bottom-color: var(--red); }
+    .col-this-week .col-head   { border-bottom-color: var(--blue); }
+    .col-backlog .col-head     { border-bottom-color: var(--gray); }
+
+    .col-done .col-count        { color: var(--green); border-color: var(--green-light); }
+    .col-in-progress .col-count { color: #B45309; border-color: var(--amber-light); }
+    .col-blocked .col-count     { color: var(--red); border-color: var(--red-light); }
+    .col-this-week .col-count   { color: #1D4ED8; border-color: var(--blue-light); }
+    .col-backlog .col-count     { color: var(--gray); border-color: var(--gray-light); }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 12px 14px;
+      border: 1px solid var(--gray-light);
+      box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04);
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+    }
+    .card-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 4px 0;
+    }
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 12.5px;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+    .empty {
+      color: var(--text-soft);
+      font-size: 12px;
+      text-align: center;
+      padding: 16px 0;
+      font-style: italic;
+    }
+
+    /* Tags */
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .tag-shipped     { background: var(--green-light); color: #065F46; }
+    .tag-phase-0     { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-phase-1     { background: var(--blue-light); color: #1D4ED8; }
+    .tag-phase-2     { background: var(--purple-light); color: #6D28D9; }
+    .tag-phase-4     { background: var(--pink-light); color: #BE185D; }
+    .tag-phase-3     { background: var(--indigo-light); color: #4338CA; }
+    .tag-deliverable { background: var(--green-light); color: #047857; }
+    .tag-playbook    { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-milestone   { background: #FEE2E2; color: #991B1B; }
+    .tag-infra       { background: var(--amber-light); color: #B45309; }
+    .tag-ops         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-recurring   { background: var(--gray-light); color: var(--gray); }
+    .tag-blocked     { background: var(--red-light); color: var(--red); }
+    .tag-est         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-neutral     { background: var(--gray-light); color: var(--text-muted); }
+
+    /* Footer */
+    footer.page-foot {
+      padding: 16px 32px 32px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+    footer.page-foot a {
+      color: var(--teal-dark);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(13, 148, 136, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .board { grid-template-columns: repeat(3, minmax(280px, 1fr)); }
+      .links-grid { grid-template-columns: 1fr; }
+      .recent-list { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 1300px) {
+      .phases-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 1100px) {
+      .goals-grid { grid-template-columns: 1fr; }
+      .roles-grid { grid-template-columns: 1fr; }
+      .phases-grid { grid-template-columns: repeat(2, 1fr); }
+      .status-strip { grid-template-columns: repeat(2, 1fr); }
+      .status-stat { border-right: none; border-bottom: 1px solid var(--gray-light); }
+      .status-stat:nth-last-child(-n+2) { border-bottom: none; }
+    }
+    @media (max-width: 700px) {
+      .phases-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .page-main { padding: 24px 16px 32px; }
+      .board { grid-template-columns: 1fr; }
+      header.page-head { padding: 16px; }
+      .hero-title { font-size: 32px; }
+      .hero-tagline { font-size: 17px; }
+      .hero-desc { font-size: 15px; }
+    }
+
+    /* Print */
+    @media print {
+      header.page-head { background: var(--card); color: var(--navy); border-bottom: 2px solid var(--gray-light); position: static; }
+      .brand-mark { background: var(--navy); color: #FFFFFF; }
+      .brand-title, .page-meta strong { color: var(--navy); }
+      .page-meta, .brand-sub { color: var(--text-muted); }
+      .board { grid-template-columns: repeat(2, 1fr); padding: 16px; }
+      .column { break-inside: avoid; background: var(--card); border: 1px solid var(--gray-light); }
+      .card:hover { transform: none; box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04); }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="page-head-inner">
+      <div class="page-brand">
+        <div class="brand-mark">🛡</div>
+        <div>
+          <div class="brand-title">Lean SEO</div>
+          <div class="brand-sub">Operations Dashboard</div>
+        </div>
+      </div>
+      <div class="page-meta">
+        <div><strong>28%</strong> complete</div>
+        <div><strong>5</strong>/18 cards done</div>
+        <div>Updated <strong>2026-06-30 00:34 UTC</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-main">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">INTERNAL · LIVE OPS DASHBOARD</div>
+      <h1 class="hero-title">Lean SEO</h1>
+      <p class="hero-tagline">Affordable, AI-augmented SEO for NZ businesses — human-led, GEO-ready.</p>
+      <p class="hero-desc">A productized SEO content service ($489/mo) for NZ businesses, built on the CoreShift stack. The app is the CRM/ops backbone — onboarding, billing, access verification, plan delivery, client portal. Current focus: modernising the method (real crawl + GSC/GA4 + GEO/AEO, human-gated) and fixing our own site so it&#39;s visible to the AI engines we want to sell against.</p>
+      <div class="hero-phase-row">
+        <div class="phase-pill">
+          <span class="phase-pill-label">Current phase</span>
+          <span class="phase-pill-value">Phase 0 · Fix our own house</span>
+        </div>
+        <div class="phase-pill phase-pill-milestone">
+          <span class="phase-pill-label">Next milestone</span>
+          <span class="phase-pill-value">Our own site visible to Google + AI engines <span class="phase-pill-date">Q3 2026</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOALS -->
+    <section class="goals">
+      <h2 class="section-head">The Three Goals</h2>
+      <div class="goals-grid">
+        
+        <div class="goal-card">
+          <div class="goal-icon">🎯</div>
+          <div class="goal-title">Affordable, productized SEO for NZ</div>
+          <div class="goal-desc">Keep the human-led, no-contract service — onboarding, billing, and delivery already work. Own the wrapper.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">⚡</div>
+          <div class="goal-title">A modern, GEO-ready method</div>
+          <div class="goal-desc">Move from a single-page regex + one haiku call to real crawl + GSC/GA4 data + GEO/AEO, gated by CORE-EEAT / CITE before anything ships.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">🌐</div>
+          <div class="goal-title">Practise what we sell</div>
+          <div class="goal-desc">Our own site is invisible to AI engines (SPA + AI bots blocked). Fix it first — it&#39;s the credibility proof.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASES -->
+    <section class="phases">
+      <h2 class="section-head">Development & Production Phases</h2>
+      <p class="section-sub">Where the project has been, where it is now, and where it's going. Each phase delivers value on its own — no big-bang.</p>
+      <div class="phases-grid">
+        
+        <div class="phase-card phase-in-progress">
+          <div class="phase-card-head">
+            <div class="phase-marker">0</div>
+            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+          </div>
+          <div class="phase-title">Phase 0 <span class="phase-subtitle">Fix our own house</span></div>
+          <div class="phase-window">In progress · audit + QA done, fixes queued</div>
+          <p class="phase-desc">Can&#39;t sell GEO while our own site is invisible to AI engines and barely crawlable by Google. Credibility first — and the SEO/GEO skills double as the validation tool.</p>
+          <ul class="phase-deliverables">
+            <li>Decide AI-crawler policy + unblock the engines we want citing us (likely Cloudflare &#39;Block AI Scrapers&#39;)</li><li>Add SSR/prerender for marketing + programmatic + blog routes (the keystone fix)</li><li>Ship og-image.png; add blog posts to sitemap; add llms.txt; add sitewide Organization schema</li><li>Exit check: re-run onpage.py / schema_lint.py → real per-page titles, content, JSON-LD</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">1</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">Phase 1 <span class="phase-subtitle">Adopt skills as internal tool</span></div>
+          <div class="phase-window">Starts after Phase 0 · ~1–2 weeks · no prod code change</div>
+          <p class="phase-desc">Use the skills as a team production tool in Claude Code — zero prod risk. Validate output beats today&#39;s plan before touching the codebase.</p>
+          <ul class="phase-deliverables">
+            <li>Install the seo-geo plugin for the team; wire free GSC + GA4 for client sites</li><li>Produce the opportunity/execution plan deliverables that are hand-built today</li><li>Adopt CORE-EEAT (80) / CITE (40) as the human sign-off gate</li><li>Go/no-go: side-by-side vs today&#39;s single-haiku plan</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">2</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">Phase 2 <span class="phase-subtitle">Build the method into the product</span></div>
+          <div class="phase-window">Gated on Phase 1 · ~2–4 weeks</div>
+          <p class="phase-desc">Port the validated methods into seoplan.ts. Responsibly re-enable the automation that&#39;s currently disabled — drafted by AI, approved by a human.</p>
+          <ul class="phase-deliverables">
+            <li>Replace homepage-regex fetch with real crawl + onpage + schema_lint + robots/sitemap</li><li>Feed GSC/GA4 data into plan generation</li><li>Upgrade engine: multi-step + stronger model, human gate retained</li><li>Add the GEO/AEO axis to the generated plan (net-new sellable value)</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-future">
+          <div class="phase-card-head">
+            <div class="phase-marker">3</div>
+            <div class="phase-status-pill phase-status-future">Future</div>
+          </div>
+          <div class="phase-title">Phase 3 <span class="phase-subtitle">Recurring value &amp; monitoring</span></div>
+          <div class="phase-window">Ongoing · retention lever</div>
+          <p class="phase-desc">For a $489/mo subscription, demonstrated monthly value is the #1 retention lever — and there&#39;s none today.</p>
+          <ul class="phase-deliverables">
+            <li>Rank tracker + monthly performance report via GSC</li><li>Surface progress in the client portal</li><li>ledger.py before/after deltas in client reporting</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATUS STRIP -->
+    <section class="status-strip">
+      <div class="status-stat status-done">
+        <div class="status-num">5</div>
+        <div class="status-label">Done</div>
+      </div>
+      <div class="status-stat status-in-progress">
+        <div class="status-num">1</div>
+        <div class="status-label">In Progress</div>
+      </div>
+      <div class="status-stat status-blocked">
+        <div class="status-num">1</div>
+        <div class="status-label">Blocked</div>
+      </div>
+      <div class="status-stat status-this-week">
+        <div class="status-num">3</div>
+        <div class="status-label">This Week</div>
+      </div>
+      <div class="status-stat status-backlog">
+        <div class="status-num">8</div>
+        <div class="status-label">Backlog</div>
+      </div>
+    </section>
+
+    <!-- KEY ARTIFACTS / QUICK LINKS -->
+    <section class="links">
+      <h2 class="section-head">Key Artifacts</h2>
+      <div class="links-grid">
+        
+        <a class="link-card" href="https://leanseo.co.nz" target="_blank" rel="noopener">
+          <div class="link-icon">🚀</div>
+          <div class="link-text">
+            <div class="link-title">Live site</div>
+            <div class="link-desc">leanseo.co.nz — production</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://github.com/aaron-he-zhu/seo-geo-claude-skills" target="_blank" rel="noopener">
+          <div class="link-icon">🧠</div>
+          <div class="link-text">
+            <div class="link-title">SEO/GEO skills (reference)</div>
+            <div class="link-desc">aaron-he-zhu/seo-geo-claude-skills — the method toolkit being adopted</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ROLES -->
+    <section class="roles">
+      <h2 class="section-head">Who's Involved</h2>
+      <div class="roles-grid">
+        
+        <div class="role-card">
+          <div class="role-avatar">A</div>
+          <div class="role-text">
+            <div class="role-name">Owner <span class="role-person">Abe</span></div>
+            <div class="role-verbs">Decide · prioritise · review</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-avatar">M</div>
+          <div class="role-text">
+            <div class="role-name">Builder <span class="role-person">Matty</span></div>
+            <div class="role-verbs">Design · code · ship</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-avatar">T</div>
+          <div class="role-text">
+            <div class="role-name">The Tools <span class="role-person">Claude Code · SEO/GEO skills · GSC/GA4</span></div>
+            <div class="role-verbs">Crawl · audit · gate</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECENTLY SHIPPED -->
+    
+    <section class="recent">
+      <h2 class="section-head">Recently Shipped</h2>
+      <div class="recent-list">
+        
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Repo audit &amp; onboarding</div>
+            <div class="recent-desc">Reviewed the codebase: CoreShift Starter stack (React/Vite SPA + Express + Drizzle/Supabase + Railway), productized SEO funnel, and the Apr 2026 pivot to manual human delivery</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">SEO/GEO capability audit</div>
+            <div class="recent-desc">Found the keystone gap: client-rendered SPA with no SSR/prerender, so all per-page schema (Service, FAQPage, BlogPosting) is JS-injected and invisible to non-JS AI crawlers. Plus missing og-image.png and blog posts absent from the sitemap</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Method benchmark vs reference tools</div>
+            <div class="recent-desc">Benchmarked seoplan.ts (single homepage regex + one claude-haiku call, no GEO/AEO/data/gate) against claudeseoskill.com + aaron-he-zhu skills. Verdict: behind on method, absent on GEO/AEO, ahead only on productization</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Tooling QA pass</div>
+            <div class="recent-desc">Ran the seo-geo skill connectors against the live site. Reproduced the audit AND found two new things: AI crawlers (GPTBot/ClaudeBot/Google-Extended/CCBot/Bytespider) blocked at the robots layer, and 0 crawlable internal links (site undiscoverable without JS)</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Adoption roadmap agreed</div>
+            <div class="recent-desc">4-phase plan (fix own house → adopt as internal tool → build into product → recurring value). This board is the canonical state</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KANBAN BOARD -->
+    <section class="board-section">
+      <h2 class="section-head">Live Rollout Board</h2>
+      <p class="section-sub">Every task across every phase. Updated by editing <code>KANBAN.md</code> and running <code>update-kanban.cmd</code>.</p>
+      <div class="board">
+        
+    <section class="column col-done">
+      <header class="col-head">
+        <h2>✅ Done</h2>
+        <span class="col-count">5</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Repo audit &amp; onboarding</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Reviewed the codebase: CoreShift Starter stack (React/Vite SPA + Express + Drizzle/Supabase + Railway), productized SEO funnel, and the Apr 2026 pivot to manual human delivery</div>
+      </div>
+      <div class="card">
+        <div class="card-title">SEO/GEO capability audit</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Found the keystone gap: client-rendered SPA with no SSR/prerender, so all per-page schema (Service, FAQPage, BlogPosting) is JS-injected and invisible to non-JS AI crawlers. Plus missing og-image.png and blog posts absent from the sitemap</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Method benchmark vs reference tools</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Benchmarked seoplan.ts (single homepage regex + one claude-haiku call, no GEO/AEO/data/gate) against claudeseoskill.com + aaron-he-zhu skills. Verdict: behind on method, absent on GEO/AEO, ahead only on productization</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tooling QA pass</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Ran the seo-geo skill connectors against the live site. Reproduced the audit AND found two new things: AI crawlers (GPTBot/ClaudeBot/Google-Extended/CCBot/Bytespider) blocked at the robots layer, and 0 crawlable internal links (site undiscoverable without JS)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Adoption roadmap agreed</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-milestone">milestone</span></div>
+        <div class="card-desc">4-phase plan (fix own house → adopt as internal tool → build into product → recurring value). This board is the canonical state</div>
+      </div></div>
+    </section>
+    <section class="column col-in-progress">
+      <header class="col-head">
+        <h2>🟡 In Progress</h2>
+        <span class="col-count">1</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Phase 0 kickoff</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span></div>
+        <div class="card-desc">Audit + QA complete; turning findings into the credibility fixes below. Awaiting go-ahead to start the SSR/prerender spike</div>
+      </div></div>
+    </section>
+    <section class="column col-blocked">
+      <header class="col-head">
+        <h2>🚫 Blocked</h2>
+        <span class="col-count">1</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Live crawl/index verification</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-blocked">blocked-by:access</span></div>
+        <div class="card-desc">Can&#39;t read LeanSEO&#39;s live client/index data: the supabase-prod MCP connector points at a different Coreshift app. Need the correct Supabase connection and/or GSC access</div>
+      </div></div>
+    </section>
+    <section class="column col-this-week">
+      <header class="col-head">
+        <h2>🔵 This Week</h2>
+        <span class="col-count">3</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Unblock chosen AI crawlers</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">Decide policy and stop blocking the answer engines we want citing us — almost certainly the Cloudflare &quot;Block AI Scrapers&quot; toggle injecting the live robots.txt</div>
+      </div>
+      <div class="card">
+        <div class="card-title">SSR/prerender spike</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-est">est:2-4d</span></div>
+        <div class="card-desc">Prototype prerendering for marketing + programmatic + blog routes so schema and content reach Google and AI crawlers. The single highest-leverage fix</div>
+      </div>
+      <div class="card">
+        <div class="card-title">GEO quick wins</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span></div>
+        <div class="card-desc">Ship og-image.png (currently 404s), add the 10 blog posts to sitemap.xml, add llms.txt, add sitewide Organization schema</div>
+      </div></div>
+    </section>
+    <section class="column col-backlog">
+      <header class="col-head">
+        <h2>⚪ Backlog</h2>
+        <span class="col-count">8</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Install skills as internal team tool</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-neutral">/plugin marketplace add aaron-he-zhu/seo-geo-claude-skills</span></div>
+        <div class="card-desc">`/plugin marketplace add aaron-he-zhu/seo-geo-claude-skills` in Claude Code; wire free GSC + GA4 for client sites</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Standardise client deliverables on the audit skill</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-deliverable">deliverable</span></div>
+        <div class="card-desc">Generate the opportunity/execution plans (the PDFs hand-built today) via the audit skill into the existing seo_plans flow</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Adopt CORE-EEAT / CITE quality gate</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-playbook">playbook</span></div>
+        <div class="card-desc">80-item + 40-item human sign-off checklists before anything ships. Fits the &quot;specialist runs the show&quot; model</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Rebuild seoplan.ts method</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
+        <div class="card-desc">Replace homepage-regex + single-haiku with real crawl + onpage + schema_lint + GSC/GA4 inputs; multi-step engine with stronger model</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Add GEO/AEO axis to plans</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-deliverable">deliverable</span></div>
+        <div class="card-desc">Entity optimisation (Wikidata), schema generation, FAQ/HowTo + answer-density — net-new sellable value</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Recurring monitoring + reporting</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-recurring">recurring</span></div>
+        <div class="card-desc">Rank tracker + monthly GSC performance report surfaced in the client portal; ledger before/after deltas</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Rebrand template scaffolding</div>
+        <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-neutral">coreshift-starter</span></div>
+        <div class="card-desc">package.json is still `coreshift-starter`; README/AGENTS.md describe the generic starter, never customised for LeanSEO</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Prune stale branches</div>
+        <div class="card-tags"><span class="tag tag-ops">ops</span></div>
+        <div class="card-desc">4 merged feature branches (admin-dashboard, dark-glassmorphic-redesign, dashboard-spec-updates, multistep-onboarding) still on the remote</div>
+      </div></div>
+    </section>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="page-foot">
+    Edit <code>KANBAN.md</code> and run <code>update-kanban.cmd</code> to refresh this view.
+    &nbsp;·&nbsp;
+    Companion to <a href="ops-playbook.html">ops-playbook.html</a> &amp; <a href="ROADMAP.md">ROADMAP.md</a>.
+  </footer>
+</body>
+</html>
