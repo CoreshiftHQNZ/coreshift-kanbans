@@ -38,7 +38,7 @@
 - **Rebuild seoplan.ts method** `phase-2` — Replace homepage-regex + single-haiku with real crawl + onpage + schema_lint + GSC/GA4 inputs; multi-step engine with stronger model.
 - **Add GEO/AEO axis to plans** `phase-2` `deliverable` — Entity optimisation (Wikidata), schema generation, FAQ/HowTo + answer-density — net-new sellable value.
 - **Recurring monitoring + reporting** `phase-3` `recurring` — Rank tracker + monthly GSC performance report surfaced in the client portal; ledger before/after deltas.
-- **Define LeanSEO best-practices output** `phase-4` `deliverable` — Produce the output Coreshift Live Edit consumes, in three forms: a spec/checklist, a machine-readable ruleset, and an SEO/GEO-ready starter theme.
+- **Define LeanSEO best-practices output** `phase-4` `deliverable` `blocked-by:phase-0` — Produce the output Coreshift Live Edit consumes, in three forms: a spec/checklist, a machine-readable ruleset, and an SEO/GEO-ready starter theme. Generalises the Phase 0 bundle (SSR/schema/llms.txt), proven on our own site, into a reusable ruleset.
 - **Bake best practices into Coreshift Live Edit** `phase-4` — Wire the ruleset into Live Edit's themes + edge renderer so every built site ships SSR, schema, llms.txt, and a clean sitemap by default.
 - **LeanSEO as a Live Edit add-on** `phase-4` `milestone` — Prep built sites with integration hooks, then offer LeanSEO as a switch-on add-on/integration to Live Edit clients (upsell on the $100/mo platform).
 - **Rebrand template scaffolding** `ops` — package.json is still `coreshift-starter`; README/AGENTS.md describe the generic starter, never customised for LeanSEO.

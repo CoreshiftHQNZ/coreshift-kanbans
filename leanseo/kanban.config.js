@@ -87,7 +87,7 @@ module.exports = {
       title: "Phase 0",
       subtitle: "Fix our own house",
       window: "In progress · audit + QA done, fixes queued",
-      desc: "Can't sell GEO while our own site is invisible to AI engines and barely crawlable by Google. Credibility first — and the SEO/GEO skills double as the validation tool.",
+      desc: "Can't sell GEO while our own site is invisible to AI engines and barely crawlable by Google. Credibility first — and the SEO/GEO skills double as the validation tool. The SSR + schema + llms.txt bundle we land here becomes the prototype for the Phase 4 Live Edit ruleset.",
       deliverables: [
         "Decide AI-crawler policy + unblock the engines we want citing us (likely Cloudflare 'Block AI Scrapers')",
         "Add SSR/prerender for marketing + programmatic + blog routes (the keystone fix)",
@@ -142,7 +142,7 @@ module.exports = {
       title: "Phase 4",
       subtitle: "Website-builder integration",
       window: "Future · gated on Coreshift Live Edit",
-      desc: "Wire LeanSEO into Coreshift Live Edit (the in-dev self-serve $100/mo site platform) so every site is built SEO/GEO-ready by default, then offer LeanSEO as a switch-on add-on to Live Edit clients.",
+      desc: "Wire LeanSEO into Coreshift Live Edit (the in-dev self-serve $100/mo site platform) so every site is built SEO/GEO-ready by default, then offer LeanSEO as a switch-on add-on to Live Edit clients. Builds directly on Phase 0 — the same SSR/schema/llms.txt bundle, generalised from our own site into a reusable ruleset.",
       deliverables: [
         "Emit LeanSEO best practices in three forms: a spec/checklist, a machine-readable ruleset Live Edit ingests, and an SEO/GEO-ready starter theme",
         "Bake the ruleset into Live Edit's themes + edge renderer (SSR, schema, llms.txt, clean sitemap by default)",

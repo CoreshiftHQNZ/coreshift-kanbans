@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>24%</strong> complete</div>
         <div><strong>5</strong>/21 cards done</div>
-        <div>Updated <strong>2026-06-30 02:21 UTC</strong></div>
+        <div>Updated <strong>2026-06-30 02:28 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -762,7 +762,7 @@
           </div>
           <div class="phase-title">Phase 0 <span class="phase-subtitle">Fix our own house</span></div>
           <div class="phase-window">In progress · audit + QA done, fixes queued</div>
-          <p class="phase-desc">Can&#39;t sell GEO while our own site is invisible to AI engines and barely crawlable by Google. Credibility first — and the SEO/GEO skills double as the validation tool.</p>
+          <p class="phase-desc">Can&#39;t sell GEO while our own site is invisible to AI engines and barely crawlable by Google. Credibility first — and the SEO/GEO skills double as the validation tool. The SSR + schema + llms.txt bundle we land here becomes the prototype for the Phase 4 Live Edit ruleset.</p>
           <ul class="phase-deliverables">
             <li>Decide AI-crawler policy + unblock the engines we want citing us (likely Cloudflare &#39;Block AI Scrapers&#39;)</li><li>Add SSR/prerender for marketing + programmatic + blog routes (the keystone fix)</li><li>Ship og-image.png; add blog posts to sitemap; add llms.txt; add sitewide Organization schema</li><li>Exit check: re-run onpage.py / schema_lint.py → real per-page titles, content, JSON-LD</li>
           </ul>
@@ -810,7 +810,7 @@
           </div>
           <div class="phase-title">Phase 4 <span class="phase-subtitle">Website-builder integration</span></div>
           <div class="phase-window">Future · gated on Coreshift Live Edit</div>
-          <p class="phase-desc">Wire LeanSEO into Coreshift Live Edit (the in-dev self-serve $100/mo site platform) so every site is built SEO/GEO-ready by default, then offer LeanSEO as a switch-on add-on to Live Edit clients.</p>
+          <p class="phase-desc">Wire LeanSEO into Coreshift Live Edit (the in-dev self-serve $100/mo site platform) so every site is built SEO/GEO-ready by default, then offer LeanSEO as a switch-on add-on to Live Edit clients. Builds directly on Phase 0 — the same SSR/schema/llms.txt bundle, generalised from our own site into a reusable ruleset.</p>
           <ul class="phase-deliverables">
             <li>Emit LeanSEO best practices in three forms: a spec/checklist, a machine-readable ruleset Live Edit ingests, and an SEO/GEO-ready starter theme</li><li>Bake the ruleset into Live Edit&#39;s themes + edge renderer (SSR, schema, llms.txt, clean sitemap by default)</li><li>Prep built sites to &#39;receive&#39; LeanSEO — structural hooks for a later add-on integration</li><li>Offer LeanSEO as a paid add-on/integration to Live Edit clients</li>
           </ul>
@@ -1061,8 +1061,8 @@
       </div>
       <div class="card">
         <div class="card-title">Define LeanSEO best-practices output</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-deliverable">deliverable</span></div>
-        <div class="card-desc">Produce the output Coreshift Live Edit consumes, in three forms: a spec/checklist, a machine-readable ruleset, and an SEO/GEO-ready starter theme</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-deliverable">deliverable</span><span class="tag tag-blocked">blocked-by:phase-0</span></div>
+        <div class="card-desc">Produce the output Coreshift Live Edit consumes, in three forms: a spec/checklist, a machine-readable ruleset, and an SEO/GEO-ready starter theme. Generalises the Phase 0 bundle (SSR/schema/llms.txt), proven on our own site, into a reusable ruleset</div>
       </div>
       <div class="card">
         <div class="card-title">Bake best practices into Coreshift Live Edit</div>
