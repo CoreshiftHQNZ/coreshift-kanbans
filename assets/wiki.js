@@ -209,35 +209,59 @@
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
-  // ── Render the daily quote (home) ─────────────────────────
+  // ── Render the home digest + daily quote ──────────────────
+  function ensureMarked(cb) {
+    if (window.marked) return cb();
+    const sc = document.createElement("script");
+    sc.src = "https://cdn.jsdelivr.net/npm/marked@12/marked.min.js";
+    sc.onload = cb;
+    sc.onerror = cb;
+    document.head.appendChild(sc);
+  }
+
   function renderHome() {
-    // Same quote all day; rotates daily through the whole list.
     const now = new Date();
     const epochDay = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
     const dateStr = now.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" });
 
+    contentEl.innerHTML = `
+      <div id="home-digest" class="home-digest"></div>
+      <div id="home-quote"></div>
+    `;
+
+    // New Toys — weekly digest, published by the AI Radar
+    fetch(root + "ai-radar/digest.md", { cache: "no-cache" })
+      .then((r) => { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then((md) => ensureMarked(() => {
+        const html = window.marked ? window.marked.parse(md) : md;
+        const el = document.getElementById("home-digest");
+        if (el) el.innerHTML =
+          `<div class="home-eyebrow">\uD83E\uDDF8 New Toys \u00B7 weekly digest</div>` +
+          `<div class="home-digest-body wiki-content">${html}</div>`;
+      }))
+      .catch(() => { const el = document.getElementById("home-digest"); if (el) el.remove(); });
+
+    // Daily quote — same quote all day, rotates daily through the whole list
     fetch(root + "assets/quotes.json", { cache: "no-cache" })
       .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then((list) => {
         const idx = ((epochDay % list.length) + list.length) % list.length;
         const item = list[idx] || list[0];
-        contentEl.innerHTML = `
-          <div class="home-eyebrow">Daily note · ${dateStr}</div>
+        const el = document.getElementById("home-quote");
+        if (el) el.innerHTML = `
+          <div class="home-eyebrow">Daily note \u00B7 ${dateStr}</div>
           <figure class="home-quote-fig">
             <blockquote class="home-quote">${escapeHtml(item.q)}</blockquote>
             ${item.a ? `<figcaption class="home-author">${escapeHtml(item.a)}</figcaption>` : ""}
           </figure>
-          <p class="home-welcome">Welcome to the Coreshift handbook. Everything lives in the menu on the left — pick a section to dive in.</p>
+          <p class="home-welcome">Welcome to the Coreshift handbook. Everything lives in the menu on the left \u2014 pick a section to dive in.</p>
         `;
       })
       .catch((err) => {
-        contentEl.innerHTML = `
+        const el = document.getElementById("home-quote");
+        if (el) el.innerHTML = `
           <div class="home-eyebrow">Welcome</div>
-          <figure class="home-quote-fig">
-            <blockquote class="home-quote">The way to get started is to quit talking and begin doing.</blockquote>
-            <figcaption class="home-author">Walt Disney</figcaption>
-          </figure>
-          <p class="home-welcome">Welcome to the Coreshift handbook. Everything lives in the menu on the left — pick a section to dive in. <span style="opacity:.6">(Daily quote unavailable: ${escapeHtml(err.message)}.)</span></p>
+          <p class="home-welcome">Welcome to the Coreshift handbook. Everything lives in the menu on the left \u2014 pick a section to dive in. <span style="opacity:.6">(Daily quote unavailable: ${escapeHtml(err.message)}.)</span></p>
         `;
       });
   }

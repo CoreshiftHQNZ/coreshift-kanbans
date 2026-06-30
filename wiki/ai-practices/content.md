@@ -6,6 +6,20 @@ Our living knowledge base for working well with AI — agent skills, coding work
 
 ---
 
+## 📬 Share a find
+
+*Spotted a tool, post, video, or trick worth adding? Drop the link below. The radar reviews submissions in its **Monday run** and replies on your submission to say whether it made it in — and where.*
+
+<a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans/issues/new?template=radar-submission.yml" target="_blank" rel="noopener" style="display:inline-block;margin:0.4rem 0 0.2rem;padding:10px 18px;background:#028090;color:#ffffff;border-radius:9px;font-weight:600;text-decoration:none;">➕ Submit a link for review</a>
+
+*(Submitting opens a 30-second GitHub form. You'll need a GitHub account; ping Abe if you'd rather send it another way.)*
+
+**Recently reviewed**
+
+- _Nothing reviewed yet — be the first to submit._
+
+---
+
 ## Agent Skills
 
 *Last updated: 30 Jun 2026 · Standout — full deck available · Sources: [Building Great Agent Skills: The Missing Manual](https://www.youtube.com/watch?v=UNzCG3lw6O0) (Matt Pocock / AI Engineer) · [mattpocock/skills v1.0 — progressive disclosure](https://www.aihero.dev/posts)*

@@ -1,0 +1,30 @@
+name: AI Radar submission
+description: Share a link (tool, post, video, trick) for the radar to consider adding to the wiki.
+title: "[Radar] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing! The **AI Radar** reviews submissions in its Monday run and will reply on this issue to say whether it made it into the wiki (and where).
+  - type: input
+    id: link
+    attributes:
+      label: Link
+      description: Paste the URL you want the radar to look at.
+      placeholder: https://...
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it's worth a look
+      description: One or two lines — what is it, and why might it help us?
+    validations:
+      required: false
+  - type: input
+    id: who
+    attributes:
+      label: Your name (optional)
+      placeholder: so we can credit you in the changelog
+    validations:
+      required: false

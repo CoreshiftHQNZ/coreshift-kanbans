@@ -322,3 +322,12 @@ a { color: var(--teal-dark); }
   .wiki-main { padding: 28px 22px 60px; }
   .wiki-content h1 { font-size: 25px; }
 }
+
+/* ── Home: New Toys digest card ─────────────────────────── */
+.home-digest { margin: 0 0 30px; padding: 20px 24px 8px; background: #f2f7f8; border: 1px solid #dfeaea; border-radius: 14px; }
+.home-digest-body { font-size: 15px; line-height: 1.6; }
+.home-digest-body > :first-child { margin-top: 0; }
+.home-digest-body h2 { font-size: 19px; margin: 16px 0 8px; }
+.home-digest-body h3 { font-size: 16px; margin: 14px 0 6px; }
+.home-digest-body ul { margin: 6px 0 12px; padding-left: 20px; }
+.home-digest-body li { margin: 4px 0; }
