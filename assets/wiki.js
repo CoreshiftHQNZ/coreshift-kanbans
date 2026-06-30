@@ -49,6 +49,14 @@
       ],
     },
     {
+      label: "AI Radar",
+      items: [
+        { key: "ai-practices",   icon: "🧠", text: "AI Practices",    href: "wiki/ai-practices/" },
+        { key: "claude-updates", icon: "✴️", text: "Claude Updates",  href: "wiki/claude-updates/" },
+        { key: "ai-changelog",   icon: "🗂️", text: "Radar Changelog", href: "wiki/ai-changelog/" },
+      ],
+    },
+    {
       label: "Projects",
       items: [
         { key: "boards",          icon: "📋", text: "Project boards", href: "boards/" },
