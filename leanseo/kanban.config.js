@@ -62,6 +62,13 @@ module.exports = {
       desc: "aaron-he-zhu/seo-geo-claude-skills — the method toolkit being adopted",
       url: "https://github.com/aaron-he-zhu/seo-geo-claude-skills",
     },
+    {
+      icon: "🏗",
+      title: "Coreshift Live Edit",
+      desc: "The in-dev self-serve site platform LeanSEO will integrate with (Phase 4)",
+      url: "https://github.com/CoreshiftHQNZ/coreshift-live-edit",
+      internal: true,
+    },
   ],
 
   // ── Roles ─────────────────────────────────────────────────────
@@ -127,6 +134,20 @@ module.exports = {
         "Rank tracker + monthly performance report via GSC",
         "Surface progress in the client portal",
         "ledger.py before/after deltas in client reporting",
+      ],
+    },
+    {
+      key: "phase-4",
+      status: "future",
+      title: "Phase 4",
+      subtitle: "Website-builder integration",
+      window: "Future · gated on Coreshift Live Edit",
+      desc: "Wire LeanSEO into Coreshift Live Edit (the in-dev self-serve $100/mo site platform) so every site is built SEO/GEO-ready by default, then offer LeanSEO as a switch-on add-on to Live Edit clients.",
+      deliverables: [
+        "Emit LeanSEO best practices in three forms: a spec/checklist, a machine-readable ruleset Live Edit ingests, and an SEO/GEO-ready starter theme",
+        "Bake the ruleset into Live Edit's themes + edge renderer (SSR, schema, llms.txt, clean sitemap by default)",
+        "Prep built sites to 'receive' LeanSEO — structural hooks for a later add-on integration",
+        "Offer LeanSEO as a paid add-on/integration to Live Edit clients",
       ],
     },
   ],
