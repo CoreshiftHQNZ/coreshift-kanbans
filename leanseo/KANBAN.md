@@ -19,7 +19,7 @@
 
 ## 🟡 In Progress
 
-- **Prerender + GEO foundations** `phase-0` `in-progress` — PR #5: headless prerender of all 23 public routes, clean-URL serving, sitemap (incl. blog posts), llms.txt, Organization schema, og-image. Verified locally (real content + JSON-LD per route). Awaiting review + first staging deploy.
+- **Prerender + GEO foundations** `phase-0` `in-progress` — PR #5 MERGED to dev (efa8379) + promoted to staging branch. CI build check passed = prerender + puppeteer run green in clean CI. Verified locally (real content + JSON-LD per route). Railway staging deploy unverified — staging.leanseo.co.nz returns 404 (env/domain not serving). Not on prod yet.
 
 ## 🚫 Blocked
 
@@ -27,7 +27,8 @@
 
 ## 🔵 This Week
 
-- **Verify Railway/Chromium build on staging** `phase-0` `infra` `blocked-by:pr-5` — After PR #5 merges, confirm the nixpacks build installs Chromium and prerender runs on the staging deploy (the one thing not testable locally).
+- **Verify Railway/Chromium build** `phase-0` `infra` `blocked-by:railway-access` — CI build (incl. prerender) is green, so logic is sound; only the Railway nixpacks Chromium path is unverified. Blocked: staging.leanseo.co.nz 404s (env not serving) and no Railway CLI/dashboard access here. Need Railway staging deploy log, the *.up.railway.app URL, or a RAILWAY_TOKEN. Safe fallback: if nixpacks Chromium fails, the build fails and Railway keeps the last good deploy (no prod regression).
+- **Confirm staging environment exists** `phase-0` `infra` — staging.leanseo.co.nz is a Cloudflare hostname with no live origin. Clarify whether a Railway staging env is actually deployed, or if dev→staging is just a branch gate and prod is the real target.
 
 ## ⚪ Backlog
 

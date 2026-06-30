@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>29%</strong> complete</div>
-        <div><strong>6</strong>/21 cards done</div>
-        <div>Updated <strong>2026-06-30 03:37 UTC</strong></div>
+        <div><strong>27%</strong> complete</div>
+        <div><strong>6</strong>/22 cards done</div>
+        <div>Updated <strong>2026-06-30 03:53 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">1</div>
+        <div class="status-num">2</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -998,7 +998,7 @@
       <div class="card">
         <div class="card-title">Prerender + GEO foundations</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">in-progress</span></div>
-        <div class="card-desc">PR #5: headless prerender of all 23 public routes, clean-URL serving, sitemap (incl. blog posts), llms.txt, Organization schema, og-image. Verified locally (real content + JSON-LD per route). Awaiting review + first staging deploy</div>
+        <div class="card-desc">PR #5 MERGED to dev (efa8379) + promoted to staging branch. CI build check passed = prerender + puppeteer run green in clean CI. Verified locally (real content + JSON-LD per route). Railway staging deploy unverified — staging.leanseo.co.nz returns 404 (env/domain not serving). Not on prod yet</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1016,13 +1016,18 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Verify Railway/Chromium build on staging</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span><span class="tag tag-blocked">blocked-by:pr-5</span></div>
-        <div class="card-desc">After PR #5 merges, confirm the nixpacks build installs Chromium and prerender runs on the staging deploy (the one thing not testable locally)</div>
+        <div class="card-title">Verify Railway/Chromium build</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span><span class="tag tag-blocked">blocked-by:railway-access</span></div>
+        <div class="card-desc">CI build (incl. prerender) is green, so logic is sound; only the Railway nixpacks Chromium path is unverified. Blocked: staging.leanseo.co.nz 404s (env not serving) and no Railway CLI/dashboard access here. Need Railway staging deploy log, the *.up.railway.app URL, or a RAILWAY_TOKEN. Safe fallback: if nixpacks Chromium fails, the build fails and Railway keeps the last good deploy (no prod regression)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Confirm staging environment exists</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">staging.leanseo.co.nz is a Cloudflare hostname with no live origin. Clarify whether a Railway staging env is actually deployed, or if dev→staging is just a branch gate and prod is the real target</div>
       </div></div>
     </section>
     <section class="column col-backlog">
