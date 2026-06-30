@@ -15,6 +15,7 @@
 - **Method benchmark vs reference tools** `phase-0` `shipped` — Benchmarked seoplan.ts (single homepage regex + one claude-haiku call, no GEO/AEO/data/gate) against claudeseoskill.com + aaron-he-zhu skills. Verdict: behind on method, absent on GEO/AEO, ahead only on productization.
 - **Tooling QA pass** `phase-0` `shipped` — Ran the seo-geo skill connectors against the live site. Reproduced the audit AND found two new things: AI crawlers (GPTBot/ClaudeBot/Google-Extended/CCBot/Bytespider) blocked at the robots layer, and 0 crawlable internal links (site undiscoverable without JS).
 - **Adoption roadmap agreed** `phase-0` `milestone` — 4-phase plan (fix own house → adopt as internal tool → build into product → recurring value). This board is the canonical state.
+- **Unblocked AI crawlers (Cloudflare)** `phase-0` `infra` `shipped` — AI bots were hard-blocked (403) at the edge AND disallowed via a Cloudflare-managed robots.txt (`ai-train=no`). Fixed in the Coreshift 2 account: Block AI Bots Scope → Do not block, and Managed robots.txt OFF (AI Crawl Control → Signals). Verified: GPTBot/ClaudeBot/OAI-SearchBot/PerplexityBot/Googlebot all 200; robots.txt back to clean `Allow: /`.
 
 ## 🟡 In Progress
 
@@ -26,7 +27,6 @@
 
 ## 🔵 This Week
 
-- **Unblock AI crawlers (Cloudflare)** `phase-0` `infra` `blocked-by:dashboard` — Confirmed: AI bots are hard-blocked at the edge — 403 to GPTBot/OAI-SearchBot/ClaudeBot/PerplexityBot, Googlebot 200 — via AI Crawl Control + "Block AI Scrapers" + managed robots.txt (ai-train=no). Decision: allow ALL AI crawlers. Action (dashboard, CoreshiftHq acct): AI Crawl Control → Crawlers → Allow; Security → Bots → Block AI Scrapers = Off; disable managed robots.txt. Not doable via the Workers-only MCP. Until lifted, PR #5 prerender doesn't reach AI engines.
 - **Verify Railway/Chromium build on staging** `phase-0` `infra` `blocked-by:pr-5` — After PR #5 merges, confirm the nixpacks build installs Chromium and prerender runs on the staging deploy (the one thing not testable locally).
 
 ## ⚪ Backlog
@@ -42,3 +42,4 @@
 - **LeanSEO as a Live Edit add-on** `phase-4` `milestone` — Prep built sites with integration hooks, then offer LeanSEO as a switch-on add-on/integration to Live Edit clients (upsell on the $100/mo platform).
 - **Rebrand template scaffolding** `ops` — package.json is still `coreshift-starter`; README/AGENTS.md describe the generic starter, never customised for LeanSEO.
 - **Prune stale branches** `ops` — 4 merged feature branches (admin-dashboard, dark-glassmorphic-redesign, dashboard-spec-updates, multistep-onboarding) still on the remote.
+- **Protect staging from indexing** `ops` — turning off the zone-wide Cloudflare managed robots.txt means staging.leanseo.co.nz now serves `Allow: /` too. Add a noindex / auth gate so staging isn't crawled or indexed.

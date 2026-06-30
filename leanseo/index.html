@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>25%</strong> complete</div>
-        <div><strong>5</strong>/20 cards done</div>
-        <div>Updated <strong>2026-06-30 03:00 UTC</strong></div>
+        <div><strong>29%</strong> complete</div>
+        <div><strong>6</strong>/21 cards done</div>
+        <div>Updated <strong>2026-06-30 03:37 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">5</div>
+        <div class="status-num">6</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,11 +833,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">2</div>
+        <div class="status-num">1</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">11</div>
+        <div class="status-num">12</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -936,6 +936,13 @@
             <div class="recent-desc">4-phase plan (fix own house → adopt as internal tool → build into product → recurring value). This board is the canonical state</div>
           </div>
         </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Unblocked AI crawlers (Cloudflare)</div>
+            <div class="recent-desc">AI bots were hard-blocked (403) at the edge AND disallowed via a Cloudflare-managed robots.txt (`ai-train=no`). Fixed in the Coreshift 2 account: Block AI Bots Scope → Do not block, and Managed robots.txt OFF (AI Crawl Control → Signals). Verified: GPTBot/ClaudeBot/OAI-SearchBot/PerplexityBot/Googlebot all 200; robots.txt back to clean `Allow: /`</div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -948,7 +955,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -975,6 +982,11 @@
         <div class="card-title">Adoption roadmap agreed</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-milestone">milestone</span></div>
         <div class="card-desc">4-phase plan (fix own house → adopt as internal tool → build into product → recurring value). This board is the canonical state</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Unblocked AI crawlers (Cloudflare)</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">ai-train=no</span><span class="tag tag-neutral">Allow: /</span></div>
+        <div class="card-desc">AI bots were hard-blocked (403) at the edge AND disallowed via a Cloudflare-managed robots.txt (`ai-train=no`). Fixed in the Coreshift 2 account: Block AI Bots Scope → Do not block, and Managed robots.txt OFF (AI Crawl Control → Signals). Verified: GPTBot/ClaudeBot/OAI-SearchBot/PerplexityBot/Googlebot all 200; robots.txt back to clean `Allow: /`</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1004,14 +1016,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">1</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Unblock AI crawlers (Cloudflare)</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span><span class="tag tag-blocked">blocked-by:dashboard</span></div>
-        <div class="card-desc">Confirmed: AI bots are hard-blocked at the edge — 403 to GPTBot/OAI-SearchBot/ClaudeBot/PerplexityBot, Googlebot 200 — via AI Crawl Control + &quot;Block AI Scrapers&quot; + managed robots.txt (ai-train=no). Decision: allow ALL AI crawlers. Action (dashboard, CoreshiftHq acct): AI Crawl Control → Crawlers → Allow; Security → Bots → Block AI Scrapers = Off; disable managed robots.txt. Not doable via the Workers-only MCP. Until lifted, PR #5 prerender doesn&#39;t reach AI engines</div>
-      </div>
       <div class="card">
         <div class="card-title">Verify Railway/Chromium build on staging</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span><span class="tag tag-blocked">blocked-by:pr-5</span></div>
@@ -1021,7 +1028,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">11</span>
+        <span class="col-count">12</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1078,6 +1085,11 @@
         <div class="card-title">Prune stale branches</div>
         <div class="card-tags"><span class="tag tag-ops">ops</span></div>
         <div class="card-desc">4 merged feature branches (admin-dashboard, dark-glassmorphic-redesign, dashboard-spec-updates, multistep-onboarding) still on the remote</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Protect staging from indexing</div>
+        <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-neutral">Allow: /</span></div>
+        <div class="card-desc">turning off the zone-wide Cloudflare managed robots.txt means staging.leanseo.co.nz now serves `Allow: /` too. Add a noindex / auth gate so staging isn&#39;t crawled or indexed</div>
       </div></div>
     </section>
       </div>
