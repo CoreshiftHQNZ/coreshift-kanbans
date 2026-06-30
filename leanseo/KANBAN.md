@@ -18,7 +18,7 @@
 
 ## 🟡 In Progress
 
-- **Phase 0 kickoff** `phase-0` — Audit + QA complete; turning findings into the credibility fixes below. Awaiting go-ahead to start the SSR/prerender spike.
+- **Prerender + GEO foundations** `phase-0` `in-progress` — PR #5: headless prerender of all 23 public routes, clean-URL serving, sitemap (incl. blog posts), llms.txt, Organization schema, og-image. Verified locally (real content + JSON-LD per route). Awaiting review + first staging deploy.
 
 ## 🚫 Blocked
 
@@ -27,8 +27,7 @@
 ## 🔵 This Week
 
 - **Unblock chosen AI crawlers** `phase-0` `infra` — Decide policy and stop blocking the answer engines we want citing us — almost certainly the Cloudflare "Block AI Scrapers" toggle injecting the live robots.txt.
-- **SSR/prerender spike** `phase-0` `est:2-4d` — Prototype prerendering for marketing + programmatic + blog routes so schema and content reach Google and AI crawlers. The single highest-leverage fix.
-- **GEO quick wins** `phase-0` — Ship og-image.png (currently 404s), add the 10 blog posts to sitemap.xml, add llms.txt, add sitewide Organization schema.
+- **Verify Railway/Chromium build on staging** `phase-0` `infra` `blocked-by:pr-5` — After PR #5 merges, confirm the nixpacks build installs Chromium and prerender runs on the staging deploy (the one thing not testable locally).
 
 ## ⚪ Backlog
 
