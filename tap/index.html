@@ -379,7 +379,7 @@
           <div class="pbar"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>M1</strong> App + ICP</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Lead engine</div><div class="pbar-track"><div class="pbar-fill" style="width: 90%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Monetise</div><div class="pbar-track"><div class="pbar-fill" style="width: 65%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Monetise</div><div class="pbar-track"><div class="pbar-fill" style="width: 85%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Launch</div><div class="pbar-track"><div class="pbar-fill" style="width: 5%"></div></div></div>
         </div>
       </section>
@@ -433,7 +433,7 @@
 
       <div class="board">
         <div class="col done">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">13</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">16</span></div>
           <div class="col-body">
             <div class="card"><div class="card-head"><span class="card-id">M0</span></div><p class="card-title">Monorepo + CI + Railway (web & engine live)</p><p class="card-note">npm workspaces · GitHub Actions · push-to-deploy via RAILWAY_TOKEN</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M0</span></div><p class="card-title">Supabase schema + RLS + auth</p><p class="card-note">profiles/icps/entities/runs/leads · profile trigger · email confirm on</p></div>
@@ -448,6 +448,9 @@
             <div class="card"><div class="card-head"><span class="card-id">QA</span></div><p class="card-title">Test suite in CI</p><p class="card-note">19 vitest tests: scoring gates/bands/weights · ICP contract · heuristics</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M3</span></div><p class="card-title">Landing page (from Tap Landing design)</p><p class="card-note">/ marketing page · honest copy · app moved to /app</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M3</span></div><p class="card-title">Stripe paywall + free tier (key-gated)</p><p class="card-note">10 free claims server-enforced · checkout + webhook + session verify · $249/mo + GST</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M3</span></div><p class="card-title">Bucket-window contact model (anti-gaming)</p><p class="card-note">Contacts server-redacted until claimed · re-lock on won/lost · return-to-bucket to re-view · claim = unlock</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M3</span></div><p class="card-title">Claim allowances</p><p class="card-note">Pro = bucket × 20/mo (enlarge raises it) · bucket occupancy server-enforced · free = 10 lifetime</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M2</span></div><p class="card-title">Realtime lead drip + supply buffer</p><p class="card-note">runs-table realtime signal → redacted fetch · watermark = capacity+5 · adaptive cooldown</p></div>
           </div>
         </div>
 
@@ -460,10 +463,9 @@
         </div>
 
         <div class="col next">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Next</span><span class="col-count">5</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Next</span><span class="col-count">4</span></div>
           <div class="col-body">
             <div class="card"><div class="card-head"><span class="card-id">M2</span></div><p class="card-title">FB Ad Library + .nz WHOIS providers</p><p class="card-note">Unlocks the ad_library signals (ads→homepage, not-advertising) with real data</p></div>
-            <div class="card"><div class="card-head"><span class="card-id">M1</span></div><p class="card-title">Realtime lead stream</p><p class="card-note">Supabase realtime so new leads drip in without a reload</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M1</span></div><p class="card-title">ICP editor</p><p class="card-note">Edit / pause / re-tune an ICP after onboarding; multiple ICPs UX</p></div>
             <div class="card"><div class="card-head"><span class="card-id">OPS</span></div><p class="card-title">Observability</p><p class="card-note">Sentry + structured engine logs + run alerting</p></div>
             <div class="card"><div class="card-head"><span class="card-id">OPS</span></div><p class="card-title">Transactional email</p><p class="card-note">Resend / Cloudflare Email for auth + notifications</p></div>
