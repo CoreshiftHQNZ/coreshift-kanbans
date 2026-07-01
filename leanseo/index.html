@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>32%</strong> complete</div>
         <div><strong>7</strong>/22 cards done</div>
-        <div>Updated <strong>2026-06-30 04:36 UTC</strong></div>
+        <div>Updated <strong>2026-07-01 20:22 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,11 +833,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">1</div>
+        <div class="status-num">0</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">12</div>
+        <div class="status-num">13</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -1001,9 +1001,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Promote Phase 0 to prod (staging → main)</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-milestone">milestone</span></div>
-        <div class="card-desc">Phase 0 is verified on staging; open the staging → main PR to ship the prerender + GEO foundations to leanseo.co.nz (still serving the old empty SPA shell). Railway build proven green on staging. Awaiting go-ahead</div>
+        <div class="card-title">Release strategy: hold prod until all phases done</div>
+        <div class="card-tags"><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">staging</span><span class="tag tag-neutral">staging → main</span></div>
+        <div class="card-desc">Phase 0 is complete and verified on staging. Decision: every phase accumulates on `staging`; a single `staging → main` promotion ships Phases 0–4 to leanseo.co.nz at the very end (see Backlog). Note: the AI-crawler unblock is already live on prod (Cloudflare config, not a code deploy). Next up: Phase 1</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1021,19 +1021,14 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">0</span>
       </header>
-      <div class="cards">
-      <div class="card">
-        <div class="card-title">Smoke-test prod after promotion</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span></div>
-        <div class="card-desc">Once staging → main ships, re-run the onpage/schema_lint connectors against leanseo.co.nz to confirm prerendered content + JSON-LD are live (not the old shell), and that AI crawlers still get 200</div>
-      </div></div>
+      <div class="cards"><div class="empty">No items</div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">12</span>
+        <span class="col-count">13</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1095,6 +1090,11 @@
         <div class="card-title">Protect staging from indexing</div>
         <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-neutral">Allow: /</span></div>
         <div class="card-desc">turning off the zone-wide Cloudflare managed robots.txt means staging.leanseo.co.nz now serves `Allow: /` too. Add a noindex / auth gate so staging isn&#39;t crawled or indexed</div>
+      </div>
+      <div class="card">
+        <div class="card-title">FINAL: promote all phases to prod (staging → main)</div>
+        <div class="card-tags"><span class="tag tag-milestone">milestone</span><span class="tag tag-blocked">blocked-by:phases-1-4</span></div>
+        <div class="card-desc">The single production release. HELD until Phases 0–4 are complete and verified on staging. Then open staging → main, let Railway deploy, and smoke-test leanseo.co.nz (onpage/schema_lint: prerendered content + JSON-LD live; AI crawlers 200)</div>
       </div></div>
     </section>
       </div>

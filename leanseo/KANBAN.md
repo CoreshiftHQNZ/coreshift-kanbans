@@ -20,7 +20,7 @@
 
 ## 🟡 In Progress
 
-- **Promote Phase 0 to prod (staging → main)** `phase-0` `milestone` — Phase 0 is verified on staging; open the staging → main PR to ship the prerender + GEO foundations to leanseo.co.nz (still serving the old empty SPA shell). Railway build proven green on staging. Awaiting go-ahead.
+- **Release strategy: hold prod until all phases done** `milestone` — Phase 0 is complete and verified on staging. Decision: every phase accumulates on `staging`; a single `staging → main` promotion ships Phases 0–4 to leanseo.co.nz at the very end (see Backlog). Note: the AI-crawler unblock is already live on prod (Cloudflare config, not a code deploy). Next up: Phase 1.
 
 ## 🚫 Blocked
 
@@ -28,7 +28,7 @@
 
 ## 🔵 This Week
 
-- **Smoke-test prod after promotion** `phase-0` — Once staging → main ships, re-run the onpage/schema_lint connectors against leanseo.co.nz to confirm prerendered content + JSON-LD are live (not the old shell), and that AI crawlers still get 200.
+- _Nothing scheduled — Phase 1 not yet kicked off. Say the word and it moves here._
 
 ## ⚪ Backlog
 
@@ -44,3 +44,4 @@
 - **Rebrand template scaffolding** `ops` — package.json is still `coreshift-starter`; README/AGENTS.md describe the generic starter, never customised for LeanSEO.
 - **Prune stale branches** `ops` — 4 merged feature branches (admin-dashboard, dark-glassmorphic-redesign, dashboard-spec-updates, multistep-onboarding) still on the remote.
 - **Protect staging from indexing** `ops` — turning off the zone-wide Cloudflare managed robots.txt means staging.leanseo.co.nz now serves `Allow: /` too. Add a noindex / auth gate so staging isn't crawled or indexed.
+- **FINAL: promote all phases to prod (staging → main)** `milestone` `blocked-by:phases-1-4` — The single production release. HELD until Phases 0–4 are complete and verified on staging. Then open staging → main, let Railway deploy, and smoke-test leanseo.co.nz (onpage/schema_lint: prerendered content + JSON-LD live; AI crawlers 200).
