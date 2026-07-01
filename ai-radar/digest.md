@@ -8,7 +8,7 @@
 
 **✴️ Claude / Anthropic**
 
-- **Models:** Fable 5 stays suspended for general use; Mythos 5 partially restored (26 Jun) for vetted US critical-infrastructure only. We stay on **Opus 4.8 / Sonnet 4.6 / Haiku 4.5**.
+- **Models:** **Fable 5 is back (30 Jun)** — US export controls lifted; it returns globally **1 Jul** (included up to 50% of weekly usage through 7 Jul, then usage credits) with a new safety classifier that reroutes blocked requests to Opus 4.8. Mythos 5 stays limited to approved US orgs; our day-to-day stack is still **Opus 4.8 / Sonnet 4.6 / Haiku 4.5**. [Redeploying Fable 5](https://www.anthropic.com/news/redeploying-fable-5)
 - **API:** rate limits raised (Sonnet/Haiku now match Opus); tiers consolidated to **Start / Build / Scale**. **Opus 4.7 fast mode** is deprecated — removed **24 Jul**.
 
 **🧠 Practices worth a look**
