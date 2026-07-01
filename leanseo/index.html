@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>32%</strong> complete</div>
-        <div><strong>7</strong>/22 cards done</div>
-        <div>Updated <strong>2026-07-01 20:22 UTC</strong></div>
+        <div><strong>38%</strong> complete</div>
+        <div><strong>9</strong>/24 cards done</div>
+        <div>Updated <strong>2026-07-01 20:35 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">7</div>
+        <div class="status-num">9</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,11 +833,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">0</div>
+        <div class="status-num">2</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">13</div>
+        <div class="status-num">11</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -955,7 +955,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">9</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -992,6 +992,16 @@
         <div class="card-title">Prerender + GEO foundations live on staging</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">PR #5 (prerender of all 23 public routes + sitemap, llms.txt, Organization schema, og-image) and PR #6 (Dockerfile with system Chromium — fixed the Railway build that Railpack broke). Verified end-to-end: staging serves real content + per-page JSON-LD (e.g. /seo-for-plumbers → 200, full content). Prod still on the old shell pending promotion. Staging env confirmed serving</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase 2: plan-generation method rebuilt</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">siteAudit.ts</span><span class="tag tag-neutral">seoplan.ts</span><span class="tag tag-neutral">searchData.ts</span></div>
+        <div class="card-desc">PR #7. Replaced single-homepage-regex + haiku with a real multi-page site audit (crawl + on-page + schema + robots/sitemap, scored SEO/GEO/AEO — `siteAudit.ts`) feeding a Sonnet-generated structured plan across all three axes with prioritised recs + CORE-EEAT/CITE notes (`seoplan.ts`). GSC/GA4 data seam (`searchData.ts`, graceful). Still human-gated. Audit layer verified live (prod GEO 3 vs staging GEO 10). On staging</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase 1: quality gate documented</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-playbook">playbook</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">docs/standards/quality-gate.md: CORE-EEAT + CITE human sign-off checklist. The generator emits a matching qualityGate section for the reviewer to check</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1021,14 +1031,24 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">0</span>
+        <span class="col-count">2</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">DECISION: wire Google OAuth (GSC + GA4)</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-infra">infra</span><span class="tag tag-blocked">blocked-by:google-access</span><span class="tag tag-neutral">searchData.ts</span></div>
+        <div class="card-desc">The one unblock for real data. Activates `searchData.ts` (ranking/traffic in plans) AND all of Phase 3 (monitoring/reports). Needs a Google Cloud OAuth client (or service account) + granting the LeanSEO Google identity access to each client&#39;s GSC + GA4 property. Can&#39;t be done from the coding env</div>
+      </div>
+      <div class="card">
+        <div class="card-title">DECISION: verify AI plan output</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
+        <div class="card-desc">The generator builds/typechecks but its live output is unverified here (no real ANTHROPIC_API_KEY + no test client in the coding env). Run one real generation (staging has the key) against a sample client and review the plan quality + the Sonnet cost</div>
+      </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">13</span>
+        <span class="col-count">11</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1042,24 +1062,14 @@
         <div class="card-desc">Generate the opportunity/execution plans (the PDFs hand-built today) via the audit skill into the existing seo_plans flow</div>
       </div>
       <div class="card">
-        <div class="card-title">Adopt CORE-EEAT / CITE quality gate</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-playbook">playbook</span></div>
-        <div class="card-desc">80-item + 40-item human sign-off checklists before anything ships. Fits the &quot;specialist runs the show&quot; model</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Rebuild seoplan.ts method</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
-        <div class="card-desc">Replace homepage-regex + single-haiku with real crawl + onpage + schema_lint + GSC/GA4 inputs; multi-step engine with stronger model</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Add GEO/AEO axis to plans</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-deliverable">deliverable</span></div>
-        <div class="card-desc">Entity optimisation (Wikidata), schema generation, FAQ/HowTo + answer-density — net-new sellable value</div>
-      </div>
-      <div class="card">
         <div class="card-title">Recurring monitoring + reporting</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-recurring">recurring</span></div>
-        <div class="card-desc">Rank tracker + monthly GSC performance report surfaced in the client portal; ledger before/after deltas</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-recurring">recurring</span><span class="tag tag-blocked">blocked-by:google-oauth</span><span class="tag tag-neutral">searchData.ts</span></div>
+        <div class="card-desc">Rank tracker + monthly GSC performance report surfaced in the client portal; before/after deltas. The data seam (`searchData.ts`) is in place; blocked on the Google OAuth decision (This Week) for real data</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Entity optimisation (Wikidata) in plans</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
+        <div class="card-desc">Optional enrichment: reconcile the business to a Wikidata entity and fold entity signals into the plan. (Core SEO/GEO/AEO axis already shipped in #7.)</div>
       </div>
       <div class="card">
         <div class="card-title">Define LeanSEO best-practices output</div>
