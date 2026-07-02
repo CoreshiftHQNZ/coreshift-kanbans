@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">17</div>
+        <div class="status-num">18</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -920,6 +920,13 @@
       <h2 class="section-head">Recently Shipped</h2>
       <div class="recent-list">
 
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Archive flow · card-modal fix · better new-request prompt (verified)</div>
+            <div class="recent-desc">(1) <strong>Archive</strong>: a declined/quiet request can be tidied away by either side — new 'archived' status + archive_job RPC (owning customer or any Gem). Team workspace is now <strong>New / Active / Archive / Done</strong> (Done = completed only; declined/cancelled/archived sit in Archive); customers get an Archive action in the thread and an Archived filter. (2) Fixed the "add card modal pops up then vanishes" — it was the Payment Element failing to load during the live-key cutover; the modal now shows a clear error instead of blanking (root cause was the brief test/live key mismatch mid-deploy, resolved). (3) New-request sheet: removed the pre-filled idea chips; placeholder now prompts for pax / budget / delivery-location / when. Verified all three in preview; shipped dev→staging→main.</div>
+          </div>
+        </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
