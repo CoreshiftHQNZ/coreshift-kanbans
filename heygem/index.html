@@ -808,11 +808,11 @@
             <div class="phase-marker">R4</div>
             <div class="phase-status-pill phase-status-done">Done</div>
           </div>
-          <div class="phase-title">Phase R4 <span class="phase-subtitle">Payments (Stripe test)</span></div>
-          <div class="phase-window">Live keys gated on company registration</div>
-          <p class="phase-desc">Card on file at first quote-approval (SetupIntent), off-session PaymentIntent on completion, GST receipts, decline/retry handling. Test mode until the business + bank exist.</p>
+          <div class="phase-title">Phase R4 <span class="phase-subtitle">Payments — LIVE</span></div>
+          <div class="phase-window">Live Stripe (NZD) since 2026-07-02</div>
+          <p class="phase-desc">Card on file at first quote-approval (SetupIntent), off-session PaymentIntent on completion, GST receipts, decline/retry handling. Now on live keys — real cards, real charges (acct NZ/NZD, charges + payouts enabled).</p>
           <ul class="phase-deliverables">
-            <li>Save card at first approval</li><li>Charge-on-complete edge function</li><li>GST receipt email</li>
+            <li>Save card at first approval</li><li>Charge-on-complete edge function</li><li>GST receipt email</li><li>Live keys in Vault + client (test data cleared)</li>
           </ul>
         </div>
         <div class="phase-card phase-in-progress">
@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">16</div>
+        <div class="status-num">17</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -920,6 +920,13 @@
       <h2 class="section-head">Recently Shipped</h2>
       <div class="recent-list">
 
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Stripe switched to LIVE (verified)</div>
+            <div class="recent-desc">HeyGem is now taking real payments. Swapped the Vault <code>stripe_secret_key</code> to the live secret (edge functions use it at runtime) and set the customer app's <code>VITE_STRIPE_PUBLISHABLE_KEY</code> to the live publishable key on Railway — confirmed the rebuilt app.heygem.co.nz bundle carries <code>pk_live</code> and no longer the old test key. Cleared all test-mode Stripe state (customer IDs + saved cards) so live mode creates fresh customers. Live account verified read-only: NZ / NZD, charges + payouts enabled, details submitted. Local dev stays on test keys.</div>
+          </div>
+        </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
