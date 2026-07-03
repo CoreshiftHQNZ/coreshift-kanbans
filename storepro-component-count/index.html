@@ -699,8 +699,8 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>47%</strong> complete</div>
-        <div><strong>17</strong>/36 cards done</div>
+        <div><strong>49%</strong> complete</div>
+        <div><strong>18</strong>/37 cards done</div>
         <div>Updated <strong>2026-07-03 09:23 UTC</strong></div>
       </div>
     </div>
@@ -970,7 +970,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">17</span>
+        <span class="col-count">18</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1057,19 +1057,20 @@
         <div class="card-title">CI green again — vision deps were never installed</div>
         <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">Every CI run since 2026-05-20 failed at `import cv2`: the parser job never installed parser/vision/requirements.txt (Docker did). One workflow fix later, all three jobs pass — first fully green build in 6 weeks — and the newer test files (SP library mapping, reconciler clarifications, OPPAK oracle) now run in CI</div>
+      </div>
+      <div class="card">
+        <div class="card-title">bom() graduated into the upload pipeline</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">merged-to-dev</span><span class="tag tag-neutral">PR #3</span></div>
+        <div class="card-desc">count_standardised() runs at job finalise: job.bom + topology_summary on JobResult, TOP-clarifications merged into the Review-screen wiring, export.xlsx gains a &quot;BOM (part-coded)&quot; first sheet. Legacy drawings → applicable=false, existing engines stand alone. Merged to dev 2026-07-03, CI green — <strong>staging promotion pending</strong></div>
       </div></div>
     </section>
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">0</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Graduate bom() into the upload pipeline</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">parser/topology_spike.py</span><span class="tag tag-neutral">feature/plan-topology</span></div>
-        <div class="card-desc"><strong>PR #3 open against dev, CI fully green.</strong> count_standardised() runs at job finalise: job.bom + topology_summary on JobResult, clarifications merged into the Review screen wiring, and export.xlsx gains a &quot;BOM (part-coded)&quot; first sheet. Legacy drawings return applicable=false → existing engines stand alone. Follow-ups: PDF export BOM section + a Review-screen BOM table; rule hypotheses stay as clarifications until Storepro&#39;s answers land</div>
-      </div></div>
+<div class="empty">No items</div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -1118,13 +1119,18 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">13</span>
+        <span class="col-count">14</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">Geometric design-review checks (Phase C epic)</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">epic</span><span class="tag tag-neutral">design-review</span></div>
         <div class="card-desc">The senior-reviewer judgment layer. Was four checks; the topology engine (2026-07-03) already solved <strong>row spacers / back ties</strong> (aligned back-to-back pairs) and proved the extraction path for the rest. Remaining three, easiest-value-first: (1) <strong>Mesh connector 6-vs-4</strong> — 6 connectors when beam &gt; 2743 mm, else 4 (beam length now read per level from elevations); (2) <strong>Post-protector cutout variant</strong> — protector height vs lowest beam level (level heights now extracted; needs protector height from catalogue); (3) <strong>Double-deep backstop quantity</strong> — needs drive-through/double-deep detection in plan topology. Each independently shippable</div>
+      </div>
+      <div class="card">
+        <div class="card-title">PDF export BOM section + Review-screen BOM table</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">polish</span></div>
+        <div class="card-desc">The part-coded BOM ships in export.xlsx (first sheet) and its clarifications reach the Review screen; remaining polish is a BOM section in the PDF export and a proper BOM table in the Review UI (job.bom is already on JobResult + ApiJob)</div>
       </div>
       <div class="card">
         <div class="card-title">Production Railway environment</div>
