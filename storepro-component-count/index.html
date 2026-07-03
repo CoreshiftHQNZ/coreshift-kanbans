@@ -699,8 +699,8 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>44%</strong> complete</div>
-        <div><strong>16</strong>/36 cards done</div>
+        <div><strong>47%</strong> complete</div>
+        <div><strong>17</strong>/36 cards done</div>
         <div>Updated <strong>2026-07-03 09:23 UTC</strong></div>
       </div>
     </div>
@@ -970,7 +970,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">16</span>
+        <span class="col-count">17</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1052,6 +1052,11 @@
         <div class="card-title">Dynamic-block topology engine — full BOM parity, line-for-line</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">parser/topology_spike.py</span><span class="tag tag-neutral">feature/plan-topology</span></div>
         <div class="card-desc">Decoded Storepro&#39;s real drawing format (dynamic blocks: *U anonymous inserts → source blocks via eed; bays = arrayed strips; letters nested per bay-unit; spec via visibility states) and built a deterministic engine that reproduced OPPAK-12515&#39;s confirmed count <strong>exactly</strong>: bays 83/46/3, frames 93/54 (shared-frame max-height rule), beams 498/18/368 from elevation reading, back ties 112 (aligned-pairs rule), anchors 588, protectors 11 LH + 11 RH (by rotation), load signs 3. Component-space palette auto-excluded by bay-pitch signature. No vision needed. 4 hypotheses surfaced as clarifications, end-to-end test env-gated on the job minJSON</div>
+      </div>
+      <div class="card">
+        <div class="card-title">CI green again — vision deps were never installed</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Every CI run since 2026-05-20 failed at `import cv2`: the parser job never installed parser/vision/requirements.txt (Docker did). One workflow fix later, all three jobs pass — first fully green build in 6 weeks — and the newer test files (SP library mapping, reconciler clarifications, OPPAK oracle) now run in CI</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1063,7 +1068,7 @@
       <div class="card">
         <div class="card-title">Graduate bom() into the upload pipeline</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">parser/topology_spike.py</span><span class="tag tag-neutral">feature/plan-topology</span></div>
-        <div class="card-desc">Wire the validated topology engine in as the counting stage for standardised drawings (replacing recipe×bays expansion): upload → bom() → clarifications on the Review screen → part-coded BOM in the existing xlsx/pdf exports. The reconciler keeps its cross-check role (drawn-geometry diff → designer-adaptation flags). Rule hypotheses (weld default, mixed-height ties, load signs) stay as clarifications until Storepro&#39;s answers land</div>
+        <div class="card-desc"><strong>PR #3 open against dev, CI fully green.</strong> count_standardised() runs at job finalise: job.bom + topology_summary on JobResult, clarifications merged into the Review screen wiring, and export.xlsx gains a &quot;BOM (part-coded)&quot; first sheet. Legacy drawings return applicable=false → existing engines stand alone. Follow-ups: PDF export BOM section + a Review-screen BOM table; rule hypotheses stay as clarifications until Storepro&#39;s answers land</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1113,7 +1118,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">14</span>
+        <span class="col-count">13</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1130,11 +1135,6 @@
         <div class="card-title">Retire HTTP Basic</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">security</span></div>
         <div class="card-desc">Once SSO has been used in earnest for a few sessions and Storepro confirms it&#39;s stable, hide the &quot;Use admin password instead&quot; toggle on /login</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Pre-existing `test_recipe_extractor.py` CI failure</div>
-        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">tech-debt</span></div>
-        <div class="card-desc">Has been red in GitHub Actions since 2026-05-20. Unrelated to the recent SSO/export work, but means CI hasn&#39;t been green for any push this month. Worth fixing so a real CI failure stands out</div>
       </div>
       <div class="card">
         <div class="card-title">PDF letterhead + Storepro branding</div>
