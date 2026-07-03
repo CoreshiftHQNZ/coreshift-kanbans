@@ -60,6 +60,7 @@
     {
       label: "Projects",
       items: [
+        { key: "new-project", icon: "🚀", text: "Start a new project", href: "wiki/new-project/" },
         { key: "boards",          icon: "📋", text: "Project boards", href: "boards/" },
         { key: "mission-control", icon: "🛰️", text: "Mission Control", href: "wiki/mission-control/" },
       ],
