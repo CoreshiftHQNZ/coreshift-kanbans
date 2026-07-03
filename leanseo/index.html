@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>36%</strong> complete</div>
-        <div><strong>9</strong>/25 cards done</div>
-        <div>Updated <strong>2026-07-03 01:50 UTC</strong></div>
+        <div><strong>35%</strong> complete</div>
+        <div><strong>9</strong>/26 cards done</div>
+        <div>Updated <strong>2026-07-03 03:16 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -825,7 +825,7 @@
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">2</div>
+        <div class="status-num">3</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -1007,9 +1007,14 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Phase 3 step 1: GSC + GA4 fetches implemented</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">searchData.ts</span><span class="tag tag-neutral">feature/phase-3-pickup</span><span class="tag tag-neutral">invalid_grant</span><span class="tag tag-neutral">webmasters.readonly</span><span class="tag tag-neutral">analytics.readonly</span><span class="tag tag-neutral">dev</span></div>
+        <div class="card-desc">`searchData.ts` fetches are real code now (branch `feature/phase-3-pickup`): OAuth refresh-token flow with cached access token, GSC 28-day totals + top queries (URL-prefix → sc-domain fallback), GA4 sessions/engaged/top landing pages. Graceful degradation verified. NOT live-verified: the provided refresh token is dead (`invalid_grant` — likely 7-day Testing-mode expiry). Awaiting re-minted token from Abe with `webmasters.readonly` + `analytics.readonly` scopes. PR into `dev` after live verification</div>
+      </div>
       <div class="card">
         <div class="card-title">Builder handover ready</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">docs/HANDOVER.md</span></div>
@@ -1041,8 +1046,8 @@
       <div class="cards">
       <div class="card">
         <div class="card-title">DECISION: wire Google OAuth (GSC + GA4)</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-infra">infra</span><span class="tag tag-blocked">blocked-by:google-access</span><span class="tag tag-neutral">searchData.ts</span></div>
-        <div class="card-desc">The one unblock for real data. Activates `searchData.ts` (ranking/traffic in plans) AND all of Phase 3 (monitoring/reports). Needs a Google Cloud OAuth client (or service account) + granting the LeanSEO Google identity access to each client&#39;s GSC + GA4 property. Can&#39;t be done from the coding env</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-infra">infra</span><span class="tag tag-blocked">blocked-by:google-access</span><span class="tag tag-neutral">invalid_grant</span><span class="tag tag-neutral">webmasters.readonly</span><span class="tag tag-neutral">analytics.readonly</span><span class="tag tag-neutral">GOOGLE_REFRESH_TOKEN</span></div>
+        <div class="card-desc">PROGRESS 2026-07-03: Abe supplied OAuth client + refresh token; fetch code is implemented and consuming them. BUT the refresh token is rejected (`invalid_grant`) — likely the OAuth consent screen is in Testing mode (tokens expire after 7 days). Ask: set publishing status to In production, re-mint a refresh token with `webmasters.readonly` + `analytics.readonly` scopes, send the new `GOOGLE_REFRESH_TOKEN` (plain text, not RTF). Also still needed: grant the LeanSEO identity access to each client&#39;s GSC + GA4 property</div>
       </div>
       <div class="card">
         <div class="card-title">DECISION: verify AI plan output</div>

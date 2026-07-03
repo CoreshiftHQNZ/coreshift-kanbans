@@ -22,6 +22,7 @@
 
 ## 🟡 In Progress
 
+- **Phase 3 step 1: GSC + GA4 fetches implemented** `phase-3` — `searchData.ts` fetches are real code now (branch `feature/phase-3-pickup`): OAuth refresh-token flow with cached access token, GSC 28-day totals + top queries (URL-prefix → sc-domain fallback), GA4 sessions/engaged/top landing pages. Graceful degradation verified. NOT live-verified: the provided refresh token is dead (`invalid_grant` — likely 7-day Testing-mode expiry). Awaiting re-minted token from Abe with `webmasters.readonly` + `analytics.readonly` scopes. PR into `dev` after live verification.
 - **Builder handover ready** `phase-3` `shipped` — `docs/HANDOVER.md` (PR #8) is the self-contained onboarding for the next builder: current state, setup + build gotchas, the decision points blocking Phase 3, the Phase 3 build plan, landmines, and paste-ready prompts. Start there.
 - **Release strategy: hold prod until all phases done** `milestone` — Phase 0 is complete and verified on staging. Decision: every phase accumulates on `staging`; a single `staging → main` promotion ships Phases 0–4 to leanseo.co.nz at the very end (see Backlog). Note: the AI-crawler unblock is already live on prod (Cloudflare config, not a code deploy). Next up: Phase 1.
 
@@ -31,7 +32,7 @@
 
 ## 🔵 This Week
 
-- **DECISION: wire Google OAuth (GSC + GA4)** `phase-2` `phase-3` `infra` `blocked-by:google-access` — The one unblock for real data. Activates `searchData.ts` (ranking/traffic in plans) AND all of Phase 3 (monitoring/reports). Needs a Google Cloud OAuth client (or service account) + granting the LeanSEO Google identity access to each client's GSC + GA4 property. Can't be done from the coding env.
+- **DECISION: wire Google OAuth (GSC + GA4)** `phase-2` `phase-3` `infra` `blocked-by:google-access` — PROGRESS 2026-07-03: Abe supplied OAuth client + refresh token; fetch code is implemented and consuming them. BUT the refresh token is rejected (`invalid_grant`) — likely the OAuth consent screen is in Testing mode (tokens expire after 7 days). Ask: set publishing status to In production, re-mint a refresh token with `webmasters.readonly` + `analytics.readonly` scopes, send the new `GOOGLE_REFRESH_TOKEN` (plain text, not RTF). Also still needed: grant the LeanSEO identity access to each client's GSC + GA4 property.
 - **DECISION: verify AI plan output** `phase-2` — The generator builds/typechecks but its live output is unverified here (no real ANTHROPIC_API_KEY + no test client in the coding env). Run one real generation (staging has the key) against a sample client and review the plan quality + the Sonnet cost.
 
 ## ⚪ Backlog
