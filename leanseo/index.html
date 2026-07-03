@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>35%</strong> complete</div>
-        <div><strong>9</strong>/26 cards done</div>
-        <div>Updated <strong>2026-07-03 04:25 UTC</strong></div>
+        <div><strong>38%</strong> complete</div>
+        <div><strong>10</strong>/26 cards done</div>
+        <div>Updated <strong>2026-07-03 08:49 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">9</div>
+        <div class="status-num">10</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -837,7 +837,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">11</div>
+        <div class="status-num">10</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -955,7 +955,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">9</span>
+        <span class="col-count">10</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1002,6 +1002,11 @@
         <div class="card-title">Phase 1: quality gate documented</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-playbook">playbook</span><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">docs/standards/quality-gate.md: CORE-EEAT + CITE human sign-off checklist. The generator emits a matching qualityGate section for the reviewer to check</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Entity optimisation (Wikidata) in plans</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">entityData.ts</span></div>
+        <div class="card-desc">On PR #10: `entityData.ts` reconciles the business to a Wikidata entity (official-website P856 match only — same-name traps rejected, subdomain-tolerant, failures degrade honestly to &quot;couldn&#39;t check&quot;). Signal feeds the AI prompt (delimited as untrusted, Wikidata is world-editable) and the fallback plan&#39;s GEO recommendations. Live-tested 6/6 scenarios</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1051,14 +1056,14 @@
       </div>
       <div class="card">
         <div class="card-title">DECISION: verify AI plan output</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
-        <div class="card-desc">The generator builds/typechecks but its live output is unverified here (no real ANTHROPIC_API_KEY + no test client in the coding env). Run one real generation (staging has the key) against a sample client and review the plan quality + the Sonnet cost</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-blocked">blocked-by:anthropic-key</span><span class="tag tag-neutral">ANTHROPIC_API_KEY</span></div>
+        <div class="card-desc">Attempted 2026-07-03: full pipeline verified locally with live data (audit + GSC/GA4 + entity → plan stored; fallback path solid; Sonnet token usage now logged per plan). BUT the `ANTHROPIC_API_KEY` in the owner-supplied env file is **invalid (401)** — the AI-written output itself is still un-reviewed. Needs a valid key from Abe, or a staging run against a safe test client (Ricky to nominate — shared DB appears to hold real clients, so no generations were triggered there)</div>
       </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">11</span>
+        <span class="col-count">10</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1075,11 +1080,6 @@
         <div class="card-title">Wire the monthly snapshot scheduler</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">ricky</span><span class="tag tag-neutral">POST /api/admin/snapshots/capture-all</span></div>
         <div class="card-desc">The capture endpoint (`POST /api/admin/snapshots/capture-all`, admin-secret auth, idempotent per day, runs in background) is built and on PR #10; needs an external scheduler (Railway cron or similar) hitting it monthly. Deliberately no in-app cron — Ricky&#39;s call on the mechanism</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Entity optimisation (Wikidata) in plans</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
-        <div class="card-desc">Optional enrichment: reconcile the business to a Wikidata entity and fold entity signals into the plan. (Core SEO/GEO/AEO axis already shipped in #7.)</div>
       </div>
       <div class="card">
         <div class="card-title">Define LeanSEO best-practices output</div>

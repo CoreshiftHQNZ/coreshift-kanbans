@@ -19,6 +19,7 @@
 - **Prerender + GEO foundations live on staging** `phase-0` `shipped` — PR #5 (prerender of all 23 public routes + sitemap, llms.txt, Organization schema, og-image) and PR #6 (Dockerfile with system Chromium — fixed the Railway build that Railpack broke). Verified end-to-end: staging serves real content + per-page JSON-LD (e.g. /seo-for-plumbers → 200, full content). Prod still on the old shell pending promotion. Staging env confirmed serving.
 - **Phase 2: plan-generation method rebuilt** `phase-2` `shipped` — PR #7. Replaced single-homepage-regex + haiku with a real multi-page site audit (crawl + on-page + schema + robots/sitemap, scored SEO/GEO/AEO — `siteAudit.ts`) feeding a Sonnet-generated structured plan across all three axes with prioritised recs + CORE-EEAT/CITE notes (`seoplan.ts`). GSC/GA4 data seam (`searchData.ts`, graceful). Still human-gated. Audit layer verified live (prod GEO 3 vs staging GEO 10). On staging.
 - **Phase 1: quality gate documented** `phase-1` `playbook` `shipped` — docs/standards/quality-gate.md: CORE-EEAT + CITE human sign-off checklist. The generator emits a matching qualityGate section for the reviewer to check.
+- **Entity optimisation (Wikidata) in plans** `phase-2` `shipped` — On PR #10: `entityData.ts` reconciles the business to a Wikidata entity (official-website P856 match only — same-name traps rejected, subdomain-tolerant, failures degrade honestly to "couldn't check"). Signal feeds the AI prompt (delimited as untrusted, Wikidata is world-editable) and the fallback plan's GEO recommendations. Live-tested 6/6 scenarios.
 
 ## 🟡 In Progress
 
@@ -33,14 +34,13 @@
 ## 🔵 This Week
 
 - **RESOLVED: Google OAuth wired (GSC + GA4)** `phase-2` `phase-3` `infra` — 2026-07-03: OAuth app published to production, fresh refresh token minted via local consent flow against the LeanSEO Google account (`webmasters.readonly` + `analytics.readonly`). Account is siteOwner on `sc-domain:leanseo.co.nz` + has GA4 property 532359443. Live data verified end-to-end through `searchData.ts` (PR #10). Remaining per-client step: grant the LeanSEO identity viewer access to each client's GSC + GA4 property as clients onboard.
-- **DECISION: verify AI plan output** `phase-2` — The generator builds/typechecks but its live output is unverified here (no real ANTHROPIC_API_KEY + no test client in the coding env). Run one real generation (staging has the key) against a sample client and review the plan quality + the Sonnet cost.
+- **DECISION: verify AI plan output** `phase-2` `blocked-by:anthropic-key` — Attempted 2026-07-03: full pipeline verified locally with live data (audit + GSC/GA4 + entity → plan stored; fallback path solid; Sonnet token usage now logged per plan). BUT the `ANTHROPIC_API_KEY` in the owner-supplied env file is **invalid (401)** — the AI-written output itself is still un-reviewed. Needs a valid key from Abe, or a staging run against a safe test client (Ricky to nominate — shared DB appears to hold real clients, so no generations were triggered there).
 
 ## ⚪ Backlog
 
 - **Install skills as internal team tool** `phase-1` — `/plugin marketplace add aaron-he-zhu/seo-geo-claude-skills` in Claude Code; wire free GSC + GA4 for client sites.
 - **Standardise client deliverables on the audit skill** `phase-1` `deliverable` — Generate the opportunity/execution plans (the PDFs hand-built today) via the audit skill into the existing seo_plans flow.
 - **Wire the monthly snapshot scheduler** `phase-3` `infra` `ricky` — The capture endpoint (`POST /api/admin/snapshots/capture-all`, admin-secret auth, idempotent per day, runs in background) is built and on PR #10; needs an external scheduler (Railway cron or similar) hitting it monthly. Deliberately no in-app cron — Ricky's call on the mechanism.
-- **Entity optimisation (Wikidata) in plans** `phase-2` — Optional enrichment: reconcile the business to a Wikidata entity and fold entity signals into the plan. (Core SEO/GEO/AEO axis already shipped in #7.)
 - **Define LeanSEO best-practices output** `phase-4` `deliverable` `blocked-by:phase-0` — Produce the output Coreshift Live Edit consumes, in three forms: a spec/checklist, a machine-readable ruleset, and an SEO/GEO-ready starter theme. Generalises the Phase 0 bundle (SSR/schema/llms.txt), proven on our own site, into a reusable ruleset.
 - **Bake best practices into Coreshift Live Edit** `phase-4` — Wire the ruleset into Live Edit's themes + edge renderer so every built site ships SSR, schema, llms.txt, and a clean sitemap by default.
 - **LeanSEO as a Live Edit add-on** `phase-4` `milestone` — Prep built sites with integration hooks, then offer LeanSEO as a switch-on add-on/integration to Live Edit clients (upsell on the $100/mo platform).
