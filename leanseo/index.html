@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>35%</strong> complete</div>
         <div><strong>9</strong>/26 cards done</div>
-        <div>Updated <strong>2026-07-03 03:16 UTC</strong></div>
+        <div>Updated <strong>2026-07-03 03:31 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1011,9 +1011,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Phase 3 step 1: GSC + GA4 fetches implemented</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">searchData.ts</span><span class="tag tag-neutral">feature/phase-3-pickup</span><span class="tag tag-neutral">invalid_grant</span><span class="tag tag-neutral">webmasters.readonly</span><span class="tag tag-neutral">analytics.readonly</span><span class="tag tag-neutral">dev</span></div>
-        <div class="card-desc">`searchData.ts` fetches are real code now (branch `feature/phase-3-pickup`): OAuth refresh-token flow with cached access token, GSC 28-day totals + top queries (URL-prefix → sc-domain fallback), GA4 sessions/engaged/top landing pages. Graceful degradation verified. NOT live-verified: the provided refresh token is dead (`invalid_grant` — likely 7-day Testing-mode expiry). Awaiting re-minted token from Abe with `webmasters.readonly` + `analytics.readonly` scopes. PR into `dev` after live verification</div>
+        <div class="card-title">Phase 3 step 1: GSC + GA4 fetches live — PR #10</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">searchData.ts</span><span class="tag tag-neutral">dev</span><span class="tag tag-neutral">GOOGLE_CLIENT_ID/SECRET/REFRESH_TOKEN</span><span class="tag tag-neutral">reports</span></div>
+        <div class="card-desc">`searchData.ts` fetches implemented and verified against live Google data (PR #10 → `dev`): OAuth refresh-token flow, GSC 28-day totals + top queries (sc-domain fallback), GA4 sessions/engaged/landing pages, graceful degradation intact. Live check: GA4 33 sessions/28d; GSC 0 clicks/impressions — genuine (12-month window also zero; prod still serves the pre-Phase-0 shell). Staging needs `GOOGLE_CLIENT_ID/SECRET/REFRESH_TOKEN` as Railway service vars (Ricky — values with Mal/Abe). Next slice: rank tracker + monthly report generator + portal surface (`reports` table — check schema with Ricky)</div>
       </div>
       <div class="card">
         <div class="card-title">Builder handover ready</div>
@@ -1045,9 +1045,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">DECISION: wire Google OAuth (GSC + GA4)</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-infra">infra</span><span class="tag tag-blocked">blocked-by:google-access</span><span class="tag tag-neutral">invalid_grant</span><span class="tag tag-neutral">webmasters.readonly</span><span class="tag tag-neutral">analytics.readonly</span><span class="tag tag-neutral">GOOGLE_REFRESH_TOKEN</span></div>
-        <div class="card-desc">PROGRESS 2026-07-03: Abe supplied OAuth client + refresh token; fetch code is implemented and consuming them. BUT the refresh token is rejected (`invalid_grant`) — likely the OAuth consent screen is in Testing mode (tokens expire after 7 days). Ask: set publishing status to In production, re-mint a refresh token with `webmasters.readonly` + `analytics.readonly` scopes, send the new `GOOGLE_REFRESH_TOKEN` (plain text, not RTF). Also still needed: grant the LeanSEO identity access to each client&#39;s GSC + GA4 property</div>
+        <div class="card-title">RESOLVED: Google OAuth wired (GSC + GA4)</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">webmasters.readonly</span><span class="tag tag-neutral">analytics.readonly</span><span class="tag tag-neutral">sc-domain:leanseo.co.nz</span><span class="tag tag-neutral">searchData.ts</span></div>
+        <div class="card-desc">2026-07-03: OAuth app published to production, fresh refresh token minted via local consent flow against the LeanSEO Google account (`webmasters.readonly` + `analytics.readonly`). Account is siteOwner on `sc-domain:leanseo.co.nz` + has GA4 property 532359443. Live data verified end-to-end through `searchData.ts` (PR #10). Remaining per-client step: grant the LeanSEO identity viewer access to each client&#39;s GSC + GA4 property as clients onboard</div>
       </div>
       <div class="card">
         <div class="card-title">DECISION: verify AI plan output</div>

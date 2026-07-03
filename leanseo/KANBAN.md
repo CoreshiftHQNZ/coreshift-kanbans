@@ -22,7 +22,7 @@
 
 ## 🟡 In Progress
 
-- **Phase 3 step 1: GSC + GA4 fetches implemented** `phase-3` — `searchData.ts` fetches are real code now (branch `feature/phase-3-pickup`): OAuth refresh-token flow with cached access token, GSC 28-day totals + top queries (URL-prefix → sc-domain fallback), GA4 sessions/engaged/top landing pages. Graceful degradation verified. NOT live-verified: the provided refresh token is dead (`invalid_grant` — likely 7-day Testing-mode expiry). Awaiting re-minted token from Abe with `webmasters.readonly` + `analytics.readonly` scopes. PR into `dev` after live verification.
+- **Phase 3 step 1: GSC + GA4 fetches live — PR #10** `phase-3` — `searchData.ts` fetches implemented and verified against live Google data (PR #10 → `dev`): OAuth refresh-token flow, GSC 28-day totals + top queries (sc-domain fallback), GA4 sessions/engaged/landing pages, graceful degradation intact. Live check: GA4 33 sessions/28d; GSC 0 clicks/impressions — genuine (12-month window also zero; prod still serves the pre-Phase-0 shell). Staging needs `GOOGLE_CLIENT_ID/SECRET/REFRESH_TOKEN` as Railway service vars (Ricky — values with Mal/Abe). Next slice: rank tracker + monthly report generator + portal surface (`reports` table — check schema with Ricky).
 - **Builder handover ready** `phase-3` `shipped` — `docs/HANDOVER.md` (PR #8) is the self-contained onboarding for the next builder: current state, setup + build gotchas, the decision points blocking Phase 3, the Phase 3 build plan, landmines, and paste-ready prompts. Start there.
 - **Release strategy: hold prod until all phases done** `milestone` — Phase 0 is complete and verified on staging. Decision: every phase accumulates on `staging`; a single `staging → main` promotion ships Phases 0–4 to leanseo.co.nz at the very end (see Backlog). Note: the AI-crawler unblock is already live on prod (Cloudflare config, not a code deploy). Next up: Phase 1.
 
@@ -32,7 +32,7 @@
 
 ## 🔵 This Week
 
-- **DECISION: wire Google OAuth (GSC + GA4)** `phase-2` `phase-3` `infra` `blocked-by:google-access` — PROGRESS 2026-07-03: Abe supplied OAuth client + refresh token; fetch code is implemented and consuming them. BUT the refresh token is rejected (`invalid_grant`) — likely the OAuth consent screen is in Testing mode (tokens expire after 7 days). Ask: set publishing status to In production, re-mint a refresh token with `webmasters.readonly` + `analytics.readonly` scopes, send the new `GOOGLE_REFRESH_TOKEN` (plain text, not RTF). Also still needed: grant the LeanSEO identity access to each client's GSC + GA4 property.
+- **RESOLVED: Google OAuth wired (GSC + GA4)** `phase-2` `phase-3` `infra` — 2026-07-03: OAuth app published to production, fresh refresh token minted via local consent flow against the LeanSEO Google account (`webmasters.readonly` + `analytics.readonly`). Account is siteOwner on `sc-domain:leanseo.co.nz` + has GA4 property 532359443. Live data verified end-to-end through `searchData.ts` (PR #10). Remaining per-client step: grant the LeanSEO identity viewer access to each client's GSC + GA4 property as clients onboard.
 - **DECISION: verify AI plan output** `phase-2` — The generator builds/typechecks but its live output is unverified here (no real ANTHROPIC_API_KEY + no test client in the coding env). Run one real generation (staging has the key) against a sample client and review the plan quality + the Sonnet cost.
 
 ## ⚪ Backlog
