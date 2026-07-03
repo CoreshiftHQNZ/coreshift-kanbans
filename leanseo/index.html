@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>35%</strong> complete</div>
         <div><strong>9</strong>/26 cards done</div>
-        <div>Updated <strong>2026-07-03 03:31 UTC</strong></div>
+        <div>Updated <strong>2026-07-03 04:25 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1011,9 +1011,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Phase 3 step 1: GSC + GA4 fetches live — PR #10</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">searchData.ts</span><span class="tag tag-neutral">dev</span><span class="tag tag-neutral">GOOGLE_CLIENT_ID/SECRET/REFRESH_TOKEN</span><span class="tag tag-neutral">reports</span></div>
-        <div class="card-desc">`searchData.ts` fetches implemented and verified against live Google data (PR #10 → `dev`): OAuth refresh-token flow, GSC 28-day totals + top queries (sc-domain fallback), GA4 sessions/engaged/landing pages, graceful degradation intact. Live check: GA4 33 sessions/28d; GSC 0 clicks/impressions — genuine (12-month window also zero; prod still serves the pre-Phase-0 shell). Staging needs `GOOGLE_CLIENT_ID/SECRET/REFRESH_TOKEN` as Railway service vars (Ricky — values with Mal/Abe). Next slice: rank tracker + monthly report generator + portal surface (`reports` table — check schema with Ricky)</div>
+        <div class="card-title">Phase 3 built: data seam + rank tracker + monthly reports — PR #10 awaiting review</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">feature/phase-3-pickup</span><span class="tag tag-neutral">search_snapshots</span><span class="tag tag-neutral">performance_reports</span><span class="tag tag-neutral">GOOGLE_CLIENT_ID/SECRET/REFRESH_TOKEN</span><span class="tag tag-neutral">POST /api/admin/snapshots/capture-all</span></div>
+        <div class="card-desc">Full slice on `feature/phase-3-pickup`: live GSC/GA4 fetches (verified: GA4 33 sessions/28d; GSC genuinely 0 — the before-picture until prod promotes), snapshot rank tracker (`search_snapshots`), deterministic monthly report generator with before/after deltas (`performance_reports`), human-gated publish flow (drafts until admin publishes; portal shows published only), portal Performance Reports section + admin capture/generate/publish controls. 8-angle review run, all confirmed findings fixed; e2e-tested on scratch Postgres with live Google data. Ricky: PR #10 review + 3 Railway service vars (`GOOGLE_CLIENT_ID/SECRET/REFRESH_TOKEN`, values with Mal) + fold migration 0003 into next pass; monthly cadence via external scheduler → `POST /api/admin/snapshots/capture-all` (idempotent per day)</div>
       </div>
       <div class="card">
         <div class="card-title">Builder handover ready</div>
@@ -1072,9 +1072,9 @@
         <div class="card-desc">Generate the opportunity/execution plans (the PDFs hand-built today) via the audit skill into the existing seo_plans flow</div>
       </div>
       <div class="card">
-        <div class="card-title">Recurring monitoring + reporting</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-recurring">recurring</span><span class="tag tag-blocked">blocked-by:google-oauth</span><span class="tag tag-neutral">searchData.ts</span></div>
-        <div class="card-desc">Rank tracker + monthly GSC performance report surfaced in the client portal; before/after deltas. The data seam (`searchData.ts`) is in place; blocked on the Google OAuth decision (This Week) for real data</div>
+        <div class="card-title">Wire the monthly snapshot scheduler</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">ricky</span><span class="tag tag-neutral">POST /api/admin/snapshots/capture-all</span></div>
+        <div class="card-desc">The capture endpoint (`POST /api/admin/snapshots/capture-all`, admin-secret auth, idempotent per day, runs in background) is built and on PR #10; needs an external scheduler (Railway cron or similar) hitting it monthly. Deliberately no in-app cron — Ricky&#39;s call on the mechanism</div>
       </div>
       <div class="card">
         <div class="card-title">Entity optimisation (Wikidata) in plans</div>
