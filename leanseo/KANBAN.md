@@ -22,6 +22,7 @@
 
 ## 🟡 In Progress
 
+- **Builder handover ready** `phase-3` `shipped` — `docs/HANDOVER.md` (PR #8) is the self-contained onboarding for the next builder: current state, setup + build gotchas, the decision points blocking Phase 3, the Phase 3 build plan, landmines, and paste-ready prompts. Start there.
 - **Release strategy: hold prod until all phases done** `milestone` — Phase 0 is complete and verified on staging. Decision: every phase accumulates on `staging`; a single `staging → main` promotion ships Phases 0–4 to leanseo.co.nz at the very end (see Backlog). Note: the AI-crawler unblock is already live on prod (Cloudflare config, not a code deploy). Next up: Phase 1.
 
 ## 🚫 Blocked
