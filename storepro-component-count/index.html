@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>41%</strong> complete</div>
-        <div><strong>13</strong>/32 cards done</div>
-        <div>Updated <strong>2026-06-28 20:17 UTC</strong></div>
+        <div><strong>44%</strong> complete</div>
+        <div><strong>16</strong>/36 cards done</div>
+        <div>Updated <strong>2026-07-03 09:23 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -712,16 +712,16 @@
     <section class="hero">
       <div class="hero-eyebrow">INTERNAL · LIVE OPS DASHBOARD</div>
       <h1 class="hero-title">Storepro Component Count</h1>
-      <p class="hero-tagline">Drop a DWG, get back a Storepro-format BOM. Pre-prod ready.</p>
-      <p class="hero-desc">Reads DWG / DXF / PDF warehouse layouts. Cross-validates a deterministic DWG-block parse with a Claude-vision per-bay-type recipe. Applies the Storepro counting rules (frames = bays + runs, splice kits at 11,400 mm, back ties × 2, frame-end protectors per run, copy-paste anomaly detection). Outputs an Excel + PDF matrix matching Storepro&#39;s Phase 1 Stage 2 working sheet — no Excel hand-editing, no second-person re-check.</p>
+      <p class="hero-tagline">Drop a DWG, get back a Storepro-format BOM. Counting engine validated against a Storepro-confirmed job.</p>
+      <p class="hero-desc">Reads Storepro&#39;s standardised dynamic-block DWGs directly: resolves anonymous dynamic blocks to their source components, reads bay strips + letters from the plan, levels/beam specs off the elevations, applies the Storepro rules (frames = bays + runs with shared-frame max-height, splice kits at 11,400 mm, back ties only where back-to-back frames align, protectors LH/RH by run end). On OPPAK-12515 (Glowbal NZ) the engine reproduced Storepro&#39;s confirmed component count <strong>line-for-line</strong> — 11/11 part-coded BOM lines — with every assumption surfaced as a clarification.</p>
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">Phase 1 · Pre-prod ship complete</span>
+          <span class="phase-pill-value">Phase 2 · Counting engine at oracle parity</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">First job through with Storepro&#39;s standardised drawings <span class="phase-pill-date">Once Storepro delivers the new files</span></span>
+          <span class="phase-pill-value">Graduate bom() into the upload pipeline <span class="phase-pill-date">after Storepro answers the 7 rule questions</span></span>
         </div>
       </div>
     </section>
@@ -970,7 +970,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">13</span>
+        <span class="col-count">16</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1037,6 +1037,21 @@
         <div class="card-title">Sample drawings comparison artifacts</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">analysis</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">samples/</span></div>
         <div class="card-desc">Parsed JSON + matrix outputs + golden spreadsheets retained under `samples/` (gitignored — multi-GB) for future regression checks once Storepro standardised drawings land</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Exit prototype mode — real engine wired to the clarifications screen</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">merged-to-dev</span><span class="tag tag-neutral">PR #1 + #2</span></div>
+        <div class="card-desc">Reconciler now runs in the job pipeline and its clarifications reach the Review screen (was: dead compliance flags saying &quot;not implemented in this prototype&quot;); silent-zero splice/mesh/protector counts replaced with manual-confirm clarifications; stale prototype wording stripped; empty-export bug fixed (bay_counts was never persisted); SP_ standardised library mapped (95.6% block coverage, longest-match matcher). Merged to dev 2026-07-02 — <strong>staging promotion still pending</strong></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase B — validated against a Storepro-confirmed count (OPPAK-12515)</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">ground-truth</span><span class="tag tag-neutral">tests/test_oppak_oracle.py</span></div>
+        <div class="card-desc">Storepro supplied OPPAK-12515 (Glowbal NZ) with their confirmed component count — locked as a regression oracle (fixture + identity tests). Every future engine change is now diffed against a known-good job automatically. Also exposed two drawing quirks the system must flag: capacity-table Total 86 ≠ 132, and FSL6629 code on a 6477mm frame</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Dynamic-block topology engine — full BOM parity, line-for-line</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">parser/topology_spike.py</span><span class="tag tag-neutral">feature/plan-topology</span></div>
+        <div class="card-desc">Decoded Storepro&#39;s real drawing format (dynamic blocks: *U anonymous inserts → source blocks via eed; bays = arrayed strips; letters nested per bay-unit; spec via visibility states) and built a deterministic engine that reproduced OPPAK-12515&#39;s confirmed count <strong>exactly</strong>: bays 83/46/3, frames 93/54 (shared-frame max-height rule), beams 498/18/368 from elevation reading, back ties 112 (aligned-pairs rule), anchors 588, protectors 11 LH + 11 RH (by rotation), load signs 3. Component-space palette auto-excluded by bay-pitch signature. No vision needed. 4 hypotheses surfaced as clarifications, end-to-end test env-gated on the job minJSON</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1046,9 +1061,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Exit prototype mode — connect the real engine to the clarifications screen</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">root-cause</span><span class="tag tag-neutral">reconciler.py</span><span class="tag tag-neutral">adapters.ts</span></div>
-        <div class="card-desc">Found 2026-06-28: the interactive clarifications screen is built from the OLD `storepro_count` compliance flags (still says &quot;not implemented in this prototype&quot; for the upright/splice check), while the real reconciler — which DOES compute splice kits + rich clarifications — only runs at export time and never reaches the screen. Fix in 3 commits: (1) reconciler emits a manual-confirm clarification instead of silently writing 0 when vision can&#39;t read upright height / post-protector / mesh-deck quantities; (2) strip the stale &quot;prototype / not implemented&quot; text from `storepro_count.py`; (3) run the reconciler in the job pipeline, expose its clarifications via JobResult, and have `adapters.ts` render those instead of the dead compliance flags. Result: screen and export agree, and the app stops calling itself a prototype</div>
+        <div class="card-title">Graduate bom() into the upload pipeline</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">parser/topology_spike.py</span><span class="tag tag-neutral">feature/plan-topology</span></div>
+        <div class="card-desc">Wire the validated topology engine in as the counting stage for standardised drawings (replacing recipe×bays expansion): upload → bom() → clarifications on the Review screen → part-coded BOM in the existing xlsx/pdf exports. The reconciler keeps its cross-check role (drawn-geometry diff → designer-adaptation flags). Rule hypotheses (weld default, mixed-height ties, load signs) stay as clarifications until Storepro&#39;s answers land</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1058,17 +1073,27 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Validate every matrix cell against a manual count (Phase B)</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">ground-truth</span><span class="tag tag-neutral">acceptance-criteria</span></div>
-        <div class="card-desc">The reconciler is built but never benchmarked cell-by-cell against a known-good count — and several rules (splice kits, post protectors, mesh decks) silently produce 0 when vision can&#39;t read the field. The manual count Storepro does today is the ground-truth oracle. <strong>Acceptance:</strong> run a real job end-to-end and diff EVERY matrix cell vs the manual tally; every rule either matches, or raises a manual-confirm clarification (never a silent 0); record which vision fields come back null in practice (tells us if Phase C is &quot;build the checks&quot; or &quot;fix extraction first&quot;). Can start NOW against existing Suntory/Sigma samples; fully unblocks on Storepro&#39;s standardised files (confirmed coming, 2026-05-28 meeting)</div>
+        <div class="card-title">Part-code table + answers to the 7 rule questions</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">blocked-on-storepro</span><span class="tag tag-neutral">docs/plan-topology-notes.md</span></div>
+        <div class="card-desc">The one input geometry can&#39;t produce: Storepro&#39;s catalogue mapping (frame height/depth/profile → FSL code; beam length/profile/weld → BBSL code; note FSL6629 ↔ 6477mm is not 1:1) plus 7 rule confirmations (weld default MW?, mixed-height back-tie = 1?, load signs one per bay type?, 4th A1 instance, protector end convention, splice increments, capacity-table total quirk). Questions consolidated in docs/plan-topology-notes.md; email drafted 2026-07-03. Until answered, part_codes.yaml runs on OPPAK-seeded entries + clarifications</div>
       </div></div>
     </section>
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Send Storepro the questions email</div>
+        <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-neutral">ricky</span></div>
+        <div class="card-desc">One email: the engine reproduced OPPAK-12515&#39;s confirmed count line-for-line (attach the BOM output as proof), plus the part-code table request and the 7 rule questions. Draft ready in the project folder (Storepro_Questions_Email_Draft.md)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Promote dev → staging</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">PR #1 + #2 on dev</span></div>
+        <div class="card-desc">Exit-prototype-mode + SP_ library mapping are merged to dev but staging still runs the 2026-05-28 build. Promote, then run one job through the staging UI to verify the clarifications screen shows reconciler prompts and the xlsx/pdf export is no longer empty (the two things not verifiable locally)</div>
+      </div>
       <div class="card">
         <div class="card-title">Rotate Anthropic API key</div>
         <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">railway variables --set &quot;ANTHROPIC_API_KEY=…&quot;</span></div>
@@ -1094,7 +1119,7 @@
       <div class="card">
         <div class="card-title">Geometric design-review checks (Phase C epic)</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">epic</span><span class="tag tag-neutral">design-review</span></div>
-        <div class="card-desc">The senior-reviewer judgment layer — currently stubbed in `storepro_count.py` and built nowhere. Four checks, all dependent on reading geometry/quantities from elevation views (so gated on Phase B&#39;s extraction findings), sequenced easiest-value-first: (1) <strong>Mesh connector 6-vs-4</strong> — 6 connectors when beam &gt; 2743 mm, else 4 (today always defaults to 4); (2) <strong>Post-protector cutout variant</strong> — standard vs cut-down based on protector height vs lowest beam; (3) <strong>Double-deep backstop quantity</strong> — needs bay-type inference; (4) <strong>Row spacer vs actual rows</strong>. Each independently shippable. Trust posture (auto-compute vs always-manual-confirm) to be set per check after Phase B</div>
+        <div class="card-desc">The senior-reviewer judgment layer. Was four checks; the topology engine (2026-07-03) already solved <strong>row spacers / back ties</strong> (aligned back-to-back pairs) and proved the extraction path for the rest. Remaining three, easiest-value-first: (1) <strong>Mesh connector 6-vs-4</strong> — 6 connectors when beam &gt; 2743 mm, else 4 (beam length now read per level from elevations); (2) <strong>Post-protector cutout variant</strong> — protector height vs lowest beam level (level heights now extracted; needs protector height from catalogue); (3) <strong>Double-deep backstop quantity</strong> — needs drive-through/double-deep detection in plan topology. Each independently shippable</div>
       </div>
       <div class="card">
         <div class="card-title">Production Railway environment</div>
