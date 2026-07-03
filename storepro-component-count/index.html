@@ -699,8 +699,8 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>49%</strong> complete</div>
-        <div><strong>18</strong>/37 cards done</div>
+        <div><strong>51%</strong> complete</div>
+        <div><strong>19</strong>/37 cards done</div>
         <div>Updated <strong>2026-07-03 09:23 UTC</strong></div>
       </div>
     </div>
@@ -970,7 +970,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">18</span>
+        <span class="col-count">19</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1061,7 +1061,12 @@
       <div class="card">
         <div class="card-title">bom() graduated into the upload pipeline</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">merged-to-dev</span><span class="tag tag-neutral">PR #3</span></div>
-        <div class="card-desc">count_standardised() runs at job finalise: job.bom + topology_summary on JobResult, TOP-clarifications merged into the Review-screen wiring, export.xlsx gains a &quot;BOM (part-coded)&quot; first sheet. Legacy drawings → applicable=false, existing engines stand alone. Merged to dev 2026-07-03, CI green — <strong>staging promotion pending</strong></div>
+        <div class="card-desc">count_standardised() runs at job finalise: job.bom + topology_summary on JobResult, TOP-clarifications merged into the Review-screen wiring, export.xlsx gains a &quot;BOM (part-coded)&quot; first sheet. Legacy drawings → applicable=false, existing engines stand alone. Merged to dev 2026-07-03, CI green</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Staging promoted + deployed — full stack live</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">staging.up.railway.app</span></div>
+        <div class="card-desc">staging fast-forwarded to dev (all 3 PRs: exit-prototype-mode, SP_ library, topology engine + BOM pipeline). CI green on the branch. Railway auto-deploy found dead (repo disconnected — see auto-deploy card), so both services deployed via `railway up` from the staging checkout: API healthy (/api/health OK, SSO enabled), web serving. Next: run one real job through the staging UI to eyeball the clarifications screen + BOM sheet in export.xlsx</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1087,18 +1092,13 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">Send Storepro the questions email</div>
         <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-neutral">ricky</span></div>
         <div class="card-desc">One email: the engine reproduced OPPAK-12515&#39;s confirmed count line-for-line (attach the BOM output as proof), plus the part-code table request and the 7 rule questions. Draft ready in the project folder (Storepro_Questions_Email_Draft.md)</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Promote dev → staging</div>
-        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">PR #1 + #2 on dev</span></div>
-        <div class="card-desc">Exit-prototype-mode + SP_ library mapping are merged to dev but staging still runs the 2026-05-28 build. Promote, then run one job through the staging UI to verify the clarifications screen shows reconciler prompts and the xlsx/pdf export is no longer empty (the two things not verifiable locally)</div>
       </div>
       <div class="card">
         <div class="card-title">Rotate Anthropic API key</div>
@@ -1108,7 +1108,7 @@
       <div class="card">
         <div class="card-title">Investigate Railway GitHub auto-deploy</div>
         <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">railway up --path-as-root</span><span class="tag tag-neutral">railway.json</span><span class="tag tag-neutral">web/railway.json</span></div>
-        <div class="card-desc">Auto-deploys have been silent for the last three pushes; current workaround is manual `railway up --path-as-root` per service. Worth fixing before the team scales. Could be a webhook re-auth on the Railway GitHub app, or a config drift between root `railway.json` and `web/railway.json`</div>
+        <div class="card-desc"><strong>Root cause found (2026-07-03): both services show repo: null</strong> — the GitHub source connection is gone entirely, so pushes never trigger builds. Reconnecting the repo to each service needs the Railway dashboard (CLI can&#39;t attach GitHub sources): service → Settings → Source → connect CoreshiftHQNZ/storepro-component-count, branch staging. Until then the workaround stands (manual `railway up` per service — used for the 2026-07-03 staging deploy)</div>
       </div>
       <div class="card">
         <div class="card-title">Ping Zoltan with confirmed SSO setup</div>
