@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>51%</strong> complete</div>
-        <div><strong>19</strong>/37 cards done</div>
-        <div>Updated <strong>2026-07-03 09:23 UTC</strong></div>
+        <div><strong>55%</strong> complete</div>
+        <div><strong>22</strong>/40 cards done</div>
+        <div>Updated <strong>2026-07-04 03:27 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -721,7 +721,7 @@
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Graduate bom() into the upload pipeline <span class="phase-pill-date">after Storepro answers the 7 rule questions</span></span>
+          <span class="phase-pill-value">First live job through the staging UI <span class="phase-pill-date">then Storepro answers → lock the rule hypotheses</span></span>
         </div>
       </div>
     </section>
@@ -970,7 +970,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">19</span>
+        <span class="col-count">22</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1067,6 +1067,21 @@
         <div class="card-title">Staging promoted + deployed — full stack live</div>
         <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">staging.up.railway.app</span></div>
         <div class="card-desc">staging fast-forwarded to dev (all 3 PRs: exit-prototype-mode, SP_ library, topology engine + BOM pipeline). CI green on the branch. Railway auto-deploy found dead (repo disconnected — see auto-deploy card), so both services deployed via `railway up` from the staging checkout: API healthy (/api/health OK, SSO enabled), web serving. Next: run one real job through the staging UI to eyeball the clarifications screen + BOM sheet in export.xlsx</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Clarification actions + cutout automation + export fix (PR #4)</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">on-staging</span><span class="tag tag-neutral">PR #4</span></div>
+        <div class="card-desc">Post-protector cutout rule AUTOMATED (protector height vs lowest beam level from elevations). AI review now sees the topology result (no more &quot;4541 unclassified *U&quot; scare) and proposes actionable include/exclude/adjust options per comment. Clarification answers + free-text now PERSIST (POST /clarifications → feedback corpus for refining rules). Exports front the part-coded BOM (PDF was showing only the legacy vision-matrix → looked wrong though the count was right). Merged + on staging 2026-07-04</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Engine generalised off OPPAK-specific hardcodes</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">on-staging</span><span class="tag tag-neutral">parser/topology_spike.py</span></div>
+        <div class="card-desc">The BOM is the deliverable (Storepro never provides one) — so the engine must work on unseen drawings. Removed 6 OPPAK-baked assumptions, all now DERIVED: bay pitch (any consistent arrayed strip), bay letters (regex discovery, not A/B), taller-at-shared-frame (from elevation heights not hardcoded &#39;B&#39;), half-bays (pattern-matched + width→type), BOM groups (by frame height). OPPAK still reproduces line-for-line; new synthetic test proves it on C/D/E bays at non-OPPAK pitches. Still 1-real-job-validated → next real drawing is the true test</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Storepro questions email sent</div>
+        <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-shipped">done</span></div>
+        <div class="card-desc">Sent 2026-07-04: OPPAK line-for-line proof + part-code table request + 7 rule questions (draft in Storepro_Questions_Email_Draft.md). Awaiting reply — tracked by the Blocked card</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1092,14 +1107,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Send Storepro the questions email</div>
-        <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-neutral">ricky</span></div>
-        <div class="card-desc">One email: the engine reproduced OPPAK-12515&#39;s confirmed count line-for-line (attach the BOM output as proof), plus the part-code table request and the 7 rule questions. Draft ready in the project folder (Storepro_Questions_Email_Draft.md)</div>
-      </div>
       <div class="card">
         <div class="card-title">Rotate Anthropic API key</div>
         <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">railway variables --set &quot;ANTHROPIC_API_KEY=…&quot;</span></div>
