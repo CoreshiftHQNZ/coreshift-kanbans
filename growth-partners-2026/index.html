@@ -198,7 +198,7 @@
       <div class="hero-eyebrow">INTERNAL · WEBSITE BUILD &amp; LAUNCH BOARD</div>
       <h1 class="hero-title">Growth Partners — 2026 Rebuild</h1>
       <p class="hero-tagline">Digital done differently — the Awwwards-style marketing site.</p>
-      <p class="hero-desc">The canonical Growth Partners rebuild (repo <code>growth-partners-2026</code>): plain HTML/CSS/JS, no build step, GSAP + a Three.js particle hero. Mal delivered the 6-page LOCAL concept; the BUILD phase self-hosted all dependencies, moved the site onto preserved clean URLs, rebuilt the full nav (~63 pages) from the current site's content, and added full SEO. Live on <code>growth-partners.pages.dev</code>. Supersedes the earlier Astro effort (<code>growth-partners-website</code>). What's left needs access to the growthpartnersgpx.com Cloudflare account.</p>
+      <p class="hero-desc">The canonical Growth Partners rebuild (repo <code>growth-partners-2026</code>): plain HTML/CSS/JS, no build step, GSAP + a Three.js particle hero. Mal delivered the LOCAL concept; the BUILD phase self-hosted all dependencies, moved onto preserved clean URLs, and — after a design-system v2 expansion (~15 components) — migrated the 70 Keep/Improve pages from search data (33 blogs with reused imagery, NZ + AU location pages, case studies, services, DigitalArchitect®, pricing, plus the full <code>/en-au/</code> Australian mirror). 76 pages live on <code>growth-partners.pages.dev</code>, full SEO, nav pruned to value + NZ/AU switcher. Supersedes the Astro effort. What's left: a UI/UX motion pass, and the CF-account items (staging domain, contact email, analytics).</p>
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
@@ -269,18 +269,18 @@
     </section>
 
     <section class="status-strip">
-      <div class="status-stat status-done"><div class="status-num">6</div><div class="status-label">Done</div></div>
-      <div class="status-stat status-in-progress"><div class="status-num">1</div><div class="status-label">In Progress</div></div>
+      <div class="status-stat status-done"><div class="status-num">10</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-in-progress"><div class="status-num">0</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">3</div><div class="status-label">Blocked (CF acct)</div></div>
       <div class="status-stat status-this-week"><div class="status-num">2</div><div class="status-label">This Week</div></div>
-      <div class="status-stat status-backlog"><div class="status-num">4</div><div class="status-label">Backlog</div></div>
+      <div class="status-stat status-backlog"><div class="status-num">5</div><div class="status-label">Backlog</div></div>
     </section>
 
     <section class="links">
       <h2 class="section-head">Key Artifacts</h2>
       <div class="links-grid">
         <a class="link-card" href="https://growth-partners.pages.dev" target="_blank" rel="noopener">
-          <div class="link-icon">🌐</div><div class="link-text"><div class="link-title">Live preview (pages.dev)</div><div class="link-desc">The deployed 63-page site</div></div><div class="link-arrow">→</div>
+          <div class="link-icon">🌐</div><div class="link-text"><div class="link-title">Live preview (pages.dev)</div><div class="link-desc">The deployed 76-page site (NZ + AU)</div></div><div class="link-arrow">→</div>
         </a>
         <a class="link-card" href="https://growth-partners.pages.dev/seo-agency/" target="_blank" rel="noopener">
           <div class="link-icon">⭐</div><div class="link-text"><div class="link-title">Template page (/seo-agency/)</div><div class="link-desc">The service-page pattern all pages follow</div></div><div class="link-arrow">→</div>
@@ -302,7 +302,7 @@
           <div class="col-head"><h2>Do now</h2><span class="col-count">2</span></div>
           <div class="cards">
             <div class="card"><div class="card-title">Grant CF account access (or add CNAME)</div><div class="card-tags"><span class="tag tag-infra">dns</span><span class="tag tag-neutral">needs access</span></div><div class="card-desc"><code>growthpartnersgpx.com</code> zone isn't in any connected account. Add <code>CNAME staging2 → growth-partners.pages.dev</code> (proxied); domain already registered on the Pages project.</div></div>
-            <div class="card"><div class="card-title">Review the live 63-page build</div><div class="card-tags"><span class="tag tag-content">review</span></div><div class="card-desc">Sign off on direction/quality on pages.dev before content polish and ship.</div></div>
+            <div class="card"><div class="card-title">Review the live 76-page migration</div><div class="card-tags"><span class="tag tag-content">review</span></div><div class="card-desc">Sign off on the migrated blogs / locations / AU mirror on pages.dev before the UI/UX pass and ship.</div></div>
           </div>
         </div>
 
@@ -316,9 +316,10 @@
         </div>
 
         <div class="column col-backlog">
-          <div class="col-head"><h2>Backlog / Later</h2><span class="col-count">4</span></div>
+          <div class="col-head"><h2>Backlog / Later</h2><span class="col-count">5</span></div>
           <div class="cards">
-            <div class="card"><div class="card-title">Detail pages</div><div class="card-tags"><span class="tag tag-content">content</span></div><div class="card-desc">Individual testimonials (19), team bios (13, need photos), per-article blog migration. Indexes link to live articles for now.</div></div>
+            <div class="card"><div class="card-title">UI/UX polish pass (micro-animations)</div><div class="card-tags"><span class="tag tag-build">design</span></div><div class="card-desc">Dedicated pass with a design eye: add micro-animations / interactions (site is text-heavy) and cherry-pick features. Consider a full mega-menu nav. Deferred until the site is complete, per Ricky.</div></div>
+            <div class="card"><div class="card-title">Remaining detail pages</div><div class="card-tags"><span class="tag tag-content">content</span></div><div class="card-desc">Un-migrated testimonial/team detail pages and lower-value blogs (the CSV "ignore" set). Kept out on purpose for now.</div></div>
             <div class="card"><div class="card-title">Content decisions</div><div class="card-tags"><span class="tag tag-content">content</span></div><div class="card-desc">Video &amp; Images tiers (TBD), pricing sign-off, hosted logo + real OG image.</div></div>
             <div class="card"><div class="card-title">Lighthouse + a11y pass</div><div class="card-tags"><span class="tag tag-seo">quality</span></div><div class="card-desc">Perf/SEO/a11y audit before launch.</div></div>
             <div class="card"><div class="card-title">CI auto-deploy + staging/main branches</div><div class="card-tags"><span class="tag tag-infra">infra</span></div><div class="card-desc">Wire GitHub → Pages auto-deploy; create staging/main per branch flow.</div></div>
@@ -326,14 +327,17 @@
         </div>
 
         <div class="column col-done">
-          <div class="col-head"><h2>Done</h2><span class="col-count">7</span></div>
+          <div class="col-head"><h2>Done</h2><span class="col-count">10</span></div>
           <div class="cards">
             <div class="card"><div class="card-title">Self-host GSAP / Three.js / fonts</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
             <div class="card"><div class="card-title">Preserved clean-URL structure + redirects</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
-            <div class="card"><div class="card-title">New footer (Services/Resources/Locations)</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
-            <div class="card"><div class="card-title">~56 pages built from current content</div><div class="card-tags"><span class="tag tag-content">content</span></div></div>
-            <div class="card"><div class="card-title">SEO: sitemap, robots, canonical, OG, JSON-LD</div><div class="card-tags"><span class="tag tag-seo">seo</span></div></div>
-            <div class="card"><div class="card-title">Deploy to Cloudflare Pages (63 pages, all 200)</div><div class="card-tags"><span class="tag tag-prod">prod</span></div></div>
+            <div class="card"><div class="card-title">Design system v2 — ~15 variety components</div><div class="card-tags"><span class="tag tag-build">design</span></div></div>
+            <div class="card"><div class="card-title">Migrate 70 Keep/Improve pages (33 blogs + AU mirror)</div><div class="card-tags"><span class="tag tag-content">content</span></div></div>
+            <div class="card"><div class="card-title">Prune nav to value + NZ/AU switcher</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
+            <div class="card"><div class="card-title">Canonical footer synced (no dead links)</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
+            <div class="card"><div class="card-title">SEO: sitemap (76 URLs), robots, canonical, OG, JSON-LD</div><div class="card-tags"><span class="tag tag-seo">seo</span></div></div>
+            <div class="card"><div class="card-title">Delete 40 off-target first-build pages</div><div class="card-tags"><span class="tag tag-neutral">cleanup</span></div></div>
+            <div class="card"><div class="card-title">Deploy to Cloudflare Pages (76 pages, all 200)</div><div class="card-tags"><span class="tag tag-prod">prod</span></div></div>
             <div class="card"><div class="card-title">Commit + push to dev</div><div class="card-tags"><span class="tag tag-infra">infra</span></div></div>
           </div>
         </div>
