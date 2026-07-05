@@ -6,6 +6,27 @@ A dated log of every weekly AI Radar run — what topics were added or edited on
 
 ---
 
+## 2026-07-06 — Weekly refresh
+
+*Scanned the watchlist for items published 29 Jun – 6 Jul. Merged onto the live page, which had already been updated via the #wiki-submissions pipeline (Fable 5 redeployment) and now carries the "Share a find" submissions box — both preserved.*
+
+**Claude Updates**
+
+- **Added: Week of 6 Jul 2026 (new block at top)** — Claude Sonnet 5 launched (30 Jun, 1M context, $2/$10 intro, now the Claude Code default); Fable 5 confirmed live globally from 1 Jul (last week's block already flagged the redeployment); Claude Enterprise admin analytics + model entitlements + spend alerts (2 Jul); Claude Science beta (30 Jun); the industry jailbreak-severity framework; and Claude Code 2.1.196–2.1.201 (Manual permission default, AskUserQuestion no longer auto-continues, Claude in Chrome GA, background sub-agents + auto draft PR, `/dataviz`, Explore inherits model, org default models). Older weeks left intact.
+
+**AI Practices**
+
+- **Edited topic: Evals & self-verifying agents** — added the **agent development lifecycle (ADLC: Build → Test → Deploy → Monitor)** framing from the June LangChain newsletter.
+- **Edited topic: Context engineering for coding agents** — merged in **context rot / Recursive Language Models** (LangChain, 1 Jul) and **cognitive debt** (Simon Willison on Geoffrey Litt's AIE talk, 2 Jul). **Featured a fresh video** — Cole Medin's *"The Best AI Coding Setup Isn't the Most Autonomous One"* (3 Jul 2026): the five levels of AI coding, and why **Level 3 (in the loop, reviewing every change)** beats chasing full autonomy. *(The AI Engineer World's Fair talk recordings — incl. Geoffrey Litt's — are still trickling onto YouTube over ~3 weeks, so they couldn't be embedded this run.)*
+- **Added topic: Model routing & cost-efficient agents** — Sonnet 5's cost-performance curve + Simon Willison's lower-power-model routing + Claude Code's org default models / Explore model inheritance. Flagged as a standout; deck attached.
+- **Added topic: AI security — assessing jailbreak severity** — Anthropic + Amazon/Microsoft/Google 4-criteria jailbreak-severity framework and the defense-in-depth "safety margin" idea, from the Redeploying Fable 5 post. Markdown only.
+
+**Assets**
+
+- Added deck: `ai-radar/decks/Model-Routing-and-Cost-Efficient-Agents.pptx`.
+
+---
+
 ## 2026-06-30 — Weekly refresh (run #1)
 
 **AI Practices**

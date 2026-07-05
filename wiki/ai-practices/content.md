@@ -68,6 +68,8 @@ The biggest practice signal this week is a convergence: **agents get reliable wh
 
 **Tooling is catching up.** LangChain's June release added **RubricMiddleware** for Deep Agents: you hand the agent an explicit rubric and it grades its own output against it and keeps iterating until the work meets the criteria — V1 verification operationalised inside the agent. The same newsletter's on-call triage copilot leans on the same idea: a clear pass/fail signal (alert resolved or not) makes the loop trustworthy.
 
+**Make it a lifecycle, not a one-off.** The same June newsletter also frames an **agent development lifecycle (ADLC) — Build → Test → Deploy → Monitor** — where production behaviour is fed back into stronger evals over time, so failures get caught earlier and the agent improves without guesswork. The practical read for us: don't treat the verifier as a launch gate you write once; keep harvesting real failures into the eval set so the success signal sharpens with use.
+
 **The discipline: write the verifier first.** Before automating a step, ask "what's the automatic success signal?" If there isn't one, either build one (a test, a checker, a rubric) or accept it's V2 and keep the human checkpoint. Karpathy calls good evals one of the highest-leverage things an AI team can build, and that matches what we see.
 
 **How we apply it at Coreshift:** every agent-run task ships with an explicit success check — typecheck + tests for code, schema/format validation for data, a written rubric for anything fuzzier; V2 tasks (DB migrations, prod deploys, outbound comms) keep their human gate; we treat "we can't verify this yet" as a reason to *not* hand it to an agent.
@@ -84,16 +86,57 @@ The biggest practice signal this week is a convergence: **agents get reliable wh
 
 ## Context engineering for coding agents
 
-*Last updated: 30 Jun 2026 · Sources: [Cole Medin — context engineering method](https://self.md/people/cole-medin-context-engineering/) · [Karpathy on Claude as an org-wide teammate](https://www.benzinga.com/markets/tech/26/06/60091727/andrej-karpathy-says-ai-is-no-longer-a-chatbot-its-becoming-your-teammate)*
+*Last updated: 6 Jul 2026 · Sources: [Cole Medin — "The Best AI Coding Setup Isn't the Most Autonomous One" (3 Jul 2026)](https://www.youtube.com/watch?v=muwRbfuKbR4) · [LangChain — How to Use RLMs in Deep Agents](https://www.langchain.com/blog/how-to-use-rlms-in-deep-agents) · [Simon Willison — on Geoffrey Litt's AIE talk & cognitive debt](https://simonwillison.net/2026/Jul/2/understand-to-participate/)*
 
-A recurring theme this week: coding agents fail less because of the model and more because of the **context** they're handed. Cole Medin's "context engineering" frames the fix as giving the agent everything it needs *upfront* — architecture decisions, project rules, conventions, worked code examples, and the validation steps that define "done" — rather than discovering them mid-task.
+🎬 *Watch — Cole Medin (22 min, published 3 Jul 2026):*
 
-In practice this lands as a **curated context pack**: a tight `CLAUDE.md` (or equivalent) holding the rules and pointers, plus example files the agent can pattern-match against, plus the commands that verify the result. Interest in a well-tuned `CLAUDE.md` spiked late June as practitioners shared setups that "stop the agent fighting them." It pairs naturally with the evals topic above — the validation steps in your context pack *are* the verifier the agent runs against.
+<div style="position:relative;width:100%;max-width:760px;aspect-ratio:16/9;margin:1.1rem 0;">
+<iframe src="https://www.youtube-nocookie.com/embed/muwRbfuKbR4" title="The Best AI Coding Setup Isn't the Most Autonomous One (Here's Why) — Cole Medin" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
 
-This connects to the broader shift Karpathy described around Claude Tag: agents are becoming **persistent, org-wide teammates** embedded in tools like Slack rather than one-off chatbots, which raises the payoff of writing context once and reusing it everywhere.
+**Aim for "in the loop," not "hands off" (new, 3 Jul 2026).** Cole Medin walks Dan Shapiro's *five levels of AI coding* (mapped onto the self-driving levels): from spicy autocomplete (L0–2), to **L3 — you plan the work and review every change**, to L4 multi-agent teams, to **L5 the fully autonomous "Dark Factory."** His key argument, having actually built a Level 5 system: chasing full autonomy isn't the goal — **L3 is the sweet spot for most work because staying in the loop is what keeps software reliable.** That's the same lesson as the cognitive-debt point below and the verifiability discipline above: the win is a tight, well-fed context plus a human reviewing every diff, not maximal hands-off automation.
 
-**How we apply it at Coreshift:** keep a maintained `CLAUDE.md` per repo (stack, conventions, gotchas, the commands that prove a change works); point to canonical example files instead of describing patterns in prose; update the context pack when an agent gets something wrong, so the lesson sticks for the next run.
+A recurring theme: coding agents fail less because of the model and more because of the **context** they're handed. Cole Medin's "context engineering" frames the fix as giving the agent everything it needs *upfront* — architecture decisions, project rules, conventions, worked code examples, and the validation steps that define "done" — rather than discovering them mid-task.
+
+In practice this lands as a **curated context pack**: a tight `CLAUDE.md` (or equivalent) holding the rules and pointers, plus example files the agent can pattern-match against, plus the commands that verify the result. It pairs naturally with the evals topic above — the validation steps in your context pack *are* the verifier the agent runs against.
+
+**Context rot is the failure mode to design against (new, early Jul 2026).** As tasks run long, the useful signal in the window gets diluted by stale tool output and dead ends — "context rot" — and quality degrades. LangChain's 1 Jul write-up on **Recursive Language Models (RLMs)** (a technique from MIT CSAIL) is one answer: rather than stuff everything into one window, the model runs code in a REPL that dispatches sub-agents and *recurses over pieces of the input context*, so each sub-call sees only the slice it needs. The practical read even without RLM tooling: keep the working window tight, push detail behind pointers, and split long jobs into sub-agent calls with scoped context rather than one ever-growing thread.
+
+**Watch for cognitive debt (new, 2 Jul 2026).** Simon Willison, riffing on Geoffrey Litt's AI Engineer talk, flags the human-side risk: as you hand more to coding agents, your understanding can drift from how the code actually works — a "cognitive debt" that comes due when something breaks and no one on the team can reason about it. The mitigation is a context-and-review discipline: keep humans reading diffs and holding the mental model, not just approving green checks.
+
+**How we apply it at Coreshift:** keep a maintained `CLAUDE.md` per repo (stack, conventions, gotchas, the commands that prove a change works); point to canonical example files instead of describing patterns in prose; scope long agent jobs into sub-agents with just the context each needs (don't let one thread rot); and keep a human reading the diffs so we don't accrue cognitive debt.
 
 ---
 
-*More topics (prompting, SEO/GEO) will appear here as the Radar runs each week.*
+## Model routing & cost-efficient agents
+
+*Last updated: 6 Jul 2026 · Standout — full deck available · Sources: [Introducing Claude Sonnet 5](https://www.anthropic.com/news/claude-sonnet-5) · [Simon Willison — using lower-power models for coding](https://simonwillison.net/) · [Claude Code changelog 2.1.196–2.1.198](https://code.claude.com/docs/en/changelog)*
+
+The most actionable shift this week is about **which model runs which step**. With **Claude Sonnet 5** landing (30 Jun) — near-Opus agentic quality at roughly a third of the price, and now the *default model in Claude Code* — the cheap move is no longer to run everything on the biggest model. The frontier is a **cost-performance curve**: pick the effort level and model per task, not per project.
+
+**The routing pattern (Simon Willison, 2 Jul).** Keep judgment, review, and synthesis on the strong model in the main loop; spawn sub-agents with **model overrides** for the grunt work — Sonnet for substantive implementation, Haiku for trivial edits and mechanical changes. You get most of the quality where it matters and a large cost cut on the long tail of small steps.
+
+**Tooling now supports this natively.** Claude Code shipped the pieces to operationalise it: **org/role default models** so routine work doesn't silently default to the most expensive option (2.1.196); the built-in **Explore agent now inherits the session model (capped at Opus)** instead of always running Haiku, so search quality scales with the task (2.1.198); sub-agents inherit the session's extended-thinking config; and Claude Enterprise added **model-level entitlements and defaults** plus spend alerts so admins can set the cheap-by-default policy centrally.
+
+**The discipline: match model to verifiability.** This dovetails with the evals topic — the tasks safest to push down to a cheaper model are the **V1** ones with a clear automatic success signal (tests, typecheck, schema validation). If the step self-verifies, a smaller model iterating against that check is usually enough; reserve the expensive model for the fuzzy, taste-heavy, or high-blast-radius work.
+
+**How we apply it at Coreshift:** default new work to **Sonnet 5** in Claude Code; keep Opus for architecture, tricky debugging, and final review; delegate mechanical edits to Haiku sub-agents; set an org default model so cost control isn't left to per-dev discipline; and only push a step to a cheaper model when it has a real verifier attached.
+
+📊 *Slides — click through inline (or use fullscreen):*
+
+<div style="position:relative;width:100%;max-width:820px;aspect-ratio:16/9;margin:1.1rem 0;">
+<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FCoreshiftHQNZ%2Fcoreshift-kanbans%2Fmain%2Fai-radar%2Fdecks%2FModel-Routing-and-Cost-Efficient-Agents.pptx" title="Model Routing & Cost-Efficient Agents — slides" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;" allowfullscreen></iframe>
+</div>
+
+[Download the deck (.pptx) →](../../ai-radar/decks/Model-Routing-and-Cost-Efficient-Agents.pptx)
+
+---
+
+## AI security: assessing jailbreak severity
+
+*Last updated: 6 Jul 2026 · Sources: [Redeploying Claude Fable 5](https://www.anthropic.com/news/redeploying-fable-5) · [More on Fable 5's safeguards & the jailbreak framework](https://www.anthropic.com/news/fable-safeguards-jailbreak-framework)*
+
+Prompted by the Fable 5 export-control episode (see [Claude Updates](../claude-updates/)), Anthropic — with Amazon, Microsoft, Google, and other Glasswing partners — proposed the industry's first **consensus framework for scoring how severe an AI "jailbreak" is**. It's useful to us as a way to reason about model-safety risk generally, not just Anthropic's models. A jailbreak is scored on four criteria:
+
+1. **Capability gain** — how far beyond existing tools does it take the attacker? If weaker models or public tools already do the same thing, the score is low.
+2. **Breadth** — how many distinct offensive tasks does the *same* technique unlock? Narrow single-target breaks score low; broadly r
