@@ -10,38 +10,34 @@
 
 ## ✅ Done
 
-- **Discovery + reuse audit** `phase-0` `shipped` — Mapped coreshift-live-edit end to end. Found ~60% of the engine already built: `crawl-site` (scrape), `generate-site` (auto LLM site-gen), Stripe checkout + webhook, Postmark, Supabase Auth, the agency/reseller model (`account_links` + `can_manage_account`), and the admin dashboard.
-- **Sale model locked** `phase-0` `decision` — One-off build fee at close (Russ enters the amount on the call). Card saved once via Stripe `setup_future_usage`; the $100/mo subscription starts later at DNS changeover, off-session, with no second card entry. heygem's R4 (SetupIntent + charge-later) is a working reference.
-- **v1 scope locked** `phase-0` `decision` — Booking-only. The "claim your website / buy page" (5a) is deferred; the preview page CTA is "book a walkthrough" + a trust video + an 0800 number. NZ-first.
-- **Tenancy model locked** `phase-0` `decision` — Build on the existing agency model, not a new workspaces layer. Coreshift = agency #1; a prospect converts into an `account` + `site` on sale; other companies can resell later via `account_links`.
+- **M1: Workspace auth + roles** `phase-1` `shipped` — Migration `0001`. Coreshift **agency account** created; `team_roles` (admin/sales/reviewer) separate from site roles; `my_team_role()`, `ensure_coreshift_membership()` domain auto-join, `set_team_role()`. Wired into the app auth bootstrap. (Discovery found `is_app_admin()` already grants `@coreshifthq.com` — so login already worked; this added role granularity + the pipeline tenant.) PR #1.
+- **M2: Prospects pipeline + CRM board** `phase-2` `shipped` — Migration `0002`. `prospects` table (all later-milestone columns up-front), 13-stage machine as 5 lanes, RLS by agency, `create_prospect` / `prospect_set_stage` / `prospect_convert_to_customer`. `PipelineView` board with score bars, stage control, review notes. Role-aware (Russ → focused sales view). PR #2.
+- **M3: Scoring engine** `phase-3` `shipped` — `score-site` edge function scores the 7-check rubric (max 98, qualify ≥50); deterministic mobile/HTTPS/outdated/stale/analytics + heuristic images/broken-links + `needs_vision` hints. **Verified live**: stripe.com→8, neverssl.com→74. Score/Re-score button per card. PR #3.
+- **M4: On-call sale (Stripe, card-once)** `phase-4` `shipped` — `create-sale-checkout` (one-off fee + `setup_future_usage` saves the card + Postmark pay link), webhook converts prospect→customer account, `start-subscription` begins $100/mo off-session at go-live. "💳 Make the sale" box for Russ. Stripe secrets confirmed present. PR #4.
+- **M5: Discovery · outreach · preview · booking** `phase-5` `shipped` — Migrations `0003`/`0004`. `discover-leads` (Google Places), `send-invitation` (warm copy + book/preview CTAs + 0800 + UEMA unsubscribe + suppression), `unsubscribe`, password-token `PreviewGate` (auto-unlock via `?t=`), admin Settings & Discover panel. PR #5.
+- **Discovery + reuse audit** `phase-0` `shipped` — ~60% already built (crawl-site, generate-site, Stripe, Postmark, agency model). v1 scope + sale model locked.
 
 ## 🟡 In Progress
 
-- **M1: Workspace auth + roles** `phase-1` `in-progress` — Establish a Coreshift agency account; anyone with a verified `@coreshifthq.com` email joins it as their own user (no shared ricky@ login). Roles admin / sales / reviewer replace the hardcoded `app_admins`. Feature branch + additive migration in flight.
+- **End-to-end verification pass** `verify` — Backends are deployed + probe-tested; the full happy path (sign in as Coreshift → discover/score → generate → review → invite → book → sale → go-live) needs one walk-through with a real session + Stripe **test card**.
 
 ## 🚫 Blocked
 
-- **Google Places API key** `phase-5` `needs-ricky` — Discovery (finding candidate URLs to score) needs a Places API key with billing enabled. Not blocking M1–M4.
-- **Russ's Google Calendar** `phase-5` `needs-ricky` — Booking needs Russ's calendar connected (OAuth) to create the 15-min Meet.
-- **Trust video + 0800 number** `phase-5` `needs-ricky` — Content for the preview page: a short "how/why we built this for you" video and the NZ 0800 number.
+- **`GOOGLE_PLACES_API_KEY`** `phase-5` `needs-ricky` — Set this Supabase function secret to switch on auto-discovery. `discover-leads` is deployed and returns "not configured" until then.
+- **Russ's Google Calendar (booking auto-create)** `phase-5` `needs-ricky` — Link-based booking works today via Settings → Booking link. Auto-creating the 15-min Meet with the preview URL in the notes needs Russ's Google OAuth.
+- **Stripe test-mode dry run + webhook endpoint** `phase-4` `needs-ricky` — Confirm `STRIPE_WEBHOOK_SECRET` + a `checkout.session.completed` endpoint are wired for coreshift-sites, then run one test-card sale before first real use.
 
 ## 🔵 This Week
 
-- **M1 · pipeline schema migration** `phase-1` — Additive migration: `agency_team` (role admin/sales/reviewer, domain auto-join) + the agency-scoped foundation. Applied via Supabase MCP; committed to the repo as a migration file.
-- **M1 · domain auto-join** `phase-1` — Verified `@coreshifthq.com` sign-in auto-joins the Coreshift agency account with the right role.
-- **M1 · role gate + Russ view** `phase-1` — Replace `is_app_admin` hardcode with role-based access; ship Russ's stripped-down view.
+- **Set Russ to `sales`** `phase-1` `needs-ricky` — Once Russ signs in once: `select set_team_role('<russ>@coreshifthq.com','sales');`
+- **Fill Settings** `phase-5` — In Lead Engine → Settings & discover: booking link, 0800 number, from-name, reply-to.
+- **Deploy the edge functions + app** `infra` — 5 new edge functions are deployed to prod already via MCP; deploy the updated `coreshift-app` (Cloudflare) so the Lead Engine UI is live for the team.
+- **Trust video** `phase-5` `needs-ricky` — Record the short "how/why we built this for you" video for the preview page.
 
 ## ⚪ Backlog
 
-- **M2: prospects table + stage machine** `phase-2` — `sourced → scored → generated → in_review → approved → invited → booked → demo → won → paid → finalising → domain_transfer → live`, agency-scoped.
-- **M2: CRM pipeline board** `phase-2` — Minimal board in the admin portal; drag across stages; Russ's simplified view.
-- **M2: prospect → account+site conversion** `phase-2` — On sale, promote the generated preview site into a real billed account.
-- **M3: score-site function** `phase-3` — 7-check rubric (mobile 22 · HTTPS 20 · outdated build 18 · poor images 12 · stale content 10 · no analytics 8 · broken links 8; qualify ≥50). Extends crawl-site; 2 fuzzy checks use tech-fingerprint + a vision call.
-- **M3: rubric bars on cards** `phase-3` — Per-check score breakdown shown on each prospect card.
-- **M4: on-call invoice button** `phase-4` — Enter amount → Stripe one-off charge + save card → pay link SMS/email mid-call.
-- **M4: off-session subscription at go-live** `phase-4` — Start the $100/mo plan against the saved card at DNS changeover.
-- **M5: Google Places discovery** `phase-5` — Pull NZ businesses by industry + region → feed URLs to the scorer.
-- **M5: invitation email + suppression** `phase-5` — Warm no-obligation invite via Postmark; UEMA-compliant unsubscribe/suppression list.
-- **M5: password-token preview** `phase-5` — Signed token in the email URL auto-unlocks the preview + sets a short cookie; bare URL hits a password gate.
-- **M5: Google Calendar booking** `phase-5` — 15-min Meet with client + Russ; preview URL in the notes so Russ previews before the demo.
-- **Site-gen theme/template tagging** `enhancement` — Tag themes/templates/sections (industry, style) so generate-site auto-selects the right one instead of pure LLM inference.
+- **Vision pass for images/outdated** `enhancement` — Use a screenshot + vision model where `score-site` emits `needs_vision` to sharpen the fuzzy checks.
+- **Renderer-level preview gate** `enhancement` — Move the client-facing password gate into the Cloudflare renderer so the gated preview is the real rendered `coreshift.page` site, not the in-app editor view.
+- **SMS pay link** `enhancement` — Add an SMS provider (e.g. Twilio) so Russ can text the pay link as well as email it.
+- **Site-gen theme/template tagging** `enhancement` — Tag themes/templates/sections so `generate-site` auto-selects the best fit instead of pure LLM inference.
+- **Branch flow for coreshift-live-edit** `infra` — Repo has only `main`; add `dev`/`staging` to match the Coreshift standard.

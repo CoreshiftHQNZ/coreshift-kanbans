@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>17%</strong> complete</div>
-        <div><strong>4</strong>/23 cards done</div>
-        <div>Updated <strong>2026-07-05 08:36 UTC</strong></div>
+        <div><strong>32%</strong> complete</div>
+        <div><strong>6</strong>/19 cards done</div>
+        <div>Updated <strong>2026-07-05 09:27 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">Phase 1 · Workspace auth + roles</span>
+          <span class="phase-pill-value">M1–M5 built · wiring + go-live</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Team can sign in by @coreshifthq.com; Russ has a role <span class="phase-pill-date">Milestone 1</span></span>
+          <span class="phase-pill-value">Add Places key, connect Russ&#39;s calendar, test-mode sale dry-run <span class="phase-pill-date">Go-live checklist</span></span>
         </div>
       </div>
     </section>
@@ -767,10 +767,10 @@
             <li>Architecture map + reuse inventory</li><li>Decisions: v1 booking-only (no buy page)</li><li>Decisions: one-off sale + card-once, Google Places sourcing</li><li>Decision: build on the existing agency (account_links) model</li>
           </ul>
         </div>
-        <div class="phase-card phase-in-progress">
+        <div class="phase-card phase-done">
           <div class="phase-card-head">
             <div class="phase-marker">1</div>
-            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
           </div>
           <div class="phase-title">Phase 1 <span class="phase-subtitle">Workspace auth + roles</span></div>
           <div class="phase-window">In progress</div>
@@ -779,10 +779,10 @@
             <li>Coreshift agency account + team membership</li><li>@coreshifthq.com domain auto-join</li><li>Roles: admin / sales / reviewer (replaces hardcoded app_admins)</li><li>Russ&#39;s simplified role-scoped view</li>
           </ul>
         </div>
-        <div class="phase-card phase-planned">
+        <div class="phase-card phase-done">
           <div class="phase-card-head">
             <div class="phase-marker">2</div>
-            <div class="phase-status-pill phase-status-planned">Planned</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
           </div>
           <div class="phase-title">Phase 2 <span class="phase-subtitle">Prospect pipeline + CRM board</span></div>
           <div class="phase-window">Next</div>
@@ -791,10 +791,10 @@
             <li>prospects table (agency-scoped) + stage machine</li><li>Pipeline board UI + Russ&#39;s view</li><li>Prospect → account + site conversion on sale</li>
           </ul>
         </div>
-        <div class="phase-card phase-planned">
+        <div class="phase-card phase-done">
           <div class="phase-card-head">
             <div class="phase-marker">3</div>
-            <div class="phase-status-pill phase-status-planned">Planned</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
           </div>
           <div class="phase-title">Phase 3 <span class="phase-subtitle">Scoring engine</span></div>
           <div class="phase-window">Proves the thesis on real data</div>
@@ -803,10 +803,10 @@
             <li>score-site function + per-check breakdown</li><li>Rubric bars on each prospect card</li><li>≥50 gate to enter the pipeline</li>
           </ul>
         </div>
-        <div class="phase-card phase-planned">
+        <div class="phase-card phase-done">
           <div class="phase-card-head">
             <div class="phase-marker">4</div>
-            <div class="phase-status-pill phase-status-planned">Planned</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
           </div>
           <div class="phase-title">Phase 4 <span class="phase-subtitle">On-call sale (Stripe)</span></div>
           <div class="phase-window">Highest-leverage; Russ touches this most</div>
@@ -815,10 +815,10 @@
             <li>Enter-amount → pay link, sent mid-call</li><li>Save card for later subscription</li><li>Off-session subscription start at go-live</li>
           </ul>
         </div>
-        <div class="phase-card phase-future">
+        <div class="phase-card phase-done">
           <div class="phase-card-head">
             <div class="phase-marker">5</div>
-            <div class="phase-status-pill phase-status-future">Future</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
           </div>
           <div class="phase-title">Phase 5 <span class="phase-subtitle">Discover · outreach · preview · book</span></div>
           <div class="phase-window">Ties the loop together</div>
@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">4</div>
+        <div class="status-num">6</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -845,11 +845,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">3</div>
+        <div class="status-num">4</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">12</div>
+        <div class="status-num">5</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -923,29 +923,43 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">M1: Workspace auth + roles</div>
+            <div class="recent-desc">Migration `0001`. Coreshift **agency account** created; `team_roles` (admin/sales/reviewer) separate from site roles; `my_team_role()`, `ensure_coreshift_membership()` domain auto-join, `set_team_role()`. Wired into the app auth bootstrap. (Discovery found `is_app_admin()` already grants `@coreshifthq.com` — so login already worked; this added role granularity + the pipeline tenant.) PR #1</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">M2: Prospects pipeline + CRM board</div>
+            <div class="recent-desc">Migration `0002`. `prospects` table (all later-milestone columns up-front), 13-stage machine as 5 lanes, RLS by agency, `create_prospect` / `prospect_set_stage` / `prospect_convert_to_customer`. `PipelineView` board with score bars, stage control, review notes. Role-aware (Russ → focused sales view). PR #2</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">M3: Scoring engine</div>
+            <div class="recent-desc">`score-site` edge function scores the 7-check rubric (max 98, qualify ≥50); deterministic mobile/HTTPS/outdated/stale/analytics + heuristic images/broken-links + `needs_vision` hints. **Verified live**: stripe.com→8, neverssl.com→74. Score/Re-score button per card. PR #3</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">M4: On-call sale (Stripe, card-once)</div>
+            <div class="recent-desc">`create-sale-checkout` (one-off fee + `setup_future_usage` saves the card + Postmark pay link), webhook converts prospect→customer account, `start-subscription` begins $100/mo off-session at go-live. &quot;💳 Make the sale&quot; box for Russ. Stripe secrets confirmed present. PR #4</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">M5: Discovery · outreach · preview · booking</div>
+            <div class="recent-desc">Migrations `0003`/`0004`. `discover-leads` (Google Places), `send-invitation` (warm copy + book/preview CTAs + 0800 + UEMA unsubscribe + suppression), `unsubscribe`, password-token `PreviewGate` (auto-unlock via `?t=`), admin Settings &amp; Discover panel. PR #5</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Discovery + reuse audit</div>
-            <div class="recent-desc">Mapped coreshift-live-edit end to end. Found ~60% of the engine already built: `crawl-site` (scrape), `generate-site` (auto LLM site-gen), Stripe checkout + webhook, Postmark, Supabase Auth, the agency/reseller model (`account_links` + `can_manage_account`), and the admin dashboard</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Sale model locked</div>
-            <div class="recent-desc">One-off build fee at close (Russ enters the amount on the call). Card saved once via Stripe `setup_future_usage`; the $100/mo subscription starts later at DNS changeover, off-session, with no second card entry. heygem&#39;s R4 (SetupIntent + charge-later) is a working reference</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">v1 scope locked</div>
-            <div class="recent-desc">Booking-only. The &quot;claim your website / buy page&quot; (5a) is deferred; the preview page CTA is &quot;book a walkthrough&quot; + a trust video + an 0800 number. NZ-first</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Tenancy model locked</div>
-            <div class="recent-desc">Build on the existing agency model, not a new workspaces layer. Coreshift = agency #1; a prospect converts into an `account` + `site` on sale; other companies can resell later via `account_links`</div>
+            <div class="recent-desc">~60% already built (crawl-site, generate-site, Stripe, Postmark, agency model). v1 scope + sale model locked</div>
           </div>
         </div>
       </div>
@@ -960,28 +974,38 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
       <div class="card">
+        <div class="card-title">M1: Workspace auth + roles</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">0001</span><span class="tag tag-neutral">team_roles</span><span class="tag tag-neutral">my_team_role()</span><span class="tag tag-neutral">ensure_coreshift_membership()</span><span class="tag tag-neutral">set_team_role()</span><span class="tag tag-neutral">is_app_admin()</span><span class="tag tag-neutral">@coreshifthq.com</span></div>
+        <div class="card-desc">Migration `0001`. Coreshift **agency account** created; `team_roles` (admin/sales/reviewer) separate from site roles; `my_team_role()`, `ensure_coreshift_membership()` domain auto-join, `set_team_role()`. Wired into the app auth bootstrap. (Discovery found `is_app_admin()` already grants `@coreshifthq.com` — so login already worked; this added role granularity + the pipeline tenant.) PR #1</div>
+      </div>
+      <div class="card">
+        <div class="card-title">M2: Prospects pipeline + CRM board</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">0002</span><span class="tag tag-neutral">prospects</span><span class="tag tag-neutral">create_prospect</span><span class="tag tag-neutral">prospect_set_stage</span><span class="tag tag-neutral">prospect_convert_to_customer</span><span class="tag tag-neutral">PipelineView</span></div>
+        <div class="card-desc">Migration `0002`. `prospects` table (all later-milestone columns up-front), 13-stage machine as 5 lanes, RLS by agency, `create_prospect` / `prospect_set_stage` / `prospect_convert_to_customer`. `PipelineView` board with score bars, stage control, review notes. Role-aware (Russ → focused sales view). PR #2</div>
+      </div>
+      <div class="card">
+        <div class="card-title">M3: Scoring engine</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">score-site</span><span class="tag tag-neutral">needs_vision</span></div>
+        <div class="card-desc">`score-site` edge function scores the 7-check rubric (max 98, qualify ≥50); deterministic mobile/HTTPS/outdated/stale/analytics + heuristic images/broken-links + `needs_vision` hints. **Verified live**: stripe.com→8, neverssl.com→74. Score/Re-score button per card. PR #3</div>
+      </div>
+      <div class="card">
+        <div class="card-title">M4: On-call sale (Stripe, card-once)</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">create-sale-checkout</span><span class="tag tag-neutral">setup_future_usage</span><span class="tag tag-neutral">start-subscription</span></div>
+        <div class="card-desc">`create-sale-checkout` (one-off fee + `setup_future_usage` saves the card + Postmark pay link), webhook converts prospect→customer account, `start-subscription` begins $100/mo off-session at go-live. &quot;💳 Make the sale&quot; box for Russ. Stripe secrets confirmed present. PR #4</div>
+      </div>
+      <div class="card">
+        <div class="card-title">M5: Discovery · outreach · preview · booking</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">0003</span><span class="tag tag-neutral">0004</span><span class="tag tag-neutral">discover-leads</span><span class="tag tag-neutral">send-invitation</span><span class="tag tag-neutral">unsubscribe</span><span class="tag tag-neutral">PreviewGate</span><span class="tag tag-neutral">?t=</span></div>
+        <div class="card-desc">Migrations `0003`/`0004`. `discover-leads` (Google Places), `send-invitation` (warm copy + book/preview CTAs + 0800 + UEMA unsubscribe + suppression), `unsubscribe`, password-token `PreviewGate` (auto-unlock via `?t=`), admin Settings &amp; Discover panel. PR #5</div>
+      </div>
+      <div class="card">
         <div class="card-title">Discovery + reuse audit</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">crawl-site</span><span class="tag tag-neutral">generate-site</span><span class="tag tag-neutral">account_links</span><span class="tag tag-neutral">can_manage_account</span></div>
-        <div class="card-desc">Mapped coreshift-live-edit end to end. Found ~60% of the engine already built: `crawl-site` (scrape), `generate-site` (auto LLM site-gen), Stripe checkout + webhook, Postmark, Supabase Auth, the agency/reseller model (`account_links` + `can_manage_account`), and the admin dashboard</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Sale model locked</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">setup_future_usage</span></div>
-        <div class="card-desc">One-off build fee at close (Russ enters the amount on the call). Card saved once via Stripe `setup_future_usage`; the $100/mo subscription starts later at DNS changeover, off-session, with no second card entry. heygem&#39;s R4 (SetupIntent + charge-later) is a working reference</div>
-      </div>
-      <div class="card">
-        <div class="card-title">v1 scope locked</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">decision</span></div>
-        <div class="card-desc">Booking-only. The &quot;claim your website / buy page&quot; (5a) is deferred; the preview page CTA is &quot;book a walkthrough&quot; + a trust video + an 0800 number. NZ-first</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Tenancy model locked</div>
-        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">account</span><span class="tag tag-neutral">site</span><span class="tag tag-neutral">account_links</span></div>
-        <div class="card-desc">Build on the existing agency model, not a new workspaces layer. Coreshift = agency #1; a prospect converts into an `account` + `site` on sale; other companies can resell later via `account_links`</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">~60% already built (crawl-site, generate-site, Stripe, Postmark, agency model). v1 scope + sale model locked</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -991,9 +1015,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">M1: Workspace auth + roles</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-neutral">in-progress</span><span class="tag tag-neutral">@coreshifthq.com</span><span class="tag tag-neutral">app_admins</span></div>
-        <div class="card-desc">Establish a Coreshift agency account; anyone with a verified `@coreshifthq.com` email joins it as their own user (no shared ricky@ login). Roles admin / sales / reviewer replace the hardcoded `app_admins`. Feature branch + additive migration in flight</div>
+        <div class="card-title">End-to-end verification pass</div>
+        <div class="card-tags"><span class="tag tag-neutral">verify</span></div>
+        <div class="card-desc">Backends are deployed + probe-tested; the full happy path (sign in as Coreshift → discover/score → generate → review → invite → book → sale → go-live) needs one walk-through with a real session + Stripe **test card**</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1003,108 +1027,78 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Google Places API key</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">needs-ricky</span></div>
-        <div class="card-desc">Discovery (finding candidate URLs to score) needs a Places API key with billing enabled. Not blocking M1–M4</div>
+        <div class="card-title">`GOOGLE_PLACES_API_KEY`</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">discover-leads</span></div>
+        <div class="card-desc">Set this Supabase function secret to switch on auto-discovery. `discover-leads` is deployed and returns &quot;not configured&quot; until then</div>
       </div>
       <div class="card">
-        <div class="card-title">Russ&#39;s Google Calendar</div>
+        <div class="card-title">Russ&#39;s Google Calendar (booking auto-create)</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">needs-ricky</span></div>
-        <div class="card-desc">Booking needs Russ&#39;s calendar connected (OAuth) to create the 15-min Meet</div>
+        <div class="card-desc">Link-based booking works today via Settings → Booking link. Auto-creating the 15-min Meet with the preview URL in the notes needs Russ&#39;s Google OAuth</div>
       </div>
       <div class="card">
-        <div class="card-title">Trust video + 0800 number</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">needs-ricky</span></div>
-        <div class="card-desc">Content for the preview page: a short &quot;how/why we built this for you&quot; video and the NZ 0800 number</div>
+        <div class="card-title">Stripe test-mode dry run + webhook endpoint</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">STRIPE_WEBHOOK_SECRET</span><span class="tag tag-neutral">checkout.session.completed</span></div>
+        <div class="card-desc">Confirm `STRIPE_WEBHOOK_SECRET` + a `checkout.session.completed` endpoint are wired for coreshift-sites, then run one test-card sale before first real use</div>
       </div></div>
     </section>
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">M1 · pipeline schema migration</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-neutral">agency_team</span></div>
-        <div class="card-desc">Additive migration: `agency_team` (role admin/sales/reviewer, domain auto-join) + the agency-scoped foundation. Applied via Supabase MCP; committed to the repo as a migration file</div>
+        <div class="card-title">Set Russ to `sales`</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">select set_team_role(&#39;&lt;russ&gt;@coreshifthq.com&#39;,&#39;sales&#39;);</span></div>
+        <div class="card-desc">Once Russ signs in once: `select set_team_role(&#39;&lt;russ&gt;@coreshifthq.com&#39;,&#39;sales&#39;);`</div>
       </div>
       <div class="card">
-        <div class="card-title">M1 · domain auto-join</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-neutral">@coreshifthq.com</span></div>
-        <div class="card-desc">Verified `@coreshifthq.com` sign-in auto-joins the Coreshift agency account with the right role</div>
+        <div class="card-title">Fill Settings</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span></div>
+        <div class="card-desc">In Lead Engine → Settings &amp; discover: booking link, 0800 number, from-name, reply-to</div>
       </div>
       <div class="card">
-        <div class="card-title">M1 · role gate + Russ view</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-neutral">is_app_admin</span></div>
-        <div class="card-desc">Replace `is_app_admin` hardcode with role-based access; ship Russ&#39;s stripped-down view</div>
+        <div class="card-title">Deploy the edge functions + app</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">coreshift-app</span></div>
+        <div class="card-desc">5 new edge functions are deployed to prod already via MCP; deploy the updated `coreshift-app` (Cloudflare) so the Lead Engine UI is live for the team</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Trust video</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">needs-ricky</span></div>
+        <div class="card-desc">Record the short &quot;how/why we built this for you&quot; video for the preview page</div>
       </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">12</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">M2: prospects table + stage machine</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">sourced → scored → generated → in_review → approved → invited → booked → demo → won → paid → finalising → domain_transfer → live</span></div>
-        <div class="card-desc">`sourced → scored → generated → in_review → approved → invited → booked → demo → won → paid → finalising → domain_transfer → live`, agency-scoped</div>
+        <div class="card-title">Vision pass for images/outdated</div>
+        <div class="card-tags"><span class="tag tag-neutral">enhancement</span><span class="tag tag-neutral">score-site</span><span class="tag tag-neutral">needs_vision</span></div>
+        <div class="card-desc">Use a screenshot + vision model where `score-site` emits `needs_vision` to sharpen the fuzzy checks</div>
       </div>
       <div class="card">
-        <div class="card-title">M2: CRM pipeline board</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
-        <div class="card-desc">Minimal board in the admin portal; drag across stages; Russ&#39;s simplified view</div>
+        <div class="card-title">Renderer-level preview gate</div>
+        <div class="card-tags"><span class="tag tag-neutral">enhancement</span><span class="tag tag-neutral">coreshift.page</span></div>
+        <div class="card-desc">Move the client-facing password gate into the Cloudflare renderer so the gated preview is the real rendered `coreshift.page` site, not the in-app editor view</div>
       </div>
       <div class="card">
-        <div class="card-title">M2: prospect → account+site conversion</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
-        <div class="card-desc">On sale, promote the generated preview site into a real billed account</div>
-      </div>
-      <div class="card">
-        <div class="card-title">M3: score-site function</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
-        <div class="card-desc">7-check rubric (mobile 22 · HTTPS 20 · outdated build 18 · poor images 12 · stale content 10 · no analytics 8 · broken links 8; qualify ≥50). Extends crawl-site; 2 fuzzy checks use tech-fingerprint + a vision call</div>
-      </div>
-      <div class="card">
-        <div class="card-title">M3: rubric bars on cards</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
-        <div class="card-desc">Per-check score breakdown shown on each prospect card</div>
-      </div>
-      <div class="card">
-        <div class="card-title">M4: on-call invoice button</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
-        <div class="card-desc">Enter amount → Stripe one-off charge + save card → pay link SMS/email mid-call</div>
-      </div>
-      <div class="card">
-        <div class="card-title">M4: off-session subscription at go-live</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span></div>
-        <div class="card-desc">Start the $100/mo plan against the saved card at DNS changeover</div>
-      </div>
-      <div class="card">
-        <div class="card-title">M5: Google Places discovery</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-5</span></div>
-        <div class="card-desc">Pull NZ businesses by industry + region → feed URLs to the scorer</div>
-      </div>
-      <div class="card">
-        <div class="card-title">M5: invitation email + suppression</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-5</span></div>
-        <div class="card-desc">Warm no-obligation invite via Postmark; UEMA-compliant unsubscribe/suppression list</div>
-      </div>
-      <div class="card">
-        <div class="card-title">M5: password-token preview</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-5</span></div>
-        <div class="card-desc">Signed token in the email URL auto-unlocks the preview + sets a short cookie; bare URL hits a password gate</div>
-      </div>
-      <div class="card">
-        <div class="card-title">M5: Google Calendar booking</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-5</span></div>
-        <div class="card-desc">15-min Meet with client + Russ; preview URL in the notes so Russ previews before the demo</div>
+        <div class="card-title">SMS pay link</div>
+        <div class="card-tags"><span class="tag tag-neutral">enhancement</span></div>
+        <div class="card-desc">Add an SMS provider (e.g. Twilio) so Russ can text the pay link as well as email it</div>
       </div>
       <div class="card">
         <div class="card-title">Site-gen theme/template tagging</div>
-        <div class="card-tags"><span class="tag tag-neutral">enhancement</span></div>
-        <div class="card-desc">Tag themes/templates/sections (industry, style) so generate-site auto-selects the right one instead of pure LLM inference</div>
+        <div class="card-tags"><span class="tag tag-neutral">enhancement</span><span class="tag tag-neutral">generate-site</span></div>
+        <div class="card-desc">Tag themes/templates/sections so `generate-site` auto-selects the best fit instead of pure LLM inference</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Branch flow for coreshift-live-edit</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">dev</span><span class="tag tag-neutral">staging</span></div>
+        <div class="card-desc">Repo has only `main`; add `dev`/`staging` to match the Coreshift standard</div>
       </div></div>
     </section>
       </div>

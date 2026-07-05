@@ -13,10 +13,10 @@ module.exports = {
     "15-min walkthrough with Russ. Russ closes on the call — one-off build fee, card saved once, subscription starts later at go-live. " +
     "Multi-tenant from day one: Coreshift is agency #1; other companies can resell the same system later.",
 
-  phase: "Phase 1 · Workspace auth + roles",
+  phase: "M1–M5 built · wiring + go-live",
   nextMilestone: {
-    name: "Team can sign in by @coreshifthq.com; Russ has a role",
-    date: "Milestone 1",
+    name: "Add Places key, connect Russ's calendar, test-mode sale dry-run",
+    date: "Go-live checklist",
   },
 
   // ── Goals ─────────────────────────────────────────────────────
@@ -80,7 +80,7 @@ module.exports = {
     },
     {
       key: "phase-1",
-      status: "in-progress",
+      status: "done",
       title: "Phase 1",
       subtitle: "Workspace auth + roles",
       window: "In progress",
@@ -94,7 +94,7 @@ module.exports = {
     },
     {
       key: "phase-2",
-      status: "planned",
+      status: "done",
       title: "Phase 2",
       subtitle: "Prospect pipeline + CRM board",
       window: "Next",
@@ -107,7 +107,7 @@ module.exports = {
     },
     {
       key: "phase-3",
-      status: "planned",
+      status: "done",
       title: "Phase 3",
       subtitle: "Scoring engine",
       window: "Proves the thesis on real data",
@@ -120,7 +120,7 @@ module.exports = {
     },
     {
       key: "phase-4",
-      status: "planned",
+      status: "done",
       title: "Phase 4",
       subtitle: "On-call sale (Stripe)",
       window: "Highest-leverage; Russ touches this most",
@@ -133,7 +133,7 @@ module.exports = {
     },
     {
       key: "phase-5",
-      status: "future",
+      status: "done",
       title: "Phase 5",
       subtitle: "Discover · outreach · preview · book",
       window: "Ties the loop together",
