@@ -269,11 +269,11 @@
     </section>
 
     <section class="status-strip">
-      <div class="status-stat status-done"><div class="status-num">13</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-done"><div class="status-num">18</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">0</div><div class="status-label">In Progress</div></div>
-      <div class="status-stat status-blocked"><div class="status-num">1</div><div class="status-label">Blocked (CF acct)</div></div>
+      <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked (CF acct)</div></div>
       <div class="status-stat status-this-week"><div class="status-num">2</div><div class="status-label">This Week</div></div>
-      <div class="status-stat status-backlog"><div class="status-num">6</div><div class="status-label">Backlog</div></div>
+      <div class="status-stat status-backlog"><div class="status-num">7</div><div class="status-label">Backlog</div></div>
     </section>
 
     <section class="links">
@@ -301,33 +301,38 @@
         <div class="column col-this-week">
           <div class="col-head"><h2>Do now</h2><span class="col-count">2</span></div>
           <div class="cards">
-            <div class="card"><div class="card-title">Grant CF account access (or add CNAME)</div><div class="card-tags"><span class="tag tag-infra">dns</span><span class="tag tag-neutral">needs access</span></div><div class="card-desc"><code>growthpartnersgpx.com</code> zone isn't in any connected account. Add <code>CNAME staging2 → growth-partners.pages.dev</code> (proxied); domain already registered on the Pages project.</div></div>
-            <div class="card"><div class="card-title">Review the live 76-page migration</div><div class="card-tags"><span class="tag tag-content">review</span></div><div class="card-desc">Sign off on the migrated blogs / locations / AU mirror on pages.dev before the UI/UX pass and ship.</div></div>
+            <div class="card"><div class="card-title">Zone access for cutover + Postmark DKIM</div><div class="card-tags"><span class="tag tag-infra">dns</span></div><div class="card-desc">staging2 CNAME is live. Still need the <code>growthpartnersgpx.com</code> zone for production cutover (point apex at Pages) and Postmark DKIM records so contact-form emails don't hit spam.</div></div>
+            <div class="card"><div class="card-title">Vyne review of the live site</div><div class="card-tags"><span class="tag tag-content">review</span></div><div class="card-desc">Shared <code>staging2.growthpartnersgpx.com</code> with Vyne (Rhys) for sign-off on migrated blogs / locations / AU mirror before ship.</div></div>
           </div>
         </div>
 
         <div class="column col-blocked">
-          <div class="col-head"><h2>Blocked · CF account</h2><span class="col-count">1</span></div>
+          <div class="col-head"><h2>Blocked · CF account</h2><span class="col-count">0</span></div>
           <div class="cards">
-            <div class="card"><div class="card-title">staging2.growthpartnersgpx.com</div><div class="card-tags"><span class="tag tag-infra">dns</span></div><div class="card-desc">One CNAME in the zone's account → live with auto cert.</div></div>
           </div>
         </div>
 
         <div class="column col-backlog">
-          <div class="col-head"><h2>Backlog / Later</h2><span class="col-count">6</span></div>
+          <div class="col-head"><h2>Backlog / Later</h2><span class="col-count">7</span></div>
           <div class="cards">
+            <div class="card"><div class="card-title">Fix soft-404s</div><div class="card-tags"><span class="tag tag-seo">seo</span></div><div class="card-desc">Unknown URLs return the homepage with HTTP 200 (Pages fallback). Add a real <code>404.html</code> so missing pages return a proper 404 and search engines don't index junk URLs.</div></div>
             <div class="card"><div class="card-title">Cloudflare Web Analytics</div><div class="card-tags"><span class="tag tag-int">analytics</span></div><div class="card-desc">Add the Web Analytics beacon in the Pages account (now reachable — no longer blocked).</div></div>
             <div class="card"><div class="card-title">UI/UX polish pass (micro-animations)</div><div class="card-tags"><span class="tag tag-build">design</span></div><div class="card-desc">Dedicated pass with a design eye: add micro-animations / interactions (site is text-heavy) and cherry-pick features. Consider a full mega-menu nav. Deferred until the site is complete, per Ricky.</div></div>
             <div class="card"><div class="card-title">Remaining detail pages</div><div class="card-tags"><span class="tag tag-content">content</span></div><div class="card-desc">Un-migrated testimonial/team detail pages and lower-value blogs (the CSV "ignore" set). Kept out on purpose for now.</div></div>
             <div class="card"><div class="card-title">Content decisions</div><div class="card-tags"><span class="tag tag-content">content</span></div><div class="card-desc">Video &amp; Images tiers (TBD), pricing sign-off, hosted light logo asset. (Branded OG image now shipped.)</div></div>
-            <div class="card"><div class="card-title">Lighthouse + a11y pass</div><div class="card-tags"><span class="tag tag-seo">quality</span></div><div class="card-desc">Perf/SEO/a11y audit before launch.</div></div>
+            <div class="card"><div class="card-title">Lighthouse + a11y pass</div><div class="card-tags"><span class="tag tag-seo">quality</span></div><div class="card-desc">Full perf/SEO/a11y audit before launch. (A11y basics — nav/FAQ aria, image dimensions — already shipped.)</div></div>
             <div class="card"><div class="card-title">CI auto-deploy + staging/main branches</div><div class="card-tags"><span class="tag tag-infra">infra</span></div><div class="card-desc">Wire GitHub → Pages auto-deploy; create staging/main per branch flow.</div></div>
           </div>
         </div>
 
         <div class="column col-done">
-          <div class="col-head"><h2>Done</h2><span class="col-count">13</span></div>
+          <div class="col-head"><h2>Done</h2><span class="col-count">18</span></div>
           <div class="cards">
+            <div class="card"><div class="card-title">hreflang NZ/AU on 40 paired pages (reciprocal, verified)</div><div class="card-tags"><span class="tag tag-seo">seo</span></div></div>
+            <div class="card"><div class="card-title">Staging noindex (X-Robots-Tag middleware) until launch</div><div class="card-tags"><span class="tag tag-seo">seo</span></div></div>
+            <div class="card"><div class="card-title">A11y: nav/FAQ aria-expanded + Escape-to-close</div><div class="card-tags"><span class="tag tag-build">a11y</span></div></div>
+            <div class="card"><div class="card-title">CLS: image width/height + decoding=async</div><div class="card-tags"><span class="tag tag-build">perf</span></div></div>
+            <div class="card"><div class="card-title">staging2.growthpartnersgpx.com live</div><div class="card-tags"><span class="tag tag-prod">prod</span></div></div>
             <div class="card"><div class="card-title">Self-host GSAP / Three.js / fonts</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
             <div class="card"><div class="card-title">Preserved clean-URL structure + redirects</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
             <div class="card"><div class="card-title">Design system v2 — ~15 variety components</div><div class="card-tags"><span class="tag tag-build">design</span></div></div>
