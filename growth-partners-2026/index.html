@@ -269,10 +269,10 @@
     </section>
 
     <section class="status-strip">
-      <div class="status-stat status-done"><div class="status-num">12</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-done"><div class="status-num">13</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">0</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">1</div><div class="status-label">Blocked (CF acct)</div></div>
-      <div class="status-stat status-this-week"><div class="status-num">3</div><div class="status-label">This Week</div></div>
+      <div class="status-stat status-this-week"><div class="status-num">2</div><div class="status-label">This Week</div></div>
       <div class="status-stat status-backlog"><div class="status-num">6</div><div class="status-label">Backlog</div></div>
     </section>
 
@@ -299,9 +299,8 @@
       <div class="board">
 
         <div class="column col-this-week">
-          <div class="col-head"><h2>Do now</h2><span class="col-count">3</span></div>
+          <div class="col-head"><h2>Do now</h2><span class="col-count">2</span></div>
           <div class="cards">
-            <div class="card"><div class="card-title">Activate contact form (Postmark)</div><div class="card-tags"><span class="tag tag-build">function</span><span class="tag tag-neutral">needs deploy</span></div><div class="card-desc">Function built + tested. Set <code>POSTMARK_TOKEN</code> (+ optional <code>CONTACT_FROM</code>/<code>TURNSTILE_SECRET</code>) on the Pages project and redeploy to go live.</div></div>
             <div class="card"><div class="card-title">Grant CF account access (or add CNAME)</div><div class="card-tags"><span class="tag tag-infra">dns</span><span class="tag tag-neutral">needs access</span></div><div class="card-desc"><code>growthpartnersgpx.com</code> zone isn't in any connected account. Add <code>CNAME staging2 → growth-partners.pages.dev</code> (proxied); domain already registered on the Pages project.</div></div>
             <div class="card"><div class="card-title">Review the live 76-page migration</div><div class="card-tags"><span class="tag tag-content">review</span></div><div class="card-desc">Sign off on the migrated blogs / locations / AU mirror on pages.dev before the UI/UX pass and ship.</div></div>
           </div>
@@ -327,7 +326,7 @@
         </div>
 
         <div class="column col-done">
-          <div class="col-head"><h2>Done</h2><span class="col-count">10</span></div>
+          <div class="col-head"><h2>Done</h2><span class="col-count">13</span></div>
           <div class="cards">
             <div class="card"><div class="card-title">Self-host GSAP / Three.js / fonts</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
             <div class="card"><div class="card-title">Preserved clean-URL structure + redirects</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
@@ -336,7 +335,8 @@
             <div class="card"><div class="card-title">Prune nav to value + NZ/AU switcher</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
             <div class="card"><div class="card-title">Canonical footer synced (no dead links)</div><div class="card-tags"><span class="tag tag-build">build</span></div></div>
             <div class="card"><div class="card-title">SEO: sitemap (76 URLs), robots, canonical, OG, JSON-LD</div><div class="card-tags"><span class="tag tag-seo">seo</span></div></div>
-            <div class="card"><div class="card-title">Contact form function (Postmark) + spam guard, tested</div><div class="card-tags"><span class="tag tag-build">function</span></div></div>
+            <div class="card"><div class="card-title">Contact form LIVE on Pages (Postmark) — deployed + verified</div><div class="card-tags"><span class="tag tag-build">function</span><span class="tag tag-prod">prod</span></div></div>
+            <div class="card"><div class="card-title">Safe deploy script (deploy.ps1, blocks .md/.csv leak)</div><div class="card-tags"><span class="tag tag-infra">infra</span></div></div>
             <div class="card"><div class="card-title">Branded OG share image (og-default.png)</div><div class="card-tags"><span class="tag tag-seo">seo</span></div></div>
             <div class="card"><div class="card-title">Delete 40 off-target first-build pages</div><div class="card-tags"><span class="tag tag-neutral">cleanup</span></div></div>
             <div class="card"><div class="card-title">Deploy to Cloudflare Pages (76 pages, all 200)</div><div class="card-tags"><span class="tag tag-prod">prod</span></div></div>
