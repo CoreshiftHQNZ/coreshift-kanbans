@@ -395,9 +395,10 @@
           manager (pause/edit/delete), real ad-spend + owner-mobile providers, CSV export, account
           deletion, Stripe dunning, and a batch of security fixes — incl. a critical cross-tenant
           contact-data leak (the shared <code>entities</code> cache was readable by any signed-in user).
-          <strong>Before this reaches real users:</strong> switch on billing (Stripe keys) and resolve the
-          one remaining <strong>prod blocker</strong> — a signed-in user can still read their own
-          <em>unclaimed</em> leads&rsquo; contact directly via the API, bypassing the paywall (fix scoped, see Next).
+          <strong>The prod blocker is now closed</strong> — the direct-API read of unclaimed leads&rsquo;
+          contact is revoked at the column level (verified live), and the cap races + webhook ordering +
+          SSRF rebinding are all fixed in PR&nbsp;#1. <strong>Before real users:</strong> switch on billing
+          (Stripe keys), and apply migrations 0010–0013 when the branch deploys.
         </p>
         <div class="ricky-grid">
           <div class="ricky-section">
@@ -437,7 +438,7 @@
 
       <div class="board">
         <div class="col done">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">25</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">28</span></div>
           <div class="col-body">
             <div class="card"><div class="card-head"><span class="card-id">M0</span></div><p class="card-title">Monorepo + CI + Railway (web & engine live)</p><p class="card-note">npm workspaces · GitHub Actions · push-to-deploy via RAILWAY_TOKEN</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M0</span></div><p class="card-title">Supabase schema + RLS + auth</p><p class="card-note">profiles/icps/entities/runs/leads · profile trigger · email confirm on</p></div>
@@ -464,6 +465,9 @@
             <div class="card"><div class="card-head"><span class="card-id">M1</span><span class="card-date">Jul 7</span></div><p class="card-title">CSV export + account deletion + error states</p><p class="card-note">Formula-injection-safe bucket export · GDPR self-serve erasure · route error boundary</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M3</span><span class="card-date">Jul 7</span></div><p class="card-title">Stripe dunning + hardening</p><p class="card-note">subscription.updated (past-due→downgrade) · price-gated so a shared-account sub can't grant/revoke Pro · customer email from verified auth · enlarge capped</p></div>
             <div class="card"><div class="card-head"><span class="card-id">QA</span><span class="card-date">Jul 7</span></div><p class="card-title">Web typecheck + tests in CI</p><p class="card-note">web was silently skipped by --if-present · now 41 tests (sanitiser, CSV, SSRF guard) · typecheck/lint/build green</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">Jul 7</span></div><p class="card-title">🔒 Paywall bypass closed (leads-RLS)</p><p class="card-note">Column-level revoke of leads.entity_snapshot from client roles (mig 0013) · server reads via service-role w/ owner scoping · verified live: entity_snapshot 403, owner update 204</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">Jul 7</span></div><p class="card-title">Atomic claim / ICP-cap RPCs</p><p class="card-note">claim / return / create / resume moved into SECURITY DEFINER RPCs under a per-user advisory lock (mig 0010) — concurrent requests can't overshoot caps · ICP-create rate-limit ledger (mig 0012)</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">Jul 7</span></div><p class="card-title">Webhook idempotency + SSRF DNS-pin</p><p class="card-note">Stripe events deduped + reconciled against current sub state (mig 0011) · engine resolves-then-pins DNS, rejecting rebinding to private IPs</p></div>
           </div>
         </div>
 
@@ -476,11 +480,8 @@
         </div>
 
         <div class="col next">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Next</span><span class="col-count">5</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Next</span><span class="col-count">2</span></div>
           <div class="col-body">
-            <div class="card" style="border-color: var(--doing);"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">blocker</span></div><p class="card-title">🚨 leads contact readable pre-claim</p><p class="card-note">A user can read their own UNCLAIMED leads' mobile directly via the API, bypassing the paywall. Needs a redacting RPC + service-role reads. Blocks promoting PR #1 past dev.</p></div>
-            <div class="card"><div class="card-head"><span class="card-id">SEC</span></div><p class="card-title">Atomic claim RPC</p><p class="card-note">claim / bucket / ICP caps are check-then-act — concurrent requests bypass them. Move claiming into one atomic DB function.</p></div>
-            <div class="card"><div class="card-head"><span class="card-id">SEC</span></div><p class="card-title">Remaining hardening</p><p class="card-note">Rate-limit ICP create (delete→recreate re-spends engine) · webhook event idempotency · SSRF DNS-rebinding pin</p></div>
             <div class="card"><div class="card-head"><span class="card-id">OPS</span></div><p class="card-title">Observability</p><p class="card-note">Heartbeat + config validation shipped · still want Sentry + structured logs + external alerting</p></div>
             <div class="card"><div class="card-head"><span class="card-id">OPS</span></div><p class="card-title">Transactional email</p><p class="card-note">Resend / Cloudflare Email for auth + "fresh leads waiting" notifications</p></div>
           </div>
