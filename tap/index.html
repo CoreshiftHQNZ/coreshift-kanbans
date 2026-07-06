@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -367,7 +367,7 @@
           <p class="subtitle">ICP-driven lead generation · real cold leads, on tap · Coreshift</p>
         </div>
         <div class="meta">
-          Last updated <strong>2026-07-02</strong><br />
+          Last updated <strong>2026-07-07</strong><br />
           <a href="https://github.com/CoreshiftHQNZ/tap" target="_blank" rel="noopener">repo</a> ·
           <a href="https://web-production-06c25.up.railway.app" target="_blank" rel="noopener">live app</a>
         </div>
@@ -378,8 +378,8 @@
         <div class="progress-bars">
           <div class="pbar"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>M1</strong> App + ICP</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Lead engine</div><div class="pbar-track"><div class="pbar-fill" style="width: 90%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Monetise</div><div class="pbar-track"><div class="pbar-fill" style="width: 85%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Lead engine</div><div class="pbar-track"><div class="pbar-fill" style="width: 95%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Monetise</div><div class="pbar-track"><div class="pbar-fill" style="width: 90%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Launch</div><div class="pbar-track"><div class="pbar-fill" style="width: 5%"></div></div></div>
         </div>
       </section>
@@ -391,9 +391,13 @@
         </div>
         <p class="intro">
           Things that need a human to click through a sign-up flow or paste credentials.
-          <strong>State of play:</strong> the whole loop works in production — a live discovery run surfaced
-          6 real Auckland leads at 84/100 with owner names and publicly-sourced mobiles. What&rsquo;s left
-          to fully switch on is billing (Stripe keys) and richer owner lookup (NZBN key, requested).
+          <strong>State of play:</strong> a hardening pass (PR&nbsp;#1 → <code>dev</code>) shipped the ICP
+          manager (pause/edit/delete), real ad-spend + owner-mobile providers, CSV export, account
+          deletion, Stripe dunning, and a batch of security fixes — incl. a critical cross-tenant
+          contact-data leak (the shared <code>entities</code> cache was readable by any signed-in user).
+          <strong>Before this reaches real users:</strong> switch on billing (Stripe keys) and resolve the
+          one remaining <strong>prod blocker</strong> — a signed-in user can still read their own
+          <em>unclaimed</em> leads&rsquo; contact directly via the API, bypassing the paywall (fix scoped, see Next).
         </p>
         <div class="ricky-grid">
           <div class="ricky-section">
@@ -433,7 +437,7 @@
 
       <div class="board">
         <div class="col done">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">16</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">25</span></div>
           <div class="col-body">
             <div class="card"><div class="card-head"><span class="card-id">M0</span></div><p class="card-title">Monorepo + CI + Railway (web & engine live)</p><p class="card-note">npm workspaces · GitHub Actions · push-to-deploy via RAILWAY_TOKEN</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M0</span></div><p class="card-title">Supabase schema + RLS + auth</p><p class="card-note">profiles/icps/entities/runs/leads · profile trigger · email confirm on</p></div>
@@ -451,35 +455,43 @@
             <div class="card"><div class="card-head"><span class="card-id">M3</span></div><p class="card-title">Bucket-window contact model (anti-gaming)</p><p class="card-note">Contacts server-redacted until claimed · re-lock on won/lost · return-to-bucket to re-view · claim = unlock</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M3</span></div><p class="card-title">Claim allowances</p><p class="card-note">Pro = bucket × 20/mo (enlarge raises it) · bucket occupancy server-enforced · free = 10 lifetime</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M2</span></div><p class="card-title">Realtime lead drip + supply buffer</p><p class="card-note">runs-table realtime signal → redacted fetch · watermark = capacity+5 · adaptive cooldown</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 7</span></div><p class="card-title">LLM output sanitisation</p><p class="card-note">Strip markup/tool-call leaks + validate NZ mobiles before persist/render · cleaned 4 polluted prod rows (the "RocketSpark&lt;/Footer&gt;" leak)</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 7</span></div><p class="card-title">Real ad-spend + owner-mobile providers</p><p class="card-note">Google Ads Transparency signal + public-listing mobile lookup with source-URL provenance · replaced the empty FB/WHOIS stubs</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">Jul 7</span></div><p class="card-title">Engine SSRF + OOM hardening</p><p class="card-note">Block private/loopback/metadata hosts + scheme allowlist + revalidated redirects · streaming byte cap (no buffer-then-slice OOM)</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">Jul 7</span></div><p class="card-title">🔒 Cross-tenant leak closed + lockdowns</p><p class="card-note">entities + engine_heartbeat reads → service-role only (was readable by any user) · anon UPDATE on profiles revoked · PostgREST .or() injection fixed</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">Jul 7</span></div><p class="card-title">Delete-proof free-tier counter</p><p class="card-note">profiles.claims_used (monotonic) — deleting an ICP no longer resets the "first 10 free" gate</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M1</span><span class="card-date">Jul 7</span></div><p class="card-title">ICP manager: pause / resume / delete</p><p class="card-note">In-app manager · app now surfaces ALL active ICPs (was newest-only) · zero-signal + empty-service onboarding guards · visible errors</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M1</span><span class="card-date">Jul 7</span></div><p class="card-title">CSV export + account deletion + error states</p><p class="card-note">Formula-injection-safe bucket export · GDPR self-serve erasure · route error boundary</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M3</span><span class="card-date">Jul 7</span></div><p class="card-title">Stripe dunning + hardening</p><p class="card-note">subscription.updated (past-due→downgrade) · price-gated so a shared-account sub can't grant/revoke Pro · customer email from verified auth · enlarge capped</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">QA</span><span class="card-date">Jul 7</span></div><p class="card-title">Web typecheck + tests in CI</p><p class="card-note">web was silently skipped by --if-present · now 41 tests (sanitiser, CSV, SSRF guard) · typecheck/lint/build green</p></div>
           </div>
         </div>
 
         <div class="col doing">
           <div class="col-head"><span class="col-title"><span class="dot"></span>Doing</span><span class="col-count">2</span></div>
           <div class="col-body">
-            <div class="card"><div class="card-head"><span class="card-id">M3</span></div><p class="card-title">Stripe activation</p><p class="card-note">Blocked on keys (Ricky) — everything else is wired</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M3</span></div><p class="card-title">Stripe activation</p><p class="card-note">Code fully wired incl. dunning + price-gating — blocked only on keys (Ricky)</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M2</span></div><p class="card-title">NZBN owner lookup</p><p class="card-note">Provider implemented · blocked on API key approval</p></div>
           </div>
         </div>
 
         <div class="col next">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Next</span><span class="col-count">4</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Next</span><span class="col-count">5</span></div>
           <div class="col-body">
-            <div class="card"><div class="card-head"><span class="card-id">M2</span></div><p class="card-title">FB Ad Library + .nz WHOIS providers</p><p class="card-note">Unlocks the ad_library signals (ads→homepage, not-advertising) with real data</p></div>
-            <div class="card"><div class="card-head"><span class="card-id">M1</span></div><p class="card-title">ICP editor</p><p class="card-note">Edit / pause / re-tune an ICP after onboarding; multiple ICPs UX</p></div>
-            <div class="card"><div class="card-head"><span class="card-id">OPS</span></div><p class="card-title">Observability</p><p class="card-note">Sentry + structured engine logs + run alerting</p></div>
-            <div class="card"><div class="card-head"><span class="card-id">OPS</span></div><p class="card-title">Transactional email</p><p class="card-note">Resend / Cloudflare Email for auth + notifications</p></div>
+            <div class="card" style="border-color: var(--doing);"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">blocker</span></div><p class="card-title">🚨 leads contact readable pre-claim</p><p class="card-note">A user can read their own UNCLAIMED leads' mobile directly via the API, bypassing the paywall. Needs a redacting RPC + service-role reads. Blocks promoting PR #1 past dev.</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">SEC</span></div><p class="card-title">Atomic claim RPC</p><p class="card-note">claim / bucket / ICP caps are check-then-act — concurrent requests bypass them. Move claiming into one atomic DB function.</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">SEC</span></div><p class="card-title">Remaining hardening</p><p class="card-note">Rate-limit ICP create (delete→recreate re-spends engine) · webhook event idempotency · SSRF DNS-rebinding pin</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">OPS</span></div><p class="card-title">Observability</p><p class="card-note">Heartbeat + config validation shipped · still want Sentry + structured logs + external alerting</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">OPS</span></div><p class="card-title">Transactional email</p><p class="card-note">Resend / Cloudflare Email for auth + "fresh leads waiting" notifications</p></div>
           </div>
         </div>
 
         <div class="col back">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Backlog</span><span class="col-count">6</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Backlog</span><span class="col-count">4</span></div>
           <div class="col-body">
             <div class="card"><div class="card-head"><span class="card-id">M4</span></div><p class="card-title">Custom domain + Cloudflare DNS</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M4</span></div><p class="card-title">Railway staging environment</p><p class="card-note">Map staging branch → staging env per Coreshift standard</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M2</span></div><p class="card-title">provider_calls metering table</p><p class="card-note">Persist per-provider cost telemetry (CostMeter data currently discarded)</p></div>
-            <div class="card"><div class="card-head"><span class="card-id">SEC</span></div><p class="card-title">entities shared-read RLS decision</p><p class="card-note">Any signed-in user can read the canonical cache — fine for now, revisit at scale</p></div>
-            <div class="card"><div class="card-head"><span class="card-id">M1</span></div><p class="card-title">CSV export (bucket)</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M5</span></div><p class="card-title">Global expansion providers</p><p class="card-note">Registry is region-keyed — new country = new provider set, no engine changes</p></div>
           </div>
         </div>
@@ -492,3 +504,4 @@
     </div>
   </body>
 </html>
+
