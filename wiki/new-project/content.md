@@ -70,4 +70,4 @@ Walk every user path with a browser UX pass, run a security check over the API e
 
 > **Why the window matters:** Fable 5 is only cheap for a limited period, then bills at API rates. Plan projects up front so you spend that window building, not deciding what to build.
 
-The full narrative — the Fable 5 Playbook and the project + usage tracker — ships inside the plugin (under the `fable5-workflow` skill's references). See also [Playbooks](../playbooks/) and [Project boards](../boards/).
+The full narrative — the Fable 5 Playbook and the project + usage tracker — ships inside the plugin (under the `fable5-workflow` skill's references). See also [Build Standards](../build-standards/) (the privacy, security & sub-processor defaults every build starts from), [Playbooks](../playbooks/), and [Project boards](../boards/).
