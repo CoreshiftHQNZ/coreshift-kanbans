@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>72%</strong> complete</div>
-        <div><strong>105</strong>/145 cards done</div>
-        <div>Updated <strong>2026-06-13 00:40 UTC</strong></div>
+        <div><strong>73%</strong> complete</div>
+        <div><strong>112</strong>/153 cards done</div>
+        <div>Updated <strong>2026-07-07 01:10 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">Phase 4 · Multi-app + Maintenance</span>
+          <span class="phase-pill-value">Phase 5 · Observability, DR, Security &amp; the Agent</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Velocity onboarding <span class="phase-pill-date">PLAY 9 proven on Digital Architect — now config-only</span></span>
+          <span class="phase-pill-value">Agent Loop 2 (Claude triage) + Growth Partners go-live <span class="phase-pill-date">Briefs 14–21 + agent v1 shipped; GP static site gated on CF access</span></span>
         </div>
       </div>
     </section>
@@ -815,17 +815,29 @@
             <li>Brief 8: App filter strip (conditional render) ✓</li><li>Brief 9a: /maintenance V1 foundation (sidebar, AppShell, RLS) ✓</li><li>Brief 9b: Auto-discovery scanner — node-cron nightly + GitHub Code Search ✓</li><li>Brief 10: Vendor lifecycle reference table + UI banner ✓</li><li>Brief 11: Maintenance digest ✓ (manual button + weekly Monday auto-schedule)</li><li>PLAYBOOK-cloning-to-new-app.md ✓ (PLAY 9 — onboarding runbook + V2 strategy)</li><li>Track A code changes (generalize fileIssue target + GitHub PAT lookup)</li><li>Noozey onboarding via PLAY 9 (closes Phase 4)</li>
           </ul>
         </div>
+        <div class="phase-card phase-in-progress">
+          <div class="phase-card-head">
+            <div class="phase-marker">5</div>
+            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+          </div>
+          <div class="phase-title">Phase 5 <span class="phase-subtitle">Observability, DR, Security &amp; the Agent</span></div>
+          <div class="phase-window">In progress</div>
+          <p class="phase-desc">Hardening + the autonomous-agent north star: Sentry heartbeat, off-site Storage backup + restore, a Supabase security-advisor surface, weekly black-box endpoint audits, resolved-report data-minimisation, and agent v1 (autonomy ladder + Loop 1, gated off).</p>
+          <ul class="phase-deliverables">
+            <li>Brief 14: Supabase security-advisor surface ✓</li><li>Brief 18: Sentry heartbeat (both apps) ✓</li><li>Brief 19 + 19b: Storage backup to R2 + prune/restore ✓</li><li>Brief 20 + 20b: Weekly endpoint audit + hosted-site onboarding ✓</li><li>Brief 21: Resolved-report auto clean-up (data-minimisation) ✓</li><li>Agent v1: autonomy ladder + action log + Loop 1 (gated off) ✓</li>
+          </ul>
+        </div>
       </div>
     </section>
 
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">105</div>
+        <div class="status-num">112</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">1</div>
+        <div class="status-num">2</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -833,11 +845,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">6</div>
+        <div class="status-num">9</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">33</div>
+        <div class="status-num">30</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -971,7 +983,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">105</span>
+        <span class="col-count">112</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1498,18 +1510,58 @@
         <div class="card-title">🚀 Digital Architect onboarded to Sentinel (app #2 — PLAY 9 proven)</div>
         <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-milestone">milestone</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">app_id=&quot;digital-architect&quot;</span><span class="tag tag-neutral">gpUser</span><span class="tag tag-neutral">&lt;app_id&gt;/&lt;user_id&gt;/...</span><span class="tag tag-neutral">verify_jwt=false</span><span class="tag tag-neutral">config.toml</span><span class="tag tag-neutral">maintained_apps</span><span class="tag tag-neutral">digital-architect</span><span class="tag tag-neutral">supabase_project_ref</span><span class="tag tag-neutral">txkgwrnzaxwtrlxkhpdl</span><span class="tag tag-neutral">app.staging.digitalarchitect.co.nz/login</span><span class="tag tag-neutral">digitalarchitect.co.nz</span></div>
         <div class="card-desc">First app onboarded via the cloning playbook; pressure-tested the whole runbook end-to-end. **Widget:** DA-native Report Issue button in the GP realm (`app_id=&quot;digital-architect&quot;`), built on DA&#39;s own Modal/Button primitives + ink/violet tokens (dark+light safe), reporter identity from the server layout&#39;s `gpUser`. DA PR [#43](https://github.com/CoreshiftHQNZ/digital-architect/pull/43) → #44 (staging). **Edge Function (KC, shared backend):** multi-app rewrite — app registry as allowlist (unknown app_id → 400), per-app JWT validation (each reporter&#39;s token validated against the project that issued it), per-app Postmark sender, inline base64 screenshot ingest for non-KC reporters (stored under `&lt;app_id&gt;/&lt;user_id&gt;/...` in the same bucket). KC PR [#191](https://github.com/CoreshiftHQNZ/keycontent-app/pull/191) → #192; deployed to KC prod project + `verify_jwt=false` pinned in `config.toml` (the platform gateway was rejecting non-KC JWTs before the function ran). **Registered** in `maintained_apps` (slug `digital-architect`, repo + `supabase_project_ref` `txkgwrnzaxwtrlxkhpdl` so the security-advisor scan covers it). **Better Stack** monitor on `app.staging.digitalarchitect.co.nz/login` → status pill live. **Smoke test passed in prod:** widget → auth → insert → both DA-branded emails → dashboard card + screenshot → file issue into the correct repo. Test artifacts cleaned up after. **Deviations folded into PLAY 9:** single-org-PAT adopted; Postmark sender-domain verification is now a required step (DA&#39;s first send 422&#39;d until `digitalarchitect.co.nz` was verified on the main Postmark account — DA&#39;s own Postmark account is still in pending-approval sandbox); inline-base64 screenshots for apps whose users have no identity in the backend project</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V2 — Brief 14: Supabase security-advisor surface</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">security_findings</span><span class="tag tag-neutral">/security</span></div>
+        <div class="card-desc">Daily 5am NZ scan of every onboarded app&#39;s Supabase project (prod + staging) via the advisor API → upserts into `security_findings` with resolve-on-clean-run, tagged per environment. `/security` page + the Monday digest surface active findings by severity. Closes the reactive-only-detection gap; the foundation the agent&#39;s Loop 1 later builds on</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V2 — Brief 19: Storage backup to Cloudflare R2</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">dr</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">job-assets</span><span class="tag tag-neutral">bug-report-screenshots</span><span class="tag tag-neutral">server/lib/r2.ts</span><span class="tag tag-neutral">storage-backup.ts</span><span class="tag tag-neutral">kc-job-assets-backup</span></div>
+        <div class="card-desc">Supabase backs up the DB but not Storage, so KC&#39;s user-content buckets (`job-assets` ~960 files/~1.8GB + `bug-report-screenshots`) had no off-site copy. `server/lib/r2.ts` (aws4fetch SigV4, no SDK) + `storage-backup.ts` mirror them to R2 bucket `kc-job-assets-backup` incrementally (only new/changed objects). Daily 3am NZ cron; gated by NODE_ENV + DISABLE_STORAGE_BACKUP_SCHEDULER + R2_* env. Verified in prod (968 job-assets + 4 screenshots in R2, 0 failed)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V2 — Brief 19b: backup prune + restore + multi-bucket</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">dr</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">planPrune</span><span class="tag tag-neutral">script/restore-storage-from-r2.ts</span><span class="tag tag-neutral">--confirm</span><span class="tag tag-neutral">POST /api/backups/storage/run</span><span class="tag tag-neutral">railway run</span></div>
+        <div class="card-desc">30-day tombstone-based prune of deleted-from-source copies (`planPrune` pure + unit-tested), `script/restore-storage-from-r2.ts` (dry-run default, `--confirm`), multi-bucket support. Manual `POST /api/backups/storage/run` + status endpoint. Restore drill verified via `railway run` dry-run (972 objects, 0 failed)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel → autonomous agent (v1)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">agent</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">NEVER_AUTO</span><span class="tag tag-neutral">agent_actions</span><span class="tag tag-neutral">AGENT_ENABLED</span><span class="tag tag-neutral">AGENT_AUTONOMY_&lt;type&gt;</span></div>
+        <div class="card-desc">The north-star groundwork: an autonomy ladder (notify/propose/auto) with a hard-floor `NEVER_AUTO` set in code, an action log (`agent_actions` table), a run harness, and Loop 1 (advisor findings → filed GitHub issue). Gated OFF by `AGENT_ENABLED`; per-action ramp via `AGENT_AUTONOMY_&lt;type&gt;`. Ships the skeleton; the LLM-reasoning loops (e.g. Sentry triage) come next</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V2 — Brief 20: weekly endpoint security audit</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">maintained_apps.primary_url</span><span class="tag tag-neutral">/api/contact</span><span class="tag tag-neutral">evaluate()</span><span class="tag tag-neutral">endpoint_audit_findings</span></div>
+        <div class="card-desc">Makes the Web Build &amp; Hosting Agreement&#39;s &quot;weekly endpoint audits&quot; claim real. Black-box HTTP hygiene audit of hosted sites (`maintained_apps.primary_url`): HTTPS reachability + HTTP→HTTPS redirect + TLS-expiry, security headers, exposed-file probes, `/api/contact` hygiene, cookie flags, banner, security.txt. Pure `evaluate()` core (31 tests) → `endpoint_audit_findings` (resolve-on-clean-run) → Monday digest + admin run/status routes. Weekly 6am Mon NZ cron. PR [#183](https://github.com/CoreshiftHQNZ/sentinel-app/pull/183) → staging [#184](https://github.com/CoreshiftHQNZ/sentinel-app/pull/184); migration applied to Sentinel prod. Suite 382</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Brief 20b — hosted-site onboarding (Growth Partners + fleet)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">growth-partners</span><span class="tag tag-neutral">https://growthpartnersgpx.com</span><span class="tag tag-neutral">primary_url</span><span class="tag tag-neutral">growthpartnersgpx.com</span><span class="tag tag-neutral">growth-partners-2026</span><span class="tag tag-neutral">CLOUDFLARE_API_TOKEN</span><span class="tag tag-neutral">/api/contact</span></div>
+        <div class="card-desc">Registered `growth-partners` (`https://growthpartnersgpx.com`) + set fleet `primary_url`s (DA/KC/Sentinel) so the weekly audit has real targets. Live audit surfaced GP&#39;s posture (missing HSTS/CSP + minor headers; no exposed files, TLS OK, HTTPS redirect works). **Discovery: `growthpartnersgpx.com` is still the OLD WordPress site** — the new static build (`growth-partners-2026`) hasn&#39;t deployed (missing `CLOUDFLARE_API_TOKEN` in GP&#39;s Cloudflare account). Security-headers PR [growth-partners-2026#1](https://github.com/CoreshiftHQNZ/growth-partners-2026/pull/1) opened for the static build. GP go-live chain (CF token + `/api/contact` + Turnstile) gated on GP CF access (Ricky/Mal)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel V2 — Brief 21: auto clean-up of resolved bug reports</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">privacy</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">planReportCleanup()</span><span class="tag tag-neutral">DISABLE_REPORT_CLEANUP</span><span class="tag tag-neutral">REPORT_RETENTION_DAYS</span></div>
+        <div class="card-desc">Data-minimisation; closes a PIA gap. 7 days after a report is resolved, scrub the reporter&#39;s email + message + screenshot, keeping a non-identifying ticket (type/dates/priority/blast_radius/issue link/status). Pure `planReportCleanup()` (11 tests) + daily 3:30am NZ sweep (`DISABLE_REPORT_CLEANUP` kill-switch) + admin run/status route + retention-dashboard entry. `REPORT_RETENTION_DAYS` default 7. No migration. PR [#185](https://github.com/CoreshiftHQNZ/sentinel-app/pull/185) → staging [#186](https://github.com/CoreshiftHQNZ/sentinel-app/pull/186). Suite 399. Verified live in prod (new admin routes return 401)</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
       <div class="card">
+        <div class="card-title">Growth Partners go-live (Brief 20b tails)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">growthpartnersgpx.com</span><span class="tag tag-neutral">growth-partners-2026</span><span class="tag tag-neutral">CLOUDFLARE_API_TOKEN</span><span class="tag tag-neutral">/api/contact</span><span class="tag tag-neutral">_headers</span></div>
+        <div class="card-desc">The new static GP build is pre-launch: `growthpartnersgpx.com` still serves the old WordPress site because the `growth-partners-2026` deploy is gated on a missing `CLOUDFLARE_API_TOKEN` in GP&#39;s Cloudflare account. Chain: Coreshift builds `/api/contact` (Postmark) + adds the Turnstile widget → Ricky/Mal supply the CF token + Turnstile keys → merge the `_headers` PR → deploy + cut the domain over. Also open: a Better Stack &quot;Growth Partners — Production&quot; monitor, and (post-cutover) porting GA/GTM to the static build or dropping the Annexure 2 analytics line</div>
+      </div>
+      <div class="card">
         <div class="card-title">Digital Architect onboarding — remaining tails</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">sentry-heartbeat.ts</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">report-issue</span><span class="tag tag-neutral">main</span></div>
-        <div class="card-desc">Functionally complete + smoke-tested in prod. Open tails: (1) **operator** to confirm DA&#39;s Sentry projects + 3-rule alert recipe exist in the org → then add DA to Sentinel&#39;s `sentry-heartbeat.ts` config (small follow-up PR); (2) DA widget is on staging+dev only — DA `main` is ~91 commits behind and DA prod is an empty Railway shell, so the widget rides along whenever DA does its own prod stand-up (no action now); (3) KC `report-issue` function source is on dev+staging but not KC `main` (4 commits) — deployed to the prod project directly, so it&#39;s source-vs-deploy drift to align when convenient, not a functional gap</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">report-issue</span><span class="tag tag-neutral">main</span></div>
+        <div class="card-desc">Functionally complete + smoke-tested in prod; DA Sentry projects + alert recipe confirmed. Remaining drift-not-gaps: DA widget is on staging/dev only (DA `main` behind, prod an empty shell — rides along at DA&#39;s own prod stand-up); KC `report-issue` function source is dev/staging not `main` (deployed to the prod project directly)</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1522,13 +1574,28 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">9</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Run first scan against keycontent</div>
-        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">/maintenance</span></div>
-        <div class="card-desc">Now that Brief 9b is live on prod, hit &quot;Scan now&quot; on the keycontent row in `/maintenance` and verify scanner populates entries from the GitHub Code Search hits. Otherwise the nightly cron will fire tonight at 2am UTC automatically</div>
+        <div class="card-title">Clear the resolved-report backlog (Brief 21)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">privacy</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">POST /api/reports/cleanup/run {&quot;wait&quot;:true}</span><span class="tag tag-neutral">send-response</span></div>
+        <div class="card-desc">7 reports &quot;done&quot; since as far back as 21 May (3 with screenshots) are eligible for the scrub. Tonight&#39;s 3:30am NZ cron clears them automatically, or trigger now via `POST /api/reports/cleanup/run {&quot;wait&quot;:true}`. Respond to any before then if wanted (post-scrub `send-response` 400s)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Growth Partners CF access (Ricky/Mal)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">blocked-external</span><span class="tag tag-neutral">Access@growthpartners.co.nz</span></div>
+        <div class="card-desc">Unblocks the whole GP go-live chain: the static-site deploy token AND the Turnstile keys both live in GP&#39;s Cloudflare account (`Access@growthpartners.co.nz`)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Velocity onboarding + audit target</div>
+        <div class="card-tags"><span class="tag tag-phase-4">phase-4</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">primary_url</span></div>
+        <div class="card-desc">Pure config via PLAY 9 (Track A + single-org-PAT already done). Also set its `primary_url` so the weekly endpoint audit covers it (not in Sentinel&#39;s DB yet)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Annexure 2 confirms</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">privacy</span></div>
+        <div class="card-desc">Support inbox address + Peec AI region for the sub-processor annexure</div>
       </div>
       <div class="card">
         <div class="card-title">Sentinel UI/UX design pass</div>
@@ -1559,7 +1626,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">33</span>
+        <span class="col-count">30</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1668,11 +1735,6 @@
         <div class="card-desc">First rung of pen-testing motion. CI-wired automated DAST scan against staging on PR + nightly. Catches OWASP-Top-10 mechanical stuff (auth bypass, injection, broken access control) without third-party engagement. ~1-2 days of CI setup, $0. Reports surface in Sentinel digest pipeline (small Brief candidate to wire that bit). Earlier rungs (manual probe, paid pen test) reserved until Phase D triggers fire</div>
       </div>
       <div class="card">
-        <div class="card-title">Brief 19: KC `job-assets` daily R2 backup</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">job-assets</span><span class="tag tag-neutral">script/restore-from-r2.ts</span></div>
-        <div class="card-desc">Implementation of B6 decision. Sentinel-owned node-cron job: list Supabase Storage `job-assets`, diff against R2 bucket, copy new/changed objects, prune versions per retention policy. Companion CLI `script/restore-from-r2.ts`. ~2 days V1. Reusable pattern for any future bucket (Noozey when onboarded)</div>
-      </div>
-      <div class="card">
         <div class="card-title">Phase B3-code: deletion + retention scripts in keycontent-app</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-B</span><span class="tag tag-neutral">code</span><span class="tag tag-neutral">~4d</span><span class="tag tag-neutral">keycontent-app/script/</span><span class="tag tag-neutral">export-user-data.ts</span><span class="tag tag-neutral">delete-user-data.ts</span><span class="tag tag-neutral">close-account.ts</span><span class="tag tag-neutral">retention-sweep-{daily,monthly}.ts</span></div>
         <div class="card-desc">Implementation of B3 doc. Four scripts in `keycontent-app/script/`: `export-user-data.ts` (IPP 6 access, ~1d), `delete-user-data.ts` (IPP 7 cascade + anonymise, ~1.5d), `close-account.ts` (Type 3 clause 11/12 — agency closure flow, ~0.5d), `retention-sweep-{daily,monthly}.ts` (TTL tokens/invites; archive bug_reports past 24m; aggregate ai_call_logs past 12m; delete webhook_events past 6m — ~1d). + tests + staging dry-run. **Unblocks the 30-day deletion SLA promise.**</div>
@@ -1703,11 +1765,6 @@
         <div class="card-desc">Separate from B8a (contract layer for the subscribing agency): the app needs a notice for **individual end users** (authorised users of KC who interact with the platform but don&#39;t sign the master agreement). Today: zero published notice, no `/privacy` or `/terms` route, no consent prompt at signup, no footer link. Plumbing posture is good (no surveillance, masked Sentry replay, sendDefaultPii=false) but undocumented. Depends on B1 (inventory) + B7 (sub-processors). Output: `/privacy` + `/terms` routes, footer links, signup consent checkbox, alignment with the master agreement (clause 7.2(b) requires the customer to have informed individuals — the public notice supports them doing that). Re-run A6 as closing audit. **Operator question first: does coreshifthq.com or keycontent.ai already host a public privacy page outside the SPA?**</div>
       </div>
       <div class="card">
-        <div class="card-title">Brief 14: Security advisor surface in Sentinel</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">/security</span><span class="tag tag-neutral">get_advisors</span></div>
-        <div class="card-desc">`/security` sub-page. Runs `get_advisors` on a cron across every onboarded app&#39;s Supabase project. Surfaces findings by severity. Folds ERROR-level into the Monday digest. Plumbing identical to Briefs 9b + 12. Highest leverage in Phase C — closes the reactive-only-detection gap that produced webhook_events + maintenance-GRANT misses</div>
-      </div>
-      <div class="card">
         <div class="card-title">Brief 15: Data inventory surface in Sentinel</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">/data-inventory</span></div>
         <div class="card-desc">`/data-inventory` sub-page reading B1 from a Sentinel-owned table. Auto-discovers tables via Supabase API; manual classification + retention annotations. Drift detection (new public table appears → alert)</div>
@@ -1721,11 +1778,6 @@
         <div class="card-title">Brief 17: Breach response runbook surfacing</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">/breach-response</span></div>
         <div class="card-desc">`/breach-response` sub-page; clickable B4 card with a &quot;Start incident&quot; button that scaffolds a structured incident folder + customer/regulator notification draft templates. Turns a doc into a tool</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Brief 18: Sentry heartbeat</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">observability</span><span class="tag tag-neutral">/__sentry-server-test</span></div>
-        <div class="card-desc">Daily cron pings every project&#39;s Sentry via a `/__sentry-server-test` endpoint that always throws a tagged event. Alert if expected events don&#39;t arrive within 6h. Closes the 2026-05-22 Sentry env-var drift incident class</div>
       </div></div>
     </section>
       </div>

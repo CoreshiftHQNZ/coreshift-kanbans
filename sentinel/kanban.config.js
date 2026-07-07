@@ -13,10 +13,10 @@ module.exports = {
   tagline: "How we run apps. Five plays. One deliberate system.",
   description:
     "An internal operating system for catching bugs before users do, shipping fixes in hours, and scaling to every Coreshift HQ app. Built once for KeyContent. Cloned in an afternoon for every app after.",
-  phase: "Phase 4 · Multi-app + Maintenance",
+  phase: "Phase 5 · Observability, DR, Security & the Agent",
   nextMilestone: {
-    name: "Velocity onboarding",
-    date: "PLAY 9 proven on Digital Architect — now config-only",
+    name: "Agent Loop 2 (Claude triage) + Growth Partners go-live",
+    date: "Briefs 14–21 + agent v1 shipped; GP static site gated on CF access",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -161,6 +161,22 @@ module.exports = {
         "PLAYBOOK-cloning-to-new-app.md ✓ (PLAY 9 — onboarding runbook + V2 strategy)",
         "Track A code changes (generalize fileIssue target + GitHub PAT lookup)",
         "Noozey onboarding via PLAY 9 (closes Phase 4)",
+      ],
+    },
+    {
+      key: "phase-5",
+      status: "in-progress",
+      title: "Phase 5",
+      subtitle: "Observability, DR, Security & the Agent",
+      window: "In progress",
+      desc: "Hardening + the autonomous-agent north star: Sentry heartbeat, off-site Storage backup + restore, a Supabase security-advisor surface, weekly black-box endpoint audits, resolved-report data-minimisation, and agent v1 (autonomy ladder + Loop 1, gated off).",
+      deliverables: [
+        "Brief 14: Supabase security-advisor surface ✓",
+        "Brief 18: Sentry heartbeat (both apps) ✓",
+        "Brief 19 + 19b: Storage backup to R2 + prune/restore ✓",
+        "Brief 20 + 20b: Weekly endpoint audit + hosted-site onboarding ✓",
+        "Brief 21: Resolved-report auto clean-up (data-minimisation) ✓",
+        "Agent v1: autonomy ladder + action log + Loop 1 (gated off) ✓",
       ],
     },
   ],
