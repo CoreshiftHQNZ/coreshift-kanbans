@@ -38,6 +38,7 @@
         { key: "architecture", icon: "🏗️", text: "Architecture",   href: "wiki/architecture/" },
         { key: "auth",         icon: "🔐", text: "Auth",           href: "wiki/auth/" },
         { key: "storage",      icon: "🗄️", text: "Storage",        href: "wiki/storage/" },
+        { key: "build-standards", icon: "🧰", text: "Build standards", href: "wiki/build-standards/" },
       ],
     },
     {
