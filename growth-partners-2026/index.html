@@ -269,10 +269,10 @@
     </section>
 
     <section class="status-strip">
-      <div class="status-stat status-done"><div class="status-num">26</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-done"><div class="status-num">27</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">0</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked (CF acct)</div></div>
-      <div class="status-stat status-this-week"><div class="status-num">2</div><div class="status-label">This Week</div></div>
+      <div class="status-stat status-this-week"><div class="status-num">1</div><div class="status-label">This Week</div></div>
       <div class="status-stat status-backlog"><div class="status-num">5</div><div class="status-label">Backlog</div></div>
     </section>
 
@@ -299,9 +299,8 @@
       <div class="board">
 
         <div class="column col-this-week">
-          <div class="col-head"><h2>Do now</h2><span class="col-count">2</span></div>
+          <div class="col-head"><h2>Do now</h2><span class="col-count">1</span></div>
           <div class="cards">
-            <div class="card"><div class="card-title">Production cutover: flip apex to Pages</div><div class="card-tags"><span class="tag tag-infra">dns</span></div><div class="card-desc"><strong>www live on new site.</strong> Apex (<code>growthpartnersgpx.com</code>) added to Pages project — pending validation. Go-live steps sent to Jack 7 Jul: change apex A (<code>35.213.248.11</code>) → CNAME <code>growth-partners.pages.dev</code>, proxied. Waiting on Jack to flip it (tonight). Then: confirm live + www↔apex canonical redirect + 301 old WordPress URLs.</div></div>
             <div class="card"><div class="card-title">Vyne review of the live site</div><div class="card-tags"><span class="tag tag-content">review</span></div><div class="card-desc">Shared <code>staging2.growthpartnersgpx.com</code> with Vyne (Rhys) for sign-off on migrated blogs / locations / AU mirror before ship.</div></div>
           </div>
         </div>
@@ -313,8 +312,9 @@
         </div>
 
         <div class="column col-backlog">
-          <div class="col-head"><h2>Backlog / Later</h2><span class="col-count">6</span></div>
+          <div class="col-head"><h2>Backlog / Later</h2><span class="col-count">7</span></div>
           <div class="cards">
+            <div class="card"><div class="card-title">301 map for old WordPress URLs</div><div class="card-tags"><span class="tag tag-seo">seo</span></div><div class="card-desc">Now live on the apex — audit old-site URLs that don't map 1:1 to the new clean URLs (legacy WP slugs, query-string URLs) and add 301s so inbound links/rankings don't 404. Main clean-URL paths already preserved.</div></div>
             <div class="card"><div class="card-title">Team bio wording tweaks (client-led, ~2 weeks)</div><div class="card-tags"><span class="tag tag-content">content</span></div><div class="card-desc">New <code>/our-team/</code> roster is current/canonical — Steve (former co-founder) has left the business and is correctly not on the new page. Bios are tightened paraphrases of the old site's; GP to refine wording over ~2 weeks. Do <strong>not</strong> copy the current site wholesale (it still lists Steve).</div></div>
             <div class="card"><div class="card-title">Case-study data consistency</div><div class="card-tags"><span class="tag tag-content">content</span></div><div class="card-desc">"Sales &amp; Leadership Performance" reuses SmartShelters' 90% / best-in-106-years story, and SmartShelters figures vary across pages (91% / 90% / 257% / 1,000%). Confirm with Mal/Jack whether SLP is a separate client, and reconcile the numbers against the real case studies.</div></div>
             <div class="card"><div class="card-title">UI/UX polish pass (micro-animations)</div><div class="card-tags"><span class="tag tag-build">design</span></div><div class="card-desc">Dedicated pass with a design eye: add micro-animations / interactions (site is text-heavy) and cherry-pick features. Consider a full mega-menu nav. Deferred until the site is complete, per Ricky.</div></div>
@@ -325,8 +325,9 @@
         </div>
 
         <div class="column col-done">
-          <div class="col-head"><h2>Done</h2><span class="col-count">26</span></div>
+          <div class="col-head"><h2>Done</h2><span class="col-count">27</span></div>
           <div class="cards">
+            <div class="card"><div class="card-title">🚀 LIVE on growthpartnersgpx.com — apex cutover + www→apex 301 (SSL valid, email untouched, verified)</div><div class="card-tags"><span class="tag tag-prod">prod</span><span class="tag tag-infra">dns</span></div></div>
             <div class="card"><div class="card-title">Fix competitor-analysis step layout + tighten cursor ring (reviewer-flagged)</div><div class="card-tags"><span class="tag tag-build">bugfix</span></div></div>
             <div class="card"><div class="card-title">Video &amp; Images pricing live (hero $2,995, product $195)</div><div class="card-tags"><span class="tag tag-content">content</span></div></div>
             <div class="card"><div class="card-title">Reveal failsafe (fixes blank hero on slow/backgrounded loads)</div><div class="card-tags"><span class="tag tag-build">a11y</span></div></div>
