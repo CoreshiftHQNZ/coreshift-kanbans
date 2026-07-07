@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>38%</strong> complete</div>
         <div><strong>10</strong>/26 cards done</div>
-        <div>Updated <strong>2026-07-03 08:49 UTC</strong></div>
+        <div>Updated <strong>2026-07-07 20:21 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1016,9 +1016,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Phase 3 built: data seam + rank tracker + monthly reports — PR #10 awaiting review</div>
+        <div class="card-title">Phase 3 built: data seam + rank tracker + monthly reports — PR #10 MERGED + deployed to staging</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">feature/phase-3-pickup</span><span class="tag tag-neutral">search_snapshots</span><span class="tag tag-neutral">performance_reports</span><span class="tag tag-neutral">GOOGLE_CLIENT_ID/SECRET/REFRESH_TOKEN</span><span class="tag tag-neutral">POST /api/admin/snapshots/capture-all</span></div>
-        <div class="card-desc">Full slice on `feature/phase-3-pickup`: live GSC/GA4 fetches (verified: GA4 33 sessions/28d; GSC genuinely 0 — the before-picture until prod promotes), snapshot rank tracker (`search_snapshots`), deterministic monthly report generator with before/after deltas (`performance_reports`), human-gated publish flow (drafts until admin publishes; portal shows published only), portal Performance Reports section + admin capture/generate/publish controls. 8-angle review run, all confirmed findings fixed; e2e-tested on scratch Postgres with live Google data. Ricky: PR #10 review + 3 Railway service vars (`GOOGLE_CLIENT_ID/SECRET/REFRESH_TOKEN`, values with Mal) + fold migration 0003 into next pass; monthly cadence via external scheduler → `POST /api/admin/snapshots/capture-all` (idempotent per day)</div>
+        <div class="card-desc">Full slice on `feature/phase-3-pickup`: live GSC/GA4 fetches (verified: GA4 33 sessions/28d; GSC genuinely 0 — the before-picture until prod promotes), snapshot rank tracker (`search_snapshots`), deterministic monthly report generator with before/after deltas (`performance_reports`), human-gated publish flow (drafts until admin publishes; portal shows published only), portal Performance Reports section + admin capture/generate/publish controls. 8-angle review run, all confirmed findings fixed; e2e-tested on scratch Postgres with live Google data. MERGED to dev→staging 2026-07-06 (Abe, same access as Ricky): CI green, Phase-3 endpoints live + auth-guarded on staging, public pages intact. REMAINING (Ricky): 3 Railway staging service vars (`GOOGLE_CLIENT_ID/SECRET/REFRESH_TOKEN`, values with Mal) so live GSC/GA4 data flows on staging + nominate a safe test client + external scheduler → `POST /api/admin/snapshots/capture-all` (idempotent per day) + fold migration 0003 into next pass</div>
       </div>
       <div class="card">
         <div class="card-title">Builder handover ready</div>
@@ -1056,8 +1056,8 @@
       </div>
       <div class="card">
         <div class="card-title">DECISION: verify AI plan output</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-blocked">blocked-by:anthropic-key</span><span class="tag tag-neutral">ANTHROPIC_API_KEY</span></div>
-        <div class="card-desc">Attempted 2026-07-03: full pipeline verified locally with live data (audit + GSC/GA4 + entity → plan stored; fallback path solid; Sonnet token usage now logged per plan). BUT the `ANTHROPIC_API_KEY` in the owner-supplied env file is **invalid (401)** — the AI-written output itself is still un-reviewed. Needs a valid key from Abe, or a staging run against a safe test client (Ricky to nominate — shared DB appears to hold real clients, so no generations were triggered there)</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-blocked">blocked-by:test-client</span><span class="tag tag-neutral">ANTHROPIC_API_KEY</span><span class="tag tag-neutral">docs/standards/quality-gate.md</span></div>
+        <div class="card-desc">Full pipeline verified locally with live data (audit + GSC/GA4 + entity → plan stored; fallback path solid; Sonnet token usage logged per plan). The `ANTHROPIC_API_KEY` is now **VALID** (Abe 2026-07-06: staging key tests HTTP 200; prod key set to the same good value; the earlier 401 was a corrupted/RTF-mangled copy, not a dead key). The AI-written output itself is still un-reviewed. REMAINING: Ricky nominates a safe test client (shared DB holds real clients), then run one generation on staging and review it against `docs/standards/quality-gate.md` + note the token cost for Abe&#39;s model sign-off</div>
       </div></div>
     </section>
     <section class="column col-backlog">
