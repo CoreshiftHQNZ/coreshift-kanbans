@@ -12,7 +12,7 @@ Almost every build is one of two shapes. Get this right first — everything els
 
 | | **App build** — multi-tenant SaaS | **Website build** — marketing / lead-gen |
 |---|---|---|
-| Examples | KeyContent, Digital Architect | Growth Partners, LDM |
+| Examples | KeyContent, DigitalArchitect | Growth Partners, LDM |
 | Hosting | **Railway**, Coreshift-managed, CI/CD `dev → staging → main` | **Cloudflare Pages** + Pages Functions, on the **client's** Cloudflare account |
 | Database | **Supabase** — own project per app (Sydney) | **None** — static; forms email out |
 | DNS / CDN / SSL / WAF | Cloudflare | Cloudflare (built into Pages) |

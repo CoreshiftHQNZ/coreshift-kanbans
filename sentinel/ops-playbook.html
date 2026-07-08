@@ -2412,8 +2412,8 @@ curl.exe -X POST &quot;https://staging.keycontent.ai/api/sentry-test-$([guid]::N
 </tbody></table>
 <p><strong>If this trade-off ever stops working</strong> (e.g. you sell an app, or one app needs SOC2 isolation), the lift is roughly: refactor <a href="https://github.com/CoreshiftHQNZ/sentinel-app/blob/main/server/lib/keycontent.ts"><code>server/lib/keycontent.ts</code></a> → <code>server/lib/app-supabase.ts</code> keyed by <code>app_id</code>, with per-app <code>&lt;SLUG&gt;_SUPABASE_URL</code> + <code>&lt;SLUG&gt;_SUPABASE_SERVICE_ROLE_KEY</code> env vars. That&#39;s a real brief, not a quick swap. Flag it now if it&#39;s a known requirement; otherwise, V1 stands.</p>
 <hr>
-<h2>Lessons from app #2 (Digital Architect) — read before app #3</h2>
-<p>The playbook below was written before any app had actually been onboarded. Digital Architect (onboarded 2026-06-12/13) pressure-tested it. The runbook held, but several specifics changed. <strong>These supersede the corresponding steps below:</strong></p>
+<h2>Lessons from app #2 (DigitalArchitect) — read before app #3</h2>
+<p>The playbook below was written before any app had actually been onboarded. DigitalArchitect (onboarded 2026-06-12/13) pressure-tested it. The runbook held, but several specifics changed. <strong>These supersede the corresponding steps below:</strong></p>
 <ol>
 <li><p><strong>Track A is done — onboarding is now config-only.</strong> The two code generalizations (<code>fileIssue.ts</code> repo lookup, <code>github.ts</code> PAT lookup) shipped to Sentinel prod in PR <a href="https://github.com/CoreshiftHQNZ/sentinel-app/pull/133">#133</a>/#137. App #3 does <strong>not</strong> need any <code>sentinel-app</code> code change. Ignore the &quot;Pre-onboarding code changes&quot; section&#39;s &quot;do them first&quot; framing — they&#39;re already in.</p>
 </li>
@@ -2907,7 +2907,7 @@ gh secret set SENTRY_PROJECT   --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#3
 <tr>
 <td><strong>Reference build</strong></td>
 <td><a href="https://github.com/CoreshiftHQNZ/growth-partners-website"><code>CoreshiftHQNZ/growth-partners-website</code></a> (Astro) · <code>growth-partners-2026</code> (hand-coded)</td>
-<td><a href="https://github.com/CoreshiftHQNZ/keycontent-app"><code>CoreshiftHQNZ/keycontent-app</code></a>, Digital Architect</td>
+<td><a href="https://github.com/CoreshiftHQNZ/keycontent-app"><code>CoreshiftHQNZ/keycontent-app</code></a>, DigitalArchitect</td>
 </tr>
 <tr>
 <td><strong>Security baseline</strong></td>
