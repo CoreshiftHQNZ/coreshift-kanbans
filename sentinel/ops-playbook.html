@@ -1692,7 +1692,7 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 <tr>
 <td><strong>Better Stack</strong></td>
 <td>✅</td>
-<td>✅ <strong>Both</strong> — uptime on the prod URL is the one live monitor a static site gets today</td>
+<td>✅ <strong>Both</strong> — uptime on the prod URL (a static site&#39;s ongoing coverage is this + Sentinel&#39;s weekly endpoint audit)</td>
 </tr>
 <tr>
 <td><strong>Operational Hygiene</strong></td>
@@ -2330,12 +2330,12 @@ curl.exe -X POST &quot;https://staging.keycontent.ai/api/sentry-test-$([guid]::N
         <h2 class="play-title">Cloning to a New App</h2>
         <p class="play-tagline">Onboard the next Coreshift app to Sentinel.</p>
         <div class="play-divider"></div>
-        <div class="md"><p><strong>Last updated:</strong> 2026-05-22
+        <div class="md"><p><strong>Last updated:</strong> 2026-06-18
 <strong>Owners:</strong> Operator (runs the checklist) · Claude Code (executes most steps under operator&#39;s account)
 <strong>Canonical source:</strong> <a href="https://github.com/CoreshiftHQNZ/sentinel-app/blob/main/docs/PLAYBOOK-cloning-to-new-app.md"><code>github.com/CoreshiftHQNZ/sentinel-app/blob/main/docs/PLAYBOOK-cloning-to-new-app.md</code></a>
 <strong>Rendered (read-only):</strong> <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#cloning">Sentinel ops playbook → PLAY 9</a></p>
 <blockquote>
-<p><strong>Where this fits (2026-07):</strong> this playbook is the <strong>product/app track&#39;s technical detail</strong>. The onboarding <em>lifecycle</em> front door — discovery → contract/PIA → build → launch → Sentinel → support, split into a <strong>website-build</strong> track and a <strong>product/app</strong> track — is <a href="HOW-WE-DO-ONBOARDING.md"><code>HOW-WE-DO-ONBOARDING.md</code></a>. Website builds (static Cloudflare Pages, no Railway/Supabase) do <strong>not</strong> use this doc; apps do, sequenced from there.</p>
+<p><strong>Where this fits (2026-07):</strong> this playbook is the <strong>product/app track&#39;s technical detail</strong>. The onboarding <em>lifecycle</em> front door — discovery → contract/PIA → build → launch → Sentinel → support, split into a <strong>website-build</strong> track and a <strong>product/app</strong> track — is <strong>HOW-WE-DO-ONBOARDING</strong> (<a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#onboarding">rendered here</a>). Website builds (static Cloudflare Pages, no Railway/Supabase) do <strong>not</strong> use this doc; apps do, sequenced from there. The two go-live gates that front door enforces are the same two enforced below — the <strong>App Audit</strong> (PLAY 6, security) and a <strong>current PIA signed off by the Privacy Officer</strong> (PLAY 10, privacy) — see Step 0 and the verification checklist.</p>
 </blockquote>
 <p><strong>Why this exists:</strong> Sentinel was built for KeyContent. Onboarding the next app (Noozey, etc.) involves ~7 systems, ~10 env vars, 2 small code changes in <code>sentinel-app</code>, and a handful of operator UI clicks (Sentry, Better Stack). This doc is the single self-contained runbook: hand it (plus the access list below) to a Claude Code session and the session can drive the onboarding end-to-end, asking the operator only for things that genuinely require human eyes (a sender domain to verify, a Sentry rule to confirm, etc.).</p>
 <hr>
@@ -2358,6 +2358,35 @@ curl.exe -X POST &quot;https://staging.keycontent.ai/api/sentry-test-$([guid]::N
 <li>A Better Stack monitor needs operator credentials it can&#39;t access</li>
 </ul>
 <p>Everything else (env vars, migrations, code edits, PR flow, smoke tests) Claude can do directly.</p>
+<hr>
+<h2>Onboarding prompts (copy-paste)</h2>
+<p>Two prompts cover the whole lifecycle. Share <strong>Prompt A</strong> when a build <em>starts</em> (so the app is born secure + observable) and <strong>Prompt B</strong> when it <em>ships</em> (to wire it into Sentinel&#39;s app-first dashboard). Each is written to hand straight to a Claude Code session in the app&#39;s own repo. Replace <code>&lt;…&gt;</code> placeholders.</p>
+<blockquote>
+<p><strong>Track note:</strong> these prompts are the <strong>product/app</strong> track — they assume Supabase + Railway (RLS, HIBP, Sentry, heartbeat). A <strong>website build</strong> (static Cloudflare Pages, no database) follows the web track in HOW-WE-DO-ONBOARDING, not these prompts.</p>
+</blockquote>
+<h3>Prompt A — &quot;Start a build, Sentinel-ready&quot; (Day 0)</h3>
+<blockquote>
+<p>Bootstrap <code>&lt;app-slug&gt;</code> to Coreshift&#39;s secure + observable baseline <em>before</em> feature work:</p>
+<ol>
+<li><strong>Supabase</strong> — enable RLS deny-by-default on every new table from the first migration, and turn on HIBP leaked-password protection (prod + staging). Both are Coreshift standards the Sentinel advisor scanner checks.</li>
+<li><strong>Sentry</strong> — create <code>&lt;UPPER&gt;-BACKEND</code> + <code>&lt;UPPER&gt;-FRONTEND</code> projects in the <code>coreshift-hq</code> org; wire the DSNs + environment tags (<code>SENTRY_DSN_BACKEND</code>, <code>VITE_SENTRY_DSN</code> or the framework equivalent).</li>
+<li><strong>Heartbeat endpoint</strong> — add a <code>GET</code> route that reads <code>?marker</code> and calls <code>Sentry.captureMessage(marker)</code>, guarded by a shared <code>SENTRY_HEARTBEAT_TOKEN</code> header. Use <code>/api/__sentry-test</code> (Express) or <code>/api/sentry-heartbeat</code> (Next.js App Router can&#39;t serve <code>_</code>-prefixed routes).</li>
+<li><strong>Report Issue widget</strong> — add it pointed at KC&#39;s Edge Function (<code>https://&lt;KC-PROD-REF&gt;.supabase.co/functions/v1/report-issue</code>) with <code>appId: &quot;&lt;app-slug&gt;&quot;</code>; non-KC apps send the screenshot as base64.</li>
+<li><strong>Env vars</strong> — the Sentry DSNs, <code>SENTRY_HEARTBEAT_TOKEN</code> (the same opaque string Sentinel uses), and the report-issue endpoint, on staging + prod.</li>
+</ol>
+<p>Goal: by first deploy the app already reports errors to Sentry, answers a heartbeat, accepts bug reports, and passes the advisor baseline.</p>
+</blockquote>
+<h3>Prompt B — &quot;Ship day: register with Sentinel&quot; (Done)</h3>
+<blockquote>
+<p>Onboard <code>&lt;app-slug&gt;</code> to Sentinel using <code>docs/PLAYBOOK-cloning-to-new-app.md</code> in the <code>sentinel-app</code> repo. Specifics: repo <code>CoreshiftHQNZ/&lt;repo&gt;</code>, live at <code>&lt;public-url&gt;</code>, Supabase prod <code>&lt;prod-ref&gt;</code> / staging <code>&lt;staging-ref&gt;</code> (or single-project), Sentry project <code>&lt;slug&gt;-backend</code>.</p>
+<ol>
+<li>Insert the <code>maintained_apps</code> row with the <strong>full registry metadata</strong>: <code>slug</code>, <code>display_name</code>, <code>repo_owner</code>/<code>repo_name</code>, <code>supabase_project_ref</code> (prod) + <code>supabase_staging_ref</code>, <code>public_url</code>, <code>sentry_project</code>, <code>heartbeat_url</code> (only if it differs from <code>public_url</code> — e.g. ping staging while prod is a shell), <code>heartbeat_path</code> (NULL = Express default; <code>/api/sentry-heartbeat</code> for Next.js), and the flags <code>has_audit_logs</code> / <code>has_retention</code> (true only if the app actually has those tables) and <code>liveness_external</code> (true once a Better Stack monitor watches its uptime).</li>
+<li>Work the playbook&#39;s operator checklist: Sentry alert rules (PLAY 7 recipe), Better Stack monitor, branded Postmark sender if wanted.</li>
+<li>Verify: the app shows in Sentinel&#39;s fleet + its own per-app page, the advisor scan picks up its Supabase ref, the heartbeat goes green within a day, and a test bug report lands + files an issue to the right repo.</li>
+</ol>
+<p>Run the playbook end-to-end; pause only for actions that need human hands (Postmark domain verify, Sentry rule click, Better Stack credentials).</p>
+</blockquote>
+<p>The registry row in Prompt B is the single fact that makes the app appear across Sentinel — security, heartbeats, bugs, and (where the flags say so) audit/retention all key off it.</p>
 <hr>
 <h2>The architectural decision baked into V1</h2>
 <p><strong>Sentinel uses a <em>shared support backend</em> model.</strong> Every onboarded app&#39;s Report Issue widget writes into <strong>KeyContent&#39;s</strong> <code>bug_reports</code> table via <strong>KeyContent&#39;s</strong> <code>report-issue</code> Supabase Edge Function. Sentinel reads one source. The <code>app_id</code> column on each row tells Sentinel which app the report came from.</p>
@@ -2390,7 +2419,7 @@ curl.exe -X POST &quot;https://staging.keycontent.ai/api/sentry-test-$([guid]::N
 </li>
 <li><p><strong>Single org-wide PAT was adopted.</strong> <code>GITHUB_TOKEN</code> on Sentinel Railway is a fine-grained PAT scoped to <strong>all</strong> CoreshiftHQNZ repos (Issues: R+W), with legacy <code>GITHUB_TOKEN_KC</code> as fallback. <strong>No per-app PAT step</strong> — skip Step 3. ⚠️ The PAT expires <strong>2026-09-09</strong>; when it lapses, every app&#39;s &quot;File issue&quot; breaks at once. Rotation reminder ~1 Sep.</p>
 </li>
-<li><p><strong>The Edge Function is a registry, not a CORS edit.</strong> <code>report-issue/index.ts</code> now has an <code>APP_EMAIL_BRANDING</code>-style app registry (<code>getAppConfig</code>) that doubles as the allowlist. Onboarding an app = <strong>add a <code>case</code> to that switch</strong> (display name, Postmark sender, <code>&lt;APP&gt;_SUPABASE_URL</code> + <code>&lt;APP&gt;_SUPABASE_ANON_KEY</code> env getters) + set those two function secrets on the KC prod project + redeploy with <code>--no-verify-jwt</code>. CORS stays <code>*</code>; there&#39;s no per-origin allowlist to edit.</p>
+<li><p><strong>The Edge Function is a registry, not a CORS edit.</strong> <code>report-issue/index.ts</code> now has an app registry (<code>getAppConfig</code>) that doubles as the allowlist. Onboarding an app = <strong>add a <code>case</code> to that switch</strong> (display name, Postmark sender, <code>&lt;APP&gt;_SUPABASE_URL</code> + <code>&lt;APP&gt;_SUPABASE_ANON_KEY</code> env getters) + set those two function secrets on the KC prod project + redeploy with <code>--no-verify-jwt</code>. CORS stays <code>*</code>; there&#39;s no per-origin allowlist to edit.</p>
 </li>
 <li><p><strong><code>verify_jwt</code> must be off.</strong> <code>supabase/config.toml</code> pins <code>[functions.report-issue] verify_jwt = false</code>. The platform gateway validates JWTs against KC&#39;s keys only — with it on, every non-KC reporter is rejected 401 before the function runs. The function does its own per-app validation. Always deploy this function with <code>--no-verify-jwt</code>.</p>
 </li>
@@ -2407,6 +2436,10 @@ curl.exe -X POST &quot;https://staging.keycontent.ai/api/sentry-test-$([guid]::N
 <li><p><strong>Promoting Sentinel to <code>main</code> needs an admin-merge.</strong> Main requires an approving review; a solo operator can&#39;t self-approve their own PR. Use <code>gh pr merge &lt;n&gt; --admin --merge</code>. (Worth fixing the branch protection to allow admin bypass cleanly — see backlog.)</p>
 </li>
 <li><p><strong>Routing decision (settled): file issues into each app&#39;s OWN repo, not a shared one.</strong> Sentinel&#39;s dashboard is the cross-app <em>collation</em> layer; a GitHub issue is the <em>engineering handoff</em> and belongs in the repo it&#39;ll be fixed in (so &quot;Fixes #N&quot; auto-close, repo labels, and <code>gh issue list</code> all work). Track A&#39;s <code>maintained_apps</code> lookup implements this.</p>
+</li>
+<li><p><strong>Enable HIBP leaked-password protection — it&#39;s a Coreshift standard.</strong> Every app&#39;s Supabase project (prod <strong>and</strong> staging) must have leaked-password protection on. Dashboard (Auth → Policies) or <code>PATCH /v1/projects/{ref}/config/auth {&quot;password_hibp_enabled&quot;: true}</code> with <code>SUPABASE_ACCESS_TOKEN</code>. The advisor flags it as <code>auth_leaked_password_protection</code> (WARN) when off, and Sentinel&#39;s Brief 14 scanner surfaces that — so a missed one shows up in the Monday digest.</p>
+</li>
+<li><p><strong>An app may have SEPARATE prod + staging Supabase projects — don&#39;t assume single-project.</strong> DA does (prod <code>sqoazaqkyviejudabahl</code> / staging <code>txkgwrnzaxwtrlxkhpdl</code>). This bit us: the report-issue Edge Function only validated reporters against one project, so DA <strong>prod</strong> reporters got 401 (their JWT is signed by the prod project; the smoke test passed only because it ran on staging). Two consequences for onboarding: (a) the Edge Function&#39;s app registry validates against an <code>authProjects[]</code> list — set <code>&lt;APP&gt;_PROD_SUPABASE_*</code> + <code>&lt;APP&gt;_STAGING_SUPABASE_*</code> for multi-project apps; (b) <code>maintained_apps.supabase_project_ref</code> = <strong>prod</strong>, <code>supabase_staging_ref</code> = <strong>staging</strong> — get them the right way round so the security scanner hits prod and the migration-parity guardrail covers the pair. <strong>Verify the prod report path in prod, not just staging.</strong></p>
 </li>
 </ol>
 <hr>
@@ -2551,7 +2584,9 @@ if (!token) {
 <h2>Step-by-step onboarding</h2>
 <p>Pick a slug (<code>&lt;slug&gt;</code>) and stick with it. Examples below use <code>noozey</code>.</p>
 <h3>Step 0 — Pre-flight</h3>
+<p>Two things gate go-live for a new app: it passes the <strong>App Audit</strong> (security — PLAY 6 / <code>HOW-WE-DO-APP-AUDITS.md</code>), and it has a current, approved <strong>PIA</strong> (privacy — owned by the Privacy Officer; PLAY 10 / <code>HOW-WE-DO-PRIVACY.md</code>). Both must be true before the app joins Sentinel ops. The PIA checkbox below is the privacy half.</p>
 <ul>
+<li><input disabled="" type="checkbox"> <strong>Privacy sign-off</strong> — a current, approved Privacy Impact Assessment (PIA) exists for this app, completed and signed off by the Privacy Officer. No PIA, no go-live — same rule as the App Audit. (The PIA lives in CoreShift&#39;s privacy docs; see <code>HOW-WE-DO-PRIVACY.md</code> / PLAY 10.)</li>
 <li><input disabled="" type="checkbox"> Decide the slug. It must match the regex <code>^[a-z][a-z0-9-]{1,40}$</code>. Capture in lowercase. Used in: <code>bug_reports.app_id</code>, <code>maintained_apps.slug</code>, env-var names (<code>GITHUB_TOKEN_&lt;UPPER&gt;</code>, <code>&lt;UPPER&gt;_SUPABASE_URL</code> if future per-app DB), Sentry project names (<code>&lt;UPPER&gt;-BACKEND</code>, <code>&lt;UPPER&gt;-FRONTEND</code>).</li>
 <li><input disabled="" type="checkbox"> Confirm Pre-onboarding code changes 1-2 above have shipped. (If this is app #2 and they haven&#39;t, do them first. Add <code>&lt;slug&gt;</code> to KC&#39;s <code>report-issue</code> allowlist at the same time per Change 3.)</li>
 <li><input disabled="" type="checkbox"> Confirm the new app has a GitHub repo at <code>CoreshiftHQNZ/&lt;repo-name&gt;</code> with branch protection per <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#deploys">HOW-WE-DO-DEPLOYS (PLAY 4)</a>.</li>
@@ -2653,6 +2688,7 @@ gh secret set SENTRY_PROJECT   --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#3
 <h2>Verification checklist</h2>
 <p>After Step 7, all of these should be true:</p>
 <ul>
+<li><input disabled="" type="checkbox"> A current PIA for this app is on file and signed off by the Privacy Officer</li>
 <li><input disabled="" type="checkbox"> <code>SELECT slug FROM maintained_apps</code> includes <code>&lt;slug&gt;</code></li>
 <li><input disabled="" type="checkbox"> New app&#39;s widget POSTs to KC&#39;s Edge Function and returns 200</li>
 <li><input disabled="" type="checkbox"> A test bug report appears in <code>bug_reports</code> with <code>app_id = &#39;&lt;slug&gt;&#39;</code></li>
@@ -2880,7 +2916,7 @@ gh secret set SENTRY_PROJECT   --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#3
 </tr>
 <tr>
 <td><strong>What Sentinel monitors</strong></td>
-<td><strong>Today:</strong> uptime (Better Stack) + the Report-Issue widget. The contract&#39;s &quot;weekly endpoint audit&quot; is <strong>not built yet</strong> (see follow-ups) — Sentinel&#39;s scanner is Supabase-advisor-based and can&#39;t scan a static site.</td>
+<td>Uptime (Better Stack) + the <strong>weekly endpoint security audit</strong> (Brief 20 — black-box HTTP hygiene, live since ~2026-07-07) + the Report-Issue widget. <em>(No code/advisor scan — a static site has no Supabase project.)</em></td>
 <td>The full picture: code/credential scan + Supabase advisors + uptime + Sentry FE/BE + Report-Issue widget</td>
 </tr>
 <tr>
@@ -2958,7 +2994,7 @@ gh secret set SENTRY_PROJECT   --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#3
 <h3>A1 · Contract &amp; commercial</h3>
 <ul>
 <li><input disabled="" type="checkbox"> Base agreement = <strong>Type-2 Bespoke Build</strong> (it fits a custom static build and already carries the named Sentinel clause + a 9–5 NZ SLA). <strong>Not</strong> the old WordPress-shaped web-build+hosting template (it references CMS/plugins/database export — none of which exists here). Fill the website-shaped SOW + SLA from the draft: <a href="drafts/WEBSITE-BUILD-SOW-SLA.md">drafts/WEBSITE-BUILD-SOW-SLA.md</a>. The SOW must describe <strong>this</strong> stack — static Cloudflare Pages, Pages Functions, Postmark, Turnstile — not Railway/Supabase and not a CMS.</li>
-<li><input disabled="" type="checkbox"> Include the <strong>named Sentinel clause</strong> (monitoring is a contractual deliverable now). For a website, what Sentinel actually delivers <strong>today</strong> is: <strong>uptime monitoring</strong> + the <strong>Report-Issue path</strong>. ⚠️ Do <strong>not</strong> promise a &quot;weekly endpoint security audit&quot; until it&#39;s built (see follow-ups) — as of 2026-07-08 it has no implementation, and Sentinel&#39;s scanner (Supabase advisors) can&#39;t audit a static site. Also don&#39;t promise app-grade coverage (advisor scans, RLS audits) — a static site has no database to advise on.</li>
+<li><input disabled="" type="checkbox"> Include the <strong>named Sentinel clause</strong> (monitoring is a contractual deliverable now). For a website, Sentinel delivers: <strong>uptime monitoring</strong> + the <strong>weekly endpoint security audit</strong> (Brief 20 — HTTPS/HSTS/TLS-expiry/exposed-file checks; live and honouring the &quot;weekly endpoint audits&quot; clause) + the <strong>Report-Issue path</strong>. Don&#39;t promise app-grade coverage (advisor/RLS scans) — a static site has no database to advise on.</li>
 <li><input disabled="" type="checkbox"> Frame the recurring fee honestly: on the client&#39;s own CF account, compute is ~free; the fee is <strong>monitoring + maintenance + support</strong>.</li>
 </ul>
 <h3>A2 · Privacy &amp; PIA  ·  <strong>GATE</strong></h3>
@@ -2990,11 +3026,11 @@ gh secret set SENTRY_PROJECT   --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#3
 <li><input disabled="" type="checkbox"> <strong>Privacy gate:</strong> PIA on file (A2) — green.</li>
 </ul>
 <h3>A5 · Sentinel + monitoring</h3>
-<p>A static site can&#39;t be code-scanned the way an app is — Sentinel&#39;s scanner keys off a Supabase project, which a static site doesn&#39;t have — so its Sentinel coverage today is <strong>uptime + bug widget</strong>, with the endpoint audit still to be built.</p>
+<p>A static site can&#39;t be code/advisor-scanned the way an app is (no Supabase project), but it <strong>does</strong> get the black-box weekly endpoint audit — so its Sentinel coverage is <strong>uptime + weekly endpoint audit + bug widget</strong>.</p>
 <ul>
-<li><input disabled="" type="checkbox"> <strong>Register in Sentinel</strong> (<code>/maintenance</code> → Onboard app, or <code>POST /api/maintenance/apps</code>): slug, display_name, repo. Set <strong><code>public_url</code></strong> to the prod URL (this is the real column — added 2026-06-18; it drives the per-app dashboard link and the heartbeat fallback). Leave <code>supabase_project_ref</code> empty — there&#39;s no DB to advisor-scan.</li>
-<li><input disabled="" type="checkbox"> <strong>Weekly endpoint security audit — NOT YET BUILT (verified 2026-07-08).</strong> There is no live-endpoint HTTP audit in <code>sentinel-app</code>; <code>security-scanner.ts</code> (Brief 14) only ingests Supabase advisor lints. Brief 20 (a <code>public_url</code>-driven header/TLS audit) is the mechanism that <em>would</em> make the contract&#39;s &quot;weekly endpoint audit&quot; clause real — it needs building before that clause can be honoured for a website. Track it, don&#39;t assume it.</li>
-<li><input disabled="" type="checkbox"> <strong>Better Stack uptime monitor</strong> on the prod URL (3-min cadence, email to <code>abe@coreshifthq.com</code>). Sentinel&#39;s <code>/api/status</code> auto-discovers it. This is the one piece of live website monitoring that works today.</li>
+<li><input disabled="" type="checkbox"> <strong>Register in Sentinel</strong> (<code>/maintenance</code> → Onboard app, or <code>POST /api/maintenance/apps</code>): slug, display_name, repo. <strong>Set <code>primary_url</code> to the prod URL</strong> — this is the column the endpoint audit keys off (<code>maintained_apps WHERE primary_url IS NOT NULL</code>, added by the Brief 20 migration <code>20260707010000</code>). Optionally set <code>public_url</code> too (dashboard link / heartbeat — a separate column). Leave <code>supabase_project_ref</code> empty (no DB to advisor-scan). Use <code>audit_paths</code> to add extra exposure-probe paths beyond the built-in list.</li>
+<li><input disabled="" type="checkbox"> <strong>Weekly endpoint security audit (Brief 20) — LIVE (shipped ~2026-07-07).</strong> <code>server/lib/endpoint-audit.ts</code> runs <strong>Mondays 6am NZ</strong> against every <code>primary_url</code>: HTTPS reachability, HTTP→HTTPS redirect, <strong>HSTS</strong> (≥180-day max-age), <strong>TLS cert expiry</strong> (high if &lt;21 days), <strong>exposed sensitive files</strong> (<code>/.env</code>, <code>/.git/config</code>, <code>/deploy.ps1</code>, <code>/HANDOVER.md</code>, <code>/README.md</code>, …), and the contact endpoint. Black-box, unauthenticated, ~&lt;15 requests/site, 10s timeout. Findings upsert into <code>endpoint_audit_findings</code> and surface in the Monday digest. This is what makes the &quot;weekly endpoint audits&quot; contract clause real.</li>
+<li><input disabled="" type="checkbox"> <strong>Better Stack uptime monitor</strong> on the prod URL (3-min cadence, email to <code>abe@coreshifthq.com</code>). Sentinel&#39;s <code>/api/status</code> auto-discovers it.</li>
 <li><input disabled="" type="checkbox"> <strong>Report-Issue widget:</strong> rebuild it on the site&#39;s own primitives (don&#39;t copy KC&#39;s React component). It&#39;s a plain <code>fetch</code> POST to KC&#39;s <code>report-issue</code> Edge Function with <code>app_id: &quot;&lt;slug&gt;&quot;</code> and, if a screenshot, <code>screenshot_b64</code> + <code>screenshot_mime</code> (5 MB cap; the service role stores it). Endpoint baked at build time. This makes the site&#39;s bug reports show up in Sentinel and file GitHub issues into its <strong>own</strong> repo.</li>
 <li><input disabled="" type="checkbox"> <strong>Sentry:</strong> optional for a brochure site. If wanted, a lightweight <strong>frontend-only</strong> project is enough — skip the backend project (there&#39;s no server).</li>
 </ul>
@@ -3060,16 +3096,18 @@ gh secret set SENTRY_PROJECT   --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#3
 </ul>
 <hr>
 <h2>Verification — &quot;onboarding is done&quot; checklist</h2>
-<p><strong>Track A (website):</strong> custom domain live on Cloudflare Pages with SSL Full(Strict) · <code>_headers</code> serving CSP/HSTS · contact form sends via Postmark with Turnstile · staging password-gated · CI deploys on push · registered in <code>maintained_apps</code> with <code>public_url</code> set · Better Stack monitor green · Report-Issue widget files into the site&#39;s repo · PIA on file · sub-processor register + DATA-INVENTORY updated · kanban synced.</p>
+<p><strong>Track A (website):</strong> custom domain live on Cloudflare Pages with SSL Full(Strict) · <code>_headers</code> serving CSP/HSTS · contact form sends via Postmark with Turnstile · staging password-gated · CI deploys on push · registered in <code>maintained_apps</code> with <strong><code>primary_url</code> set</strong> (weekly endpoint-audit target) · first endpoint audit clean (or findings triaged) · Better Stack monitor green · Report-Issue widget files into the site&#39;s repo · PIA on file · sub-processor register + DATA-INVENTORY updated · kanban synced.</p>
 <p><strong>Track B (app):</strong> full <a href="HOW-WE-DO-APP-AUDITS.md">App Audit (PLAY 6)</a> passing · approved PIA on file · <a href="PLAYBOOK-cloning-to-new-app.md#verification-checklist">PLAY 9 verification checklist</a> all-green · kanban + roadmap synced.</p>
 <hr>
-<h2>Known gaps / follow-ups this doc surfaces</h2>
+<h2>Follow-ups this doc surfaced — status</h2>
+<p>All four gaps flagged when this doc was first drafted are now closed (2026-07-08):</p>
 <ol>
-<li><strong>PLAY 6 has no web-build column.</strong> The App Audit is written for Supabase/Railway. Track A · Stage 4 above carries the web subset inline for now; a proper move is to add a &quot;web build&quot; applicability column (or a sibling <code>HOW-WE-DO-WEB-AUDITS</code>) to PLAY 6.</li>
-<li><strong>The &quot;weekly endpoint audit&quot; is promised but unbuilt (verified 2026-07-08).</strong> <code>sentinel-app</code> has no live-endpoint HTTP/header/TLS audit — <code>security-scanner.ts</code> (Brief 14) only reads Supabase advisor lints, which a static site doesn&#39;t have. So a website onboarded today gets uptime + bug widget and <em>nothing</em> the &quot;weekly endpoint audit&quot; clause describes. <strong>Either build Brief 20</strong> (a <code>public_url</code>-driven header/TLS/exposure check) <strong>or reword the clause.</strong> This is the highest-priority gap because it&#39;s a live contractual promise with zero implementation.</li>
-<li><strong>Static-site contract/annexure template.</strong> The current web-build template is WordPress-shaped; it needs a static-Cloudflare-Pages rewrite (noted in A1).</li>
-<li><strong><code>_headers</code> in the web starter.</strong> The reference build ships a staging gate but not a security-headers layer — fold <code>_headers</code> into the starter so every new site is born with it.</li>
+<li>✅ <strong>PLAY 6 now has a web-build track.</strong> <a href="HOW-WE-DO-APP-AUDITS.md">HOW-WE-DO-APP-AUDITS</a> v2.4 added a track-applicability map + <code>_headers</code>/Turnstile checks; Track A · A4 mirrors the subset.</li>
+<li>✅ <strong>The weekly endpoint audit is live.</strong> Brief 20 shipped ~2026-07-07 — <code>server/lib/endpoint-audit.ts</code> + the <code>endpoint_audit_findings</code> table + a Monday-6am-NZ cron off <code>maintained_apps.primary_url</code>. The &quot;weekly endpoint audits&quot; clause is now honourable. <em>(An earlier &quot;not built&quot; note here was written against a stale local checkout that was 30 commits behind <code>main</code> — corrected.)</em></li>
+<li>✅ <strong>Static-site contract drafted.</strong> <a href="drafts/WEBSITE-BUILD-SOW-SLA.md">drafts/WEBSITE-BUILD-SOW-SLA.md</a> — a website-shaped SOW + SLA under the Type-2 base. Pending Operator/Privacy-Officer sign-off before first use.</li>
+<li>✅ <strong><code>_headers</code> recipe exists.</strong> <a href="recipes/cloudflare-pages-security-headers.md">recipes/cloudflare-pages-security-headers.md</a>. Remaining nicety: fold it into a reusable web-starter repo so it&#39;s copied in by default, not by hand.</li>
 </ol>
+<p><strong>The one thing that silently breaks the contract clause:</strong> the endpoint audit only runs on rows with <code>primary_url</code> set. So the operator action that makes the &quot;weekly endpoint audit&quot; real for a given site is <strong>setting <code>primary_url</code> at onboarding</strong> (A5) — miss it and the site is never audited, with no error.</p>
 <hr>
 <h2>When this doc changes</h2>
 <ul>
