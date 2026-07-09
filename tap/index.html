@@ -367,7 +367,7 @@
           <p class="subtitle">ICP-driven lead generation · real cold leads, on tap · Coreshift</p>
         </div>
         <div class="meta">
-          Last updated <strong>2026-07-07</strong><br />
+          Last updated <strong>2026-07-09</strong><br />
           <a href="https://github.com/CoreshiftHQNZ/tap" target="_blank" rel="noopener">repo</a> ·
           <a href="https://web-production-06c25.up.railway.app" target="_blank" rel="noopener">live app</a>
         </div>
@@ -378,9 +378,9 @@
         <div class="progress-bars">
           <div class="pbar"><div class="pbar-label"><strong>M0</strong> Foundation</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>M1</strong> App + ICP</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Lead engine</div><div class="pbar-track"><div class="pbar-fill" style="width: 95%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Monetise</div><div class="pbar-track"><div class="pbar-fill" style="width: 90%"></div></div></div>
-          <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Launch</div><div class="pbar-track"><div class="pbar-fill" style="width: 5%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Lead engine</div><div class="pbar-track"><div class="pbar-fill" style="width: 98%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Monetise</div><div class="pbar-track"><div class="pbar-fill" style="width: 92%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M4</strong> Launch</div><div class="pbar-track"><div class="pbar-fill" style="width: 25%"></div></div></div>
         </div>
       </section>
 
@@ -391,14 +391,13 @@
         </div>
         <p class="intro">
           Things that need a human to click through a sign-up flow or paste credentials.
-          <strong>State of play:</strong> a hardening pass (PR&nbsp;#1 → <code>dev</code>) shipped the ICP
-          manager (pause/edit/delete), real ad-spend + owner-mobile providers, CSV export, account
-          deletion, Stripe dunning, and a batch of security fixes — incl. a critical cross-tenant
-          contact-data leak (the shared <code>entities</code> cache was readable by any signed-in user).
-          <strong>The prod blocker is now closed</strong> — the direct-API read of unclaimed leads&rsquo;
-          contact is revoked at the column level (verified live), and the cap races + webhook ordering +
-          SSRF rebinding are all fixed in PR&nbsp;#1. <strong>Before real users:</strong> switch on billing
-          (Stripe keys), and apply migrations 0010–0013 when the branch deploys.
+          <strong>Everything below is live on prod</strong> (<code>main</code> → Railway). Since the last
+          board: transactional email is live (Cloudflare Email Sending via Supabase SMTP), the
+          login-redirect bug is fixed, account settings + editable identity shipped, and two lead-scoring
+          improvements landed (de-dilution — lifted the sample tap 84→92 — plus opt-in site-quality
+          signals). Migrations through <code>0014</code> are applied to <code>tap-app</code>.
+          <strong>Before real users:</strong> switch on billing (Stripe keys, below) — and a password-reset
+          flow still needs building (a user who forgets their password is currently locked out).
         </p>
         <div class="ricky-grid">
           <div class="ricky-section">
@@ -425,10 +424,6 @@
               <p class="task-body">Cloudflare DNS confirmed as the plan; domain not chosen yet. Needed before real users + Stripe live mode.</p>
             </div>
             <div class="task">
-              <p class="task-title">📧 Transactional email (SMTP) <span class="task-when">pre-launch</span></p>
-              <p class="task-body">Auth confirmations currently use Supabase&rsquo;s rate-limited built-in mailer. Wire Resend / Cloudflare Email before real signups.</p>
-            </div>
-            <div class="task">
               <p class="task-title">📈 SearchApi plan sizing <span class="task-when">when usage grows</span></p>
               <p class="task-body">Free tier has limited credits; each discovery run costs a handful of searches. Upgrade when more than a few ICPs run continuously.</p>
             </div>
@@ -438,8 +433,14 @@
 
       <div class="board">
         <div class="col done">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">28</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">34</span></div>
           <div class="col-body">
+            <div class="card"><div class="card-head"><span class="card-id">M4</span><span class="card-date">Jul 9</span></div><p class="card-title">📧 Transactional email LIVE (Cloudflare)</p><p class="card-note">Cloudflare Email Sending → Supabase custom SMTP · confirmation ON · permanent token · signup→email→confirm verified end-to-end. Replaces the rate-limited built-in mailer.</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">Jul 9</span></div><p class="card-title">🔓 Login-redirect bug fixed (prod)</p><p class="card-note">/auth/callback built its redirect from request.url → localhost:8080 behind Railway's proxy ("site can't be reached"). Now uses x-forwarded-host. Verified live.</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M1</span><span class="card-date">Jul 9</span></div><p class="card-title">⚙ Account settings + editable identity</p><p class="card-note">/settings: edit an ICP (region/service/industries/signals) after intake · confirm-modal clears un-actioned queue on retargeting · account info + danger zone · adversarially reviewed</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 9</span></div><p class="card-title">Fit-score de-dilution + weak_reviews (Slice A)</p><p class="card-note">Retired 3 unresolvable signals that taxed every score (sample tap 84→92 hot, verified live) · added weak_reviews from free Maps rating/review data · reviewed + fixed</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 9</span></div><p class="card-title">Site-quality signals + re-enrichment TTL (Slice B)</p><p class="card-note">not_mobile_ready + no_analytics (opt-in — default-on would cull leads) · 30-day entity TTL so signals refresh · analytics detector hardened · reviewed + fixed</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M4</span><span class="card-date">Jul 9</span></div><p class="card-title">Full prod promotion (hardening + a11y)</p><p class="card-note">The P0/P1 hardening set + a11y + all of the above promoted staging→main; prod code realigned with its already-migrated DB (mig 0014)</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M0</span></div><p class="card-title">Monorepo + CI + Railway (web & engine live)</p><p class="card-note">npm workspaces · GitHub Actions · push-to-deploy via RAILWAY_TOKEN</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M0</span></div><p class="card-title">Supabase schema + RLS + auth</p><p class="card-note">profiles/icps/entities/runs/leads · profile trigger · email confirm on</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M1</span></div><p class="card-title">@tap/core — the ICP contract</p><p class="card-note">schema (zod) · signal library · deterministic scoring (≥80 surfaces) · provider registry</p></div>
@@ -480,16 +481,21 @@
         </div>
 
         <div class="col next">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Next</span><span class="col-count">2</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Next</span><span class="col-count">3</span></div>
           <div class="col-body">
+            <div class="card"><div class="card-head"><span class="card-id">M4</span><span class="card-date">Jul 9</span></div><p class="card-title">🔑 Password reset + change flow</p><p class="card-note">No forgot-password / change-password today — forget it and you're locked out (admin-only reset). The #1 user-facing launch gap; auth plumbing is ready (recovery via /auth/callback).</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M2</span></div><p class="card-title">Scoring rebalance (Slice C)</p><p class="card-note">The real lead-quality lever: fit = fraction-of-total signal weight vs a fixed 80 bar, so adding signals culls leads. Decouple signal-set size from the surface cutoff for spread without dropping leads.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">OPS</span></div><p class="card-title">Observability</p><p class="card-note">Heartbeat + config validation shipped · still want Sentry + structured logs + external alerting</p></div>
-            <div class="card"><div class="card-head"><span class="card-id">OPS</span></div><p class="card-title">Transactional email</p><p class="card-note">Resend / Cloudflare Email for auth + "fresh leads waiting" notifications</p></div>
           </div>
         </div>
 
         <div class="col back">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Backlog</span><span class="col-count">4</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Backlog</span><span class="col-count">8</span></div>
           <div class="col-body">
+            <div class="card ext"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 9</span></div><p class="card-title">PageSpeed (slow_site) performance signal</p><p class="card-note">Deferred from Slice B — real mobile perf score via PageSpeed Insights, gated to near-threshold candidates (adds an API call)</p></div>
+            <div class="card ext"><div class="card-head"><span class="card-id">M3</span><span class="card-date">Jul 9</span></div><p class="card-title">Stripe checkout origin (forwarded-host)</p><p class="card-note">Same proxy bug as the login fix — checkout redirect uses the bare host; latent until live Stripe keys land</p></div>
+            <div class="card ext"><div class="card-head"><span class="card-id">M1</span><span class="card-date">Jul 9</span></div><p class="card-title">Shared ICP intake-fields refactor</p><p class="card-note">De-dupe the wizard field controls between onboarding + the settings edit form</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">OPS</span></div><p class="card-title">Lead-ready notifications</p><p class="card-note">Email a user when fresh leads land (auth email is live; this is a separate feature)</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M4</span></div><p class="card-title">Custom domain + Cloudflare DNS</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M4</span></div><p class="card-title">Railway staging environment</p><p class="card-note">Map staging branch → staging env per Coreshift standard</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M2</span></div><p class="card-title">provider_calls metering table</p><p class="card-note">Persist per-provider cost telemetry (CostMeter data currently discarded)</p></div>
