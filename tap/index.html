@@ -367,7 +367,7 @@
           <p class="subtitle">ICP-driven lead generation · real cold leads, on tap · Coreshift</p>
         </div>
         <div class="meta">
-          Last updated <strong>2026-07-09</strong><br />
+          Last updated <strong>2026-07-10</strong><br />
           <a href="https://github.com/CoreshiftHQNZ/tap" target="_blank" rel="noopener">repo</a> ·
           <a href="https://web-production-06c25.up.railway.app" target="_blank" rel="noopener">live app</a>
         </div>
@@ -380,7 +380,7 @@
           <div class="pbar"><div class="pbar-label"><strong>M1</strong> App + ICP</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Lead engine</div><div class="pbar-track"><div class="pbar-fill" style="width: 98%"></div></div></div>
           <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Monetise</div><div class="pbar-track"><div class="pbar-fill" style="width: 92%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M4</strong> Launch</div><div class="pbar-track"><div class="pbar-fill" style="width: 25%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M4</strong> Launch</div><div class="pbar-track"><div class="pbar-fill" style="width: 38%"></div></div></div>
         </div>
       </section>
 
@@ -392,17 +392,22 @@
         <p class="intro">
           Things that need a human to click through a sign-up flow or paste credentials.
           <strong>Everything below is live on prod</strong> (<code>main</code> → Railway). Since the last
-          board: transactional email is live (Cloudflare Email Sending via Supabase SMTP), the
-          login-redirect bug is fixed, account settings + editable identity shipped, and two lead-scoring
-          improvements landed (de-dilution — lifted the sample tap 84→92 — plus opt-in site-quality
-          signals). Migrations through <code>0014</code> are applied to <code>tap-app</code>.
-          <strong>Before real users:</strong> switch on billing (Stripe keys, below) — and a password-reset
-          flow still needs building (a user who forgets their password is currently locked out).
+          board: <strong>Privacy Policy + Terms pages shipped</strong> (linked from the landing footer +
+          signup), and <strong>lead-ready email notifications</strong> are built and deployed — the engine
+          emails a user when fresh leads land, rate-limited to one nudge per 12h. Password reset/change is
+          done too. Migrations through <code>0015</code> are applied to <code>tap-app</code>.
+          <strong>One paste activates notifications</strong> (SMTP token, below); the engine already
+          surfaces leads normally without it. <strong>Before real users:</strong> switch on billing
+          (Stripe keys, below).
         </p>
         <div class="ricky-grid">
           <div class="ricky-section">
             <h3>Do now</h3>
             <p class="helper">Each unlocks something already built and waiting.</p>
+            <div class="task">
+              <p class="task-title">📨 Paste the email token → notifications go live <span class="task-when">~2 min</span></p>
+              <p class="task-body">Set <code>SMTP_PASS</code> on the Railway <code>engine</code> service to the Cloudflare Email Sending token (the same one already in Supabase&rsquo;s custom SMTP). Everything else (<code>SMTP_HOST</code>/<code>PORT</code>/<code>USER</code> + <code>APP_URL</code>) is already set — the moment the token lands, the engine starts emailing users when fresh leads arrive.</p>
+            </div>
             <div class="task">
               <p class="task-title">💳 Create the Stripe product + paste keys <span class="task-when">~10 min</span></p>
               <p class="task-body">In Stripe: create product &ldquo;Tap Pro&rdquo;, recurring price <strong>NZ$249/mo</strong> (+GST). Then give Claude (or set on the Railway <code>web</code> service): <code>STRIPE_SECRET_KEY</code>, <code>STRIPE_PRICE_ID</code>, and after adding the webhook endpoint (<code>/api/stripe/webhook</code>) <code>STRIPE_WEBHOOK_SECRET</code>. The checkout, webhook, free-tier gate and paywall are all built and key-gated.</p>
@@ -433,8 +438,10 @@
 
       <div class="board">
         <div class="col done">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">36</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">38</span></div>
           <div class="col-body">
+            <div class="card"><div class="card-head"><span class="card-id">M4</span><span class="card-date">Jul 10</span></div><p class="card-title">📨 Lead-ready email notifications</p><p class="card-note">Engine emails an owner when a run adds genuinely-new leads (not re-surfaced dupes) — rate-limited to one nudge per 12h via profiles.notified_at (mig 0015). Opt-in on config: no-op until SMTP_PASS is set, leads still surface. Branded HTML email → /app. Adversarially reviewed; latent dedup finding spun off.</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M4</span><span class="card-date">Jul 10</span></div><p class="card-title">📄 Privacy Policy + Terms of Service</p><p class="card-note">/privacy + /terms tailored to Tap (public-sourced contact data + per-number source URL, NZ Privacy Act 2020 + anti-spam responsibility, one-lead-one-agency, self-serve deletion). Linked from landing footer + signup consent. Verified live (200). Drafting starting point — lawyer review recommended.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M4</span><span class="card-date">Jul 9</span></div><p class="card-title">🔑 Password reset + change flow</p><p class="card-note">"Forgot password?" on login → device-independent token_hash recovery email (works on any device) → set a new password in Settings. Change-password too; signs out other sessions. Verified e2e at the auth layer.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 9</span></div><p class="card-title">Additive-with-cap scoring (Slice C)</p><p class="card-note">Signal scoring is additive toward a fixed reference (signalFullMarks 45), not fraction-of-total — adding a signal never culls a non-matcher. 80 floor + contact gate unchanged; compileDraft guards un-surfaceable ICPs.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M4</span><span class="card-date">Jul 9</span></div><p class="card-title">📧 Transactional email LIVE (Cloudflare)</p><p class="card-note">Cloudflare Email Sending → Supabase custom SMTP · confirmation ON · permanent token · signup→email→confirm verified end-to-end. Replaces the rate-limited built-in mailer.</p></div>
@@ -491,12 +498,11 @@
         </div>
 
         <div class="col back">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Backlog</span><span class="col-count">8</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Backlog</span><span class="col-count">7</span></div>
           <div class="col-body">
             <div class="card ext"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 9</span></div><p class="card-title">PageSpeed (slow_site) performance signal</p><p class="card-note">Deferred from Slice B — real mobile perf score via PageSpeed Insights, gated to near-threshold candidates (adds an API call)</p></div>
             <div class="card ext"><div class="card-head"><span class="card-id">M3</span><span class="card-date">Jul 9</span></div><p class="card-title">Stripe checkout origin (forwarded-host)</p><p class="card-note">Same proxy bug as the login fix — checkout redirect uses the bare host; latent until live Stripe keys land</p></div>
             <div class="card ext"><div class="card-head"><span class="card-id">M1</span><span class="card-date">Jul 9</span></div><p class="card-title">Shared ICP intake-fields refactor</p><p class="card-note">De-dupe the wizard field controls between onboarding + the settings edit form</p></div>
-            <div class="card"><div class="card-head"><span class="card-id">OPS</span></div><p class="card-title">Lead-ready notifications</p><p class="card-note">Email a user when fresh leads land (auth email is live; this is a separate feature)</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M4</span></div><p class="card-title">Custom domain + Cloudflare DNS</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M4</span></div><p class="card-title">Railway staging environment</p><p class="card-note">Map staging branch → staging env per Coreshift standard</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M2</span></div><p class="card-title">provider_calls metering table</p><p class="card-note">Persist per-provider cost telemetry (CostMeter data currently discarded)</p></div>
