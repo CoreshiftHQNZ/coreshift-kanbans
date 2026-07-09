@@ -433,8 +433,10 @@
 
       <div class="board">
         <div class="col done">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">34</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">36</span></div>
           <div class="col-body">
+            <div class="card"><div class="card-head"><span class="card-id">M4</span><span class="card-date">Jul 9</span></div><p class="card-title">🔑 Password reset + change flow</p><p class="card-note">"Forgot password?" on login → device-independent token_hash recovery email (works on any device) → set a new password in Settings. Change-password too; signs out other sessions. Verified e2e at the auth layer.</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 9</span></div><p class="card-title">Additive-with-cap scoring (Slice C)</p><p class="card-note">Signal scoring is additive toward a fixed reference (signalFullMarks 45), not fraction-of-total — adding a signal never culls a non-matcher. 80 floor + contact gate unchanged; compileDraft guards un-surfaceable ICPs.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M4</span><span class="card-date">Jul 9</span></div><p class="card-title">📧 Transactional email LIVE (Cloudflare)</p><p class="card-note">Cloudflare Email Sending → Supabase custom SMTP · confirmation ON · permanent token · signup→email→confirm verified end-to-end. Replaces the rate-limited built-in mailer.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">Jul 9</span></div><p class="card-title">🔓 Login-redirect bug fixed (prod)</p><p class="card-note">/auth/callback built its redirect from request.url → localhost:8080 behind Railway's proxy ("site can't be reached"). Now uses x-forwarded-host. Verified live.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M1</span><span class="card-date">Jul 9</span></div><p class="card-title">⚙ Account settings + editable identity</p><p class="card-note">/settings: edit an ICP (region/service/industries/signals) after intake · confirm-modal clears un-actioned queue on retargeting · account info + danger zone · adversarially reviewed</p></div>
@@ -481,10 +483,9 @@
         </div>
 
         <div class="col next">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Next</span><span class="col-count">3</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Next</span><span class="col-count">2</span></div>
           <div class="col-body">
-            <div class="card"><div class="card-head"><span class="card-id">M4</span><span class="card-date">Jul 9</span></div><p class="card-title">🔑 Password reset + change flow</p><p class="card-note">No forgot-password / change-password today — forget it and you're locked out (admin-only reset). The #1 user-facing launch gap; auth plumbing is ready (recovery via /auth/callback).</p></div>
-            <div class="card"><div class="card-head"><span class="card-id">M2</span></div><p class="card-title">Scoring rebalance (Slice C)</p><p class="card-note">The real lead-quality lever: fit = fraction-of-total signal weight vs a fixed 80 bar, so adding signals culls leads. Decouple signal-set size from the surface cutoff for spread without dropping leads.</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M2</span></div><p class="card-title">Scoring tuning + site-quality defaults</p><p class="card-note">Now that additive scoring can't dilute, re-enable not_mobile_ready / no_analytics as defaults and tune signalFullMarks (45) for the right spread vs volume.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">OPS</span></div><p class="card-title">Observability</p><p class="card-note">Heartbeat + config validation shipped · still want Sentry + structured logs + external alerting</p></div>
           </div>
         </div>
