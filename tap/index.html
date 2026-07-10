@@ -444,19 +444,20 @@
         <p class="intro">
           A multi-agent sweep of the whole codebase (9 dimensions, every finding adversarially verified
           against the source) rates Tap <strong>architecturally solid</strong> — but flags
-          <strong>1 confirmed-critical security bypass</strong> plus <strong>11 blockers · 14 important ·
-          10 polish</strong> to clear before charging real customers. <strong>M2 (lead engine) was cleared
-          this session</strong> — 6 slices shipped (see Done). The critical write-lockdown is now the top
-          scheduled item (Next →).
+          <strong>1 confirmed-critical security bypass</strong> (now <strong style="color:#059669;">CLOSED</strong>)
+          plus <strong>11 blockers · 14 important · 10 polish</strong> to clear before charging real customers.
+          <strong>M2 (lead engine) cleared + the critical bypass fixed this session</strong> — 7 shipments (see
+          Done). 10 blockers remain; Next leads with observability + CI-gated deploys.
         </p>
-        <div style="background:rgba(179,38,30,.09); border:1px solid rgba(179,38,30,.4); border-radius:8px; padding:15px 18px; margin-bottom:18px;">
-          <p style="margin:0 0 6px; font-weight:700; font-size:13.5px; color:#d14b40;">● CRITICAL · verified against prod — paywall + contact-reveal bypass</p>
+        <div style="background:rgba(5,150,105,.10); border:1px solid rgba(5,150,105,.4); border-radius:8px; padding:15px 18px; margin-bottom:18px;">
+          <p style="margin:0 0 6px; font-weight:700; font-size:13.5px; color:#059669;">✅ RESOLVED this session — paywall + contact-reveal + spend bypass closed</p>
           <p style="margin:0; font-size:13px; color:var(--ink-muted); line-height:1.55;">
-            <code>authenticated</code> retains direct <code>UPDATE</code> on <code>leads.status</code>, and the
-            server reveals contacts purely on <code>status='claimed'</code> — a free user can PATCH their own
-            leads to claimed and harvest every owner name + mobile for $0, skipping the claim RPC, the free-tier
-            counter and the bucket cap. The same gap lets them flip every ICP <code>active</code> → unbounded
-            engine spend. One write-lockdown migration closes both. <strong>Top launch gate — not yet scheduled.</strong>
+            <code>authenticated</code> had direct <code>UPDATE</code> on <code>leads.status</code> (reveal every
+            contact for $0, skipping the claim caps + counter) and <code>icps.active</code> (bypass the 3-active
+            cap → unbounded spend). Fixed by routing every mutation through 5 owner-scoped SECURITY DEFINER RPCs
+            and revoking all direct client writes (mig 0018/0019). Verified on prod: authenticated
+            INSERT/UPDATE/DELETE on leads + icps all <strong>false</strong>. Adversarially reviewed; a related
+            profile-injection DoS was hardened in the same pass.
           </p>
         </div>
         <div class="ricky-grid">
@@ -477,8 +478,9 @@
 
       <div class="board">
         <div class="col done">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">44</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">45</span></div>
           <div class="col-body">
+            <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">Jul 10</span></div><p class="card-title">🔒 Write-lockdown — paywall/PII/spend bypass closed</p><p class="card-note">authenticated could PATCH leads.status='claimed' (free contact reveal, skipping the caps) + icps.active (unbounded spend). Now every mutation routes through 5 owner-scoped SECURITY DEFINER RPCs; direct client writes revoked (mig 0018/0019). Verified on prod: authenticated write on leads+icps all false. Reviewed; profile-injection DoS hardened too.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 10</span></div><p class="card-title">💰 Cost governance — ceiling + entitlement gate</p><p class="card-note">Fleet-wide daily spend ceiling ($25/24h, halt+alert) + entitlement gating so the engine only spends for pro or free-under-cap owners (mig 0017). Adversarially reviewed (overshoot + fail-closed fixes). Engine live on it; internal accounts comped to Pro.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 10</span></div><p class="card-title">🧠 Reject-reason learning (the claim is now true)</p><p class="card-note">Per-ICP reject tallies drive a bounded score penalty on candidates matching detectable reasons (already-has-agency, no-signal) — activates past 3 rejects, capped 15pts. scoreLead stays deterministic. Reviewed clean; +8 tests.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 10</span></div><p class="card-title">🩺 Legible empty tap (engine state)</p><p class="card-note">App now reads latest run outcome + heartbeat freshness → distinct empty states (first-run / exhausted+broaden / breather / catching-up / all-caught-up) instead of one infinite spinner.</p></div>
@@ -535,9 +537,8 @@
         </div>
 
         <div class="col next">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Next</span><span class="col-count">3</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Next</span><span class="col-count">2</span></div>
           <div class="col-body">
-            <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">audit</span></div><p class="card-title">🔴 Write-lockdown migration (paywall + spend bypass)</p><p class="card-note">CRITICAL, verified vs prod: authenticated has direct UPDATE/INSERT/DELETE on leads + icps, so the claim RPC (free-tier + bucket caps) and the 3-active-ICP cap are all bypassable via PATCH. Revoke client writes; route through the SECURITY DEFINER RPCs (+ trigger for note/reject/won-lost). Top launch gate.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">OPS</span><span class="card-date">audit</span></div><p class="card-title">Observability + alerting</p><p class="card-note">Nothing watches the heartbeat and there's no error tracking. Set ALERT_WEBHOOK_URL, add an external heartbeat-staleness watcher + /api/health, provider-failure alerts, and wire Sentry into web + engine. (The cost ceiling already alerts via ALERT_WEBHOOK_URL once it's set.)</p></div>
             <div class="card"><div class="card-head"><span class="card-id">OPS</span><span class="card-date">audit</span></div><p class="card-title">Gate deploys on CI + auto-apply migrations</p><p class="card-note">ci.yml and deploy.yml both fire on main with no gate — a red build still ships, and deploy never runs migrations (all applied manually via MCP so far). Gate deploy on CI success + add a supabase db push step; adopt expand/contract migrations.</p></div>
           </div>
