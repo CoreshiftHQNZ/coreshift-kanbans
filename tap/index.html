@@ -380,7 +380,7 @@
           <div class="pbar"><div class="pbar-label"><strong>M1</strong> App + ICP</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Lead engine</div><div class="pbar-track"><div class="pbar-fill" style="width: 95%"></div></div></div>
           <div class="pbar active"><div class="pbar-label"><strong>M3</strong> Monetise</div><div class="pbar-track"><div class="pbar-fill" style="width: 92%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M4</strong> Launch</div><div class="pbar-track"><div class="pbar-fill" style="width: 38%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M4</strong> Launch</div><div class="pbar-track"><div class="pbar-fill" style="width: 65%"></div></div></div>
         </div>
       </section>
 
@@ -444,10 +444,11 @@
         <p class="intro">
           A multi-agent sweep of the whole codebase (9 dimensions, every finding adversarially verified
           against the source) rates Tap <strong>architecturally solid</strong> — but flags
-          <strong>1 confirmed-critical security bypass</strong> (now <strong style="color:#059669;">CLOSED</strong>)
-          plus <strong>11 blockers · 14 important · 10 polish</strong> to clear before charging real customers.
-          <strong>M2 (lead engine) cleared + the critical bypass fixed this session</strong> — 7 shipments (see
-          Done). 10 blockers remain; Next leads with observability + CI-gated deploys.
+          <strong>2 confirmed-critical bypasses</strong> (both now <strong style="color:#059669;">CLOSED</strong>) —
+          the second caught by a follow-up re-audit of this session's own work — plus a cluster of launch gaps.
+          <strong>Big session:</strong> M2 cleared, both criticals fixed, and observability, CI-gated deploys,
+          mobile, and pre-launch hardening all shipped. What remains is mostly Ricky-side (Stripe keys, DNS,
+          domain) plus a little config.
         </p>
         <div style="background:rgba(5,150,105,.10); border:1px solid rgba(5,150,105,.4); border-radius:8px; padding:15px 18px; margin-bottom:18px;">
           <p style="margin:0 0 6px; font-weight:700; font-size:13.5px; color:#059669;">✅ RESOLVED this session — paywall + contact-reveal + spend bypass closed</p>
@@ -458,6 +459,12 @@
             and revoking all direct client writes (mig 0018/0019). Verified on prod: authenticated
             INSERT/UPDATE/DELETE on leads + icps all <strong>false</strong>. Adversarially reviewed; a related
             profile-injection DoS was hardened in the same pass.
+          </p>
+          <p style="margin:10px 0 0; font-size:13px; color:var(--ink-muted); line-height:1.55;">
+            <strong style="color:#059669;">+ a second critical</strong> a follow-up re-audit caught: the same
+            lockdown had missed <code>profiles</code> — <code>authenticated</code> could DELETE then re-INSERT
+            their own row with <code>plan='pro'</code> to self-grant Pro, reset the free-claim counter and drive
+            unbounded spend. Revoked INSERT/DELETE + added a plan CHECK (mig 0021); verified closed on prod.
           </p>
         </div>
         <div class="ricky-grid">
@@ -478,8 +485,15 @@
 
       <div class="board">
         <div class="col done">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">45</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">52</span></div>
           <div class="col-body">
+            <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">Jul 10</span></div><p class="card-title">🔒 2nd critical closed — profiles write-lockdown</p><p class="card-note">Re-audit caught what the first lockdown missed: authenticated could DELETE+re-INSERT their own profiles row to self-grant plan=pro, reset the free counter, and drive unbounded spend. Revoked INSERT/DELETE + added a plan CHECK (mig 0021). Verified closed on prod.</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">OPS</span><span class="card-date">Jul 10</span></div><p class="card-title">🛰️ Observability — /api/health + engine watchdog</p><p class="card-note">GET /api/health (web+DB + engine heartbeat freshness) + a scheduled Action that fails (emails admins, zero config) when the engine goes stale/errored. Cost-cap now alerts too. Verified live: 200, engine healthy.</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">OPS</span><span class="card-date">Jul 10</span></div><p class="card-title">🚦 CI-gated deploys</p><p class="card-note">Folded deploy into CI as a job that needs: check — a red build (typecheck/test/lint/build) now blocks the deploy instead of shipping. Opt-in migration auto-apply. Verified: the gated deploy fired after CI passed.</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">Jul 10</span></div><p class="card-title">🛡️ Pre-launch hardening</p><p class="card-note">Security headers (X-Frame-Options / nosniff / Referrer-Policy / frame-ancestors CSP) on every route · password reauth before account deletion (inline masked confirm, no more plaintext prompt) · notification unsubscribe (opt-out + List-Unsubscribe + endpoint, mig 0020).</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M4</span><span class="card-date">Jul 10</span></div><p class="card-title">📱 Mobile layout fixed</p><p class="card-note">Bucket cards stack (content over notes) instead of a fixed 300px side panel; top nav wraps with tabs on a full-width second row; overflow-x guard on the shell. Demoable on any screen now.</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">M4</span><span class="card-date">Jul 10</span></div><p class="card-title">⚡ First-leads experience (auto-flow + poll)</p><p class="card-note">A new user's leads now appear on their own and the tap auto-opens into the first card — no refresh, no hunting for an off switch. Diagnosed realtime as unreliable (subscription live 2min before the run, no event); added a poll fallback + auto-flow.</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">QA</span><span class="card-date">Jul 10</span></div><p class="card-title">🧹 Re-audit cleanups</p><p class="card-note">persistRun surfaces the runs-insert error (cost-cap visibility); rejected leads kept out of the tap on re-fetch; auto-flow respects a deliberate tap-off; empty-tap poll slows to a keepalive; re-granted entity_key SELECT dropped by mig 0016 (mig 0022).</p></div>
             <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">Jul 10</span></div><p class="card-title">🔒 Write-lockdown — paywall/PII/spend bypass closed</p><p class="card-note">authenticated could PATCH leads.status='claimed' (free contact reveal, skipping the caps) + icps.active (unbounded spend). Now every mutation routes through 5 owner-scoped SECURITY DEFINER RPCs; direct client writes revoked (mig 0018/0019). Verified on prod: authenticated write on leads+icps all false. Reviewed; profile-injection DoS hardened too.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 10</span></div><p class="card-title">💰 Cost governance — ceiling + entitlement gate</p><p class="card-note">Fleet-wide daily spend ceiling ($25/24h, halt+alert) + entitlement gating so the engine only spends for pro or free-under-cap owners (mig 0017). Adversarially reviewed (overshoot + fail-closed fixes). Engine live on it; internal accounts comped to Pro.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 10</span></div><p class="card-title">🧠 Reject-reason learning (the claim is now true)</p><p class="card-note">Per-ICP reject tallies drive a bounded score penalty on candidates matching detectable reasons (already-has-agency, no-signal) — activates past 3 rejects, capped 15pts. scoreLead stays deterministic. Reviewed clean; +8 tests.</p></div>
@@ -537,10 +551,11 @@
         </div>
 
         <div class="col next">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Next</span><span class="col-count">2</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Next</span><span class="col-count">3</span></div>
           <div class="col-body">
-            <div class="card"><div class="card-head"><span class="card-id">OPS</span><span class="card-date">audit</span></div><p class="card-title">Observability + alerting</p><p class="card-note">Nothing watches the heartbeat and there's no error tracking. Set ALERT_WEBHOOK_URL, add an external heartbeat-staleness watcher + /api/health, provider-failure alerts, and wire Sentry into web + engine. (The cost ceiling already alerts via ALERT_WEBHOOK_URL once it's set.)</p></div>
-            <div class="card"><div class="card-head"><span class="card-id">OPS</span><span class="card-date">audit</span></div><p class="card-title">Gate deploys on CI + auto-apply migrations</p><p class="card-note">ci.yml and deploy.yml both fire on main with no gate — a red build still ships, and deploy never runs migrations (all applied manually via MCP so far). Gate deploy on CI success + add a supabase db push step; adopt expand/contract migrations.</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">OPS</span><span class="card-date">config</span></div><p class="card-title">Finish observability wiring</p><p class="card-note">/api/health + engine-watchdog Action + cost-cap alerts are shipped and live. Left: set ALERT_WEBHOOK_URL (Slack/Discord) for richer in-process engine alerts, and a SENTRY_DSN to wire Sentry error tracking on web + engine.</p></div>
+            <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">config</span></div><p class="card-title">Turnstile bot protection (auth forms)</p><p class="card-note">Config-gated: create a Cloudflare Turnstile widget + enable Supabase Auth captcha (dashboard, with the secret), then the widget wires into signup/login/reset. Inert without that setup, so it's parked as a config task.</p></div>
+            <div class="card ext"><div class="card-head"><span class="card-id">UX</span><span class="card-date">audit</span></div><p class="card-title">Won/Lost fast-claim edge + minor a11y/SEO polish</p><p class="card-note">Small deferred re-audit items: gate Won/Lost on claim-confirm (narrow silent-drop window), plus the tracked a11y / OG-tags / native-dialog polish. None block launch.</p></div>
           </div>
         </div>
 
