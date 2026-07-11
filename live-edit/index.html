@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coreshift Live Edit — Kanban</title>
+  <style>
+    :root {
+      --navy: #0F1E3D;
+      --navy-deep: #081530;
+      --navy-soft: #1A2A4F;
+      --teal: #14B8A6;
+      --teal-dark: #0D9488;
+      --teal-light: #CCFBF1;
+      --amber: #F59E0B;
+      --amber-light: #FEF3C7;
+      --red: #DC2626;
+      --red-light: #FEE2E2;
+      --green: #10B981;
+      --green-light: #D1FAE5;
+      --purple: #8B5CF6;
+      --purple-light: #EDE9FE;
+      --blue: #3B82F6;
+      --blue-light: #DBEAFE;
+      --indigo: #6366F1;
+      --indigo-light: #E0E7FF;
+      --pink: #EC4899;
+      --pink-light: #FCE7F3;
+      --gray: #64748B;
+      --gray-light: #E2E8F0;
+      --gray-lighter: #F1F5F9;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #475569;
+      --text-soft: #94A3B8;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 14px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    header.page-head {
+      background: var(--navy);
+      color: #FFFFFF;
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--navy-deep);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .page-head-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .page-brand { display: flex; align-items: center; gap: 14px; }
+    .brand-mark {
+      width: 36px; height: 36px;
+      background: var(--teal);
+      color: var(--navy);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 18px;
+    }
+    .brand-title {
+      font-size: 18px; font-weight: 700; letter-spacing: -0.01em;
+    }
+    .brand-sub {
+      font-size: 11px; color: var(--teal);
+      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .page-meta {
+      font-size: 12px; color: #8EA5C8;
+      display: flex; gap: 24px; flex-wrap: wrap;
+    }
+    .page-meta strong { color: #FFFFFF; font-weight: 600; }
+
+    /* Main layout */
+    .page-main {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 32px 32px 48px;
+    }
+
+    /* Section headings */
+    .section-head {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 16px;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: -8px 0 16px;
+    }
+    .section-sub code {
+      background: var(--gray-lighter);
+      border: 1px solid var(--gray-light);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 12px;
+      color: var(--navy);
+    }
+
+    /* Hero */
+    .hero {
+      margin-bottom: 48px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .hero-eyebrow {
+      color: var(--teal-dark);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      margin-bottom: 14px;
+    }
+    .hero-title {
+      color: var(--navy);
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin: 0 0 12px;
+    }
+    .hero-tagline {
+      color: var(--teal-dark);
+      font-size: 22px;
+      font-style: italic;
+      font-weight: 500;
+      margin: 0 0 16px;
+      line-height: 1.35;
+    }
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 17px;
+      line-height: 1.5;
+      max-width: 880px;
+      margin: 0;
+    }
+    .hero-phase-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .phase-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 13px;
+    }
+    .phase-pill-label {
+      color: var(--text-soft);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .phase-pill-value {
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .phase-pill-date {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 4px;
+    }
+    .phase-pill-milestone {
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+    .phase-pill-milestone .phase-pill-label { color: var(--teal); }
+    .phase-pill-milestone .phase-pill-value { color: #FFFFFF; }
+    .phase-pill-milestone .phase-pill-date { color: #CADCFC; }
+
+    /* Goals */
+    .goals { margin-bottom: 40px; }
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .goal-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 24px;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .goal-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .goal-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .goal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .goal-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Phases */
+    .phases { margin-bottom: 40px; }
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .phase-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .phase-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .phase-card.phase-done       { border-top: 4px solid var(--green); }
+    .phase-card.phase-in-progress{ border-top: 4px solid var(--amber); }
+    .phase-card.phase-planned    { border-top: 4px solid var(--blue); }
+    .phase-card.phase-future     { border-top: 4px solid var(--gray); opacity: 0.88; }
+    .phase-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .phase-marker {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .phase-card.phase-done .phase-marker        { background: var(--green); }
+    .phase-card.phase-in-progress .phase-marker { background: var(--amber); }
+    .phase-status-pill {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .phase-status-done        { background: var(--green-light); color: #065F46; }
+    .phase-status-in-progress { background: var(--amber-light); color: #B45309; }
+    .phase-status-planned     { background: var(--blue-light); color: #1D4ED8; }
+    .phase-status-future      { background: var(--gray-light); color: var(--gray); }
+    .phase-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 2px;
+      letter-spacing: -0.01em;
+    }
+    .phase-subtitle {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+    .phase-window {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+    .phase-desc {
+      font-size: 12.5px;
+      color: var(--text);
+      line-height: 1.5;
+      margin: 0 0 12px;
+    }
+    .phase-deliverables {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-top: 1px solid var(--gray-light);
+      padding-top: 10px;
+    }
+    .phase-deliverables li {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      padding: 3px 0 3px 14px;
+      position: relative;
+    }
+    .phase-deliverables li::before {
+      content: "•";
+      position: absolute;
+      left: 4px;
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    /* Status strip */
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 20px 8px;
+    }
+    .status-stat {
+      text-align: center;
+      padding: 8px 12px;
+      border-right: 1px solid var(--gray-light);
+    }
+    .status-stat:last-child { border-right: none; }
+    .status-num {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+    .status-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-top: 8px;
+    }
+    .status-done .status-num        { color: var(--green); }
+    .status-in-progress .status-num { color: var(--amber); }
+    .status-blocked .status-num     { color: var(--red); }
+    .status-this-week .status-num   { color: var(--blue); }
+    .status-backlog .status-num     { color: var(--gray); }
+
+    /* Links */
+    .links { margin-bottom: 40px; }
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+    }
+    .link-card:hover {
+      box-shadow: 0 4px 14px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+      border-color: var(--teal);
+    }
+    .link-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .link-text { flex: 1; }
+    .link-title {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+    .link-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .link-arrow {
+      color: var(--teal);
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Roles */
+    .roles { margin-bottom: 40px; }
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .role-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+    .role-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .role-text { flex: 1; }
+    .role-name {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .role-person {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 6px;
+      font-size: 13px;
+    }
+    .role-verbs {
+      font-size: 12px;
+      color: var(--text-soft);
+      font-weight: 500;
+    }
+
+    /* Recently shipped */
+    .recent { margin-bottom: 40px; }
+    .recent-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+    .recent-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+    }
+    .recent-check {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .recent-text { flex: 1; min-width: 0; }
+    .recent-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+    .recent-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    /* Board section */
+    .board-section { margin-top: 8px; }
+
+    /* Kanban board */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(280px, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .column {
+      background: var(--gray-lighter);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--gray-light);
+    }
+    .col-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 4px 4px 12px;
+      border-bottom: 2px solid transparent;
+    }
+    .col-head h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.02em;
+    }
+    .col-count {
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--gray-light);
+    }
+
+    /* Column accents */
+    .col-done .col-head        { border-bottom-color: var(--green); }
+    .col-in-progress .col-head { border-bottom-color: var(--amber); }
+    .col-blocked .col-head     { border-bottom-color: var(--red); }
+    .col-this-week .col-head   { border-bottom-color: var(--blue); }
+    .col-backlog .col-head     { border-bottom-color: var(--gray); }
+
+    .col-done .col-count        { color: var(--green); border-color: var(--green-light); }
+    .col-in-progress .col-count { color: #B45309; border-color: var(--amber-light); }
+    .col-blocked .col-count     { color: var(--red); border-color: var(--red-light); }
+    .col-this-week .col-count   { color: #1D4ED8; border-color: var(--blue-light); }
+    .col-backlog .col-count     { color: var(--gray); border-color: var(--gray-light); }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 12px 14px;
+      border: 1px solid var(--gray-light);
+      box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04);
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+    }
+    .card-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 4px 0;
+    }
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 12.5px;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+    .empty {
+      color: var(--text-soft);
+      font-size: 12px;
+      text-align: center;
+      padding: 16px 0;
+      font-style: italic;
+    }
+
+    /* Tags */
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .tag-shipped     { background: var(--green-light); color: #065F46; }
+    .tag-phase-0     { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-phase-1     { background: var(--blue-light); color: #1D4ED8; }
+    .tag-phase-2     { background: var(--purple-light); color: #6D28D9; }
+    .tag-phase-4     { background: var(--pink-light); color: #BE185D; }
+    .tag-phase-3     { background: var(--indigo-light); color: #4338CA; }
+    .tag-deliverable { background: var(--green-light); color: #047857; }
+    .tag-playbook    { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-milestone   { background: #FEE2E2; color: #991B1B; }
+    .tag-infra       { background: var(--amber-light); color: #B45309; }
+    .tag-ops         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-recurring   { background: var(--gray-light); color: var(--gray); }
+    .tag-blocked     { background: var(--red-light); color: var(--red); }
+    .tag-est         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-neutral     { background: var(--gray-light); color: var(--text-muted); }
+
+    /* Footer */
+    footer.page-foot {
+      padding: 16px 32px 32px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+    footer.page-foot a {
+      color: var(--teal-dark);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(13, 148, 136, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .board { grid-template-columns: repeat(3, minmax(280px, 1fr)); }
+      .links-grid { grid-template-columns: 1fr; }
+      .recent-list { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 1300px) {
+      .phases-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 1100px) {
+      .goals-grid { grid-template-columns: 1fr; }
+      .roles-grid { grid-template-columns: 1fr; }
+      .phases-grid { grid-template-columns: repeat(2, 1fr); }
+      .status-strip { grid-template-columns: repeat(2, 1fr); }
+      .status-stat { border-right: none; border-bottom: 1px solid var(--gray-light); }
+      .status-stat:nth-last-child(-n+2) { border-bottom: none; }
+    }
+    @media (max-width: 700px) {
+      .phases-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .page-main { padding: 24px 16px 32px; }
+      .board { grid-template-columns: 1fr; }
+      header.page-head { padding: 16px; }
+      .hero-title { font-size: 32px; }
+      .hero-tagline { font-size: 17px; }
+      .hero-desc { font-size: 15px; }
+    }
+
+    /* Print */
+    @media print {
+      header.page-head { background: var(--card); color: var(--navy); border-bottom: 2px solid var(--gray-light); position: static; }
+      .brand-mark { background: var(--navy); color: #FFFFFF; }
+      .brand-title, .page-meta strong { color: var(--navy); }
+      .page-meta, .brand-sub { color: var(--text-muted); }
+      .board { grid-template-columns: repeat(2, 1fr); padding: 16px; }
+      .column { break-inside: avoid; background: var(--card); border: 1px solid var(--gray-light); }
+      .card:hover { transform: none; box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04); }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="page-head-inner">
+      <div class="page-brand">
+        <div class="brand-mark">✎</div>
+        <div>
+          <div class="brand-title">Coreshift Live Edit</div>
+          <div class="brand-sub">Product Dashboard</div>
+        </div>
+      </div>
+      <div class="page-meta">
+        <div><strong>31%</strong> complete</div>
+        <div><strong>10</strong>/32 cards done</div>
+        <div>Updated <strong>2026-07-11 19:11 UTC</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-main">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">INTERNAL · LIVE OPS DASHBOARD</div>
+      <h1 class="hero-title">Coreshift Live Edit</h1>
+      <p class="hero-tagline">Self-serve $100/mo websites the client edits themselves — click any text or image on the live page and change it.</p>
+      <p class="hero-desc">The core Coreshift product: clients get a beautiful site they can edit in place, with unlimited redesigns across a library of theme styles. Edge-native — publishing is a database pointer flip, so go-live is instant; one Cloudflare Worker server-renders every tenant. Cloudflare + Supabase + Stripe + Postmark. Live in production with real customer sites; current focus is proving the money path and hardening security.</p>
+      <div class="hero-phase-row">
+        <div class="phase-pill">
+          <span class="phase-pill-label">Current phase</span>
+          <span class="phase-pill-value">In production · hardening</span>
+        </div>
+        <div class="phase-pill phase-pill-milestone">
+          <span class="phase-pill-label">Next milestone</span>
+          <span class="phase-pill-value">Prove billing end-to-end + close the security gaps <span class="phase-pill-date">P0–P1</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOALS -->
+    <section class="goals">
+      <h2 class="section-head">The Three Goals</h2>
+      <div class="goals-grid">
+        
+        <div class="goal-card">
+          <div class="goal-icon">✎</div>
+          <div class="goal-title">Edit the live page</div>
+          <div class="goal-desc">Click any text or image on your real site and change it. Rich text, links, nav/footer, pages, SEO, plus theme switching across the section + theme library.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">⚡</div>
+          <div class="goal-title">Publish instantly</div>
+          <div class="goal-desc">Publishing flips a pointer in the DB and purges the edge cache, so a change is live in seconds. One Worker SSRs every tenant from the same components the editor uses.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">💳</div>
+          <div class="goal-title">$100/mo, self-serve</div>
+          <div class="goal-desc">Sign up, generate a site from your URL, edit it, go live on a subdomain or custom domain. Trial from first publish, then a Stripe subscription.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASES -->
+    <section class="phases">
+      <h2 class="section-head">Development & Production Phases</h2>
+      <p class="section-sub">Where the project has been, where it is now, and where it's going. Each phase delivers value on its own — no big-bang.</p>
+      <div class="phases-grid">
+        
+        <div class="phase-card phase-done">
+          <div class="phase-card-head">
+            <div class="phase-marker">0</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
+          </div>
+          <div class="phase-title">Phase 0 <span class="phase-subtitle">Edge-native foundation</span></div>
+          <div class="phase-window">Done</div>
+          <p class="phase-desc">Multi-tenant Postgres schema + RLS, the edge renderer Worker (host → tenant → published content → SSR → cache), the shared section library and theme styles, and the JSON content contract that lets the same React components render in the editor and on published sites.</p>
+          <ul class="phase-deliverables">
+            <li>Multi-tenant schema + RLS on Supabase</li><li>Cloudflare Worker edge renderer</li><li>Section library + theme styles (one content contract)</li><li>Instant publish = published-version pointer flip</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-done">
+          <div class="phase-card-head">
+            <div class="phase-marker">1</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
+          </div>
+          <div class="phase-title">Phase 1 <span class="phase-subtitle">The in-page editor</span></div>
+          <div class="phase-window">Done</div>
+          <p class="phase-desc">The click-to-edit overlay: edit text and images in place, rich text with links, nav/footer editors, add pages, SEO + settings panels, theme switching, an in-memory draft, and a sign-off gate that publishes a new version.</p>
+          <ul class="phase-deliverables">
+            <li>Click-to-edit text + image upload to storage</li><li>Nav / footer / pages / SEO / settings editors</li><li>Theme + brand-colour switching</li><li>Draft → review → publish flow</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-done">
+          <div class="phase-card-head">
+            <div class="phase-marker">2</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
+          </div>
+          <div class="phase-title">Phase 2 <span class="phase-subtitle">A live product</span></div>
+          <div class="phase-window">Done · in production</div>
+          <p class="phase-desc">Real customers, real sites. Google sign-in, generate-a-site onboarding, custom-domain connect, the marketing site + signup funnel, CI auto-deploy, support ticketing, and passive telemetry (page views, errors, change requests).</p>
+          <ul class="phase-deliverables">
+            <li>15 published sites live on *.coreshift.page</li><li>Marketing site + signup funnel</li><li>CI auto-deploy (workers, functions, migrations)</li><li>Support ticketing + telemetry</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-in-progress">
+          <div class="phase-card-head">
+            <div class="phase-marker">3</div>
+            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+          </div>
+          <div class="phase-title">Phase 3 <span class="phase-subtitle">Monetise + harden</span></div>
+          <div class="phase-window">Now</div>
+          <p class="phase-desc">Turn a live product into a sellable one: prove the Stripe path end-to-end, make email delivery reliable, finish custom-domain activation, and close the security gaps surfaced by the review (the content-write RPC lockdown already shipped).</p>
+          <ul class="phase-deliverables">
+            <li>Billing proven with a real payment + webhook robustness</li><li>Email deliverability confirmed + fail-loud</li><li>Security: write-path lockdown ✓, XSS + SSRF next</li><li>Custom-domain activation</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">4</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">Phase 4 <span class="phase-subtitle">Polish + self-serve</span></div>
+          <div class="phase-window">Next</div>
+          <p class="phase-desc">Smooth the edges: faster generation on the real theme set, a self-serve billing portal, account lifecycle (rename / leave / transfer / delete), proper test coverage, and reconciling the live DB schema back into source migrations.</p>
+          <ul class="phase-deliverables">
+            <li>Faster generation on the full theme set</li><li>Self-serve billing portal + dunning</li><li>Account lifecycle + co-owner + audit trail</li><li>Test coverage + schema-in-source</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATUS STRIP -->
+    <section class="status-strip">
+      <div class="status-stat status-done">
+        <div class="status-num">10</div>
+        <div class="status-label">Done</div>
+      </div>
+      <div class="status-stat status-in-progress">
+        <div class="status-num">8</div>
+        <div class="status-label">In Progress</div>
+      </div>
+      <div class="status-stat status-blocked">
+        <div class="status-num">3</div>
+        <div class="status-label">Blocked</div>
+      </div>
+      <div class="status-stat status-this-week">
+        <div class="status-num">4</div>
+        <div class="status-label">This Week</div>
+      </div>
+      <div class="status-stat status-backlog">
+        <div class="status-num">7</div>
+        <div class="status-label">Backlog</div>
+      </div>
+    </section>
+
+    <!-- KEY ARTIFACTS / QUICK LINKS -->
+    <section class="links">
+      <h2 class="section-head">Key Artifacts</h2>
+      <div class="links-grid">
+        
+        <a class="link-card" href="https://github.com/CoreshiftHQNZ/coreshift-live-edit" target="_blank" rel="noopener">
+          <div class="link-icon">📦</div>
+          <div class="link-text">
+            <div class="link-title">Repo</div>
+            <div class="link-desc">CoreshiftHQNZ/coreshift-live-edit — the whole monorepo</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://app.coreshift.page" target="_blank" rel="noopener">
+          <div class="link-icon">🚀</div>
+          <div class="link-text">
+            <div class="link-title">Dashboard / editor</div>
+            <div class="link-desc">app.coreshift.page — sign in, edit, publish</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://coreshift.page" target="_blank" rel="noopener">
+          <div class="link-icon">🌐</div>
+          <div class="link-text">
+            <div class="link-title">Marketing site</div>
+            <div class="link-desc">coreshift.page — the funnel + signup</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <a class="link-card" href="../lead-engine/" target="_blank" rel="noopener">
+          <div class="link-icon">🧭</div>
+          <div class="link-text">
+            <div class="link-title">Lead Engine board</div>
+            <div class="link-desc">The sales machine built on top of this product</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ROLES -->
+    <section class="roles">
+      <h2 class="section-head">Who's Involved</h2>
+      <div class="roles-grid">
+        
+        <div class="role-card">
+          <div class="role-avatar">O</div>
+          <div class="role-text">
+            <div class="role-name">Owner <span class="role-person">Ricky</span></div>
+            <div class="role-verbs">Decide · prioritise · review</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-avatar">B</div>
+          <div class="role-text">
+            <div class="role-name">Builder <span class="role-person">Claude Code</span></div>
+            <div class="role-verbs">Design · code · ship</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-avatar">T</div>
+          <div class="role-text">
+            <div class="role-name">The stack <span class="role-person">Cloudflare · Supabase · Stripe · Postmark</span></div>
+            <div class="role-verbs">Render · store · charge · email</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECENTLY SHIPPED -->
+    
+    <section class="recent">
+      <h2 class="section-head">Recently Shipped</h2>
+      <div class="recent-list">
+        
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">In-page editor</div>
+            <div class="recent-desc">Click-to-edit text and images, rich text with links, nav/footer editors, add-pages, SEO + settings panels, theme + brand-colour switching, in-memory draft, and a sign-off gate. In real use across the live sites</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Section + theme engine</div>
+            <div class="recent-desc">7 section types and ~10 theme styles rendered through one shared code path used by both the editor and the edge renderer, so swapping themes never loses content</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Instant publish + edge renderer</div>
+            <div class="recent-desc">Publishing is a DB pointer flip + edge-cache purge; one Cloudflare Worker resolves host → tenant → published content → SSR. **15 sites live and published.**</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Contact forms → leads</div>
+            <div class="recent-desc">Published forms post to a public function that resolves the recipient server-side, stores the lead, and shows it in the dashboard. Proven by real leads</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Telemetry</div>
+            <div class="recent-desc">Page-view counting, dashboard error capture, and an editor &quot;ask for a change&quot; feed — all live with real data</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Auth + accounts</div>
+            <div class="recent-desc">Google sign-in with automatic personal-account + owner-membership provisioning</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KANBAN BOARD -->
+    <section class="board-section">
+      <h2 class="section-head">Live Rollout Board</h2>
+      <p class="section-sub">Every task across every phase. Updated by editing <code>KANBAN.md</code> and running <code>update-kanban.cmd</code>.</p>
+      <div class="board">
+        
+    <section class="column col-done">
+      <header class="col-head">
+        <h2>✅ Done</h2>
+        <span class="col-count">10</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">In-page editor</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Click-to-edit text and images, rich text with links, nav/footer editors, add-pages, SEO + settings panels, theme + brand-colour switching, in-memory draft, and a sign-off gate. In real use across the live sites</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Section + theme engine</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">7 section types and ~10 theme styles rendered through one shared code path used by both the editor and the edge renderer, so swapping themes never loses content</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Instant publish + edge renderer</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Publishing is a DB pointer flip + edge-cache purge; one Cloudflare Worker resolves host → tenant → published content → SSR. **15 sites live and published.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Contact forms → leads</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Published forms post to a public function that resolves the recipient server-side, stores the lead, and shows it in the dashboard. Proven by real leads</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Telemetry</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Page-view counting, dashboard error capture, and an editor &quot;ask for a change&quot; feed — all live with real data</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Auth + accounts</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Google sign-in with automatic personal-account + owner-membership provisioning</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Trial + billing gate</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">14-day trial from first publish; cancelled/expired sites serve a calm offline page from the renderer</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Marketing site + signup funnel</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">coreshift.page carries a pasted URL through sign-in into the &quot;bring my site&quot; onboarding</div>
+      </div>
+      <div class="card">
+        <div class="card-title">CI auto-deploy</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Push to main deploys the dashboard, renderer, marketing, and edge functions to Cloudflare/Supabase, gated on typecheck + tests + a prod smoke test</div>
+      </div>
+      <div class="card">
+        <div class="card-title">P0: content-write RPCs locked down</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">publish_site</span><span class="tag tag-neutral">save_draft</span><span class="tag tag-neutral">rollback_site</span><span class="tag tag-neutral">provision_site</span><span class="tag tag-neutral">anon</span></div>
+        <div class="card-desc">`publish_site`/`save_draft`/`rollback_site`/`provision_site` now enforce owner checks and are no longer callable by `anon`. Hotfixed in prod + codified in PR #7</div>
+      </div></div>
+    </section>
+    <section class="column col-in-progress">
+      <header class="col-head">
+        <h2>🟡 In Progress</h2>
+        <span class="col-count">8</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Billing end-to-end</div>
+        <div class="card-tags"><span class="tag tag-neutral">billing</span></div>
+        <div class="card-desc">Every path is built and deployed, but no real payment has gone through Stripe in prod yet; the webhook also needs replay/idempotency guards and to persist the subscription id</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Email deliverability</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">Postmark is wired for leads, auth, support and invites, but there is no confirmation any email has actually been delivered; it should fail loudly, not silently</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Magic-link login</div>
+        <div class="card-tags"><span class="tag tag-neutral">auth</span></div>
+        <div class="card-desc">Built, but has never completed a real round trip in production (depends on the Postmark auth hook above)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Site generation quality</div>
+        <div class="card-tags"><span class="tag tag-neutral">enhancement</span></div>
+        <div class="card-desc">&quot;Make me a site&quot; works, but it runs slow, is currently limited to a small set of theme styles, and generated copy/links need sanitising before publish</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Team invites / agency linking</div>
+        <div class="card-tags"><span class="tag tag-neutral">auth</span></div>
+        <div class="card-desc">Partly wired; several bindings and the invite-accept surface still need connecting and one real run-through</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Two-way support chat</div>
+        <div class="card-tags"><span class="tag tag-neutral">enhancement</span></div>
+        <div class="card-desc">Customer → team works; the team → customer reply and the customer email notification still need to be delivered (the widget already promises &quot;we&#39;ll email you&quot;)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Stored-XSS hardening</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span></div>
+        <div class="card-desc">Add an href allow-list on links + a parser-based rich-text sanitizer shared by the browser and the Worker</div>
+      </div>
+      <div class="card">
+        <div class="card-title">SSRF hardening</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span></div>
+        <div class="card-desc">Resolve DNS and re-check the resolved IP before the crawler/scorer fetch a user-supplied URL</div>
+      </div></div>
+    </section>
+    <section class="column col-blocked">
+      <header class="col-head">
+        <h2>🚫 Blocked</h2>
+        <span class="col-count">3</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Confirm Postmark is configured in prod</div>
+        <div class="card-tags"><span class="tag tag-neutral">needs-ricky</span></div>
+        <div class="card-desc">Until the token is verified set, every lead / auth / support / invite email may be silently failing</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Stripe webhook secret + one test-card sale</div>
+        <div class="card-tags"><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">checkout.session.completed</span></div>
+        <div class="card-desc">Confirm the `checkout.session.completed` endpoint + signing secret for coreshift-sites, then run one real test payment before charging customers</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Custom domains: decide the path</div>
+        <div class="card-tags"><span class="tag tag-neutral">needs-ricky</span></div>
+        <div class="card-desc">Customers can connect a domain but nothing activates it. Either finish activation (Cloudflare for SaaS ownership/SSL) or stop advertising it until it works</div>
+      </div></div>
+    </section>
+    <section class="column col-this-week">
+      <header class="col-head">
+        <h2>🔵 This Week</h2>
+        <span class="col-count">4</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Ship the stored-XSS fix</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">safeHref()</span><span class="tag tag-neutral">javascript:</span></div>
+        <div class="card-desc">`safeHref()` on all links + swap the regex sanitizer for a real parser; add a `javascript:` href test</div>
+      </div>
+      <div class="card">
+        <div class="card-title">SSRF DNS-resolve guard</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span></div>
+        <div class="card-desc">Apply to crawl-site, score-site, and generate-site&#39;s asset fetch, on every redirect hop</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Webhook robustness + payment-failed handling</div>
+        <div class="card-tags"><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">stripe_subscription_id</span><span class="tag tag-neutral">invoice.payment_failed</span></div>
+        <div class="card-desc">Timestamp/replay guard, event dedup, persist `stripe_subscription_id`, handle `invoice.payment_failed`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Reconcile live DB → migrations</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">saas-platform/db/migrations/</span></div>
+        <div class="card-desc">The core tables and RPCs exist only in the prod DB; capture them into `saas-platform/db/migrations/` so source is the truth and a rebuild is safe</div>
+      </div></div>
+    </section>
+    <section class="column col-backlog">
+      <header class="col-head">
+        <h2>⚪ Backlog</h2>
+        <span class="col-count">7</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Self-serve billing portal</div>
+        <div class="card-tags"><span class="tag tag-neutral">billing</span></div>
+        <div class="card-desc">Cancel / update card / view invoices (Stripe portal helper already exists, just unwired) + dunning on failed payments</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Custom-domain lifecycle</div>
+        <div class="card-tags"><span class="tag tag-neutral">enhancement</span></div>
+        <div class="card-desc">Verify / retry / remove a hostname; purge cache on custom-domain go-live; tear down on cancel</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Account lifecycle</div>
+        <div class="card-tags"><span class="tag tag-neutral">enhancement</span></div>
+        <div class="card-desc">Rename / leave / transfer-ownership / delete-account (GDPR), a co-owner / recovery path, and an access-change audit trail</div>
+      </div>
+      <div class="card">
+        <div class="card-title">RLS/telemetry hardening</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">sites</span><span class="tag tag-neutral">site-assets</span></div>
+        <div class="card-desc">Tighten the `sites` anon read (tenant enumeration), disable `site-assets` bucket listing, lengthen the preview password, add view-count integrity</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Test coverage</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">No tests yet for edge functions, RLS/multitenancy, checkout/webhook, or href sanitization</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Lazy-load the editor</div>
+        <div class="card-tags"><span class="tag tag-neutral">enhancement</span></div>
+        <div class="card-desc">Code-split the overlay so it never ships to end-visitors on published sites</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Branch flow</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">dev/staging are behind main; reconcile to match the local → dev → staging → main standard</div>
+      </div></div>
+    </section>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="page-foot">
+    Edit <code>live-edit/KANBAN.md</code> and run <code>node tools/build.js live-edit</code> to refresh this view. &nbsp;·&nbsp; Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans">CoreshiftHQNZ/coreshift-kanbans</a>.
+  </footer>
+</body>
+</html>
