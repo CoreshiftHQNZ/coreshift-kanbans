@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>35%</strong> complete</div>
-        <div><strong>11</strong>/31 cards done</div>
-        <div>Updated <strong>2026-07-12 21:44 UTC</strong></div>
+        <div><strong>40%</strong> complete</div>
+        <div><strong>12</strong>/30 cards done</div>
+        <div>Updated <strong>2026-07-12 22:01 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,11 +821,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">11</div>
+        <div class="status-num">12</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">7</div>
+        <div class="status-num">6</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">3</div>
+        <div class="status-num">2</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -971,7 +971,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">11</span>
+        <span class="col-count">12</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1028,12 +1028,17 @@
         <div class="card-title">Stored-XSS fix: URL guards + tokenizer sanitizer</div>
         <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">Link/image fields go through a scheme allow-list (safeUrl/safeSrc) and rich text through a parser-style sanitizer; blocks javascript: hrefs and unterminated-tag bypasses, with tests. PR #8</div>
+      </div>
+      <div class="card">
+        <div class="card-title">SSRF hardening: DNS-rebinding guard</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Crawler/scorer/generator resolve the host over DNS-over-HTTPS and reject private/reserved IPs (not just the hostname string); generate-site asset fetch is guarded too. PR #9</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1065,11 +1070,6 @@
         <div class="card-title">Two-way support chat</div>
         <div class="card-tags"><span class="tag tag-neutral">enhancement</span></div>
         <div class="card-desc">Customer → team works; the team → customer reply and the customer email notification still need to be delivered (the widget already promises &quot;we&#39;ll email you&quot;)</div>
-      </div>
-      <div class="card">
-        <div class="card-title">SSRF hardening</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span></div>
-        <div class="card-desc">Resolve DNS and re-check the resolved IP before the crawler/scorer fetch a user-supplied URL</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1097,14 +1097,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">SSRF DNS-resolve guard</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span></div>
-        <div class="card-desc">Apply to crawl-site, score-site, and generate-site&#39;s asset fetch, on every redirect hop</div>
-      </div>
       <div class="card">
         <div class="card-title">Webhook robustness + payment-failed handling</div>
         <div class="card-tags"><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">stripe_subscription_id</span><span class="tag tag-neutral">invoice.payment_failed</span></div>
