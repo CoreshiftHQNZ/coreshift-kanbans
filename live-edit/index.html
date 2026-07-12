@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>31%</strong> complete</div>
-        <div><strong>10</strong>/32 cards done</div>
-        <div>Updated <strong>2026-07-11 19:11 UTC</strong></div>
+        <div><strong>35%</strong> complete</div>
+        <div><strong>11</strong>/31 cards done</div>
+        <div>Updated <strong>2026-07-12 21:44 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,11 +821,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">10</div>
+        <div class="status-num">11</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">8</div>
+        <div class="status-num">7</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">4</div>
+        <div class="status-num">3</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -971,7 +971,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">10</span>
+        <span class="col-count">11</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1023,12 +1023,17 @@
         <div class="card-title">P0: content-write RPCs locked down</div>
         <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">publish_site</span><span class="tag tag-neutral">save_draft</span><span class="tag tag-neutral">rollback_site</span><span class="tag tag-neutral">provision_site</span><span class="tag tag-neutral">anon</span></div>
         <div class="card-desc">`publish_site`/`save_draft`/`rollback_site`/`provision_site` now enforce owner checks and are no longer callable by `anon`. Hotfixed in prod + codified in PR #7</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Stored-XSS fix: URL guards + tokenizer sanitizer</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Link/image fields go through a scheme allow-list (safeUrl/safeSrc) and rich text through a parser-style sanitizer; blocks javascript: hrefs and unterminated-tag bypasses, with tests. PR #8</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">8</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1062,11 +1067,6 @@
         <div class="card-desc">Customer → team works; the team → customer reply and the customer email notification still need to be delivered (the widget already promises &quot;we&#39;ll email you&quot;)</div>
       </div>
       <div class="card">
-        <div class="card-title">Stored-XSS hardening</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span></div>
-        <div class="card-desc">Add an href allow-list on links + a parser-based rich-text sanitizer shared by the browser and the Worker</div>
-      </div>
-      <div class="card">
         <div class="card-title">SSRF hardening</div>
         <div class="card-tags"><span class="tag tag-neutral">security</span></div>
         <div class="card-desc">Resolve DNS and re-check the resolved IP before the crawler/scorer fetch a user-supplied URL</div>
@@ -1097,14 +1097,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Ship the stored-XSS fix</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">safeHref()</span><span class="tag tag-neutral">javascript:</span></div>
-        <div class="card-desc">`safeHref()` on all links + swap the regex sanitizer for a real parser; add a `javascript:` href test</div>
-      </div>
       <div class="card">
         <div class="card-title">SSRF DNS-resolve guard</div>
         <div class="card-tags"><span class="tag tag-neutral">security</span></div>

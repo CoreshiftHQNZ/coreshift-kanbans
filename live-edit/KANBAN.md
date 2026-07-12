@@ -20,6 +20,7 @@
 - **Marketing site + signup funnel** `shipped` — coreshift.page carries a pasted URL through sign-in into the "bring my site" onboarding.
 - **CI auto-deploy** `infra` `shipped` — Push to main deploys the dashboard, renderer, marketing, and edge functions to Cloudflare/Supabase, gated on typecheck + tests + a prod smoke test.
 - **P0: content-write RPCs locked down** `security` `shipped` — `publish_site`/`save_draft`/`rollback_site`/`provision_site` now enforce owner checks and are no longer callable by `anon`. Hotfixed in prod + codified in PR #7.
+- **Stored-XSS fix: URL guards + tokenizer sanitizer** `security` `shipped` — Link/image fields go through a scheme allow-list (safeUrl/safeSrc) and rich text through a parser-style sanitizer; blocks javascript: hrefs and unterminated-tag bypasses, with tests. PR #8.
 
 ## 🟡 In Progress
 
@@ -29,7 +30,6 @@
 - **Site generation quality** `enhancement` — "Make me a site" works, but it runs slow, is currently limited to a small set of theme styles, and generated copy/links need sanitising before publish.
 - **Team invites / agency linking** `auth` — Partly wired; several bindings and the invite-accept surface still need connecting and one real run-through.
 - **Two-way support chat** `enhancement` — Customer → team works; the team → customer reply and the customer email notification still need to be delivered (the widget already promises "we'll email you").
-- **Stored-XSS hardening** `security` — Add an href allow-list on links + a parser-based rich-text sanitizer shared by the browser and the Worker.
 - **SSRF hardening** `security` — Resolve DNS and re-check the resolved IP before the crawler/scorer fetch a user-supplied URL.
 
 ## 🚫 Blocked
@@ -40,7 +40,6 @@
 
 ## 🔵 This Week
 
-- **Ship the stored-XSS fix** `security` — `safeHref()` on all links + swap the regex sanitizer for a real parser; add a `javascript:` href test.
 - **SSRF DNS-resolve guard** `security` — Apply to crawl-site, score-site, and generate-site's asset fetch, on every redirect hop.
 - **Webhook robustness + payment-failed handling** `billing` — Timestamp/replay guard, event dedup, persist `stripe_subscription_id`, handle `invoice.payment_failed`.
 - **Reconcile live DB → migrations** `infra` — The core tables and RPCs exist only in the prod DB; capture them into `saas-platform/db/migrations/` so source is the truth and a rebuild is safe.
