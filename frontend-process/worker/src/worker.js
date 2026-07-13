@@ -106,6 +106,10 @@ async function handleChat(request, env, cors) {
   const messages = clientMsgs
     .filter((m) => m && (m.role === "user" || m.role === "assistant") && m.text)
     .map((m) => ({ role: m.role, content: String(m.text) }));
+  // The Anthropic API requires the first message to be a user turn. The client
+  // stores the assistant's greeting as message #1, so drop any leading
+  // assistant turns before sending.
+  while (messages.length && messages[0].role !== "user") messages.shift();
   if (!messages.length) messages.push({ role: "user", content: "Hi — I have an idea." });
 
   let reply = "";
