@@ -45,16 +45,27 @@ a { color: inherit; }
 .fp-legend b { color: var(--text-muted); font-weight: 600; }
 
 /* ── Board ─────────────────────────────────────────────── */
-.fp-board { overflow-x: auto; padding-bottom: 10px; }
-.fp-cols { display: flex; gap: 14px; min-width: min-content; align-items: flex-start; }
-.fp-col { flex: 0 0 292px; min-width: 292px; }
+/* A bordered, scrollable panel — so a partially-visible right column reads as
+   "scroll for more", not a broken page. */
+.fp-board { overflow-x: auto; overflow-y: hidden; border: 1px solid var(--border-strong); border-radius: 14px; background: var(--bg); box-shadow: var(--shadow-sm); padding: 14px; scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+/* Keep the horizontal scrollbar visible (overlay scrollbars hide on macOS/Win11)
+   so "scroll for more" always reads, even when no partial column peeks. */
+.fp-board::-webkit-scrollbar { height: 10px; }
+.fp-board::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 6px; }
+.fp-board::-webkit-scrollbar-track { background: transparent; }
+.fp-cols { display: flex; gap: 14px; min-width: min-content; align-items: flex-start; height: 100%; }
+.fp-col { flex: 0 0 288px; min-width: 288px; display: flex; flex-direction: column; min-height: 0; }
 .fp-col.divider { border-left: 2px dashed var(--red); margin-left: 3px; padding-left: 14px; }
-.fp-role { display: inline-block; background: #FBE79B; color: #4A3D00; font-size: 11px; font-weight: 700; padding: 3px 11px; border-radius: 3px; transform: rotate(-1.2deg); box-shadow: 0 2px 5px rgba(0,0,0,.13); margin-bottom: 8px; }
-.fp-col-head { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 11px 13px; box-shadow: var(--shadow-sm); margin-bottom: 10px; }
+.fp-col.offstart { border-left: 2px solid var(--border-strong); margin-left: 6px; padding-left: 16px; }
+.fp-col.offlane { opacity: 0.92; }
+.fp-role { align-self: flex-start; flex-shrink: 0; display: inline-block; background: #FBE79B; color: #4A3D00; font-size: 11px; font-weight: 700; padding: 3px 11px; border-radius: 3px; transform: rotate(-1.2deg); box-shadow: 0 2px 5px rgba(0,0,0,.13); margin-bottom: 8px; }
+.fp-col.offlane .fp-role { background: #E2E8F0; color: #475569; transform: none; box-shadow: none; }
+.fp-col-head { flex-shrink: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 11px 13px; box-shadow: var(--shadow-sm); margin-bottom: 10px; }
 .fp-col-title { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--navy); }
 .fp-col-count { margin-left: auto; font-size: 11px; color: var(--text-soft); background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 1px 8px; font-weight: 600; }
 .fp-col-gate { font-size: 11px; color: var(--text-muted); margin-top: 5px; line-height: 1.4; }
-.fp-cards { display: flex; flex-direction: column; gap: 10px; min-height: 30px; }
+.fp-cards { display: flex; flex-direction: column; gap: 10px; flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 3px; }
+.fp-empty { color: var(--text-muted); font-size: 12px; font-style: italic; padding: 8px 2px; }
 
 .fp-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 13px; box-shadow: var(--shadow-sm); transition: box-shadow .13s ease, transform .13s ease; }
 .fp-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
@@ -75,14 +86,14 @@ a { color: inherit; }
 .pill-validated { background: var(--green-light); color: #065F46; border-color: #6EE7B7; }
 .pill-declined  { background: var(--red-light); color: #991B1B; border-color: #FCA5A5; }
 .fp-card-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
-.fp-card-updated { font-size: 10.5px; color: var(--text-soft); }
+.fp-card-updated { font-size: 10.5px; color: var(--text-muted); }
 .fp-card.new { border-style: dashed; background: transparent; box-shadow: none; text-align: center; color: var(--text-soft); font-size: 13px; padding: 16px; text-decoration: none; display: block; }
 .fp-card.new:hover { border-color: var(--teal); color: var(--teal-dark); }
 .fp-card.new b { color: var(--text-muted); }
 
 /* ── Intake (chat + panel) ─────────────────────────────── */
 .fp-intake { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1fr); gap: 18px; align-items: stretch; }
-.fp-chat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; height: calc(100vh - 210px); min-height: 460px; }
+.fp-chat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; min-height: 460px; }
 .fp-chat-head { padding: 14px 18px; border-bottom: 1px solid var(--border); font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 8px; }
 .fp-chat-head .avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--teal); color: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 14px; }
 .fp-log { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
@@ -103,12 +114,12 @@ a { color: inherit; }
 .fp-input:focus { outline: none; border-color: var(--teal); }
 
 /* assessment panel */
-.fp-panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; height: calc(100vh - 210px); min-height: 460px; }
+.fp-panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; min-height: 460px; }
 .fp-panel-head { padding: 14px 18px; border-bottom: 1px solid var(--border); }
 .fp-panel-head h2 { margin: 0; font-size: 14px; font-weight: 700; color: var(--navy); }
 .fp-progress { height: 5px; background: var(--bg); border-radius: 999px; margin-top: 10px; overflow: hidden; }
 .fp-progress > i { display: block; height: 100%; background: var(--teal); width: 0; transition: width .4s ease; }
-.fp-progress-label { font-size: 11px; color: var(--text-soft); margin-top: 6px; }
+.fp-progress-label { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
 .fp-sections { flex: 1; overflow-y: auto; padding: 8px 18px 18px; }
 .fp-section { border-bottom: 1px solid var(--border); padding: 12px 0; }
 .fp-section:last-child { border-bottom: none; }
@@ -166,10 +177,25 @@ a { color: inherit; }
 .fp-step.done .lbl { color: var(--navy); }
 @media (max-width: 560px) { .fp-step .lbl small { display: none; } }
 
-/* off-board (Parked / Declined) */
-.fp-offboard { margin-top: 26px; }
-.fp-offboard-head { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-soft); margin: 0 0 12px; display: flex; align-items: center; gap: 10px; }
-.fp-offboard-head::after { content: ""; height: 1px; flex: 1; background: var(--border); }
-.fp-offboard-row { display: flex; gap: 12px; flex-wrap: wrap; }
-.fp-offboard-row .fp-col { flex: 0 0 300px; }
-.fp-offboard-row .fp-card { opacity: 0.9; }
+/* Desktop with enough height: fit the viewport exactly. The page never scrolls;
+   the transcript, assessment panel, and each board column scroll inside their own
+   box. Gated on min-height too, so short or zoomed windows fall back to the
+   normal-flow (page-scrolls) base layout instead of clipping. */
+@media (min-width: 901px) and (min-height: 600px) {
+  html { height: 100%; }
+  body.fp-app { height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+  body.fp-app .fp-head { position: static; flex: 0 0 auto; }
+  body.fp-app .fp-wrap { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; padding-top: 22px; padding-bottom: 18px; }
+  body.fp-app .fp-hero { flex: 0 0 auto; margin-bottom: 14px; }
+  body.fp-app .fp-legend { flex: 0 0 auto; margin-bottom: 12px; }
+  body.fp-app .fp-foot { flex: 0 0 auto; margin-top: 12px; padding-top: 12px; }
+  /* board fills the remaining height; columns scroll internally */
+  body.fp-app .fp-board { flex: 1 1 auto; min-height: 0; }
+  body.fp-app .fp-cols { align-items: stretch; }
+  body.fp-app .fp-col { max-height: 100%; }
+  /* intake fills the remaining height; log + panel scroll internally */
+  body.fp-app .fp-intake { flex: 1 1 auto; min-height: 0; }
+  body.fp-app .fp-chat, body.fp-app .fp-panel { height: 100%; min-height: 0; }
+  /* success state replaces the intake — keep it scrollable so its CTA is never clipped */
+  body.fp-app .fp-success { flex: 1 1 auto; min-height: 0; max-height: 100%; overflow-y: auto; margin: 24px auto; }
+}

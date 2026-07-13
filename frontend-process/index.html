@@ -4,16 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex" />
-  <title>Frontend Process — Coreshift HQ</title>
+  <title>Coreshift Idea Pipeline — Coreshift HQ</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💡%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="fp-app">
   <header class="fp-head">
     <div class="fp-head-inner">
       <a class="fp-brand" href="../index.html">
         <div class="fp-mark">💡</div>
-        <div><div class="fp-title">Coreshift HQ</div><div class="fp-sub">Frontend Process</div></div>
+        <div><div class="fp-title">Coreshift HQ</div><div class="fp-sub">Idea Pipeline</div></div>
       </a>
       <div class="fp-meta">
         <span id="modeBadge"></span>
@@ -27,7 +27,7 @@
   <div class="fp-wrap">
     <div class="fp-hero">
       <div>
-        <h1>Idea pipeline</h1>
+        <h1>Coreshift Idea Pipeline</h1>
         <p>Every app idea, from first thought to live. Each card carries its assessment across owned gates. The build engine (the plugin) runs in the Build column.</p>
       </div>
       <a class="btn btn-primary" href="submit.html">＋ Submit an idea</a>
@@ -36,12 +36,11 @@
       <span><b>Chips:</b> Intent · Confidence · Decision</span>
       <span><b>Status:</b> draft → in review → validated</span>
       <span><b>Dashed line:</b> build ◀ | ▶ harden &amp; govern</span>
+      <span><b>Solid line:</b> off-board (parked &amp; declined)</span>
       <span><b>Click a card</b> to review &amp; decide</span>
     </p>
 
     <div class="fp-board"><div class="fp-cols" id="cols"></div></div>
-
-    <div class="fp-offboard" id="offboard"></div>
 
     <div class="fp-foot">
       <span>The pipeline that surrounds the <a href="../wiki/new-project/">build workflow</a>. Assessment gate = the <code>app-assessment</code> skill.</span>
@@ -80,7 +79,7 @@
     }
     function cardHtml(idea) {
       const st = idea.status || "draft";
-      return `<div class="fp-card" data-id="${esc(idea.id)}">
+      return `<div class="fp-card" data-id="${esc(idea.id)}" tabindex="0" role="button" aria-label="Review ${esc(idea.title)}">
         <div class="fp-card-top"><span class="fp-card-name">${esc(idea.title)}</span>
           <span class="pill pill-${st}">${esc(L.status[st] || st)}</span></div>
         <div class="fp-card-snap">${esc(idea.one_liner || "")}</div>
@@ -89,37 +88,50 @@
       </div>`;
     }
 
+    function colHtml(s, isOff, isOffStart) {
+      const inCol = ideas.filter((i) => (i.stage || "inbox") === s.key);
+      const cards = inCol.map(cardHtml).join("");
+      const adder = s.key === "inbox" ? `<a class="fp-card new" href="submit.html"><b>＋ New idea</b><br/>start an assessment</a>` : "";
+      const cls = ["fp-col", s.divider ? "divider" : "", isOff ? "offlane" : "", isOffStart ? "offstart" : ""].filter(Boolean).join(" ");
+      const gate = s.gate ? `<div class="fp-col-gate">Exit: ${esc(s.gate)}</div>` : "";
+      return `<div class="${cls}">
+        <div class="fp-role">${esc(isOff ? "off-board" : s.role)}</div>
+        <div class="fp-col-head">
+          <div class="fp-col-title">${esc(s.label)}<span class="fp-col-count">${inCol.length}</span></div>
+          ${gate}
+        </div>
+        <div class="fp-cards">${cards}${adder}</div>
+      </div>`;
+    }
+
     function render() {
-      document.getElementById("cols").innerHTML = F.stages.map((s) => {
-        const inCol = ideas.filter((i) => (i.stage || "inbox") === s.key);
-        const cards = inCol.map(cardHtml).join("");
-        const adder = s.key === "inbox" ? `<a class="fp-card new" href="submit.html"><b>＋ New idea</b><br/>start an assessment</a>` : "";
-        return `<div class="fp-col${s.divider ? " divider" : ""}">
-          <div class="fp-role">${esc(s.role)}</div>
-          <div class="fp-col-head">
-            <div class="fp-col-title">${esc(s.label)}<span class="fp-col-count">${inCol.length}</span></div>
-            <div class="fp-col-gate">Exit: ${esc(s.gate)}</div>
-          </div>
-          <div class="fp-cards">${cards}${adder}</div>
-        </div>`;
-      }).join("");
-
-      // off-board lanes (Parked / Declined)
-      const off = (F.offBoard || []).map((o) => {
-        const inLane = ideas.filter((i) => i.stage === o.key);
-        const cards = inLane.length ? inLane.map(cardHtml).join("") : `<div style="color:var(--text-soft);font-size:12px;font-style:italic;padding:8px 2px">none</div>`;
-        return `<div class="fp-col"><div class="fp-col-head"><div class="fp-col-title">${esc(o.label)}<span class="fp-col-count">${inLane.length}</span></div></div><div class="fp-cards">${cards}</div></div>`;
-      }).join("");
-      document.getElementById("offboard").innerHTML = off
-        ? `<div class="fp-offboard-head">Off-board</div><div class="fp-offboard-row">${off}</div>` : "";
-
-      document.querySelectorAll(".fp-card[data-id]").forEach((c) => c.addEventListener("click", () => openReview(c.dataset.id)));
+      const stageCols = F.stages.map((s) => colHtml(s, false, false)).join("");
+      // Only show Parked / Declined lanes that actually have cards (no dead far-right scroll).
+      const offLanes = (F.offBoard || []).filter((o) => ideas.some((i) => i.stage === o.key));
+      const offCols = offLanes.map((o, i) => colHtml(o, true, i === 0)).join("");
+      document.getElementById("cols").innerHTML = stageCols + offCols;
+      document.querySelectorAll(".fp-card[data-id]").forEach((c) => {
+        const open = () => openReview(c.dataset.id);
+        c.addEventListener("click", open);
+        c.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+      });
     }
 
     // ── Review overlay ────────────────────────────────────────────────
+    let lastTrigger = null;
+    function trapKeys(e) {
+      if (e.key === "Escape") { e.preventDefault(); closeReview(); return; }
+      if (e.key !== "Tab") return;
+      const f = document.querySelectorAll('#overlay button, #overlay a[href], #overlay [tabindex]:not([tabindex="-1"])');
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
     async function openReview(id) {
       const idea = ideas.find((i) => i.id === id);
       if (!idea) return;
+      lastTrigger = document.activeElement;
       let assessment = null;
       if (LIVE) {
         const token = ensureToken();
@@ -143,9 +155,9 @@
 
       document.getElementById("overlay").innerHTML = `
         <div style="position:fixed;inset:0;background:rgba(8,21,48,.45);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto" id="scrim">
-          <div style="background:var(--card);border-radius:16px;max-width:620px;width:100%;box-shadow:var(--shadow-md)" onclick="event.stopPropagation()">
+          <div id="fpDialog" role="dialog" aria-modal="true" aria-labelledby="fpDialogTitle" tabindex="-1" style="background:var(--card);border-radius:16px;max-width:620px;width:100%;box-shadow:var(--shadow-md);outline:none" onclick="event.stopPropagation()">
             <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;justify-content:space-between;gap:10px">
-              <div><div style="font-size:19px;font-weight:700;color:var(--navy)">${esc(idea.title)}</div>
+              <div><div id="fpDialogTitle" style="font-size:19px;font-weight:700;color:var(--navy)">${esc(idea.title)}</div>
               <div style="font-size:13px;color:var(--text-muted);margin-top:3px">${esc(idea.one_liner || "")}</div></div>
               <span class="pill pill-${idea.status || "draft"}">${esc(L.status[idea.status] || idea.status || "draft")}</span>
             </div>
@@ -165,8 +177,15 @@
       document.getElementById("scrim").addEventListener("click", closeReview);
       document.getElementById("closeReview").addEventListener("click", closeReview);
       document.querySelectorAll("#overlay button[data-d]").forEach((b) => b.addEventListener("click", () => decide(idea, b.dataset.d)));
+      document.addEventListener("keydown", trapKeys);
+      const dlg = document.getElementById("fpDialog");
+      if (dlg) dlg.focus();
     }
-    function closeReview() { document.getElementById("overlay").innerHTML = ""; }
+    function closeReview() {
+      document.removeEventListener("keydown", trapKeys);
+      document.getElementById("overlay").innerHTML = "";
+      if (lastTrigger && lastTrigger.focus) lastTrigger.focus();
+    }
 
     async function decide(idea, decision) {
       const stageFor = { do_not_proceed: "declined", validate_first: "build", product: "build" };

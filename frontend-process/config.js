@@ -7,7 +7,7 @@
  *     "https://idea-intake.<your-subdomain>.workers.dev") and both pages go live.
  */
 window.FP = {
-  workerUrl: "", // ← set after deploying the Worker to go live
+  workerUrl: "", // ← set to the deployed Worker URL to go live
 
   // The lifecycle stages (board columns), in order. `role` is the owning role.
   stages: [
@@ -46,7 +46,7 @@ window.FP = {
   ],
 
   labels: {
-    intent:     { personal: "Personal", internal: "Internal tool", client: "Client build", speculative: "Speculative", standalone: "Standalone business" },
+    intent:     { personal: "Personal", internal: "Internal tool", client: "Client build", speculative: "Speculative", standalone: "Standalone business", product: "Product" },
     confidence: { punt: "Worth a punt", validate: "Validate first", business_case: "Full business case" },
     decision:   { proceed: "Proceed", validate_first: "Validate first", experiment: "Experiment", client_only: "Client only", product: "Build as product", do_not_proceed: "Do not proceed" },
     status:     { draft: "Draft", in_review: "In review", validated: "Validated ✓", declined: "Declined" },
