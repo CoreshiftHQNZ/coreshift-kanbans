@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>55%</strong> complete</div>
-        <div><strong>22</strong>/40 cards done</div>
-        <div>Updated <strong>2026-07-04 03:27 UTC</strong></div>
+        <div><strong>23</strong>/41 cards done</div>
+        <div>Updated <strong>2026-07-06 09:00 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -970,7 +970,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">22</span>
+        <span class="col-count">23</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1074,6 +1074,11 @@
         <div class="card-desc">Post-protector cutout rule AUTOMATED (protector height vs lowest beam level from elevations). AI review now sees the topology result (no more &quot;4541 unclassified *U&quot; scare) and proposes actionable include/exclude/adjust options per comment. Clarification answers + free-text now PERSIST (POST /clarifications → feedback corpus for refining rules). Exports front the part-coded BOM (PDF was showing only the legacy vision-matrix → looked wrong though the count was right). Merged + on staging 2026-07-04</div>
       </div>
       <div class="card">
+        <div class="card-title">Storepro&#39;s rule answers encoded (PR #5)</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">pr-open</span><span class="tag tag-neutral">PR #5</span></div>
+        <div class="card-desc">Shivneel replied 2026-07-05. Encoded as corrected clarification wording (OPPAK count unchanged): splice kits de-automated (1/post, load-driven, 2 variants — manual flag); load signs → per-aisle estimate not per-bay-type; weld reads from block name (OPPAK unmarked → MW confirmed); Bay B custom-height cut-to-size documented (FSL6629→6477); back-tie Gino-vs-count contradiction flagged. Reply drafted to Shiv (Gmail draft) requesting the NetSuite catalogue + stock sizes. 30 tests pass</div>
+      </div>
+      <div class="card">
         <div class="card-title">Engine generalised off OPPAK-specific hardcodes</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">on-staging</span><span class="tag tag-neutral">parser/topology_spike.py</span></div>
         <div class="card-desc">The BOM is the deliverable (Storepro never provides one) — so the engine must work on unseen drawings. Removed 6 OPPAK-baked assumptions, all now DERIVED: bay pitch (any consistent arrayed strip), bay letters (regex discovery, not A/B), taller-at-shared-frame (from elevation heights not hardcoded &#39;B&#39;), half-bays (pattern-matched + width→type), BOM groups (by frame height). OPPAK still reproduces line-for-line; new synthetic test proves it on C/D/E bays at non-OPPAK pitches. Still 1-real-job-validated → next real drawing is the true test</div>
@@ -1099,9 +1104,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Part-code table + answers to the 7 rule questions</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">blocked-on-storepro</span><span class="tag tag-neutral">docs/plan-topology-notes.md</span></div>
-        <div class="card-desc">The one input geometry can&#39;t produce: Storepro&#39;s catalogue mapping (frame height/depth/profile → FSL code; beam length/profile/weld → BBSL code; note FSL6629 ↔ 6477mm is not 1:1) plus 7 rule confirmations (weld default MW?, mixed-height back-tie = 1?, load signs one per bay type?, 4th A1 instance, protector end convention, splice increments, capacity-table total quirk). Questions consolidated in docs/plan-topology-notes.md; email drafted 2026-07-03. Until answered, part_codes.yaml runs on OPPAK-seeded entries + clarifications</div>
+        <div class="card-title">NetSuite part-code catalogue + stock-size list</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">blocked-on-storepro</span></div>
+        <div class="card-desc">The 7 rule questions were ANSWERED (Shivneel, 2026-07-05) and encoded (PR #5). Remaining blocker is the one input geometry can&#39;t produce: Storepro&#39;s NetSuite codes (geometry → FSL/BBSL) + the STANDARD STOCK FRAME SIZES (custom heights order the nearest stock size + a cut-to-size line — that&#39;s why Bay B is FSL6629 cut to 6477). Storepro confirmed they&#39;ll send it; not on drawings yet. Two smaller open items in the reply: back-tie count reconciliation (Gino says 2/pair → 114 vs confirmed 112) and whether beams are always weld-marked in the block name</div>
       </div></div>
     </section>
     <section class="column col-this-week">
