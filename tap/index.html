@@ -485,8 +485,9 @@
 
       <div class="board">
         <div class="col done">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">53</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Done</span><span class="col-count">54</span></div>
           <div class="col-body">
+            <div class="card"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 13</span></div><p class="card-title">🪪 NZBN owner lookup — LIVE</p><p class="card-note">Companies Office director lookup activated: NZBN_API_KEY set on the engine service (prod). Verified end-to-end — the register returns directors with just the subscription key (no OAuth), the provider fires with zero errors, and a freshly-surfaced lead now carries an NZBN owner (Cozy Building Compliance → Chihyang Tsai, Director). Free + runs first in the contact cascade, so the director name then seeds the mobile search.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">M2</span><span class="card-date">Jul 13</span></div><p class="card-title">🎯 Industry gate fix — every category surfaces, not just Real estate</p><p class="card-note">Found live during a demo: the cheap gate re-rejected any candidate whose Google Maps type didn't literally contain the ICP's industry label. Only &ldquo;Real estate&rdquo; self-echoes (&ldquo;Real estate agency&rdquo;), so it was the ONLY category that ever surfaced — Professional services / Trades / Retail / Healthcare found 80+ candidates and surfaced 0, killed before enrichment at $0.004/run. Discovery already searches by industry, so the substring re-check was redundant + destructive: removed it (evaluate no longer penalises non-matches). Verified in prod: &ldquo;Professional services&rdquo; ICP 0→9 leads (Baker Tilly, PDV Consultants @ 99-100); Russ 10→31. Bounded by $0.50/run + $25/day; +6 tests; adversarially reviewed (15 agents, zero must-fix). #78→#80.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">SEC</span><span class="card-date">Jul 10</span></div><p class="card-title">🔒 2nd critical closed — profiles write-lockdown</p><p class="card-note">Re-audit caught what the first lockdown missed: authenticated could DELETE+re-INSERT their own profiles row to self-grant plan=pro, reset the free counter, and drive unbounded spend. Revoked INSERT/DELETE + added a plan CHECK (mig 0021). Verified closed on prod.</p></div>
             <div class="card"><div class="card-head"><span class="card-id">OPS</span><span class="card-date">Jul 10</span></div><p class="card-title">🛰️ Observability — /api/health + engine watchdog</p><p class="card-note">GET /api/health (web+DB + engine heartbeat freshness) + a scheduled Action that fails (emails admins, zero config) when the engine goes stale/errored. Cost-cap now alerts too. Verified live: 200, engine healthy.</p></div>
@@ -544,10 +545,9 @@
         </div>
 
         <div class="col doing">
-          <div class="col-head"><span class="col-title"><span class="dot"></span>Doing</span><span class="col-count">2</span></div>
+          <div class="col-head"><span class="col-title"><span class="dot"></span>Doing</span><span class="col-count">1</span></div>
           <div class="col-body">
             <div class="card"><div class="card-head"><span class="card-id">M3</span></div><p class="card-title">Stripe activation</p><p class="card-note">Code fully wired incl. dunning + price-gating — blocked only on keys (Ricky)</p></div>
-            <div class="card"><div class="card-head"><span class="card-id">M2</span></div><p class="card-title">NZBN owner lookup</p><p class="card-note">Provider implemented · blocked on API key approval</p></div>
           </div>
         </div>
 
