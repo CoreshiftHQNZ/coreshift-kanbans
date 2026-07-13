@@ -10,20 +10,28 @@ window.FP = {
   workerUrl: "", // ← set to the deployed Worker URL to go live
 
   // The lifecycle stages (board columns), in order. `role` is the owning role.
+  // `view` splits them: "pipeline" (new-idea intake: capture→assess→decide) and
+  // "wip" (approved work: build→live). The governance gate is the boundary
+  // between the two — nothing enters Build until PIA/governance clears at Review.
   stages: [
-    { key: "inbox",      label: "Inbox",                 role: "—",            gate: "Captured — not yet assessed" },
-    { key: "assessment", label: "Assessment",            role: "Product owner", gate: "Assessment in progress" },
-    { key: "review",     label: "Review",                role: "Reviewer",     gate: "Decision recorded" },
-    { key: "build",      label: "Build",                 role: "Build lead",   gate: "MVP built — the plugin runs here" },
-    { key: "harden",     label: "Harden & Secure",       role: "Security",     gate: "Security signed off, no high-sev", divider: true },
-    { key: "business",   label: "Business & Governance", role: "Commercial",   gate: "Business case + governance signed" },
-    { key: "launch",     label: "Launch Readiness",      role: "Launch",       gate: "Launch / handover ready" },
-    { key: "live",       label: "Live",                  role: "—",            gate: "Shipped / in production" },
+    { key: "inbox",      label: "Inbox",                 role: "—",             gate: "Captured — not yet assessed",                  view: "pipeline" },
+    { key: "assessment", label: "Assessment",            role: "Product owner", gate: "Assessment in progress",                       view: "pipeline" },
+    { key: "review",     label: "Review",                role: "Reviewer",      gate: "Decision + PIA / governance cleared → Build",  view: "pipeline" },
+    { key: "build",      label: "Build",                 role: "Build lead",    gate: "MVP built — the plugin runs here",             view: "wip" },
+    { key: "harden",     label: "Harden & Secure",       role: "Security",      gate: "Security signed off, no high-sev",             view: "wip", softdivider: true },
+    { key: "business",   label: "Business & Governance", role: "Commercial",    gate: "Business case + governance signed",            view: "wip" },
+    { key: "launch",     label: "Launch Readiness",      role: "Launch",        gate: "Launch / handover ready",                      view: "wip" },
+    { key: "live",       label: "Live",                  role: "—",             gate: "Shipped / in production",                      view: "wip" },
   ],
-  // Terminal states shown below the board, not as columns.
+  // Terminal states (shown in the WIP view).
   offBoard: [
     { key: "parked",   label: "Parked" },
     { key: "declined", label: "Declined" },
+  ],
+  // The two board views (tab toggle). Split per the 2026-07-13 stand-up.
+  views: [
+    { key: "pipeline", label: "Idea Pipeline",     sub: "capture · assess · decide" },
+    { key: "wip",      label: "Work in Progress",  sub: "build → live" },
   ],
 
   // The intake conversation's three visible phases (the plugin, on the web).

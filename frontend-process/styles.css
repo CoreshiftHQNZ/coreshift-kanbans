@@ -44,6 +44,19 @@ a { color: inherit; }
 .fp-legend { color: var(--text-soft); font-size: 12px; margin: 0 0 20px; display: flex; gap: 20px; flex-wrap: wrap; }
 .fp-legend b { color: var(--text-muted); font-weight: 600; }
 
+/* view toggle (Idea Pipeline / Work in Progress) */
+.fp-viewtabs { display: flex; gap: 8px; margin: 0 0 14px; flex-wrap: wrap; }
+.fp-viewtab { display: inline-flex; align-items: baseline; gap: 8px; font-family: var(--font); font-size: 13.5px; font-weight: 700; color: var(--text-muted); background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; cursor: pointer; }
+.fp-viewtab small { font-weight: 500; font-size: 11px; color: var(--text-soft); }
+.fp-viewtab .vc { font-size: 11px; font-weight: 700; background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 0 7px; color: var(--text-muted); }
+.fp-viewtab:hover { border-color: var(--teal); }
+.fp-viewtab.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+.fp-viewtab.active small { color: #CADCFC; }
+.fp-viewtab.active .vc { background: rgba(255,255,255,.15); border-color: transparent; color: #fff; }
+
+/* soft section divider (Harden & Secure inside the WIP view) */
+.fp-col.softdivider { border-left: 1px solid var(--border-strong); margin-left: 4px; padding-left: 14px; }
+
 /* ── Board ─────────────────────────────────────────────── */
 /* A bordered, scrollable panel — so a partially-visible right column reads as
    "scroll for more", not a broken page. */
@@ -218,6 +231,7 @@ a { color: inherit; }
   body.fp-app .fp-head { position: static; flex: 0 0 auto; }
   body.fp-app .fp-wrap { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; padding-top: 22px; padding-bottom: 18px; }
   body.fp-app .fp-hero { flex: 0 0 auto; margin-bottom: 14px; }
+  body.fp-app .fp-viewtabs { flex: 0 0 auto; }
   body.fp-app .fp-legend { flex: 0 0 auto; margin-bottom: 12px; }
   body.fp-app .fp-foot { flex: 0 0 auto; margin-top: 12px; padding-top: 12px; }
   /* board fills the remaining height; columns scroll internally */

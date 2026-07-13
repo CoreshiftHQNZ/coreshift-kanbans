@@ -27,18 +27,13 @@
   <div class="fp-wrap">
     <div class="fp-hero">
       <div>
-        <h1>Coreshift Idea Pipeline</h1>
-        <p>Every app idea, from first thought to live. Each card carries its assessment across owned gates. The build engine (the plugin) runs in the Build column.</p>
+        <h1 id="viewTitle">Coreshift Idea Pipeline</h1>
+        <p id="viewDesc"></p>
       </div>
       <a class="btn btn-primary" href="submit.html">＋ Submit an idea</a>
     </div>
-    <p class="fp-legend">
-      <span><b>Chips:</b> Intent · Confidence · Decision</span>
-      <span><b>Status:</b> draft → in review → validated</span>
-      <span><b>Dashed line:</b> build ◀ | ▶ harden &amp; govern</span>
-      <span><b>Solid line:</b> off-board (parked &amp; declined)</span>
-      <span><b>Click a card</b> to review &amp; decide</span>
-    </p>
+    <div class="fp-viewtabs" id="viewTabs" role="tablist" aria-label="Board view"></div>
+    <p class="fp-legend" id="legend"></p>
 
     <div class="fp-board"><div class="fp-cols" id="cols"></div></div>
 
@@ -56,6 +51,11 @@
     const LIVE = !!F.workerUrl;
     const L = F.labels;
     let ideas = [];
+    let view = "pipeline"; // "pipeline" (inbox/assessment/review) or "wip" (build→live)
+    const VIEW_META = {
+      pipeline: { title: "Coreshift Idea Pipeline", desc: "New ideas land here — captured, assessed, then a go/no-go decision. Approved ideas cross the governance gate into Work in Progress." },
+      wip:      { title: "Coreshift — Work in Progress", desc: "Approved projects moving from build to live. The build engine (the plugin) runs in Build; parked & declined sit off-board." },
+    };
 
     document.getElementById("modeBadge").innerHTML = LIVE ? "" : '<span class="fp-badge-demo">Demo data</span>';
     const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -96,7 +96,7 @@
       const cards = inCol.map(cardHtml).join("");
       const adder = s.key === "inbox" ? `<a class="fp-card new" href="submit.html"><b>＋ New idea</b><br/>start an assessment</a>` : "";
       const empty = (!inCol.length && s.key !== "inbox") ? `<div class="fp-empty">No ideas here yet</div>` : "";
-      const cls = ["fp-col", s.divider ? "divider" : "", isOff ? "offlane" : "", isOffStart ? "offstart" : ""].filter(Boolean).join(" ");
+      const cls = ["fp-col", s.divider ? "divider" : "", s.softdivider ? "softdivider" : "", isOff ? "offlane" : "", isOffStart ? "offstart" : ""].filter(Boolean).join(" ");
       const gate = s.gate ? `<div class="fp-col-gate">Exit: ${esc(s.gate)}</div>` : "";
       return `<div class="${cls}">
         <div class="fp-role">${esc(isOff ? "off-board" : s.role)}</div>
@@ -108,11 +108,41 @@
       </div>`;
     }
 
+    function stageKeysFor(vk) {
+      const keys = F.stages.filter((s) => s.view === vk).map((s) => s.key);
+      return vk === "wip" ? keys.concat((F.offBoard || []).map((o) => o.key)) : keys;
+    }
+    function countInView(vk) {
+      const keys = stageKeysFor(vk);
+      return ideas.filter((i) => keys.includes(i.stage || "inbox")).length;
+    }
+    function renderTabs() {
+      document.getElementById("viewTabs").innerHTML = (F.views || []).map((v) =>
+        `<button class="fp-viewtab ${v.key === view ? "active" : ""}" data-view="${v.key}" role="tab" aria-selected="${v.key === view}">
+           ${esc(v.label)} <span class="vc">${countInView(v.key)}</span><small>${esc(v.sub)}</small></button>`).join("");
+      document.querySelectorAll("#viewTabs .fp-viewtab").forEach((b) =>
+        b.addEventListener("click", () => { view = b.dataset.view; render(); }));
+    }
+    function renderLegend() {
+      const common = `<span><b>Chips:</b> Intent · Confidence · Decision</span><span><b>Click a card</b> to review &amp; decide</span>`;
+      const extra = view === "pipeline"
+        ? `<span><b>Governance gate:</b> a decision + PIA/governance sends approved ideas into Work in Progress →</span>`
+        : `<span><b>Faint line:</b> build ▸ harden &amp; govern</span><span><b>Off-board:</b> parked &amp; declined</span>`;
+      document.getElementById("legend").innerHTML = common + extra;
+    }
     function render() {
-      const stageCols = F.stages.map((s) => colHtml(s, false, false)).join("");
-      // Only show Parked / Declined lanes that actually have cards (no dead far-right scroll).
-      const offLanes = (F.offBoard || []).filter((o) => ideas.some((i) => i.stage === o.key));
-      const offCols = offLanes.map((o, i) => colHtml(o, true, i === 0)).join("");
+      const meta = VIEW_META[view];
+      document.getElementById("viewTitle").textContent = meta.title;
+      document.getElementById("viewDesc").textContent = meta.desc;
+      renderTabs();
+      renderLegend();
+      const stages = F.stages.filter((s) => s.view === view);
+      const stageCols = stages.map((s) => colHtml(s, false, false)).join("");
+      let offCols = "";
+      if (view === "wip") {
+        const offLanes = (F.offBoard || []).filter((o) => ideas.some((i) => i.stage === o.key));
+        offCols = offLanes.map((o, i) => colHtml(o, true, i === 0)).join("");
+      }
       document.getElementById("cols").innerHTML = stageCols + offCols;
       document.querySelectorAll(".fp-card[data-id]").forEach((c) => {
         const open = () => openReview(c.dataset.id);
