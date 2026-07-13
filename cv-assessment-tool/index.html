@@ -453,12 +453,7 @@
               </p>
             </div>
 
-            <div class="task">
-              <p class="task-title">Design system pass <span class="task-when">whenever visual polish matters</span></p>
-              <p class="task-body">
-                The app shipped on clean shadcn defaults because no <code>docs/design.md</code> exists. When you want a branded look, run the Design System skill with reference imagery and Claude will retrofit tokens app-wide.
-              </p>
-            </div>
+
           </div>
         </div>
       </section>
@@ -513,6 +508,7 @@
             <div class="col-count">48</div>
           </div>
           <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m4">design</span><span class="card-id">14 Jul</span></div><h3 class="card-title">Design system + full UI retrofit (PRs #10&ndash;#12)</h3><p class="card-note">Claude Designer mockup translated into <code>docs/design.md</code> + <code>docs/design.html</code> (tokens: cream canvas, ink navy, burnt-orange accent, Bricolage Grotesque + Instrument Sans). Every screen restyled and browser-verified; live on staging. Repo also mirrored to <code>CoreshiftHQNZ/shortlist</code>.</p></article>
             <article class="card"><div class="card-head"><span class="chip m4">P3</span><span class="card-id">14 Jul</span></div><h3 class="card-title">Phases 0&ndash;3 shipped to main (PRs #4&ndash;#9)</h3><p class="card-note">Export pack, run-complete email, loading/error states, onboarding seed + hint strip, a11y announcements, bundle 480&rarr;208KB gz, role-delete with storage cleanup (zero orphans verified), 30 req/min rate limits, <code>/security-review</code> pass (1 finding, fixed), staging worker crashloop hotfix. CI green on hermetic Supabase stack throughout.</p></article>
             <article class="card"><div class="card-head"><span class="chip m3">P2</span><span class="card-id">13 Jul</span></div><h3 class="card-title">Assessment engine + ranked shortlist (magic moment ✓)</h3><p class="card-note">Forced tool-use engine (<code>claude-sonnet-5</code>), zod-validated with retries, citation verification against extracted text, prompts-as-data in <code>engine_versions</code>. 80-candidate simulated run: live progress &rarr; ranked table &rarr; cited report &rarr; PDF quote highlight &rarr; override re-ranks 1&rarr;7 &rarr; shortlist &rarr; 23-page export pack.</p></article>
             <article class="card"><div class="card-head"><span class="chip m2">P1</span><span class="card-id">13 Jul</span></div><h3 class="card-title">Roles, scorecards &amp; CV ingestion</h3><p class="card-note">Role CRUD, scorecard editor (autosave, versioning, drag-reorder, duplication), HSS Delivery &amp; Install template seeded exactly from the source docx (17 criteria / 290 pts), 200-file upload pipeline, pdf/docx extraction with vision fallback + password/corrupt handling, Postgres job queue (skip-locked claims, heartbeats, retries with backoff).</p></article>
