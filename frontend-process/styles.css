@@ -67,8 +67,11 @@ a { color: inherit; }
 .fp-cards { display: flex; flex-direction: column; gap: 10px; flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 3px; }
 .fp-empty { color: var(--text-muted); font-size: 12px; font-style: italic; padding: 8px 2px; }
 
-.fp-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 13px; box-shadow: var(--shadow-sm); transition: box-shadow .13s ease, transform .13s ease; }
+.fp-card { position: relative; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 13px; box-shadow: var(--shadow-sm); transition: box-shadow .13s ease, transform .13s ease; }
 .fp-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.fp-card-del { width: 22px; height: 22px; flex-shrink: 0; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text-soft); font-size: 11px; line-height: 1; cursor: pointer; padding: 0; opacity: 0; transition: opacity .12s ease, color .12s ease, border-color .12s ease; }
+.fp-card:hover .fp-card-del, .fp-card:focus-within .fp-card-del, .fp-card-del:focus { opacity: 1; }
+.fp-card-del:hover { color: var(--red); border-color: var(--red); }
 .fp-card-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .fp-card-name { font-size: 15px; font-weight: 700; color: var(--navy); letter-spacing: -0.01em; }
 .fp-card-snap { font-size: 12.5px; color: var(--text-muted); margin: 5px 0 9px; line-height: 1.45; }
@@ -142,6 +145,31 @@ a { color: inherit; }
 .fp-toast .ch { font-size: 12px; color: var(--text-soft); }
 .fp-toast .tx { font-size: 13px; color: var(--text); margin-top: 2px; }
 
+/* resumed-session note (a centered system line in the transcript) */
+.fp-note { align-self: center; font-size: 11.5px; color: var(--text-muted); background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 3px 12px; margin: 2px 0; }
+
+/* completion outputs (the deliverable view after submit) */
+.fp-outputs { max-width: 920px; margin: 8px auto; }
+.out-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.out-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow-sm); }
+.out-card h3 { margin: 0 0 12px; font-size: 14px; color: var(--navy); }
+.out-decision { font-size: 13px; margin-bottom: 12px; padding: 8px 12px; background: var(--teal-light); border-radius: 8px; color: var(--teal-dark); }
+.out-decision b { color: var(--navy); }
+.out-row { padding: 8px 0; border-bottom: 1px solid var(--border); }
+.out-row:last-child { border-bottom: none; }
+.out-k { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); }
+.out-v { font-size: 13px; color: var(--text); margin-top: 3px; line-height: 1.5; }
+.out-v.muted { color: var(--text-soft); font-style: italic; }
+.out-sub { font-size: 12.5px; color: var(--text-muted); margin: 0 0 12px; line-height: 1.5; }
+.out-checklist { list-style: none; padding: 0; margin: 0; }
+.out-checklist li { font-size: 13px; color: var(--text); padding: 8px 0 8px 24px; position: relative; line-height: 1.5; border-bottom: 1px solid var(--border); }
+.out-checklist li:last-child { border-bottom: none; }
+.out-checklist li::before { content: "▢"; position: absolute; left: 2px; color: var(--text-soft); }
+.out-checklist li.flag { color: var(--navy); }
+.out-checklist li.flag::before { content: "⚑"; color: var(--amber); }
+.out-checklist li.flag span { display: block; font-size: 11.5px; color: #B45309; font-weight: 600; margin-top: 2px; }
+@media (max-width: 700px) { .out-grid { grid-template-columns: 1fr; } }
+
 /* footer */
 .fp-foot { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-soft); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 .fp-foot a { color: var(--text-muted); text-decoration: none; border-bottom: 1px solid var(--border-strong); }
@@ -196,6 +224,6 @@ a { color: inherit; }
   /* intake fills the remaining height; log + panel scroll internally */
   body.fp-app .fp-intake { flex: 1 1 auto; min-height: 0; }
   body.fp-app .fp-chat, body.fp-app .fp-panel { height: 100%; min-height: 0; }
-  /* success state replaces the intake — keep it scrollable so its CTA is never clipped */
-  body.fp-app .fp-success { flex: 1 1 auto; min-height: 0; max-height: 100%; overflow-y: auto; margin: 24px auto; }
+  /* completion outputs replace the intake — keep scrollable so nothing is clipped */
+  body.fp-app .fp-outputs { flex: 1 1 auto; min-height: 0; max-height: 100%; overflow-y: auto; }
 }

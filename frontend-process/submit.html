@@ -73,6 +73,8 @@
     let ideaId = null;
     let step = 0;
     let busy = false;
+    let submitted = false;
+    const SKEY = "fp_intake_session";
 
     document.getElementById("modeBadge").innerHTML = LIVE ? "" : '<span class="fp-badge-demo">Demo mode</span>';
     const logEl = document.getElementById("log");
@@ -89,6 +91,17 @@
       logEl.appendChild(d);
       logEl.scrollTop = logEl.scrollHeight;
     }
+    function addNote(text) {
+      const d = document.createElement("div");
+      d.className = "fp-note"; d.textContent = text;
+      logEl.appendChild(d);
+    }
+    // Persist the in-progress session so an accidental navigation / closed tab resumes.
+    function saveSession() {
+      if (submitted) return;
+      try { localStorage.setItem(SKEY, JSON.stringify({ ideaId, messages, assessment, step })); } catch (e) {}
+    }
+    function clearSession() { try { localStorage.removeItem(SKEY); } catch (e) {} }
     function typing(on) {
       let t = document.getElementById("typing");
       if (on && !t) {
@@ -157,9 +170,11 @@
       if (!text) return;
       inputEl.value = ""; suggestEl.innerHTML = "";
       addMsg("user", text);
+      messages.push({ role: "user", text });
       busy = true;
-      LIVE ? await sendLive(text) : await sendDemo(text);
+      LIVE ? await sendLive() : await sendDemo();
       busy = false;
+      saveSession();
     }
     async function sendDemo() {
       const s = F.demoScript[step];
@@ -169,12 +184,12 @@
       typing(false);
       if (s.fills) applyFills(s.fills);
       addMsg("assistant", s.assistant);
+      messages.push({ role: "assistant", text: s.assistant });
       if (s.submit) return finish();
       step++;
       if (F.demoScript[step]) showChips(F.demoScript[step].chips);
     }
-    async function sendLive(text) {
-      messages.push({ role: "user", text });
+    async function sendLive() {
       typing(true);
       try {
         const r = await fetch(F.workerUrl + "/api/chat", {
@@ -192,18 +207,47 @@
     }
 
     function finish() {
+      submitted = true;
+      clearSession();
       const title = assessment.title || "your idea";
+      const decisionLabel = L.decision[assessment.decision] || assessment.decision || "—";
+      const rows = F.sections.map((sec, i) => {
+        let v = assessment[sec.field];
+        const has = v != null && v !== "";
+        if (has && sec.field === "intent_type") v = L.intent[v] || v;
+        if (has && sec.field === "confidence") v = L.confidence[v] || v;
+        if (has && sec.field === "decision") v = L.decision[v] || v;
+        return `<div class="out-row"><div class="out-k">${i + 1} · ${esc(sec.label)}</div>
+          <div class="out-v ${has ? "" : "muted"}">${has ? esc(v) : "not captured"}</div></div>`;
+      }).join("");
       document.getElementById("intake").outerHTML = `
-        <div class="fp-success">
-          <div class="check">✓</div>
-          <h2 id="fpDone" tabindex="-1">Assessment complete</h2>
-          <p>Sent to Keitha for review. You'll see it in <strong>Review</strong> on the board.</p>
-          <div class="fp-toast">
-            <div class="slack">#</div>
-            <div><div class="ch">#frontend-process · just now</div>
-            <div class="tx">💡 New idea submitted: <strong>${esc(title)}</strong> — awaiting your review @keitha</div></div>
+        <div class="fp-outputs">
+          <div class="fp-success" style="max-width:none;margin:0 0 18px">
+            <div class="check">✓</div>
+            <h2 id="fpDone" tabindex="-1">Assessment complete</h2>
+            <p>Recorded and sent to the reviewer. You'll see <strong>${esc(title)}</strong> in <strong>Review</strong> on the board.</p>
+            <div class="fp-toast"><div class="slack">#</div>
+              <div><div class="ch">#frontend-process · just now</div>
+              <div class="tx">💡 New idea submitted: <strong>${esc(title)}</strong> — awaiting your review @keitha</div></div></div>
           </div>
-          <a class="btn btn-primary" href="index.html">See it on the board →</a>
+          <div class="out-grid">
+            <div class="out-card">
+              <h3>What was captured</h3>
+              <div class="out-decision">Decision: <b>${esc(decisionLabel)}</b></div>
+              ${rows}
+            </div>
+            <div class="out-card">
+              <h3>What happens next</h3>
+              <p class="out-sub">If the reviewer greenlights it, this assessment seeds the build. Every artifact below is <b>required</b> before it ships:</p>
+              <ul class="out-checklist">
+                <li><b>Product idea</b> — pre-filled from this assessment (<code>docs/product-idea.md</code>)</li>
+                <li><b>Vision, PRD &amp; roadmap</b> — the product-planner skill (<code>docs/prd.md</code>, <code>product-roadmap.md</code>)</li>
+                <li class="flag"><b>Design system</b> — the design-system skill (<code>docs/design.md</code>).<span>Separate step, easy to miss — no design file means the build is incomplete.</span></li>
+                <li><b>Launch checklist</b> — the launch-checklist skill, before go-live</li>
+              </ul>
+            </div>
+          </div>
+          <a class="btn btn-primary" href="index.html" style="margin-top:16px;display:inline-flex">See it on the board →</a>
         </div>`;
       var done = document.getElementById("fpDone");
       if (done) done.focus();
@@ -213,10 +257,24 @@
 
     inputEl.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } });
     document.getElementById("send").addEventListener("click", send);
-    document.getElementById("restart").addEventListener("click", () => location.reload());
+    document.getElementById("restart").addEventListener("click", () => { clearSession(); location.reload(); });
 
     // ── Boot ──────────────────────────────────────────────────────────
     async function boot() {
+      // Resume an in-progress session (accidental navigation / closed tab).
+      let saved = null;
+      try { saved = JSON.parse(localStorage.getItem(SKEY) || "null"); } catch (e) {}
+      if (saved && saved.messages && saved.messages.length) {
+        ideaId = saved.ideaId || null;
+        messages = saved.messages;
+        assessment = saved.assessment || { phase: "shape" };
+        step = saved.step || 0;
+        renderStepper(); renderPanel();
+        addNote("Resumed where you left off — Restart to start fresh");
+        messages.forEach((m) => addMsg(m.role, m.text));
+        if (!LIVE && F.demoScript[step]) showChips(F.demoScript[step].chips);
+        return;
+      }
       assessment.phase = "shape";
       renderStepper();
       renderPanel();
@@ -230,13 +288,15 @@
           typing(false);
           ideaId = j.ideaId || null;
           if (j.assessment) { assessment = j.assessment; renderPanel(); renderStepper(); }
-          addMsg("assistant", j.reply || "Hi — what's your idea?");
-          if (j.reply) messages.push({ role: "assistant", text: j.reply });
+          const greeting = j.reply || "Hi — what's your idea?";
+          addMsg("assistant", greeting); messages.push({ role: "assistant", text: greeting });
         } catch (e) { typing(false); addMsg("assistant", "Couldn't reach the intake service — but here's how it works: tell me your idea and who it's for."); }
       } else {
         addMsg("assistant", F.demoGreeting);
+        messages.push({ role: "assistant", text: F.demoGreeting });
         showChips(F.demoScript[0].chips);
       }
+      saveSession();
     }
     boot();
   </script>

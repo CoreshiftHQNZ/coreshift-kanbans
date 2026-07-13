@@ -29,11 +29,13 @@ create table if not exists public.ideas (
   transcript     jsonb,                                 -- optional conversation record
   decision_note  text,
   reviewed_by    text,
-  reviewed_at    timestamptz
+  reviewed_at    timestamptz,
+  deleted_at     timestamptz           -- soft delete; the board filters deleted_at is null
 );
 
-create index if not exists ideas_stage_idx      on public.ideas (stage);
-create index if not exists ideas_updated_at_idx  on public.ideas (updated_at desc);
+create index if not exists ideas_stage_idx       on public.ideas (stage);
+create index if not exists ideas_updated_at_idx   on public.ideas (updated_at desc);
+create index if not exists ideas_deleted_at_idx   on public.ideas (deleted_at);
 
 alter table public.ideas enable row level security;
 -- Intentionally no policies. Service role (the Worker) bypasses RLS; everyone

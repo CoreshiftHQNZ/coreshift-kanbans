@@ -76,6 +76,7 @@ export default {
       if (url.pathname === "/api/ideas" && request.method === "GET") return await handleIdeas(env, cors);
       if (url.pathname === "/api/idea" && request.method === "GET") return await handleIdea(request, env, cors, url);
       if (url.pathname === "/api/decision" && request.method === "POST") return await handleDecision(request, env, cors);
+      if (url.pathname === "/api/delete" && request.method === "POST") return await handleDelete(request, env, cors);
       if (url.pathname === "/try" && request.method === "GET")
         return new Response(TRY_PAGE, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
       if (url.pathname === "/" || url.pathname === "/health") return json({ ok: true, service: "idea-intake" }, 200, cors);
@@ -146,6 +147,8 @@ async function handleChat(request, env, cors) {
     patch.status = "in_review";
     patch.stage = "review";
   }
+  // Persist the transcript so a draft is recoverable server-side too.
+  patch.transcript = clientMsgs.concat(reply ? [{ role: "assistant", text: reply }] : []);
   const saved = await updateIdea(env, idea.id, patch);
   if (submitted) await notifySlack(env, saved).catch(() => {});
 
@@ -168,7 +171,7 @@ async function handleSubmit(request, env, cors) {
 async function handleIdeas(env, cors) {
   const rows = await supa(
     env, "GET",
-    "ideas?select=id,title,one_liner,stage,status,intent,confidence,decision,updated_at&order=updated_at.desc",
+    "ideas?select=id,title,one_liner,stage,status,intent,confidence,decision,updated_at&deleted_at=is.null&order=updated_at.desc",
   );
   return json({ ideas: rows.map(publicView) }, 200, cors);
 }
@@ -199,6 +202,15 @@ async function handleDecision(request, env, cors) {
   };
   const saved = await updateIdea(env, body.ideaId, patch);
   return json({ ok: true, idea: publicView(saved) }, 200, cors);
+}
+
+// ── /api/delete (soft delete — review-token gated) ─────────────────────────
+async function handleDelete(request, env, cors) {
+  if (!authed(request, env)) return json({ error: "Unauthorized" }, 401, cors);
+  const body = await request.json();
+  if (!body.ideaId) return json({ error: "ideaId required" }, 400, cors);
+  await updateIdea(env, body.ideaId, { deleted_at: new Date().toISOString() });
+  return json({ ok: true }, 200, cors);
 }
 
 // ── Assessment merge ───────────────────────────────────────────────────────
@@ -304,7 +316,10 @@ function publicView(idea) {
 function corsHeaders(origin, env) {
   const allowed = (env.ALLOWED_ORIGINS || "https://coreshifthqnz.github.io,http://localhost:8790,http://127.0.0.1:8790")
     .split(",").map((s) => s.trim());
-  const ok = allowed.includes(origin) || allowed.includes("*");
+  // Also allow Cloudflare Pages preview origins (*.pages.dev). CORS isn't a real
+  // security boundary here (the endpoint is reachable by non-browser clients
+  // regardless); tighten by gating the whole thing before real use.
+  const ok = allowed.includes(origin) || allowed.includes("*") || /^https:\/\/[a-z0-9.-]+\.pages\.dev$/i.test(origin);
   return {
     "Access-Control-Allow-Origin": ok ? origin : allowed[0],
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
