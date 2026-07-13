@@ -1,0 +1,17 @@
+name = "idea-intake"
+main = "src/worker.js"
+compatibility_date = "2026-07-01"
+
+# Non-secret config. Secrets are set separately with `wrangler secret put` —
+# never commit ANTHROPIC_API_KEY, SUPABASE_SERVICE_ROLE_KEY, SLACK_WEBHOOK_URL,
+# or REVIEW_TOKEN.
+[vars]
+MODEL = "claude-sonnet-5"
+SITE_URL = "https://coreshifthqnz.github.io/coreshift-kanbans"
+SUPABASE_URL = "https://yusggtnusduelymxrcmt.supabase.co"
+# Comma-separated origins allowed to call the Worker (the Pages site + local dev).
+ALLOWED_ORIGINS = "https://coreshifthqnz.github.io,http://localhost:8790,http://127.0.0.1:8790"
+
+# Observability on so logs show in the Cloudflare dashboard.
+[observability]
+enabled = true

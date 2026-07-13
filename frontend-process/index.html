@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Frontend Process — Coreshift HQ</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💡%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="fp-head">
+    <div class="fp-head-inner">
+      <a class="fp-brand" href="../index.html">
+        <div class="fp-mark">💡</div>
+        <div><div class="fp-title">Coreshift HQ</div><div class="fp-sub">Frontend Process</div></div>
+      </a>
+      <div class="fp-meta">
+        <span id="modeBadge"></span>
+        <a href="../boards/">Project boards</a>
+        <span class="dot"></span>
+        <a href="../index.html">← Wiki</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="fp-wrap">
+    <div class="fp-hero">
+      <div>
+        <h1>Idea pipeline</h1>
+        <p>Every app idea, from first thought to cleared-to-build. Each card carries its assessment across owned gates. The build engine (the plugin) runs in the Product column.</p>
+      </div>
+      <a class="btn btn-primary" href="submit.html">＋ Submit an idea</a>
+    </div>
+    <p class="fp-legend">
+      <span><b>Chips:</b> Intent · Confidence · Decision</span>
+      <span><b>Status:</b> draft → in review → validated</span>
+      <span><b>Dashed line:</b> build ◀ | ▶ harden &amp; govern</span>
+      <span><b>Click a card</b> to review &amp; decide</span>
+    </p>
+
+    <div class="fp-board"><div class="fp-cols" id="cols"></div></div>
+
+    <div class="fp-foot">
+      <span>The pipeline that surrounds the <a href="../wiki/new-project/">build workflow</a>. Assessment gate = the <code>app-assessment</code> skill.</span>
+      <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">Source</a>
+    </div>
+  </div>
+
+  <div id="overlay"></div>
+
+  <script src="config.js"></script>
+  <script>
+    const F = window.FP;
+    const LIVE = !!F.workerUrl;
+    const L = F.labels;
+    let ideas = [];
+
+    document.getElementById("modeBadge").innerHTML = LIVE ? "" : '<span class="fp-badge-demo">Demo data</span>';
+
+    const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    async function load() {
+      if (!LIVE) { ideas = F.demoIdeas.slice(); return render(); }
+      try {
+        const r = await fetch(F.workerUrl + "/api/ideas");
+        ideas = (await r.json()).ideas || [];
+      } catch (e) { ideas = []; }
+      render();
+    }
+
+    function chips(idea) {
+      const out = [];
+      if (idea.intent) out.push(`<span class="chip chip-navy">${esc(L.intent[idea.intent] || idea.intent)}</span>`);
+      if (idea.confidence) out.push(`<span class="chip">${esc(L.confidence[idea.confidence] || idea.confidence)}</span>`);
+      if (idea.decision) {
+        const stop = idea.decision === "do_not_proceed";
+        out.push(`<span class="chip chip-decision${stop ? " stop" : ""}">${esc(L.decision[idea.decision] || idea.decision)}</span>`);
+      }
+      return out.join("");
+    }
+
+    function cardHtml(idea) {
+      const st = idea.status || "draft";
+      return `<div class="fp-card" data-id="${esc(idea.id)}">
+        <div class="fp-card-top"><span class="fp-card-name">${esc(idea.title)}</span>
+          <span class="pill pill-${st}">${esc((L.status[st] || st))}</span></div>
+        <div class="fp-card-snap">${esc(idea.one_liner || "")}</div>
+        <div class="fp-chips">${chips(idea)}</div>
+        <div class="fp-card-foot"><span class="fp-card-updated">updated ${esc(idea.updated_at || "")}</span></div>
+      </div>`;
+    }
+
+    function render() {
+      document.getElementById("cols").innerHTML = F.stages.map((s) => {
+        const inCol = ideas.filter((i) => (i.stage || "ideation") === s.key);
+        const cards = inCol.map(cardHtml).join("");
+        const adder = s.key === "ideation" ? `<a class="fp-card new" href="submit.html"><b>＋ New idea</b><br/>start an assessment</a>` : "";
+        return `<div class="fp-col${s.divider ? " divider" : ""}">
+          <div class="fp-role">${esc(s.role)}</div>
+          <div class="fp-col-head">
+            <div class="fp-col-title">${esc(s.label)}<span class="fp-col-count">${inCol.length}</span></div>
+            <div class="fp-col-gate">Exit: ${esc(s.gate)}</div>
+          </div>
+          <div class="fp-cards">${cards}${adder}</div>
+        </div>`;
+      }).join("");
+      document.querySelectorAll(".fp-card[data-id]").forEach((c) =>
+        c.addEventListener("click", () => openReview(c.dataset.id)));
+    }
+
+    // ── Review overlay ────────────────────────────────────────────────
+    async function openReview(id) {
+      const idea = ideas.find((i) => i.id === id);
+      if (!idea) return;
+      let assessment = null;
+      if (LIVE) {
+        const token = ensureToken();
+        if (token) {
+          try {
+            const r = await fetch(F.workerUrl + "/api/idea?id=" + encodeURIComponent(id), { headers: { Authorization: "Bearer " + token } });
+            if (r.ok) assessment = (await r.json()).idea.assessment;
+            else if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Review token rejected."); }
+          } catch (e) {}
+        }
+      }
+      const rows = F.sections.map((sec) => {
+        const v = assessment && assessment[sec.field];
+        const val = sec.field === "intent_type" ? (L.intent[v] || v) : sec.field === "confidence" ? (L.confidence[v] || v) : sec.field === "decision" ? (L.decision[v] || v) : v;
+        return `<div class="fp-section ${v ? "filled" : ""}"><div class="fp-section-head"><span class="tick">✓</span>${esc(sec.label)}</div>
+          <div class="fp-section-body ${v ? "" : "empty"}">${v ? esc(val) : (LIVE ? "—" : "(full assessment shown in live mode)")}</div></div>`;
+      }).join("");
+
+      document.getElementById("overlay").innerHTML = `
+        <div style="position:fixed;inset:0;background:rgba(8,21,48,.45);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto" id="scrim">
+          <div style="background:var(--card);border-radius:16px;max-width:620px;width:100%;box-shadow:var(--shadow-md)" onclick="event.stopPropagation()">
+            <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+              <div><div style="font-size:19px;font-weight:700;color:var(--navy)">${esc(idea.title)}</div>
+              <div style="font-size:13px;color:var(--text-muted);margin-top:3px">${esc(idea.one_liner || "")}</div></div>
+              <span class="pill pill-${idea.status || "draft"}">${esc(L.status[idea.status] || idea.status || "draft")}</span>
+            </div>
+            <div class="fp-chips" style="padding:14px 24px 0">${chips(idea)}</div>
+            <div style="padding:4px 24px 8px">${rows}</div>
+            <div style="padding:16px 24px 22px;border-top:1px solid var(--border)">
+              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:10px">Keitha's decision</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="btn btn-primary" data-d="product">Proceed → Product</button>
+                <button class="btn" data-d="validate_first">Validate first</button>
+                <button class="btn" data-d="do_not_proceed">Do not proceed</button>
+                <button class="btn btn-ghost" id="closeReview" style="margin-left:auto">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      const scrim = document.getElementById("scrim");
+      scrim.addEventListener("click", closeReview);
+      document.getElementById("closeReview").addEventListener("click", closeReview);
+      document.querySelectorAll("#overlay button[data-d]").forEach((b) =>
+        b.addEventListener("click", () => decide(idea, b.dataset.d)));
+    }
+    function closeReview() { document.getElementById("overlay").innerHTML = ""; }
+
+    async function decide(idea, decision) {
+      const stageFor = { do_not_proceed: "archived", validate_first: "product", product: "product" };
+      if (LIVE) {
+        const token = ensureToken();
+        if (!token) return;
+        try {
+          await fetch(F.workerUrl + "/api/decision", {
+            method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
+            body: JSON.stringify({ ideaId: idea.id, decision }),
+          });
+        } catch (e) { alert("Could not save decision."); return; }
+        closeReview(); await load();
+      } else {
+        idea.decision = decision;
+        idea.status = decision === "do_not_proceed" ? "declined" : "validated";
+        idea.stage = stageFor[decision] || idea.stage;
+        idea.updated_at = "just now";
+        closeReview(); render();
+      }
+    }
+
+    function ensureToken() {
+      let t = localStorage.getItem("fp_review_token");
+      if (!t) { t = prompt("Reviewer token (Keitha):"); if (t) localStorage.setItem("fp_review_token", t.trim()); }
+      return t && t.trim();
+    }
+
+    load();
+  </script>
+</body>
+</html>

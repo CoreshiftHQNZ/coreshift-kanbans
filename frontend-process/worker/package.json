@@ -1,0 +1,15 @@
+{
+  "name": "idea-intake",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Coreshift Frontend Process — idea-intake Worker (assessment conversation + persistence + Keitha notification).",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}
