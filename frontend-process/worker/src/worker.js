@@ -20,6 +20,48 @@ const PROSE_FIELDS = [
   "commercial", "governance", "decision_rationale", "spend_cap",
 ];
 
+// Minimal same-origin test chat served at GET /try. Talks to /api/chat on this
+// same Worker, so there is no CORS and nothing needs publishing. Client JS uses
+// plain string concatenation (no backticks / no ${}) so it embeds safely here.
+const TRY_PAGE = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Idea Intake — live test</title>
+<style>
+ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f8fafc;color:#1e293b}
+ h1{font-size:15px;margin:16px 20px 0}.sub{font-size:12px;color:#64748b;margin:2px 20px 12px}
+ .wrap{max-width:1120px;margin:0 auto;padding:0 20px 24px;display:grid;grid-template-columns:1.5fr 1fr;gap:16px}
+ .card{background:#fff;border:1px solid #e2e8f0;border-radius:12px}
+ .chat{display:flex;flex-direction:column;height:72vh}
+ .log{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+ .msg{max-width:85%;padding:9px 13px;border-radius:12px;font-size:14px;line-height:1.45;white-space:pre-wrap}
+ .assistant{background:#f1f5f9;align-self:flex-start}.user{background:#0f1e3d;color:#fff;align-self:flex-end}
+ .foot{border-top:1px solid #e2e8f0;padding:10px;display:flex;gap:8px}
+ textarea{flex:1;border:1px solid #cbd5e1;border-radius:8px;padding:9px;font:inherit;resize:none}
+ button{background:#14b8a6;color:#fff;border:0;border-radius:8px;padding:0 18px;font-weight:600;cursor:pointer}
+ .panel{padding:8px 18px 16px}.ptitle{font-size:13px;font-weight:700;margin:8px 0}
+ .ph{font-size:12px;color:#0d9488;font-weight:600}
+ .sec{border-bottom:1px solid #eef2f7;padding:9px 0}.sec b{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#475569}
+ .sec div{font-size:13px;margin-top:3px}.empty{color:#94a3b8;font-style:italic}
+</style></head><body>
+<h1>Idea Intake — live test <span id="ph" class="ph"></span></h1>
+<div class="sub">Real Claude conversation via this Worker's /api/chat. Type anything — it responds to you, not a script.</div>
+<div class="wrap">
+ <div class="card chat"><div class="log" id="log"></div>
+  <div class="foot"><textarea id="in" rows="1" placeholder="Type your idea and press Enter..."></textarea><button id="send">Send</button></div></div>
+ <div class="card panel"><div class="ptitle">App Assessment</div><div id="panel"></div></div>
+</div>
+<script>
+ var SECTIONS=[['opportunity','1 Opportunity'],['intent_type','2 Intent'],['confidence','3 Confidence'],['commercial','4 Commercial'],['scope','5 Scope'],['asset_value','6 Asset value'],['governance','7 Governance'],['decision','8 Decision']];
+ var ideaId=null,messages=[],assessment={},busy=false;
+ var log=document.getElementById('log'),input=document.getElementById('in');
+ function add(role,text){var d=document.createElement('div');d.className='msg '+role;d.textContent=text;log.appendChild(d);log.scrollTop=log.scrollHeight;}
+ function panel(){var p=document.getElementById('panel');p.innerHTML='';SECTIONS.forEach(function(s){var v=assessment[s[0]];var el=document.createElement('div');el.className='sec';var b=document.createElement('b');b.textContent=s[1];var dv=document.createElement('div');if(v){dv.textContent=v;}else{dv.className='empty';dv.textContent='not captured yet';}el.appendChild(b);el.appendChild(dv);p.appendChild(el);});document.getElementById('ph').textContent=assessment.phase?('phase: '+assessment.phase):'';}
+ function apply(j){if(j.error){add('assistant','[error] '+j.error);return;}ideaId=j.ideaId||ideaId;if(j.assessment)assessment=j.assessment;if(j.reply){add('assistant',j.reply);messages.push({role:'assistant',text:j.reply});}panel();if(j.submitted)add('assistant','[✓ submitted for review]');}
+ function call(body){return fetch('/api/chat',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json();});}
+ function send(){if(busy)return;var t=input.value.trim();if(!t)return;input.value='';add('user',t);messages.push({role:'user',text:t});busy=true;call({ideaId:ideaId,messages:messages}).then(function(j){busy=false;apply(j);}).catch(function(e){busy=false;add('assistant','[network error] '+e);});}
+ document.getElementById('send').onclick=send;
+ input.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
+ panel();call({messages:[]}).then(apply).catch(function(e){add('assistant','[network error] '+e);});
+</script></body></html>`;
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -34,6 +76,8 @@ export default {
       if (url.pathname === "/api/ideas" && request.method === "GET") return await handleIdeas(env, cors);
       if (url.pathname === "/api/idea" && request.method === "GET") return await handleIdea(request, env, cors, url);
       if (url.pathname === "/api/decision" && request.method === "POST") return await handleDecision(request, env, cors);
+      if (url.pathname === "/try" && request.method === "GET")
+        return new Response(TRY_PAGE, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
       if (url.pathname === "/" || url.pathname === "/health") return json({ ok: true, service: "idea-intake" }, 200, cors);
       return json({ error: "Not found" }, 404, cors);
     } catch (err) {

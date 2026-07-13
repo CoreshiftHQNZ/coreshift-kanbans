@@ -1,6 +1,7 @@
 name = "idea-intake"
 main = "src/worker.js"
 compatibility_date = "2026-07-01"
+account_id = "a9088cddb8d07ce5b3341adee883f56c"  # CoreshiftHq
 
 # Non-secret config. Secrets are set separately with `wrangler secret put` —
 # never commit ANTHROPIC_API_KEY, SUPABASE_SERVICE_ROLE_KEY, SLACK_WEBHOOK_URL,
