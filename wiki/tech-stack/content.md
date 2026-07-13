@@ -26,6 +26,39 @@ Everything here uses tools we already run — no new providers.
 
 ---
 
+## What we pay for — subscriptions
+
+A plain-English guide to the paid services behind these tiers, for anyone tracking spend.
+Everything *else* in the stack — Astro, React, Vite, Express, Drizzle ORM, 11ty and Cloudflare
+Turnstile — is free, open-source software with **no subscription**.
+
+> Prices are **indicative USD list prices as of July 2026** and are billed monthly unless noted.
+> Our actual plans and invoices may differ — treat these as a guide to *what each line item is
+> for*, not an exact bill.
+
+| Service | What it is (plain English) | What we use it for | Free tier? | Paid plan (indicative) |
+|---|---|---|---|---|
+| **GitHub** | Online home for our code, with full version history | Master copy of every project's source code; also triggers the auto-deploy when we push changes | Yes — free for public repositories | **Team ≈ US$4 / user / month** (billed annually) once we need private repos & team controls |
+| **Cloudflare** | Website hosting, global delivery network (CDN), domain/DNS management & security | Hosts Tier 1 & 2 sites (Pages), runs small bits of server code like the contact form (Pages Functions), stores form data (D1 / KV), manages our domains & DNS, and blocks spam (Turnstile) | Yes — generous free plan | **Workers Paid ≈ US$5 / month per account** — one flat fee covering *all* projects' functions & data. Domain registrations billed separately, at cost |
+| **Railway** | Rented cloud server that keeps a web app running around the clock | Runs the always-on application server (the Express API) behind Tier 3 web apps | US$5 free trial credit | **Hobby ≈ US$5 / month** (incl. $5 of usage) or **Pro ≈ US$20 / month per seat** (incl. $20 of usage); busier apps cost more as usage grows |
+| **Supabase** | All-in-one back-end for apps — database, user logins & file storage in one service | Powers Tier 3 apps: user accounts & sign-in (Auth), the app's database (Postgres) and uploaded files (Storage) | Yes — free tier | **Pro ≈ US$25 / month per project** (each Tier 3 app is its own project). Real-world ≈ US$35–75 / month per app once usage is added |
+| **Postmark** | Service that reliably delivers automated emails | Sends the emails our sites & apps generate: contact-form notifications, newsletter/signup, password resets, receipts | Free for 100 emails / month | **Basic ≈ US$15 / month for 10,000 emails** (higher tiers US$16.50–18 / month) |
+
+**Cost drivers worth knowing**
+
+- **Supabase scales per project** — every Tier 3 app is a separate ≈ US$25/month+ subscription. Tier 1 & 2 sites don't use it at all.
+- **Cloudflare is one flat account fee**, not one-per-site — the ≈ US$5/month Workers Paid plan covers every project's functions and data. Only domain names are billed individually (per domain, per year, at cost).
+- **Railway is usage-based** — the base plan bundles some usage; heavier or higher-traffic apps run above it and cost more.
+- **Postmark and GitHub** are single, account-level subscriptions shared across all projects, not per-site.
+
+**Rough monthly cost by tier**
+
+- **Tier 1 — Basic Static Site:** often **US$0** — a public GitHub repo plus Cloudflare's free plan. Postmark only enters if a live contact form sends real volume.
+- **Tier 2 — Full Website:** typically **low single digits** — as Tier 1, plus Cloudflare Workers Paid (≈ $5) once it exceeds free limits, plus Postmark (≈ $15) once real email flows.
+- **Tier 3 — Web App:** the priced tier — **≈ US$45–100+ per app per month**: Supabase (≈ $25+) + Railway (≈ $5–20+) + Postmark (≈ $15), on top of the shared GitHub & Cloudflare fees.
+
+---
+
 ## Tier 1 — Basic Static Site
 
 A brochure or landing site: a handful of pages, no data to keep.
