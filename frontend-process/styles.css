@@ -69,8 +69,11 @@ a { color: inherit; }
 
 .fp-card { position: relative; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 13px; box-shadow: var(--shadow-sm); transition: box-shadow .13s ease, transform .13s ease; }
 .fp-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
-.fp-card-del { width: 22px; height: 22px; flex-shrink: 0; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text-soft); font-size: 11px; line-height: 1; cursor: pointer; padding: 0; opacity: 0; transition: opacity .12s ease, color .12s ease, border-color .12s ease; }
-.fp-card:hover .fp-card-del, .fp-card:focus-within .fp-card-del, .fp-card-del:focus { opacity: 1; }
+/* Delete ✕ is a SIBLING of the card (not nested in the role=button) — valid ARIA,
+   independently focusable/announced. Absolutely positioned over the card corner. */
+.fp-card-wrap { position: relative; }
+.fp-card-del { position: absolute; bottom: 10px; right: 10px; width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--border-strong); background: var(--card); color: var(--text-soft); font-size: 11px; line-height: 1; cursor: pointer; padding: 0; opacity: 0; transition: opacity .12s ease, color .12s ease, border-color .12s ease; }
+.fp-card-wrap:hover .fp-card-del, .fp-card-wrap:focus-within .fp-card-del, .fp-card-del:focus { opacity: 1; }
 .fp-card-del:hover { color: var(--red); border-color: var(--red); }
 .fp-card-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .fp-card-name { font-size: 15px; font-weight: 700; color: var(--navy); letter-spacing: -0.01em; }

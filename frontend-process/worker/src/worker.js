@@ -265,7 +265,9 @@ async function supa(env, method, path, body) {
 }
 
 async function getIdea(env, id) {
-  const rows = await supa(env, "GET", `ideas?id=eq.${encodeURIComponent(id)}&select=*`);
+  // Exclude soft-deleted rows so a deleted idea reads as gone everywhere
+  // (chat resume, /api/idea, review) — never silently written to or resurfaced.
+  const rows = await supa(env, "GET", `ideas?id=eq.${encodeURIComponent(id)}&deleted_at=is.null&select=*`);
   return rows && rows[0];
 }
 async function createIdea(env) {

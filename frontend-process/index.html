@@ -79,13 +79,15 @@
     }
     function cardHtml(idea) {
       const st = idea.status || "draft";
-      return `<div class="fp-card" data-id="${esc(idea.id)}" tabindex="0" role="button" aria-label="Review ${esc(idea.title)}">
-        <div class="fp-card-top"><span class="fp-card-name">${esc(idea.title)}</span>
-          <span class="pill pill-${st}">${esc(L.status[st] || st)}</span></div>
-        <div class="fp-card-snap">${esc(idea.one_liner || "")}</div>
-        <div class="fp-chips">${chips(idea)}</div>
-        <div class="fp-card-foot"><span class="fp-card-updated">updated ${esc(idea.updated_at || "")}</span>
-          <button class="fp-card-del" data-del="${esc(idea.id)}" aria-label="Delete ${esc(idea.title)}" title="Delete idea">✕</button></div>
+      return `<div class="fp-card-wrap">
+        <div class="fp-card" data-id="${esc(idea.id)}" tabindex="0" role="button" aria-label="Review ${esc(idea.title)}">
+          <div class="fp-card-top"><span class="fp-card-name">${esc(idea.title)}</span>
+            <span class="pill pill-${st}">${esc(L.status[st] || st)}</span></div>
+          <div class="fp-card-snap">${esc(idea.one_liner || "")}</div>
+          <div class="fp-chips">${chips(idea)}</div>
+          <div class="fp-card-foot"><span class="fp-card-updated">updated ${esc(idea.updated_at || "")}</span></div>
+        </div>
+        <button class="fp-card-del" data-del="${esc(idea.id)}" aria-label="Delete ${esc(idea.title)}" title="Delete idea">✕</button>
       </div>`;
     }
 
@@ -93,6 +95,7 @@
       const inCol = ideas.filter((i) => (i.stage || "inbox") === s.key);
       const cards = inCol.map(cardHtml).join("");
       const adder = s.key === "inbox" ? `<a class="fp-card new" href="submit.html"><b>＋ New idea</b><br/>start an assessment</a>` : "";
+      const empty = (!inCol.length && s.key !== "inbox") ? `<div class="fp-empty">No ideas here yet</div>` : "";
       const cls = ["fp-col", s.divider ? "divider" : "", isOff ? "offlane" : "", isOffStart ? "offstart" : ""].filter(Boolean).join(" ");
       const gate = s.gate ? `<div class="fp-col-gate">Exit: ${esc(s.gate)}</div>` : "";
       return `<div class="${cls}">
@@ -101,7 +104,7 @@
           <div class="fp-col-title">${esc(s.label)}<span class="fp-col-count">${inCol.length}</span></div>
           ${gate}
         </div>
-        <div class="fp-cards">${cards}${adder}</div>
+        <div class="fp-cards">${cards}${adder}${empty}</div>
       </div>`;
     }
 
@@ -117,9 +120,13 @@
         c.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
       });
       document.querySelectorAll("#cols .fp-card-del[data-del]").forEach((b) => {
-        b.addEventListener("click", (e) => { e.stopPropagation(); deleteIdea(b.dataset.del); });
-        b.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.stopPropagation(); } });
+        b.addEventListener("click", () => deleteIdea(b.dataset.del));
       });
+    }
+
+    function focusAfterBoardChange() {
+      const next = document.querySelector(".fp-card[data-id]") || document.querySelector(".fp-hero .btn-primary");
+      if (next && next.focus) next.focus();
     }
 
     async function deleteIdea(id) {
@@ -133,13 +140,15 @@
             method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
             body: JSON.stringify({ ideaId: id }),
           });
-          if (!r.ok) { alert("Couldn't delete — check your reviewer token."); return; }
+          if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Reviewer token rejected — try again."); return; }
+          if (!r.ok) { alert("Couldn't delete — please retry."); return; }
         } catch (e) { alert("Couldn't delete — network error."); return; }
         await load();
       } else {
         ideas = ideas.filter((i) => i.id !== id);
         render();
       }
+      focusAfterBoardChange();
     }
 
     // ── Review overlay ────────────────────────────────────────────────
@@ -217,11 +226,13 @@
       if (LIVE) {
         const token = ensureToken(); if (!token) return;
         try {
-          await fetch(F.workerUrl + "/api/decision", {
+          const r = await fetch(F.workerUrl + "/api/decision", {
             method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
             body: JSON.stringify({ ideaId: idea.id, decision }),
           });
-        } catch (e) { alert("Could not save decision."); return; }
+          if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Reviewer token rejected — try again."); return; }
+          if (!r.ok) { alert("Couldn't save the decision — please retry."); return; }
+        } catch (e) { alert("Couldn't save the decision — network error."); return; }
         closeReview(); await load();
       } else {
         idea.decision = decision;

@@ -99,7 +99,7 @@
     // Persist the in-progress session so an accidental navigation / closed tab resumes.
     function saveSession() {
       if (submitted) return;
-      try { localStorage.setItem(SKEY, JSON.stringify({ ideaId, messages, assessment, step })); } catch (e) {}
+      try { localStorage.setItem(SKEY, JSON.stringify({ mode: LIVE ? "live" : "demo", ideaId, messages, assessment, step })); } catch (e) {}
     }
     function clearSession() { try { localStorage.removeItem(SKEY); } catch (e) {} }
     function typing(on) {
@@ -262,9 +262,13 @@
     // ── Boot ──────────────────────────────────────────────────────────
     async function boot() {
       // Resume an in-progress session (accidental navigation / closed tab).
+      // Only resume a draft the user actually engaged with, saved in the SAME
+      // mode (so a demo↔live config flip can't cross-replay a mismatched session).
       let saved = null;
       try { saved = JSON.parse(localStorage.getItem(SKEY) || "null"); } catch (e) {}
-      if (saved && saved.messages && saved.messages.length) {
+      const sameMode = saved && saved.mode === (LIVE ? "live" : "demo");
+      const hasUserTurn = saved && saved.messages && saved.messages.some((m) => m.role === "user");
+      if (saved && sameMode && hasUserTurn) {
         ideaId = saved.ideaId || null;
         messages = saved.messages;
         assessment = saved.assessment || { phase: "shape" };
