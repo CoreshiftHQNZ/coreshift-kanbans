@@ -171,7 +171,7 @@ async function handleSubmit(request, env, cors) {
 async function handleIdeas(env, cors) {
   const rows = await supa(
     env, "GET",
-    "ideas?select=id,title,one_liner,stage,status,intent,confidence,decision,updated_at&deleted_at=is.null&order=updated_at.desc",
+    "ideas?select=id,title,one_liner,stage,status,intent,confidence,decision,repo_url,kanban_url,staging_url,production_url,updated_at&deleted_at=is.null&order=updated_at.desc",
   );
   return json({ ideas: rows.map(publicView) }, 200, cors);
 }
@@ -191,10 +191,11 @@ async function handleDecision(request, env, cors) {
   if (!authed(request, env)) return json({ error: "Unauthorized" }, 401, cors);
   const body = await request.json();
   if (!body.ideaId || !body.decision) return json({ error: "ideaId and decision required" }, 400, cors);
-  const STAGE_FOR = { do_not_proceed: "declined" };
+  const STAGE_FOR = { do_not_proceed: "rejected", validate_first: "pending_validation" };
+  const STATUS_FOR = { do_not_proceed: "declined", validate_first: "in_review" };
   const patch = {
     decision: body.decision,
-    status: body.decision === "do_not_proceed" ? "declined" : "validated",
+    status: STATUS_FOR[body.decision] || "validated",
     stage: STAGE_FOR[body.decision] || (body.stage || "build"),
     decision_note: body.note || null,
     reviewed_by: body.reviewer || "Keitha",
@@ -312,6 +313,8 @@ function publicView(idea) {
     id: idea.id, title: idea.title, one_liner: idea.one_liner,
     stage: idea.stage, status: idea.status,
     intent: idea.intent, confidence: idea.confidence, decision: idea.decision,
+    repo_url: idea.repo_url, kanban_url: idea.kanban_url,
+    staging_url: idea.staging_url, production_url: idea.production_url,
     updated_at: idea.updated_at,
   };
 }

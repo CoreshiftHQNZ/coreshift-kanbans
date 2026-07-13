@@ -217,29 +217,40 @@
           <div class="fp-section-body ${has ? "" : "empty"}">${has ? esc(v) : (LIVE ? "—" : "(full assessment shown in live mode)")}</div></div>`;
       }).join("");
 
+      const urlDefs = [["repo_url", "Repo", "📦"], ["kanban_url", "Kanban", "🗂"], ["staging_url", "Staging", "🧪"], ["production_url", "Production", "🚀"]];
+      const urlLinks = urlDefs.filter(([k]) => idea[k]).map(([k, label, ic]) =>
+        `<a class="fp-link" href="${esc(idea[k])}" target="_blank" rel="noopener"><span>${ic}&nbsp; ${label}</span><span class="fp-link-arrow">↗</span></a>`).join("");
+      const urlsBlock = `<div class="fp-drawer-sec"><div class="fp-drawer-label">Links</div>${urlLinks
+        ? `<div class="fp-links">${urlLinks}</div>`
+        : `<div class="fp-empty">Repo · kanban · staging · production appear once it's in Build.</div>`}</div>`;
+
       document.getElementById("overlay").innerHTML = `
-        <div style="position:fixed;inset:0;background:rgba(8,21,48,.45);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto" id="scrim">
-          <div id="fpDialog" role="dialog" aria-modal="true" aria-labelledby="fpDialogTitle" tabindex="-1" style="background:var(--card);border-radius:16px;max-width:620px;width:100%;box-shadow:var(--shadow-md);outline:none" onclick="event.stopPropagation()">
-            <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;justify-content:space-between;gap:10px">
-              <div><div id="fpDialogTitle" style="font-size:19px;font-weight:700;color:var(--navy)">${esc(idea.title)}</div>
-              <div style="font-size:13px;color:var(--text-muted);margin-top:3px">${esc(idea.one_liner || "")}</div></div>
-              <span class="pill pill-${idea.status || "draft"}">${esc(L.status[idea.status] || idea.status || "draft")}</span>
-            </div>
-            <div class="fp-chips" style="padding:14px 24px 0">${chips(idea)}</div>
-            <div style="padding:4px 24px 8px">${rows}</div>
-            <div style="padding:16px 24px 22px;border-top:1px solid var(--border)">
-              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:10px">Reviewer decision</div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap">
-                <button class="btn btn-primary" data-d="product">Proceed → Build</button>
-                <button class="btn" data-d="validate_first">Validate first</button>
-                <button class="btn" data-d="do_not_proceed">Do not proceed</button>
-                <button class="btn btn-ghost" id="closeReview" style="margin-left:auto">Close</button>
-              </div>
-            </div>
+        <div class="fp-scrim" id="scrim"></div>
+        <aside class="fp-drawer" id="fpDialog" role="dialog" aria-modal="true" aria-labelledby="fpDialogTitle" tabindex="-1">
+          <button class="fp-drawer-close" id="closeReview" aria-label="Close">✕</button>
+          <div class="fp-drawer-head">
+            <span class="pill pill-${idea.status || "draft"}">${esc(L.status[idea.status] || idea.status || "draft")}</span>
+            <h2 id="fpDialogTitle" class="fp-drawer-title">${esc(idea.title)}</h2>
+            <div class="fp-drawer-sub">${esc(idea.one_liner || "")}</div>
+            <div class="fp-chips" style="margin-top:12px">${chips(idea)}</div>
           </div>
-        </div>`;
+          <div class="fp-drawer-body">
+            ${urlsBlock}
+            <div class="fp-drawer-sec"><div class="fp-drawer-label">Assessment</div>${rows}</div>
+          </div>
+          <div class="fp-drawer-foot">
+            <div class="fp-drawer-label">Reviewer decision</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+              <button class="btn btn-primary" data-d="product">Proceed → Build</button>
+              <button class="btn" data-d="validate_first">Validate first</button>
+              <button class="btn" data-d="do_not_proceed">Do not proceed</button>
+            </div>
+            <button class="btn btn-ghost" id="drawerDelete" style="margin-top:10px;color:var(--red)">Delete idea</button>
+          </div>
+        </aside>`;
       document.getElementById("scrim").addEventListener("click", closeReview);
       document.getElementById("closeReview").addEventListener("click", closeReview);
+      document.getElementById("drawerDelete").addEventListener("click", () => { closeReview(); deleteIdea(idea.id); });
       document.querySelectorAll("#overlay button[data-d]").forEach((b) => b.addEventListener("click", () => decide(idea, b.dataset.d)));
       document.addEventListener("keydown", trapKeys);
       const dlg = document.getElementById("fpDialog");
@@ -252,7 +263,8 @@
     }
 
     async function decide(idea, decision) {
-      const stageFor = { do_not_proceed: "declined", validate_first: "build", product: "build" };
+      const stageFor = { do_not_proceed: "rejected", validate_first: "pending_validation" };
+      const statusFor = { do_not_proceed: "declined", validate_first: "in_review" };
       if (LIVE) {
         const token = ensureToken(); if (!token) return;
         try {
@@ -266,8 +278,8 @@
         closeReview(); await load();
       } else {
         idea.decision = decision;
-        idea.status = decision === "do_not_proceed" ? "declined" : "validated";
-        idea.stage = stageFor[decision] || idea.stage;
+        idea.status = statusFor[decision] || "validated";
+        idea.stage = stageFor[decision] || "build";
         idea.updated_at = "just now";
         closeReview(); render();
       }

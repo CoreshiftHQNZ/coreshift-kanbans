@@ -16,18 +16,18 @@ window.FP = {
   stages: [
     { key: "inbox",      label: "Inbox",                 role: "—",             gate: "Captured — not yet assessed",                  view: "pipeline" },
     { key: "assessment", label: "Assessment",            role: "Product owner", gate: "Assessment in progress",                       view: "pipeline" },
-    { key: "review",     label: "Review",                role: "Reviewer",      gate: "Decision + PIA / governance cleared → Build",  view: "pipeline" },
+    { key: "review",             label: "Review",             role: "Reviewer",      gate: "Decide → Build, Pending Validation, or Rejected", view: "pipeline" },
+    { key: "pending_validation", label: "Pending Validation", role: "—",             gate: "Validate first — awaiting a test / discussion",   view: "pipeline" },
+    { key: "rejected",           label: "Rejected",           role: "—",             gate: "Not proceeding — kept as a record",               view: "pipeline" },
     { key: "build",      label: "Build",                 role: "Build lead",    gate: "MVP built — the plugin runs here",             view: "wip" },
     { key: "harden",     label: "Harden & Secure",       role: "Security",      gate: "Security signed off, no high-sev",             view: "wip", softdivider: true },
     { key: "business",   label: "Business & Governance", role: "Commercial",    gate: "Business case + governance signed",            view: "wip" },
     { key: "launch",     label: "Launch Readiness",      role: "Launch",        gate: "Launch / handover ready",                      view: "wip" },
     { key: "live",       label: "Live",                  role: "—",             gate: "Shipped / in production",                      view: "wip" },
   ],
-  // Terminal states (shown in the WIP view).
-  offBoard: [
-    { key: "parked",   label: "Parked" },
-    { key: "declined", label: "Declined" },
-  ],
+  // Approval outcomes now have their own Pipeline columns (Pending Validation /
+  // Rejected), so there's no separate off-board section.
+  offBoard: [],
   // The two board views (tab toggle). Split per the 2026-07-13 stand-up.
   views: [
     { key: "pipeline", label: "Idea Pipeline",     sub: "capture · assess · decide" },
@@ -64,12 +64,12 @@ window.FP = {
   demoIdeas: [
     { id: "d1", title: "Client Portal Revamp", one_liner: "One place for clients to see status, invoices, files.", stage: "assessment", status: "draft",     intent: "internal",   confidence: null,          decision: null,        updated_at: "just now" },
     { id: "d2", title: "Tap",                  one_liner: "ICP-driven lead generation — cold leads on tap.",     stage: "review",     status: "in_review", intent: "internal",   confidence: "punt",        decision: null,        updated_at: "2h ago" },
-    { id: "d3", title: "HeyGem",               one_liner: "Remote admin support for Kiwi tradies.",              stage: "build",      status: "validated", intent: "client",     confidence: "validate",      decision: "client_only", updated_at: "3d ago" },
-    { id: "d4", title: "Lead Engine",          one_liner: "Find bad sites → auto-build the replacement.",        stage: "harden",     status: "validated", intent: "internal",   confidence: "validate",      decision: "product",   updated_at: "5d ago" },
-    { id: "d5", title: "Merlin",               one_liner: "AI implementation wizard — outcome-led pathways.",     stage: "business",   status: "validated", intent: "standalone", confidence: "business_case", decision: "product",   updated_at: "1w ago" },
-    { id: "d6", title: "Live Edit",            one_liner: "Self-serve $100/mo sites clients edit in place.",     stage: "live",       status: "validated", intent: "product",    confidence: "validate",      decision: "product",   updated_at: "yesterday" },
-    { id: "d7", title: "Crypto tipping jar",   one_liner: "In-page crypto tips for creators.",                   stage: "declined",   status: "declined",  intent: "speculative", confidence: "validate",     decision: "do_not_proceed", updated_at: "2w ago" },
-    { id: "d8", title: "Listicle Writer v2",   one_liner: "Next-gen sponsored listicle generator.",              stage: "parked",     status: "draft",     intent: "internal",   confidence: "punt",          decision: null,        updated_at: "3w ago" },
+    { id: "d3", title: "HeyGem",               one_liner: "Remote admin support for Kiwi tradies.",              stage: "build",      status: "validated", intent: "client",     confidence: "validate",      decision: "client_only", updated_at: "3d ago", repo_url: "https://github.com/CoreshiftHQNZ/heygem", staging_url: "https://staging.heygem.co.nz", production_url: "https://heygem.co.nz", kanban_url: "../heygem/" },
+    { id: "d4", title: "Lead Engine",          one_liner: "Find bad sites → auto-build the replacement.",        stage: "harden",     status: "validated", intent: "internal",   confidence: "validate",      decision: "product",   updated_at: "5d ago", repo_url: "https://github.com/CoreshiftHQNZ/coreshift-live-edit", kanban_url: "../lead-engine/" },
+    { id: "d5", title: "Merlin",               one_liner: "AI implementation wizard — outcome-led pathways.",     stage: "business",   status: "validated", intent: "standalone", confidence: "business_case", decision: "product",   updated_at: "1w ago", repo_url: "https://github.com/CoreshiftHQNZ/merlin", kanban_url: "../merlin/" },
+    { id: "d6", title: "Live Edit",            one_liner: "Self-serve $100/mo sites clients edit in place.",     stage: "live",       status: "validated", intent: "product",    confidence: "validate",      decision: "product",   updated_at: "yesterday", repo_url: "https://github.com/CoreshiftHQNZ/coreshift-live-edit", staging_url: "https://staging.coreshift.page", production_url: "https://app.coreshift.page", kanban_url: "../live-edit/" },
+    { id: "d7", title: "Crypto tipping jar",   one_liner: "In-page crypto tips for creators.",                   stage: "rejected",   status: "declined",  intent: "speculative", confidence: "validate",     decision: "do_not_proceed", updated_at: "2w ago" },
+    { id: "d8", title: "Listicle Writer v2",   one_liner: "Next-gen sponsored listicle generator.",              stage: "pending_validation", status: "in_review", intent: "internal",   confidence: "validate",      decision: "validate_first", updated_at: "3w ago" },
   ],
 
   // Scripted intake for demo mode — the three phases, "onboarding email drafter".

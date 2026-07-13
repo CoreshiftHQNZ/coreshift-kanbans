@@ -18,7 +18,7 @@ create table if not exists public.ideas (
   submitter_name text,
   submitter_email text,
   stage          text not null default 'inbox'
-                   check (stage in ('inbox','assessment','review','build','harden','business','launch','live','parked','declined')),
+                   check (stage in ('inbox','assessment','review','pending_validation','rejected','build','harden','business','launch','live','parked','declined')),
   status         text not null default 'draft'
                    check (status in ('draft','in_review','validated','declined')),
   intent         text check (intent in ('personal','internal','client','speculative','standalone')),
@@ -30,7 +30,11 @@ create table if not exists public.ideas (
   decision_note  text,
   reviewed_by    text,
   reviewed_at    timestamptz,
-  deleted_at     timestamptz           -- soft delete; the board filters deleted_at is null
+  deleted_at     timestamptz,          -- soft delete; the board filters deleted_at is null
+  repo_url       text,                 -- shown on WIP cards / in the review drawer
+  kanban_url     text,
+  staging_url    text,
+  production_url text
 );
 
 create index if not exists ideas_stage_idx       on public.ideas (stage);
