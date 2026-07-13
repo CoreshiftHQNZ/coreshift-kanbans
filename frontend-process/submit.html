@@ -26,19 +26,26 @@
     <div class="fp-hero" style="margin-bottom:18px">
       <div>
         <h1>Talk it through</h1>
-        <p>Answer a few questions and the assessment fills itself in on the right. When it's ready, it goes to Keitha for review — no forms, no setup.</p>
+        <p>Same conversation as the build plugin — shape the idea, pressure-test it, then decide — minus any setup. It fills the assessment as you talk and sends it to Keitha. No forms, no install.</p>
       </div>
     </div>
 
     <div class="fp-intake" id="intake">
       <!-- chat -->
       <div class="fp-chat">
-        <div class="fp-chat-head"><span class="avatar">✦</span> Idea Intake</div>
+        <div class="fp-chat-head">
+          <div class="fp-chat-id">
+            <span class="avatar">✦</span>
+            <div class="who">the Idea Intake<div class="fp-chat-status"><span class="live"></span>online · fills your assessment as you talk</div></div>
+          </div>
+          <button class="fp-restart" id="restart">↻ Restart</button>
+        </div>
+        <div class="fp-stepper" id="stepper"></div>
         <div class="fp-log" id="log"></div>
         <div class="fp-chat-foot">
           <div class="fp-suggest" id="suggest"></div>
           <div class="fp-input-row">
-            <textarea class="fp-input" id="input" rows="1" placeholder="Type your answer…"></textarea>
+            <textarea class="fp-input" id="input" rows="1" placeholder="Type your answer…  (or tap a suggestion)"></textarea>
             <button class="btn btn-primary" id="send">Send</button>
           </div>
         </div>
@@ -60,10 +67,11 @@
     const F = window.FP;
     const LIVE = !!F.workerUrl;
     const L = F.labels;
+    const PHASE_ORDER = F.phases.map((p) => p.key);
     let assessment = {};
-    let messages = [];      // live-mode transcript
+    let messages = [];
     let ideaId = null;
-    let step = 0;           // demo-mode script index
+    let step = 0;
     let busy = false;
 
     document.getElementById("modeBadge").innerHTML = LIVE ? "" : '<span class="fp-badge-demo">Demo mode</span>';
@@ -72,6 +80,7 @@
     const inputEl = document.getElementById("input");
     const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
     const mdBold = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    const phaseNow = () => assessment.phase || "shape";
 
     function addMsg(role, text) {
       const d = document.createElement("div");
@@ -84,13 +93,18 @@
       let t = document.getElementById("typing");
       if (on && !t) {
         t = document.createElement("div"); t.id = "typing"; t.className = "typing";
-        t.innerHTML = "Idea Intake is typing <span>·</span><span>·</span><span>·</span>";
+        t.innerHTML = "the Idea Intake is typing <span>·</span><span>·</span><span>·</span>";
         logEl.appendChild(t); logEl.scrollTop = logEl.scrollHeight;
       } else if (!on && t) { t.remove(); }
     }
     function showChips(chips) {
       suggestEl.innerHTML = "";
-      (chips || []).forEach((c) => {
+      if (!chips || !chips.length) return;
+      const lbl = document.createElement("div");
+      lbl.style.cssText = "width:100%;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-soft);font-weight:700;margin-bottom:2px";
+      lbl.textContent = "Suggested replies";
+      suggestEl.appendChild(lbl);
+      chips.forEach((c) => {
         const b = document.createElement("button");
         b.className = "suggest"; b.textContent = c;
         b.addEventListener("click", () => { inputEl.value = c; send(); });
@@ -98,10 +112,20 @@
       });
     }
 
+    // ── Phase stepper ─────────────────────────────────────────────────
+    function renderStepper() {
+      const cur = PHASE_ORDER.indexOf(phaseNow());
+      document.getElementById("stepper").innerHTML = F.phases.map((p, i) => {
+        const cls = i < cur ? "done" : i === cur ? "active" : "";
+        const mark = i < cur ? "✓" : i + 1;
+        return `<div class="fp-step ${cls}"><span class="n">${mark}</span><span class="lbl">${esc(p.label)}<small>${esc(p.sub)}</small></span></div>`;
+      }).join("");
+    }
+
     // ── Assessment panel ──────────────────────────────────────────────
     function renderPanel(justFilled) {
       const secEl = document.getElementById("sections");
-      secEl.innerHTML = F.sections.map((sec) => {
+      secEl.innerHTML = F.sections.map((sec, i) => {
         let v = assessment[sec.field];
         const has = v != null && v !== "";
         if (has && sec.field === "intent_type") v = L.intent[v] || v;
@@ -109,8 +133,8 @@
         if (has && sec.field === "decision") v = L.decision[v] || v;
         const jf = justFilled && justFilled.includes(sec.field) ? " just-filled" : "";
         return `<div class="fp-section ${has ? "filled" : ""}${jf}">
-          <div class="fp-section-head"><span class="tick">✓</span>${esc(sec.label)}</div>
-          <div class="fp-section-body ${has ? "" : "empty"}">${has ? esc(v) : "not captured yet"}</div></div>`;
+          <div class="fp-section-head"><span class="tick">✓</span>${i + 1} · ${esc(sec.label)}</div>
+          <div class="fp-section-body ${has ? "" : "empty"}">${has ? esc(v) : esc(sec.hint)}</div></div>`;
       }).join("");
       const filled = F.sections.filter((s) => assessment[s.field] != null && assessment[s.field] !== "").length;
       document.getElementById("bar").style.width = Math.round((filled / F.sections.length) * 100) + "%";
@@ -123,9 +147,10 @@
       Object.assign(assessment, fills);
       const jf = F.sections.filter((s) => !before[s.field] && assessment[s.field]).map((s) => s.field);
       renderPanel(jf);
+      renderStepper();
     }
 
-    // ── Send handler ──────────────────────────────────────────────────
+    // ── Send ──────────────────────────────────────────────────────────
     async function send() {
       if (busy) return;
       const text = inputEl.value.trim();
@@ -136,10 +161,9 @@
       LIVE ? await sendLive(text) : await sendDemo(text);
       busy = false;
     }
-
-    // Demo: play the scripted steps.
     async function sendDemo() {
       const s = F.demoScript[step];
+      if (!s) return;
       typing(true);
       await wait(750 + Math.random() * 500);
       typing(false);
@@ -149,8 +173,6 @@
       step++;
       if (F.demoScript[step]) showChips(F.demoScript[step].chips);
     }
-
-    // Live: talk to the Worker.
     async function sendLive(text) {
       messages.push({ role: "user", text });
       typing(true);
@@ -163,19 +185,19 @@
         typing(false);
         if (j.error) { addMsg("assistant", "Sorry — something went wrong: " + j.error); return; }
         ideaId = j.ideaId || ideaId;
-        if (j.assessment) { assessment = j.assessment; renderPanel(); }
+        if (j.assessment) { assessment = j.assessment; renderPanel(); renderStepper(); }
         if (j.reply) { addMsg("assistant", j.reply); messages.push({ role: "assistant", text: j.reply }); }
         if (j.submitted) return finish();
       } catch (e) { typing(false); addMsg("assistant", "Couldn't reach the intake service. Try again in a moment."); }
     }
 
     function finish() {
-      const title = assessment.title || (F.demoScript.find((s) => s.fills && s.fills.title) || {}).fills?.title || "your idea";
+      const title = assessment.title || "your idea";
       document.getElementById("intake").outerHTML = `
         <div class="fp-success">
           <div class="check">✓</div>
           <h2>Assessment complete</h2>
-          <p>Sent to Keitha for review. You'll see it on the pipeline board in Ideation.</p>
+          <p>Sent to Keitha for review. You'll see it in <strong>Review</strong> on the pipeline board.</p>
           <div class="fp-toast">
             <div class="slack">#</div>
             <div><div class="ch">#frontend-process · just now</div>
@@ -187,12 +209,14 @@
 
     const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-    // Input UX
     inputEl.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } });
     document.getElementById("send").addEventListener("click", send);
+    document.getElementById("restart").addEventListener("click", () => location.reload());
 
     // ── Boot ──────────────────────────────────────────────────────────
     async function boot() {
+      assessment.phase = "shape";
+      renderStepper();
       renderPanel();
       if (LIVE) {
         typing(true);
@@ -203,7 +227,7 @@
           const j = await r.json();
           typing(false);
           ideaId = j.ideaId || null;
-          if (j.assessment) { assessment = j.assessment; renderPanel(); }
+          if (j.assessment) { assessment = j.assessment; renderPanel(); renderStepper(); }
           addMsg("assistant", j.reply || "Hi — what's your idea?");
           if (j.reply) messages.push({ role: "assistant", text: j.reply });
         } catch (e) { typing(false); addMsg("assistant", "Couldn't reach the intake service — but here's how it works: tell me your idea and who it's for."); }

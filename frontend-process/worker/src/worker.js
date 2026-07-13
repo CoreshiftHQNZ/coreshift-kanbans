@@ -16,7 +16,7 @@ import { SYSTEM_PROMPT, TOOLS } from "./spec.js";
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const ENUM_COLUMNS = { intent_type: "intent", confidence: "confidence", decision: "decision" };
 const PROSE_FIELDS = [
-  "opportunity", "intent", "scope", "asset_value",
+  "phase", "opportunity", "intent", "scope", "asset_value",
   "commercial", "governance", "decision_rationale", "spend_cap",
 ];
 
@@ -96,7 +96,7 @@ async function handleChat(request, env, cors) {
 
   if (submitted) {
     patch.status = "in_review";
-    patch.stage = "ideation";
+    patch.stage = "review";
   }
   const saved = await updateIdea(env, idea.id, patch);
   if (submitted) await notifySlack(env, saved).catch(() => {});
@@ -140,11 +140,11 @@ async function handleDecision(request, env, cors) {
   if (!authed(request, env)) return json({ error: "Unauthorized" }, 401, cors);
   const body = await request.json();
   if (!body.ideaId || !body.decision) return json({ error: "ideaId and decision required" }, 400, cors);
-  const STAGE_FOR = { do_not_proceed: "archived" };
+  const STAGE_FOR = { do_not_proceed: "declined" };
   const patch = {
     decision: body.decision,
     status: body.decision === "do_not_proceed" ? "declined" : "validated",
-    stage: STAGE_FOR[body.decision] || (body.stage || "product"),
+    stage: STAGE_FOR[body.decision] || (body.stage || "build"),
     decision_note: body.note || null,
     reviewed_by: body.reviewer || "Keitha",
     reviewed_at: new Date().toISOString(),
@@ -209,7 +209,7 @@ async function getIdea(env, id) {
   return rows && rows[0];
 }
 async function createIdea(env) {
-  const rows = await supa(env, "POST", "ideas", { title: "Untitled idea", stage: "ideation", status: "draft" });
+  const rows = await supa(env, "POST", "ideas", { title: "Untitled idea", stage: "assessment", status: "draft" });
   return rows[0];
 }
 async function updateIdea(env, id, patch) {

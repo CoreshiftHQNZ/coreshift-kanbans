@@ -28,7 +28,7 @@
     <div class="fp-hero">
       <div>
         <h1>Idea pipeline</h1>
-        <p>Every app idea, from first thought to cleared-to-build. Each card carries its assessment across owned gates. The build engine (the plugin) runs in the Product column.</p>
+        <p>Every app idea, from first thought to live. Each card carries its assessment across owned gates. The build engine (the plugin) runs in the Build column.</p>
       </div>
       <a class="btn btn-primary" href="submit.html">＋ Submit an idea</a>
     </div>
@@ -40,6 +40,8 @@
     </p>
 
     <div class="fp-board"><div class="fp-cols" id="cols"></div></div>
+
+    <div class="fp-offboard" id="offboard"></div>
 
     <div class="fp-foot">
       <span>The pipeline that surrounds the <a href="../wiki/new-project/">build workflow</a>. Assessment gate = the <code>app-assessment</code> skill.</span>
@@ -57,15 +59,12 @@
     let ideas = [];
 
     document.getElementById("modeBadge").innerHTML = LIVE ? "" : '<span class="fp-badge-demo">Demo data</span>';
-
     const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
     async function load() {
       if (!LIVE) { ideas = F.demoIdeas.slice(); return render(); }
-      try {
-        const r = await fetch(F.workerUrl + "/api/ideas");
-        ideas = (await r.json()).ideas || [];
-      } catch (e) { ideas = []; }
+      try { ideas = (await (await fetch(F.workerUrl + "/api/ideas")).json()).ideas || []; }
+      catch (e) { ideas = []; }
       render();
     }
 
@@ -79,12 +78,11 @@
       }
       return out.join("");
     }
-
     function cardHtml(idea) {
       const st = idea.status || "draft";
       return `<div class="fp-card" data-id="${esc(idea.id)}">
         <div class="fp-card-top"><span class="fp-card-name">${esc(idea.title)}</span>
-          <span class="pill pill-${st}">${esc((L.status[st] || st))}</span></div>
+          <span class="pill pill-${st}">${esc(L.status[st] || st)}</span></div>
         <div class="fp-card-snap">${esc(idea.one_liner || "")}</div>
         <div class="fp-chips">${chips(idea)}</div>
         <div class="fp-card-foot"><span class="fp-card-updated">updated ${esc(idea.updated_at || "")}</span></div>
@@ -93,9 +91,9 @@
 
     function render() {
       document.getElementById("cols").innerHTML = F.stages.map((s) => {
-        const inCol = ideas.filter((i) => (i.stage || "ideation") === s.key);
+        const inCol = ideas.filter((i) => (i.stage || "inbox") === s.key);
         const cards = inCol.map(cardHtml).join("");
-        const adder = s.key === "ideation" ? `<a class="fp-card new" href="submit.html"><b>＋ New idea</b><br/>start an assessment</a>` : "";
+        const adder = s.key === "inbox" ? `<a class="fp-card new" href="submit.html"><b>＋ New idea</b><br/>start an assessment</a>` : "";
         return `<div class="fp-col${s.divider ? " divider" : ""}">
           <div class="fp-role">${esc(s.role)}</div>
           <div class="fp-col-head">
@@ -105,8 +103,17 @@
           <div class="fp-cards">${cards}${adder}</div>
         </div>`;
       }).join("");
-      document.querySelectorAll(".fp-card[data-id]").forEach((c) =>
-        c.addEventListener("click", () => openReview(c.dataset.id)));
+
+      // off-board lanes (Parked / Declined)
+      const off = (F.offBoard || []).map((o) => {
+        const inLane = ideas.filter((i) => i.stage === o.key);
+        const cards = inLane.length ? inLane.map(cardHtml).join("") : `<div style="color:var(--text-soft);font-size:12px;font-style:italic;padding:8px 2px">none</div>`;
+        return `<div class="fp-col"><div class="fp-col-head"><div class="fp-col-title">${esc(o.label)}<span class="fp-col-count">${inLane.length}</span></div></div><div class="fp-cards">${cards}</div></div>`;
+      }).join("");
+      document.getElementById("offboard").innerHTML = off
+        ? `<div class="fp-offboard-head">Off-board</div><div class="fp-offboard-row">${off}</div>` : "";
+
+      document.querySelectorAll(".fp-card[data-id]").forEach((c) => c.addEventListener("click", () => openReview(c.dataset.id)));
     }
 
     // ── Review overlay ────────────────────────────────────────────────
@@ -124,11 +131,14 @@
           } catch (e) {}
         }
       }
-      const rows = F.sections.map((sec) => {
-        const v = assessment && assessment[sec.field];
-        const val = sec.field === "intent_type" ? (L.intent[v] || v) : sec.field === "confidence" ? (L.confidence[v] || v) : sec.field === "decision" ? (L.decision[v] || v) : v;
-        return `<div class="fp-section ${v ? "filled" : ""}"><div class="fp-section-head"><span class="tick">✓</span>${esc(sec.label)}</div>
-          <div class="fp-section-body ${v ? "" : "empty"}">${v ? esc(val) : (LIVE ? "—" : "(full assessment shown in live mode)")}</div></div>`;
+      const rows = F.sections.map((sec, i) => {
+        let v = assessment && assessment[sec.field];
+        const has = v != null && v !== "";
+        if (has && sec.field === "intent_type") v = L.intent[v] || v;
+        if (has && sec.field === "confidence") v = L.confidence[v] || v;
+        if (has && sec.field === "decision") v = L.decision[v] || v;
+        return `<div class="fp-section ${has ? "filled" : ""}"><div class="fp-section-head"><span class="tick">✓</span>${i + 1} · ${esc(sec.label)}</div>
+          <div class="fp-section-body ${has ? "" : "empty"}">${has ? esc(v) : (LIVE ? "—" : "(full assessment shown in live mode)")}</div></div>`;
       }).join("");
 
       document.getElementById("overlay").innerHTML = `
@@ -142,9 +152,9 @@
             <div class="fp-chips" style="padding:14px 24px 0">${chips(idea)}</div>
             <div style="padding:4px 24px 8px">${rows}</div>
             <div style="padding:16px 24px 22px;border-top:1px solid var(--border)">
-              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:10px">Keitha's decision</div>
+              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:10px">Reviewer decision</div>
               <div style="display:flex;gap:8px;flex-wrap:wrap">
-                <button class="btn btn-primary" data-d="product">Proceed → Product</button>
+                <button class="btn btn-primary" data-d="product">Proceed → Build</button>
                 <button class="btn" data-d="validate_first">Validate first</button>
                 <button class="btn" data-d="do_not_proceed">Do not proceed</button>
                 <button class="btn btn-ghost" id="closeReview" style="margin-left:auto">Close</button>
@@ -152,19 +162,16 @@
             </div>
           </div>
         </div>`;
-      const scrim = document.getElementById("scrim");
-      scrim.addEventListener("click", closeReview);
+      document.getElementById("scrim").addEventListener("click", closeReview);
       document.getElementById("closeReview").addEventListener("click", closeReview);
-      document.querySelectorAll("#overlay button[data-d]").forEach((b) =>
-        b.addEventListener("click", () => decide(idea, b.dataset.d)));
+      document.querySelectorAll("#overlay button[data-d]").forEach((b) => b.addEventListener("click", () => decide(idea, b.dataset.d)));
     }
     function closeReview() { document.getElementById("overlay").innerHTML = ""; }
 
     async function decide(idea, decision) {
-      const stageFor = { do_not_proceed: "archived", validate_first: "product", product: "product" };
+      const stageFor = { do_not_proceed: "declined", validate_first: "build", product: "build" };
       if (LIVE) {
-        const token = ensureToken();
-        if (!token) return;
+        const token = ensureToken(); if (!token) return;
         try {
           await fetch(F.workerUrl + "/api/decision", {
             method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
@@ -180,10 +187,9 @@
         closeReview(); render();
       }
     }
-
     function ensureToken() {
       let t = localStorage.getItem("fp_review_token");
-      if (!t) { t = prompt("Reviewer token (Keitha):"); if (t) localStorage.setItem("fp_review_token", t.trim()); }
+      if (!t) { t = prompt("Reviewer token:"); if (t) localStorage.setItem("fp_review_token", t.trim()); }
       return t && t.trim();
     }
 

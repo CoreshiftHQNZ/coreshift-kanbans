@@ -4,34 +4,47 @@
  *   - Leave workerUrl "" and the board + intake run entirely on the sample data
  *     below (no backend) — good for demos and for viewing before the Worker is up.
  *   - Set workerUrl to the deployed idea-intake Worker (e.g.
- *     "https://idea-intake.<your-subdomain>.workers.dev") and both pages go live:
- *     the board reads real ideas and the intake becomes a real Claude conversation.
+ *     "https://idea-intake.<your-subdomain>.workers.dev") and both pages go live.
  */
 window.FP = {
   workerUrl: "", // ← set after deploying the Worker to go live
 
-  // The five lifecycle stages (columns). `role` is the owning role, not a person.
+  // The lifecycle stages (board columns), in order. `role` is the owning role.
   stages: [
-    { key: "ideation", label: "Ideation",                    role: "Product owner", gate: "Decision recorded + route set" },
-    { key: "product",  label: "Product",                     role: "Build lead",    gate: "MVP built — the plugin runs here" },
-    { key: "abify",    label: "Abify — hardening & security", role: "Security",      gate: "Security signed off, no high-sev", divider: true },
-    { key: "business", label: "Business / Governance",        role: "Commercial",    gate: "Business case + governance signed" },
-    { key: "final",    label: "Final Readiness",              role: "Launch",        gate: "Launch / handover readiness" },
+    { key: "inbox",      label: "Inbox",                 role: "—",            gate: "Captured — not yet assessed" },
+    { key: "assessment", label: "Assessment",            role: "Product owner", gate: "Assessment in progress" },
+    { key: "review",     label: "Review",                role: "Reviewer",     gate: "Decision recorded" },
+    { key: "build",      label: "Build",                 role: "Build lead",   gate: "MVP built — the plugin runs here" },
+    { key: "harden",     label: "Harden & Secure",       role: "Security",     gate: "Security signed off, no high-sev", divider: true },
+    { key: "business",   label: "Business & Governance", role: "Commercial",   gate: "Business case + governance signed" },
+    { key: "launch",     label: "Launch Readiness",      role: "Launch",       gate: "Launch / handover ready" },
+    { key: "live",       label: "Live",                  role: "—",            gate: "Shipped / in production" },
+  ],
+  // Terminal states shown below the board, not as columns.
+  offBoard: [
+    { key: "parked",   label: "Parked" },
+    { key: "declined", label: "Declined" },
   ],
 
-  // The eight assessment sections shown in the live-filling panel.
+  // The intake conversation's three visible phases (the plugin, on the web).
+  phases: [
+    { key: "shape",         label: "Shape",          sub: "the idea",         note: "idea-generator" },
+    { key: "pressure_test", label: "Pressure-test",  sub: "the assumptions",  note: "idea-validator" },
+    { key: "assess",        label: "Assess & decide", sub: "the call",        note: "app-assessment" },
+  ],
+
+  // The eight assessment sections, with placeholder hints for the empty state.
   sections: [
-    { key: "opportunity", field: "opportunity", label: "1 · Opportunity" },
-    { key: "intent",      field: "intent_type", label: "2 · Intent" },
-    { key: "confidence",  field: "confidence",  label: "3 · Confidence" },
-    { key: "commercial",  field: "commercial",  label: "4 · Commercial" },
-    { key: "scope",       field: "scope",       label: "5 · Scope" },
-    { key: "asset_value", field: "asset_value", label: "6 · Asset value" },
-    { key: "governance",  field: "governance",  label: "7 · Governance" },
-    { key: "decision",    field: "decision",    label: "8 · Decision" },
+    { field: "opportunity", label: "Opportunity",  phase: "shape",         hint: "The problem, and who feels it." },
+    { field: "intent_type", label: "Intent",       phase: "assess",        hint: "Internal tool or client-facing product." },
+    { field: "confidence",  label: "Confidence",   phase: "assess",        hint: "How sure we need to be before building." },
+    { field: "commercial",  label: "Commercial",   phase: "assess",        hint: "Only if it's client-facing / a product." },
+    { field: "scope",       label: "Scope",        phase: "pressure_test", hint: "The smallest version worth building." },
+    { field: "asset_value", label: "Asset value",  phase: "pressure_test", hint: "The reusable asset this could become." },
+    { field: "governance",  label: "Governance",   phase: "assess",        hint: "Privacy, security, IP, data." },
+    { field: "decision",    label: "Decision",     phase: "assess",        hint: "The recommended next step." },
   ],
 
-  // Human-readable labels for the enum values.
   labels: {
     intent:     { personal: "Personal", internal: "Internal tool", client: "Client build", speculative: "Speculative", standalone: "Standalone business" },
     confidence: { punt: "Worth a punt", validate: "Validate first", business_case: "Full business case" },
@@ -41,51 +54,63 @@ window.FP = {
 
   // Sample cards for demo mode (illustrative; clearly not live data).
   demoIdeas: [
-    { id: "d1", title: "Live Edit",   one_liner: "Self-serve $100/mo sites clients edit in place.", stage: "product",  status: "validated", intent: "product",  confidence: "validate",      decision: "product",        updated_at: "yesterday" },
-    { id: "d2", title: "Tap",         one_liner: "ICP-driven lead generation — cold leads on tap.",  stage: "ideation", status: "in_review", intent: "internal", confidence: "punt",          decision: null,             updated_at: "2h ago" },
-    { id: "d3", title: "Lead Engine", one_liner: "Find bad sites → auto-build the replacement.",     stage: "abify",    status: "validated", intent: "internal", confidence: "validate",      decision: "product",        updated_at: "3d ago" },
-    { id: "d4", title: "Merlin",      one_liner: "AI implementation wizard — outcome-led pathways.",  stage: "business", status: "validated", intent: "standalone", confidence: "business_case", decision: "product",      updated_at: "1w ago" },
+    { id: "d1", title: "Client Portal Revamp", one_liner: "One place for clients to see status, invoices, files.", stage: "assessment", status: "draft",     intent: "internal",   confidence: null,          decision: null,        updated_at: "just now" },
+    { id: "d2", title: "Tap",                  one_liner: "ICP-driven lead generation — cold leads on tap.",     stage: "review",     status: "in_review", intent: "internal",   confidence: "punt",        decision: null,        updated_at: "2h ago" },
+    { id: "d3", title: "HeyGem",               one_liner: "Remote admin support for Kiwi tradies.",              stage: "build",      status: "validated", intent: "client",     confidence: "validate",      decision: "client_only", updated_at: "3d ago" },
+    { id: "d4", title: "Lead Engine",          one_liner: "Find bad sites → auto-build the replacement.",        stage: "harden",     status: "validated", intent: "internal",   confidence: "validate",      decision: "product",   updated_at: "5d ago" },
+    { id: "d5", title: "Merlin",               one_liner: "AI implementation wizard — outcome-led pathways.",     stage: "business",   status: "validated", intent: "standalone", confidence: "business_case", decision: "product",   updated_at: "1w ago" },
+    { id: "d6", title: "Live Edit",            one_liner: "Self-serve $100/mo sites clients edit in place.",     stage: "live",       status: "validated", intent: "product",    confidence: "validate",      decision: "product",   updated_at: "yesterday" },
+    { id: "d7", title: "Crypto tipping jar",   one_liner: "In-page crypto tips for creators.",                   stage: "declined",   status: "declined",  intent: "speculative", confidence: "validate",     decision: "do_not_proceed", updated_at: "2w ago" },
+    { id: "d8", title: "Listicle Writer v2",   one_liner: "Next-gen sponsored listicle generator.",              stage: "parked",     status: "draft",     intent: "internal",   confidence: "punt",          decision: null,        updated_at: "3w ago" },
   ],
 
-  // Scripted intake conversation for demo mode: "onboarding email drafter".
-  // Each step = one user turn + the assistant's reply + the fields it captures.
-  demoGreeting: "Hi — I'm the Idea Intake. I'll help you shape your idea and, as we talk, I'll fill in Coreshift's assessment on the right. To start: what's the idea, and who's it for?",
+  // Scripted intake for demo mode — the three phases, "onboarding email drafter".
+  demoGreeting: "Hi — I'm the Idea Intake. Give me the short version: what's the opportunity? What's clunky or missing today, and who feels it?",
   demoScript: [
+    // ── Phase 1: Shape ────────────────────────────────────────────────
     {
-      chips: ["A tool that auto-drafts our client onboarding emails", "Something else"],
-      user: "A tool that auto-drafts our client onboarding emails.",
-      assistant: "Nice — onboarding email drafting. So the opportunity is cutting the manual time the team spends writing near-identical onboarding emails for every new client. Is this for the internal team, or something clients would use themselves?",
-      fills: { title: "Onboarding Email Drafter", one_liner: "Auto-drafts client onboarding emails for the Coreshift team.", opportunity: "Cut the manual time spent writing near-identical onboarding emails for every new client; keep tone consistent." },
+      chips: ["Client onboarding emails — PMs hand-write welcome, doc-request and kickoff messages for every new client. Slow and inconsistent.", "Something else"],
+      user: "Client onboarding emails — PMs hand-write welcome, doc-request and kickoff messages for every new client. Slow and inconsistent.",
+      assistant: "Got it — so the pain is PMs re-writing near-identical onboarding emails for every new client, and the tone drifting. Roughly how often does that happen, and who feels it most?",
+      fills: { phase: "shape", title: "Onboarding Email Drafter", one_liner: "Auto-drafts client onboarding emails for the delivery team.", opportunity: "PMs hand-write welcome / doc-request / kickoff emails for every new client — slow, repetitive, inconsistent tone." },
     },
     {
-      chips: ["Internal tool for our team", "A client-facing product", "Could be both"],
+      chips: ["Every new client — 5-10 a week, all on the PMs", "A few a month"],
+      user: "Every new client — 5 to 10 a week, and it all lands on the PMs.",
+      assistant: "So it's frequent and it's a PM time-sink. That's a real, weekly pain. Let me pressure-test it before we commit anything.",
+      fills: { phase: "shape", opportunity: "PMs hand-write welcome / doc-request / kickoff emails for 5-10 new clients a week — a weekly time-sink, inconsistent tone." },
+    },
+    // ── Phase 2: Pressure-test ────────────────────────────────────────
+    {
+      chips: ["That a good-enough draft saves real time vs. writing fresh", "That PMs will actually use it"],
+      user: "That a good-enough first draft actually saves time versus writing from scratch.",
+      assistant: "Right — the core assumption is that a generated draft is close enough that editing it beats writing fresh. What do PMs do today instead — templates, copy-paste from the last client, nothing?",
+      fills: { phase: "pressure_test", scope: "Smallest test: pick a client + template → a good-enough editable draft that beats writing from scratch." },
+    },
+    {
+      chips: ["Copy-paste the last client's email and find-replace", "A shared doc of rough templates"],
+      user: "Mostly copy-paste the last client's email and find-replace the details.",
+      assistant: "So the real competition is copy-paste-and-tweak — which is fast but error-prone (wrong client name slips through). A draft that's client-aware would beat that. Anything reusable here for other tools?",
+      fills: { phase: "pressure_test", asset_value: "A reusable, client-aware email-drafting component usable across internal tools." },
+    },
+    // ── Phase 3: Assess & decide ──────────────────────────────────────
+    {
+      chips: ["Internal tool for our team", "A client-facing product", "Could be both later"],
       user: "Internal tool for our team.",
-      assistant: "Got it — an internal tool. That keeps governance light. Next dial: how much confidence do we need before building it? Is this worth a quick punt, worth validating first, or does it need a full business case?",
-      fills: { intent_type: "internal", intent: "Internal business tool — used by the Coreshift delivery team." },
+      assistant: "Internal tool — so governance stays light. How much confidence do we need before building: worth a quick punt, validate first, or a full business case?",
+      fills: { phase: "assess", intent_type: "internal", intent: "Internal delivery-team tool.", governance: "Light — internal, no new sensitive data beyond existing CRM. Security/privacy completed downstream in Harden & Secure." },
     },
     {
-      chips: ["Worth a punt — it's cheap", "Validate first", "Full business case"],
+      chips: ["Worth a punt — cheap and we feel it weekly", "Validate first"],
       user: "Worth a punt — it's cheap and we feel the pain weekly.",
-      assistant: "Agreed — worth a punt. Let's pin the smallest version worth building. What's the one flow that would prove it? E.g. pick a client + a template → get a ready-to-send draft.",
-      fills: { confidence: "punt" },
-    },
-    {
-      chips: ["Pick client + template → editable draft", "Full multi-step sequence", "Just a prompt library"],
-      user: "Pick a client and a template, get an editable draft I can tweak and send.",
-      assistant: "That's a tight V1. I'll note richer sequences and CRM sync as later. Quick asset-value check: is there anything reusable here for other Coreshift tools?",
-      fills: { scope: "V1: pick a client + template → generate an editable onboarding draft to tweak and send. Later: multi-step sequences, CRM sync, tone presets." },
-    },
-    {
-      chips: ["A reusable email-drafting component", "Not really, one-off", "Our onboarding templates as data"],
-      user: "The email-drafting component could be reused across our tools.",
-      assistant: "Good — reusable drafting component is real asset value. Governance and cost are light for an internal punt, so we complete those downstream. My recommended call: Build as an experiment, capped at one Fable 5 build. Happy to record that?",
-      fills: { asset_value: "A reusable email-drafting component usable across Coreshift internal tools.", governance: "Light — internal tool, no sensitive customer data beyond existing CRM. Security/privacy completed downstream in Abify.", commercial: "Deferred — internal tool. Spend capped at one build." },
+      assistant: "Agreed. My recommended call: **Build as an experiment**, capped at one build, not a commitment to ship. Commercial's not needed for an internal punt. Happy to record that and send it to Keitha?",
+      fills: { phase: "assess", confidence: "punt", commercial: "Deferred — internal tool. Capped at one build." },
     },
     {
       chips: ["Yes — record it and send to Keitha", "Let me change something"],
       user: "Yes — record it and send to Keitha.",
-      assistant: "Done. Recorded as **Build as an experiment**, capped at one build, and sent to Keitha for review. You'll see it appear on the pipeline board in Ideation. Nice one. 👋",
-      fills: { decision: "experiment", decision_rationale: "Acute weekly pain, cheap to test, reusable component. Not a commitment to ship.", spend_cap: "One Fable 5 build" },
+      assistant: "Done. Recorded as **Build as an experiment**, capped at one build, and sent to Keitha for review. You'll see it land in Review on the board. Nice one. 👋",
+      fills: { phase: "assess", decision: "experiment", decision_rationale: "Acute weekly pain, cheap to test, reusable component. Beats copy-paste-and-tweak. Not a commitment to ship.", spend_cap: "One build" },
       submit: true,
     },
   ],

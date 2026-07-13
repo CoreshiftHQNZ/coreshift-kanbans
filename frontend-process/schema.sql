@@ -17,8 +17,8 @@ create table if not exists public.ideas (
   one_liner      text,
   submitter_name text,
   submitter_email text,
-  stage          text not null default 'ideation'
-                   check (stage in ('ideation','product','abify','business','final','shipped','archived')),
+  stage          text not null default 'inbox'
+                   check (stage in ('inbox','assessment','review','build','harden','business','launch','live','parked','declined')),
   status         text not null default 'draft'
                    check (status in ('draft','in_review','validated','declined')),
   intent         text check (intent in ('personal','internal','client','speculative','standalone')),

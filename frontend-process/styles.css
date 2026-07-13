@@ -143,3 +143,33 @@ a { color: inherit; }
   .fp-panel { min-height: 300px; }
   .fp-head-inner, .fp-wrap { padding-left: 16px; padding-right: 16px; }
 }
+
+/* chat head: id + live status + restart */
+.fp-chat-head { justify-content: space-between; }
+.fp-chat-id { display: flex; align-items: center; gap: 10px; }
+.fp-chat-id .who { line-height: 1.15; }
+.fp-chat-status { font-size: 11px; font-weight: 600; color: var(--green); }
+.fp-chat-status .live { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--green); margin-right: 5px; vertical-align: middle; }
+.fp-restart { font-size: 12px; font-weight: 600; color: var(--text-muted); background: transparent; border: 1px solid var(--border-strong); border-radius: 8px; padding: 5px 11px; cursor: pointer; }
+.fp-restart:hover { border-color: var(--teal); color: var(--teal-dark); }
+
+/* phase stepper (Shape → Pressure-test → Assess) */
+.fp-stepper { display: flex; gap: 7px; padding: 12px 18px; border-bottom: 1px solid var(--border); }
+.fp-step { flex: 1; display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 9px; border: 1px solid var(--border); background: var(--card); }
+.fp-step .n { width: 19px; height: 19px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border-strong); color: var(--text-soft); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.fp-step .lbl { font-size: 12px; font-weight: 700; color: var(--text-soft); line-height: 1.1; }
+.fp-step .lbl small { display: block; font-weight: 500; font-size: 10px; }
+.fp-step.active { background: var(--teal-light); border-color: #99F6E4; }
+.fp-step.active .n { background: var(--teal); border-color: var(--teal); color: #fff; }
+.fp-step.active .lbl { color: var(--teal-dark); }
+.fp-step.done .n { background: var(--green); border-color: var(--green); color: #fff; }
+.fp-step.done .lbl { color: var(--navy); }
+@media (max-width: 560px) { .fp-step .lbl small { display: none; } }
+
+/* off-board (Parked / Declined) */
+.fp-offboard { margin-top: 26px; }
+.fp-offboard-head { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-soft); margin: 0 0 12px; display: flex; align-items: center; gap: 10px; }
+.fp-offboard-head::after { content: ""; height: 1px; flex: 1; background: var(--border); }
+.fp-offboard-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.fp-offboard-row .fp-col { flex: 0 0 300px; }
+.fp-offboard-row .fp-card { opacity: 0.9; }
