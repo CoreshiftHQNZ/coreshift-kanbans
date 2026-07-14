@@ -68,6 +68,9 @@
     const LIVE = !!F.workerUrl;
     const L = F.labels;
     const PHASE_ORDER = F.phases.map((p) => p.key);
+    // Decision (§8) is the outcome, not part of the assessment summary — shown via
+    // the decision chip/headline, not listed as a captured section.
+    const SUMMARY_SECTIONS = F.sections.filter((s) => s.field !== "decision");
     let assessment = {};
     let messages = [];
     let ideaId = null;
@@ -138,20 +141,19 @@
     // ── Assessment panel ──────────────────────────────────────────────
     function renderPanel(justFilled) {
       const secEl = document.getElementById("sections");
-      secEl.innerHTML = F.sections.map((sec, i) => {
+      secEl.innerHTML = SUMMARY_SECTIONS.map((sec, i) => {
         let v = assessment[sec.field];
         const has = v != null && v !== "";
         if (has && sec.field === "intent_type") v = L.intent[v] || v;
         if (has && sec.field === "confidence") v = L.confidence[v] || v;
-        if (has && sec.field === "decision") v = L.decision[v] || v;
         const jf = justFilled && justFilled.includes(sec.field) ? " just-filled" : "";
         return `<div class="fp-section ${has ? "filled" : ""}${jf}">
           <div class="fp-section-head"><span class="tick">✓</span>${i + 1} · ${esc(sec.label)}</div>
           <div class="fp-section-body ${has ? "" : "empty"}">${has ? esc(v) : esc(sec.hint)}</div></div>`;
       }).join("");
-      const filled = F.sections.filter((s) => assessment[s.field] != null && assessment[s.field] !== "").length;
-      document.getElementById("bar").style.width = Math.round((filled / F.sections.length) * 100) + "%";
-      document.getElementById("progressLabel").textContent = filled + " of " + F.sections.length + " captured";
+      const filled = SUMMARY_SECTIONS.filter((s) => assessment[s.field] != null && assessment[s.field] !== "").length;
+      document.getElementById("bar").style.width = Math.round((filled / SUMMARY_SECTIONS.length) * 100) + "%";
+      document.getElementById("progressLabel").textContent = filled + " of " + SUMMARY_SECTIONS.length + " captured";
     }
 
     function applyFills(fills) {
@@ -221,12 +223,11 @@
         proceed: "Next: run <b>product-planner</b> to turn this into a vision, PRD &amp; roadmap.",
       };
       const routeNote = ROUTE[assessment.decision] || "The reviewer will confirm the next step.";
-      const rows = F.sections.map((sec, i) => {
+      const rows = SUMMARY_SECTIONS.map((sec, i) => {
         let v = assessment[sec.field];
         const has = v != null && v !== "";
         if (has && sec.field === "intent_type") v = L.intent[v] || v;
         if (has && sec.field === "confidence") v = L.confidence[v] || v;
-        if (has && sec.field === "decision") v = L.decision[v] || v;
         return `<div class="out-row"><div class="out-k">${i + 1} · ${esc(sec.label)}</div>
           <div class="out-v ${has ? "" : "muted"}">${has ? esc(v) : "not captured"}</div></div>`;
       }).join("");
@@ -302,24 +303,10 @@
         // draft not resumable (already submitted / deleted) → fall through to a fresh start
       }
 
-      // Resume an in-progress session (accidental navigation / closed tab).
-      // Only resume a draft the user actually engaged with, saved in the SAME
-      // mode (so a demo↔live config flip can't cross-replay a mismatched session).
-      let saved = null;
-      try { saved = JSON.parse(localStorage.getItem(SKEY) || "null"); } catch (e) {}
-      const sameMode = saved && saved.mode === (LIVE ? "live" : "demo");
-      const hasUserTurn = saved && saved.messages && saved.messages.some((m) => m.role === "user");
-      if (saved && sameMode && hasUserTurn) {
-        ideaId = saved.ideaId || null;
-        messages = saved.messages;
-        assessment = saved.assessment || { phase: "shape" };
-        step = saved.step || 0;
-        renderStepper(); renderPanel();
-        addNote("Resumed where you left off — Restart to start fresh");
-        messages.forEach((m) => addMsg(m.role, m.text));
-        if (!LIVE && F.demoScript[step]) showChips(F.demoScript[step].chips);
-        return;
-      }
+      // A fresh "Submit an idea" / "+ New idea" always starts clean. Resuming a
+      // specific draft happens ONLY via a board card (?id= above) — never implicitly
+      // from localStorage, so a new idea never re-opens a previous conversation.
+      clearSession();
       assessment.phase = "shape";
       renderStepper();
       renderPanel();

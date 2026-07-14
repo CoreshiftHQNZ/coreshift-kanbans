@@ -64,6 +64,9 @@
     const WIP_STAGES = ["build", "harden", "business", "launch", "live"];
     const isWip = (s) => WIP_STAGES.includes(s);
     const PRODUCT_OWNERS = F.productOwners || [];
+    // Decision (§8) is the outcome (shown as a chip + the decision buttons), not an
+    // assessment-summary section.
+    const SUMMARY_SECTIONS = F.sections.filter((s) => s.field !== "decision");
 
     // Local, human timestamps. Leaves demo strings ("2h ago") untouched.
     function fmtTime(v) {
@@ -81,6 +84,8 @@
     function fullLocal(v) { const d = new Date(v); return isNaN(d.getTime()) ? String(v || "") : d.toLocaleString(); }
     // Developer-status pill, coloured by auto-derived RAG. Defaults to In Progress for WIP cards.
     function devStatusHtml(idea) {
+      // A Live card reads as "Live" — developer status is a build-phase concept.
+      if (idea.stage === "live") return `<span class="pill pill-rag-green" title="Live">Live</span>`;
       const key = idea.dev_status || "in_progress";
       const label = (L.dev_status && L.dev_status[key]) || key;
       const rag = DEV_RAG[key] || "green";
@@ -267,12 +272,11 @@
         } else { locked = true; }
       }
       curIdea = idea; curAssessment = assessment;
-      const rows = F.sections.map((sec, i) => {
+      const rows = SUMMARY_SECTIONS.map((sec, i) => {
         let v = assessment && assessment[sec.field];
         const has = v != null && v !== "";
         if (has && sec.field === "intent_type") v = L.intent[v] || v;
         if (has && sec.field === "confidence") v = L.confidence[v] || v;
-        if (has && sec.field === "decision") v = L.decision[v] || v;
         return `<div class="fp-section ${has ? "filled" : ""}"><div class="fp-section-head"><span class="tick">✓</span>${i + 1} · ${esc(sec.label)}</div>
           <div class="fp-section-body ${has ? "" : "empty"}">${has ? esc(v) : (LIVE ? "—" : "(full assessment shown in live mode)")}</div></div>`;
       }).join("");
@@ -285,14 +289,17 @@
         : `<div class="fp-empty">Repo · kanban · staging · production appear once it's in Build.</div>`}</div>`;
 
       const wip = isWip(idea.stage);
+      const isLive = idea.stage === "live";
+      // Inline-editable build status — change a field and it saves on the spot (no Edit mode).
+      const poOptsInline = ['<option value="">— unassigned —</option>'].concat(
+        PRODUCT_OWNERS.map((n) => `<option value="${esc(n)}"${n === (idea.product_owner || "") ? " selected" : ""}>${esc(n)}</option>`)).join("");
+      const dsOptsInline = Object.keys(L.dev_status || {}).map((k) => `<option value="${esc(k)}"${k === (idea.dev_status || "in_progress") ? " selected" : ""}>${esc(L.dev_status[k])}</option>`).join("");
       const buildStatusBlock = wip ? `<div class="fp-drawer-sec"><div class="fp-drawer-label">Build status</div>
-          <div class="fp-buildstat">${devStatusHtml(idea)}${idea.product_owner
-            ? `<span class="fp-po">👤 ${esc(idea.product_owner)}</span>`
-            : `<span class="fp-po muted">No product owner</span>`}</div>
-          ${idea.dev_status_reason
-            ? `<div class="fp-reason">${esc(idea.dev_status_reason)}</div>`
-            : ((idea.dev_status && idea.dev_status !== "in_progress" && idea.dev_status !== "done") ? `<div class="fp-reason muted">No reason noted.</div>` : "")}</div>` : "";
-      const filledCount = idea.filled ? Object.values(idea.filled).filter(Boolean).length : 0;
+          <div class="fp-inline-field"><span class="fp-inline-lbl">Product Owner</span><select class="fp-inline" data-inline="product_owner">${poOptsInline}</select></div>
+          ${isLive ? "" : `<div class="fp-inline-field"><span class="fp-inline-lbl">Developer status</span><select class="fp-inline" data-inline="dev_status">${dsOptsInline}</select></div>
+          <div class="fp-inline-field"><span class="fp-inline-lbl">Reason / note</span><textarea class="fp-inline" data-inline="dev_status_reason" rows="2" placeholder="Why on hold / at risk / blocked?">${esc(idea.dev_status_reason || "")}</textarea></div>`}
+        </div>` : "";
+      const filledCount = idea.filled ? SUMMARY_SECTIONS.filter((s) => idea.filled[s.field]).length : 0;
       const fullLink = `<a class="fp-fulllink" href="assessment.html?id=${encodeURIComponent(idea.id)}">Read full assessment &amp; transcript →</a>`;
 
       document.getElementById("overlay").innerHTML = `
@@ -312,7 +319,7 @@
               <div class="fp-drawer-label">Assessment${(LIVE && !locked) ? ' <button class="fp-editbtn" id="editAssess" type="button">✎ Edit</button>' : ''}</div>
               ${locked
                 ? `<div class="fp-locked">🔒 The full assessment is reviewer-only. <button class="fp-editbtn" id="unlockAssess" type="button">Enter reviewer token</button></div>`
-                : `<details class="fp-assess"><summary>Summary · ${filledCount}/8 sections</summary><div class="fp-assess-body">${rows}</div></details>`}
+                : `<details class="fp-assess"><summary>Summary · ${filledCount}/${SUMMARY_SECTIONS.length} sections</summary><div class="fp-assess-body">${rows}</div></details>`}
               ${fullLink}
             </div>
           </div>
@@ -332,6 +339,10 @@
       document.querySelectorAll("#overlay button[data-d]").forEach((b) => b.addEventListener("click", () => decide(idea, b.dataset.d)));
       const eb = document.getElementById("editAssess"); if (eb) eb.addEventListener("click", enterEdit);
       const ub = document.getElementById("unlockAssess"); if (ub) ub.addEventListener("click", () => { if (ensureToken()) openReview(id); });
+      document.querySelectorAll("#fpDialog [data-inline]").forEach((el) => {
+        let prev = el.value;
+        el.addEventListener("change", () => { saveField(id, el.getAttribute("data-inline"), el.value, el, prev); prev = el.value; });
+      });
       document.removeEventListener("keydown", trapKeys); document.addEventListener("keydown", trapKeys);
       const dlg = document.getElementById("fpDialog");
       if (dlg) dlg.focus();
@@ -428,22 +439,14 @@
         : "";
       const stageVal = mv ? mv.target : (curIdea.stage || "");
       const stageOpts = F.stages.map((s) => `<option value="${esc(s.key)}"${s.key === stageVal ? " selected" : ""}>${esc(s.label)}</option>`).join("");
-      const fields = F.sections.map((sec, i) =>
+      // Build status (PO / dev status / reason) is edited inline in the read view;
+      // this form is for the assessment prose + stage. Decision is set via the buttons.
+      const fields = SUMMARY_SECTIONS.map((sec, i) =>
         `<div class="fp-edit-field"><label>${i + 1} · ${esc(sec.label)}</label>${editInput(sec)}</div>`).join("");
-      const wipEdit = isWip(curIdea.stage);
-      const poOpts = ['<option value="">— unassigned —</option>'].concat(
-        PRODUCT_OWNERS.map((n) => `<option value="${esc(n)}"${n === (curIdea.product_owner || "") ? " selected" : ""}>${esc(n)}</option>`)).join("");
-      const dsOpts = Object.keys(L.dev_status || {}).map((k) => `<option value="${esc(k)}"${k === (curIdea.dev_status || "in_progress") ? " selected" : ""}>${esc(L.dev_status[k])}</option>`).join("");
-      const buildEdit = wipEdit ? `<div class="fp-drawer-sec"><div class="fp-drawer-label">Build status</div>
-          <div class="fp-edit-field"><label>Product Owner</label><select class="fp-edit-input" data-f="__po">${poOpts}</select></div>
-          <div class="fp-edit-field"><label>Developer status</label><select class="fp-edit-input" data-f="__dev_status">${dsOpts}</select></div>
-          <div class="fp-edit-field"><label>Reason / note</label><textarea class="fp-edit-input" data-f="__dev_reason" rows="2" placeholder="Why on hold / at risk / blocked?">${esc(curIdea.dev_status_reason || "")}</textarea></div>
-        </div>` : "";
       dlg.querySelector(".fp-drawer-body").innerHTML =
         `${banner}
          <div class="fp-drawer-sec"><div class="fp-drawer-label">Stage</div>
            <select class="fp-edit-input" data-f="__stage">${stageOpts}</select></div>
-         ${buildEdit}
          <div class="fp-drawer-sec"><div class="fp-drawer-label">Edit assessment</div>${fields}</div>`;
       const saveLabel = mv ? `Save & move to ${esc(targetLabel)}` : "Save changes";
       dlg.querySelector(".fp-drawer-foot").innerHTML =
@@ -472,9 +475,10 @@
       let stageToSave = stageSel, blocked = false;
       const target = moveContext ? moveContext.target : stageSel;
       if (target && target !== (curIdea.stage || "inbox")) {
-        const data = { filled: {}, intent: assessment.intent_type, confidence: assessment.confidence, decision: assessment.decision };
-        ["opportunity", "intent_type", "confidence", "commercial", "scope", "asset_value", "governance", "decision"]
+        const data = { filled: {}, intent: assessment.intent_type, confidence: assessment.confidence, decision: curIdea.decision };
+        ["opportunity", "intent_type", "confidence", "commercial", "scope", "asset_value", "governance"]
           .forEach((k) => { data.filled[k] = (assessment[k] || "").trim() !== ""; });
+        data.filled.decision = !!curIdea.decision; // Decision isn't edited in this form — read the recorded one
         const stillMissing = unmetForData(data, target);
         if (stillMissing.length) { blocked = true; moveContext = { target: target, missing: stillMissing }; stageToSave = curIdea.stage; }
         else { stageToSave = target; }
@@ -497,7 +501,7 @@
           if (devStatus !== undefined) idea.dev_status = devStatus || null;
           if (devReason !== undefined) idea.dev_status_reason = devReason || null;
           idea.filled = idea.filled || {};
-          ["opportunity", "intent_type", "confidence", "commercial", "scope", "asset_value", "governance", "decision"]
+          ["opportunity", "intent_type", "confidence", "commercial", "scope", "asset_value", "governance"]
             .forEach((k) => { idea.filled[k] = (assessment[k] || "").trim() !== ""; });
         }
         if (!blocked) moveContext = null;
@@ -552,6 +556,32 @@
         idea.stage = prev; render(); // revert
         alert(e && e.message === "token" ? "Reviewer token rejected — try again." : "Couldn't move the card — reverted.");
       }
+    }
+
+    // ── Inline field save (Product Owner / Developer status / reason) ─────
+    function refreshDrawerPill(idea) {
+      const h = document.querySelector("#fpDialog .fp-drawer-head .pill");
+      if (h && idea) h.outerHTML = devStatusHtml(idea);
+    }
+    async function saveField(id, field, value, el, prevVal) {
+      const idea = ideas.find((i) => i.id === id);
+      if (!LIVE) { if (idea) idea[field] = value || null; render(); refreshDrawerPill(idea); return; }
+      const token = ensureToken();
+      if (!token) { if (el) el.value = prevVal; return; }   // no token → revert the control
+      if (el) el.disabled = true;
+      try {
+        const body = { ideaId: id }; body[field] = value;
+        const r = await fetch(F.workerUrl + "/api/update", {
+          method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
+          body: JSON.stringify(body),
+        });
+        if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Reviewer token rejected — try again."); if (el) el.value = prevVal; return; }
+        if (!r.ok) { alert("Couldn't save — please retry."); if (el) el.value = prevVal; return; }
+        if (idea) idea[field] = value || null;
+        render();                 // reflect on the card behind the drawer
+        refreshDrawerPill(idea);  // and on the drawer header pill (dev status)
+      } catch (e) { alert("Couldn't save — network error."); if (el) el.value = prevVal; }
+      finally { if (el) el.disabled = false; }
     }
 
     // ── Pointer drag-and-drop (5px activation so click-to-open survives) ─

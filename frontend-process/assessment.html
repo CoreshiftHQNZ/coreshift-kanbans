@@ -88,11 +88,10 @@
       const dk = idea.dev_status;
       const devPill = (wip && dk) ? `<span class="pill pill-rag-${DEV_RAG[dk] || "green"}">${esc((L.dev_status && L.dev_status[dk]) || dk)}</span>` : "";
 
-      const secs = (F.sections || []).map((s, i) => {
+      const secs = (F.sections || []).filter((s) => s.field !== "decision").map((s, i) => {
         let v = a[s.field]; const has = v != null && v !== "";
         if (has && s.field === "intent_type") v = L.intent[v] || v;
         if (has && s.field === "confidence") v = L.confidence[v] || v;
-        if (has && s.field === "decision") v = L.decision[v] || v;
         return `<section class="af-sec"><h3>${i + 1} · ${esc(s.label)}</h3><p class="${has ? "" : "muted"}">${has ? esc(v) : "— not captured —"}</p></section>`;
       }).join("");
 
