@@ -183,7 +183,7 @@ async function handleChat(request, env, cors) {
 async function handleSubmit(request, env, cors) {
   const body = await request.json();
   if (!body.ideaId) return json({ error: "ideaId required" }, 400, cors);
-  const saved = await updateIdea(env, body.ideaId, { status: "in_review", stage: "ideation" });
+  const saved = await updateIdea(env, body.ideaId, { status: "in_review", stage: "review" });
   await notifySlack(env, saved).catch(() => {});
   return json({ ok: true, idea: publicView(saved) }, 200, cors);
 }
@@ -213,6 +213,8 @@ async function handleDecision(request, env, cors) {
   const body = await request.json();
   if (!body.ideaId || !body.decision) return json({ error: "ideaId and decision required" }, 400, cors);
   if (!ENUM_VALUES.decision.includes(body.decision)) return json({ error: "invalid decision" }, 400, cors);
+  const existing = await getIdea(env, body.ideaId);
+  if (!existing) return json({ error: "Not found" }, 404, cors);
   const STAGE_FOR = { do_not_proceed: "rejected", validate_first: "pending_validation" };
   const STATUS_FOR = { do_not_proceed: "declined", validate_first: "in_review" };
   const patch = {
@@ -223,8 +225,13 @@ async function handleDecision(request, env, cors) {
     reviewed_by: body.reviewer || "Keitha",
     reviewed_at: new Date().toISOString(),
   };
-  // A go-decision lands the card in Build — start its developer status.
-  if (WIP_STAGES.includes(patch.stage)) patch.dev_status = "in_progress";
+  // Seed developer status only when the card is ENTERING WIP from a non-WIP stage
+  // (or has none yet). Re-deciding an already-WIP card must not clobber a real
+  // status like "blocked" or strand its reason.
+  if (WIP_STAGES.includes(patch.stage) && (!WIP_STAGES.includes(existing.stage) || !existing.dev_status)) {
+    patch.dev_status = "in_progress";
+    patch.dev_status_reason = null;
+  }
   const saved = await updateIdea(env, body.ideaId, patch);
   return json({ ok: true, idea: publicView(saved) }, 200, cors);
 }
