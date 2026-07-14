@@ -11,7 +11,9 @@
 ## ✅ Done
 
 - **In-page editor** `shipped` — Click-to-edit text and images, rich text with links, nav/footer editors, add-pages, SEO + settings panels, theme + brand-colour switching, in-memory draft, and a sign-off gate. In real use across the live sites.
-- **Section + theme engine** `shipped` — 7 section types and ~10 theme styles rendered through one shared code path used by both the editor and the edge renderer, so swapping themes never loses content.
+- **Section + theme engine** `shipped` — 8 section types and ~11 theme styles rendered through one shared code path used by both the editor and the edge renderer, so swapping themes never loses content.
+- **Design Engine + Tailwind authoring layer** `shipped` — Sections are now authored in Tailwind v4 utilities bridged to runtime theme tokens (no preflight, so existing themes don't drift), compiled by the editor's Vite plugin and the renderer's CLI from one source. Variety is cheap and theme-swap still keeps content. Canon: the Simplicity Budget (customers pick pictures not parameters; "Ask" is the advanced mode; UI surface frozen).
+- **Testimonials: 6-layout calibration** `shipped` — First engine-built section: spotlight, cards, mosaic, portrait, stacked and marquee on one content contract with zero toggles. Reviewable on the board (`?gallery=section&type=testimonials`, `?variant=<id>` to deep-link one).
 - **Instant publish + edge renderer** `shipped` — Publishing is a DB pointer flip + edge-cache purge; one Cloudflare Worker resolves host → tenant → published content → SSR. **15 sites live and published.**
 - **Contact forms → leads** `shipped` — Published forms post to a public function that resolves the recipient server-side, stores the lead, and shows it in the dashboard. Proven by real leads.
 - **Telemetry** `shipped` — Page-view counting, dashboard error capture, and an editor "ask for a change" feed — all live with real data.
@@ -42,6 +44,7 @@
 
 - **Webhook robustness + payment-failed handling** `billing` — Timestamp/replay guard, event dedup, persist `stripe_subscription_id`, handle `invoice.payment_failed`.
 - **Reconcile live DB → migrations** `infra` — The core tables and RPCs exist only in the prod DB; capture them into `saas-platform/db/migrations/` so source is the truth and a rebuild is safe.
+- **Design Engine — Phase B: migrate 7 sections to Tailwind** `enhancement` — Rebuild Hero, Feature grid, Gallery, Rich text, CTA, Team and Contact form in the new Tailwind authoring layer, retire their legacy CSS, and apply the "kill list" (fewer in-section options, more curated layouts). Then scale to new section types + theme families.
 
 ## ⚪ Backlog
 
