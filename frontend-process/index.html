@@ -255,9 +255,15 @@
         if (token) {
           try {
             const r = await fetch(F.workerUrl + "/api/idea?id=" + encodeURIComponent(id), { headers: { Authorization: "Bearer " + token } });
-            if (r.ok) assessment = (await r.json()).idea.assessment;
-            else if (r.status === 401) { localStorage.removeItem("fp_review_token"); locked = true; }
-          } catch (e) {}
+            if (r.ok) {
+              const data = await r.json().catch(() => null);
+              if (data && data.idea) assessment = data.idea.assessment || {};
+              else locked = true;              // malformed body → don't misrepresent a real idea as empty
+            } else {
+              if (r.status === 401) localStorage.removeItem("fp_review_token");
+              locked = true;                    // fail closed on ANY error (500/404/etc.), not just 401
+            }
+          } catch (e) { locked = true; }        // network error → locked, never a fake-empty assessment
         } else { locked = true; }
       }
       curIdea = idea; curAssessment = assessment;
@@ -383,13 +389,16 @@
       if (!curIdea) return;
       if (LIVE) {
         const token = ensureToken(); if (!token) return;
-        // If the drawer was opened without a token, fetch the full assessment now.
-        if (!curAssessment || !Object.keys(curAssessment).length) {
+        // Fetch the full assessment if we don't have it. Never render the edit form
+        // on data that failed to load — an all-empty form would wipe the real prose on Save.
+        if (curAssessment == null || !Object.keys(curAssessment).length) {
+          let ok = false;
           try {
             const r = await fetch(F.workerUrl + "/api/idea?id=" + encodeURIComponent(curIdea.id), { headers: { Authorization: "Bearer " + token } });
-            if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Review token rejected."); return; }
-            if (r.ok) curAssessment = (await r.json()).idea.assessment || {};
+            if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Reviewer token rejected — try again."); return; }
+            if (r.ok) { const data = await r.json().catch(() => null); if (data && data.idea) { curAssessment = data.idea.assessment || {}; ok = true; } }
           } catch (e) {}
+          if (!ok) { alert("Couldn't load the assessment — please try again."); return; }
         }
       }
       renderEditForm();
@@ -540,7 +549,8 @@
         if (!r.ok) throw new Error("http");
         await load(); // server is the source of truth (catches concurrent edits)
       } catch (e) {
-        idea.stage = prev; render(); // silent revert
+        idea.stage = prev; render(); // revert
+        alert(e && e.message === "token" ? "Reviewer token rejected — try again." : "Couldn't move the card — reverted.");
       }
     }
 
