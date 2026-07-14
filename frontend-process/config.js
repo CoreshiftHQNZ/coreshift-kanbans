@@ -17,7 +17,7 @@ window.FP = {
     { key: "inbox",      label: "Inbox",                 role: "—",             gate: "Captured — not yet assessed",                  view: "pipeline" },
     { key: "assessment", label: "Assessment",            role: "Product owner", gate: "Assessment in progress",                       view: "pipeline" },
     { key: "review",             label: "Review",             role: "Reviewer",      gate: "Decide → Build, Pending Validation, or Rejected", view: "pipeline" },
-    { key: "pending_validation", label: "Pending Validation", role: "—",             gate: "Validate first — awaiting a test / discussion",   view: "pipeline" },
+    { key: "pending_validation", label: "Pending Validation", role: "—",             gate: "Validate first — awaiting a test / discussion",   view: "pipeline", divider: true },
     { key: "rejected",           label: "Rejected",           role: "—",             gate: "Not proceeding — kept as a record",               view: "pipeline" },
     { key: "build",      label: "Build",                 role: "Build lead",    gate: "MVP built — the plugin runs here",             view: "wip" },
     { key: "harden",     label: "Harden & Secure",       role: "Security",      gate: "Security signed off, no high-sev",             view: "wip", softdivider: true },

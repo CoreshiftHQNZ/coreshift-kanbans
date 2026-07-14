@@ -169,7 +169,7 @@
     function renderLegend() {
       const common = `<span><b>Chips:</b> Intent · Confidence · Decision</span><span><b>Click a card</b> to review &amp; decide</span>`;
       const extra = view === "pipeline"
-        ? `<span><b>Governance gate:</b> a decision + PIA/governance sends approved ideas into Work in Progress →</span>`
+        ? `<span><b>Governance gate:</b> a decision + PIA/governance sends approved ideas into Work in Progress →</span><span><b>After the dashed line:</b> Pending Validation &amp; Rejected are outcome statuses, not active stages.</span>`
         : `<span><b>Faint line:</b> the Build → Harden & Secure hand-off</span>`;
       document.getElementById("legend").innerHTML = common + extra;
     }
