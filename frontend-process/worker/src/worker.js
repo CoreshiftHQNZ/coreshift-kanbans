@@ -77,6 +77,7 @@ export default {
       if (url.pathname === "/api/idea" && request.method === "GET") return await handleIdea(request, env, cors, url);
       if (url.pathname === "/api/decision" && request.method === "POST") return await handleDecision(request, env, cors);
       if (url.pathname === "/api/delete" && request.method === "POST") return await handleDelete(request, env, cors);
+      if (url.pathname === "/api/update" && request.method === "POST") return await handleUpdate(request, env, cors);
       if (url.pathname === "/try" && request.method === "GET")
         return new Response(TRY_PAGE, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
       if (url.pathname === "/" || url.pathname === "/health") return json({ ok: true, service: "idea-intake" }, 200, cors);
@@ -212,6 +213,39 @@ async function handleDelete(request, env, cors) {
   if (!body.ideaId) return json({ error: "ideaId required" }, 400, cors);
   await updateIdea(env, body.ideaId, { deleted_at: new Date().toISOString() });
   return json({ ok: true }, 200, cors);
+}
+
+// ── /api/update (reviewer edits assessment / corrects stage — token-gated) ──
+async function handleUpdate(request, env, cors) {
+  if (!authed(request, env)) return json({ error: "Unauthorized" }, 401, cors);
+  const body = await request.json();
+  if (!body.ideaId) return json({ error: "ideaId required" }, 400, cors);
+  const idea = await getIdea(env, body.ideaId);
+  if (!idea) return json({ error: "Not found" }, 404, cors);
+
+  const patch = {};
+  const assessment = { ...(idea.assessment || {}) };
+  const edits = (body.assessment && typeof body.assessment === "object") ? body.assessment : {};
+  // Only these assessment keys are writable from the board editor. An enum key
+  // also syncs its denormalised column (intent/confidence/decision) so the
+  // card chips + placement stay in step. "" clears the field.
+  const ALLOWED = ["opportunity", "intent_type", "confidence", "commercial", "scope", "asset_value", "governance", "decision", "decision_rationale", "spend_cap"];
+  for (const key of ALLOWED) {
+    if (!(key in edits)) continue;
+    const raw = edits[key];
+    const v = typeof raw === "string" ? raw.trim() : raw;
+    if (v == null || v === "") { delete assessment[key]; if (ENUM_COLUMNS[key]) patch[ENUM_COLUMNS[key]] = null; }
+    else { assessment[key] = v; if (ENUM_COLUMNS[key]) patch[ENUM_COLUMNS[key]] = v; }
+  }
+  patch.assessment = assessment;
+
+  const STAGES = ["inbox", "assessment", "review", "pending_validation", "rejected", "build", "harden", "business", "launch", "live", "parked", "declined"];
+  if (body.stage && STAGES.includes(body.stage)) patch.stage = body.stage;
+  const STATUSES = ["draft", "in_review", "validated", "declined"];
+  if (body.status && STATUSES.includes(body.status)) patch.status = body.status;
+
+  const saved = await updateIdea(env, body.ideaId, patch);
+  return json({ ok: true, idea: publicView(saved), assessment: saved.assessment }, 200, cors);
 }
 
 // ── Assessment merge ───────────────────────────────────────────────────────

@@ -10,7 +10,7 @@
 </head>
 <body class="fp-app">
   <header class="fp-head">
-    <div class="fp-head-inner">
+    <div class="fp-head-inner fp-head-inner-board">
       <a class="fp-brand" href="../index.html">
         <div class="fp-mark">💡</div>
         <div><div class="fp-title">Coreshift HQ</div><div class="fp-sub">Idea Pipeline</div></div>
@@ -24,7 +24,7 @@
     </div>
   </header>
 
-  <div class="fp-wrap">
+  <div class="fp-wrap fp-wrap-board">
     <div class="fp-hero">
       <div>
         <h1 id="viewTitle">Coreshift Idea Pipeline</h1>
@@ -195,7 +195,7 @@
     async function openReview(id) {
       const idea = ideas.find((i) => i.id === id);
       if (!idea) return;
-      lastTrigger = document.activeElement;
+      if (!document.getElementById("fpDialog")) lastTrigger = document.activeElement;
       let assessment = null;
       if (LIVE) {
         const token = ensureToken();
@@ -207,6 +207,7 @@
           } catch (e) {}
         }
       }
+      curIdea = idea; curAssessment = assessment;
       const rows = F.sections.map((sec, i) => {
         let v = assessment && assessment[sec.field];
         const has = v != null && v !== "";
@@ -236,7 +237,7 @@
           </div>
           <div class="fp-drawer-body">
             ${urlsBlock}
-            <div class="fp-drawer-sec"><div class="fp-drawer-label">Assessment</div>${rows}</div>
+            <div class="fp-drawer-sec"><div class="fp-drawer-label">Assessment${LIVE ? ' <button class="fp-editbtn" id="editAssess" type="button">✎ Edit</button>' : ''}</div>${rows}</div>
           </div>
           <div class="fp-drawer-foot">
             <div class="fp-drawer-label">Reviewer decision</div>
@@ -252,7 +253,8 @@
       document.getElementById("closeReview").addEventListener("click", closeReview);
       document.getElementById("drawerDelete").addEventListener("click", () => { closeReview(); deleteIdea(idea.id); });
       document.querySelectorAll("#overlay button[data-d]").forEach((b) => b.addEventListener("click", () => decide(idea, b.dataset.d)));
-      document.addEventListener("keydown", trapKeys);
+      const eb = document.getElementById("editAssess"); if (eb) eb.addEventListener("click", enterEdit);
+      document.removeEventListener("keydown", trapKeys); document.addEventListener("keydown", trapKeys);
       const dlg = document.getElementById("fpDialog");
       if (dlg) dlg.focus();
     }
@@ -260,6 +262,80 @@
       document.removeEventListener("keydown", trapKeys);
       document.getElementById("overlay").innerHTML = "";
       if (lastTrigger && lastTrigger.focus) lastTrigger.focus();
+    }
+
+    // ── Edit assessment / correct stage (reviewer, token-gated) ───────
+    let curIdea = null, curAssessment = null;
+    const ENUM_OPTS = { intent_type: L.intent, confidence: L.confidence, decision: L.decision };
+
+    async function enterEdit() {
+      if (!LIVE || !curIdea) return;
+      const token = ensureToken(); if (!token) return;
+      // If the drawer was opened without a token, fetch the full assessment now.
+      if (!curAssessment || !Object.keys(curAssessment).length) {
+        try {
+          const r = await fetch(F.workerUrl + "/api/idea?id=" + encodeURIComponent(curIdea.id), { headers: { Authorization: "Bearer " + token } });
+          if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Review token rejected."); return; }
+          if (r.ok) curAssessment = (await r.json()).idea.assessment || {};
+        } catch (e) {}
+      }
+      renderEditForm();
+    }
+
+    function editInput(sec) {
+      const f = sec.field;
+      const cur = (curAssessment && curAssessment[f] != null) ? curAssessment[f] : "";
+      if (ENUM_OPTS[f]) {
+        const opts = ['<option value="">— not set —</option>'].concat(
+          Object.keys(ENUM_OPTS[f]).map((k) => `<option value="${esc(k)}"${k === cur ? " selected" : ""}>${esc(ENUM_OPTS[f][k])}</option>`)
+        ).join("");
+        return `<select class="fp-edit-input" data-f="${esc(f)}">${opts}</select>`;
+      }
+      return `<textarea class="fp-edit-input" data-f="${esc(f)}" rows="3" placeholder="${esc(sec.hint || "")}">${esc(cur)}</textarea>`;
+    }
+
+    function renderEditForm() {
+      const dlg = document.getElementById("fpDialog");
+      if (!dlg) return;
+      const stageOpts = F.stages.map((s) => `<option value="${esc(s.key)}"${s.key === (curIdea.stage || "") ? " selected" : ""}>${esc(s.label)}</option>`).join("");
+      const fields = F.sections.map((sec, i) =>
+        `<div class="fp-edit-field"><label>${i + 1} · ${esc(sec.label)}</label>${editInput(sec)}</div>`).join("");
+      dlg.querySelector(".fp-drawer-body").innerHTML =
+        `<div class="fp-drawer-sec"><div class="fp-drawer-label">Stage</div>
+           <select class="fp-edit-input" data-f="__stage">${stageOpts}</select></div>
+         <div class="fp-drawer-sec"><div class="fp-drawer-label">Edit assessment</div>${fields}</div>`;
+      dlg.querySelector(".fp-drawer-foot").innerHTML =
+        `<div class="fp-edit-actions"><button class="btn btn-primary" id="saveEdit" type="button">Save changes</button><button class="btn btn-ghost" id="cancelEdit" type="button">Cancel</button></div>`;
+      document.getElementById("saveEdit").addEventListener("click", saveEdit);
+      document.getElementById("cancelEdit").addEventListener("click", () => openReview(curIdea.id));
+      const first = dlg.querySelector(".fp-edit-input"); if (first) first.focus();
+    }
+
+    async function saveEdit() {
+      if (!curIdea) return;
+      const token = ensureToken(); if (!token) return;
+      const dlg = document.getElementById("fpDialog");
+      const assessment = {}; let stage = null;
+      dlg.querySelectorAll("[data-f]").forEach((el) => {
+        const f = el.getAttribute("data-f");
+        const v = (el.value || "").trim();
+        if (f === "__stage") stage = v; else assessment[f] = v;
+      });
+      const btn = document.getElementById("saveEdit");
+      const reset = () => { if (btn) { btn.disabled = false; btn.textContent = "Save changes"; } };
+      if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
+      try {
+        const r = await fetch(F.workerUrl + "/api/update", {
+          method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
+          body: JSON.stringify({ ideaId: curIdea.id, assessment, stage }),
+        });
+        if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Reviewer token rejected — try again."); reset(); return; }
+        if (!r.ok) { alert("Couldn't save — please retry."); reset(); return; }
+      } catch (e) { alert("Couldn't save — network error."); reset(); return; }
+      const id = curIdea.id;
+      curAssessment = null; // force a refetch of the merged assessment on reopen
+      await load();
+      openReview(id);
     }
 
     async function decide(idea, decision) {
