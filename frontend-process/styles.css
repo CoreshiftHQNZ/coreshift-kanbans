@@ -133,6 +133,9 @@ body.fp-dragging, body.fp-dragging .fp-card { cursor: grabbing; user-select: non
 .fp-assess-body { margin-top: 6px; }
 .fp-fulllink { display: inline-block; margin-top: 12px; font-size: 12.5px; font-weight: 600; color: var(--teal-dark); text-decoration: none; }
 .fp-fulllink:hover { text-decoration: underline; }
+/* Reviewer-token locked state (assessment prose is token-gated; no auto-prompt) */
+.fp-locked { font-size: 12.5px; color: var(--text-muted); background: var(--bg); border: 1px dashed var(--border-strong); border-radius: 8px; padding: 10px 12px; margin-top: 4px; }
+.fp-locked .fp-editbtn { margin-left: 6px; }
 .fp-col-head { flex-shrink: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 11px 13px; box-shadow: var(--shadow-sm); margin-bottom: 10px; }
 .fp-col-title { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--navy); }
 .fp-col-count { margin-left: auto; font-size: 11px; color: var(--text-soft); background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 1px 8px; font-weight: 600; }

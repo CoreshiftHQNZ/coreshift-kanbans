@@ -89,6 +89,7 @@ export default {
       if (url.pathname === "/api/decision" && request.method === "POST") return await handleDecision(request, env, cors);
       if (url.pathname === "/api/delete" && request.method === "POST") return await handleDelete(request, env, cors);
       if (url.pathname === "/api/update" && request.method === "POST") return await handleUpdate(request, env, cors);
+      if (url.pathname === "/api/draft" && request.method === "GET") return await handleDraft(request, env, cors, url);
       if (url.pathname === "/try" && request.method === "GET")
         return new Response(TRY_PAGE, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
       if (url.pathname === "/" || url.pathname === "/health") return json({ ok: true, service: "idea-intake" }, 200, cors);
@@ -130,10 +131,12 @@ async function handleChat(request, env, cors) {
   if (!messages.length) messages.push({ role: "user", content: "Hi — I have an idea." });
 
   let reply = "";
-  for (let i = 0; i < 4; i++) {
+  let lastText = "";
+  for (let i = 0; i < 6; i++) {
     const resp = await callAnthropic(env, system, messages, TOOLS);
     const toolUses = (resp.content || []).filter((b) => b.type === "tool_use");
     const text = (resp.content || []).filter((b) => b.type === "text").map((b) => b.text).join("\n").trim();
+    if (text) lastText = text;
 
     if (resp.stop_reason === "tool_use" && toolUses.length) {
       messages.push({ role: "assistant", content: resp.content });
@@ -158,6 +161,11 @@ async function handleChat(request, env, cors) {
     reply = text;
     break;
   }
+
+  // Never leave the ideator on a silent "typing…": fall back to any text the model
+  // emitted alongside its tool calls, then to a safe prompt that keeps things moving.
+  if (!reply) reply = lastText;
+  if (!reply) reply = "Got that — I've captured it on the assessment. What would you like to add or change next?";
 
   if (submitted) {
     patch.status = "in_review";
@@ -205,6 +213,24 @@ async function handleIdea(request, env, cors, url) {
   const idea = await getIdea(env, id);
   if (!idea) return json({ error: "Not found" }, 404, cors);
   return json({ idea }, 200, cors);
+}
+
+// ── /api/draft?id=… (resume an in-progress draft — no token; drafts only) ──
+async function handleDraft(request, env, cors, url) {
+  const id = url.searchParams.get("id");
+  if (!id) return json({ error: "id required" }, 400, cors);
+  const idea = await getIdea(env, id);
+  // Only in-progress drafts are resumable here. Anything submitted/decided is
+  // off-limits (its full assessment stays review-token gated via /api/idea).
+  if (!idea || idea.status !== "draft" || !["inbox", "assessment"].includes(idea.stage || "inbox")) {
+    return json({ error: "Not a resumable draft" }, 404, cors);
+  }
+  return json({ idea: {
+    id: idea.id, title: idea.title, one_liner: idea.one_liner,
+    assessment: idea.assessment || {},
+    transcript: Array.isArray(idea.transcript) ? idea.transcript : [],
+    stage: idea.stage, status: idea.status,
+  } }, 200, cors);
 }
 
 // ── /api/decision (Keitha's review — review-token gated) ───────────────────

@@ -188,7 +188,15 @@
       }
       document.getElementById("cols").innerHTML = stageCols + offCols;
       document.querySelectorAll(".fp-card[data-id]").forEach((c) => {
-        const open = () => { if (justDragged) { justDragged = false; return; } moveContext = null; openReview(c.dataset.id); };
+        const open = () => {
+          if (justDragged) { justDragged = false; return; }
+          moveContext = null;
+          const idea = ideas.find((i) => i.id === c.dataset.id);
+          // A draft is still being written — clicking it resumes the intake conversation
+          // (not the read/decide drawer, which is for submitted cards).
+          if (idea && idea.status === "draft") { location.href = "submit.html?id=" + encodeURIComponent(idea.id); return; }
+          openReview(c.dataset.id);
+        };
         c.addEventListener("click", open);
         c.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
       });
@@ -241,15 +249,16 @@
       if (!idea) return;
       if (!document.getElementById("fpDialog")) lastTrigger = document.activeElement;
       let assessment = null;
+      let locked = false;
       if (LIVE) {
-        const token = ensureToken();
+        const token = localStorage.getItem("fp_review_token"); // use a cached token; never prompt just to open a card
         if (token) {
           try {
             const r = await fetch(F.workerUrl + "/api/idea?id=" + encodeURIComponent(id), { headers: { Authorization: "Bearer " + token } });
             if (r.ok) assessment = (await r.json()).idea.assessment;
-            else if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Review token rejected."); }
+            else if (r.status === 401) { localStorage.removeItem("fp_review_token"); locked = true; }
           } catch (e) {}
-        }
+        } else { locked = true; }
       }
       curIdea = idea; curAssessment = assessment;
       const rows = F.sections.map((sec, i) => {
@@ -294,8 +303,10 @@
             ${buildStatusBlock}
             ${urlsBlock}
             <div class="fp-drawer-sec">
-              <div class="fp-drawer-label">Assessment${LIVE ? ' <button class="fp-editbtn" id="editAssess" type="button">✎ Edit</button>' : ''}</div>
-              <details class="fp-assess"><summary>Summary · ${filledCount}/8 sections</summary><div class="fp-assess-body">${rows}</div></details>
+              <div class="fp-drawer-label">Assessment${(LIVE && !locked) ? ' <button class="fp-editbtn" id="editAssess" type="button">✎ Edit</button>' : ''}</div>
+              ${locked
+                ? `<div class="fp-locked">🔒 The full assessment is reviewer-only. <button class="fp-editbtn" id="unlockAssess" type="button">Enter reviewer token</button></div>`
+                : `<details class="fp-assess"><summary>Summary · ${filledCount}/8 sections</summary><div class="fp-assess-body">${rows}</div></details>`}
               ${fullLink}
             </div>
           </div>
@@ -314,6 +325,7 @@
       document.getElementById("drawerDelete").addEventListener("click", () => { closeReview(); deleteIdea(idea.id); });
       document.querySelectorAll("#overlay button[data-d]").forEach((b) => b.addEventListener("click", () => decide(idea, b.dataset.d)));
       const eb = document.getElementById("editAssess"); if (eb) eb.addEventListener("click", enterEdit);
+      const ub = document.getElementById("unlockAssess"); if (ub) ub.addEventListener("click", () => { if (ensureToken()) openReview(id); });
       document.removeEventListener("keydown", trapKeys); document.addEventListener("keydown", trapKeys);
       const dlg = document.getElementById("fpDialog");
       if (dlg) dlg.focus();

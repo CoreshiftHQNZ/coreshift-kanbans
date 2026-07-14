@@ -273,6 +273,35 @@
 
     // ── Boot ──────────────────────────────────────────────────────────
     async function boot() {
+      const urlId = new URLSearchParams(location.search).get("id");
+      // Resume a specific draft opened from the board (?id=…) via the server transcript.
+      if (LIVE && urlId) {
+        typing(true);
+        try {
+          const r = await fetch(F.workerUrl + "/api/draft?id=" + encodeURIComponent(urlId));
+          typing(false);
+          if (r.ok) {
+            const d = (await r.json()).idea;
+            ideaId = d.id;
+            assessment = (d.assessment && Object.keys(d.assessment).length) ? d.assessment : { phase: "shape" };
+            messages = (d.transcript || []).filter((m) => m && m.text && (m.role === "user" || m.role === "assistant"));
+            renderStepper(); renderPanel();
+            if (messages.length) {
+              addNote("Resumed this idea from the board — Restart to start fresh");
+              messages.forEach((m) => addMsg(m.role, m.text));
+              // If the assistant never replied to the last turn, fetch its response now.
+              if (messages[messages.length - 1].role === "user") { busy = true; await sendLive(); busy = false; }
+            } else {
+              const g = "Let's pick this up — tell me the idea: the opportunity, what's clunky today, and who feels it.";
+              addMsg("assistant", g); messages.push({ role: "assistant", text: g });
+            }
+            saveSession();
+            return;
+          }
+        } catch (e) { typing(false); }
+        // draft not resumable (already submitted / deleted) → fall through to a fresh start
+      }
+
       // Resume an in-progress session (accidental navigation / closed tab).
       // Only resume a draft the user actually engaged with, saved in the SAME
       // mode (so a demo↔live config flip can't cross-replay a mismatched session).
