@@ -113,6 +113,26 @@ body.fp-dragging, body.fp-dragging .fp-card { cursor: grabbing; user-select: non
 .fp-col-over .fp-cards { outline: 2px dashed var(--teal); outline-offset: 3px; border-radius: 10px; background: var(--teal-light); }
 /* "What's missing" banner in the move-blocked edit form */
 .fp-move-banner { background: var(--amber-light); border: 1px solid #FDE68A; color: #92400E; border-radius: 10px; padding: 10px 12px; font-size: 12.5px; line-height: 1.45; margin-bottom: 14px; }
+
+/* Developer-status RAG pills (auto-coloured from status) */
+.pill-rag-green { background: var(--green-light); color: #065F46; border-color: #6EE7B7; }
+.pill-rag-amber { background: var(--amber-light); color: #92400E; border-color: #FDE68A; }
+.pill-rag-red   { background: var(--red-light);   color: #991B1B; border-color: #FCA5A5; }
+/* Product owner + build-status block */
+.fp-po { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+.fp-po.muted { color: var(--text-soft); font-style: italic; }
+.fp-buildstat { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.fp-reason { margin-top: 8px; font-size: 13px; line-height: 1.5; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; }
+.fp-reason.muted { color: var(--text-soft); font-style: italic; background: transparent; border: 0; padding: 0; margin-top: 6px; }
+/* Collapsible assessment summary + full-assessment link */
+.fp-assess { margin-top: 4px; }
+.fp-assess > summary { cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--teal-dark); list-style: none; padding: 4px 0; user-select: none; }
+.fp-assess > summary::-webkit-details-marker { display: none; }
+.fp-assess > summary::before { content: "▸ "; color: var(--text-soft); }
+.fp-assess[open] > summary::before { content: "▾ "; }
+.fp-assess-body { margin-top: 6px; }
+.fp-fulllink { display: inline-block; margin-top: 12px; font-size: 12.5px; font-weight: 600; color: var(--teal-dark); text-decoration: none; }
+.fp-fulllink:hover { text-decoration: underline; }
 .fp-col-head { flex-shrink: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 11px 13px; box-shadow: var(--shadow-sm); margin-bottom: 10px; }
 .fp-col-title { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--navy); }
 .fp-col-count { margin-left: auto; font-size: 11px; color: var(--text-soft); background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 1px 8px; font-weight: 600; }

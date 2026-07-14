@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Assessment — Coreshift Idea Pipeline</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💡%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Full-assessment page — scrolling document layout (not the fixed board shell). */
+    .af-back { display: inline-block; margin-bottom: 16px; font-size: 13px; font-weight: 600; color: var(--teal-dark); text-decoration: none; }
+    .af-back:hover { text-decoration: underline; }
+    .af-head { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 24px; }
+    .af-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .af-head h1 { font-size: 26px; margin: 0 0 6px; letter-spacing: -0.02em; }
+    .af-sub { font-size: 15px; color: var(--text-muted); margin: 0 0 14px; max-width: 70ch; }
+    .af-meta { display: flex; gap: 20px; flex-wrap: wrap; font-size: 12.5px; color: var(--text-muted); }
+    .af-meta b { color: var(--text); font-weight: 600; }
+    .af-block { margin: 28px 0; }
+    .af-block > h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-soft); margin: 0 0 14px; }
+    .af-sec { margin-bottom: 18px; }
+    .af-sec h3 { font-size: 14px; margin: 0 0 4px; color: var(--navy); }
+    .af-sec p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--text); white-space: pre-wrap; }
+    .af-sec p.muted { color: var(--text-soft); font-style: italic; }
+    .af-transcript { display: flex; flex-direction: column; gap: 10px; }
+    .fp-note-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; color: var(--text-muted); box-shadow: var(--shadow-sm); }
+    .fp-loading { color: var(--text-soft); }
+  </style>
+</head>
+<body>
+  <header class="fp-head">
+    <div class="fp-head-inner">
+      <a class="fp-brand" href="index.html">
+        <div class="fp-mark">💡</div>
+        <div><div class="fp-title">Coreshift HQ</div><div class="fp-sub">Idea Pipeline</div></div>
+      </a>
+      <div class="fp-meta"><a href="index.html">← Board</a></div>
+    </div>
+  </header>
+
+  <div class="fp-wrap" style="max-width: 900px">
+    <div id="content"><p class="fp-loading">Loading…</p></div>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    const F = window.FP;
+    const LIVE = !!F.workerUrl;
+    const L = F.labels;
+    const DEV_RAG = F.devRag || { in_progress: "green", done: "green", at_risk: "amber", on_hold: "amber", blocked: "red" };
+    const WIP_STAGES = ["build", "harden", "business", "launch", "live"];
+    const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const id = new URLSearchParams(location.search).get("id");
+    const content = document.getElementById("content");
+    const fmtLocal = (v) => { const d = new Date(v); return isNaN(d.getTime()) ? String(v || "—") : d.toLocaleString(); };
+    function ensureToken() {
+      let t = localStorage.getItem("fp_review_token");
+      if (!t) { t = prompt("Reviewer token:"); if (t) localStorage.setItem("fp_review_token", t.trim()); }
+      return t && t.trim();
+    }
+
+    async function loadIdea() {
+      if (!id) { content.innerHTML = '<div class="fp-note-box">No idea specified.</div>'; return; }
+      if (!LIVE) { content.innerHTML = '<a class="af-back" href="index.html">← Back to the board</a><div class="fp-note-box">The full assessment and ideation transcript are available in live mode (once the Worker is configured).</div>'; return; }
+      const token = ensureToken();
+      if (!token) { content.innerHTML = '<a class="af-back" href="index.html">← Back to the board</a><div class="fp-note-box">A reviewer token is required to read the full assessment.</div>'; return; }
+      let idea;
+      try {
+        const r = await fetch(F.workerUrl + "/api/idea?id=" + encodeURIComponent(id), { headers: { Authorization: "Bearer " + token } });
+        if (r.status === 401) { localStorage.removeItem("fp_review_token"); content.innerHTML = '<div class="fp-note-box">Reviewer token rejected. <a href="assessment.html?id=' + encodeURIComponent(id) + '">Try again</a>.</div>'; return; }
+        if (r.status === 404) { content.innerHTML = '<a class="af-back" href="index.html">← Back to the board</a><div class="fp-note-box">This idea no longer exists.</div>'; return; }
+        if (!r.ok) { content.innerHTML = '<div class="fp-note-box">Couldn’t load this assessment — please retry.</div>'; return; }
+        idea = (await r.json()).idea;
+      } catch (e) { content.innerHTML = '<div class="fp-note-box">Network error — please retry.</div>'; return; }
+      render(idea);
+    }
+
+    function render(idea) {
+      document.title = (idea.title || "Assessment") + " — Coreshift";
+      const a = idea.assessment || {};
+      const wip = WIP_STAGES.includes(idea.stage);
+
+      const chips = [];
+      if (idea.intent) chips.push(`<span class="chip chip-navy">${esc(L.intent[idea.intent] || idea.intent)}</span>`);
+      if (idea.confidence) chips.push(`<span class="chip">${esc(L.confidence[idea.confidence] || idea.confidence)}</span>`);
+      if (idea.decision) { const stop = idea.decision === "do_not_proceed"; chips.push(`<span class="chip chip-decision${stop ? " stop" : ""}">${esc(L.decision[idea.decision] || idea.decision)}</span>`); }
+      const dk = idea.dev_status;
+      const devPill = (wip && dk) ? `<span class="pill pill-rag-${DEV_RAG[dk] || "green"}">${esc((L.dev_status && L.dev_status[dk]) || dk)}</span>` : "";
+
+      const secs = (F.sections || []).map((s, i) => {
+        let v = a[s.field]; const has = v != null && v !== "";
+        if (has && s.field === "intent_type") v = L.intent[v] || v;
+        if (has && s.field === "confidence") v = L.confidence[v] || v;
+        if (has && s.field === "decision") v = L.decision[v] || v;
+        return `<section class="af-sec"><h3>${i + 1} · ${esc(s.label)}</h3><p class="${has ? "" : "muted"}">${has ? esc(v) : "— not captured —"}</p></section>`;
+      }).join("");
+
+      const urlDefs = [["repo_url", "Repo", "📦"], ["kanban_url", "Kanban", "🗂"], ["staging_url", "Staging", "🧪"], ["production_url", "Production", "🚀"]];
+      const links = urlDefs.filter(([k]) => idea[k]).map(([k, label, ic]) =>
+        `<a class="fp-link" href="${esc(idea[k])}" target="_blank" rel="noopener"><span>${ic}&nbsp; ${label}</span><span class="fp-link-arrow">↗</span></a>`).join("");
+
+      const tr = Array.isArray(idea.transcript) ? idea.transcript.filter((m) => m && m.text && (m.role === "user" || m.role === "assistant")) : [];
+      const transcript = tr.length
+        ? `<div class="af-transcript">${tr.map((m) => `<div class="msg ${m.role === "user" ? "user" : "assistant"}">${esc(m.text)}</div>`).join("")}</div>`
+        : `<p class="af-sec"><span class="muted" style="font-style:italic;color:var(--text-soft)">No ideation transcript on record — transcripts are captured for ideas submitted through the in-page intake.</span></p>`;
+
+      const stageLabel = ((F.stages || []).find((s) => s.key === idea.stage) || {}).label || idea.stage || "—";
+
+      content.innerHTML = `
+        <a class="af-back" href="index.html">← Back to the board</a>
+        <div class="af-head">
+          <div class="af-pills">${devPill}${chips.join("")}</div>
+          <h1>${esc(idea.title || "Untitled idea")}</h1>
+          <p class="af-sub">${esc(idea.one_liner || "")}</p>
+          <div class="af-meta">
+            ${(wip && idea.product_owner) ? `<span>👤 Product Owner · <b>${esc(idea.product_owner)}</b></span>` : ""}
+            <span>Stage · <b>${esc(stageLabel)}</b></span>
+            <span>Updated · <b>${esc(fmtLocal(idea.updated_at))}</b></span>
+          </div>
+          ${(wip && idea.dev_status_reason) ? `<div class="fp-reason">${esc(idea.dev_status_reason)}</div>` : ""}
+        </div>
+        ${links ? `<div class="af-block"><h2>Links</h2><div class="fp-links">${links}</div></div>` : ""}
+        <div class="af-block"><h2>Assessment</h2>${secs}</div>
+        <div class="af-block"><h2>Ideation transcript</h2>${transcript}</div>`;
+    }
+
+    loadIdea();
+  </script>
+</body>
+</html>

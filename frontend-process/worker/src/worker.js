@@ -24,6 +24,8 @@ const ENUM_VALUES = {
 };
 const STAGES = ["inbox", "assessment", "review", "pending_validation", "rejected", "build", "harden", "business", "launch", "live", "parked", "declined"];
 const STATUSES = ["draft", "in_review", "validated", "declined"];
+const DEV_STATUSES = ["in_progress", "on_hold", "blocked", "at_risk", "done"];
+const WIP_STAGES = ["build", "harden", "business", "launch", "live"];
 const PROSE_FIELDS = [
   "phase", "opportunity", "intent", "scope", "asset_value",
   "commercial", "governance", "decision_rationale", "spend_cap",
@@ -190,7 +192,7 @@ async function handleSubmit(request, env, cors) {
 async function handleIdeas(env, cors) {
   const rows = await supa(
     env, "GET",
-    "ideas?select=id,title,one_liner,stage,status,intent,confidence,decision,assessment,repo_url,kanban_url,staging_url,production_url,updated_at&deleted_at=is.null&order=updated_at.desc",
+    "ideas?select=id,title,one_liner,stage,status,intent,confidence,decision,assessment,product_owner,dev_status,dev_status_reason,repo_url,kanban_url,staging_url,production_url,updated_at&deleted_at=is.null&order=updated_at.desc",
   );
   return json({ ideas: rows.map(publicView) }, 200, cors);
 }
@@ -221,6 +223,8 @@ async function handleDecision(request, env, cors) {
     reviewed_by: body.reviewer || "Keitha",
     reviewed_at: new Date().toISOString(),
   };
+  // A go-decision lands the card in Build — start its developer status.
+  if (WIP_STAGES.includes(patch.stage)) patch.dev_status = "in_progress";
   const saved = await updateIdea(env, body.ideaId, patch);
   return json({ ok: true, idea: publicView(saved) }, 200, cors);
 }
@@ -266,6 +270,11 @@ async function handleUpdate(request, env, cors) {
 
   if (body.stage && STAGES.includes(body.stage)) patch.stage = body.stage;
   if (body.status && STATUSES.includes(body.status)) patch.status = body.status;
+
+  // Operational fields (Product Owner + developer status) — set on Build+ cards.
+  if ("product_owner" in body) patch.product_owner = body.product_owner ? String(body.product_owner).slice(0, 120) : null;
+  if ("dev_status" in body) patch.dev_status = DEV_STATUSES.includes(body.dev_status) ? body.dev_status : null;
+  if ("dev_status_reason" in body) patch.dev_status_reason = body.dev_status_reason ? String(body.dev_status_reason) : null;
 
   const saved = await updateIdea(env, body.ideaId, patch);
   return json({ ok: true, idea: publicView(saved), assessment: saved.assessment }, 200, cors);
@@ -388,6 +397,9 @@ function publicView(idea) {
     stage: idea.stage, status: idea.status,
     intent: idea.intent, confidence: idea.confidence, decision: idea.decision,
     filled,
+    product_owner: idea.product_owner || null,
+    dev_status: idea.dev_status || null,
+    dev_status_reason: idea.dev_status_reason || null,
     repo_url: idea.repo_url, kanban_url: idea.kanban_url,
     staging_url: idea.staging_url, production_url: idea.production_url,
     updated_at: idea.updated_at,

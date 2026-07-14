@@ -7,7 +7,7 @@
  *     "https://idea-intake.<your-subdomain>.workers.dev") and both pages go live.
  */
 window.FP = {
-  workerUrl: "", // ← set to the deployed Worker URL to go live
+  workerUrl: "", // live Worker (preview only; keep "" in commits)
 
   // The lifecycle stages (board columns), in order. `role` is the owning role.
   // `view` splits them: "pipeline" (new-idea intake: capture→assess→decide) and
@@ -58,16 +58,22 @@ window.FP = {
     confidence: { punt: "Worth a punt", validate: "Validate first", business_case: "Full business case" },
     decision:   { proceed: "Proceed", validate_first: "Validate first", experiment: "Experiment", client_only: "Client only", product: "Build as product", do_not_proceed: "Do not proceed" },
     status:     { draft: "Draft", in_review: "In review", validated: "Validated ✓", declined: "Declined" },
+    dev_status: { in_progress: "In Progress", on_hold: "On Hold", blocked: "Blocked", at_risk: "At Risk", done: "Done" },
   },
+
+  // Product Owners assignable once a card is approved into Build+ (drawer dropdown).
+  productOwners: ["Ricky", "Abe"],
+  // Developer-status → RAG colour (auto-derived; not set by hand).
+  devRag: { in_progress: "green", done: "green", at_risk: "amber", on_hold: "amber", blocked: "red" },
 
   // Sample cards for demo mode (illustrative; clearly not live data).
   demoIdeas: [
     { id: "d1", title: "Client Portal Revamp", one_liner: "One place for clients to see status, invoices, files.", stage: "assessment", status: "draft",     intent: "internal",   confidence: null,          decision: null,        updated_at: "just now" },
     { id: "d2", title: "Tap",                  one_liner: "ICP-driven lead generation — cold leads on tap.",     stage: "review",     status: "in_review", intent: "internal",   confidence: "punt",        decision: null,        updated_at: "2h ago" },
-    { id: "d3", title: "HeyGem",               one_liner: "Remote admin support for Kiwi tradies.",              stage: "build",      status: "validated", intent: "client",     confidence: "validate",      decision: "client_only", updated_at: "3d ago", repo_url: "https://github.com/CoreshiftHQNZ/heygem", staging_url: "https://staging.heygem.co.nz", production_url: "https://heygem.co.nz", kanban_url: "../heygem/" },
-    { id: "d4", title: "Lead Engine",          one_liner: "Find bad sites → auto-build the replacement.",        stage: "harden",     status: "validated", intent: "internal",   confidence: "validate",      decision: "product",   updated_at: "5d ago", repo_url: "https://github.com/CoreshiftHQNZ/coreshift-live-edit", kanban_url: "../lead-engine/" },
-    { id: "d5", title: "Merlin",               one_liner: "AI implementation wizard — outcome-led pathways.",     stage: "business",   status: "validated", intent: "standalone", confidence: "business_case", decision: "product",   updated_at: "1w ago", repo_url: "https://github.com/CoreshiftHQNZ/merlin", kanban_url: "../merlin/" },
-    { id: "d6", title: "Live Edit",            one_liner: "Self-serve $100/mo sites clients edit in place.",     stage: "live",       status: "validated", intent: "product",    confidence: "validate",      decision: "product",   updated_at: "yesterday", repo_url: "https://github.com/CoreshiftHQNZ/coreshift-live-edit", staging_url: "https://staging.coreshift.page", production_url: "https://app.coreshift.page", kanban_url: "../live-edit/" },
+    { id: "d3", title: "HeyGem",               one_liner: "Remote admin support for Kiwi tradies.",              stage: "build",      status: "validated", intent: "client",     confidence: "validate",      decision: "client_only", updated_at: "3d ago", repo_url: "https://github.com/CoreshiftHQNZ/heygem", staging_url: "https://staging.heygem.co.nz", production_url: "https://heygem.co.nz", kanban_url: "../heygem/", dev_status: "in_progress", product_owner: "Ricky" },
+    { id: "d4", title: "Lead Engine",          one_liner: "Find bad sites → auto-build the replacement.",        stage: "harden",     status: "validated", intent: "internal",   confidence: "validate",      decision: "product",   updated_at: "5d ago", repo_url: "https://github.com/CoreshiftHQNZ/coreshift-live-edit", kanban_url: "../lead-engine/", dev_status: "at_risk", dev_status_reason: "Waiting on vendor API access before the replacement build can proceed.", product_owner: "Abe" },
+    { id: "d5", title: "Merlin",               one_liner: "AI implementation wizard — outcome-led pathways.",     stage: "business",   status: "validated", intent: "standalone", confidence: "business_case", decision: "product",   updated_at: "1w ago", repo_url: "https://github.com/CoreshiftHQNZ/merlin", kanban_url: "../merlin/", dev_status: "blocked", dev_status_reason: "Blocked on design-system sign-off.", product_owner: "Ricky" },
+    { id: "d6", title: "Live Edit",            one_liner: "Self-serve $100/mo sites clients edit in place.",     stage: "live",       status: "validated", intent: "product",    confidence: "validate",      decision: "product",   updated_at: "yesterday", repo_url: "https://github.com/CoreshiftHQNZ/coreshift-live-edit", staging_url: "https://staging.coreshift.page", production_url: "https://app.coreshift.page", kanban_url: "../live-edit/", dev_status: "done", product_owner: "Abe" },
     { id: "d7", title: "Crypto tipping jar",   one_liner: "In-page crypto tips for creators.",                   stage: "rejected",   status: "declined",  intent: "speculative", confidence: "validate",     decision: "do_not_proceed", updated_at: "2w ago" },
     { id: "d8", title: "Listicle Writer v2",   one_liner: "Next-gen sponsored listicle generator.",              stage: "pending_validation", status: "in_review", intent: "internal",   confidence: "validate",      decision: "validate_first", updated_at: "3w ago" },
   ],

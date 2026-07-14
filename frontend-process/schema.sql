@@ -34,7 +34,11 @@ create table if not exists public.ideas (
   repo_url       text,                 -- shown on WIP cards / in the review drawer
   kanban_url     text,
   staging_url    text,
-  production_url text
+  production_url text,
+  product_owner  text,                 -- assigned once approved into Build+ (shown on the card)
+  dev_status     text                  -- developer status on WIP cards (RAG auto-derived in the UI)
+                   check (dev_status is null or dev_status in ('in_progress','on_hold','blocked','at_risk','done')),
+  dev_status_reason text                -- why on hold / at risk / blocked (shown on card click)
 );
 
 create index if not exists ideas_stage_idx       on public.ideas (stage);

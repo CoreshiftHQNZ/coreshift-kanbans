@@ -60,6 +60,33 @@
     document.getElementById("modeBadge").innerHTML = LIVE ? "" : '<span class="fp-badge-demo">Demo data</span>';
     const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
+    const DEV_RAG = F.devRag || { in_progress: "green", done: "green", at_risk: "amber", on_hold: "amber", blocked: "red" };
+    const WIP_STAGES = ["build", "harden", "business", "launch", "live"];
+    const isWip = (s) => WIP_STAGES.includes(s);
+    const PRODUCT_OWNERS = F.productOwners || [];
+
+    // Local, human timestamps. Leaves demo strings ("2h ago") untouched.
+    function fmtTime(v) {
+      if (!v) return "";
+      const d = new Date(v);
+      if (isNaN(d.getTime())) return String(v);
+      const diff = (Date.now() - d.getTime()) / 1000;
+      if (diff < 45) return "just now";
+      if (diff < 3600) return Math.max(1, Math.round(diff / 60)) + "m ago";
+      if (diff < 86400) return Math.round(diff / 3600) + "h ago";
+      if (diff < 172800) return "yesterday";
+      const sameYear = d.getFullYear() === new Date().getFullYear();
+      return d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: sameYear ? undefined : "numeric" });
+    }
+    function fullLocal(v) { const d = new Date(v); return isNaN(d.getTime()) ? String(v || "") : d.toLocaleString(); }
+    // Developer-status pill, coloured by auto-derived RAG. Defaults to In Progress for WIP cards.
+    function devStatusHtml(idea) {
+      const key = idea.dev_status || "in_progress";
+      const label = (L.dev_status && L.dev_status[key]) || key;
+      const rag = DEV_RAG[key] || "green";
+      return `<span class="pill pill-rag-${rag}" title="Developer status">${esc(label)}</span>`;
+    }
+
     // Demo cards carry no assessment prose, so synthesise the `filled` map the
     // gate reads: advanced (WIP) cards are complete; pipeline cards reflect the
     // dials they actually carry, so a drag demonstrates both allowed & blocked moves.
@@ -92,14 +119,17 @@
       return out.join("");
     }
     function cardHtml(idea) {
+      const wip = isWip(idea.stage);
       const st = idea.status || "draft";
+      // WIP cards show the developer status (RAG) instead of the redundant "Validated" pill.
+      const pill = wip ? devStatusHtml(idea) : `<span class="pill pill-${st}">${esc(L.status[st] || st)}</span>`;
+      const po = (wip && idea.product_owner) ? `<span class="fp-po" title="Product Owner">👤 ${esc(idea.product_owner)}</span>` : "";
       return `<div class="fp-card-wrap">
-        <div class="fp-card" data-id="${esc(idea.id)}" tabindex="0" role="button" aria-label="Review ${esc(idea.title)}">
-          <div class="fp-card-top"><span class="fp-card-name">${esc(idea.title)}</span>
-            <span class="pill pill-${st}">${esc(L.status[st] || st)}</span></div>
+        <div class="fp-card" data-id="${esc(idea.id)}" tabindex="0" role="button" aria-label="Open ${esc(idea.title)}">
+          <div class="fp-card-top"><span class="fp-card-name">${esc(idea.title)}</span>${pill}</div>
           <div class="fp-card-snap">${esc(idea.one_liner || "")}</div>
           <div class="fp-chips">${chips(idea)}</div>
-          <div class="fp-card-foot"><span class="fp-card-updated">updated ${esc(idea.updated_at || "")}</span></div>
+          <div class="fp-card-foot">${po}<span class="fp-card-updated" title="Updated ${esc(fullLocal(idea.updated_at))}">${esc(fmtTime(idea.updated_at))}</span></div>
         </div>
         <button class="fp-card-del" data-del="${esc(idea.id)}" aria-label="Delete ${esc(idea.title)}" title="Delete idea">✕</button>
       </div>`;
@@ -239,19 +269,35 @@
         ? `<div class="fp-links">${urlLinks}</div>`
         : `<div class="fp-empty">Repo · kanban · staging · production appear once it's in Build.</div>`}</div>`;
 
+      const wip = isWip(idea.stage);
+      const buildStatusBlock = wip ? `<div class="fp-drawer-sec"><div class="fp-drawer-label">Build status</div>
+          <div class="fp-buildstat">${devStatusHtml(idea)}${idea.product_owner
+            ? `<span class="fp-po">👤 ${esc(idea.product_owner)}</span>`
+            : `<span class="fp-po muted">No product owner</span>`}</div>
+          ${idea.dev_status_reason
+            ? `<div class="fp-reason">${esc(idea.dev_status_reason)}</div>`
+            : ((idea.dev_status && idea.dev_status !== "in_progress" && idea.dev_status !== "done") ? `<div class="fp-reason muted">No reason noted.</div>` : "")}</div>` : "";
+      const filledCount = idea.filled ? Object.values(idea.filled).filter(Boolean).length : 0;
+      const fullLink = `<a class="fp-fulllink" href="assessment.html?id=${encodeURIComponent(idea.id)}">Read full assessment &amp; transcript →</a>`;
+
       document.getElementById("overlay").innerHTML = `
         <div class="fp-scrim" id="scrim"></div>
         <aside class="fp-drawer" id="fpDialog" role="dialog" aria-modal="true" aria-labelledby="fpDialogTitle" tabindex="-1">
           <button class="fp-drawer-close" id="closeReview" aria-label="Close">✕</button>
           <div class="fp-drawer-head">
-            <span class="pill pill-${idea.status || "draft"}">${esc(L.status[idea.status] || idea.status || "draft")}</span>
+            ${wip ? devStatusHtml(idea) : `<span class="pill pill-${idea.status || "draft"}">${esc(L.status[idea.status] || idea.status || "draft")}</span>`}
             <h2 id="fpDialogTitle" class="fp-drawer-title">${esc(idea.title)}</h2>
             <div class="fp-drawer-sub">${esc(idea.one_liner || "")}</div>
             <div class="fp-chips" style="margin-top:12px">${chips(idea)}</div>
           </div>
           <div class="fp-drawer-body">
+            ${buildStatusBlock}
             ${urlsBlock}
-            <div class="fp-drawer-sec"><div class="fp-drawer-label">Assessment${LIVE ? ' <button class="fp-editbtn" id="editAssess" type="button">✎ Edit</button>' : ''}</div>${rows}</div>
+            <div class="fp-drawer-sec">
+              <div class="fp-drawer-label">Assessment${LIVE ? ' <button class="fp-editbtn" id="editAssess" type="button">✎ Edit</button>' : ''}</div>
+              <details class="fp-assess"><summary>Summary · ${filledCount}/8 sections</summary><div class="fp-assess-body">${rows}</div></details>
+              ${fullLink}
+            </div>
           </div>
           <div class="fp-drawer-foot">
             <div class="fp-drawer-label">Reviewer decision</div>
@@ -363,10 +409,20 @@
       const stageOpts = F.stages.map((s) => `<option value="${esc(s.key)}"${s.key === stageVal ? " selected" : ""}>${esc(s.label)}</option>`).join("");
       const fields = F.sections.map((sec, i) =>
         `<div class="fp-edit-field"><label>${i + 1} · ${esc(sec.label)}</label>${editInput(sec)}</div>`).join("");
+      const wipEdit = isWip(curIdea.stage);
+      const poOpts = ['<option value="">— unassigned —</option>'].concat(
+        PRODUCT_OWNERS.map((n) => `<option value="${esc(n)}"${n === (curIdea.product_owner || "") ? " selected" : ""}>${esc(n)}</option>`)).join("");
+      const dsOpts = Object.keys(L.dev_status || {}).map((k) => `<option value="${esc(k)}"${k === (curIdea.dev_status || "in_progress") ? " selected" : ""}>${esc(L.dev_status[k])}</option>`).join("");
+      const buildEdit = wipEdit ? `<div class="fp-drawer-sec"><div class="fp-drawer-label">Build status</div>
+          <div class="fp-edit-field"><label>Product Owner</label><select class="fp-edit-input" data-f="__po">${poOpts}</select></div>
+          <div class="fp-edit-field"><label>Developer status</label><select class="fp-edit-input" data-f="__dev_status">${dsOpts}</select></div>
+          <div class="fp-edit-field"><label>Reason / note</label><textarea class="fp-edit-input" data-f="__dev_reason" rows="2" placeholder="Why on hold / at risk / blocked?">${esc(curIdea.dev_status_reason || "")}</textarea></div>
+        </div>` : "";
       dlg.querySelector(".fp-drawer-body").innerHTML =
         `${banner}
          <div class="fp-drawer-sec"><div class="fp-drawer-label">Stage</div>
            <select class="fp-edit-input" data-f="__stage">${stageOpts}</select></div>
+         ${buildEdit}
          <div class="fp-drawer-sec"><div class="fp-drawer-label">Edit assessment</div>${fields}</div>`;
       const saveLabel = mv ? `Save & move to ${esc(targetLabel)}` : "Save changes";
       dlg.querySelector(".fp-drawer-foot").innerHTML =
@@ -379,11 +435,15 @@
     async function saveEdit() {
       if (!curIdea) return;
       const dlg = document.getElementById("fpDialog");
-      const assessment = {}; let stageSel = null;
+      const assessment = {}; let stageSel = null, po, devStatus, devReason;
       dlg.querySelectorAll("[data-f]").forEach((el) => {
         const f = el.getAttribute("data-f");
         const v = (el.value || "").trim();
-        if (f === "__stage") stageSel = v; else assessment[f] = v;
+        if (f === "__stage") stageSel = v;
+        else if (f === "__po") po = v;
+        else if (f === "__dev_status") devStatus = v;
+        else if (f === "__dev_reason") devReason = v;
+        else assessment[f] = v;
       });
 
       // Gate ANY stage change — drag-driven OR via the Stage dropdown — against the
@@ -412,6 +472,9 @@
           if (assessment.intent_type) idea.intent = assessment.intent_type;
           if (assessment.confidence) idea.confidence = assessment.confidence;
           if (assessment.decision) idea.decision = assessment.decision;
+          if (po !== undefined) idea.product_owner = po || null;
+          if (devStatus !== undefined) idea.dev_status = devStatus || null;
+          if (devReason !== undefined) idea.dev_status_reason = devReason || null;
           idea.filled = idea.filled || {};
           ["opportunity", "intent_type", "confidence", "commercial", "scope", "asset_value", "governance", "decision"]
             .forEach((k) => { idea.filled[k] = (assessment[k] || "").trim() !== ""; });
@@ -425,9 +488,13 @@
       const token = ensureToken(); if (!token) return;
       if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
       try {
+        const payload = { ideaId: id, assessment, stage: stageToSave };
+        if (po !== undefined) payload.product_owner = po;
+        if (devStatus !== undefined) payload.dev_status = devStatus;
+        if (devReason !== undefined) payload.dev_status_reason = devReason;
         const r = await fetch(F.workerUrl + "/api/update", {
           method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
-          body: JSON.stringify({ ideaId: id, assessment, stage: stageToSave }),
+          body: JSON.stringify(payload),
         });
         if (r.status === 401) { localStorage.removeItem("fp_review_token"); fail("Reviewer token rejected — try again."); return; }
         if (!r.ok) { fail("Couldn't save — please retry."); return; }
