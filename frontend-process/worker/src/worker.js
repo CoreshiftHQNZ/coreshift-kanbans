@@ -15,6 +15,15 @@ import { SYSTEM_PROMPT, TOOLS } from "./spec.js";
 
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const ENUM_COLUMNS = { intent_type: "intent", confidence: "confidence", decision: "decision" };
+// Allowed values for the CHECK-constrained columns (mirrors schema.sql). Used to
+// validate writes so one bad value can't fail the whole atomic PATCH with a 500.
+const ENUM_VALUES = {
+  intent: ["personal", "internal", "client", "speculative", "standalone", "product"],
+  confidence: ["punt", "validate", "business_case"],
+  decision: ["proceed", "validate_first", "experiment", "client_only", "product", "do_not_proceed"],
+};
+const STAGES = ["inbox", "assessment", "review", "pending_validation", "rejected", "build", "harden", "business", "launch", "live", "parked", "declined"];
+const STATUSES = ["draft", "in_review", "validated", "declined"];
 const PROSE_FIELDS = [
   "phase", "opportunity", "intent", "scope", "asset_value",
   "commercial", "governance", "decision_rationale", "spend_cap",
@@ -93,6 +102,10 @@ async function handleChat(request, env, cors) {
   const body = await request.json();
   const clientMsgs = Array.isArray(body.messages) ? body.messages.slice(-24) : [];
   let idea = body.ideaId ? await getIdea(env, body.ideaId) : null;
+  // Only resume drafts. /api/chat is unauthenticated, so a bare ideaId must never
+  // read or mutate a submitted/live idea (its prose is otherwise review-token gated
+  // via /api/idea). A non-draft id falls through to a fresh draft.
+  if (idea && !["inbox", "assessment"].includes(idea.stage || "inbox")) idea = null;
   if (!idea) idea = await createIdea(env);
 
   const assessment = { ...(idea.assessment || {}) };
@@ -147,6 +160,11 @@ async function handleChat(request, env, cors) {
   if (submitted) {
     patch.status = "in_review";
     patch.stage = "review";
+  } else if (["inbox", "assessment"].includes(idea.stage || "inbox")) {
+    // While drafting: an untitled idea stays in Inbox; once it has a real title
+    // it surfaces in Assessment. Never auto-touch a card already past assessment.
+    const t = String(patch.title || idea.title || "").trim();
+    patch.stage = (t && t !== "Untitled idea") ? "assessment" : "inbox";
   }
   // Persist the transcript so a draft is recoverable server-side too.
   patch.transcript = clientMsgs.concat(reply ? [{ role: "assistant", text: reply }] : []);
@@ -172,7 +190,7 @@ async function handleSubmit(request, env, cors) {
 async function handleIdeas(env, cors) {
   const rows = await supa(
     env, "GET",
-    "ideas?select=id,title,one_liner,stage,status,intent,confidence,decision,repo_url,kanban_url,staging_url,production_url,updated_at&deleted_at=is.null&order=updated_at.desc",
+    "ideas?select=id,title,one_liner,stage,status,intent,confidence,decision,assessment,repo_url,kanban_url,staging_url,production_url,updated_at&deleted_at=is.null&order=updated_at.desc",
   );
   return json({ ideas: rows.map(publicView) }, 200, cors);
 }
@@ -192,12 +210,13 @@ async function handleDecision(request, env, cors) {
   if (!authed(request, env)) return json({ error: "Unauthorized" }, 401, cors);
   const body = await request.json();
   if (!body.ideaId || !body.decision) return json({ error: "ideaId and decision required" }, 400, cors);
+  if (!ENUM_VALUES.decision.includes(body.decision)) return json({ error: "invalid decision" }, 400, cors);
   const STAGE_FOR = { do_not_proceed: "rejected", validate_first: "pending_validation" };
   const STATUS_FOR = { do_not_proceed: "declined", validate_first: "in_review" };
   const patch = {
     decision: body.decision,
     status: STATUS_FOR[body.decision] || "validated",
-    stage: STAGE_FOR[body.decision] || (body.stage || "build"),
+    stage: STAGE_FOR[body.decision] || (STAGES.includes(body.stage) ? body.stage : "build"),
     decision_note: body.note || null,
     reviewed_by: body.reviewer || "Keitha",
     reviewed_at: new Date().toISOString(),
@@ -235,13 +254,17 @@ async function handleUpdate(request, env, cors) {
     const raw = edits[key];
     const v = typeof raw === "string" ? raw.trim() : raw;
     if (v == null || v === "") { delete assessment[key]; if (ENUM_COLUMNS[key]) patch[ENUM_COLUMNS[key]] = null; }
-    else { assessment[key] = v; if (ENUM_COLUMNS[key]) patch[ENUM_COLUMNS[key]] = v; }
+    else {
+      assessment[key] = v;
+      // Only sync the denormalised column when the value is a valid enum member —
+      // an out-of-enum value would otherwise fail the CHECK constraint and 500 the
+      // whole update, losing the prose edits in the same request.
+      if (ENUM_COLUMNS[key] && ENUM_VALUES[ENUM_COLUMNS[key]].includes(v)) patch[ENUM_COLUMNS[key]] = v;
+    }
   }
   patch.assessment = assessment;
 
-  const STAGES = ["inbox", "assessment", "review", "pending_validation", "rejected", "build", "harden", "business", "launch", "live", "parked", "declined"];
   if (body.stage && STAGES.includes(body.stage)) patch.stage = body.stage;
-  const STATUSES = ["draft", "in_review", "validated", "declined"];
   if (body.status && STATUSES.includes(body.status)) patch.status = body.status;
 
   const saved = await updateIdea(env, body.ideaId, patch);
@@ -306,7 +329,9 @@ async function getIdea(env, id) {
   return rows && rows[0];
 }
 async function createIdea(env) {
-  const rows = await supa(env, "POST", "ideas", { title: "Untitled idea", stage: "assessment", status: "draft" });
+  // New drafts land in Inbox — they only surface in Assessment once they have a
+  // real title (see handleChat). Keeps "Untitled idea" cards out of Assessment.
+  const rows = await supa(env, "POST", "ideas", { title: "Untitled idea", stage: "inbox", status: "draft" });
   return rows[0];
 }
 async function updateIdea(env, id, patch) {
@@ -343,10 +368,26 @@ function authed(request, env) {
 }
 function publicView(idea) {
   if (!idea) return null;
+  // `filled` reports which assessment sections are non-empty — booleans only, so
+  // the board can enforce move-gating without the (sensitive) prose crossing the
+  // wire. Enum fields count as filled from either the column or the assessment.
+  const a = idea.assessment || {};
+  const has = (v) => v != null && String(v).trim() !== "";
+  const filled = {
+    opportunity: has(a.opportunity),
+    intent_type: has(idea.intent) || has(a.intent_type),
+    confidence: has(idea.confidence) || has(a.confidence),
+    commercial: has(a.commercial),
+    scope: has(a.scope),
+    asset_value: has(a.asset_value),
+    governance: has(a.governance),
+    decision: has(idea.decision) || has(a.decision),
+  };
   return {
     id: idea.id, title: idea.title, one_liner: idea.one_liner,
     stage: idea.stage, status: idea.status,
     intent: idea.intent, confidence: idea.confidence, decision: idea.decision,
+    filled,
     repo_url: idea.repo_url, kanban_url: idea.kanban_url,
     staging_url: idea.staging_url, production_url: idea.production_url,
     updated_at: idea.updated_at,

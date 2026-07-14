@@ -105,8 +105,14 @@ textarea.fp-edit-input { min-height: 64px; }
 .fp-col.divider { border-left: 2px dashed var(--red); margin-left: 3px; padding-left: 14px; }
 .fp-col.offstart { border-left: 2px solid var(--border-strong); margin-left: 6px; padding-left: 16px; }
 .fp-col.offlane { opacity: 0.92; }
-.fp-role { align-self: flex-start; flex-shrink: 0; display: inline-block; background: #FBE79B; color: #4A3D00; font-size: 11px; font-weight: 700; padding: 3px 11px; border-radius: 3px; transform: rotate(-1.2deg); box-shadow: 0 2px 5px rgba(0,0,0,.13); margin-bottom: 8px; }
-.fp-col.offlane .fp-role { background: #E2E8F0; color: #475569; transform: none; box-shadow: none; }
+/* Drag-and-drop */
+.fp-card { cursor: grab; }
+body.fp-dragging, body.fp-dragging .fp-card { cursor: grabbing; user-select: none; }
+.fp-card-dragging { opacity: .38; }
+.fp-drag-ghost { position: fixed; z-index: 60; margin: 0; pointer-events: none; transform: rotate(1.5deg); opacity: .95; box-shadow: 0 14px 32px -8px rgba(15,23,42,.42); }
+.fp-col-over .fp-cards { outline: 2px dashed var(--teal); outline-offset: 3px; border-radius: 10px; background: var(--teal-light); }
+/* "What's missing" banner in the move-blocked edit form */
+.fp-move-banner { background: var(--amber-light); border: 1px solid #FDE68A; color: #92400E; border-radius: 10px; padding: 10px 12px; font-size: 12.5px; line-height: 1.45; margin-bottom: 14px; }
 .fp-col-head { flex-shrink: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 11px 13px; box-shadow: var(--shadow-sm); margin-bottom: 10px; }
 .fp-col-title { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--navy); }
 .fp-col-count { margin-left: auto; font-size: 11px; color: var(--text-soft); background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 1px 8px; font-weight: 600; }

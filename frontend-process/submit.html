@@ -211,6 +211,16 @@
       clearSession();
       const title = assessment.title || "your idea";
       const decisionLabel = L.decision[assessment.decision] || assessment.decision || "—";
+      // The plugin routes the next step off the Decision (see the app-assessment skill).
+      const ROUTE = {
+        do_not_proceed: "Archived — recorded with the reason so it isn't re-litigated cold later. Nothing's lost.",
+        validate_first: "Next: run <b>idea-validator</b> to pressure-test it and lock a 2-week MVP test before any build spend.",
+        experiment: "Next: run <b>product-planner</b> to spec the smallest version — capped, not a commitment to ship.",
+        client_only: "Next: run <b>product-planner</b> for the vision, PRD &amp; roadmap.",
+        product: "Next: run <b>product-planner</b>; get Keitha's business-case sign-off before the build starts.",
+        proceed: "Next: run <b>product-planner</b> to turn this into a vision, PRD &amp; roadmap.",
+      };
+      const routeNote = ROUTE[assessment.decision] || "The reviewer will confirm the next step.";
       const rows = F.sections.map((sec, i) => {
         let v = assessment[sec.field];
         const has = v != null && v !== "";
@@ -233,12 +243,14 @@
           <div class="out-grid">
             <div class="out-card">
               <h3>What was captured</h3>
+              <p class="out-sub">Saved as <code>docs/app-assessment.md</code> — the living assessment doc that travels with the card.</p>
               <div class="out-decision">Decision: <b>${esc(decisionLabel)}</b></div>
               ${rows}
             </div>
             <div class="out-card">
               <h3>What happens next</h3>
-              <p class="out-sub">If the reviewer greenlights it, this assessment seeds the build. Every artifact below is <b>required</b> before it ships:</p>
+              <p class="out-sub">${routeNote}</p>
+              <p class="out-sub">If it proceeds to a build, these artifacts are <b>required</b> before it ships:</p>
               <ul class="out-checklist">
                 <li><b>Product idea</b> — pre-filled from this assessment (<code>docs/product-idea.md</code>)</li>
                 <li><b>Vision, PRD &amp; roadmap</b> — the product-planner skill (<code>docs/prd.md</code>, <code>product-roadmap.md</code>)</li>

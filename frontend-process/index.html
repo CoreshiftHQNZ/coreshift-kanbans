@@ -60,8 +60,22 @@
     document.getElementById("modeBadge").innerHTML = LIVE ? "" : '<span class="fp-badge-demo">Demo data</span>';
     const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
+    // Demo cards carry no assessment prose, so synthesise the `filled` map the
+    // gate reads: advanced (WIP) cards are complete; pipeline cards reflect the
+    // dials they actually carry, so a drag demonstrates both allowed & blocked moves.
+    function demoFilled(d) {
+      const advanced = ["build", "harden", "business", "launch", "live"].includes(d.stage);
+      const f = {};
+      ["opportunity", "intent_type", "confidence", "commercial", "scope", "asset_value", "governance", "decision"]
+        .forEach((k) => { f[k] = advanced; });
+      if (!advanced) {
+        f.opportunity = true; f.scope = true; f.asset_value = true;
+        f.intent_type = !!d.intent; f.confidence = !!d.confidence; f.decision = !!d.decision;
+      }
+      return f;
+    }
     async function load() {
-      if (!LIVE) { ideas = F.demoIdeas.slice(); return render(); }
+      if (!LIVE) { ideas = F.demoIdeas.map((d) => ({ ...d, filled: d.filled || demoFilled(d) })); return render(); }
       try { ideas = (await (await fetch(F.workerUrl + "/api/ideas")).json()).ideas || []; }
       catch (e) { ideas = []; }
       render();
@@ -98,8 +112,7 @@
       const empty = (!inCol.length && s.key !== "inbox") ? `<div class="fp-empty">No ideas here yet</div>` : "";
       const cls = ["fp-col", s.divider ? "divider" : "", s.softdivider ? "softdivider" : "", isOff ? "offlane" : "", isOffStart ? "offstart" : ""].filter(Boolean).join(" ");
       const gate = s.gate ? `<div class="fp-col-gate">Exit: ${esc(s.gate)}</div>` : "";
-      return `<div class="${cls}">
-        <div class="fp-role">${esc(isOff ? "off-board" : s.role)}</div>
+      return `<div class="${cls}" data-stage="${esc(s.key)}">
         <div class="fp-col-head">
           <div class="fp-col-title">${esc(s.label)}<span class="fp-col-count">${inCol.length}</span></div>
           ${gate}
@@ -145,13 +158,14 @@
       }
       document.getElementById("cols").innerHTML = stageCols + offCols;
       document.querySelectorAll(".fp-card[data-id]").forEach((c) => {
-        const open = () => openReview(c.dataset.id);
+        const open = () => { if (justDragged) { justDragged = false; return; } moveContext = null; openReview(c.dataset.id); };
         c.addEventListener("click", open);
         c.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
       });
       document.querySelectorAll("#cols .fp-card-del[data-del]").forEach((b) => {
         b.addEventListener("click", () => deleteIdea(b.dataset.del));
       });
+      enableDnD();
     }
 
     function focusAfterBoardChange() {
@@ -257,30 +271,73 @@
       document.removeEventListener("keydown", trapKeys); document.addEventListener("keydown", trapKeys);
       const dlg = document.getElementById("fpDialog");
       if (dlg) dlg.focus();
+      if (moveContext) await enterEditCore();
     }
     function closeReview() {
       document.removeEventListener("keydown", trapKeys);
       document.getElementById("overlay").innerHTML = "";
-      if (lastTrigger && lastTrigger.focus) lastTrigger.focus();
+      moveContext = null;
+      // lastTrigger may be a card node detached by a render() during save/move —
+      // fall back to a live card so keyboard/SR focus never lands on <body>.
+      if (lastTrigger && lastTrigger.isConnected && lastTrigger.focus) lastTrigger.focus();
+      else focusAfterBoardChange();
     }
 
-    // ── Edit assessment / correct stage (reviewer, token-gated) ───────
+    // ── Edit assessment · move cards · requirement gating (token-gated) ─
     let curIdea = null, curAssessment = null;
+    let moveContext = null;   // set when a blocked drag routes into the edit form
+    let justDragged = false;  // suppresses the click that would follow a drag
     const ENUM_OPTS = { intent_type: L.intent, confidence: L.confidence, decision: L.decision };
 
-    async function enterEdit() {
-      if (!LIVE || !curIdea) return;
-      const token = ensureToken(); if (!token) return;
-      // If the drawer was opened without a token, fetch the full assessment now.
-      if (!curAssessment || !Object.keys(curAssessment).length) {
-        try {
-          const r = await fetch(F.workerUrl + "/api/idea?id=" + encodeURIComponent(curIdea.id), { headers: { Authorization: "Bearer " + token } });
-          if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Review token rejected."); return; }
-          if (r.ok) curAssessment = (await r.json()).idea.assessment || {};
-        } catch (e) {}
+    function sectionLabel(key) {
+      const s = (F.sections || []).find((x) => x.field === key);
+      return s ? s.label : key;
+    }
+    // What must be filled to ENTER a stage. Mirrors the app-assessment skill:
+    // Opportunity/Intent/Confidence/Scope/Asset value/Decision are always
+    // required; Commercial + Governance only when it's client-facing or a full
+    // business case. WIP additionally needs a go-ahead Decision.
+    function unmetForData(data, targetKey) {
+      const filled = data.filled || {};
+      const clientFacing = ["client", "standalone", "product"].includes(data.intent);
+      const fullCase = data.confidence === "business_case";
+      const core = ["opportunity", "intent_type", "confidence", "scope", "asset_value", "decision"];
+      const withCG = core.concat(["commercial", "governance"]);
+      const goDecisions = ["proceed", "product", "client_only", "experiment"];
+      const need = (keys) => keys.filter((k) => !filled[k]).map(sectionLabel);
+      switch (targetKey) {
+        case "inbox": return [];
+        case "assessment": return need(["opportunity"]);
+        case "pending_validation":
+        case "rejected": return need(["decision"]);
+        case "review": return need((clientFacing || fullCase) ? withCG : core);
+        default: { // build / harden / business / launch / live
+          const miss = need((clientFacing || fullCase) ? withCG : core);
+          // Only flag the go-ahead separately when a Decision exists but isn't a
+          // go (e.g. "Do not proceed"); a missing Decision is already listed.
+          if (data.decision && !goDecisions.includes(data.decision)) miss.push("a go-ahead Decision");
+          return miss;
+        }
+      }
+    }
+
+    async function enterEditCore() {
+      if (!curIdea) return;
+      if (LIVE) {
+        const token = ensureToken(); if (!token) return;
+        // If the drawer was opened without a token, fetch the full assessment now.
+        if (!curAssessment || !Object.keys(curAssessment).length) {
+          try {
+            const r = await fetch(F.workerUrl + "/api/idea?id=" + encodeURIComponent(curIdea.id), { headers: { Authorization: "Bearer " + token } });
+            if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Review token rejected."); return; }
+            if (r.ok) curAssessment = (await r.json()).idea.assessment || {};
+          } catch (e) {}
+        }
       }
       renderEditForm();
     }
+    async function enterEdit() { moveContext = null; await enterEditCore(); }
+    async function openMissing(idea, targetKey, missing) { moveContext = { target: targetKey, missing }; await openReview(idea.id); }
 
     function editInput(sec) {
       const f = sec.field;
@@ -297,45 +354,190 @@
     function renderEditForm() {
       const dlg = document.getElementById("fpDialog");
       if (!dlg) return;
-      const stageOpts = F.stages.map((s) => `<option value="${esc(s.key)}"${s.key === (curIdea.stage || "") ? " selected" : ""}>${esc(s.label)}</option>`).join("");
+      const mv = moveContext;
+      const targetLabel = mv ? (((F.stages.find((s) => s.key === mv.target)) || {}).label || mv.target) : null;
+      const banner = mv
+        ? `<div class="fp-move-banner" role="alert" tabindex="-1">⚠ To move to <b>${esc(targetLabel)}</b>, complete: ${esc(mv.missing.join(", "))}. Fill these in and save.</div>`
+        : "";
+      const stageVal = mv ? mv.target : (curIdea.stage || "");
+      const stageOpts = F.stages.map((s) => `<option value="${esc(s.key)}"${s.key === stageVal ? " selected" : ""}>${esc(s.label)}</option>`).join("");
       const fields = F.sections.map((sec, i) =>
         `<div class="fp-edit-field"><label>${i + 1} · ${esc(sec.label)}</label>${editInput(sec)}</div>`).join("");
       dlg.querySelector(".fp-drawer-body").innerHTML =
-        `<div class="fp-drawer-sec"><div class="fp-drawer-label">Stage</div>
+        `${banner}
+         <div class="fp-drawer-sec"><div class="fp-drawer-label">Stage</div>
            <select class="fp-edit-input" data-f="__stage">${stageOpts}</select></div>
          <div class="fp-drawer-sec"><div class="fp-drawer-label">Edit assessment</div>${fields}</div>`;
+      const saveLabel = mv ? `Save & move to ${esc(targetLabel)}` : "Save changes";
       dlg.querySelector(".fp-drawer-foot").innerHTML =
-        `<div class="fp-edit-actions"><button class="btn btn-primary" id="saveEdit" type="button">Save changes</button><button class="btn btn-ghost" id="cancelEdit" type="button">Cancel</button></div>`;
+        `<div class="fp-edit-actions"><button class="btn btn-primary" id="saveEdit" type="button">${saveLabel}</button><button class="btn btn-ghost" id="cancelEdit" type="button">Cancel</button></div>`;
       document.getElementById("saveEdit").addEventListener("click", saveEdit);
-      document.getElementById("cancelEdit").addEventListener("click", () => openReview(curIdea.id));
-      const first = dlg.querySelector(".fp-edit-input"); if (first) first.focus();
+      document.getElementById("cancelEdit").addEventListener("click", () => { moveContext = null; openReview(curIdea.id); });
+      const first = (mv && dlg.querySelector(".fp-move-banner")) || dlg.querySelector(".fp-edit-input"); if (first) first.focus();
     }
 
     async function saveEdit() {
       if (!curIdea) return;
-      const token = ensureToken(); if (!token) return;
       const dlg = document.getElementById("fpDialog");
-      const assessment = {}; let stage = null;
+      const assessment = {}; let stageSel = null;
       dlg.querySelectorAll("[data-f]").forEach((el) => {
         const f = el.getAttribute("data-f");
         const v = (el.value || "").trim();
-        if (f === "__stage") stage = v; else assessment[f] = v;
+        if (f === "__stage") stageSel = v; else assessment[f] = v;
       });
+
+      // Gate ANY stage change — drag-driven OR via the Stage dropdown — against the
+      // target's entry requirements. The dropdown must not be a way around the gate.
+      let stageToSave = stageSel, blocked = false;
+      const target = moveContext ? moveContext.target : stageSel;
+      if (target && target !== (curIdea.stage || "inbox")) {
+        const data = { filled: {}, intent: assessment.intent_type, confidence: assessment.confidence, decision: assessment.decision };
+        ["opportunity", "intent_type", "confidence", "commercial", "scope", "asset_value", "governance", "decision"]
+          .forEach((k) => { data.filled[k] = (assessment[k] || "").trim() !== ""; });
+        const stillMissing = unmetForData(data, target);
+        if (stillMissing.length) { blocked = true; moveContext = { target: target, missing: stillMissing }; stageToSave = curIdea.stage; }
+        else { stageToSave = target; }
+      }
+
       const btn = document.getElementById("saveEdit");
-      const reset = () => { if (btn) { btn.disabled = false; btn.textContent = "Save changes"; } };
+      const label = btn ? btn.textContent : "";
+      const fail = (m) => { alert(m); if (btn) { btn.disabled = false; btn.textContent = label; } };
+      const id = curIdea.id;
+
+      if (!LIVE) {
+        // Demo mode — mutate the in-memory idea; no backend.
+        const idea = ideas.find((i) => i.id === id);
+        if (idea) {
+          idea.stage = stageToSave; idea.updated_at = "just now";
+          if (assessment.intent_type) idea.intent = assessment.intent_type;
+          if (assessment.confidence) idea.confidence = assessment.confidence;
+          if (assessment.decision) idea.decision = assessment.decision;
+          idea.filled = idea.filled || {};
+          ["opportunity", "intent_type", "confidence", "commercial", "scope", "asset_value", "governance", "decision"]
+            .forEach((k) => { idea.filled[k] = (assessment[k] || "").trim() !== ""; });
+        }
+        if (!blocked) moveContext = null;
+        render();
+        await openReview(id);
+        return;
+      }
+
+      const token = ensureToken(); if (!token) return;
       if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
       try {
         const r = await fetch(F.workerUrl + "/api/update", {
           method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
-          body: JSON.stringify({ ideaId: curIdea.id, assessment, stage }),
+          body: JSON.stringify({ ideaId: id, assessment, stage: stageToSave }),
         });
-        if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Reviewer token rejected — try again."); reset(); return; }
-        if (!r.ok) { alert("Couldn't save — please retry."); reset(); return; }
-      } catch (e) { alert("Couldn't save — network error."); reset(); return; }
-      const id = curIdea.id;
+        if (r.status === 401) { localStorage.removeItem("fp_review_token"); fail("Reviewer token rejected — try again."); return; }
+        if (!r.ok) { fail("Couldn't save — please retry."); return; }
+      } catch (e) { fail("Couldn't save — network error."); return; }
+
       curAssessment = null; // force a refetch of the merged assessment on reopen
       await load();
-      openReview(id);
+      if (blocked) { await openReview(id); }        // moveContext still set → reopens with remaining items
+      else { moveContext = null; await openReview(id); }
+    }
+
+    // ── Move a card (drag-drop drop handler, requirement-gated) ───────
+    function attemptMove(id, targetKey) {
+      const idea = ideas.find((i) => i.id === id);
+      if (!idea || !targetKey || (idea.stage || "inbox") === targetKey) return;
+      const missing = unmetForData(idea, targetKey);
+      if (missing.length) { openMissing(idea, targetKey, missing); return; }
+      moveCard(idea, targetKey);
+    }
+    async function moveCard(idea, targetKey) {
+      const prev = idea.stage;
+      if (!LIVE) { idea.stage = targetKey; idea.updated_at = "just now"; render(); return; }
+      const token = ensureToken(); if (!token) return;
+      idea.stage = targetKey; render(); // optimistic
+      try {
+        const r = await fetch(F.workerUrl + "/api/update", {
+          method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
+          body: JSON.stringify({ ideaId: idea.id, stage: targetKey }),
+        });
+        if (r.status === 401) { localStorage.removeItem("fp_review_token"); throw new Error("token"); }
+        if (!r.ok) throw new Error("http");
+        await load(); // server is the source of truth (catches concurrent edits)
+      } catch (e) {
+        idea.stage = prev; render(); // silent revert
+      }
+    }
+
+    // ── Pointer drag-and-drop (5px activation so click-to-open survives) ─
+    let dnd = null;
+    function enableDnD() {
+      if (!("PointerEvent" in window)) return;
+      document.querySelectorAll("#cols .fp-card[data-id]").forEach((card) => {
+        card.addEventListener("pointerdown", onCardPointerDown);
+      });
+    }
+    function onCardPointerDown(e) {
+      if (dnd) return;                        // ignore a second pointer while a gesture is in flight
+      if (e.button && e.button !== 0) return;
+      const card = e.currentTarget;
+      dnd = { id: card.dataset.id, card: card, sx: e.clientX, sy: e.clientY, dragging: false, clone: null, over: null, offX: 0, offY: 0 };
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp, { once: true });
+      window.addEventListener("pointercancel", onPointerCancel, { once: true });
+    }
+    function onPointerMove(e) {
+      if (!dnd) return;
+      if (!dnd.dragging) {
+        if (Math.hypot(e.clientX - dnd.sx, e.clientY - dnd.sy) < 5) return;
+        beginDrag(e);
+      }
+      dnd.clone.style.left = (e.clientX - dnd.offX) + "px";
+      dnd.clone.style.top = (e.clientY - dnd.offY) + "px";
+      const col = columnUnder(e.clientX, e.clientY);
+      if (col !== dnd.over) {
+        if (dnd.over) dnd.over.classList.remove("fp-col-over");
+        dnd.over = col;
+        if (col) col.classList.add("fp-col-over");
+      }
+    }
+    function beginDrag(e) {
+      dnd.dragging = true; justDragged = true;
+      try { dnd.card.setPointerCapture(e.pointerId); } catch (_) {} // keep events flowing off-window / mid-scroll
+      const r = dnd.card.getBoundingClientRect();
+      dnd.offX = e.clientX - r.left; dnd.offY = e.clientY - r.top;
+      const c = dnd.card.cloneNode(true);
+      c.classList.add("fp-drag-ghost");
+      c.style.width = r.width + "px";
+      c.style.left = r.left + "px"; c.style.top = r.top + "px";
+      document.body.appendChild(c);
+      dnd.clone = c;
+      dnd.card.classList.add("fp-card-dragging");
+      document.body.classList.add("fp-dragging");
+    }
+    function columnUnder(x, y) {
+      const el = document.elementFromPoint(x, y);
+      return el ? el.closest("#cols .fp-col[data-stage]") : null;
+    }
+    // One teardown for every way a gesture can end (drop, cancel, lost pointer).
+    function cleanupDrag(s) {
+      window.removeEventListener("pointermove", onPointerMove);
+      if (!s) return;
+      if (s.clone) s.clone.remove();
+      if (s.card) s.card.classList.remove("fp-card-dragging");
+      document.body.classList.remove("fp-dragging");
+      if (s.over) s.over.classList.remove("fp-col-over");
+      if (s.dragging) setTimeout(() => { justDragged = false; }, 0); // clear right after the synthetic click, not 250ms later
+    }
+    function onPointerUp(e) {
+      window.removeEventListener("pointercancel", onPointerCancel);
+      const s = dnd; dnd = null;
+      if (!s) return;
+      const dropped = s.dragging;                                    // below 5px → a click; let openReview fire
+      const col = dropped ? columnUnder(e.clientX, e.clientY) : null;
+      cleanupDrag(s);
+      if (dropped && col) attemptMove(s.id, col.getAttribute("data-stage"));
+    }
+    function onPointerCancel() {
+      window.removeEventListener("pointerup", onPointerUp);
+      const s = dnd; dnd = null;
+      cleanupDrag(s);  // a cancelled gesture must not drop the card
     }
 
     async function decide(idea, decision) {
