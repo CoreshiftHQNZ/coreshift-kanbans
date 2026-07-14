@@ -250,7 +250,9 @@ a { color: inherit; }
   html { height: 100%; }
   body.fp-app { height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
   body.fp-app .fp-head { position: static; flex: 0 0 auto; }
-  body.fp-app .fp-wrap { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; padding-top: 22px; padding-bottom: 18px; }
+  /* width:100% stops the flex `margin:0 auto` from content-sizing the wrap, so the
+     board is the same width in every view regardless of how many cards it holds. */
+  body.fp-app .fp-wrap { flex: 1 1 auto; min-height: 0; width: 100%; display: flex; flex-direction: column; overflow: hidden; padding-top: 22px; padding-bottom: 18px; }
   body.fp-app .fp-hero { flex: 0 0 auto; margin-bottom: 14px; }
   body.fp-app .fp-viewtabs { flex: 0 0 auto; }
   body.fp-app .fp-legend { flex: 0 0 auto; margin-bottom: 12px; }
