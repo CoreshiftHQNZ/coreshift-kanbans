@@ -21,7 +21,7 @@ create table if not exists public.ideas (
                    check (stage in ('inbox','assessment','review','pending_validation','rejected','build','harden','business','launch','live','parked','declined')),
   status         text not null default 'draft'
                    check (status in ('draft','in_review','validated','declined')),
-  intent         text check (intent in ('personal','internal','client','speculative','standalone')),
+  intent         text check (intent in ('personal','internal','client','speculative','standalone','product')),
   confidence     text check (confidence in ('punt','validate','business_case')),
   decision       text check (decision in ('proceed','validate_first','experiment','client_only','product','do_not_proceed')),
   assessment     jsonb not null default '{}'::jsonb,   -- the 8-section prose answers
