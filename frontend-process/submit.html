@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Submit an idea — Coreshift Idea Pipeline</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💡%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="fp-app">
+  <header class="fp-head">
+    <div class="fp-head-inner">
+      <a class="fp-brand" href="index.html">
+        <div class="fp-mark">💡</div>
+        <div><div class="fp-title">Coreshift HQ</div><div class="fp-sub">Submit an idea</div></div>
+      </a>
+      <div class="fp-meta">
+        <span id="modeBadge"></span>
+        <a href="index.html">← Idea Pipeline</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="fp-wrap">
+    <div class="fp-hero" style="margin-bottom:18px">
+      <div>
+        <h1>Talk it through</h1>
+        <p>Same conversation as the build plugin — shape the idea, pressure-test it, then decide — minus any setup. It fills the assessment as you talk and sends it to Keitha. No forms, no install.</p>
+      </div>
+    </div>
+
+    <div class="fp-intake" id="intake">
+      <!-- chat -->
+      <div class="fp-chat">
+        <div class="fp-chat-head">
+          <div class="fp-chat-id">
+            <span class="avatar">✦</span>
+            <div class="who">the Idea Intake<div class="fp-chat-status"><span class="live"></span>online · fills your assessment as you talk</div></div>
+          </div>
+          <button class="fp-restart" id="restart">↻ Restart</button>
+        </div>
+        <div class="fp-stepper" id="stepper"></div>
+        <div class="fp-log" id="log" tabindex="0" role="log" aria-live="polite" aria-label="Conversation transcript"></div>
+        <div class="fp-chat-foot">
+          <div class="fp-suggest" id="suggest"></div>
+          <div class="fp-input-row">
+            <textarea class="fp-input" id="input" rows="1" placeholder="Type your answer…  (or tap a suggestion)"></textarea>
+            <button class="btn btn-primary" id="send">Send</button>
+          </div>
+        </div>
+      </div>
+      <!-- assessment panel -->
+      <div class="fp-panel">
+        <div class="fp-panel-head">
+          <h2>App Assessment</h2>
+          <div class="fp-progress"><i id="bar"></i></div>
+          <div class="fp-progress-label" id="progressLabel">0 of 7 captured</div>
+        </div>
+        <div class="fp-sections" id="sections" tabindex="0" aria-label="App assessment, filled as you talk"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    const F = window.FP;
+    const LIVE = !!F.workerUrl;
+    const L = F.labels;
+    const PHASE_ORDER = F.phases.map((p) => p.key);
+    // Decision (§8) is the outcome, not part of the assessment summary — shown via
+    // the decision chip/headline, not listed as a captured section.
+    const SUMMARY_SECTIONS = F.sections.filter((s) => s.field !== "decision");
+    let assessment = {};
+    let messages = [];
+    let ideaId = null;
+    let step = 0;
+    let busy = false;
+    let submitted = false;
+    const SKEY = "fp_intake_session";
+
+    document.getElementById("modeBadge").innerHTML = LIVE ? "" : '<span class="fp-badge-demo">Demo mode</span>';
+    const logEl = document.getElementById("log");
+    const suggestEl = document.getElementById("suggest");
+    const inputEl = document.getElementById("input");
+    const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const mdBold = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    const phaseNow = () => assessment.phase || "shape";
+
+    function addMsg(role, text) {
+      const d = document.createElement("div");
+      d.className = "msg " + role;
+      d.innerHTML = mdBold(text);
+      logEl.appendChild(d);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+    function addNote(text) {
+      const d = document.createElement("div");
+      d.className = "fp-note"; d.textContent = text;
+      logEl.appendChild(d);
+    }
+    // Persist the in-progress session so an accidental navigation / closed tab resumes.
+    function saveSession() {
+      if (submitted) return;
+      try { localStorage.setItem(SKEY, JSON.stringify({ mode: LIVE ? "live" : "demo", ideaId, messages, assessment, step })); } catch (e) {}
+    }
+    function clearSession() { try { localStorage.removeItem(SKEY); } catch (e) {} }
+    function typing(on) {
+      let t = document.getElementById("typing");
+      if (on && !t) {
+        t = document.createElement("div"); t.id = "typing"; t.className = "typing";
+        t.innerHTML = "the Idea Intake is typing <span>·</span><span>·</span><span>·</span>";
+        logEl.appendChild(t); logEl.scrollTop = logEl.scrollHeight;
+      } else if (!on && t) { t.remove(); }
+    }
+    function showChips(chips) {
+      suggestEl.innerHTML = "";
+      if (!chips || !chips.length) return;
+      const lbl = document.createElement("div");
+      lbl.style.cssText = "width:100%;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-soft);font-weight:700;margin-bottom:2px";
+      lbl.textContent = "Suggested replies";
+      suggestEl.appendChild(lbl);
+      chips.forEach((c) => {
+        const b = document.createElement("button");
+        b.className = "suggest"; b.textContent = c;
+        b.addEventListener("click", () => { inputEl.value = c; send(); });
+        suggestEl.appendChild(b);
+      });
+    }
+
+    // ── Phase stepper ─────────────────────────────────────────────────
+    function renderStepper() {
+      const cur = PHASE_ORDER.indexOf(phaseNow());
+      document.getElementById("stepper").innerHTML = F.phases.map((p, i) => {
+        const cls = i < cur ? "done" : i === cur ? "active" : "";
+        const mark = i < cur ? "✓" : i + 1;
+        return `<div class="fp-step ${cls}"><span class="n">${mark}</span><span class="lbl">${esc(p.label)}<small>${esc(p.sub)}</small></span></div>`;
+      }).join("");
+    }
+
+    // ── Assessment panel ──────────────────────────────────────────────
+    function renderPanel(justFilled) {
+      const secEl = document.getElementById("sections");
+      secEl.innerHTML = SUMMARY_SECTIONS.map((sec, i) => {
+        let v = assessment[sec.field];
+        const has = v != null && v !== "";
+        if (has && sec.field === "intent_type") v = L.intent[v] || v;
+        if (has && sec.field === "confidence") v = L.confidence[v] || v;
+        const jf = justFilled && justFilled.includes(sec.field) ? " just-filled" : "";
+        return `<div class="fp-section ${has ? "filled" : ""}${jf}">
+          <div class="fp-section-head"><span class="tick">✓</span>${i + 1} · ${esc(sec.label)}</div>
+          <div class="fp-section-body ${has ? "" : "empty"}">${has ? esc(v) : esc(sec.hint)}</div></div>`;
+      }).join("");
+      const filled = SUMMARY_SECTIONS.filter((s) => assessment[s.field] != null && assessment[s.field] !== "").length;
+      document.getElementById("bar").style.width = Math.round((filled / SUMMARY_SECTIONS.length) * 100) + "%";
+      document.getElementById("progressLabel").textContent = filled + " of " + SUMMARY_SECTIONS.length + " captured";
+    }
+
+    function applyFills(fills) {
+      const before = {};
+      F.sections.forEach((s) => (before[s.field] = assessment[s.field]));
+      Object.assign(assessment, fills);
+      const jf = F.sections.filter((s) => !before[s.field] && assessment[s.field]).map((s) => s.field);
+      renderPanel(jf);
+      renderStepper();
+    }
+
+    // ── Send ──────────────────────────────────────────────────────────
+    async function send() {
+      if (busy) return;
+      const text = inputEl.value.trim();
+      if (!text) return;
+      inputEl.value = ""; suggestEl.innerHTML = "";
+      addMsg("user", text);
+      messages.push({ role: "user", text });
+      busy = true;
+      LIVE ? await sendLive() : await sendDemo();
+      busy = false;
+      saveSession();
+    }
+    async function sendDemo() {
+      const s = F.demoScript[step];
+      if (!s) return;
+      typing(true);
+      await wait(750 + Math.random() * 500);
+      typing(false);
+      if (s.fills) applyFills(s.fills);
+      addMsg("assistant", s.assistant);
+      messages.push({ role: "assistant", text: s.assistant });
+      if (s.submit) return finish();
+      step++;
+      if (F.demoScript[step]) showChips(F.demoScript[step].chips);
+    }
+    async function sendLive() {
+      typing(true);
+      try {
+        const r = await fetch(F.workerUrl + "/api/chat", {
+          method: "POST", headers: { "content-type": "application/json" },
+          body: JSON.stringify({ ideaId, messages }),
+        });
+        const j = await r.json();
+        typing(false);
+        if (j.error) { addMsg("assistant", "Sorry — something went wrong: " + j.error); return; }
+        ideaId = j.ideaId || ideaId;
+        if (j.assessment) { assessment = j.assessment; renderPanel(); renderStepper(); }
+        if (j.reply) { addMsg("assistant", j.reply); messages.push({ role: "assistant", text: j.reply }); }
+        if (j.submitted) return finish();
+      } catch (e) { typing(false); addMsg("assistant", "Couldn't reach the intake service. Try again in a moment."); }
+    }
+
+    function finish() {
+      submitted = true;
+      clearSession();
+      const title = assessment.title || "your idea";
+      const decisionLabel = L.decision[assessment.decision] || assessment.decision || "—";
+      // The plugin routes the next step off the Decision (see the app-assessment skill).
+      const ROUTE = {
+        do_not_proceed: "Archived — recorded with the reason so it isn't re-litigated cold later. Nothing's lost.",
+        validate_first: "Next: run <b>idea-validator</b> to pressure-test it and lock a 2-week MVP test before any build spend.",
+        experiment: "Next: run <b>product-planner</b> to spec the smallest version — capped, not a commitment to ship.",
+        client_only: "Next: run <b>product-planner</b> for the vision, PRD &amp; roadmap.",
+        product: "Next: run <b>product-planner</b>; get Keitha's business-case sign-off before the build starts.",
+        proceed: "Next: run <b>product-planner</b> to turn this into a vision, PRD &amp; roadmap.",
+      };
+      const routeNote = ROUTE[assessment.decision] || "The reviewer will confirm the next step.";
+      const rows = SUMMARY_SECTIONS.map((sec, i) => {
+        let v = assessment[sec.field];
+        const has = v != null && v !== "";
+        if (has && sec.field === "intent_type") v = L.intent[v] || v;
+        if (has && sec.field === "confidence") v = L.confidence[v] || v;
+        return `<div class="out-row"><div class="out-k">${i + 1} · ${esc(sec.label)}</div>
+          <div class="out-v ${has ? "" : "muted"}">${has ? esc(v) : "not captured"}</div></div>`;
+      }).join("");
+      document.getElementById("intake").outerHTML = `
+        <div class="fp-outputs">
+          <div class="fp-success" style="max-width:none;margin:0 0 18px">
+            <div class="check">✓</div>
+            <h2 id="fpDone" tabindex="-1">Assessment complete</h2>
+            <p>Recorded and sent to the reviewer. You'll see <strong>${esc(title)}</strong> in <strong>Review</strong> on the board.</p>
+            <div class="fp-toast"><div class="slack">#</div>
+              <div><div class="ch">#frontend-process · just now</div>
+              <div class="tx">💡 New idea submitted: <strong>${esc(title)}</strong> — awaiting your review @keitha</div></div></div>
+          </div>
+          <div class="out-grid">
+            <div class="out-card">
+              <h3>What was captured</h3>
+              <p class="out-sub">Saved as <code>docs/app-assessment.md</code> — the living assessment doc that travels with the card.</p>
+              <div class="out-decision">Decision: <b>${esc(decisionLabel)}</b></div>
+              ${rows}
+            </div>
+            <div class="out-card">
+              <h3>What happens next</h3>
+              <p class="out-sub">${routeNote}</p>
+              <p class="out-sub">If it proceeds to a build, these artifacts are <b>required</b> before it ships:</p>
+              <ul class="out-checklist">
+                <li><b>Product idea</b> — pre-filled from this assessment (<code>docs/product-idea.md</code>)</li>
+                <li><b>Vision, PRD &amp; roadmap</b> — the product-planner skill (<code>docs/prd.md</code>, <code>product-roadmap.md</code>)</li>
+                <li class="flag"><b>Design system</b> — the design-system skill (<code>docs/design.md</code>).<span>Separate step, easy to miss — no design file means the build is incomplete.</span></li>
+                <li><b>Launch checklist</b> — the launch-checklist skill, before go-live</li>
+              </ul>
+            </div>
+          </div>
+          <a class="btn btn-primary" href="index.html" style="margin-top:16px;display:inline-flex">See it on the board →</a>
+        </div>`;
+      var done = document.getElementById("fpDone");
+      if (done) done.focus();
+    }
+
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+    inputEl.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } });
+    document.getElementById("send").addEventListener("click", send);
+    document.getElementById("restart").addEventListener("click", () => { clearSession(); location.reload(); });
+
+    // ── Boot ──────────────────────────────────────────────────────────
+    async function boot() {
+      const urlId = new URLSearchParams(location.search).get("id");
+      // Resume a specific draft opened from the board (?id=…) via the server transcript.
+      if (LIVE && urlId) {
+        typing(true);
+        try {
+          const r = await fetch(F.workerUrl + "/api/draft?id=" + encodeURIComponent(urlId));
+          typing(false);
+          if (r.ok) {
+            const d = (await r.json()).idea;
+            ideaId = d.id;
+            assessment = (d.assessment && Object.keys(d.assessment).length) ? d.assessment : { phase: "shape" };
+            messages = (d.transcript || []).filter((m) => m && m.text && (m.role === "user" || m.role === "assistant"));
+            renderStepper(); renderPanel();
+            if (messages.length) {
+              addNote("Resumed this idea from the board — Restart to start fresh");
+              messages.forEach((m) => addMsg(m.role, m.text));
+              // If the assistant never replied to the last turn, fetch its response now.
+              if (messages[messages.length - 1].role === "user") { busy = true; await sendLive(); busy = false; }
+            } else {
+              const g = "Let's pick this up — tell me the idea: the opportunity, what's clunky today, and who feels it.";
+              addMsg("assistant", g); messages.push({ role: "assistant", text: g });
+            }
+            saveSession();
+            return;
+          }
+        } catch (e) { typing(false); }
+        // draft not resumable (already submitted / deleted) → fall through to a fresh start
+      }
+
+      // A fresh "Submit an idea" / "+ New idea" always starts clean. Resuming a
+      // specific draft happens ONLY via a board card (?id= above) — never implicitly
+      // from localStorage, so a new idea never re-opens a previous conversation.
+      clearSession();
+      assessment.phase = "shape";
+      renderStepper();
+      renderPanel();
+      if (LIVE) {
+        typing(true);
+        try {
+          const r = await fetch(F.workerUrl + "/api/chat", {
+            method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ messages: [] }),
+          });
+          const j = await r.json();
+          typing(false);
+          ideaId = j.ideaId || null;
+          if (j.assessment) { assessment = j.assessment; renderPanel(); renderStepper(); }
+          const greeting = j.reply || "Hi — what's your idea?";
+          addMsg("assistant", greeting); messages.push({ role: "assistant", text: greeting });
+        } catch (e) { typing(false); addMsg("assistant", "Couldn't reach the intake service — but here's how it works: tell me your idea and who it's for."); }
+      } else {
+        addMsg("assistant", F.demoGreeting);
+        messages.push({ role: "assistant", text: F.demoGreeting });
+        showChips(F.demoScript[0].chips);
+      }
+      saveSession();
+    }
+    boot();
+  </script>
+</body>
+</html>

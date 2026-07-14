@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Coreshift Idea Pipeline — Coreshift HQ</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💡%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="fp-app">
+  <header class="fp-head">
+    <div class="fp-head-inner fp-head-inner-board">
+      <a class="fp-brand" href="../index.html">
+        <div class="fp-mark">💡</div>
+        <div><div class="fp-title">Coreshift HQ</div><div class="fp-sub">Idea Pipeline</div></div>
+      </a>
+      <div class="fp-meta">
+        <span id="modeBadge"></span>
+        <a href="../boards/">Project boards</a>
+        <span class="dot"></span>
+        <a href="../index.html">← Wiki</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="fp-wrap fp-wrap-board">
+    <div class="fp-hero">
+      <div>
+        <h1 id="viewTitle">Coreshift Idea Pipeline</h1>
+        <p id="viewDesc"></p>
+      </div>
+      <a class="btn btn-primary" href="submit.html">＋ Submit an idea</a>
+    </div>
+    <div class="fp-viewtabs" id="viewTabs" role="tablist" aria-label="Board view"></div>
+    <p class="fp-legend" id="legend"></p>
+
+    <div class="fp-board"><div class="fp-cols" id="cols"></div></div>
+
+    <div class="fp-foot">
+      <span>The pipeline that surrounds the <a href="../wiki/new-project/">build workflow</a>. Assessment gate = the <code>app-assessment</code> skill.</span>
+      <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans" target="_blank" rel="noopener">Source</a>
+    </div>
+  </div>
+
+  <div id="overlay"></div>
+
+  <script src="config.js"></script>
+  <script>
+    const F = window.FP;
+    const LIVE = !!F.workerUrl;
+    const L = F.labels;
+    let ideas = [];
+    let view = "pipeline"; // "pipeline" (inbox/assessment/review) or "wip" (build→live)
+    const VIEW_META = {
+      pipeline: { title: "Coreshift Idea Pipeline", desc: "New ideas land here — captured, assessed, then a go/no-go decision. Approved ideas cross the governance gate into Work in Progress." },
+      wip:      { title: "Coreshift — Work in Progress", desc: "Approved projects moving from build to live. The build engine (the plugin) runs in Build; parked & declined sit off-board." },
+    };
+
+    document.getElementById("modeBadge").innerHTML = LIVE ? "" : '<span class="fp-badge-demo">Demo data</span>';
+    const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    const DEV_RAG = F.devRag || { in_progress: "green", done: "green", at_risk: "amber", on_hold: "amber", blocked: "red" };
+    const WIP_STAGES = ["build", "harden", "business", "launch", "live"];
+    const isWip = (s) => WIP_STAGES.includes(s);
+    const PRODUCT_OWNERS = F.productOwners || [];
+    // Decision (§8) is the outcome (shown as a chip + the decision buttons), not an
+    // assessment-summary section.
+    const SUMMARY_SECTIONS = F.sections.filter((s) => s.field !== "decision");
+
+    // Local, human timestamps. Leaves demo strings ("2h ago") untouched.
+    function fmtTime(v) {
+      if (!v) return "";
+      const d = new Date(v);
+      if (isNaN(d.getTime())) return String(v);
+      const diff = (Date.now() - d.getTime()) / 1000;
+      if (diff < 45) return "just now";
+      if (diff < 3600) return Math.max(1, Math.round(diff / 60)) + "m ago";
+      if (diff < 86400) return Math.round(diff / 3600) + "h ago";
+      if (diff < 172800) return "yesterday";
+      const sameYear = d.getFullYear() === new Date().getFullYear();
+      return d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: sameYear ? undefined : "numeric" });
+    }
+    function fullLocal(v) { const d = new Date(v); return isNaN(d.getTime()) ? String(v || "") : d.toLocaleString(); }
+    // Developer-status pill, coloured by auto-derived RAG. Defaults to In Progress for WIP cards.
+    function devStatusHtml(idea) {
+      // A Live card reads as "Live" — developer status is a build-phase concept.
+      if (idea.stage === "live") return `<span class="pill pill-rag-green" title="Live">Live</span>`;
+      const key = idea.dev_status || "in_progress";
+      const label = (L.dev_status && L.dev_status[key]) || key;
+      const rag = DEV_RAG[key] || "green";
+      return `<span class="pill pill-rag-${rag}" title="Developer status">${esc(label)}</span>`;
+    }
+
+    // Demo cards carry no assessment prose, so synthesise the `filled` map the
+    // gate reads: advanced (WIP) cards are complete; pipeline cards reflect the
+    // dials they actually carry, so a drag demonstrates both allowed & blocked moves.
+    function demoFilled(d) {
+      const advanced = ["build", "harden", "business", "launch", "live"].includes(d.stage);
+      const f = {};
+      ["opportunity", "intent_type", "confidence", "commercial", "scope", "asset_value", "governance", "decision"]
+        .forEach((k) => { f[k] = advanced; });
+      if (!advanced) {
+        f.opportunity = true; f.scope = true; f.asset_value = true;
+        f.intent_type = !!d.intent; f.confidence = !!d.confidence; f.decision = !!d.decision;
+      }
+      return f;
+    }
+    async function load() {
+      if (!LIVE) { ideas = F.demoIdeas.map((d) => ({ ...d, filled: d.filled || demoFilled(d) })); return render(); }
+      try { ideas = (await (await fetch(F.workerUrl + "/api/ideas")).json()).ideas || []; }
+      catch (e) { ideas = []; }
+      render();
+    }
+
+    function chips(idea) {
+      const out = [];
+      if (idea.intent) out.push(`<span class="chip chip-navy">${esc(L.intent[idea.intent] || idea.intent)}</span>`);
+      if (idea.confidence) out.push(`<span class="chip">${esc(L.confidence[idea.confidence] || idea.confidence)}</span>`);
+      if (idea.decision) {
+        const stop = idea.decision === "do_not_proceed";
+        out.push(`<span class="chip chip-decision${stop ? " stop" : ""}">${esc(L.decision[idea.decision] || idea.decision)}</span>`);
+      }
+      return out.join("");
+    }
+    function cardHtml(idea) {
+      const wip = isWip(idea.stage);
+      const st = idea.status || "draft";
+      // WIP cards show the developer status (RAG) instead of the redundant "Validated" pill.
+      const pill = wip ? devStatusHtml(idea) : `<span class="pill pill-${st}">${esc(L.status[st] || st)}</span>`;
+      const po = (wip && idea.product_owner) ? `<span class="fp-po" title="Product Owner">👤 ${esc(idea.product_owner)}</span>` : "";
+      return `<div class="fp-card-wrap">
+        <div class="fp-card" data-id="${esc(idea.id)}" tabindex="0" role="button" aria-label="Open ${esc(idea.title)}">
+          <div class="fp-card-top"><span class="fp-card-name">${esc(idea.title)}</span>${pill}</div>
+          <div class="fp-card-snap">${esc(idea.one_liner || "")}</div>
+          <div class="fp-chips">${chips(idea)}</div>
+          <div class="fp-card-foot">${po}<span class="fp-card-updated" title="Updated ${esc(fullLocal(idea.updated_at))}">${esc(fmtTime(idea.updated_at))}</span></div>
+        </div>
+        <button class="fp-card-del" data-del="${esc(idea.id)}" aria-label="Delete ${esc(idea.title)}" title="Delete idea">✕</button>
+      </div>`;
+    }
+
+    function colHtml(s, isOff, isOffStart) {
+      const inCol = ideas.filter((i) => (i.stage || "inbox") === s.key);
+      const cards = inCol.map(cardHtml).join("");
+      const adder = s.key === "inbox" ? `<a class="fp-card new" href="submit.html"><b>＋ New idea</b><br/>start an assessment</a>` : "";
+      const empty = (!inCol.length && s.key !== "inbox") ? `<div class="fp-empty">No ideas here yet</div>` : "";
+      const cls = ["fp-col", s.divider ? "divider" : "", s.softdivider ? "softdivider" : "", isOff ? "offlane" : "", isOffStart ? "offstart" : ""].filter(Boolean).join(" ");
+      const gate = s.gate ? `<div class="fp-col-gate">Exit: ${esc(s.gate)}</div>` : "";
+      return `<div class="${cls}" data-stage="${esc(s.key)}">
+        <div class="fp-col-head">
+          <div class="fp-col-title">${esc(s.label)}<span class="fp-col-count">${inCol.length}</span></div>
+          ${gate}
+        </div>
+        <div class="fp-cards">${cards}${adder}${empty}</div>
+      </div>`;
+    }
+
+    function stageKeysFor(vk) {
+      const keys = F.stages.filter((s) => s.view === vk).map((s) => s.key);
+      return vk === "wip" ? keys.concat((F.offBoard || []).map((o) => o.key)) : keys;
+    }
+    function countInView(vk) {
+      const keys = stageKeysFor(vk);
+      return ideas.filter((i) => keys.includes(i.stage || "inbox")).length;
+    }
+    function renderTabs() {
+      document.getElementById("viewTabs").innerHTML = (F.views || []).map((v) =>
+        `<button class="fp-viewtab ${v.key === view ? "active" : ""}" data-view="${v.key}" role="tab" aria-selected="${v.key === view}">
+           ${esc(v.label)} <span class="vc">${countInView(v.key)}</span><small>${esc(v.sub)}</small></button>`).join("");
+      document.querySelectorAll("#viewTabs .fp-viewtab").forEach((b) =>
+        b.addEventListener("click", () => { view = b.dataset.view; render(); }));
+    }
+    function renderLegend() {
+      const common = `<span><b>Chips:</b> Intent · Confidence · Decision</span><span><b>Click a card</b> to review &amp; decide</span>`;
+      const extra = view === "pipeline"
+        ? `<span><b>Governance gate:</b> a decision + PIA/governance sends approved ideas into Work in Progress →</span><span><b>After the dashed line:</b> Pending Validation &amp; Rejected are outcome statuses, not active stages.</span>`
+        : `<span><b>Faint line:</b> the Build → Harden & Secure hand-off</span>`;
+      document.getElementById("legend").innerHTML = common + extra;
+    }
+    function render() {
+      const meta = VIEW_META[view];
+      document.getElementById("viewTitle").textContent = meta.title;
+      document.getElementById("viewDesc").textContent = meta.desc;
+      renderTabs();
+      renderLegend();
+      const stages = F.stages.filter((s) => s.view === view);
+      const stageCols = stages.map((s) => colHtml(s, false, false)).join("");
+      let offCols = "";
+      if (view === "wip") {
+        const offLanes = (F.offBoard || []).filter((o) => ideas.some((i) => i.stage === o.key));
+        offCols = offLanes.map((o, i) => colHtml(o, true, i === 0)).join("");
+      }
+      document.getElementById("cols").innerHTML = stageCols + offCols;
+      document.querySelectorAll(".fp-card[data-id]").forEach((c) => {
+        const open = () => {
+          if (justDragged) { justDragged = false; return; }
+          moveContext = null;
+          const idea = ideas.find((i) => i.id === c.dataset.id);
+          // A draft is still being written — clicking it resumes the intake conversation
+          // (not the read/decide drawer, which is for submitted cards).
+          if (idea && idea.status === "draft") { location.href = "submit.html?id=" + encodeURIComponent(idea.id); return; }
+          openReview(c.dataset.id);
+        };
+        c.addEventListener("click", open);
+        c.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+      });
+      document.querySelectorAll("#cols .fp-card-del[data-del]").forEach((b) => {
+        b.addEventListener("click", () => deleteIdea(b.dataset.del));
+      });
+      enableDnD();
+    }
+
+    function focusAfterBoardChange() {
+      const next = document.querySelector(".fp-card[data-id]") || document.querySelector(".fp-hero .btn-primary");
+      if (next && next.focus) next.focus();
+    }
+
+    async function deleteIdea(id) {
+      const idea = ideas.find((i) => i.id === id);
+      const name = idea ? idea.title : "this idea";
+      if (!confirm("Delete “" + name + "”? It will be removed from the board.")) return;
+      if (LIVE) {
+        const token = ensureToken(); if (!token) return;
+        try {
+          const r = await fetch(F.workerUrl + "/api/delete", {
+            method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
+            body: JSON.stringify({ ideaId: id }),
+          });
+          if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Reviewer token rejected — try again."); return; }
+          if (!r.ok) { alert("Couldn't delete — please retry."); return; }
+        } catch (e) { alert("Couldn't delete — network error."); return; }
+        await load();
+      } else {
+        ideas = ideas.filter((i) => i.id !== id);
+        render();
+      }
+      focusAfterBoardChange();
+    }
+
+    // ── Review overlay ────────────────────────────────────────────────
+    let lastTrigger = null;
+    function trapKeys(e) {
+      if (e.key === "Escape") { e.preventDefault(); closeReview(); return; }
+      if (e.key !== "Tab") return;
+      const f = document.querySelectorAll('#overlay button, #overlay a[href], #overlay [tabindex]:not([tabindex="-1"])');
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+    async function openReview(id) {
+      const idea = ideas.find((i) => i.id === id);
+      if (!idea) return;
+      if (!document.getElementById("fpDialog")) lastTrigger = document.activeElement;
+      let assessment = null;
+      let locked = false;
+      if (LIVE) {
+        const token = localStorage.getItem("fp_review_token"); // use a cached token; never prompt just to open a card
+        if (token) {
+          try {
+            const r = await fetch(F.workerUrl + "/api/idea?id=" + encodeURIComponent(id), { headers: { Authorization: "Bearer " + token } });
+            if (r.ok) {
+              const data = await r.json().catch(() => null);
+              if (data && data.idea) assessment = data.idea.assessment || {};
+              else locked = true;              // malformed body → don't misrepresent a real idea as empty
+            } else {
+              if (r.status === 401) localStorage.removeItem("fp_review_token");
+              locked = true;                    // fail closed on ANY error (500/404/etc.), not just 401
+            }
+          } catch (e) { locked = true; }        // network error → locked, never a fake-empty assessment
+        } else { locked = true; }
+      }
+      curIdea = idea; curAssessment = assessment;
+      const rows = SUMMARY_SECTIONS.map((sec, i) => {
+        let v = assessment && assessment[sec.field];
+        const has = v != null && v !== "";
+        if (has && sec.field === "intent_type") v = L.intent[v] || v;
+        if (has && sec.field === "confidence") v = L.confidence[v] || v;
+        return `<div class="fp-section ${has ? "filled" : ""}"><div class="fp-section-head"><span class="tick">✓</span>${i + 1} · ${esc(sec.label)}</div>
+          <div class="fp-section-body ${has ? "" : "empty"}">${has ? esc(v) : (LIVE ? "—" : "(full assessment shown in live mode)")}</div></div>`;
+      }).join("");
+
+      const urlDefs = [["repo_url", "Repo", "📦"], ["kanban_url", "Kanban", "🗂"], ["staging_url", "Staging", "🧪"], ["production_url", "Production", "🚀"]];
+      const urlLinks = urlDefs.filter(([k]) => idea[k]).map(([k, label, ic]) =>
+        `<a class="fp-link" href="${esc(idea[k])}" target="_blank" rel="noopener"><span>${ic}&nbsp; ${label}</span><span class="fp-link-arrow">↗</span></a>`).join("");
+      const urlsBlock = `<div class="fp-drawer-sec"><div class="fp-drawer-label">Links</div>${urlLinks
+        ? `<div class="fp-links">${urlLinks}</div>`
+        : `<div class="fp-empty">Repo · kanban · staging · production appear once it's in Build.</div>`}</div>`;
+
+      const wip = isWip(idea.stage);
+      const isLive = idea.stage === "live";
+      // Inline-editable build status — change a field and it saves on the spot (no Edit mode).
+      const poOptsInline = ['<option value="">— unassigned —</option>'].concat(
+        PRODUCT_OWNERS.map((n) => `<option value="${esc(n)}"${n === (idea.product_owner || "") ? " selected" : ""}>${esc(n)}</option>`)).join("");
+      const dsOptsInline = Object.keys(L.dev_status || {}).map((k) => `<option value="${esc(k)}"${k === (idea.dev_status || "in_progress") ? " selected" : ""}>${esc(L.dev_status[k])}</option>`).join("");
+      const buildStatusBlock = wip ? `<div class="fp-drawer-sec"><div class="fp-drawer-label">Build status</div>
+          <div class="fp-inline-field"><span class="fp-inline-lbl">Product Owner</span><select class="fp-inline" data-inline="product_owner">${poOptsInline}</select></div>
+          ${isLive ? "" : `<div class="fp-inline-field"><span class="fp-inline-lbl">Developer status</span><select class="fp-inline" data-inline="dev_status">${dsOptsInline}</select></div>
+          <div class="fp-inline-field"><span class="fp-inline-lbl">Reason / note</span><textarea class="fp-inline" data-inline="dev_status_reason" rows="2" placeholder="Why on hold / at risk / blocked?">${esc(idea.dev_status_reason || "")}</textarea></div>`}
+        </div>` : "";
+      const filledCount = idea.filled ? SUMMARY_SECTIONS.filter((s) => idea.filled[s.field]).length : 0;
+      const fullLink = `<a class="fp-fulllink" href="assessment.html?id=${encodeURIComponent(idea.id)}">Read full assessment &amp; transcript →</a>`;
+
+      document.getElementById("overlay").innerHTML = `
+        <div class="fp-scrim" id="scrim"></div>
+        <aside class="fp-drawer" id="fpDialog" role="dialog" aria-modal="true" aria-labelledby="fpDialogTitle" tabindex="-1">
+          <button class="fp-drawer-close" id="closeReview" aria-label="Close">✕</button>
+          <div class="fp-drawer-head">
+            ${wip ? devStatusHtml(idea) : `<span class="pill pill-${idea.status || "draft"}">${esc(L.status[idea.status] || idea.status || "draft")}</span>`}
+            <h2 id="fpDialogTitle" class="fp-drawer-title">${esc(idea.title)}</h2>
+            <div class="fp-drawer-sub">${esc(idea.one_liner || "")}</div>
+            <div class="fp-chips" style="margin-top:12px">${chips(idea)}</div>
+          </div>
+          <div class="fp-drawer-body">
+            ${buildStatusBlock}
+            ${urlsBlock}
+            <div class="fp-drawer-sec">
+              <div class="fp-drawer-label">Assessment${(LIVE && !locked) ? ' <button class="fp-editbtn" id="editAssess" type="button">✎ Edit</button>' : ''}</div>
+              ${locked
+                ? `<div class="fp-locked">🔒 The full assessment is reviewer-only. <button class="fp-editbtn" id="unlockAssess" type="button">Enter reviewer token</button></div>`
+                : `<details class="fp-assess"><summary>Summary · ${filledCount}/${SUMMARY_SECTIONS.length} sections</summary><div class="fp-assess-body">${rows}</div></details>`}
+              ${fullLink}
+            </div>
+          </div>
+          <div class="fp-drawer-foot">
+            <div class="fp-drawer-label">Reviewer decision</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+              <button class="btn btn-primary" data-d="product">Proceed → Build</button>
+              <button class="btn" data-d="validate_first">Validate first</button>
+              <button class="btn" data-d="do_not_proceed">Do not proceed</button>
+            </div>
+            <button class="btn btn-ghost" id="drawerDelete" style="margin-top:10px;color:var(--red)">Delete idea</button>
+          </div>
+        </aside>`;
+      document.getElementById("scrim").addEventListener("click", closeReview);
+      document.getElementById("closeReview").addEventListener("click", closeReview);
+      document.getElementById("drawerDelete").addEventListener("click", () => { closeReview(); deleteIdea(idea.id); });
+      document.querySelectorAll("#overlay button[data-d]").forEach((b) => b.addEventListener("click", () => decide(idea, b.dataset.d)));
+      const eb = document.getElementById("editAssess"); if (eb) eb.addEventListener("click", enterEdit);
+      const ub = document.getElementById("unlockAssess"); if (ub) ub.addEventListener("click", () => { if (ensureToken()) openReview(id); });
+      document.querySelectorAll("#fpDialog [data-inline]").forEach((el) => {
+        let prev = el.value;
+        // Advance the baseline only AFTER the save resolves — on failure saveField
+        // reverts el.value to prevVal, so reading el.value post-await is correct either way.
+        el.addEventListener("change", async () => { await saveField(id, el.getAttribute("data-inline"), el.value, el, prev); prev = el.value; });
+      });
+      document.removeEventListener("keydown", trapKeys); document.addEventListener("keydown", trapKeys);
+      const dlg = document.getElementById("fpDialog");
+      if (dlg) dlg.focus();
+      if (moveContext) await enterEditCore();
+    }
+    function closeReview() {
+      document.removeEventListener("keydown", trapKeys);
+      document.getElementById("overlay").innerHTML = "";
+      moveContext = null;
+      // lastTrigger may be a card node detached by a render() during save/move —
+      // fall back to a live card so keyboard/SR focus never lands on <body>.
+      if (lastTrigger && lastTrigger.isConnected && lastTrigger.focus) lastTrigger.focus();
+      else focusAfterBoardChange();
+    }
+
+    // ── Edit assessment · move cards · requirement gating (token-gated) ─
+    let curIdea = null, curAssessment = null;
+    let moveContext = null;   // set when a blocked drag routes into the edit form
+    let justDragged = false;  // suppresses the click that would follow a drag
+    const ENUM_OPTS = { intent_type: L.intent, confidence: L.confidence, decision: L.decision };
+
+    function sectionLabel(key) {
+      const s = (F.sections || []).find((x) => x.field === key);
+      return s ? s.label : key;
+    }
+    // What must be filled to ENTER a stage. Mirrors the app-assessment skill:
+    // Opportunity/Intent/Confidence/Scope/Asset value/Decision are always
+    // required; Commercial + Governance only when it's client-facing or a full
+    // business case. WIP additionally needs a go-ahead Decision.
+    function unmetForData(data, targetKey) {
+      const filled = data.filled || {};
+      const clientFacing = ["client", "standalone", "product"].includes(data.intent);
+      const fullCase = data.confidence === "business_case";
+      const core = ["opportunity", "intent_type", "confidence", "scope", "asset_value", "decision"];
+      const withCG = core.concat(["commercial", "governance"]);
+      const goDecisions = ["proceed", "product", "client_only", "experiment"];
+      const need = (keys) => keys.filter((k) => !filled[k]).map(sectionLabel);
+      switch (targetKey) {
+        case "inbox": return [];
+        case "assessment": return need(["opportunity"]);
+        case "pending_validation":
+        case "rejected": return need(["decision"]);
+        case "review": return need((clientFacing || fullCase) ? withCG : core);
+        default: { // build / harden / business / launch / live
+          const miss = need((clientFacing || fullCase) ? withCG : core);
+          // Only flag the go-ahead separately when a Decision exists but isn't a
+          // go (e.g. "Do not proceed"); a missing Decision is already listed.
+          if (data.decision && !goDecisions.includes(data.decision)) miss.push("a go-ahead Decision");
+          return miss;
+        }
+      }
+    }
+
+    async function enterEditCore() {
+      if (!curIdea) return;
+      if (LIVE) {
+        const token = ensureToken(); if (!token) return;
+        // Fetch the full assessment if we don't have it. Never render the edit form
+        // on data that failed to load — an all-empty form would wipe the real prose on Save.
+        if (curAssessment == null || !Object.keys(curAssessment).length) {
+          let ok = false;
+          try {
+            const r = await fetch(F.workerUrl + "/api/idea?id=" + encodeURIComponent(curIdea.id), { headers: { Authorization: "Bearer " + token } });
+            if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Reviewer token rejected — try again."); return; }
+            if (r.ok) { const data = await r.json().catch(() => null); if (data && data.idea) { curAssessment = data.idea.assessment || {}; ok = true; } }
+          } catch (e) {}
+          if (!ok) { alert("Couldn't load the assessment — please try again."); return; }
+        }
+      }
+      renderEditForm();
+    }
+    async function enterEdit() { moveContext = null; await enterEditCore(); }
+    async function openMissing(idea, targetKey, missing) { moveContext = { target: targetKey, missing }; await openReview(idea.id); }
+
+    function editInput(sec) {
+      const f = sec.field;
+      const cur = (curAssessment && curAssessment[f] != null) ? curAssessment[f] : "";
+      if (ENUM_OPTS[f]) {
+        const opts = ['<option value="">— not set —</option>'].concat(
+          Object.keys(ENUM_OPTS[f]).map((k) => `<option value="${esc(k)}"${k === cur ? " selected" : ""}>${esc(ENUM_OPTS[f][k])}</option>`)
+        ).join("");
+        return `<select class="fp-edit-input" data-f="${esc(f)}">${opts}</select>`;
+      }
+      return `<textarea class="fp-edit-input" data-f="${esc(f)}" rows="3" placeholder="${esc(sec.hint || "")}">${esc(cur)}</textarea>`;
+    }
+
+    function renderEditForm() {
+      const dlg = document.getElementById("fpDialog");
+      if (!dlg) return;
+      const mv = moveContext;
+      const targetLabel = mv ? (((F.stages.find((s) => s.key === mv.target)) || {}).label || mv.target) : null;
+      const banner = mv
+        ? `<div class="fp-move-banner" role="alert" tabindex="-1">⚠ To move to <b>${esc(targetLabel)}</b>, complete: ${esc(mv.missing.join(", "))}. Fill these in and save.</div>`
+        : "";
+      const stageVal = mv ? mv.target : (curIdea.stage || "");
+      const stageOpts = F.stages.map((s) => `<option value="${esc(s.key)}"${s.key === stageVal ? " selected" : ""}>${esc(s.label)}</option>`).join("");
+      // Build status (PO / dev status / reason) is edited inline in the read view;
+      // this form is for the assessment prose + stage. Decision is set via the buttons.
+      const fields = SUMMARY_SECTIONS.map((sec, i) =>
+        `<div class="fp-edit-field"><label>${i + 1} · ${esc(sec.label)}</label>${editInput(sec)}</div>`).join("");
+      dlg.querySelector(".fp-drawer-body").innerHTML =
+        `${banner}
+         <div class="fp-drawer-sec"><div class="fp-drawer-label">Stage</div>
+           <select class="fp-edit-input" data-f="__stage">${stageOpts}</select></div>
+         <div class="fp-drawer-sec"><div class="fp-drawer-label">Edit assessment</div>${fields}</div>`;
+      const saveLabel = mv ? `Save & move to ${esc(targetLabel)}` : "Save changes";
+      dlg.querySelector(".fp-drawer-foot").innerHTML =
+        `<div class="fp-edit-actions"><button class="btn btn-primary" id="saveEdit" type="button">${saveLabel}</button><button class="btn btn-ghost" id="cancelEdit" type="button">Cancel</button></div>`;
+      document.getElementById("saveEdit").addEventListener("click", saveEdit);
+      document.getElementById("cancelEdit").addEventListener("click", () => { moveContext = null; openReview(curIdea.id); });
+      const first = (mv && dlg.querySelector(".fp-move-banner")) || dlg.querySelector(".fp-edit-input"); if (first) first.focus();
+    }
+
+    async function saveEdit() {
+      if (!curIdea) return;
+      const dlg = document.getElementById("fpDialog");
+      const assessment = {}; let stageSel = null, po, devStatus, devReason;
+      dlg.querySelectorAll("[data-f]").forEach((el) => {
+        const f = el.getAttribute("data-f");
+        const v = (el.value || "").trim();
+        if (f === "__stage") stageSel = v;
+        else if (f === "__po") po = v;
+        else if (f === "__dev_status") devStatus = v;
+        else if (f === "__dev_reason") devReason = v;
+        else assessment[f] = v;
+      });
+
+      // Gate ANY stage change — drag-driven OR via the Stage dropdown — against the
+      // target's entry requirements. The dropdown must not be a way around the gate.
+      let stageToSave = stageSel, blocked = false;
+      const target = moveContext ? moveContext.target : stageSel;
+      if (target && target !== (curIdea.stage || "inbox")) {
+        const data = { filled: {}, intent: assessment.intent_type, confidence: assessment.confidence, decision: curIdea.decision };
+        ["opportunity", "intent_type", "confidence", "commercial", "scope", "asset_value", "governance"]
+          .forEach((k) => { data.filled[k] = (assessment[k] || "").trim() !== ""; });
+        data.filled.decision = !!curIdea.decision; // Decision isn't edited in this form — read the recorded one
+        const stillMissing = unmetForData(data, target);
+        if (stillMissing.length) { blocked = true; moveContext = { target: target, missing: stillMissing }; stageToSave = curIdea.stage; }
+        else { stageToSave = target; }
+      }
+
+      const btn = document.getElementById("saveEdit");
+      const label = btn ? btn.textContent : "";
+      const fail = (m) => { alert(m); if (btn) { btn.disabled = false; btn.textContent = label; } };
+      const id = curIdea.id;
+
+      if (!LIVE) {
+        // Demo mode — mutate the in-memory idea; no backend.
+        const idea = ideas.find((i) => i.id === id);
+        if (idea) {
+          idea.stage = stageToSave; idea.updated_at = "just now";
+          if (assessment.intent_type) idea.intent = assessment.intent_type;
+          if (assessment.confidence) idea.confidence = assessment.confidence;
+          if (assessment.decision) idea.decision = assessment.decision;
+          if (po !== undefined) idea.product_owner = po || null;
+          if (devStatus !== undefined) idea.dev_status = devStatus || null;
+          if (devReason !== undefined) idea.dev_status_reason = devReason || null;
+          idea.filled = idea.filled || {};
+          ["opportunity", "intent_type", "confidence", "commercial", "scope", "asset_value", "governance"]
+            .forEach((k) => { idea.filled[k] = (assessment[k] || "").trim() !== ""; });
+        }
+        if (!blocked) moveContext = null;
+        render();
+        await openReview(id);
+        return;
+      }
+
+      const token = ensureToken(); if (!token) return;
+      if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
+      try {
+        const payload = { ideaId: id, assessment, stage: stageToSave };
+        if (po !== undefined) payload.product_owner = po;
+        if (devStatus !== undefined) payload.dev_status = devStatus;
+        if (devReason !== undefined) payload.dev_status_reason = devReason;
+        const r = await fetch(F.workerUrl + "/api/update", {
+          method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
+          body: JSON.stringify(payload),
+        });
+        if (r.status === 401) { localStorage.removeItem("fp_review_token"); fail("Reviewer token rejected — try again."); return; }
+        if (!r.ok) { fail("Couldn't save — please retry."); return; }
+      } catch (e) { fail("Couldn't save — network error."); return; }
+
+      curAssessment = null; // force a refetch of the merged assessment on reopen
+      await load();
+      if (blocked) { await openReview(id); }        // moveContext still set → reopens with remaining items
+      else { moveContext = null; await openReview(id); }
+    }
+
+    // ── Move a card (drag-drop drop handler, requirement-gated) ───────
+    function attemptMove(id, targetKey) {
+      const idea = ideas.find((i) => i.id === id);
+      if (!idea || !targetKey || (idea.stage || "inbox") === targetKey) return;
+      const missing = unmetForData(idea, targetKey);
+      if (missing.length) { openMissing(idea, targetKey, missing); return; }
+      moveCard(idea, targetKey);
+    }
+    async function moveCard(idea, targetKey) {
+      const prev = idea.stage;
+      if (!LIVE) { idea.stage = targetKey; idea.updated_at = "just now"; render(); return; }
+      const token = ensureToken(); if (!token) return;
+      idea.stage = targetKey; render(); // optimistic
+      try {
+        const r = await fetch(F.workerUrl + "/api/update", {
+          method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
+          body: JSON.stringify({ ideaId: idea.id, stage: targetKey }),
+        });
+        if (r.status === 401) { localStorage.removeItem("fp_review_token"); throw new Error("token"); }
+        if (!r.ok) throw new Error("http");
+        await load(); // server is the source of truth (catches concurrent edits)
+      } catch (e) {
+        idea.stage = prev; render(); // revert
+        alert(e && e.message === "token" ? "Reviewer token rejected — try again." : "Couldn't move the card — reverted.");
+      }
+    }
+
+    // ── Inline field save (Product Owner / Developer status / reason) ─────
+    function refreshDrawerPill(idea) {
+      const h = document.querySelector("#fpDialog .fp-drawer-head .pill");
+      if (h && idea) h.outerHTML = devStatusHtml(idea);
+    }
+    async function saveField(id, field, value, el, prevVal) {
+      const idea = ideas.find((i) => i.id === id);
+      if (!LIVE) { if (idea) idea[field] = value || null; render(); refreshDrawerPill(idea); return; }
+      const token = ensureToken();
+      if (!token) { if (el) el.value = prevVal; return; }   // no token → revert the control
+      if (el) el.disabled = true;
+      try {
+        const body = { ideaId: id }; body[field] = value;
+        const r = await fetch(F.workerUrl + "/api/update", {
+          method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
+          body: JSON.stringify(body),
+        });
+        if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Reviewer token rejected — try again."); if (el) el.value = prevVal; return; }
+        if (!r.ok) { alert("Couldn't save — please retry."); if (el) el.value = prevVal; return; }
+        if (idea) idea[field] = value || null;
+        render();                 // reflect on the card behind the drawer
+        refreshDrawerPill(idea);  // and on the drawer header pill (dev status)
+      } catch (e) { alert("Couldn't save — network error."); if (el) el.value = prevVal; }
+      finally { if (el) el.disabled = false; }
+    }
+
+    // ── Pointer drag-and-drop (5px activation so click-to-open survives) ─
+    let dnd = null;
+    function enableDnD() {
+      if (!("PointerEvent" in window)) return;
+      document.querySelectorAll("#cols .fp-card[data-id]").forEach((card) => {
+        card.addEventListener("pointerdown", onCardPointerDown);
+      });
+    }
+    function onCardPointerDown(e) {
+      if (dnd) return;                        // ignore a second pointer while a gesture is in flight
+      if (e.button && e.button !== 0) return;
+      const card = e.currentTarget;
+      dnd = { id: card.dataset.id, card: card, sx: e.clientX, sy: e.clientY, dragging: false, clone: null, over: null, offX: 0, offY: 0 };
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp, { once: true });
+      window.addEventListener("pointercancel", onPointerCancel, { once: true });
+    }
+    function onPointerMove(e) {
+      if (!dnd) return;
+      if (!dnd.dragging) {
+        if (Math.hypot(e.clientX - dnd.sx, e.clientY - dnd.sy) < 5) return;
+        beginDrag(e);
+      }
+      dnd.clone.style.left = (e.clientX - dnd.offX) + "px";
+      dnd.clone.style.top = (e.clientY - dnd.offY) + "px";
+      const col = columnUnder(e.clientX, e.clientY);
+      if (col !== dnd.over) {
+        if (dnd.over) dnd.over.classList.remove("fp-col-over");
+        dnd.over = col;
+        if (col) col.classList.add("fp-col-over");
+      }
+    }
+    function beginDrag(e) {
+      dnd.dragging = true; justDragged = true;
+      try { dnd.card.setPointerCapture(e.pointerId); } catch (_) {} // keep events flowing off-window / mid-scroll
+      const r = dnd.card.getBoundingClientRect();
+      dnd.offX = e.clientX - r.left; dnd.offY = e.clientY - r.top;
+      const c = dnd.card.cloneNode(true);
+      c.classList.add("fp-drag-ghost");
+      c.style.width = r.width + "px";
+      c.style.left = r.left + "px"; c.style.top = r.top + "px";
+      document.body.appendChild(c);
+      dnd.clone = c;
+      dnd.card.classList.add("fp-card-dragging");
+      document.body.classList.add("fp-dragging");
+    }
+    function columnUnder(x, y) {
+      const el = document.elementFromPoint(x, y);
+      return el ? el.closest("#cols .fp-col[data-stage]") : null;
+    }
+    // One teardown for every way a gesture can end (drop, cancel, lost pointer).
+    function cleanupDrag(s) {
+      window.removeEventListener("pointermove", onPointerMove);
+      if (!s) return;
+      if (s.clone) s.clone.remove();
+      if (s.card) s.card.classList.remove("fp-card-dragging");
+      document.body.classList.remove("fp-dragging");
+      if (s.over) s.over.classList.remove("fp-col-over");
+      if (s.dragging) setTimeout(() => { justDragged = false; }, 0); // clear right after the synthetic click, not 250ms later
+    }
+    function onPointerUp(e) {
+      window.removeEventListener("pointercancel", onPointerCancel);
+      const s = dnd; dnd = null;
+      if (!s) return;
+      const dropped = s.dragging;                                    // below 5px → a click; let openReview fire
+      const col = dropped ? columnUnder(e.clientX, e.clientY) : null;
+      cleanupDrag(s);
+      if (dropped && col) attemptMove(s.id, col.getAttribute("data-stage"));
+    }
+    function onPointerCancel() {
+      window.removeEventListener("pointerup", onPointerUp);
+      const s = dnd; dnd = null;
+      cleanupDrag(s);  // a cancelled gesture must not drop the card
+    }
+
+    async function decide(idea, decision) {
+      const stageFor = { do_not_proceed: "rejected", validate_first: "pending_validation" };
+      const statusFor = { do_not_proceed: "declined", validate_first: "in_review" };
+      if (LIVE) {
+        const token = ensureToken(); if (!token) return;
+        try {
+          const r = await fetch(F.workerUrl + "/api/decision", {
+            method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
+            body: JSON.stringify({ ideaId: idea.id, decision }),
+          });
+          if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Reviewer token rejected — try again."); return; }
+          if (!r.ok) { alert("Couldn't save the decision — please retry."); return; }
+        } catch (e) { alert("Couldn't save the decision — network error."); return; }
+        closeReview(); await load();
+      } else {
+        idea.decision = decision;
+        idea.status = statusFor[decision] || "validated";
+        idea.stage = stageFor[decision] || "build";
+        idea.updated_at = "just now";
+        closeReview(); render();
+      }
+    }
+    function ensureToken() {
+      let t = localStorage.getItem("fp_review_token");
+      if (!t) { t = prompt("Reviewer token:"); if (t) localStorage.setItem("fp_review_token", t.trim()); }
+      return t && t.trim();
+    }
+
+    load();
+  </script>
+</body>
+</html>
