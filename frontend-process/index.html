@@ -341,7 +341,9 @@
       const ub = document.getElementById("unlockAssess"); if (ub) ub.addEventListener("click", () => { if (ensureToken()) openReview(id); });
       document.querySelectorAll("#fpDialog [data-inline]").forEach((el) => {
         let prev = el.value;
-        el.addEventListener("change", () => { saveField(id, el.getAttribute("data-inline"), el.value, el, prev); prev = el.value; });
+        // Advance the baseline only AFTER the save resolves — on failure saveField
+        // reverts el.value to prevVal, so reading el.value post-await is correct either way.
+        el.addEventListener("change", async () => { await saveField(id, el.getAttribute("data-inline"), el.value, el, prev); prev = el.value; });
       });
       document.removeEventListener("keydown", trapKeys); document.addEventListener("keydown", trapKeys);
       const dlg = document.getElementById("fpDialog");
