@@ -7,7 +7,7 @@
  *     "https://idea-intake.<your-subdomain>.workers.dev") and both pages go live.
  */
 window.FP = {
-  workerUrl: "", // live Worker (preview only; keep "" in commits)
+  workerUrl: "https://idea-intake.coreshifthq.workers.dev", // live idea-intake Worker — the wiki board is the live deployment
 
   // The lifecycle stages (board columns), in order. `role` is the owning role.
   // `view` splits them: "pipeline" (new-idea intake: capture→assess→decide) and
