@@ -109,7 +109,9 @@ textarea.fp-edit-input { min-height: 64px; }
 .fp-card { cursor: grab; }
 body.fp-dragging, body.fp-dragging .fp-card { cursor: grabbing; user-select: none; }
 .fp-card-dragging { opacity: .38; }
-.fp-drag-ghost { position: fixed; z-index: 60; margin: 0; pointer-events: none; transform: rotate(1.5deg); opacity: .95; box-shadow: 0 14px 32px -8px rgba(15,23,42,.42); }
+/* .fp-card.fp-drag-ghost (0,2,0) must out-specify the later `.fp-card { position: relative }` (0,1,0),
+   or the clone stays position:relative → becomes an in-flow flex child of body → the board collapses mid-drag. */
+.fp-card.fp-drag-ghost { position: fixed !important; z-index: 60; margin: 0; pointer-events: none; transform: rotate(1.5deg); opacity: .95; box-shadow: 0 14px 32px -8px rgba(15,23,42,.42); }
 .fp-col-over .fp-cards { outline: 2px dashed var(--teal); outline-offset: 3px; border-radius: 10px; background: var(--teal-light); }
 /* "What's missing" banner in the move-blocked edit form */
 .fp-move-banner { background: var(--amber-light); border: 1px solid #FDE68A; color: #92400E; border-radius: 10px; padding: 10px 12px; font-size: 12.5px; line-height: 1.45; margin-bottom: 14px; }
