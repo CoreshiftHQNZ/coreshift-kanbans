@@ -24,6 +24,8 @@
 - **Trial + billing gate** `shipped` — 14-day trial from first publish; cancelled/expired sites serve a calm offline page from the renderer.
 - **Billing hardened + self-serve portal** `launch` `shipped` — Stripe webhook now has a replay guard, idempotent event dedup, persists the subscription id, and handles payment-failed/succeeded. Customers get a "Manage billing" button (Stripe portal) to update card / cancel themselves. Real end-to-end sale still to be run in the rehearsal.
 - **Legal & trust pages** `launch` `shipped` — Terms, Privacy (NZ Privacy Act + real sub-processors), and a plain-English Refunds policy, served at /terms, /privacy, /refunds and linked from the footer. Pending a final human/legal review.
+- **Custom-domain lifecycle** `launch` `shipped` — Full flow now: connect (custom hostname) → auto-poll status (pending→live once Cloudflare issues SSL) → per-domain remove → teardown-on-cancel. Renderer already serves active custom domains. Code live; needs Cloudflare-for-SaaS enabled + CF secrets to test end-to-end (see Blocked).
+- **DB baseline in source control** `launch` `infra` `shipped` — Captured the 20 prod tables + constraints + RLS + all policies + triggers into a re-runnable baseline migration; functions pointered to prod/0005 with a `supabase db dump` note for byte-exactness. Closes the "schema only in prod" gap.
 - **Marketing site + signup funnel** `shipped` — coreshift.page carries a pasted URL through sign-in into the "bring my site" onboarding.
 - **CI auto-deploy** `infra` `shipped` — Push to main deploys the dashboard, renderer, marketing, and edge functions to Cloudflare/Supabase, gated on typecheck + tests + a prod smoke test.
 - **P0: content-write RPCs locked down** `security` `shipped` — `publish_site`/`save_draft`/`rollback_site`/`provision_site` now enforce owner checks and are no longer callable by `anon`. Hotfixed in prod + codified in PR #7.
@@ -32,8 +34,7 @@
 
 ## 🟡 In Progress
 
-- **Custom domains — Cloudflare for SaaS** `launch` — Decided IN for launch. Create-hostname flow + renderer resolution already exist; building the lifecycle now (status polling pending→active, remove, teardown-on-cancel, guiding UI). Needs Cloudflare-for-SaaS enabled on the zone + the CF secrets confirmed (see Blocked).
-- **Email deliverability** `launch` `infra` — Postmark is wired for leads, auth, support and invites, but there is no confirmation any email has actually been delivered; it should fail loudly, not silently. Blocked on the prod-config check below.
+- **Email deliverability** `launch` `infra` — Postmark is wired for leads, auth, support and invites, but there is no confirmation any email has actually been delivered; it should fail loudly, not silently. Blocked on the prod-config check below — then Claude runs a live send test.
 - **Magic-link login** `auth` — Built, but has never completed a real round trip in production (depends on the Postmark auth hook above).
 - **Team invites / agency linking** `auth` — Partly wired; several bindings and the invite-accept surface still need connecting and one real run-through.
 - **Two-way support chat** `enhancement` — Customer → team works; the team → customer reply and the customer email notification still need to be delivered (the widget already promises "we'll email you").
@@ -44,10 +45,9 @@
 - **2️⃣ Go live on Stripe: keys + webhook + one real sale** `launch` `billing` `needs-ricky` — Switch to live keys, set the `checkout.session.completed` signing secret, then run one real card through the full trial→pay path before charging anyone.
 - **3️⃣ Enable Cloudflare for SaaS + confirm domain secrets** `launch` `needs-ricky` — Turn on Custom Hostnames on the coreshift.page zone, set the fallback origin to `sites.coreshift.page`, and confirm the edge secrets: `CLOUDFLARE_API_TOKEN` (cert edit scope), `CLOUDFLARE_ZONE_ID`, `CUSTOM_DOMAIN_TARGET`. Unblocks the custom-domains build.
 
-## 🔵 This Week — launch wave (Claude can drive)
+## 🔵 This Week — launch wave
 
-- **Reconcile live DB → migrations** `launch` `infra` — Capture the 19 prod tables + RPCs + RLS into `saas-platform/db/migrations/` so the source is the truth and a rebuild is safe before real customers depend on it.
-- **Go-live dress rehearsal** `launch` — One clean end-to-end run as a brand-new customer: sign up → generate/edit a site → publish → confirm the lead email lands → hit the trial gate → pay → confirm the site stays live. Fix whatever the rehearsal surfaces.
+- **Go-live dress rehearsal** `launch` — The last step. One clean end-to-end run as a brand-new customer: sign up → generate/edit a site → publish → confirm the lead email lands → connect a custom domain → hit the trial gate → pay → confirm the site stays live. Fix whatever it surfaces. Runs once the three gates above are cleared (test mode first, then flip Stripe live).
 
 ## ⚪ Backlog
 
