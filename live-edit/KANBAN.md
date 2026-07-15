@@ -22,6 +22,8 @@
 - **Telemetry** `shipped` — Page-view counting, dashboard error capture, and an editor "ask for a change" feed — all live with real data.
 - **Auth + accounts** `shipped` — Google sign-in with automatic personal-account + owner-membership provisioning.
 - **Trial + billing gate** `shipped` — 14-day trial from first publish; cancelled/expired sites serve a calm offline page from the renderer.
+- **Billing hardened + self-serve portal** `launch` `shipped` — Stripe webhook now has a replay guard, idempotent event dedup, persists the subscription id, and handles payment-failed/succeeded. Customers get a "Manage billing" button (Stripe portal) to update card / cancel themselves. Real end-to-end sale still to be run in the rehearsal.
+- **Legal & trust pages** `launch` `shipped` — Terms, Privacy (NZ Privacy Act + real sub-processors), and a plain-English Refunds policy, served at /terms, /privacy, /refunds and linked from the footer. Pending a final human/legal review.
 - **Marketing site + signup funnel** `shipped` — coreshift.page carries a pasted URL through sign-in into the "bring my site" onboarding.
 - **CI auto-deploy** `infra` `shipped` — Push to main deploys the dashboard, renderer, marketing, and edge functions to Cloudflare/Supabase, gated on typecheck + tests + a prod smoke test.
 - **P0: content-write RPCs locked down** `security` `shipped` — `publish_site`/`save_draft`/`rollback_site`/`provision_site` now enforce owner checks and are no longer callable by `anon`. Hotfixed in prod + codified in PR #7.
@@ -30,8 +32,8 @@
 
 ## 🟡 In Progress
 
-- **Billing end-to-end** `billing` — Every path is built and deployed, but no real payment has gone through Stripe in prod yet; the webhook also needs replay/idempotency guards and to persist the subscription id.
-- **Email deliverability** `infra` — Postmark is wired for leads, auth, support and invites, but there is no confirmation any email has actually been delivered; it should fail loudly, not silently.
+- **Custom domains — Cloudflare for SaaS** `launch` — Decided IN for launch. Create-hostname flow + renderer resolution already exist; building the lifecycle now (status polling pending→active, remove, teardown-on-cancel, guiding UI). Needs Cloudflare-for-SaaS enabled on the zone + the CF secrets confirmed (see Blocked).
+- **Email deliverability** `launch` `infra` — Postmark is wired for leads, auth, support and invites, but there is no confirmation any email has actually been delivered; it should fail loudly, not silently. Blocked on the prod-config check below.
 - **Magic-link login** `auth` — Built, but has never completed a real round trip in production (depends on the Postmark auth hook above).
 - **Team invites / agency linking** `auth` — Partly wired; several bindings and the invite-accept surface still need connecting and one real run-through.
 - **Two-way support chat** `enhancement` — Customer → team works; the team → customer reply and the customer email notification still need to be delivered (the widget already promises "we'll email you").
@@ -40,13 +42,11 @@
 
 - **1️⃣ Confirm email delivery in prod** `launch` `needs-ricky` — Verify the Postmark token/sender is live and a real lead / login / support email actually arrives (not just "sent"). Everything downstream depends on this — a site whose leads don't land is worthless. First domino.
 - **2️⃣ Go live on Stripe: keys + webhook + one real sale** `launch` `billing` `needs-ricky` — Switch to live keys, set the `checkout.session.completed` signing secret, then run one real card through the full trial→pay path before charging anyone.
-- **3️⃣ Custom domains: decide the path** `launch` `needs-ricky` — Either commit to finishing activation (Cloudflare for SaaS) as the paid upsell, or cut it from the pitch for v1 so we don't promise what doesn't work. A decision, not code.
+- **3️⃣ Enable Cloudflare for SaaS + confirm domain secrets** `launch` `needs-ricky` — Turn on Custom Hostnames on the coreshift.page zone, set the fallback origin to `sites.coreshift.page`, and confirm the edge secrets: `CLOUDFLARE_API_TOKEN` (cert edit scope), `CLOUDFLARE_ZONE_ID`, `CUSTOM_DOMAIN_TARGET`. Unblocks the custom-domains build.
 
 ## 🔵 This Week — launch wave (Claude can drive)
 
-- **Webhook robustness + billing safety** `launch` `billing` — Replay/timestamp guard, event dedup, persist `stripe_subscription_id`, handle `invoice.payment_failed`, and wire the self-serve billing portal (cancel / update card) so paying customers aren't trapped.
-- **Legal + trust pages** `launch` — Terms of Service, Privacy Policy, and a refund/cancellation policy linked from the marketing site and checkout (required to take payments responsibly). Claude drafts, Ricky reviews.
-- **Reconcile live DB → migrations** `launch` `infra` — Capture the prod tables + RPCs into `saas-platform/db/migrations/` so the source is the truth and a rebuild is safe before real customers depend on it.
+- **Reconcile live DB → migrations** `launch` `infra` — Capture the 19 prod tables + RPCs + RLS into `saas-platform/db/migrations/` so the source is the truth and a rebuild is safe before real customers depend on it.
 - **Go-live dress rehearsal** `launch` — One clean end-to-end run as a brand-new customer: sign up → generate/edit a site → publish → confirm the lead email lands → hit the trial gate → pay → confirm the site stays live. Fix whatever the rehearsal surfaces.
 
 ## ⚪ Backlog
