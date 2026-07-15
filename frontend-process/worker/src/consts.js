@@ -16,3 +16,6 @@ export const MOVE_STAGES = STAGES.filter((s) => s !== "parked" && s !== "decline
 export const STATUSES = ["draft", "in_review", "validated", "declined"];
 export const DEV_STATUSES = ["in_progress", "on_hold", "blocked", "at_risk", "done"];
 export const WIP_STAGES = ["build", "harden", "business", "launch", "live"];
+// Pre-build lanes — the assessment step. A card here can be (re-)opened into the intake
+// conversation (resumable via /api/draft + /api/chat), unauthenticated like drafts.
+export const PREBUILD_STAGES = ["inbox", "assessment", "review", "pending_validation", "rejected"];

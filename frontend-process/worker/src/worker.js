@@ -22,7 +22,7 @@ import { applyUpdates } from "./publish.js";
 import { ingest } from "./ingest.js";
 import { getLatestStandup } from "./fireflies.js";
 import { validateAttachments, toContentBlock, toMeta, base64ToBytes } from "./attachments.js";
-import { ENUM_COLUMNS, ENUM_VALUES, STAGES, STATUSES, DEV_STATUSES, WIP_STAGES } from "./consts.js";
+import { ENUM_COLUMNS, ENUM_VALUES, STAGES, STATUSES, DEV_STATUSES, WIP_STAGES, PREBUILD_STAGES } from "./consts.js";
 
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 // Assessment jsonb keys the Worker persists from update_assessment. The commissioned
@@ -139,10 +139,11 @@ async function handleChat(request, env, cors) {
   const hasUserTurn = clientMsgs.some((m) => m && m.role === "user" && m.text);
   const hasAttachments = Array.isArray(body.attachments) && body.attachments.length > 0;
   let idea = body.ideaId ? await getIdea(env, body.ideaId) : null;
-  // Only resume drafts. /api/chat is unauthenticated, so a bare ideaId must never
-  // read or mutate a submitted/live idea (its prose is otherwise review-token gated
-  // via /api/idea). A non-draft id falls through to a fresh draft.
-  if (idea && !["inbox", "assessment"].includes(idea.stage || "inbox")) idea = null;
+  // Resume any PRE-BUILD card (the assessment step): a fresh draft OR a card a reviewer
+  // re-opened to re-assess (Inbox/Assessment/Review/Pending Validation/Rejected). A card
+  // past assessment (WIP/Live/Archived) is never resumed/mutated by a bare ideaId here —
+  // its prose stays review-token gated via /api/idea.
+  if (idea && !PREBUILD_STAGES.includes(idea.stage || "inbox")) idea = null;
   // Intake mode. For an EXISTING draft the mode comes from stored state ONLY (never
   // the request), so a crafted body.mode can't flip a standard draft to commissioned
   // and push it past the reviewer gate into Build. body.mode is honoured only when
@@ -297,6 +298,14 @@ async function handleChat(request, env, cors) {
   } else if (submitted) {
     patch.status = "in_review";
     patch.stage = "review";
+    // Re-submitting a re-opened card (incl. a revived Rejected/Pending Validation one)
+    // goes back for a FRESH review — clear the prior reviewer verdict so it doesn't land
+    // in Review wearing an old "Do not proceed"/"Validate first" chip + stale reviewer.
+    // Keep a decision the ideator set THIS conversation; otherwise clear a stale one.
+    patch.reviewed_by = null;
+    patch.reviewed_at = null;
+    patch.decision_note = null;
+    if (patch.decision === undefined) { patch.decision = null; delete assessment.decision; }
   } else if (["inbox", "assessment"].includes(idea.stage || "inbox")) {
     // While drafting: an untitled idea stays in Inbox; once it has a real title
     // it surfaces in Assessment. Never auto-touch a card already past assessment.
@@ -371,11 +380,11 @@ async function handleDraft(request, env, cors, url) {
   const id = url.searchParams.get("id");
   if (!id) return json({ error: "id required" }, 400, cors);
   const idea = await getIdea(env, id);
-  // Resumable = anything still in the Inbox/Assessment stage (a fresh draft OR a card
-  // a reviewer moved back to re-assess). These lanes ARE the assessment step, so the
-  // intake conversation is the right thing to open. Anything past Assessment
-  // (review/decided/WIP) stays off-limits — its prose is review-token gated via /api/idea.
-  if (!idea || !["inbox", "assessment"].includes(idea.stage || "inbox")) {
+  // Resumable = any PRE-BUILD card (Inbox/Assessment/Review/Pending Validation/Rejected)
+  // — these lanes ARE the assessment step, so the intake conversation is the right thing
+  // to (re-)open. Anything past assessment (WIP/Live/Archived) stays off-limits — its
+  // prose is review-token gated via /api/idea.
+  if (!idea || !PREBUILD_STAGES.includes(idea.stage || "inbox")) {
     return json({ error: "Not open for assessment" }, 404, cors);
   }
   return json({ idea: {
