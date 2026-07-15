@@ -24,14 +24,17 @@ window.FP = {
     { key: "business",   label: "Business & Governance", role: "Commercial",    gate: "Business case + governance signed",            view: "wip" },
     { key: "launch",     label: "Launch Readiness",      role: "Launch",        gate: "Launch / handover ready",                      view: "wip" },
     { key: "live",       label: "Live",                  role: "—",             gate: "Shipped / in production",                      view: "wip" },
+    // Archived lane (own view). Uses the existing `parked` stage value under the hood.
+    { key: "parked",     label: "Archived",              role: "—",             gate: "Shelved — restore or send to validation",      view: "archived" },
   ],
   // Approval outcomes now have their own Pipeline columns (Pending Validation /
   // Rejected), so there's no separate off-board section.
   offBoard: [],
-  // The two board views (tab toggle). Split per the 2026-07-13 stand-up.
+  // The board views (tab toggle). Split per the 2026-07-13 stand-up; Archived added later.
   views: [
     { key: "pipeline", label: "Idea Pipeline",     sub: "capture · assess · decide" },
     { key: "wip",      label: "Work in Progress",  sub: "build → live" },
+    { key: "archived", label: "Archived",          sub: "shelved projects" },
   ],
 
   // The intake conversation's three visible phases (the plugin, on the web).

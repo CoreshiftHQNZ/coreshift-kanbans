@@ -57,7 +57,8 @@
     let view = "pipeline"; // "pipeline" (inbox/assessment/review) or "wip" (build→live)
     const VIEW_META = {
       pipeline: { title: "Coreshift Idea Pipeline", desc: "New ideas land here — captured, assessed, then a go/no-go decision. Approved ideas cross the governance gate into Work in Progress." },
-      wip:      { title: "Coreshift — Work in Progress", desc: "Approved projects moving from build to live. The build engine (the plugin) runs in Build; parked & declined sit off-board." },
+      wip:      { title: "Coreshift — Work in Progress", desc: "Approved projects moving from build to live. The build engine (the plugin) runs in Build." },
+      archived: { title: "Coreshift — Archived", desc: "Shelved projects, kept as a record. Open one to restore it to its previous lane or send it to validation." },
     };
 
     document.getElementById("modeBadge").innerHTML = LIVE ? "" : '<span class="fp-badge-demo">Demo data</span>';
@@ -129,8 +130,11 @@
     function cardHtml(idea) {
       const wip = isWip(idea.stage);
       const st = idea.status || "draft";
-      // WIP cards show the developer status (RAG) instead of the redundant "Validated" pill.
-      const pill = wip ? devStatusHtml(idea) : `<span class="pill pill-${st}">${esc(L.status[st] || st)}</span>`;
+      // Archived cards get a neutral "Archived" pill; WIP cards show the developer
+      // status (RAG); everything else shows its review status.
+      const pill = idea.stage === "parked"
+        ? `<span class="pill pill-archived" title="Archived">Archived</span>`
+        : wip ? devStatusHtml(idea) : `<span class="pill pill-${st}">${esc(L.status[st] || st)}</span>`;
       const po = (wip && idea.product_owner) ? `<span class="fp-po" title="Product Owner">👤 ${esc(idea.product_owner)}</span>` : "";
       // Nudge on ideas still being assessed/reviewed that are missing a core section.
       const needsMore = idea.mode !== "commissioned" && (idea.stage === "assessment" || idea.stage === "review") && idea.filled
@@ -157,7 +161,7 @@
       const adder = s.key === "inbox" ? `<a class="fp-card new" href="submit.html"><b>＋ New idea</b><br/>start an assessment</a>` : "";
       const empty = (!inCol.length && s.key !== "inbox") ? `<div class="fp-empty">No ideas here yet</div>` : "";
       const cls = ["fp-col", s.divider ? "divider" : "", s.softdivider ? "softdivider" : "", isOff ? "offlane" : "", isOffStart ? "offstart" : ""].filter(Boolean).join(" ");
-      const gate = s.gate ? `<div class="fp-col-gate">Exit: ${esc(s.gate)}</div>` : "";
+      const gate = s.gate ? `<div class="fp-col-gate">${s.view === "archived" ? "" : "Exit: "}${esc(s.gate)}</div>` : "";
       return `<div class="${cls}" data-stage="${esc(s.key)}">
         <div class="fp-col-head">
           <div class="fp-col-title">${esc(s.label)}<span class="fp-col-count">${inCol.length}</span></div>
@@ -183,11 +187,12 @@
         b.addEventListener("click", () => { view = b.dataset.view; render(); }));
     }
     function renderLegend() {
-      const common = `<span><b>Chips:</b> Intent · Confidence · Decision</span><span><b>Click a card</b> to review &amp; decide</span>`;
       const extra = view === "pipeline"
-        ? `<span><b>Governance gate:</b> a decision + PIA/governance sends approved ideas into Work in Progress →</span><span><b>After the dashed line:</b> Pending Validation &amp; Rejected are outcome statuses, not active stages.</span>`
-        : `<span><b>Faint line:</b> the Build → Harden & Secure hand-off</span>`;
-      document.getElementById("legend").innerHTML = common + extra;
+        ? `<span><b>Click an Inbox/Assessment card</b> to open its assessment conversation.</span><span><b>Governance gate:</b> a decision + PIA/governance sends approved ideas into Work in Progress →</span><span><b>After the dashed line:</b> Pending Validation &amp; Rejected are outcome statuses.</span>`
+        : view === "archived"
+        ? `<span><b>Archived</b> projects are shelved, kept as a record.</span><span><b>Open one</b> to restore it to its previous lane or send it to validation.</span>`
+        : `<span><b>Click a card</b> to review &amp; set developer status.</span><span><b>Faint line:</b> the Build → Harden &amp; Secure hand-off.</span>`;
+      document.getElementById("legend").innerHTML = extra;
     }
     function render() {
       const meta = VIEW_META[view];
@@ -208,9 +213,13 @@
           if (justDragged) { justDragged = false; return; }
           moveContext = null;
           const idea = ideas.find((i) => i.id === c.dataset.id);
-          // A draft is still being written — clicking it resumes the intake conversation
-          // (not the read/decide drawer, which is for submitted cards).
-          if (idea && idea.status === "draft") { location.href = "submit.html?id=" + encodeURIComponent(idea.id); return; }
+          // Inbox/Assessment IS the assessment step, so clicking a card there opens the
+          // intake conversation (with its current assessment pre-loaded) — whether it's a
+          // fresh draft or a card a reviewer moved back to re-assess. Everything past
+          // Assessment opens the read/decide drawer instead.
+          if (idea && ["inbox", "assessment"].includes(idea.stage || "inbox")) {
+            location.href = "submit.html?id=" + encodeURIComponent(idea.id); return;
+          }
           openReview(c.dataset.id);
         };
         c.addEventListener("click", open);
@@ -247,6 +256,33 @@
         render();
       }
       focusAfterBoardChange();
+    }
+
+    // Archive / restore / send-to-validation from the drawer (token-gated /api/update).
+    async function postUpdate(id, body) {
+      if (!LIVE) {
+        const idea = ideas.find((i) => i.id === id);
+        if (idea) {
+          if (body.restore) { idea.stage = idea.archived_from || "review"; delete idea.archived_from; }
+          else if (body.stage) {
+            if (body.stage === "parked" && idea.stage !== "parked") idea.archived_from = idea.stage; // remember origin
+            else if (idea.stage === "parked" && body.stage !== "parked") delete idea.archived_from;    // leaving archive
+            idea.stage = body.stage;
+          }
+          idea.updated_at = "just now";
+        }
+        closeReview(); render(); return;
+      }
+      const token = ensureToken(); if (!token) return;
+      try {
+        const r = await fetch(F.workerUrl + "/api/update", {
+          method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
+          body: JSON.stringify({ ideaId: id, ...body }),
+        });
+        if (r.status === 401) { localStorage.removeItem("fp_review_token"); alert("Reviewer token rejected — try again."); return; }
+        if (!r.ok) { alert("Couldn't update — please retry."); return; }
+      } catch (e) { alert("Couldn't update — network error."); return; }
+      closeReview(); await load();
     }
 
     // ── Review overlay ────────────────────────────────────────────────
@@ -323,13 +359,15 @@
         ? `<div class="fp-drawer-sec"><div class="fp-drawer-label">${idea.stage === "rejected" ? "Reason not proceeding" : "On hold — reason"}</div><div class="fp-reason">${esc(idea.dev_status_reason)}</div></div>`
         : "";
       const fullLink = `<a class="fp-fulllink" href="assessment.html?id=${encodeURIComponent(idea.id)}">Read full assessment &amp; transcript →</a>`;
+      const isArchived = idea.stage === "parked";
+      const archFromLabel = idea.archived_from ? (((F.stages || []).find((s) => s.key === idea.archived_from) || {}).label || idea.archived_from) : "";
 
       document.getElementById("overlay").innerHTML = `
         <div class="fp-scrim" id="scrim"></div>
         <aside class="fp-drawer" id="fpDialog" role="dialog" aria-modal="true" aria-labelledby="fpDialogTitle" tabindex="-1">
           <button class="fp-drawer-close" id="closeReview" aria-label="Close">✕</button>
           <div class="fp-drawer-head">
-            ${wip ? devStatusHtml(idea) : `<span class="pill pill-${idea.status || "draft"}">${esc(L.status[idea.status] || idea.status || "draft")}</span>`}
+            ${isArchived ? `<span class="pill pill-archived" title="Archived">Archived</span>` : wip ? devStatusHtml(idea) : `<span class="pill pill-${idea.status || "draft"}">${esc(L.status[idea.status] || idea.status || "draft")}</span>`}
             <h2 id="fpDialogTitle" class="fp-drawer-title">${esc(idea.title)}</h2>
             <div class="fp-drawer-sub">${esc(idea.one_liner || "")}</div>
             <div class="fp-chips" style="margin-top:12px">${chips(idea)}</div>
@@ -347,19 +385,34 @@
             </div>
           </div>
           <div class="fp-drawer-foot">
+            ${isArchived ? `
+            <div class="fp-drawer-label">Archived</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+              <button class="btn btn-primary" id="restoreBtn">↩ Restore${archFromLabel ? " to " + esc(archFromLabel) : ""}</button>
+              <button class="btn" id="toValidationBtn">Send to validation</button>
+            </div>
+            <button class="btn btn-ghost" id="drawerDelete" style="margin-top:10px;color:var(--red)">Delete idea</button>
+            ` : `
             <div class="fp-drawer-label">Reviewer decision</div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
               <button class="btn btn-primary" data-d="product">Proceed → Build</button>
               <button class="btn" data-d="validate_first">Validate first</button>
               <button class="btn" data-d="do_not_proceed">Do not proceed</button>
             </div>
-            <button class="btn btn-ghost" id="drawerDelete" style="margin-top:10px;color:var(--red)">Delete idea</button>
+            <div style="display:flex;gap:8px;margin-top:10px">
+              <button class="btn btn-ghost" id="archiveBtn">🗄 Archive</button>
+              <button class="btn btn-ghost" id="drawerDelete" style="color:var(--red)">Delete idea</button>
+            </div>
+            `}
           </div>
         </aside>`;
       document.getElementById("scrim").addEventListener("click", closeReview);
       document.getElementById("closeReview").addEventListener("click", closeReview);
       document.getElementById("drawerDelete").addEventListener("click", () => { closeReview(); deleteIdea(idea.id); });
       document.querySelectorAll("#overlay button[data-d]").forEach((b) => b.addEventListener("click", () => decide(idea, b.dataset.d)));
+      const archiveB = document.getElementById("archiveBtn"); if (archiveB) archiveB.addEventListener("click", () => postUpdate(idea.id, { stage: "parked" }));
+      const restoreB = document.getElementById("restoreBtn"); if (restoreB) restoreB.addEventListener("click", () => postUpdate(idea.id, { restore: true }));
+      const toValB = document.getElementById("toValidationBtn"); if (toValB) toValB.addEventListener("click", () => postUpdate(idea.id, { stage: "pending_validation" }));
       const eb = document.getElementById("editAssess"); if (eb) eb.addEventListener("click", enterEdit);
       const ub = document.getElementById("unlockAssess"); if (ub) ub.addEventListener("click", () => { if (ensureToken()) openReview(id); });
       document.querySelectorAll("#fpDialog [data-inline]").forEach((el) => {
@@ -411,6 +464,7 @@
       const need = (keys) => keys.filter((k) => !filled[k]).map(sectionLabel);
       switch (targetKey) {
         case "inbox": return [];
+        case "parked": return []; // archiving is always allowed
         case "assessment": return need(["opportunity"]);
         case "pending_validation":
         case "rejected": return need(["decision"]);
