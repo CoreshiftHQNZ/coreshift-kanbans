@@ -310,6 +310,10 @@ async function handleUpdate(request, env, cors) {
   if ("dev_status" in body) patch.dev_status = DEV_STATUSES.includes(body.dev_status) ? body.dev_status : null;
   if ("dev_status_reason" in body) patch.dev_status_reason = body.dev_status_reason ? String(body.dev_status_reason) : null;
 
+  // A genuine transition INTO Live = shipped → dev_status "done". Gated on a real
+  // stage change so editing an already-live card can't clobber its set dev status.
+  if (patch.stage === "live" && idea.stage !== "live" && patch.dev_status === undefined) patch.dev_status = "done";
+
   const saved = await updateIdea(env, body.ideaId, patch);
   return json({ ok: true, idea: publicView(saved), assessment: saved.assessment }, 200, cors);
 }
@@ -396,9 +400,6 @@ async function createIdea(env) {
   return rows[0];
 }
 async function updateIdea(env, id, patch) {
-  // A card entering Live is shipped — its developer status is "done" (the board
-  // renders it as "Live"), so stored dev_status never lingers as stale "in_progress".
-  if (patch.stage === "live" && !("dev_status" in patch)) patch.dev_status = "done";
   patch.updated_at = new Date().toISOString();
   const rows = await supa(env, "PATCH", `ideas?id=eq.${encodeURIComponent(id)}`, patch);
   return rows[0];

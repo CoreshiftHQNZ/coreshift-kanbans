@@ -83,3 +83,21 @@ test("applyUpdates: idempotent re-run of an applied move is a no-op", async () =
   assert.equal(r1.summary.skipped, 1);
   assert.equal(calls, 0);
 });
+
+test("matchIdea: a short title is NOT matched by an unrelated longer reference", () => {
+  const list = [{ id: "1", title: "Tap", stage: "harden" }];
+  assert.equal(matchIdea(list, "Tapestry"), null); // "tapestry" must not resolve to "Tap"
+  assert.equal(matchIdea(list, "Tap").id, "1");     // exact still matches
+});
+
+test("applyUpdates: a move INTO Live sets dev_status 'done' (transition only)", async () => {
+  const patched = [];
+  const deps = {
+    listIdeas: async () => [{ id: "1", title: "KeyContent", stage: "launch", dev_status: "in_progress" }],
+    updateIdea: async (id, patch) => patched.push({ id, patch }),
+  };
+  await applyUpdates(deps, [{ match: "KeyContent", action: "move", target_stage: "live" }]);
+  assert.equal(patched.length, 1);
+  assert.equal(patched[0].patch.stage, "live");
+  assert.equal(patched[0].patch.dev_status, "done");
+});

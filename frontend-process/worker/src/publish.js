@@ -35,7 +35,12 @@ export function matchIdea(ideas, match) {
   if (exact) return exact;
   const contained = ideas.filter((i) => {
     const t = normTitle(i.title);
-    return t && (t.includes(q) || q.includes(t));
+    if (!t) return false;
+    // Word-boundary aware: the shorter title must appear as a whole-word run in the
+    // longer one. Avoids "tap" matching "tapestry" while keeping
+    // "growth partners" matching "growth partners 2026 rebuild".
+    const [short, long] = t.length <= q.length ? [t, q] : [q, t];
+    return (" " + long + " ").includes(" " + short + " ");
   });
   return contained.length === 1 ? contained[0] : null; // 0 or >1 → unmatched
 }
@@ -76,6 +81,8 @@ export async function applyUpdates(deps, items) {
     if (!idea) { results.push({ item, status: "unmatched" }); continue; }
     const { patch, error } = itemToPatch(item);
     if (error) { results.push({ item, id: idea.id, title: idea.title, status: "error", error }); continue; }
+    // A move INTO Live (from a non-live stage) means shipped → dev_status "done".
+    if (patch.stage === "live" && idea.stage !== "live") { patch.dev_status = "done"; patch.dev_status_reason = null; }
     if (isNoop(idea, patch)) { results.push({ item, id: idea.id, title: idea.title, status: "skipped" }); continue; }
     try {
       await deps.updateIdea(idea.id, patch);
