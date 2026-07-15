@@ -523,11 +523,17 @@
             assessment = (d.assessment && Object.keys(d.assessment).length) ? d.assessment : { phase: PHASE_ORDER[0] };
             messages = (d.transcript || []).filter((m) => m && m.text && (m.role === "user" || m.role === "assistant"));
             renderStepper(); renderPanel();
+            const hasContent = Object.keys(assessment).some((k) => k !== "phase" && k !== "mode" && assessment[k]);
             if (messages.length) {
               addNote("Resumed this idea from the board — Restart to start fresh");
               messages.forEach((m) => addMsg(m.role, m.text, m.attachments));
               // If the assistant never replied to the last turn, fetch its response now.
               if (messages[messages.length - 1].role === "user") { busy = true; await sendLive(); busy = false; }
+            } else if (hasContent) {
+              // Existing assessment, no transcript: let the model open by acknowledging
+              // what's captured and asking about the first missing section (not "tell me the idea").
+              addNote("Resumed this idea from the board — Restart to start fresh");
+              busy = true; await sendLive(); busy = false;
             } else {
               const g = "Let's pick this up — tell me the idea: the opportunity, what's clunky today, and who feels it.";
               addMsg("assistant", g); messages.push({ role: "assistant", text: g });
