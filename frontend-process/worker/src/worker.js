@@ -21,6 +21,7 @@ import {
 import { applyUpdates } from "./publish.js";
 import { ingest } from "./ingest.js";
 import { getLatestStandup } from "./fireflies.js";
+import { validateAttachments, toContentBlock, toMeta, base64ToBytes } from "./attachments.js";
 import { ENUM_COLUMNS, ENUM_VALUES, STAGES, STATUSES, DEV_STATUSES, WIP_STAGES } from "./consts.js";
 
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
@@ -136,6 +137,7 @@ async function handleChat(request, env, cors) {
   const body = await request.json();
   const clientMsgs = Array.isArray(body.messages) ? body.messages.slice(-24) : [];
   const hasUserTurn = clientMsgs.some((m) => m && m.role === "user" && m.text);
+  const hasAttachments = Array.isArray(body.attachments) && body.attachments.length > 0;
   let idea = body.ideaId ? await getIdea(env, body.ideaId) : null;
   // Only resume drafts. /api/chat is unauthenticated, so a bare ideaId must never
   // read or mutate a submitted/live idea (its prose is otherwise review-token gated
@@ -154,7 +156,7 @@ async function handleChat(request, env, cors) {
   // Opening greeting (page just loaded, no real input yet): reply WITHOUT creating a
   // row — this is what left empty "Untitled idea" cards on the board. Persist only
   // once the ideator has actually said something.
-  if (!idea && !hasUserTurn) {
+  if (!idea && !hasUserTurn && !hasAttachments) {
     return json({ ideaId: null, reply: greeting, assessment: {}, submitted: false, idea: null }, 200, cors);
   }
   if (!idea) idea = await createIdea(env, isCommissioned);
@@ -163,6 +165,33 @@ async function handleChat(request, env, cors) {
   const patch = { assessment };
   let submitted = false;
   let submitMeta = null;
+
+  // Attachments on THIS turn (transcripts / briefs / screenshots / inspirations).
+  // Validate, store the originals in Storage so they travel with the card, and turn
+  // each into a content block the model can read. Only metadata is persisted on the
+  // idea + transcript — never the raw bytes.
+  const incoming = Array.isArray(body.attachments) ? body.attachments : [];
+  const attachBlocks = [];
+  const attachMeta = [];
+  if (incoming.length) {
+    const v = validateAttachments(incoming);
+    if (!v.ok) return json({ error: v.error }, 400, cors);
+    const existing = Array.isArray(idea.attachments) ? idea.attachments : [];
+    if (existing.length + incoming.length > MAX_TOTAL_FILES) {
+      return json({ error: `This idea already has the maximum number of attachments (${MAX_TOTAL_FILES}).` }, 400, cors);
+    }
+    try {
+      for (let ai = 0; ai < incoming.length; ai++) {
+        attachMeta.push(await uploadAttachment(env, idea.id, incoming[ai]));
+        attachBlocks.push(toContentBlock(incoming[ai]));
+      }
+    } catch (e) {
+      // Don't leave half-uploaded orphans if a store/decode fails partway.
+      await cleanupAttachments(env, attachMeta);
+      return json({ error: "Couldn't process the attachments — please retry." }, 400, cors);
+    }
+    patch.attachments = existing.concat(attachMeta);
+  }
 
   const system =
     (isCommissioned ? COMMISSIONED_PROMPT : SYSTEM_PROMPT) +
@@ -177,9 +206,24 @@ async function handleChat(request, env, cors) {
   // assistant turns before sending.
   while (messages.length && messages[0].role !== "user") messages.shift();
   if (!messages.length) messages.push({ role: "user", content: "Hi — I have an idea." });
+  // Attach this turn's files to the CURRENT (trailing) turn so they never graft onto
+  // an older message (images/PDF first, then the note — Anthropic's recommended order).
+  // If the trailing turn isn't a user turn (e.g. its text was empty and got filtered),
+  // add a fresh user turn carrying the files rather than back-dating them.
+  if (attachBlocks.length) {
+    const fallbackText = "I've attached some files — please use them for the assessment / build plan.";
+    const last = messages[messages.length - 1];
+    if (last && last.role === "user") {
+      const t = typeof last.content === "string" ? last.content : "";
+      last.content = attachBlocks.concat([{ type: "text", text: t || fallbackText }]);
+    } else {
+      messages.push({ role: "user", content: attachBlocks.concat([{ type: "text", text: fallbackText }]) });
+    }
+  }
 
   let reply = "";
   let lastText = "";
+  try {
   for (let i = 0; i < 6; i++) {
     const resp = await callAnthropic(env, system, messages, isCommissioned ? COMMISSIONED_TOOLS : TOOLS);
     const toolUses = (resp.content || []).filter((b) => b.type === "tool_use");
@@ -209,6 +253,11 @@ async function handleChat(request, env, cors) {
     reply = text;
     break;
   }
+  } catch (e) {
+    // A failed model call must not leave the just-uploaded originals orphaned.
+    if (attachMeta.length) await cleanupAttachments(env, attachMeta);
+    throw e;
+  }
 
   // Never leave the ideator on a silent "typing…": fall back to any text the model
   // emitted alongside its tool calls, then to a safe prompt that keeps things moving.
@@ -233,6 +282,16 @@ async function handleChat(request, env, cors) {
   }
   // Persist the transcript so a draft is recoverable server-side too.
   patch.transcript = clientMsgs.concat(reply ? [{ role: "assistant", text: reply }] : []);
+  // Note this turn's attachments on the latest user turn so the transcript renders
+  // them inline (chips). Only name/kind — the originals live in Storage.
+  if (attachMeta.length) {
+    for (let i = patch.transcript.length - 1; i >= 0; i--) {
+      if (patch.transcript[i] && patch.transcript[i].role === "user") {
+        patch.transcript[i] = { ...patch.transcript[i], attachments: attachMeta.map((m) => ({ name: m.name, kind: m.kind })) };
+        break;
+      }
+    }
+  }
   const saved = await updateIdea(env, idea.id, patch);
   // The internal funnel pings Keitha for review. A commissioned build skips the review
   // gate (already approved), but it still posts a distinct notice so a card landing
@@ -262,7 +321,7 @@ async function handleSubmit(request, env, cors) {
 async function handleIdeas(env, cors) {
   const rows = await supa(
     env, "GET",
-    "ideas?select=id,title,one_liner,stage,status,intent,confidence,decision,assessment,product_owner,dev_status,dev_status_reason,repo_url,kanban_url,staging_url,production_url,updated_at&deleted_at=is.null&order=updated_at.desc",
+    "ideas?select=id,title,one_liner,stage,status,intent,confidence,decision,assessment,product_owner,dev_status,dev_status_reason,repo_url,kanban_url,staging_url,production_url,updated_at,attachments&deleted_at=is.null&order=updated_at.desc",
   );
   return json({ ideas: rows.map(publicView) }, 200, cors);
 }
@@ -274,6 +333,13 @@ async function handleIdea(request, env, cors, url) {
   if (!id) return json({ error: "id required" }, 400, cors);
   const idea = await getIdea(env, id);
   if (!idea) return json({ error: "Not found" }, 404, cors);
+  // Mint short-lived signed URLs for the originals so the reviewer can open them
+  // (the bucket is private; URLs expire in an hour).
+  if (Array.isArray(idea.attachments) && idea.attachments.length) {
+    idea.attachments = await Promise.all(
+      idea.attachments.map(async (a) => ({ ...a, url: await signAttachmentUrl(env, a.path, 3600) })),
+    );
+  }
   return json({ idea }, 200, cors);
 }
 
@@ -503,6 +569,58 @@ async function updateIdea(env, id, patch) {
   return rows[0];
 }
 
+// ── Attachment storage (private idea-attachments bucket, service-role only) ──
+const ATTACH_BUCKET = "idea-attachments";
+const MAX_TOTAL_FILES = 20; // cumulative cap per idea (per-file/size caps live in attachments.js)
+// Store one attachment's ORIGINAL bytes and return its metadata (name/type/kind/path/size).
+// A random path component makes the key collision-proof across turns/retries.
+async function uploadAttachment(env, ideaId, att) {
+  const safe = String(att.name || "file").replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 80) || "file";
+  const path = `${ideaId}/${Date.now()}-${crypto.randomUUID()}-${safe}`;
+  const bytes = base64ToBytes(att.data);
+  const res = await fetch(`${env.SUPABASE_URL}/storage/v1/object/${ATTACH_BUCKET}/${path}`, {
+    method: "POST",
+    headers: {
+      apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+      authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+      "content-type": att.type,
+    },
+    body: bytes,
+  });
+  if (!res.ok) throw new Error(`Storage ${res.status}: ${await res.text()}`);
+  return toMeta(att, path);
+}
+// Best-effort delete (used to reclaim just-uploaded objects when the turn then fails).
+async function cleanupAttachments(env, metas) {
+  for (const m of metas || []) {
+    if (!m || !m.path) continue;
+    try {
+      await fetch(`${env.SUPABASE_URL}/storage/v1/object/${ATTACH_BUCKET}/${m.path}`, {
+        method: "DELETE",
+        headers: { apikey: env.SUPABASE_SERVICE_ROLE_KEY, authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}` },
+      });
+    } catch (_) { /* best-effort */ }
+  }
+}
+// Short-lived signed URL for viewing an original (reviewers only, via /api/idea).
+async function signAttachmentUrl(env, path, expiresIn) {
+  if (!path) return null;
+  try {
+    const res = await fetch(`${env.SUPABASE_URL}/storage/v1/object/sign/${ATTACH_BUCKET}/${path}`, {
+      method: "POST",
+      headers: {
+        apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+        authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ expiresIn }),
+    });
+    if (!res.ok) return null;
+    const j = await res.json();
+    return j && j.signedURL ? `${env.SUPABASE_URL}/storage/v1${j.signedURL}` : null;
+  } catch (_) { return null; }
+}
+
 // ── Ingestion idempotency (ingestion_log) ──────────────────────────────────
 // A transcript is processed at most once (the cron can fire repeatedly with the
 // same latest stand-up). `force` on /api/ingest bypasses this via ingest().
@@ -596,6 +714,8 @@ function publicView(idea) {
     // Intake mode so the board can special-case commissioned cards (different section
     // set, and no ideation-funnel move-gating — they're already approved).
     mode: (idea.assessment && idea.assessment.mode) || "standard",
+    // Count only (not paths/URLs) — the board is public; originals are token-gated.
+    attachment_count: Array.isArray(idea.attachments) ? idea.attachments.length : 0,
     filled,
     product_owner: idea.product_owner || null,
     dev_status: idea.dev_status || null,

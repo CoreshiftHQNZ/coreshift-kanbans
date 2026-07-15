@@ -110,6 +110,15 @@
 
       const stageLabel = ((F.stages || []).find((s) => s.key === idea.stage) || {}).label || idea.stage || "—";
 
+      // Uploaded originals (transcripts / briefs / screenshots / inspirations). The
+      // Worker mints short-lived signed URLs on this token-gated endpoint.
+      const atts = Array.isArray(idea.attachments) ? idea.attachments : [];
+      const attachHtml = atts.length ? `<div class="af-block"><h2>Attachments</h2><div class="af-attach-grid">` + atts.map((a) => {
+        if (!a.url) return `<span class="af-attach-file">📎 ${esc(a.name)} — unavailable</span>`;
+        if (a.kind === "image") return `<a class="af-attach" href="${esc(a.url)}" target="_blank" rel="noopener"><img src="${esc(a.url)}" alt="${esc(a.name)}" loading="lazy" /><span class="af-attach-cap">🖼 ${esc(a.name)}</span></a>`;
+        return `<a class="af-attach-file" href="${esc(a.url)}" target="_blank" rel="noopener">${a.kind === "pdf" ? "📄" : "📝"} ${esc(a.name)}</a>`;
+      }).join("") + `</div></div>` : "";
+
       content.innerHTML = `
         <a class="af-back" href="index.html">← Back to the board</a>
         <div class="af-head">
@@ -125,6 +134,7 @@
         </div>
         ${links ? `<div class="af-block"><h2>Links</h2><div class="fp-links">${links}</div></div>` : ""}
         <div class="af-block"><h2>${isComm ? "Commissioned brief" : "Assessment"}</h2>${secs}</div>
+        ${attachHtml}
         <div class="af-block"><h2>${isComm ? "Intake transcript" : "Ideation transcript"}</h2>${transcript}</div>`;
     }
 

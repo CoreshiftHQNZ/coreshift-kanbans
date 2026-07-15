@@ -145,7 +145,7 @@
           <div class="fp-card-snap">${esc(idea.one_liner || "")}</div>
           <div class="fp-chips">${chips(idea)}</div>
           ${hint}${holdReason}
-          <div class="fp-card-foot">${po}<span class="fp-card-updated" title="Updated ${esc(fullLocal(idea.updated_at))}">${esc(fmtTime(idea.updated_at))}</span></div>
+          <div class="fp-card-foot">${po}${idea.attachment_count ? `<span class="fp-po" title="${idea.attachment_count} attachment${idea.attachment_count > 1 ? "s" : ""}">📎 ${idea.attachment_count}</span>` : ""}<span class="fp-card-updated" title="Updated ${esc(fullLocal(idea.updated_at))}">${esc(fmtTime(idea.updated_at))}</span></div>
         </div>
         <button class="fp-card-del" data-del="${esc(idea.id)}" aria-label="Delete ${esc(idea.title)}" title="Delete idea">✕</button>
       </div>`;

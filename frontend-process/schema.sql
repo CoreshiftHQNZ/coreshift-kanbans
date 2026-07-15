@@ -38,8 +38,17 @@ create table if not exists public.ideas (
   product_owner  text,                 -- assigned once approved into Build+ (shown on the card)
   dev_status     text                  -- developer status on WIP cards (RAG auto-derived in the UI)
                    check (dev_status is null or dev_status in ('in_progress','on_hold','blocked','at_risk','done')),
-  dev_status_reason text                -- why on hold / at risk / blocked (shown on card click)
+  dev_status_reason text,               -- why on hold / at risk / blocked (shown on card click)
+  attachments    jsonb not null default '[]'::jsonb  -- intake uploads (transcripts/briefs/screenshots);
+                                        -- metadata only, bytes live in the private idea-attachments bucket
 );
+
+-- Intake attachment originals. Private bucket; RLS-on/no-policies means only the
+-- Worker's service role can read/write, and reviewers see files via short-lived
+-- signed URLs the Worker mints on the token-gated /api/idea.
+-- insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+-- values ('idea-attachments','idea-attachments', false, 10485760,
+--   array['image/png','image/jpeg','image/webp','image/gif','application/pdf','text/plain','text/markdown']);
 
 create index if not exists ideas_stage_idx       on public.ideas (stage);
 create index if not exists ideas_updated_at_idx   on public.ideas (updated_at desc);
