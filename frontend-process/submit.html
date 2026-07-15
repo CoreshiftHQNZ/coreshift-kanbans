@@ -121,7 +121,18 @@
     const inputEl = document.getElementById("input");
     const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
     const mdBold = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-    const phaseNow = () => assessment.phase || PHASE_ORDER[0];
+    // Current phase: the model's explicit phase when set, else derived from the
+    // assessment — the earliest phase that still has an empty section. Deriving keeps
+    // the stepper accurate on a resumed/backfilled card that has no stored `phase`
+    // (otherwise it wrongly parks on phase 1 even when most sections are captured).
+    function derivePhase() {
+      for (const p of PHASE_ORDER) {
+        const gap = SECTION_DEFS.some((s) => s.phase === p && !(assessment[s.field] != null && assessment[s.field] !== ""));
+        if (gap) return p;
+      }
+      return PHASE_ORDER[PHASE_ORDER.length - 1];
+    }
+    const phaseNow = () => (assessment.phase && PHASE_ORDER.includes(assessment.phase)) ? assessment.phase : derivePhase();
 
     function addMsg(role, text, atts) {
       const d = document.createElement("div");
