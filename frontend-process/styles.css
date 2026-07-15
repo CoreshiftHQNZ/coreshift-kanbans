@@ -177,6 +177,7 @@ body.fp-dragging, body.fp-dragging .fp-card { cursor: grabbing; user-select: non
 .pill-declined  { background: var(--red-light); color: #991B1B; border-color: #FCA5A5; }
 .fp-card-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
 .fp-card-updated { font-size: 10.5px; color: var(--text-muted); }
+.fp-card-hint { margin-top: 8px; font-size: 10.5px; font-weight: 600; color: #92400E; }
 .fp-card.new { border-style: dashed; background: transparent; box-shadow: none; text-align: center; color: var(--text-soft); font-size: 13px; padding: 16px; text-decoration: none; display: block; }
 .fp-card.new:hover { border-color: var(--teal); color: var(--teal-dark); }
 .fp-card.new b { color: var(--text-muted); }

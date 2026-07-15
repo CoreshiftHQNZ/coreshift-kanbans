@@ -12,24 +12,17 @@
 // Vars (wrangler.toml): MODEL, ALLOWED_ORIGINS, SITE_URL.
 
 import { SYSTEM_PROMPT, TOOLS } from "./spec.js";
+import { applyUpdates } from "./publish.js";
+import { ENUM_COLUMNS, ENUM_VALUES, STAGES, STATUSES, DEV_STATUSES, WIP_STAGES } from "./consts.js";
 
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
-const ENUM_COLUMNS = { intent_type: "intent", confidence: "confidence", decision: "decision" };
-// Allowed values for the CHECK-constrained columns (mirrors schema.sql). Used to
-// validate writes so one bad value can't fail the whole atomic PATCH with a 500.
-const ENUM_VALUES = {
-  intent: ["personal", "internal", "client", "speculative", "standalone", "product"],
-  confidence: ["punt", "validate", "business_case"],
-  decision: ["proceed", "validate_first", "experiment", "client_only", "product", "do_not_proceed"],
-};
-const STAGES = ["inbox", "assessment", "review", "pending_validation", "rejected", "build", "harden", "business", "launch", "live", "parked", "declined"];
-const STATUSES = ["draft", "in_review", "validated", "declined"];
-const DEV_STATUSES = ["in_progress", "on_hold", "blocked", "at_risk", "done"];
-const WIP_STAGES = ["build", "harden", "business", "launch", "live"];
 const PROSE_FIELDS = [
   "phase", "opportunity", "intent", "scope", "asset_value",
   "commercial", "governance", "decision_rationale", "spend_cap",
 ];
+// Opening line for a fresh intake — returned WITHOUT creating a DB row (see handleChat),
+// so page-loads that never turn into a real idea don't litter the board.
+const GREETING = "Hi — I'm the Idea Intake. Tell me the idea: what's the opportunity, what's clunky or missing today, and who feels it?";
 
 // Minimal same-origin test chat served at GET /try. Talks to /api/chat on this
 // same Worker, so there is no CORS and nothing needs publishing. Client JS uses
@@ -90,6 +83,7 @@ export default {
       if (url.pathname === "/api/delete" && request.method === "POST") return await handleDelete(request, env, cors);
       if (url.pathname === "/api/update" && request.method === "POST") return await handleUpdate(request, env, cors);
       if (url.pathname === "/api/draft" && request.method === "GET") return await handleDraft(request, env, cors, url);
+      if (url.pathname === "/api/publish" && request.method === "POST") return await handlePublish(request, env, cors);
       if (url.pathname === "/try" && request.method === "GET")
         return new Response(TRY_PAGE, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
       if (url.pathname === "/" || url.pathname === "/health") return json({ ok: true, service: "idea-intake" }, 200, cors);
@@ -104,11 +98,18 @@ export default {
 async function handleChat(request, env, cors) {
   const body = await request.json();
   const clientMsgs = Array.isArray(body.messages) ? body.messages.slice(-24) : [];
+  const hasUserTurn = clientMsgs.some((m) => m && m.role === "user" && m.text);
   let idea = body.ideaId ? await getIdea(env, body.ideaId) : null;
   // Only resume drafts. /api/chat is unauthenticated, so a bare ideaId must never
   // read or mutate a submitted/live idea (its prose is otherwise review-token gated
   // via /api/idea). A non-draft id falls through to a fresh draft.
   if (idea && !["inbox", "assessment"].includes(idea.stage || "inbox")) idea = null;
+  // Opening greeting (page just loaded, no real input yet): reply WITHOUT creating a
+  // row — this is what left empty "Untitled idea" cards on the board. Persist only
+  // once the ideator has actually said something.
+  if (!idea && !hasUserTurn) {
+    return json({ ideaId: null, reply: GREETING, assessment: {}, submitted: false, idea: null }, 200, cors);
+  }
   if (!idea) idea = await createIdea(env);
 
   const assessment = { ...(idea.assessment || {}) };
@@ -313,6 +314,20 @@ async function handleUpdate(request, env, cors) {
   return json({ ok: true, idea: publicView(saved), assessment: saved.assessment }, 200, cors);
 }
 
+// ── /api/publish (batch status updates from Keitha's Radar — token-gated) ───
+// Reuses the shared applyUpdates core (also used by the Fireflies ingestion).
+async function handlePublish(request, env, cors) {
+  if (!authed(request, env)) return json({ error: "Unauthorized" }, 401, cors);
+  const body = await request.json();
+  const items = Array.isArray(body.items) ? body.items : [];
+  if (!items.length) return json({ error: "items[] required" }, 400, cors);
+  const { results, summary } = await applyUpdates(
+    { listIdeas: () => listIdeas(env), updateIdea: (id, patch) => updateIdea(env, id, patch) },
+    items,
+  );
+  return json({ ok: true, summary, results }, 200, cors);
+}
+
 // ── Assessment merge ───────────────────────────────────────────────────────
 function applyUpdate(patch, assessment, input) {
   if (!input) return;
@@ -364,6 +379,10 @@ async function supa(env, method, path, body) {
   return text ? JSON.parse(text) : null;
 }
 
+// Minimal projection of live ideas for matching updates (title + current state).
+async function listIdeas(env) {
+  return await supa(env, "GET", "ideas?select=id,title,stage,dev_status,dev_status_reason&deleted_at=is.null");
+}
 async function getIdea(env, id) {
   // Exclude soft-deleted rows so a deleted idea reads as gone everywhere
   // (chat resume, /api/idea, review) — never silently written to or resurfaced.
@@ -377,6 +396,9 @@ async function createIdea(env) {
   return rows[0];
 }
 async function updateIdea(env, id, patch) {
+  // A card entering Live is shipped — its developer status is "done" (the board
+  // renders it as "Live"), so stored dev_status never lingers as stale "in_progress".
+  if (patch.stage === "live" && !("dev_status" in patch)) patch.dev_status = "done";
   patch.updated_at = new Date().toISOString();
   const rows = await supa(env, "PATCH", `ideas?id=eq.${encodeURIComponent(id)}`, patch);
   return rows[0];
