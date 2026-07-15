@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>44%</strong> complete</div>
-        <div><strong>15</strong>/34 cards done</div>
-        <div>Updated <strong>2026-07-15 00:40 UTC</strong></div>
+        <div><strong>43%</strong> complete</div>
+        <div><strong>15</strong>/35 cards done</div>
+        <div>Updated <strong>2026-07-15 22:51 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -825,7 +825,7 @@
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">6</div>
+        <div class="status-num">5</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -833,11 +833,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">3</div>
+        <div class="status-num">4</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">7</div>
+        <div class="status-num">8</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -1053,7 +1053,7 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1072,11 +1072,6 @@
         <div class="card-desc">Built, but has never completed a real round trip in production (depends on the Postmark auth hook above)</div>
       </div>
       <div class="card">
-        <div class="card-title">Site generation quality</div>
-        <div class="card-tags"><span class="tag tag-neutral">enhancement</span></div>
-        <div class="card-desc">&quot;Make me a site&quot; works, but it runs slow, is currently limited to a small set of theme styles, and generated copy/links need sanitising before publish</div>
-      </div>
-      <div class="card">
         <div class="card-title">Team invites / agency linking</div>
         <div class="card-tags"><span class="tag tag-neutral">auth</span></div>
         <div class="card-desc">Partly wired; several bindings and the invite-accept surface still need connecting and one real run-through</div>
@@ -1089,58 +1084,68 @@
     </section>
     <section class="column col-blocked">
       <header class="col-head">
-        <h2>🚫 Blocked</h2>
+        <h2>🚫 Blocked — go-live gates (need Ricky)</h2>
         <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Confirm Postmark is configured in prod</div>
-        <div class="card-tags"><span class="tag tag-neutral">needs-ricky</span></div>
-        <div class="card-desc">Until the token is verified set, every lead / auth / support / invite email may be silently failing</div>
+        <div class="card-title">1️⃣ Confirm email delivery in prod</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">needs-ricky</span></div>
+        <div class="card-desc">Verify the Postmark token/sender is live and a real lead / login / support email actually arrives (not just &quot;sent&quot;). Everything downstream depends on this — a site whose leads don&#39;t land is worthless. First domino</div>
       </div>
       <div class="card">
-        <div class="card-title">Stripe webhook secret + one test-card sale</div>
-        <div class="card-tags"><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">checkout.session.completed</span></div>
-        <div class="card-desc">Confirm the `checkout.session.completed` endpoint + signing secret for coreshift-sites, then run one real test payment before charging customers</div>
+        <div class="card-title">2️⃣ Go live on Stripe: keys + webhook + one real sale</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">checkout.session.completed</span></div>
+        <div class="card-desc">Switch to live keys, set the `checkout.session.completed` signing secret, then run one real card through the full trial→pay path before charging anyone</div>
       </div>
       <div class="card">
-        <div class="card-title">Custom domains: decide the path</div>
-        <div class="card-tags"><span class="tag tag-neutral">needs-ricky</span></div>
-        <div class="card-desc">Customers can connect a domain but nothing activates it. Either finish activation (Cloudflare for SaaS ownership/SSL) or stop advertising it until it works</div>
+        <div class="card-title">3️⃣ Custom domains: decide the path</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">needs-ricky</span></div>
+        <div class="card-desc">Either commit to finishing activation (Cloudflare for SaaS) as the paid upsell, or cut it from the pitch for v1 so we don&#39;t promise what doesn&#39;t work. A decision, not code</div>
       </div></div>
     </section>
     <section class="column col-this-week">
       <header class="col-head">
-        <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <h2>🔵 This Week — launch wave (Claude can drive)</h2>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Webhook robustness + payment-failed handling</div>
-        <div class="card-tags"><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">stripe_subscription_id</span><span class="tag tag-neutral">invoice.payment_failed</span></div>
-        <div class="card-desc">Timestamp/replay guard, event dedup, persist `stripe_subscription_id`, handle `invoice.payment_failed`</div>
+        <div class="card-title">Webhook robustness + billing safety</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">stripe_subscription_id</span><span class="tag tag-neutral">invoice.payment_failed</span></div>
+        <div class="card-desc">Replay/timestamp guard, event dedup, persist `stripe_subscription_id`, handle `invoice.payment_failed`, and wire the self-serve billing portal (cancel / update card) so paying customers aren&#39;t trapped</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Legal + trust pages</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span></div>
+        <div class="card-desc">Terms of Service, Privacy Policy, and a refund/cancellation policy linked from the marketing site and checkout (required to take payments responsibly). Claude drafts, Ricky reviews</div>
       </div>
       <div class="card">
         <div class="card-title">Reconcile live DB → migrations</div>
-        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">saas-platform/db/migrations/</span></div>
-        <div class="card-desc">The core tables and RPCs exist only in the prod DB; capture them into `saas-platform/db/migrations/` so source is the truth and a rebuild is safe</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">saas-platform/db/migrations/</span></div>
+        <div class="card-desc">Capture the prod tables + RPCs into `saas-platform/db/migrations/` so the source is the truth and a rebuild is safe before real customers depend on it</div>
       </div>
       <div class="card">
-        <div class="card-title">Design Engine — Phase B: migrate 7 sections to Tailwind</div>
-        <div class="card-tags"><span class="tag tag-neutral">enhancement</span></div>
-        <div class="card-desc">Rebuild Hero, Feature grid, Gallery, Rich text, CTA, Team and Contact form in the new Tailwind authoring layer, retire their legacy CSS, and apply the &quot;kill list&quot; (fewer in-section options, more curated layouts). Then scale to new section types + theme families</div>
+        <div class="card-title">Go-live dress rehearsal</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span></div>
+        <div class="card-desc">One clean end-to-end run as a brand-new customer: sign up → generate/edit a site → publish → confirm the lead email lands → hit the trial gate → pay → confirm the site stays live. Fix whatever the rehearsal surfaces</div>
       </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">8</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Self-serve billing portal</div>
-        <div class="card-tags"><span class="tag tag-neutral">billing</span></div>
-        <div class="card-desc">Cancel / update card / view invoices (Stripe portal helper already exists, just unwired) + dunning on failed payments</div>
+        <div class="card-title">Design Engine — Phase B: migrate 7 sections to Tailwind</div>
+        <div class="card-tags"><span class="tag tag-neutral">enhancement</span><span class="tag tag-neutral">post-launch</span></div>
+        <div class="card-desc">Rebuild Hero, Feature grid, Gallery, Rich text, CTA, Team and Contact form in the new Tailwind authoring layer, retire their legacy CSS, and apply the &quot;kill list&quot; (fewer in-section options, more curated layouts). Then scale to new section types + theme families. Parallel quality track — not launch-blocking</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Site generation quality</div>
+        <div class="card-tags"><span class="tag tag-neutral">enhancement</span><span class="tag tag-neutral">post-launch</span></div>
+        <div class="card-desc">&quot;Make me a site&quot; works but runs slow and is limited to a few theme styles; speed it up, widen the theme range, sanitise generated copy/links before publish</div>
       </div>
       <div class="card">
         <div class="card-title">Custom-domain lifecycle</div>

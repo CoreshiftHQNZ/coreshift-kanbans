@@ -5,6 +5,8 @@
 > **Card format:** `- **Title** \`tag\` \`tag\` — Description.`
 >
 > The five column headings below are what the renderer looks for. Keep the leading emoji — it's how the engine assigns colours.
+>
+> **🎯 Current focus: the go-live push.** The machine works and 15 sites are live; the gap to real paying customers is the launch checklist below (email delivery, live payments, legal, a decision on custom domains, and a full dress rehearsal). Design-Engine quality work continues in parallel but is not a launch blocker.
 
 ---
 
@@ -31,25 +33,26 @@
 - **Billing end-to-end** `billing` — Every path is built and deployed, but no real payment has gone through Stripe in prod yet; the webhook also needs replay/idempotency guards and to persist the subscription id.
 - **Email deliverability** `infra` — Postmark is wired for leads, auth, support and invites, but there is no confirmation any email has actually been delivered; it should fail loudly, not silently.
 - **Magic-link login** `auth` — Built, but has never completed a real round trip in production (depends on the Postmark auth hook above).
-- **Site generation quality** `enhancement` — "Make me a site" works, but it runs slow, is currently limited to a small set of theme styles, and generated copy/links need sanitising before publish.
 - **Team invites / agency linking** `auth` — Partly wired; several bindings and the invite-accept surface still need connecting and one real run-through.
 - **Two-way support chat** `enhancement` — Customer → team works; the team → customer reply and the customer email notification still need to be delivered (the widget already promises "we'll email you").
 
-## 🚫 Blocked
+## 🚫 Blocked — go-live gates (need Ricky)
 
-- **Confirm Postmark is configured in prod** `needs-ricky` — Until the token is verified set, every lead / auth / support / invite email may be silently failing.
-- **Stripe webhook secret + one test-card sale** `billing` `needs-ricky` — Confirm the `checkout.session.completed` endpoint + signing secret for coreshift-sites, then run one real test payment before charging customers.
-- **Custom domains: decide the path** `needs-ricky` — Customers can connect a domain but nothing activates it. Either finish activation (Cloudflare for SaaS ownership/SSL) or stop advertising it until it works.
+- **1️⃣ Confirm email delivery in prod** `launch` `needs-ricky` — Verify the Postmark token/sender is live and a real lead / login / support email actually arrives (not just "sent"). Everything downstream depends on this — a site whose leads don't land is worthless. First domino.
+- **2️⃣ Go live on Stripe: keys + webhook + one real sale** `launch` `billing` `needs-ricky` — Switch to live keys, set the `checkout.session.completed` signing secret, then run one real card through the full trial→pay path before charging anyone.
+- **3️⃣ Custom domains: decide the path** `launch` `needs-ricky` — Either commit to finishing activation (Cloudflare for SaaS) as the paid upsell, or cut it from the pitch for v1 so we don't promise what doesn't work. A decision, not code.
 
-## 🔵 This Week
+## 🔵 This Week — launch wave (Claude can drive)
 
-- **Webhook robustness + payment-failed handling** `billing` — Timestamp/replay guard, event dedup, persist `stripe_subscription_id`, handle `invoice.payment_failed`.
-- **Reconcile live DB → migrations** `infra` — The core tables and RPCs exist only in the prod DB; capture them into `saas-platform/db/migrations/` so source is the truth and a rebuild is safe.
-- **Design Engine — Phase B: migrate 7 sections to Tailwind** `enhancement` — Rebuild Hero, Feature grid, Gallery, Rich text, CTA, Team and Contact form in the new Tailwind authoring layer, retire their legacy CSS, and apply the "kill list" (fewer in-section options, more curated layouts). Then scale to new section types + theme families.
+- **Webhook robustness + billing safety** `launch` `billing` — Replay/timestamp guard, event dedup, persist `stripe_subscription_id`, handle `invoice.payment_failed`, and wire the self-serve billing portal (cancel / update card) so paying customers aren't trapped.
+- **Legal + trust pages** `launch` — Terms of Service, Privacy Policy, and a refund/cancellation policy linked from the marketing site and checkout (required to take payments responsibly). Claude drafts, Ricky reviews.
+- **Reconcile live DB → migrations** `launch` `infra` — Capture the prod tables + RPCs into `saas-platform/db/migrations/` so the source is the truth and a rebuild is safe before real customers depend on it.
+- **Go-live dress rehearsal** `launch` — One clean end-to-end run as a brand-new customer: sign up → generate/edit a site → publish → confirm the lead email lands → hit the trial gate → pay → confirm the site stays live. Fix whatever the rehearsal surfaces.
 
 ## ⚪ Backlog
 
-- **Self-serve billing portal** `billing` — Cancel / update card / view invoices (Stripe portal helper already exists, just unwired) + dunning on failed payments.
+- **Design Engine — Phase B: migrate 7 sections to Tailwind** `enhancement` `post-launch` — Rebuild Hero, Feature grid, Gallery, Rich text, CTA, Team and Contact form in the new Tailwind authoring layer, retire their legacy CSS, and apply the "kill list" (fewer in-section options, more curated layouts). Then scale to new section types + theme families. Parallel quality track — not launch-blocking.
+- **Site generation quality** `enhancement` `post-launch` — "Make me a site" works but runs slow and is limited to a few theme styles; speed it up, widen the theme range, sanitise generated copy/links before publish.
 - **Custom-domain lifecycle** `enhancement` — Verify / retry / remove a hostname; purge cache on custom-domain go-live; tear down on cancel.
 - **Account lifecycle** `enhancement` — Rename / leave / transfer-ownership / delete-account (GDPR), a co-owner / recovery path, and an access-change audit trail.
 - **RLS/telemetry hardening** `security` — Tighten the `sites` anon read (tenant enumeration), disable `site-assets` bucket listing, lengthen the preview password, add view-count integrity.
