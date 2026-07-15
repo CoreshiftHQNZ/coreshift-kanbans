@@ -12,14 +12,25 @@
 // Vars (wrangler.toml): MODEL, ALLOWED_ORIGINS, SITE_URL.
 
 import { SYSTEM_PROMPT, TOOLS } from "./spec.js";
+import {
+  SYSTEM_PROMPT as COMMISSIONED_PROMPT,
+  TOOLS as COMMISSIONED_TOOLS,
+  GREETING as COMMISSIONED_GREETING,
+  COMMISSIONED_PROSE_FIELDS,
+} from "./spec-commissioned.js";
 import { applyUpdates } from "./publish.js";
+import { ingest } from "./ingest.js";
+import { getLatestStandup } from "./fireflies.js";
 import { ENUM_COLUMNS, ENUM_VALUES, STAGES, STATUSES, DEV_STATUSES, WIP_STAGES } from "./consts.js";
 
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
-const PROSE_FIELDS = [
+// Assessment jsonb keys the Worker persists from update_assessment. The commissioned
+// mode adds its own brief fields; a Set dedupes the overlap (scope/governance/etc.).
+const PROSE_FIELDS = [...new Set([
   "phase", "opportunity", "intent", "scope", "asset_value",
   "commercial", "governance", "decision_rationale", "spend_cap",
-];
+  ...COMMISSIONED_PROSE_FIELDS,
+])];
 // Opening line for a fresh intake — returned WITHOUT creating a DB row (see handleChat),
 // so page-loads that never turn into a real idea don't litter the board.
 const GREETING = "Hi — I'm the Idea Intake. Tell me the idea: what's the opportunity, what's clunky or missing today, and who feels it?";
@@ -84,13 +95,39 @@ export default {
       if (url.pathname === "/api/update" && request.method === "POST") return await handleUpdate(request, env, cors);
       if (url.pathname === "/api/draft" && request.method === "GET") return await handleDraft(request, env, cors, url);
       if (url.pathname === "/api/publish" && request.method === "POST") return await handlePublish(request, env, cors);
+      if (url.pathname === "/api/ingest" && request.method === "POST") return await handleIngest(request, env, cors);
       if (url.pathname === "/try" && request.method === "GET")
         return new Response(TRY_PAGE, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
       if (url.pathname === "/" || url.pathname === "/health") return json({ ok: true, service: "idea-intake" }, 200, cors);
       return json({ error: "Not found" }, 404, cors);
     } catch (err) {
-      return json({ error: String(err && err.message || err) }, 500, cors);
+      // Log the detail server-side, but return a generic message — upstream error
+      // bodies (PostgREST/Anthropic/Fireflies) can carry internal detail like column
+      // or constraint names, and some routes (/api/ideas, /api/chat) are unauthenticated.
+      console.error("[worker] unhandled error:", String((err && err.stack) || (err && err.message) || err));
+      return json({ error: "Internal error" }, 500, cors);
     }
+  },
+
+  // Cloudflare Cron Trigger (see wrangler.toml [triggers]). Fires daily: pull the
+  // latest stand-up and apply routed updates, then prune stale empty drafts. Both
+  // are best-effort and idempotent — a fire with nothing new is a safe no-op. Needs
+  // FIREFLIES_API_KEY to actually ingest; without it, ingest logs and moves on.
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil((async () => {
+      try {
+        const res = await ingest(buildIngestDeps(env));
+        console.log("[cron] ingest:", res.status, res.id || "");
+      } catch (e) {
+        console.error("[cron] ingest failed:", String((e && e.message) || e));
+      }
+      try {
+        const n = await pruneEmptyDrafts(env);
+        if (n) console.log(`[cron] pruned ${n} empty draft(s)`);
+      } catch (e) {
+        console.error("[cron] prune failed:", String((e && e.message) || e));
+      }
+    })());
   },
 };
 
@@ -104,13 +141,23 @@ async function handleChat(request, env, cors) {
   // read or mutate a submitted/live idea (its prose is otherwise review-token gated
   // via /api/idea). A non-draft id falls through to a fresh draft.
   if (idea && !["inbox", "assessment"].includes(idea.stage || "inbox")) idea = null;
+  // Intake mode. For an EXISTING draft the mode comes from stored state ONLY (never
+  // the request), so a crafted body.mode can't flip a standard draft to commissioned
+  // and push it past the reviewer gate into Build. body.mode is honoured only when
+  // creating a brand-new idea. "commissioned" = the paid Growth Partners build flow
+  // (spec-commissioned.js) — no ideation/validation, lands straight in Build.
+  const mode = idea
+    ? ((idea.assessment && idea.assessment.mode === "commissioned") ? "commissioned" : "standard")
+    : (body.mode === "commissioned" ? "commissioned" : "standard");
+  const isCommissioned = mode === "commissioned";
+  const greeting = isCommissioned ? COMMISSIONED_GREETING : GREETING;
   // Opening greeting (page just loaded, no real input yet): reply WITHOUT creating a
   // row — this is what left empty "Untitled idea" cards on the board. Persist only
   // once the ideator has actually said something.
   if (!idea && !hasUserTurn) {
-    return json({ ideaId: null, reply: GREETING, assessment: {}, submitted: false, idea: null }, 200, cors);
+    return json({ ideaId: null, reply: greeting, assessment: {}, submitted: false, idea: null }, 200, cors);
   }
-  if (!idea) idea = await createIdea(env);
+  if (!idea) idea = await createIdea(env, isCommissioned);
 
   const assessment = { ...(idea.assessment || {}) };
   const patch = { assessment };
@@ -118,7 +165,7 @@ async function handleChat(request, env, cors) {
   let submitMeta = null;
 
   const system =
-    SYSTEM_PROMPT +
+    (isCommissioned ? COMMISSIONED_PROMPT : SYSTEM_PROMPT) +
     `\n\nAssessment captured so far (JSON). Do not re-ask what is already filled — build on it:\n` +
     JSON.stringify(assessment);
 
@@ -134,7 +181,7 @@ async function handleChat(request, env, cors) {
   let reply = "";
   let lastText = "";
   for (let i = 0; i < 6; i++) {
-    const resp = await callAnthropic(env, system, messages, TOOLS);
+    const resp = await callAnthropic(env, system, messages, isCommissioned ? COMMISSIONED_TOOLS : TOOLS);
     const toolUses = (resp.content || []).filter((b) => b.type === "tool_use");
     const text = (resp.content || []).filter((b) => b.type === "text").map((b) => b.text).join("\n").trim();
     if (text) lastText = text;
@@ -168,7 +215,14 @@ async function handleChat(request, env, cors) {
   if (!reply) reply = lastText;
   if (!reply) reply = "Got that — I've captured it on the assessment. What would you like to add or change next?";
 
-  if (submitted) {
+  if (submitted && isCommissioned) {
+    // Commissioned builds are paid and already approved — no reviewer gate. Land the
+    // card directly in Build with the brief attached; seed dev status if it has none.
+    patch.status = "validated";
+    patch.stage = "build";
+    patch.intent = "client";
+    if (!idea.dev_status) patch.dev_status = "in_progress";
+  } else if (submitted) {
     patch.status = "in_review";
     patch.stage = "review";
   } else if (["inbox", "assessment"].includes(idea.stage || "inbox")) {
@@ -180,7 +234,14 @@ async function handleChat(request, env, cors) {
   // Persist the transcript so a draft is recoverable server-side too.
   patch.transcript = clientMsgs.concat(reply ? [{ role: "assistant", text: reply }] : []);
   const saved = await updateIdea(env, idea.id, patch);
-  if (submitted) await notifySlack(env, saved).catch(() => {});
+  // The internal funnel pings Keitha for review. A commissioned build skips the review
+  // gate (already approved), but it still posts a distinct notice so a card landing
+  // straight in Build is never silent.
+  if (submitted && !isCommissioned) await notifySlack(env, saved).catch(() => {});
+  else if (submitted && isCommissioned) {
+    const site = env.SITE_URL || "https://coreshifthqnz.github.io/coreshift-kanbans";
+    await slackText(env, `🛠 Commissioned build logged: *${saved.title}* — landed in Build. ${site}/frontend-process/`).catch(() => {});
+  }
 
   return json(
     { ideaId: idea.id, reply, assessment: saved.assessment || assessment, submitted, idea: publicView(saved) },
@@ -332,6 +393,36 @@ async function handlePublish(request, env, cors) {
   return json({ ok: true, summary, results }, 200, cors);
 }
 
+// ── /api/ingest (manual "pull today's stand-up" — token-gated) ─────────────
+// Same routine the cron runs, on demand. Needs FIREFLIES_API_KEY; without it we
+// return a clear pointer to the Cowork fallback rather than a raw 500.
+async function handleIngest(request, env, cors) {
+  if (!authed(request, env)) return json({ error: "Unauthorized" }, 401, cors);
+  if (!env.FIREFLIES_API_KEY) {
+    return json({
+      error: "FIREFLIES_API_KEY not set on the Worker — automated pull is not live yet.",
+      hint: "Use the Cowork prompt in frontend-process/INGESTION.md (it runs via the Fireflies MCP, no Worker key needed), or set the key: `wrangler secret put FIREFLIES_API_KEY`.",
+    }, 503, cors);
+  }
+  let opts = {};
+  try { opts = (await request.json()) || {}; } catch (_) { /* body optional */ }
+  const res = await ingest(buildIngestDeps(env), { force: !!opts.force });
+  return json(res, 200, cors);
+}
+
+// Assemble the injected deps the ingestion routine needs from `env`.
+function buildIngestDeps(env) {
+  return {
+    getLatestStandup: () => getLatestStandup(env),
+    listIdeas: () => listIdeas(env),
+    updateIdea: (id, patch) => updateIdea(env, id, patch),
+    callAnthropic: (system, msgs, tools) => callAnthropic(env, system, msgs, tools),
+    wasProcessed: (id) => wasProcessed(env, id),
+    markProcessed: (id, meta) => markProcessed(env, id, meta),
+    notify: (text) => slackText(env, text),
+  };
+}
+
 // ── Assessment merge ───────────────────────────────────────────────────────
 function applyUpdate(patch, assessment, input) {
   if (!input) return;
@@ -367,14 +458,18 @@ async function callAnthropic(env, system, messages, tools) {
 }
 
 // ── Supabase REST ──────────────────────────────────────────────────────────
-async function supa(env, method, path, body) {
+// extraHeaders (lowercase keys) may override content-type/prefer (e.g. `prefer` for
+// upserts) but NOT the service-role auth headers — apikey/authorization are spread
+// last so a future caller can never accidentally override the credentials.
+async function supa(env, method, path, body, extraHeaders) {
   const res = await fetch(`${env.SUPABASE_URL}/rest/v1/${path}`, {
     method,
     headers: {
-      apikey: env.SUPABASE_SERVICE_ROLE_KEY,
-      authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
       "content-type": "application/json",
       prefer: "return=representation",
+      ...(extraHeaders || {}),
+      apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+      authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
     },
     body: body ? JSON.stringify(body) : undefined,
   });
@@ -393,16 +488,51 @@ async function getIdea(env, id) {
   const rows = await supa(env, "GET", `ideas?id=eq.${encodeURIComponent(id)}&deleted_at=is.null&select=*`);
   return rows && rows[0];
 }
-async function createIdea(env) {
+async function createIdea(env, commissioned) {
   // New drafts land in Inbox — they only surface in Assessment once they have a
   // real title (see handleChat). Keeps "Untitled idea" cards out of Assessment.
-  const rows = await supa(env, "POST", "ideas", { title: "Untitled idea", stage: "inbox", status: "draft" });
+  // A commissioned draft carries its mode + fixed client intent from the start.
+  const seed = { title: "Untitled idea", stage: "inbox", status: "draft" };
+  if (commissioned) { seed.intent = "client"; seed.assessment = { mode: "commissioned" }; }
+  const rows = await supa(env, "POST", "ideas", seed);
   return rows[0];
 }
 async function updateIdea(env, id, patch) {
   patch.updated_at = new Date().toISOString();
   const rows = await supa(env, "PATCH", `ideas?id=eq.${encodeURIComponent(id)}`, patch);
   return rows[0];
+}
+
+// ── Ingestion idempotency (ingestion_log) ──────────────────────────────────
+// A transcript is processed at most once (the cron can fire repeatedly with the
+// same latest stand-up). `force` on /api/ingest bypasses this via ingest().
+async function wasProcessed(env, transcriptId) {
+  const rows = await supa(
+    env, "GET",
+    `ingestion_log?select=transcript_id&transcript_id=eq.${encodeURIComponent(transcriptId)}`,
+  );
+  return Array.isArray(rows) && rows.length > 0;
+}
+async function markProcessed(env, transcriptId, meta) {
+  // Upsert so a forced re-run doesn't collide on the primary key.
+  await supa(env, "POST", "ingestion_log?on_conflict=transcript_id", {
+    transcript_id: transcriptId, processed_at: new Date().toISOString(), result: meta || null,
+  }, { prefer: "resolution=merge-duplicates,return=minimal" });
+}
+
+// Soft-delete abandoned empty drafts older than 24h. Belt-and-suspenders now that
+// the opening greeting no longer creates a row — catches any stragglers. Returns count.
+// `transcript=is.null` restricts this to create-without-follow-up rows (createIdea ran
+// but the first turn's updateIdea never persisted a transcript, e.g. Claude threw), so
+// a draft that accumulated any real conversation is never pruned.
+async function pruneEmptyDrafts(env) {
+  const cutoff = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+  const rows = await supa(
+    env, "PATCH",
+    `ideas?status=eq.draft&title=eq.Untitled%20idea&one_liner=is.null&transcript=is.null&deleted_at=is.null&created_at=lt.${encodeURIComponent(cutoff)}`,
+    { deleted_at: new Date().toISOString() },
+  );
+  return Array.isArray(rows) ? rows.length : 0;
 }
 
 // ── Slack ──────────────────────────────────────────────────────────────────
@@ -423,6 +553,17 @@ async function notifySlack(env, idea) {
         { type: "actions", elements: [{ type: "button", text: { type: "plain_text", text: "Review assessment" }, url: link }] },
       ],
     }),
+  });
+}
+
+// Post a plain-text message to Slack (the stand-up ingestion digest). No-ops if
+// SLACK_WEBHOOK_URL is unset, so ingestion still works before Slack is wired up.
+async function slackText(env, text) {
+  if (!env.SLACK_WEBHOOK_URL || !text) return;
+  await fetch(env.SLACK_WEBHOOK_URL, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ text }),
   });
 }
 
@@ -452,6 +593,9 @@ function publicView(idea) {
     id: idea.id, title: idea.title, one_liner: idea.one_liner,
     stage: idea.stage, status: idea.status,
     intent: idea.intent, confidence: idea.confidence, decision: idea.decision,
+    // Intake mode so the board can special-case commissioned cards (different section
+    // set, and no ideation-funnel move-gating — they're already approved).
+    mode: (idea.assessment && idea.assessment.mode) || "standard",
     filled,
     product_owner: idea.product_owner || null,
     dev_status: idea.dev_status || null,

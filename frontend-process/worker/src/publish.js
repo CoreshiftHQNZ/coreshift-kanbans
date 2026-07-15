@@ -88,7 +88,11 @@ export async function applyUpdates(deps, items) {
       await deps.updateIdea(idea.id, patch);
       results.push({ item, id: idea.id, title: idea.title, status: "applied", patch });
     } catch (e) {
-      results.push({ item, id: idea.id, title: idea.title, status: "error", error: String((e && e.message) || e) });
+      // `transient: true` distinguishes a write failure (network/DB blip — worth a
+      // retry) from a permanent validation error (bad target_stage etc. from
+      // itemToPatch, above), so the ingestion can defer markProcessed for the
+      // former without looping forever on the latter.
+      results.push({ item, id: idea.id, title: idea.title, status: "error", transient: true, error: String((e && e.message) || e) });
     }
   }
   const summary = results.reduce((a, r) => { a[r.status] = (a[r.status] || 0) + 1; return a; }, {});
