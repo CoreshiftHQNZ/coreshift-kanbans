@@ -343,15 +343,17 @@ async function handleIdea(request, env, cors, url) {
   return json({ idea }, 200, cors);
 }
 
-// ── /api/draft?id=… (resume an in-progress draft — no token; drafts only) ──
+// ── /api/draft?id=… (resume the intake for an Inbox/Assessment card — no token) ──
 async function handleDraft(request, env, cors, url) {
   const id = url.searchParams.get("id");
   if (!id) return json({ error: "id required" }, 400, cors);
   const idea = await getIdea(env, id);
-  // Only in-progress drafts are resumable here. Anything submitted/decided is
-  // off-limits (its full assessment stays review-token gated via /api/idea).
-  if (!idea || idea.status !== "draft" || !["inbox", "assessment"].includes(idea.stage || "inbox")) {
-    return json({ error: "Not a resumable draft" }, 404, cors);
+  // Resumable = anything still in the Inbox/Assessment stage (a fresh draft OR a card
+  // a reviewer moved back to re-assess). These lanes ARE the assessment step, so the
+  // intake conversation is the right thing to open. Anything past Assessment
+  // (review/decided/WIP) stays off-limits — its prose is review-token gated via /api/idea.
+  if (!idea || !["inbox", "assessment"].includes(idea.stage || "inbox")) {
+    return json({ error: "Not open for assessment" }, 404, cors);
   }
   return json({ idea: {
     id: idea.id, title: idea.title, one_liner: idea.one_liner,
@@ -432,14 +434,35 @@ async function handleUpdate(request, env, cors) {
   if (body.stage && STAGES.includes(body.stage)) patch.stage = body.stage;
   if (body.status && STATUSES.includes(body.status)) patch.status = body.status;
 
+  // Archive / restore. "Archived" is the `parked` stage surfaced as its own board view.
+  // The origin lane is remembered in the assessment jsonb so Restore returns it there.
+  if (body.restore && idea.stage === "parked") {
+    const from = idea.assessment && idea.assessment.archived_from;
+    patch.stage = (from && STAGES.includes(from)) ? from : "review"; // guard a stale/renamed value
+  }
+  if (patch.stage === "parked" && idea.stage !== "parked") {
+    assessment.archived_from = idea.stage;                 // archiving — remember where from
+  } else if (idea.stage === "parked" && patch.stage && patch.stage !== "parked") {
+    delete assessment.archived_from;                        // leaving the archive
+  }
+  patch.assessment = assessment;
+
+  // A card sent BACK to Inbox/Assessment from a later stage is being re-assessed —
+  // it's a draft again (correct pill + coherent state for the re-opened intake).
+  if (["inbox", "assessment"].includes(patch.stage) && !["inbox", "assessment"].includes(idea.stage || "inbox")) {
+    patch.status = "draft";
+  }
+
   // Operational fields (Product Owner + developer status) — set on Build+ cards.
   if ("product_owner" in body) patch.product_owner = body.product_owner ? String(body.product_owner).slice(0, 120) : null;
   if ("dev_status" in body) patch.dev_status = DEV_STATUSES.includes(body.dev_status) ? body.dev_status : null;
   if ("dev_status_reason" in body) patch.dev_status_reason = body.dev_status_reason ? String(body.dev_status_reason) : null;
 
   // A genuine transition INTO Live = shipped → dev_status "done". Gated on a real
-  // stage change so editing an already-live card can't clobber its set dev status.
-  if (patch.stage === "live" && idea.stage !== "live" && patch.dev_status === undefined) patch.dev_status = "done";
+  // stage change so editing an already-live card can't clobber its set dev status —
+  // and NOT on restore (restoring a card archived out of Live returns its prior
+  // status, e.g. at_risk, rather than asserting it shipped).
+  if (!body.restore && patch.stage === "live" && idea.stage !== "live" && patch.dev_status === undefined) patch.dev_status = "done";
 
   const saved = await updateIdea(env, body.ideaId, patch);
   return json({ ok: true, idea: publicView(saved), assessment: saved.assessment }, 200, cors);
@@ -716,6 +739,8 @@ function publicView(idea) {
     mode: (idea.assessment && idea.assessment.mode) || "standard",
     // Count only (not paths/URLs) — the board is public; originals are token-gated.
     attachment_count: Array.isArray(idea.attachments) ? idea.attachments.length : 0,
+    // Origin lane for an archived (parked) card, so the drawer can offer "Restore to …".
+    archived_from: (idea.assessment && idea.assessment.archived_from) || null,
     filled,
     product_owner: idea.product_owner || null,
     dev_status: idea.dev_status || null,

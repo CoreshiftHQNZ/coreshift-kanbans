@@ -137,6 +137,7 @@ body.fp-dragging, body.fp-dragging .fp-card { cursor: grabbing; user-select: non
 .pill-rag-green { background: var(--green-light); color: #065F46; border-color: #6EE7B7; }
 .pill-rag-amber { background: var(--amber-light); color: #92400E; border-color: #FDE68A; }
 .pill-rag-red   { background: var(--red-light);   color: #991B1B; border-color: #FCA5A5; }
+.pill-archived  { background: #f1f5f9; color: #64748b; border-color: #cbd5e1; }
 /* Product owner + build-status block */
 .fp-po { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
 .fp-po.muted { color: var(--text-soft); font-style: italic; }
