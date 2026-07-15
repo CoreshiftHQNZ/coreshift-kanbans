@@ -361,6 +361,10 @@
       const fullLink = `<a class="fp-fulllink" href="assessment.html?id=${encodeURIComponent(idea.id)}">Read full assessment &amp; transcript →</a>`;
       const isArchived = idea.stage === "parked";
       const archFromLabel = idea.archived_from ? (((F.stages || []).find((s) => s.key === idea.archived_from) || {}).label || idea.archived_from) : "";
+      // Pre-build cards that open the drawer (Review / Pending Validation / Rejected) can
+      // be re-opened into the intake conversation to re-assess. (Inbox/Assessment cards
+      // open the conversation directly on click, so they never reach the drawer.)
+      const isPrebuild = ["review", "pending_validation", "rejected"].includes(idea.stage);
 
       document.getElementById("overlay").innerHTML = `
         <div class="fp-scrim" id="scrim"></div>
@@ -393,6 +397,7 @@
             </div>
             <button class="btn btn-ghost" id="drawerDelete" style="margin-top:10px;color:var(--red)">Delete idea</button>
             ` : `
+            ${isPrebuild ? `<button class="btn" id="reopenBtn" type="button" style="width:100%;justify-content:center;margin-bottom:12px">↻ Re-open the assessment conversation</button>` : ""}
             <div class="fp-drawer-label">Reviewer decision</div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
               <button class="btn btn-primary" data-d="product">Proceed → Build</button>
@@ -410,6 +415,7 @@
       document.getElementById("closeReview").addEventListener("click", closeReview);
       document.getElementById("drawerDelete").addEventListener("click", () => { closeReview(); deleteIdea(idea.id); });
       document.querySelectorAll("#overlay button[data-d]").forEach((b) => b.addEventListener("click", () => decide(idea, b.dataset.d)));
+      const reopenB = document.getElementById("reopenBtn"); if (reopenB) reopenB.addEventListener("click", () => { location.href = "submit.html?id=" + encodeURIComponent(idea.id); });
       const archiveB = document.getElementById("archiveBtn"); if (archiveB) archiveB.addEventListener("click", () => postUpdate(idea.id, { stage: "parked" }));
       const restoreB = document.getElementById("restoreBtn"); if (restoreB) restoreB.addEventListener("click", () => postUpdate(idea.id, { restore: true }));
       const toValB = document.getElementById("toValidationBtn"); if (toValB) toValB.addEventListener("click", () => postUpdate(idea.id, { stage: "pending_validation" }));
