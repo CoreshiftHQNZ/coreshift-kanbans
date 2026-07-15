@@ -313,8 +313,9 @@
         </div>
 
         <div class="column col-backlog">
-          <div class="col-head"><h2>Backlog / Later</h2><span class="col-count">7</span></div>
+          <div class="col-head"><h2>Backlog / Later</h2><span class="col-count">8</span></div>
           <div class="cards">
+            <div class="card"><div class="card-title">Transcoast Express testimonial (Wayne) pending</div><div class="card-tags"><span class="tag tag-content">content</span></div><div class="card-desc">The Transcoast case study shipped without a client quote — the source doc only had a <code>[pending]</code> placeholder, no wording. Add Wayne's approved quote to <code>/case-studies/transcoast-express/</code> (NZ + AU) when available.</div></div>
             <div class="card"><div class="card-title">301 map for old WordPress URLs</div><div class="card-tags"><span class="tag tag-seo">seo</span></div><div class="card-desc">Now live on the apex — audit old-site URLs that don't map 1:1 to the new clean URLs (legacy WP slugs, query-string URLs) and add 301s so inbound links/rankings don't 404. Main clean-URL paths already preserved.</div></div>
             <div class="card"><div class="card-title">Team bio wording tweaks (client-led, ~2 weeks)</div><div class="card-tags"><span class="tag tag-content">content</span></div><div class="card-desc">New <code>/our-team/</code> roster is current/canonical — Steve (former co-founder) has left the business and is correctly not on the new page. Bios are tightened paraphrases of the old site's; GP to refine wording over ~2 weeks. Do <strong>not</strong> copy the current site wholesale (it still lists Steve). <em>(AU team page now synced to the NZ roster, with photos — done.)</em></div></div>
             <div class="card"><div class="card-title">Case-study data consistency</div><div class="card-tags"><span class="tag tag-content">content</span></div><div class="card-desc">"Sales &amp; Leadership Performance" reuses SmartShelters' 90% / best-in-106-years story, and SmartShelters figures vary across pages (91% / 90% / 257% / 1,000%). Confirm with Mal/Jack whether SLP is a separate client, and reconcile the numbers against the real case studies.</div></div>
@@ -326,8 +327,9 @@
         </div>
 
         <div class="column col-done">
-          <div class="col-head"><h2>Done</h2><span class="col-count">31</span></div>
+          <div class="col-head"><h2>Done</h2><span class="col-count">32</span></div>
           <div class="cards">
+            <div class="card"><div class="card-title">🚀 5 new case studies live (NZ + AU): SiteMinder, MEX Engineering, Transcoast Express, AeroFlow Filters, Impact HR</div><div class="card-tags"><span class="tag tag-prod">prod</span><span class="tag tag-content">content</span></div><div class="card-desc">Built from the design system (no new CSS); NZ + AU mirrors with hreflang and AU footers, LocalBusiness JSON-LD on the AU pages. Approved client quotes on AeroFlow (Peter), Impact HR (Letizia), SiteMinder (Mark Dawson) and MEX (Gail King). Added to both case-studies index grids (now 9 NZ cards) and <code>sitemap.xml</code> — including the previously-missing SmartShelters / Hot Spring Spas entries. Shipped dev→staging→main; Pages production deploy green, live URLs verified 200.</div></div>
             <div class="card"><div class="card-title">🚀 LIVE on growthpartnersgpx.com — apex cutover + www→apex 301 (SSL valid, email untouched, verified)</div><div class="card-tags"><span class="tag tag-prod">prod</span><span class="tag tag-infra">dns</span></div></div>
             <div class="card"><div class="card-title">Bot spam protection: Cloudflare Turnstile on both contact forms (Mal's request)</div><div class="card-tags"><span class="tag tag-int">security</span></div><div class="card-desc">Managed Turnstile widget added to NZ + AU contact forms; <code>TURNSTILE_SECRET</code> set on Production. Verified: token-less (bot) POST → 400 rejected (no email); real visitor auto-solves + submits. Honeypot retained as first layer. <em>TODO: also add the secret to Preview env for staging-branch consistency.</em></div></div>
             <div class="card"><div class="card-title">Jack's title → Customer Operations Manager (NZ+AU) + dropped premature Inter-400 font preload (clean console)</div><div class="card-tags"><span class="tag tag-build">polish</span></div></div>
