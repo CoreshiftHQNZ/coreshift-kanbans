@@ -129,11 +129,19 @@
       // WIP cards show the developer status (RAG) instead of the redundant "Validated" pill.
       const pill = wip ? devStatusHtml(idea) : `<span class="pill pill-${st}">${esc(L.status[st] || st)}</span>`;
       const po = (wip && idea.product_owner) ? `<span class="fp-po" title="Product Owner">👤 ${esc(idea.product_owner)}</span>` : "";
+      // Nudge on ideas still being assessed/reviewed that are missing a core section.
+      const needsMore = (idea.stage === "assessment" || idea.stage === "review") && idea.filled
+        && ["opportunity", "intent_type", "confidence", "scope", "asset_value", "decision"].some((k) => !idea.filled[k]);
+      const hint = needsMore ? `<div class="fp-card-hint">⚠ Assessment incomplete</div>` : "";
+      // Hold/park reason on the outcome lanes (Pending Validation / Rejected aren't WIP cards).
+      const holdReason = (["pending_validation", "rejected"].includes(idea.stage) && idea.dev_status_reason)
+        ? `<div class="fp-card-reason">${esc(idea.dev_status_reason)}</div>` : "";
       return `<div class="fp-card-wrap">
         <div class="fp-card" data-id="${esc(idea.id)}" tabindex="0" role="button" aria-label="Open ${esc(idea.title)}">
           <div class="fp-card-top"><span class="fp-card-name">${esc(idea.title)}</span>${pill}</div>
           <div class="fp-card-snap">${esc(idea.one_liner || "")}</div>
           <div class="fp-chips">${chips(idea)}</div>
+          ${hint}${holdReason}
           <div class="fp-card-foot">${po}<span class="fp-card-updated" title="Updated ${esc(fullLocal(idea.updated_at))}">${esc(fmtTime(idea.updated_at))}</span></div>
         </div>
         <button class="fp-card-del" data-del="${esc(idea.id)}" aria-label="Delete ${esc(idea.title)}" title="Delete idea">✕</button>
@@ -300,6 +308,10 @@
           <div class="fp-inline-field"><span class="fp-inline-lbl">Reason / note</span><textarea class="fp-inline" data-inline="dev_status_reason" rows="2" placeholder="Why on hold / at risk / blocked?">${esc(idea.dev_status_reason || "")}</textarea></div>`}
         </div>` : "";
       const filledCount = idea.filled ? SUMMARY_SECTIONS.filter((s) => idea.filled[s.field]).length : 0;
+      // Reason for a parked/rejected card (dev_status_reason repurposed as the hold note).
+      const holdReason = (["pending_validation", "rejected"].includes(idea.stage) && idea.dev_status_reason)
+        ? `<div class="fp-drawer-sec"><div class="fp-drawer-label">${idea.stage === "rejected" ? "Reason not proceeding" : "On hold — reason"}</div><div class="fp-reason">${esc(idea.dev_status_reason)}</div></div>`
+        : "";
       const fullLink = `<a class="fp-fulllink" href="assessment.html?id=${encodeURIComponent(idea.id)}">Read full assessment &amp; transcript →</a>`;
 
       document.getElementById("overlay").innerHTML = `
@@ -314,6 +326,7 @@
           </div>
           <div class="fp-drawer-body">
             ${buildStatusBlock}
+            ${holdReason}
             ${urlsBlock}
             <div class="fp-drawer-sec">
               <div class="fp-drawer-label">Assessment${(LIVE && !locked) ? ' <button class="fp-editbtn" id="editAssess" type="button">✎ Edit</button>' : ''}</div>

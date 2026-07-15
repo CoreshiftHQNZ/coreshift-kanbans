@@ -117,7 +117,7 @@
             <span>Stage · <b>${esc(stageLabel)}</b></span>
             <span>Updated · <b>${esc(fmtLocal(idea.updated_at))}</b></span>
           </div>
-          ${(wip && idea.dev_status_reason) ? `<div class="fp-reason">${esc(idea.dev_status_reason)}</div>` : ""}
+          ${((wip || ["pending_validation", "rejected"].includes(idea.stage)) && idea.dev_status_reason) ? `<div class="fp-reason">${esc(idea.dev_status_reason)}</div>` : ""}
         </div>
         ${links ? `<div class="af-block"><h2>Links</h2><div class="fp-links">${links}</div></div>` : ""}
         <div class="af-block"><h2>Assessment</h2>${secs}</div>
