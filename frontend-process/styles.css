@@ -36,6 +36,23 @@ a { color: inherit; }
 .btn-primary:hover { background: var(--teal-dark); color: #fff; }
 .btn-ghost { border-color: transparent; background: transparent; color: var(--text-muted); }
 
+/* Intake attachments (transcript / brief / screenshots / inspiration) */
+.fp-attach-btn { flex: 0 0 auto; align-self: stretch; background: var(--card); border: 1px solid var(--border-strong); border-radius: 9px; padding: 0 12px; font-size: 16px; line-height: 1; cursor: pointer; transition: border-color .13s ease; }
+.fp-attach-btn:hover { border-color: var(--teal); }
+.fp-attach-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.fp-attach-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; font-size: 12px; color: var(--text); max-width: 100%; }
+.fp-attach-chip button { background: none; border: 0; cursor: pointer; color: var(--text-soft); font-size: 12px; line-height: 1; padding: 0; }
+.fp-attach-chip button:hover { color: var(--red); }
+.fp-attach-chip.mini { font-size: 11px; padding: 2px 8px; background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.25); }
+.fp-msg-attach { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+/* Attachments on the full-assessment page */
+.af-attach-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+.af-attach { display: block; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); text-decoration: none; color: var(--text); max-width: 220px; }
+.af-attach img { display: block; width: 220px; height: 150px; object-fit: cover; }
+.af-attach .af-attach-cap { padding: 7px 10px; font-size: 12px; display: flex; align-items: center; gap: 6px; }
+.af-attach-file { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; text-decoration: none; color: var(--text); background: var(--card); font-size: 13px; }
+.af-attach-file:hover, .af-attach:hover { border-color: var(--teal); }
+
 /* Wrap + hero */
 .fp-wrap { max-width: 1400px; margin: 0 auto; padding: 32px 28px 64px; }
 /* Board pages fill the screen; the centered intake (submit.html) stays narrow. */

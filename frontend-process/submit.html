@@ -44,7 +44,11 @@
         <div class="fp-log" id="log" tabindex="0" role="log" aria-live="polite" aria-label="Conversation transcript"></div>
         <div class="fp-chat-foot">
           <div class="fp-suggest" id="suggest"></div>
+          <div class="fp-attach-chips" id="attachChips"></div>
           <div class="fp-input-row">
+            <button class="fp-attach-btn" id="attachBtn" type="button" title="Attach files — transcript, brief, screenshots, inspiration" aria-label="Attach files">📎</button>
+            <input type="file" id="fileInput" multiple
+              accept="image/png,image/jpeg,image/webp,image/gif,application/pdf,text/plain,text/markdown,.txt,.md" style="display:none" />
             <textarea class="fp-input" id="input" rows="1" placeholder="Type your answer…  (or tap a suggestion)"></textarea>
             <button class="btn btn-primary" id="send">Send</button>
           </div>
@@ -119,13 +123,21 @@
     const mdBold = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
     const phaseNow = () => assessment.phase || PHASE_ORDER[0];
 
-    function addMsg(role, text) {
+    function addMsg(role, text, atts) {
       const d = document.createElement("div");
       d.className = "msg " + role;
       d.innerHTML = mdBold(text);
+      if (atts && atts.length) {
+        const row = document.createElement("div");
+        row.className = "fp-msg-attach";
+        row.innerHTML = atts.map((a) => `<span class="fp-attach-chip mini">${attachIcon(a.kind)} ${esc(a.name)}</span>`).join("");
+        d.appendChild(row);
+      }
       logEl.appendChild(d);
       logEl.scrollTop = logEl.scrollHeight;
+      return d;
     }
+    const attachIcon = (k) => (k === "image" ? "🖼" : k === "pdf" ? "📄" : "📝");
     function addNote(text) {
       const d = document.createElement("div");
       d.className = "fp-note"; d.textContent = text;
@@ -197,17 +209,106 @@
       renderStepper();
     }
 
+    // ── Attachments (transcripts / briefs / screenshots / inspirations) ──
+    // Read client-side, images downscaled to keep tokens sane, sent ONCE with the next
+    // message (never re-sent on later turns). Live-only — needs the backend to store them.
+    let pendingAttachments = []; // [{ name, type, kind, data(base64) }]
+    const ATTACH_MAX = 6, IMG_MAX_DIM = 1568;
+    function attachKind(type) {
+      // Mirror the worker's classify() exactly — only these text types (no text/*
+      // wildcard) so the UI never accepts a file the worker will then 400.
+      const t = String(type || "").toLowerCase().split(";")[0].trim();
+      if (["image/png", "image/jpeg", "image/webp", "image/gif"].includes(t)) return "image";
+      if (t === "application/pdf") return "pdf";
+      if (["text/plain", "text/markdown"].includes(t)) return "text";
+      return null;
+    }
+    function guessType(f) {
+      if (f.type) return f.type;
+      if (/\.md$/i.test(f.name)) return "text/markdown";
+      if (/\.txt$/i.test(f.name)) return "text/plain";
+      return "";
+    }
+    const readDataUrl = (f) => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result)); r.onerror = rej; r.readAsDataURL(f); });
+    const b64of = (dataUrl) => dataUrl.slice(dataUrl.indexOf(",") + 1);
+    // Keep the TRUE original (data) so it's archived on the card, and produce a
+    // downscaled preview that's what the model actually reads (Anthropic caps image
+    // size; downscaling keeps tokens sane). createImageBitmap bakes in EXIF orientation.
+    async function readImagePreview(f) {
+      const data = b64of(await readDataUrl(f)); // original, stored as-is
+      let bmp;
+      try { bmp = await createImageBitmap(f, { imageOrientation: "from-image" }); }
+      catch (_) { bmp = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = "data:" + (f.type || "image/png") + ";base64," + data; }); }
+      let w = bmp.width || bmp.naturalWidth, h = bmp.height || bmp.naturalHeight;
+      const scale = Math.min(1, IMG_MAX_DIM / Math.max(w, h || 1));
+      w = Math.max(1, Math.round(w * scale)); h = Math.max(1, Math.round(h * scale));
+      const c = document.createElement("canvas"); c.width = w; c.height = h;
+      c.getContext("2d").drawImage(bmp, 0, 0, w, h);
+      if (bmp.close) bmp.close();
+      const previewType = f.type === "image/jpeg" ? "image/jpeg" : "image/png";
+      return { name: f.name, type: f.type || previewType, kind: "image", data, preview: b64of(c.toDataURL(previewType, 0.85)), previewType };
+    }
+    async function addFiles(fileList) {
+      for (const f of Array.from(fileList || [])) {
+        if (pendingAttachments.length >= ATTACH_MAX) { addNote(`You can attach up to ${ATTACH_MAX} files per message.`); break; }
+        const type = guessType(f);
+        const kind = attachKind(type);
+        if (!kind) { addNote(`"${f.name}" isn't a supported type (images, PDF, or text). For Word/Slides, export to PDF or paste the text.`); continue; }
+        if (f.size > 10 * 1024 * 1024) { addNote(`"${f.name}" is too large (max 10MB).`); continue; }
+        try {
+          const att = kind === "image" ? await readImagePreview(f) : { name: f.name, type, kind, data: b64of(await readDataUrl(f)) };
+          // Re-check after the async read — a concurrent picker/paste could have filled up.
+          if (pendingAttachments.length >= ATTACH_MAX) { addNote(`You can attach up to ${ATTACH_MAX} files per message.`); break; }
+          pendingAttachments.push(att);
+        } catch (e) { addNote(`Couldn't read "${f.name}".`); }
+      }
+      renderAttachChips();
+    }
+    function renderAttachChips() {
+      const el = document.getElementById("attachChips");
+      if (!el) return;
+      el.innerHTML = pendingAttachments.map((a, i) =>
+        `<span class="fp-attach-chip">${attachIcon(a.kind)} ${esc(a.name)} <button type="button" data-rm="${i}" aria-label="Remove ${esc(a.name)}">✕</button></span>`).join("");
+      el.querySelectorAll("[data-rm]").forEach((b) => b.addEventListener("click", () => { pendingAttachments.splice(+b.getAttribute("data-rm"), 1); renderAttachChips(); }));
+    }
+
     // ── Send ──────────────────────────────────────────────────────────
     async function send() {
       if (busy) return;
-      const text = inputEl.value.trim();
-      if (!text) return;
+      const typed = inputEl.value.trim();
+      const atts = pendingAttachments.slice(0, ATTACH_MAX); // clamp — never exceed the cap
+      if (!typed && !atts.length) return;
+      const text = typed || (atts.length ? "Here are some files for the assessment." : "");
       inputEl.value = ""; suggestEl.innerHTML = "";
-      addMsg("user", text);
-      messages.push({ role: "user", text });
+      pendingAttachments = []; renderAttachChips();
+      const meta = atts.map((a) => ({ name: a.name, kind: a.kind }));
+      const bubble = addMsg("user", text, meta);
+      const msgObj = meta.length ? { role: "user", text, attachments: meta } : { role: "user", text };
+      messages.push(msgObj);
       busy = true;
-      LIVE ? await sendLive() : await sendDemo();
+      let ok = true;
+      if (LIVE) ok = await sendLive(atts); else await sendDemo();
       busy = false;
+      if (LIVE && ok === false) {
+        // Roll back the optimistic turn so a failed send doesn't strand the files or
+        // leave phantom attachment chips in the transcript the next turn persists.
+        const idx = messages.lastIndexOf(msgObj);
+        if (idx !== -1) messages.splice(idx, 1);
+        // sendLive appended an assistant error bubble right after the user bubble —
+        // remove it too so we don't leave a dangling error with no question.
+        const errBubble = bubble && bubble.nextElementSibling;
+        if (bubble && bubble.remove) bubble.remove();
+        if (errBubble && errBubble.classList && errBubble.classList.contains("assistant")) errBubble.remove();
+        // Restore the failed send's text/files WITHOUT clobbering anything the user
+        // typed or attached mid-flight: only refill an empty box, and prepend the
+        // failed files ahead of any newly-added ones (clamped to the cap).
+        if (typed && !inputEl.value.trim()) inputEl.value = typed;
+        if (atts.length) {
+          pendingAttachments = atts.concat(pendingAttachments).slice(0, ATTACH_MAX);
+          renderAttachChips();
+          addNote("Your attachments were kept — press Send to try again.");
+        }
+      }
       saveSession();
     }
     async function sendDemo() {
@@ -223,21 +324,22 @@
       step++;
       if (F.demoScript[step]) showChips(F.demoScript[step].chips);
     }
-    async function sendLive() {
+    async function sendLive(attachments) {
       typing(true);
       try {
         const r = await fetch(F.workerUrl + "/api/chat", {
           method: "POST", headers: { "content-type": "application/json" },
-          body: JSON.stringify({ ideaId, messages, mode: MODE }),
+          body: JSON.stringify({ ideaId, messages, mode: MODE, attachments: attachments || [] }),
         });
         const j = await r.json();
         typing(false);
-        if (j.error) { addMsg("assistant", "Sorry — something went wrong: " + j.error); return; }
+        if (j.error) { addMsg("assistant", "Sorry — something went wrong: " + j.error); return false; }
         ideaId = j.ideaId || ideaId;
         if (j.assessment) { assessment = j.assessment; renderPanel(); renderStepper(); }
         if (j.reply) { addMsg("assistant", j.reply); messages.push({ role: "assistant", text: j.reply }); }
-        if (j.submitted) return finish();
-      } catch (e) { typing(false); addMsg("assistant", "Couldn't reach the intake service. Try again in a moment."); }
+        if (j.submitted) { finish(); return true; }
+        return true;
+      } catch (e) { typing(false); addMsg("assistant", "Couldn't reach the intake service. Try again in a moment."); return false; }
     }
 
     function finish() {
@@ -338,6 +440,20 @@
     document.getElementById("send").addEventListener("click", send);
     document.getElementById("restart").addEventListener("click", () => { clearSession(); location.reload(); });
 
+    // Attachments need the backend to store them, so only offer them in live mode.
+    const attachBtn = document.getElementById("attachBtn");
+    const fileInput = document.getElementById("fileInput");
+    if (!LIVE) { if (attachBtn) attachBtn.style.display = "none"; }
+    else {
+      attachBtn.addEventListener("click", () => fileInput.click());
+      fileInput.addEventListener("change", async () => { const files = fileInput.files; fileInput.value = ""; await addFiles(files); });
+      // Paste an image straight from the clipboard (screenshots).
+      inputEl.addEventListener("paste", (e) => {
+        const imgs = Array.from((e.clipboardData && e.clipboardData.files) || []).filter((f) => f.type.startsWith("image/"));
+        if (imgs.length) { e.preventDefault(); addFiles(imgs); }
+      });
+    }
+
     // ── Boot ──────────────────────────────────────────────────────────
     async function boot() {
       const urlId = new URLSearchParams(location.search).get("id");
@@ -358,7 +474,7 @@
             renderStepper(); renderPanel();
             if (messages.length) {
               addNote("Resumed this idea from the board — Restart to start fresh");
-              messages.forEach((m) => addMsg(m.role, m.text));
+              messages.forEach((m) => addMsg(m.role, m.text, m.attachments));
               // If the assistant never replied to the last turn, fetch its response now.
               if (messages[messages.length - 1].role === "user") { busy = true; await sendLive(); busy = false; }
             } else {
