@@ -48,7 +48,7 @@
           <div class="fp-input-row">
             <button class="fp-attach-btn" id="attachBtn" type="button" title="Attach files — transcript, brief, screenshots, inspiration" aria-label="Attach files">📎</button>
             <input type="file" id="fileInput" multiple
-              accept="image/png,image/jpeg,image/webp,image/gif,application/pdf,text/plain,text/markdown,.txt,.md" style="display:none" />
+              accept="image/png,image/jpeg,image/webp,image/gif,application/pdf,text/plain,text/markdown,.txt,.md,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="display:none" />
             <textarea class="fp-input" id="input" rows="1" placeholder="Type your answer…  (or tap a suggestion)"></textarea>
             <button class="btn btn-primary" id="send">Send</button>
           </div>
@@ -248,13 +248,64 @@
       const previewType = f.type === "image/jpeg" ? "image/jpeg" : "image/png";
       return { name: f.name, type: f.type || previewType, kind: "image", data, preview: b64of(c.toDataURL(previewType, 0.85)), previewType };
     }
+    const DOCX_MIME = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    const isDocx = (f) => /\.docx$/i.test(f.name) || f.type === DOCX_MIME;
+    // Extract plain text from a .docx (a ZIP whose text lives in word/document.xml).
+    // Uses the ZIP central directory (robust to data-descriptor entries) + the browser's
+    // DecompressionStream for the deflate. Throws on anything unexpected → caller falls back.
+    async function docxToText(f) {
+      const buf = new Uint8Array(await f.arrayBuffer());
+      const dv = new DataView(buf.buffer);
+      let eocd = -1;
+      for (let i = buf.length - 22; i >= 0 && i >= buf.length - 22 - 65536; i--) {
+        if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+      }
+      if (eocd < 0) throw new Error("not a zip");
+      const cdCount = dv.getUint16(eocd + 10, true);
+      let cd = dv.getUint32(eocd + 16, true), target = null;
+      for (let n = 0; n < cdCount && cd + 46 <= buf.length; n++) {
+        if (dv.getUint32(cd, true) !== 0x02014b50) break;
+        const method = dv.getUint16(cd + 10, true), compSize = dv.getUint32(cd + 20, true);
+        const fnLen = dv.getUint16(cd + 28, true), extraLen = dv.getUint16(cd + 30, true), commentLen = dv.getUint16(cd + 32, true);
+        const localOff = dv.getUint32(cd + 42, true);
+        const name = new TextDecoder().decode(buf.subarray(cd + 46, cd + 46 + fnLen));
+        if (name === "word/document.xml") { target = { method, compSize, localOff }; break; }
+        cd += 46 + fnLen + extraLen + commentLen;
+      }
+      if (!target) throw new Error("no document.xml");
+      if (dv.getUint32(target.localOff, true) !== 0x04034b50) throw new Error("bad local header");
+      const dataStart = target.localOff + 30 + dv.getUint16(target.localOff + 26, true) + dv.getUint16(target.localOff + 28, true);
+      const comp = buf.subarray(dataStart, dataStart + target.compSize);
+      let xmlBytes;
+      if (target.method === 0) xmlBytes = comp;
+      else if (target.method === 8) {
+        const stream = new Blob([comp]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+        xmlBytes = new Uint8Array(await new Response(stream).arrayBuffer());
+      } else throw new Error("unsupported compression");
+      const xml = new TextDecoder("utf-8").decode(xmlBytes);
+      return xml
+        .replace(/<w:tab[^>]*\/>/g, "\t").replace(/<\/w:p>/g, "\n").replace(/<w:br[^>]*\/?>/g, "\n")
+        .replace(/<[^>]+>/g, "")
+        .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'")
+        .replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+    }
+    const textToB64 = async (text) => b64of(await readDataUrl(new Blob([text], { type: "text/plain" })));
     async function addFiles(fileList) {
       for (const f of Array.from(fileList || [])) {
         if (pendingAttachments.length >= ATTACH_MAX) { addNote(`You can attach up to ${ATTACH_MAX} files per message.`); break; }
+        if (f.size > 10 * 1024 * 1024) { addNote(`"${f.name}" is too large (max 10MB).`); continue; }
+        // Word docs: Claude can't read the binary, so pull the text out and attach that.
+        if (isDocx(f)) {
+          let text = "";
+          try { text = await docxToText(f); } catch (e) { text = ""; }
+          if (!text || !text.trim()) { addNote(`Couldn't read text from "${f.name}" — try exporting it to PDF, or paste the text.`); continue; }
+          if (pendingAttachments.length >= ATTACH_MAX) { addNote(`You can attach up to ${ATTACH_MAX} files per message.`); break; }
+          pendingAttachments.push({ name: f.name, type: "text/plain", kind: "text", data: await textToB64(text) });
+          continue;
+        }
         const type = guessType(f);
         const kind = attachKind(type);
-        if (!kind) { addNote(`"${f.name}" isn't a supported type (images, PDF, or text). For Word/Slides, export to PDF or paste the text.`); continue; }
-        if (f.size > 10 * 1024 * 1024) { addNote(`"${f.name}" is too large (max 10MB).`); continue; }
+        if (!kind) { addNote(`"${f.name}" isn't a supported type. Attach images, PDFs, Word (.docx), or text — for Slides or other formats, export to PDF or paste the text.`); continue; }
         try {
           const att = kind === "image" ? await readImagePreview(f) : { name: f.name, type, kind, data: b64of(await readDataUrl(f)) };
           // Re-check after the async read — a concurrent picker/paste could have filled up.
