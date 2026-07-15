@@ -30,7 +30,10 @@
         <h1 id="viewTitle">Coreshift Idea Pipeline</h1>
         <p id="viewDesc"></p>
       </div>
-      <a class="btn btn-primary" href="submit.html">＋ Submit an idea</a>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn" href="submit.html?mode=commissioned" title="Paid Growth Partners build — skips ideation, produces a build plan">🛠 Commissioned build</a>
+        <a class="btn btn-primary" href="submit.html">＋ Submit an idea</a>
+      </div>
     </div>
     <div class="fp-viewtabs" id="viewTabs" role="tablist" aria-label="Board view"></div>
     <p class="fp-legend" id="legend"></p>
@@ -130,7 +133,7 @@
       const pill = wip ? devStatusHtml(idea) : `<span class="pill pill-${st}">${esc(L.status[st] || st)}</span>`;
       const po = (wip && idea.product_owner) ? `<span class="fp-po" title="Product Owner">👤 ${esc(idea.product_owner)}</span>` : "";
       // Nudge on ideas still being assessed/reviewed that are missing a core section.
-      const needsMore = (idea.stage === "assessment" || idea.stage === "review") && idea.filled
+      const needsMore = idea.mode !== "commissioned" && (idea.stage === "assessment" || idea.stage === "review") && idea.filled
         && ["opportunity", "intent_type", "confidence", "scope", "asset_value", "decision"].some((k) => !idea.filled[k]);
       const hint = needsMore ? `<div class="fp-card-hint">⚠ Assessment incomplete</div>` : "";
       // Hold/park reason on the outcome lanes (Pending Validation / Rejected aren't WIP cards).
@@ -280,7 +283,11 @@
         } else { locked = true; }
       }
       curIdea = idea; curAssessment = assessment;
-      const rows = SUMMARY_SECTIONS.map((sec, i) => {
+      // Commissioned cards capture a different section set (brief + build plan); show
+      // that set so the drawer isn't a standard 7-section frame hiding the whole brief.
+      const drawerSections = (idea.mode === "commissioned" && F.commissioned)
+        ? (F.commissioned.sections || []) : SUMMARY_SECTIONS;
+      const rows = drawerSections.map((sec, i) => {
         let v = assessment && assessment[sec.field];
         const has = v != null && v !== "";
         if (has && sec.field === "intent_type") v = L.intent[v] || v;
@@ -307,7 +314,10 @@
           ${isLive ? "" : `<div class="fp-inline-field"><span class="fp-inline-lbl">Developer status</span><select class="fp-inline" data-inline="dev_status">${dsOptsInline}</select></div>
           <div class="fp-inline-field"><span class="fp-inline-lbl">Reason / note</span><textarea class="fp-inline" data-inline="dev_status_reason" rows="2" placeholder="Why on hold / at risk / blocked?">${esc(idea.dev_status_reason || "")}</textarea></div>`}
         </div>` : "";
-      const filledCount = idea.filled ? SUMMARY_SECTIONS.filter((s) => idea.filled[s.field]).length : 0;
+      // Count from the fetched assessment (matches the rows above) rather than the
+      // board's standard-keyed `filled` map — so commissioned cards count correctly
+      // and the standard drawer's count no longer disagrees with its own rows.
+      const filledCount = drawerSections.filter((s) => { const v = assessment && assessment[s.field]; return v != null && v !== ""; }).length;
       // Reason for a parked/rejected card (dev_status_reason repurposed as the hold note).
       const holdReason = (["pending_validation", "rejected"].includes(idea.stage) && idea.dev_status_reason)
         ? `<div class="fp-drawer-sec"><div class="fp-drawer-label">${idea.stage === "rejected" ? "Reason not proceeding" : "On hold — reason"}</div><div class="fp-reason">${esc(idea.dev_status_reason)}</div></div>`
@@ -332,7 +342,7 @@
               <div class="fp-drawer-label">Assessment${(LIVE && !locked) ? ' <button class="fp-editbtn" id="editAssess" type="button">✎ Edit</button>' : ''}</div>
               ${locked
                 ? `<div class="fp-locked">🔒 The full assessment is reviewer-only. <button class="fp-editbtn" id="unlockAssess" type="button">Enter reviewer token</button></div>`
-                : `<details class="fp-assess"><summary>Summary · ${filledCount}/${SUMMARY_SECTIONS.length} sections</summary><div class="fp-assess-body">${rows}</div></details>`}
+                : `<details class="fp-assess"><summary>Summary · ${filledCount}/${drawerSections.length} sections</summary><div class="fp-assess-body">${rows}</div></details>`}
               ${fullLink}
             </div>
           </div>
@@ -388,6 +398,10 @@
     // required; Commercial + Governance only when it's client-facing or a full
     // business case. WIP additionally needs a go-ahead Decision.
     function unmetForData(data, targetKey) {
+      // Commissioned builds are already approved and enter at Build — they never have
+      // the ideation-funnel sections (opportunity/confidence/decision), so don't gate
+      // their moves on them.
+      if ((data.mode || "standard") === "commissioned") return [];
       const filled = data.filled || {};
       const clientFacing = ["client", "standalone", "product"].includes(data.intent);
       const fullCase = data.confidence === "business_case";
@@ -490,7 +504,7 @@
       let stageToSave = stageSel, blocked = false;
       const target = moveContext ? moveContext.target : stageSel;
       if (target && target !== (curIdea.stage || "inbox")) {
-        const data = { filled: {}, intent: assessment.intent_type, confidence: assessment.confidence, decision: curIdea.decision };
+        const data = { mode: curIdea.mode, filled: {}, intent: assessment.intent_type, confidence: assessment.confidence, decision: curIdea.decision };
         ["opportunity", "intent_type", "confidence", "commercial", "scope", "asset_value", "governance"]
           .forEach((k) => { data.filled[k] = (assessment[k] || "").trim() !== ""; });
         data.filled.decision = !!curIdea.decision; // Decision isn't edited in this form — read the recorded one

@@ -61,6 +61,36 @@ window.FP = {
     dev_status: { in_progress: "In Progress", on_hold: "On Hold", blocked: "Blocked", at_risk: "At Risk", done: "Done" },
   },
 
+  // Commissioned-build intake mode (submit.html?mode=commissioned) — the paid Growth
+  // Partners flow. Skips ideation/validation; captures the brief + a build plan and
+  // lands the card straight in Build. Mirrors worker/src/spec-commissioned.js — keep
+  // the section fields in sync with that spec and assessment.html's commissioned list.
+  commissioned: {
+    hero: {
+      title: "Scope a commissioned build",
+      blurb: "For paid, already-commissioned builds. No ideation or go/no-go — we capture the brief and produce a build plan the team can pick up. It lands straight in Build.",
+    },
+    greeting: "Hi — this is the Coreshift commissioned-build intake. Let's scope the build. Who's the client, and what have they commissioned?",
+    phases: [
+      { key: "brief", label: "Brief",      sub: "the commission" },
+      { key: "scope", label: "Scope",      sub: "the boundary" },
+      { key: "plan",  label: "Build plan", sub: "the roadmap" },
+    ],
+    sections: [
+      { field: "client",          label: "Client",                    phase: "brief", hint: "Who commissioned it, and the end users." },
+      { field: "primary_contact", label: "Primary contact",           phase: "brief", hint: "The client's main point of contact." },
+      { field: "commission",      label: "Commission",                phase: "brief", hint: "What's been commissioned + the outcome." },
+      { field: "deliverables",    label: "Deliverables & acceptance", phase: "brief", hint: "What 'done' looks like." },
+      { field: "timeline",        label: "Timeline",                  phase: "brief", hint: "Deadline and key milestones." },
+      { field: "commercial",      label: "Commercial",                phase: "brief", hint: "Budget / price and payment terms." },
+      { field: "scope",           label: "Scope",                     phase: "scope", hint: "The MVP/V1 boundary — what ships first." },
+      { field: "governance",      label: "Governance",                phase: "scope", hint: "Privacy, security, IP/ownership, data." },
+      { field: "asset_value",     label: "Asset value",               phase: "scope", hint: "Any reusable asset this creates for Coreshift." },
+      { field: "design_refs",     label: "Design references",         phase: "brief", hint: "Brand, assets, reference links." },
+      { field: "build_plan",      label: "Build plan",                phase: "plan",  hint: "The roadmap for the build team." },
+    ],
+  },
+
   // Product Owners assignable once a card is approved into Build+ (drawer dropdown).
   productOwners: ["Ricky", "Abe"],
   // Developer-status → RAG colour (auto-derived; not set by hand).

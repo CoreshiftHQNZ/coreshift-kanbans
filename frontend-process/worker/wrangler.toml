@@ -5,7 +5,7 @@ account_id = "a9088cddb8d07ce5b3341adee883f56c"  # CoreshiftHq
 
 # Non-secret config. Secrets are set separately with `wrangler secret put` —
 # never commit ANTHROPIC_API_KEY, SUPABASE_SERVICE_ROLE_KEY, SLACK_WEBHOOK_URL,
-# or REVIEW_TOKEN.
+# REVIEW_TOKEN, or FIREFLIES_API_KEY.
 [vars]
 MODEL = "claude-sonnet-5"
 SITE_URL = "https://coreshifthqnz.github.io/coreshift-kanbans"
@@ -16,3 +16,11 @@ ALLOWED_ORIGINS = "https://coreshifthqnz.github.io,http://localhost:8790,http://
 # Observability on so logs show in the Cloudflare dashboard.
 [observability]
 enabled = true
+
+# Daily stand-up ingestion + empty-draft prune (worker.js `scheduled()`). Two evening
+# UTC fires so an irregular stand-up time is still caught the same day; ingestion is
+# idempotent (ingestion_log), so a second fire with nothing new is a cheap no-op.
+# Times are UTC — 21:45/23:45 UTC ≈ mid-morning NZ. Needs FIREFLIES_API_KEY set to
+# actually pull; without it the fire logs "no key" and just runs the prune.
+[triggers]
+crons = ["45 21 * * *", "45 23 * * *"]

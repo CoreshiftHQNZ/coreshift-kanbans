@@ -55,7 +55,7 @@
         <div class="fp-panel-head">
           <h2>App Assessment</h2>
           <div class="fp-progress"><i id="bar"></i></div>
-          <div class="fp-progress-label" id="progressLabel">0 of 7 captured</div>
+          <div class="fp-progress-label" id="progressLabel"></div>
         </div>
         <div class="fp-sections" id="sections" tabindex="0" aria-label="App assessment, filled as you talk"></div>
       </div>
@@ -67,10 +67,13 @@
     const F = window.FP;
     const LIVE = !!F.workerUrl;
     const L = F.labels;
-    const PHASE_ORDER = F.phases.map((p) => p.key);
-    // Decision (§8) is the outcome, not part of the assessment summary — shown via
-    // the decision chip/headline, not listed as a captured section.
-    const SUMMARY_SECTIONS = F.sections.filter((s) => s.field !== "decision");
+    // Two intake modes share this page. "standard" = the internal idea funnel.
+    // "commissioned" = the paid Growth Partners build flow (?mode=commissioned):
+    // no ideation/validation, produces a build plan, lands straight in Build. It's a
+    // live-only flow; in demo it falls back to standard.
+    const qMode = new URLSearchParams(location.search).get("mode");
+    let MODE = (LIVE && qMode === "commissioned") ? "commissioned" : "standard";
+    let PHASE_DEFS, PHASE_ORDER, SECTION_DEFS, SUMMARY_SECTIONS;
     let assessment = {};
     let messages = [];
     let ideaId = null;
@@ -79,13 +82,42 @@
     let submitted = false;
     const SKEY = "fp_intake_session";
 
-    document.getElementById("modeBadge").innerHTML = LIVE ? "" : '<span class="fp-badge-demo">Demo mode</span>';
+    // (Re)configure the page for a mode. Called at boot, and again if a resumed draft
+    // turns out to be a commissioned build (opened from a board card without ?mode).
+    function applyMode(m) {
+      MODE = m;
+      const cm = (m === "commissioned") ? (F.commissioned || null) : null;
+      PHASE_DEFS = cm ? cm.phases : F.phases;
+      PHASE_ORDER = PHASE_DEFS.map((p) => p.key);
+      SECTION_DEFS = cm ? cm.sections : F.sections;
+      // Decision (§8) is the outcome in the standard flow, not a summary section; the
+      // commissioned set has no decision, so the filter is a harmless no-op there.
+      SUMMARY_SECTIONS = SECTION_DEFS.filter((s) => s.field !== "decision");
+      if (cm) {
+        const heroH = document.querySelector(".fp-hero h1");
+        const heroP = document.querySelector(".fp-hero p");
+        const panelH = document.querySelector(".fp-panel-head h2");
+        if (heroH) heroH.textContent = cm.hero.title;
+        if (heroP) heroP.textContent = cm.hero.blurb;
+        if (panelH) panelH.textContent = "Commissioned brief";
+      }
+      renderBadge();
+    }
+    // The top-right mode badge — re-rendered on every applyMode() so resuming a
+    // commissioned draft (mode switches only after the /api/draft fetch) updates it too.
+    function renderBadge() {
+      document.getElementById("modeBadge").innerHTML =
+        MODE === "commissioned"
+          ? '<span class="fp-badge-demo" style="background:var(--navy);color:#fff;border-color:var(--navy)">Commissioned build</span>'
+          : LIVE ? "" : '<span class="fp-badge-demo">Demo mode</span>';
+    }
+    applyMode(MODE);
     const logEl = document.getElementById("log");
     const suggestEl = document.getElementById("suggest");
     const inputEl = document.getElementById("input");
     const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
     const mdBold = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-    const phaseNow = () => assessment.phase || "shape";
+    const phaseNow = () => assessment.phase || PHASE_ORDER[0];
 
     function addMsg(role, text) {
       const d = document.createElement("div");
@@ -131,7 +163,7 @@
     // ── Phase stepper ─────────────────────────────────────────────────
     function renderStepper() {
       const cur = PHASE_ORDER.indexOf(phaseNow());
-      document.getElementById("stepper").innerHTML = F.phases.map((p, i) => {
+      document.getElementById("stepper").innerHTML = PHASE_DEFS.map((p, i) => {
         const cls = i < cur ? "done" : i === cur ? "active" : "";
         const mark = i < cur ? "✓" : i + 1;
         return `<div class="fp-step ${cls}"><span class="n">${mark}</span><span class="lbl">${esc(p.label)}<small>${esc(p.sub)}</small></span></div>`;
@@ -158,9 +190,9 @@
 
     function applyFills(fills) {
       const before = {};
-      F.sections.forEach((s) => (before[s.field] = assessment[s.field]));
+      SECTION_DEFS.forEach((s) => (before[s.field] = assessment[s.field]));
       Object.assign(assessment, fills);
-      const jf = F.sections.filter((s) => !before[s.field] && assessment[s.field]).map((s) => s.field);
+      const jf = SECTION_DEFS.filter((s) => !before[s.field] && assessment[s.field]).map((s) => s.field);
       renderPanel(jf);
       renderStepper();
     }
@@ -196,7 +228,7 @@
       try {
         const r = await fetch(F.workerUrl + "/api/chat", {
           method: "POST", headers: { "content-type": "application/json" },
-          body: JSON.stringify({ ideaId, messages }),
+          body: JSON.stringify({ ideaId, messages, mode: MODE }),
         });
         const j = await r.json();
         typing(false);
@@ -211,18 +243,7 @@
     function finish() {
       submitted = true;
       clearSession();
-      const title = assessment.title || "your idea";
-      const decisionLabel = L.decision[assessment.decision] || assessment.decision || "—";
-      // The plugin routes the next step off the Decision (see the app-assessment skill).
-      const ROUTE = {
-        do_not_proceed: "Archived — recorded with the reason so it isn't re-litigated cold later. Nothing's lost.",
-        validate_first: "Next: run <b>idea-validator</b> to pressure-test it and lock a 2-week MVP test before any build spend.",
-        experiment: "Next: run <b>product-planner</b> to spec the smallest version — capped, not a commitment to ship.",
-        client_only: "Next: run <b>product-planner</b> for the vision, PRD &amp; roadmap.",
-        product: "Next: run <b>product-planner</b>; get Keitha's business-case sign-off before the build starts.",
-        proceed: "Next: run <b>product-planner</b> to turn this into a vision, PRD &amp; roadmap.",
-      };
-      const routeNote = ROUTE[assessment.decision] || "The reviewer will confirm the next step.";
+      const title = assessment.title || (MODE === "commissioned" ? "this build" : "your idea");
       const rows = SUMMARY_SECTIONS.map((sec, i) => {
         let v = assessment[sec.field];
         const has = v != null && v !== "";
@@ -231,37 +252,82 @@
         return `<div class="out-row"><div class="out-k">${i + 1} · ${esc(sec.label)}</div>
           <div class="out-v ${has ? "" : "muted"}">${has ? esc(v) : "not captured"}</div></div>`;
       }).join("");
-      document.getElementById("intake").outerHTML = `
-        <div class="fp-outputs">
-          <div class="fp-success" style="max-width:none;margin:0 0 18px">
-            <div class="check">✓</div>
-            <h2 id="fpDone" tabindex="-1">Assessment complete</h2>
-            <p>Recorded and sent to the reviewer. You'll see <strong>${esc(title)}</strong> in <strong>Review</strong> on the board.</p>
-            <div class="fp-toast"><div class="slack">#</div>
-              <div><div class="ch">#frontend-process · just now</div>
-              <div class="tx">💡 New idea submitted: <strong>${esc(title)}</strong> — awaiting your review @keitha</div></div></div>
-          </div>
-          <div class="out-grid">
-            <div class="out-card">
-              <h3>What was captured</h3>
-              <p class="out-sub">Saved as <code>docs/app-assessment.md</code> — the living assessment doc that travels with the card.</p>
-              <div class="out-decision">Decision: <b>${esc(decisionLabel)}</b></div>
-              ${rows}
+
+      if (MODE === "commissioned") {
+        // Paid, approved commission — no reviewer gate; it lands straight in Build.
+        document.getElementById("intake").outerHTML = `
+          <div class="fp-outputs">
+            <div class="fp-success" style="max-width:none;margin:0 0 18px">
+              <div class="check">✓</div>
+              <h2 id="fpDone" tabindex="-1">Commissioned build logged</h2>
+              <p>Captured and handed to the build team. <strong>${esc(title)}</strong> is now in <strong>Build</strong> on the board — a paid, approved commission, so it skips the review gate.</p>
+              <div class="fp-toast"><div class="slack">🛠</div>
+                <div><div class="ch">#frontend-process · just now</div>
+                <div class="tx">🛠 Commissioned build logged: <strong>${esc(title)}</strong> — now in Build</div></div></div>
             </div>
-            <div class="out-card">
-              <h3>What happens next</h3>
-              <p class="out-sub">${routeNote}</p>
-              <p class="out-sub">If it proceeds to a build, these artifacts are <b>required</b> before it ships:</p>
-              <ul class="out-checklist">
-                <li><b>Product idea</b> — pre-filled from this assessment (<code>docs/product-idea.md</code>)</li>
-                <li><b>Vision, PRD &amp; roadmap</b> — the product-planner skill (<code>docs/prd.md</code>, <code>product-roadmap.md</code>)</li>
-                <li class="flag"><b>Design system</b> — the design-system skill (<code>docs/design.md</code>).<span>Separate step, easy to miss — no design file means the build is incomplete.</span></li>
-                <li><b>Launch checklist</b> — the launch-checklist skill, before go-live</li>
-              </ul>
+            <div class="out-grid">
+              <div class="out-card">
+                <h3>The brief</h3>
+                <p class="out-sub">Saved as <code>docs/commissioned-brief.md</code> — the brief + build plan that travels with the card.</p>
+                ${rows}
+              </div>
+              <div class="out-card">
+                <h3>What happens next</h3>
+                <p class="out-sub">The build team turns this brief into the delivery artifacts, then builds in the plugin:</p>
+                <ul class="out-checklist">
+                  <li><b>Vision, PRD &amp; roadmap</b> — product-planner, pre-filled from this brief (<code>docs/prd.md</code>, <code>product-roadmap.md</code>)</li>
+                  <li class="flag"><b>Design system</b> — the design-system skill (<code>docs/design.md</code>).<span>Client build — the brand / design references above feed this. No design file means the build is incomplete.</span></li>
+                  <li><b>Governance sign-off</b> — privacy, security, IP / ownership per the brief, before delivery</li>
+                  <li><b>Launch / handover checklist</b> — the launch-checklist skill, before go-live</li>
+                </ul>
+              </div>
             </div>
-          </div>
-          <a class="btn btn-primary" href="index.html" style="margin-top:16px;display:inline-flex">See it on the board →</a>
-        </div>`;
+            <a class="btn btn-primary" href="index.html" style="margin-top:16px;display:inline-flex">See it on the board →</a>
+          </div>`;
+      } else {
+        const decisionLabel = L.decision[assessment.decision] || assessment.decision || "—";
+        // The plugin routes the next step off the Decision (see the app-assessment skill).
+        const ROUTE = {
+          do_not_proceed: "Archived — recorded with the reason so it isn't re-litigated cold later. Nothing's lost.",
+          validate_first: "Next: run <b>idea-validator</b> to pressure-test it and lock a 2-week MVP test before any build spend.",
+          experiment: "Next: run <b>product-planner</b> to spec the smallest version — capped, not a commitment to ship.",
+          client_only: "Next: run <b>product-planner</b> for the vision, PRD &amp; roadmap.",
+          product: "Next: run <b>product-planner</b>; get Keitha's business-case sign-off before the build starts.",
+          proceed: "Next: run <b>product-planner</b> to turn this into a vision, PRD &amp; roadmap.",
+        };
+        const routeNote = ROUTE[assessment.decision] || "The reviewer will confirm the next step.";
+        document.getElementById("intake").outerHTML = `
+          <div class="fp-outputs">
+            <div class="fp-success" style="max-width:none;margin:0 0 18px">
+              <div class="check">✓</div>
+              <h2 id="fpDone" tabindex="-1">Assessment complete</h2>
+              <p>Recorded and sent to the reviewer. You'll see <strong>${esc(title)}</strong> in <strong>Review</strong> on the board.</p>
+              <div class="fp-toast"><div class="slack">#</div>
+                <div><div class="ch">#frontend-process · just now</div>
+                <div class="tx">💡 New idea submitted: <strong>${esc(title)}</strong> — awaiting your review @keitha</div></div></div>
+            </div>
+            <div class="out-grid">
+              <div class="out-card">
+                <h3>What was captured</h3>
+                <p class="out-sub">Saved as <code>docs/app-assessment.md</code> — the living assessment doc that travels with the card.</p>
+                <div class="out-decision">Decision: <b>${esc(decisionLabel)}</b></div>
+                ${rows}
+              </div>
+              <div class="out-card">
+                <h3>What happens next</h3>
+                <p class="out-sub">${routeNote}</p>
+                <p class="out-sub">If it proceeds to a build, these artifacts are <b>required</b> before it ships:</p>
+                <ul class="out-checklist">
+                  <li><b>Product idea</b> — pre-filled from this assessment (<code>docs/product-idea.md</code>)</li>
+                  <li><b>Vision, PRD &amp; roadmap</b> — the product-planner skill (<code>docs/prd.md</code>, <code>product-roadmap.md</code>)</li>
+                  <li class="flag"><b>Design system</b> — the design-system skill (<code>docs/design.md</code>).<span>Separate step, easy to miss — no design file means the build is incomplete.</span></li>
+                  <li><b>Launch checklist</b> — the launch-checklist skill, before go-live</li>
+                </ul>
+              </div>
+            </div>
+            <a class="btn btn-primary" href="index.html" style="margin-top:16px;display:inline-flex">See it on the board →</a>
+          </div>`;
+      }
       var done = document.getElementById("fpDone");
       if (done) done.focus();
     }
@@ -284,7 +350,10 @@
           if (r.ok) {
             const d = (await r.json()).idea;
             ideaId = d.id;
-            assessment = (d.assessment && Object.keys(d.assessment).length) ? d.assessment : { phase: "shape" };
+            // A commissioned draft opened from a board card won't carry ?mode — detect
+            // it from the saved assessment so the stepper/sections render correctly.
+            if (d.assessment && d.assessment.mode === "commissioned" && MODE !== "commissioned") applyMode("commissioned");
+            assessment = (d.assessment && Object.keys(d.assessment).length) ? d.assessment : { phase: PHASE_ORDER[0] };
             messages = (d.transcript || []).filter((m) => m && m.text && (m.role === "user" || m.role === "assistant"));
             renderStepper(); renderPanel();
             if (messages.length) {
@@ -307,14 +376,14 @@
       // specific draft happens ONLY via a board card (?id= above) — never implicitly
       // from localStorage, so a new idea never re-opens a previous conversation.
       clearSession();
-      assessment.phase = "shape";
+      assessment.phase = PHASE_ORDER[0];
       renderStepper();
       renderPanel();
       if (LIVE) {
         typing(true);
         try {
           const r = await fetch(F.workerUrl + "/api/chat", {
-            method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ messages: [] }),
+            method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ messages: [], mode: MODE }),
           });
           const j = await r.json();
           typing(false);
