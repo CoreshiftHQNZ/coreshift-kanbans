@@ -193,10 +193,33 @@ async function handleChat(request, env, cors) {
     patch.attachments = existing.concat(attachMeta);
   }
 
+  // Resume opening: an existing card was re-opened (assessment already has content) with
+  // no user turn yet. Open by acknowledging what's captured and asking about the first
+  // MISSING required section — never greet as a brand-new idea or re-ask filled sections.
+  const assessmentHasContent = Object.keys(assessment).some((k) => k !== "phase" && k !== "mode" && assessment[k]);
+  const isResumeOpening = !hasUserTurn && assessmentHasContent;
+  let resumeNote = "";
+  if (isResumeOpening) {
+    resumeNote = "\n\nRESUME MODE: This idea already has the assessment above. Do NOT greet it as a new idea and do NOT re-ask anything already filled. In one short line, acknowledge what's captured, then ask about the first still-missing part.";
+    if (!isCommissioned) {
+      const req = [
+        ["Opportunity", assessment.opportunity],
+        ["Intent", idea.intent || assessment.intent_type],
+        ["Confidence", idea.confidence || assessment.confidence],
+        ["Scope", assessment.scope],
+        ["Decision", idea.decision || assessment.decision],
+      ];
+      const missing = req.filter(([, v]) => !(v != null && String(v).trim() !== "")).map(([n]) => n);
+      resumeNote += missing.length
+        ? ` Still missing: ${missing.join(", ")}. Start with ${missing[0]}.`
+        : " Everything required looks captured — confirm the summary and offer to submit for review.";
+    }
+  }
+
   const system =
     (isCommissioned ? COMMISSIONED_PROMPT : SYSTEM_PROMPT) +
     `\n\nAssessment captured so far (JSON). Do not re-ask what is already filled — build on it:\n` +
-    JSON.stringify(assessment);
+    JSON.stringify(assessment) + resumeNote;
 
   const messages = clientMsgs
     .filter((m) => m && (m.role === "user" || m.role === "assistant") && m.text)
@@ -205,7 +228,7 @@ async function handleChat(request, env, cors) {
   // stores the assistant's greeting as message #1, so drop any leading
   // assistant turns before sending.
   while (messages.length && messages[0].role !== "user") messages.shift();
-  if (!messages.length) messages.push({ role: "user", content: "Hi — I have an idea." });
+  if (!messages.length) messages.push({ role: "user", content: isResumeOpening ? "(Resuming this idea — continue from what's still missing.)" : "Hi — I have an idea." });
   // Attach this turn's files to the CURRENT (trailing) turn so they never graft onto
   // an older message (images/PDF first, then the note — Anthropic's recommended order).
   // If the trailing turn isn't a user turn (e.g. its text was empty and got filtered),
