@@ -7,9 +7,13 @@ This doc has two parts:
 - **Part 1 — the setup call** (for Abe to run the session).
 - **Part 2 — getting started** (for Keitha & Ricky to keep and use).
 
-The core is the same for both of you: **turn your notes or a call transcript into board
-updates from Claude Cowork, without touching code.** Keitha also publishes her Project
-Radar and pulls the daily stand-up; Ricky mainly pushes updates from client calls.
+**Most of the board now updates itself** — two feeds publish automatically:
+- **Keitha's Project Radar → board**, via a scheduled Cowork task that reads her Radar
+  artifact (the recommended setup).
+- **The daily stand-up → board**, via the Worker's nightly cron (Fireflies).
+
+On top of that, the Cowork prompts below push **ad-hoc** updates from notes / a call, or add
+new projects — without touching code. Ricky mainly uses these for client-call updates.
 
 ---
 
@@ -26,14 +30,15 @@ Screen-share the board and walk through this in order (~15 min):
 3. **Keitha only — GitHub access** for publishing her Radar as a wiki page: a fine-grained
    PAT on `CoreshiftHQNZ/coreshift-kanbans`, Contents: Read & write (she creates it; see
    Part 2). Skip if she won't publish the Radar page today.
-4. **Do one real update together.** Open Cowork, paste **Prompt A** (Part 2), point it at a
-   recent set of notes / a call, let it propose updates, say go, watch the card move on the
-   board. This is the "aha" — everyone should do it once live.
-5. **Keitha — the extras:** pull today's stand-up (Prompt B / `INGESTION.md`), publish the
-   Radar page (`PUBLISH.md` Prompt B), and reviewing ideas from the drawer.
-6. **Confirm the two "later" flips** are on someone's list: set `FIREFLIES_API_KEY` (turns
-   stand-up ingestion fully automatic) and `SLACK_WEBHOOK_URL` (digests/notices). Neither
-   blocks anything today.
+4. **Do one real update together.** Open Cowork and run either the **Radar-artifact publish**
+   (Keitha) or **Prompt A** (Part 2) against a recent set of notes / a call — let it propose
+   updates, say go, watch the card move on the board. This is the "aha".
+5. **Keitha — the automated feeds are already on:** her Radar artifact publishes on a Cowork
+   schedule, and the daily stand-up pulls via the Worker cron. Also show her: add/update
+   projects (Prompt B), publish the Radar as a wiki page (`PUBLISH.md` Prompt B), and review
+   ideas from the drawer.
+6. **Optional:** set `SLACK_WEBHOOK_URL` so the stand-up cron posts a "what changed" digest to
+   Slack (without it the board still updates, just silently). `FIREFLIES_API_KEY` is set.
 
 **Talking points / FAQ**
 - *"Do I need the token every time?"* Only for **writes** (publishing updates, deciding,
@@ -60,10 +65,25 @@ The API it talks to: `https://idea-intake.coreshifthq.workers.dev`
 
 ---
 
-### Prompt A — update the board from your notes or a call  *(Keitha & Ricky)*
+### The board keeps itself current (automated)
 
-Paste into Cowork. Swap the first line for your source (typed notes, a pasted transcript,
-or "the latest <meeting> in Fireflies"):
+Two feeds already run on a schedule — nobody has to touch them daily:
+- **Project Radar → board (recommended, Keitha).** A scheduled Cowork task reads Keitha's
+  Radar artifact and publishes the changes — this is `PUBLISH.md`'s Radar prompt saved as a
+  recurring Cowork task. Keep the Radar current and the board follows.
+- **Daily stand-up → board.** The Worker's cron pulls the latest "Daily stand-up" from
+  Fireflies each evening and applies the routed updates.
+
+Both go through the same `/api/publish` write path, so they stay consistent and never
+double-apply. The prompts below are for **ad-hoc** updates on top of these feeds.
+
+---
+
+### Prompt A — ad-hoc: update the board from notes or a call  *(one-offs / Ricky)*
+
+For a status you want to push right now that isn't in the Radar yet (e.g. straight out of a
+client call). Paste into Cowork; swap the first line for your source (typed notes, a pasted
+transcript, or "the latest <meeting> in Fireflies"):
 
 ```
 I want to update the Coreshift Idea Pipeline board from THESE NOTES:
@@ -90,7 +110,8 @@ I want to update the Coreshift Idea Pipeline board from THESE NOTES:
 
 What the actions do on a card: **move** → changes its stage/lane · **waiting-on** → flags it
 **Blocked** with your reason · **park** → moves it to **Pending Validation** with a note.
-You can save this as a **scheduled Cowork task** to run every morning.
+(Keitha's *scheduled* feed is the Radar-artifact task above; Ricky can save this one as a
+recurring Cowork task too if his call notes live in a consistent place.)
 
 ---
 
@@ -133,13 +154,15 @@ established/tracked project — it won't nag for an assessment and moves freely 
 
 ### Keitha's extra flows
 
-- **Pull today's stand-up into the board** — see `INGESTION.md`. It's the same idea as
-  Prompt A, sourced from the daily "Daily stand-up" in Fireflies. (Once `FIREFLIES_API_KEY`
-  is set on the Worker, this also runs automatically each day.)
-- **Publish your Project Radar as a wiki page** — see `PUBLISH.md` **Prompt B**: commits your
-  Radar artifact as a browsable page in the wiki (needs the GitHub PAT).
-- **Review & decide ideas** — open the board, click a card in **Review** → the drawer shows
-  the assessment; use **Proceed → Build / Validate first / Do not proceed**. (Needs the token.)
+- **Publish from your Project Radar (your main flow)** — `PUBLISH.md`'s Radar prompt reads
+  your Radar artifact and pushes the changes to the board. It runs automatically on a Cowork
+  schedule; you can also run it on demand any time you update the Radar.
+- **Daily stand-up → board** — runs automatically via the Worker cron; `INGESTION.md` has the
+  details + a manual re-run if you ever need it.
+- **Publish your Project Radar as a wiki page** — `PUBLISH.md` **Prompt B** commits your Radar
+  artifact as a browsable page in the wiki (needs the GitHub PAT).
+- **Review & decide ideas** — open the board, click a card in **Review** → the drawer;
+  **Proceed → Build / Validate first / Do not proceed**. (Needs the token.)
 
 ### Re-assessing a card *(either of you)*
 
@@ -156,7 +179,8 @@ call transcript), produces a build plan, and lands the card straight in **Build*
 
 ---
 
-**In short:** everyone uses **Prompt A** to keep the board honest from their calls/notes;
-**Prompt B** adds or updates whole projects (Keitha, for work that never went through the
-funnel); Keitha additionally pulls the stand-up, publishes her Radar, and reviews. All
-writes go through one tested endpoint, so manual and automatic updates stay consistent.
+**In short:** the board keeps itself current from two automatic feeds — Keitha's **Project
+Radar** (scheduled Cowork task) and the **daily stand-up** (Worker cron). On top of that,
+**Prompt A** pushes ad-hoc updates from notes / a call (Ricky's main use) and **Prompt B**
+adds or updates whole projects. Everything routes through one tested endpoint, so the
+automatic and manual updates stay consistent and never double-apply.
