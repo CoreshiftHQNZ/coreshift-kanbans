@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>54%</strong> complete</div>
-        <div><strong>21</strong>/39 cards done</div>
-        <div>Updated <strong>2026-07-16 05:20 UTC</strong></div>
+        <div><strong>22</strong>/41 cards done</div>
+        <div>Updated <strong>2026-07-16 21:33 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">21</div>
+        <div class="status-num">22</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -829,7 +829,7 @@
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">2</div>
+        <div class="status-num">3</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
@@ -971,7 +971,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">21</span>
+        <span class="col-count">22</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1038,6 +1038,11 @@
         <div class="card-title">Legal &amp; trust pages</div>
         <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">Terms, Privacy (NZ Privacy Act + real sub-processors), and a plain-English Refunds policy, served at /terms, /privacy, /refunds and linked from the footer. Pending a final human/legal review</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Platform Agreement + signup acceptance</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">The lawyer&#39;s Live Edit Platform &amp; Hosting Agreement published as a click-through page (/platform-agreement), reconciled to the real product: electronic acceptance (no party details/signatures), cancel-anytime (not a 12-month lock-in), no setup fee, corrected sub-processor list. Sign-in now has a required &quot;I agree to the Platform Agreement + Privacy Policy&quot; checkbox (hyperlinks, gates Google + magic-link); acceptance is recorded server-side with a version stamp (migration 0008, prod+staging). Sub-processors corrected across the agreement **and** the live privacy page (Anthropic not Open Router; +Railway +Postmark; −Higgs Field). **Open points still need Ricky↔lawyer sign-off** (see the go-live gates)</div>
       </div>
       <div class="card">
         <div class="card-title">Custom-domain lifecycle</div>
@@ -1110,7 +1115,7 @@
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked — remaining go-live gates (need Ricky)</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1122,6 +1127,11 @@
         <div class="card-title">2️⃣ Flip Stripe to live keys</div>
         <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">needs-ricky</span></div>
         <div class="card-desc">The full test-mode path is verified end-to-end; the only remaining step is swapping test → live keys + the live webhook signing secret, as the final action before opening</div>
+      </div>
+      <div class="card">
+        <div class="card-title">3️⃣ Lawyer sign-off on the Platform Agreement</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">legal</span><span class="tag tag-neutral">needs-ricky</span></div>
+        <div class="card-desc">The click-through agreement is live + accepted at signup, but reconciled by us from the draft. Send the lawyer the corrections: (a) 5 open points — 4 confirmed from the product (offline-on-cancel, customer domain, customer content, V2 out of scope), setup fee = none; (b) we reconciled the 12-month term → cancel-anytime to match the product/marketing; (c) corrected sub-processor list (Anthropic, +Railway, +Postmark, −Higgs Field); (d) clause 13.2 promises a self-serve content export we haven&#39;t built yet — build it or lean on the assisted-export clause</div>
       </div></div>
     </section>
     <section class="column col-this-week">
