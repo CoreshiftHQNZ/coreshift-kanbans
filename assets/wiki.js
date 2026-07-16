@@ -63,6 +63,7 @@
       label: "Projects",
       items: [
         { key: "frontend-process", icon: "💡", text: "Idea Pipeline", href: "frontend-process/" },
+        { key: "team-setup", icon: "🔌", text: "Pipeline — team setup", href: "wiki/team-setup/" },
         { key: "new-project", icon: "🚀", text: "Start a new project", href: "wiki/new-project/" },
         { key: "boards",          icon: "📋", text: "Project boards", href: "boards/" },
         { key: "mission-control", icon: "🛰️", text: "Mission Control", href: "wiki/mission-control/" },

@@ -137,7 +137,7 @@
         : wip ? devStatusHtml(idea) : `<span class="pill pill-${st}">${esc(L.status[st] || st)}</span>`;
       const po = (wip && idea.product_owner) ? `<span class="fp-po" title="Product Owner">👤 ${esc(idea.product_owner)}</span>` : "";
       // Nudge on ideas still being assessed/reviewed that are missing a core section.
-      const needsMore = idea.mode !== "commissioned" && (idea.stage === "assessment" || idea.stage === "review") && idea.filled
+      const needsMore = (idea.mode || "standard") === "standard" && (idea.stage === "assessment" || idea.stage === "review") && idea.filled
         && ["opportunity", "intent_type", "confidence", "scope", "asset_value", "decision"].some((k) => !idea.filled[k]);
       const hint = needsMore ? `<div class="fp-card-hint">⚠ Assessment incomplete</div>` : "";
       // Hold/park reason on the outcome lanes (Pending Validation / Rejected aren't WIP cards).
@@ -457,10 +457,10 @@
     // required; Commercial + Governance only when it's client-facing or a full
     // business case. WIP additionally needs a go-ahead Decision.
     function unmetForData(data, targetKey) {
-      // Commissioned builds are already approved and enter at Build — they never have
-      // the ideation-funnel sections (opportunity/confidence/decision), so don't gate
-      // their moves on them.
-      if ((data.mode || "standard") === "commissioned") return [];
+      // Non-standard cards (commissioned builds, tracked/established projects added
+      // directly) never have the ideation-funnel sections, so don't gate their moves on
+      // opportunity/confidence/decision.
+      if ((data.mode || "standard") !== "standard") return [];
       const filled = data.filled || {};
       const clientFacing = ["client", "standalone", "product"].includes(data.intent);
       const fullCase = data.confidence === "business_case";
