@@ -39,11 +39,20 @@
 - **Team invites / agency linking** `auth` — Partly wired; several bindings and the invite-accept surface still need connecting and one real run-through.
 - **Two-way support chat** `enhancement` — Customer → team works; the team → customer reply and the customer email notification still need to be delivered (the widget already promises "we'll email you").
 
-## 🚫 Blocked — go-live gates (need Ricky)
+## ✅ Rehearsal — core paths VERIFIED (2026-07-16 test run, nzricky@gmail.com)
 
-- **1️⃣ Confirm email delivery in prod** `launch` `needs-ricky` — Verify the Postmark token/sender is live and a real lead / login / support email actually arrives (not just "sent"). Everything downstream depends on this — a site whose leads don't land is worthless. First domino.
-- **2️⃣ Go live on Stripe: keys + webhook + one real sale** `launch` `billing` `needs-ricky` — Switch to live keys, set the `checkout.session.completed` signing secret, then run one real card through the full trial→pay path before charging anyone.
-- **3️⃣ Enable Cloudflare for SaaS + confirm domain secrets** `launch` `needs-ricky` — Turn on Custom Hostnames on the coreshift.page zone, set the fallback origin to `sites.coreshift.page`, and confirm the edge secrets: `CLOUDFLARE_API_TOKEN` (cert edit scope), `CLOUDFLARE_ZONE_ID`, `CUSTOM_DOMAIN_TARGET`. Unblocks the custom-domains build.
+Real dress rehearsal passed on every critical path: onboarding (crawl+generate) →
+publish → **lead captured** → **custom domain `theboys.co.nz` went live** (Cloudflare
+for SaaS cert issued via the status poll) → **test checkout → webhook → account
+flipped to active** with the Stripe customer + subscription id persisted and the
+event recorded (idempotency working). Billing and custom domains are proven in
+test mode. Punch-list issues found + fixed separately.
+
+## 🚫 Blocked — remaining go-live gates (need Ricky)
+
+- **1️⃣ Add DMARC record (email → inbox, not junk)** `launch` `needs-ricky` — SPF/DKIM verified; magic-link + lead emails land in junk without DMARC. Add TXT `_dmarc` → `v=DMARC1; p=none; rua=mailto:hello@coreshifthq.com`.
+- **2️⃣ Flip Stripe to live keys** `launch` `billing` `needs-ricky` — The full test-mode path is verified end-to-end; the only remaining step is swapping test → live keys + the live webhook signing secret, as the final action before opening.
+- ~~Cloudflare for SaaS~~ ✅ done — verified live (`theboys.co.nz` active).
 
 ## 🔵 This Week — launch wave
 

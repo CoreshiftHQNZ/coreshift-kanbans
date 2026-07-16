@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>54%</strong> complete</div>
-        <div><strong>19</strong>/35 cards done</div>
-        <div>Updated <strong>2026-07-15 23:23 UTC</strong></div>
+        <div><strong>56%</strong> complete</div>
+        <div><strong>19</strong>/34 cards done</div>
+        <div>Updated <strong>2026-07-16 00:08 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -829,7 +829,7 @@
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">3</div>
+        <div class="status-num">2</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
@@ -1097,26 +1097,28 @@
         <div class="card-desc">Customer → team works; the team → customer reply and the customer email notification still need to be delivered (the widget already promises &quot;we&#39;ll email you&quot;)</div>
       </div></div>
     </section>
+    <section class="column col-done">
+      <header class="col-head">
+        <h2>✅ Rehearsal — core paths VERIFIED (2026-07-16 test run, nzricky@gmail.com)</h2>
+        <span class="col-count">0</span>
+      </header>
+      <div class="cards"><div class="empty">No items</div></div>
+    </section>
     <section class="column col-blocked">
       <header class="col-head">
-        <h2>🚫 Blocked — go-live gates (need Ricky)</h2>
-        <span class="col-count">3</span>
+        <h2>🚫 Blocked — remaining go-live gates (need Ricky)</h2>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">1️⃣ Confirm email delivery in prod</div>
-        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">needs-ricky</span></div>
-        <div class="card-desc">Verify the Postmark token/sender is live and a real lead / login / support email actually arrives (not just &quot;sent&quot;). Everything downstream depends on this — a site whose leads don&#39;t land is worthless. First domino</div>
+        <div class="card-title">1️⃣ Add DMARC record (email → inbox, not junk)</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">_dmarc</span><span class="tag tag-neutral">v=DMARC1; p=none; rua=mailto:hello@coreshifthq.com</span></div>
+        <div class="card-desc">SPF/DKIM verified; magic-link + lead emails land in junk without DMARC. Add TXT `_dmarc` → `v=DMARC1; p=none; rua=mailto:hello@coreshifthq.com`</div>
       </div>
       <div class="card">
-        <div class="card-title">2️⃣ Go live on Stripe: keys + webhook + one real sale</div>
-        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">checkout.session.completed</span></div>
-        <div class="card-desc">Switch to live keys, set the `checkout.session.completed` signing secret, then run one real card through the full trial→pay path before charging anyone</div>
-      </div>
-      <div class="card">
-        <div class="card-title">3️⃣ Enable Cloudflare for SaaS + confirm domain secrets</div>
-        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">sites.coreshift.page</span><span class="tag tag-neutral">CLOUDFLARE_API_TOKEN</span><span class="tag tag-neutral">CLOUDFLARE_ZONE_ID</span><span class="tag tag-neutral">CUSTOM_DOMAIN_TARGET</span></div>
-        <div class="card-desc">Turn on Custom Hostnames on the coreshift.page zone, set the fallback origin to `sites.coreshift.page`, and confirm the edge secrets: `CLOUDFLARE_API_TOKEN` (cert edit scope), `CLOUDFLARE_ZONE_ID`, `CUSTOM_DOMAIN_TARGET`. Unblocks the custom-domains build</div>
+        <div class="card-title">2️⃣ Flip Stripe to live keys</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">needs-ricky</span></div>
+        <div class="card-desc">The full test-mode path is verified end-to-end; the only remaining step is swapping test → live keys + the live webhook signing secret, as the final action before opening</div>
       </div></div>
     </section>
     <section class="column col-this-week">
