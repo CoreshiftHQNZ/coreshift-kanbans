@@ -24,7 +24,8 @@
 - **Trial + billing gate** `shipped` — 14-day trial from first publish; cancelled/expired sites serve a calm offline page from the renderer.
 - **Billing hardened + self-serve portal** `launch` `shipped` — Stripe webhook now has a replay guard, idempotent event dedup, persists the subscription id, and handles payment-failed/succeeded. Customers get a "Manage billing" button (Stripe portal) to update card / cancel themselves. Real end-to-end sale still to be run in the rehearsal.
 - **Legal & trust pages** `launch` `shipped` — Terms, Privacy (NZ Privacy Act + real sub-processors), and a plain-English Refunds policy, served at /terms, /privacy, /refunds and linked from the footer. Pending a final human/legal review.
-- **Custom-domain lifecycle** `launch` `shipped` — Full flow now: connect (custom hostname) → auto-poll status (pending→live once Cloudflare issues SSL) → per-domain remove → teardown-on-cancel. Renderer already serves active custom domains. Code live; needs Cloudflare-for-SaaS enabled + CF secrets to test end-to-end (see Blocked).
+- **Custom-domain lifecycle** `launch` `shipped` — Full flow now: connect (custom hostname) → auto-poll status (pending→live once Cloudflare issues SSL) → per-domain remove → teardown-on-cancel. **Verified live in the rehearsal — `theboys.co.nz` went active.**
+- **Dress rehearsal — core paths verified** `launch` `shipped` — 2026-07-16 test run: onboarding (crawl+generate) → publish → lead captured → custom domain live → **test checkout → webhook → account active** (Stripe customer + subscription id persisted, event recorded / idempotent). Billing + custom domains proven in test mode. Remaining before opening: DMARC record + flip Stripe to live keys.
 - **DB baseline in source control** `launch` `infra` `shipped` — Captured the 20 prod tables + constraints + RLS + all policies + triggers into a re-runnable baseline migration; functions pointered to prod/0005 with a `supabase db dump` note for byte-exactness. Closes the "schema only in prod" gap.
 - **Marketing site + signup funnel** `shipped` — coreshift.page carries a pasted URL through sign-in into the "bring my site" onboarding.
 - **CI auto-deploy** `infra` `shipped` — Push to main deploys the dashboard, renderer, marketing, and edge functions to Cloudflare/Supabase, gated on typecheck + tests + a prod smoke test.
@@ -38,15 +39,6 @@
 - **Magic-link login** `auth` — Built, but has never completed a real round trip in production (depends on the Postmark auth hook above).
 - **Team invites / agency linking** `auth` — Partly wired; several bindings and the invite-accept surface still need connecting and one real run-through.
 - **Two-way support chat** `enhancement` — Customer → team works; the team → customer reply and the customer email notification still need to be delivered (the widget already promises "we'll email you").
-
-## ✅ Rehearsal — core paths VERIFIED (2026-07-16 test run, nzricky@gmail.com)
-
-Real dress rehearsal passed on every critical path: onboarding (crawl+generate) →
-publish → **lead captured** → **custom domain `theboys.co.nz` went live** (Cloudflare
-for SaaS cert issued via the status poll) → **test checkout → webhook → account
-flipped to active** with the Stripe customer + subscription id persisted and the
-event recorded (idempotency working). Billing and custom domains are proven in
-test mode. Punch-list issues found + fixed separately.
 
 ## 🚫 Blocked — remaining go-live gates (need Ricky)
 

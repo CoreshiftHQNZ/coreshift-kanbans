@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>56%</strong> complete</div>
-        <div><strong>19</strong>/34 cards done</div>
-        <div>Updated <strong>2026-07-16 00:08 UTC</strong></div>
+        <div><strong>57%</strong> complete</div>
+        <div><strong>20</strong>/35 cards done</div>
+        <div>Updated <strong>2026-07-16 00:09 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">19</div>
+        <div class="status-num">20</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -971,7 +971,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">19</span>
+        <span class="col-count">20</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1036,8 +1036,13 @@
       </div>
       <div class="card">
         <div class="card-title">Custom-domain lifecycle</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">theboys.co.nz</span></div>
+        <div class="card-desc">Full flow now: connect (custom hostname) → auto-poll status (pending→live once Cloudflare issues SSL) → per-domain remove → teardown-on-cancel. **Verified live in the rehearsal — `theboys.co.nz` went active.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Dress rehearsal — core paths verified</div>
         <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Full flow now: connect (custom hostname) → auto-poll status (pending→live once Cloudflare issues SSL) → per-domain remove → teardown-on-cancel. Renderer already serves active custom domains. Code live; needs Cloudflare-for-SaaS enabled + CF secrets to test end-to-end (see Blocked)</div>
+        <div class="card-desc">2026-07-16 test run: onboarding (crawl+generate) → publish → lead captured → custom domain live → **test checkout → webhook → account active** (Stripe customer + subscription id persisted, event recorded / idempotent). Billing + custom domains proven in test mode. Remaining before opening: DMARC record + flip Stripe to live keys</div>
       </div>
       <div class="card">
         <div class="card-title">DB baseline in source control</div>
@@ -1096,13 +1101,6 @@
         <div class="card-tags"><span class="tag tag-neutral">enhancement</span></div>
         <div class="card-desc">Customer → team works; the team → customer reply and the customer email notification still need to be delivered (the widget already promises &quot;we&#39;ll email you&quot;)</div>
       </div></div>
-    </section>
-    <section class="column col-done">
-      <header class="col-head">
-        <h2>✅ Rehearsal — core paths VERIFIED (2026-07-16 test run, nzricky@gmail.com)</h2>
-        <span class="col-count">0</span>
-      </header>
-      <div class="cards"><div class="empty">No items</div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
