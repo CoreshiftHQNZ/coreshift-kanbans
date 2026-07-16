@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>53%</strong> complete</div>
-        <div><strong>20</strong>/38 cards done</div>
-        <div>Updated <strong>2026-07-16 04:37 UTC</strong></div>
+        <div><strong>54%</strong> complete</div>
+        <div><strong>21</strong>/39 cards done</div>
+        <div>Updated <strong>2026-07-16 05:20 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">20</div>
+        <div class="status-num">21</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -920,8 +920,15 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">New-site flow (redesign)</div>
+            <div class="recent-desc">The onboarding Ricky spec&#39;d: start (bring-existing / start-new) → pick a template → live preview with theme-hover reskin → brand colour + curated font pairing → finalize. **Bring-existing crawls the site and pours the real content into the chosen template&#39;s layout** (generate-site follows the template skeleton, never inventing testimonials/stats/logos). Start-from-scratch drops into a blank editor. 14 templates, 17 themes, 6 font pairings all wired in. *(Pending a live smoke-test of the authed crawl→pour path.)*</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">In-page editor</div>
-            <div class="recent-desc">Click-to-edit text and images, rich text with links, nav/footer editors, add-pages, SEO + settings panels, theme + brand-colour switching, in-memory draft, and a sign-off gate. In real use across the live sites</div>
+            <div class="recent-desc">Click-to-edit text and images, rich text with links, nav/footer editors, add-pages, SEO + settings panels, theme + brand-colour switching, curated font pairings, in-memory draft, and a sign-off gate. In real use across the live sites</div>
           </div>
         </div>
         <div class="recent-item">
@@ -952,13 +959,6 @@
             <div class="recent-desc">Micro-motion as a contract: sections expose hooks (scroll reveal, staggered card cascades, hover), each of the 11 themes carries a tuned motion personality (calm / gentle / snappy / precise / hard), and functional micro-interactions (button press, focus rings) are always on. Fast (CSS + a tiny observer), and fully off under reduced-motion. Preview with `?motion=on` on the review board</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Instant publish + edge renderer</div>
-            <div class="recent-desc">Publishing is a DB pointer flip + edge-cache purge; one Cloudflare Worker resolves host → tenant → published content → SSR. **15 sites live and published.**</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -971,13 +971,18 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">20</span>
+        <span class="col-count">21</span>
       </header>
       <div class="cards">
       <div class="card">
+        <div class="card-title">New-site flow (redesign)</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">The onboarding Ricky spec&#39;d: start (bring-existing / start-new) → pick a template → live preview with theme-hover reskin → brand colour + curated font pairing → finalize. **Bring-existing crawls the site and pours the real content into the chosen template&#39;s layout** (generate-site follows the template skeleton, never inventing testimonials/stats/logos). Start-from-scratch drops into a blank editor. 14 templates, 17 themes, 6 font pairings all wired in. *(Pending a live smoke-test of the authed crawl→pour path.)*</div>
+      </div>
+      <div class="card">
         <div class="card-title">In-page editor</div>
         <div class="card-tags"><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Click-to-edit text and images, rich text with links, nav/footer editors, add-pages, SEO + settings panels, theme + brand-colour switching, in-memory draft, and a sign-off gate. In real use across the live sites</div>
+        <div class="card-desc">Click-to-edit text and images, rich text with links, nav/footer editors, add-pages, SEO + settings panels, theme + brand-colour switching, curated font pairings, in-memory draft, and a sign-off gate. In real use across the live sites</div>
       </div>
       <div class="card">
         <div class="card-title">Section + theme engine</div>
