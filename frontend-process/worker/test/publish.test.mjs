@@ -164,17 +164,93 @@ test("matchIdeaExact: id / exact title only, never fuzzy containment", () => {
   assert.equal(matchIdeaExact(list, "Growth Partners"), null); // containment does NOT match
 });
 
-test("add: a new title that only CONTAINS an existing one creates a distinct card (never renames)", async () => {
+test("add: a new title that fuzzily matches an existing card is flagged ambiguous, not duplicated", async () => {
   const patched = [], created = [];
   const deps = {
     listIdeas: async () => ideas(),
     updateIdea: async (id, patch) => patched.push({ id, patch }),
     createIdea: async (patch) => { created.push(patch); return { id: "new" }; },
   };
-  const { summary } = await applyUpdates(deps, [{ action: "add", title: "Growth Partners", stage: "build" }]);
-  assert.equal(summary.created, 1);         // a distinct "Growth Partners" was created
+  const { summary, results } = await applyUpdates(deps, [{ action: "add", title: "Growth Partners", stage: "build" }]);
+  assert.equal(summary.ambiguous, 1);       // "Growth Partners" ≈ "Growth Partners — 2026 Rebuild"
+  assert.equal(summary.created, undefined); // NOT auto-created (would be a duplicate)
+  assert.equal(created.length, 0);
+  assert.equal(patched.length, 0);          // and the existing card is untouched (no rename)
+  assert.equal(results[0].title, "Growth Partners — 2026 Rebuild"); // reports the card it resembles
+});
+
+test("add: force_create overrides the guard → distinct card created, existing one never renamed", async () => {
+  const patched = [], created = [];
+  const deps = {
+    listIdeas: async () => ideas(),
+    updateIdea: async (id, patch) => patched.push({ id, patch }),
+    createIdea: async (patch) => { created.push(patch); return { id: "new" }; },
+  };
+  const { summary } = await applyUpdates(deps, [{ action: "add", title: "Growth Partners", stage: "build", force_create: true }]);
+  assert.equal(summary.created, 1);         // explicit override → a distinct card IS created
   assert.equal(created[0].title, "Growth Partners");
-  assert.equal(patched.length, 0);          // the live "Growth Partners — 2026 Rebuild" was untouched
+  assert.equal(patched.length, 0);          // the live "Growth Partners — 2026 Rebuild" is still untouched
+});
+
+test("add: name drift ('Sales Velocity' vs existing 'Velocity') is ambiguous, not a duplicate", async () => {
+  const created = [];
+  const deps = {
+    listIdeas: async () => [{ id: "v", title: "Velocity", stage: "harden", dev_status: "in_progress" }],
+    updateIdea: async () => {},
+    createIdea: async (patch) => { created.push(patch); return { id: "x" }; },
+  };
+  const { summary, results } = await applyUpdates(deps, [{ action: "upsert", match: "Sales Velocity", title: "Sales Velocity", stage: "harden" }]);
+  assert.equal(summary.ambiguous, 1);
+  assert.equal(created.length, 0);          // no second "Velocity" card spawned
+  assert.equal(results[0].id, "v");         // points at the card it likely is
+  assert.equal(results[0].title, "Velocity");
+});
+
+test("add: two items for the SAME new project in one batch create it once, then update it", async () => {
+  const created = [], patched = [];
+  const deps = {
+    listIdeas: async () => ideas(),            // no "Ops Portal" to start
+    updateIdea: async (id, patch) => patched.push({ id, patch }),
+    createIdea: async (patch) => { created.push(patch); return { id: "op-1" }; },
+  };
+  const { summary } = await applyUpdates(deps, [
+    { action: "add", title: "Ops Portal", stage: "build" },
+    { action: "set", match: "Ops Portal", title: "Ops Portal", repo_url: "https://gh/ops" },
+  ]);
+  assert.equal(created.length, 1);           // created exactly once, not twice
+  assert.equal(summary.created, 1);
+  assert.equal(patched.length, 1);           // the 2nd item UPDATED the just-created card
+  assert.equal(patched[0].id, "op-1");
+  assert.equal(patched[0].patch.repo_url, "https://gh/ops");
+});
+
+test("add: a bare name resembling TWO existing cards is ambiguous, never created", async () => {
+  const created = [];
+  const deps = {
+    listIdeas: async () => [
+      { id: "1", title: "Growth Partners", stage: "live" },
+      { id: "2", title: "Growth Engine", stage: "build" },
+    ],
+    updateIdea: async () => {},
+    createIdea: async (patch) => { created.push(patch); return { id: "x" }; },
+  };
+  const { summary } = await applyUpdates(deps, [{ action: "add", title: "Growth", stage: "build" }]);
+  assert.equal(summary.ambiguous, 1);        // 2 containment hits → fails SAFE
+  assert.equal(created.length, 0);           // no third "Growth*" card
+});
+
+test("add: match key differs from title but the TITLE exactly hits an existing card → ambiguous", async () => {
+  const created = [];
+  const deps = {
+    listIdeas: async () => [{ id: "n", title: "Nova", stage: "build" }],
+    updateIdea: async () => {},
+    createIdea: async (patch) => { created.push(patch); return { id: "x" }; },
+  };
+  // match "Zeta" finds nothing, but title "Nova" already exists — must not create a 2nd Nova.
+  const { summary, results } = await applyUpdates(deps, [{ action: "add", match: "Zeta", title: "Nova", stage: "build" }]);
+  assert.equal(summary.ambiguous, 1);
+  assert.equal(created.length, 0);
+  assert.equal(results[0].title, "Nova");
 });
 
 test("upsert on an exact match updates fields but never rewrites the title", async () => {

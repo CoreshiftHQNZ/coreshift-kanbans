@@ -507,6 +507,16 @@ async function handlePublish(request, env, cors) {
   const body = await request.json();
   const items = Array.isArray(body.items) ? body.items : [];
   if (!items.length) return json({ error: "items[] required" }, 400, cors);
+  // Cross-feed meeting dedup: when a batch is derived from ONE meeting, tag it with that
+  // meeting's Fireflies id. A meeting is then applied at most once no matter which feed
+  // pulls it — the stand-up cron and any Cowork pull share the same ingestion_log, so if
+  // you and Keitha were both in the same call, whoever lands first wins and the other is a
+  // no-op. A Radar-ARTIFACT publish carries no meeting id and is never deduped (correct —
+  // the Radar isn't a meeting and should always sync). `force` re-applies regardless.
+  const meetingId = body.source_meeting_id ? String(body.source_meeting_id).slice(0, 200) : null;
+  if (meetingId && !body.force && (await wasProcessed(env, meetingId))) {
+    return json({ ok: true, status: "already_ingested", source_meeting_id: meetingId, summary: {}, results: [] }, 200, cors);
+  }
   const { results, summary } = await applyUpdates(
     {
       listIdeas: () => listIdeas(env),
@@ -517,7 +527,23 @@ async function handlePublish(request, env, cors) {
     },
     items,
   );
-  return json({ ok: true, summary, results }, 200, cors);
+  // Record the meeting as done so a second feed pulling it is a no-op — but ONLY once it
+  // actually CHANGED the board (applied / created), and only when nothing transient failed.
+  // A publish that matched nothing (all unmatched/ambiguous) — or only skipped cards that
+  // happened to already be current — must not "claim" the meeting and block the stand-up
+  // cron (the authoritative fallback) from processing it, in case the cron would surface a
+  // project this batch didn't touch. A blip stays retryable (applyUpdates is idempotent, so
+  // already-applied items re-apply as no-ops on the retry).
+  const hadTransient = results.some((r) => r.status === "error" && r.transient);
+  const didWork = results.some((r) => ["applied", "created"].includes(r.status));
+  const recorded = !!(meetingId && didWork && !hadTransient);
+  if (recorded) {
+    await markProcessed(env, meetingId, { title: body.source_meeting_title || null, via: "publish", count: results.length }).catch(() => {});
+  }
+  // Surface review-worthy outcomes — new cards created, or names too close to an existing
+  // card to auto-create — to Slack. Routine moves stay silent (the board shows those).
+  await notifyPublish(env, results).catch(() => {});
+  return json({ ok: true, status: hadTransient ? "retry_pending" : (recorded ? "ingested" : "ok"), source_meeting_id: meetingId || undefined, summary, results }, 200, cors);
 }
 
 // ── /api/ingest (manual "pull today's stand-up" — token-gated) ─────────────
@@ -755,6 +781,24 @@ async function notifySlack(env, idea) {
       ],
     }),
   });
+}
+
+// Review ping for a Radar/publish batch: which projects were newly CREATED, and which
+// came back AMBIGUOUS (name too close to an existing card to auto-create — needs a human
+// to reconcile). Routine moves/updates are intentionally omitted so this stays low-noise.
+// No-ops when there's nothing review-worthy, or when Slack isn't wired up.
+async function notifyPublish(env, results) {
+  if (!env.SLACK_WEBHOOK_URL || !Array.isArray(results)) return;
+  const created = results.filter((r) => r.status === "created");
+  const ambiguous = results.filter((r) => r.status === "ambiguous");
+  if (!created.length && !ambiguous.length) return;
+  const site = env.SITE_URL || "https://coreshifthqnz.github.io/coreshift-kanbans";
+  const attempted = (r) => (r.item && (r.item.title || r.item.match)) || "?";
+  const lines = ["🛰 Radar publish"];
+  if (created.length) lines.push(`🆕 Created (${created.length}): ${created.map((r) => r.title).join(", ")}`);
+  if (ambiguous.length) lines.push(`⚠️ Name check (${ambiguous.length}) — not created, looks like an existing card: ${ambiguous.map((r) => `"${attempted(r)}" ↔ "${r.title}"`).join(", ")}`);
+  lines.push(`${site}/frontend-process/`);
+  await slackText(env, lines.join("\n"));
 }
 
 // Post a plain-text message to Slack (the stand-up ingestion digest). No-ops if

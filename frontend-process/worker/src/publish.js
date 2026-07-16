@@ -22,6 +22,23 @@ export function normTitle(s) {
   return String(s == null ? "" : s).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
+// Every card whose normalised title word-overlaps `match` by whole-word containment
+// (either direction). The shared building block for fuzzy matching AND the create-time
+// duplicate guard. Empty array when `match` is blank.
+export function containmentMatches(ideas, match) {
+  const q = normTitle(match);
+  if (!q) return [];
+  return (ideas || []).filter((i) => {
+    const t = normTitle(i.title);
+    if (!t) return false;
+    // Word-boundary aware: the shorter title must appear as a whole-word run in the
+    // longer one. Avoids "tap" matching "tapestry" while keeping
+    // "growth partners" matching "growth partners 2026 rebuild".
+    const [short, long] = t.length <= q.length ? [t, q] : [q, t];
+    return (" " + long + " ").includes(" " + short + " ");
+  });
+}
+
 // Resolve which idea an update refers to. Prefers an exact id; else exact-normalised
 // title; else a single unambiguous containment match. Returns the idea or null
 // (null → "unmatched", surfaced for review rather than guessed).
@@ -33,15 +50,7 @@ export function matchIdea(ideas, match) {
   if (!q) return null;
   const exact = ideas.find((i) => normTitle(i.title) === q);
   if (exact) return exact;
-  const contained = ideas.filter((i) => {
-    const t = normTitle(i.title);
-    if (!t) return false;
-    // Word-boundary aware: the shorter title must appear as a whole-word run in the
-    // longer one. Avoids "tap" matching "tapestry" while keeping
-    // "growth partners" matching "growth partners 2026 rebuild".
-    const [short, long] = t.length <= q.length ? [t, q] : [q, t];
-    return (" " + long + " ").includes(" " + short + " ");
-  });
+  const contained = containmentMatches(ideas, match);
   return contained.length === 1 ? contained[0] : null; // 0 or >1 → unmatched
 }
 
@@ -103,8 +112,12 @@ function isNoop(idea, patch) {
 
 // Apply a batch of items. deps = { listIdeas(), updateIdea(id, patch), createIdea?(patch) }.
 // An item may name its target via `id`, `match`, `project`, or `title`. An add/upsert
-// item with no match CREATES a card (only when deps.createIdea is provided — e.g.
-// /api/publish, NOT the stand-up ingestion, which must never invent projects).
+// item with no EXACT match CREATES a card (only when deps.createIdea is provided — e.g.
+// /api/publish, NOT the stand-up ingestion, which must never invent projects) — UNLESS
+// its name fuzzily matches an existing card, in which case it's reported "ambiguous"
+// (a likely duplicate for a human to reconcile) rather than created. `item.force_create`
+// skips that guard to create a genuinely-new same-ish-named card.
+// Result statuses: applied · skipped · created · ambiguous · unmatched · error.
 // Returns { results: [{status, id?, title?, error?}], summary: {status: count} }.
 export async function applyUpdates(deps, items) {
   const list = Array.isArray(items) ? items : [];
@@ -120,9 +133,35 @@ export async function applyUpdates(deps, items) {
       // No existing card. Create only for an add/upsert that names a title AND when a
       // creator is available; everything else is reported as unmatched (never guessed).
       if (create && deps.createIdea && patch.title) {
+        // Name-drift guard: check the TITLE being created (not just the match key, which
+        // can differ) against every existing card. ANY containment overlap — exact, one
+        // match, or several ("Sales Velocity" vs "Velocity"; a bare "Growth" vs two Growth*
+        // cards) — is treated as a likely duplicate and reported "ambiguous" for a human to
+        // reconcile the name, rather than silently spawning a second card. `force_create`
+        // overrides the guard (reviewer confirmed a genuinely NEW same-ish-named project) —
+        // that still CREATES a distinct card, never renames the one it resembles.
+        const near = item.force_create ? [] : containmentMatches(ideas, patch.title);
+        if (near.length) {
+          results.push({ item, status: "ambiguous", id: near[0].id, title: near[0].title });
+          continue;
+        }
         try {
           const made = await deps.createIdea(patch);
           results.push({ item, id: made && made.id, title: patch.title, status: "created", patch });
+          // Reflect the new card in the working set so a later item in THIS batch naming the
+          // same project updates it (or no-ops) rather than creating a second one — `ideas`
+          // was fetched once up front and wouldn't otherwise see intra-batch creates. Mirror
+          // the RETURNED row (createIdea fills defaults like stage "build"), not just `patch`,
+          // so a later isNoop check against this entry is accurate.
+          if (made && made.id) {
+            ideas.push({
+              id: made.id,
+              title: made.title || patch.title,
+              stage: made.stage || patch.stage || null,
+              dev_status: made.dev_status || patch.dev_status || null,
+              dev_status_reason: made.dev_status_reason || patch.dev_status_reason || null,
+            });
+          }
         } catch (e) {
           results.push({ item, title: patch.title, status: "error", transient: true, error: String((e && e.message) || e) });
         }

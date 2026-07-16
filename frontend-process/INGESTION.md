@@ -42,7 +42,7 @@ Paste this into Cowork:
 ```
 Get the most recent Coreshift "Daily stand-up" from Fireflies (use the Fireflies tools —
 list recent transcripts, pick the newest whose title is the daily stand-up, and read its
-summary + action items).
+summary + action items). Note its Fireflies transcript id — you'll pass it below.
 
 Then fetch the current pipeline projects:
   GET https://idea-intake.coreshifthq.workers.dev/api/ideas   (no auth needed)
@@ -60,10 +60,15 @@ mentioned isn't clearly one of the pipeline projects, DON'T guess — list it se
 
 Show me the proposed updates first, in plain English. When I say go, POST them in ONE request to
   https://idea-intake.coreshifthq.workers.dev/api/publish
-with header  Authorization: Bearer <REVIEW TOKEN>  and body  { "items": [ ...objects... ] }.
-Ask me for the review token if you don't have it; do not print or save it.
+with header  Authorization: Bearer <REVIEW TOKEN>  and body
+  { "source_meeting_id": "<the stand-up's Fireflies transcript id>", "items": [ ...objects... ] }.
+The source_meeting_id lets the board skip this stand-up if the automatic nightly feed already
+applied it (and vice-versa), so the same meeting is never double-counted. Ask me for the review
+token if you don't have it; do not print or save it.
 
-Then show me the response summary:
+Then show me the response:
+  • status "already_ingested" – this stand-up was already applied (by the nightly feed or an
+                                earlier run); nothing to do.
   • applied   – cards updated
   • skipped   – already up to date
   • unmatched – project name didn't match a card (so I can fix the name or add the idea)
@@ -134,5 +139,6 @@ manual Cowork prompt above — a graceful pointer, not a crash (`curl -s` prints
 ## Good to know
 - **Project names must match** the board. Unmatched items show up in the digest / Cowork summary —
   fix the name in the stand-up notes (or add the idea) and it'll match next time.
-- Manual and automatic can coexist — the idempotency guard means running both won't double-apply.
+- Manual and automatic can coexist — passing `source_meeting_id` means a stand-up is applied
+  once no matter which feed runs first (the other sees it's done and returns `already_ingested`).
 - Related: `PUBLISH.md` (Keitha publishing her Project Radar to the board and the wiki).

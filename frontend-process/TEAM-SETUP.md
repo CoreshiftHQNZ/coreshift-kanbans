@@ -43,8 +43,10 @@ Screen-share the board and walk through this in order (~15 min):
 **Talking points / FAQ**
 - *"Do I need the token every time?"* Only for **writes** (publishing updates, deciding,
   editing). Reading the board needs nothing.
-- *"What if a project name doesn't match?"* It comes back as **unmatched** — fix the name in
-  your notes and re-run, or add it as a new idea. Nothing is guessed or auto-created.
+- *"What if a project name doesn't match?"* For **stand-up / notes** updates it comes back
+  **unmatched** — fix the name and re-run (nothing is guessed). For the **Radar sync / add
+  projects** flow, a genuinely new name is **created**, and a name close to an existing card is
+  flagged as a **name check** so you align it rather than duplicate. Nothing is silently doubled.
 - *"Is it safe to re-run?"* Yes — unchanged cards are skipped, never double-applied.
 
 ---
@@ -69,8 +71,9 @@ The API it talks to: `https://idea-intake.coreshifthq.workers.dev`
 
 Two feeds already run on a schedule — nobody has to touch them daily:
 - **Project Radar → board (recommended, Keitha).** A scheduled Cowork task reads Keitha's
-  Radar artifact and publishes the changes — this is `PUBLISH.md`'s Radar prompt saved as a
-  recurring Cowork task. Keep the Radar current and the board follows.
+  Radar artifact and syncs the board to it — updating existing cards AND adding projects that
+  aren't on the board yet (as tracked projects, no assessment). This is `PUBLISH.md`'s Radar
+  prompt saved as a recurring Cowork task. Keep the Radar current and the board follows.
 - **Daily stand-up → board.** The Worker's cron pulls the latest "Daily stand-up" from
   Fireflies each evening and applies the routed updates.
 
@@ -103,9 +106,13 @@ I want to update the Coreshift Idea Pipeline board from THESE NOTES:
 3. Show me the proposed updates first. When I say go, POST them in ONE request to
    https://idea-intake.coreshifthq.workers.dev/api/publish
    with header  Authorization: Bearer <REVIEW TOKEN>  and body  { "items": [ ...objects... ] }.
+   If the source was a Fireflies meeting, also include its transcript id as
+   "source_meeting_id" in the body — so if someone else pulls the SAME call it's applied only
+   once (whoever lands first wins; the other gets "already_ingested"). For typed notes, omit it.
    Ask me for the review token if you don't have it; do not print or save it.
 4. Show me the summary: applied · skipped (already up to date) · unmatched (name didn't
-   match — I'll fix it) · error (rejected — card left unchanged).
+   match — I'll fix it) · error (rejected — card left unchanged). If it comes back
+   "already_ingested", that meeting was already applied by another feed — nothing to do.
 ```
 
 What the actions do on a card: **move** → changes its stage/lane · **waiting-on** → flags it
@@ -144,11 +151,16 @@ I want to add / update projects on the Coreshift Idea Pipeline board. Here are m
    https://idea-intake.coreshifthq.workers.dev/api/publish
    with header  Authorization: Bearer <REVIEW TOKEN>  and body  { "items": [ ...objects... ] }.
    Ask me for the review token if you don't have it; don't print or save it.
-4. Show me the summary:  created · applied (updated) · skipped (already matched) · error.
+4. Show me the summary:  created · applied (updated) · skipped (already matched) · name check
+   (a name too close to an existing card — NOT created; I'll either rename it to match the
+   board, or add  "force_create": true  to that one item if it's genuinely a separate, new
+   project) · error.
 ```
 
 A created project lands at the **stage** you give (defaults to Build), marked as an
-established/tracked project — it won't nag for an assessment and moves freely on the board.
+established/tracked project — it won't nag for an assessment and moves freely on the board. A
+name that closely resembles an existing card comes back as a **name check** rather than a
+second card, so near-duplicates never sneak in.
 
 ---
 
