@@ -4,6 +4,34 @@ What changed in Claude this week — models, API, and Claude Code — in plain l
 
 ---
 
+## Week of 12 Jul 2026
+
+**Product — Cowork goes cross-device (the big one)**
+
+- **Claude Cowork is coming to web and mobile (7 Jul).** Cowork previously lived only on the desktop app; now sessions run **remotely (beta)** so your work and files are saved to your Claude account and follow you across devices. Three practical changes: **work follows you** (start at your desk, check from your phone), **work continues in the background** — including **scheduled tasks that run with no device online** — and **decisions still route to you** (Claude pauses for approvals, which reach your phone; nothing ships until you review). Chat and Cowork now also share **one home** with shared projects/artifacts. Rolling out over the next several weeks **starting with Max**, more plans to follow. Desktop stays the fullest experience (local files + browser). Anthropic notes >90% of Cowork use is **non-coding** knowledge work (ops + content), and is **doubling Cowork usage limits through 5 Aug** to mark the launch. ([Cowork on web and mobile](https://claude.com/blog/cowork-web-mobile) · [release notes](https://support.claude.com/en/articles/12138966-release-notes))
+- **Microsoft 365 connector gets write tools (7 Jul).** Beyond search, Claude can now **draft, send, and organise email, manage calendar events, update mailbox settings, and create/update files in OneDrive and SharePoint**. Teams stays read-only. Requires a Microsoft Entra admin to consent to the new permissions and an org admin to enable them. ([release notes](https://support.claude.com/en/articles/12138966-release-notes))
+- **A new way to reflect (9 Jul).** *Settings → Reflect* adds a **monthly recap** (top topics, most active day/peak hour, how you work with Claude) and *Settings → Time and focus* adds optional **break reminders and quiet hours**. Beta on Free/Pro/Max, web + Desktop, **requires memory on**; built around a 4D AI-fluency framing (delegation, description, discernment, diligence). ([Reflect with Claude](https://www.anthropic.com/news/reflect-with-claude))
+- **Claude Code + Cowork for Government (7 Jul):** public beta in a FedRAMP High authorised environment, with tamper-evident audit logs and spend governance. Niche for us, noted for completeness. ([blog](https://claude.com/blog/bringing-claude-code-and-claude-cowork-to-government))
+
+**Developer platform & API**
+
+- **API key expiration (8 Jul):** you can now set an expiration (preset, custom, or **Never**) when creating an API key or Admin API key in the Console; Anthropic emails the creator before keys with a ≥7-day life expire, and the Admin API reports `expires_at`. Existing keys are unaffected. ([release notes](https://support.claude.com/en/articles/12138966-release-notes))
+
+**Claude Code (2.1.202 → 2.1.207 this week)**
+
+- **Built-in browser on Desktop (Week 28):** Claude Code on desktop now has a **sandboxed in-app browser** — it can pull up docs, designs, or any site and read/click/interact the way it already does with local dev-server previews. You choose whether browsing sessions persist; safety classifiers review actions on external sites.
+- **`/doctor` is now a full setup checkup (2.1.205; alias `/checkup`):** it diagnoses **and can fix** issues instead of just printing a report — finds skills, MCP servers, and plugins that aren't worth their **context cost**, de-duplicates local vs checked-in `CLAUDE.md`, proposes trimming `CLAUDE.md` content Claude could derive from the codebase, and flags slow hooks. It reports first and asks before changing anything.
+- **Auto mode safety hardening.** Auto mode now **blocks tampering with session transcript files** and **background task notifications explicitly state that no human input occurred — preventing fabricated in-transcript approvals from being acted on** (2.1.205); it **asks before `rm -rf` on a variable it can't resolve** (2.1.205); spurious **prompt-injection warnings** on benign system updates were fixed and auto mode **no longer reads `autoMode` from repo-resident `.claude/settings.local.json`** — use `~/.claude/settings.json` (2.1.207); and a plugin **shell-injection hole** (`${user_config.*}` in shell-form commands) was closed (2.1.207).
+- **Auto mode on by default for cloud providers (2.1.207):** no longer needs the `CLAUDE_CODE_ENABLE_AUTO_MODE` opt-in on **Bedrock, Vertex AI, and Foundry** (disable via `disableAutoMode`); those providers now **default to Opus 4.8**.
+- **`/review` split (2.1.202):** `/review <pr>` is back to a **fast single-pass** review; use **`/code-review <level> <pr#>`** for the multi-agent review at a chosen effort level. `/code-review` finding quality on **Opus 4.8** improved across effort levels (2.1.205–206).
+- Smaller quality-of-life: **login-expiry warnings** + a grey ⏸ **manual-mode badge** (2.1.203); `/cd` path suggestions, `/commit-push-pr` auto-allowing the repo's configured push remote, gateway `/login`, and a confirmation before entering an out-of-tree worktree (2.1.206); a **Dynamic workflow size** setting + workflow OpenTelemetry attributes (2.1.202); background agents now upgrade in the background; plus a long tail of background-agent, worktree, Windows, and MCP-timeout fixes.
+
+**What this means for us:** the headline is **Cowork on web/mobile with remote + background execution** — our automated jobs (this AI Radar included) can now run with **no device online**, and sessions follow us across devices; the **doubled usage limits through 5 Aug** are a good window to push bigger delegations. If we use **Microsoft 365**, we can now let Claude draft/send email and manage calendars once an Entra admin consents. On the Claude Code side: **run `/doctor` across our repos** to strip `CLAUDE.md` bloat and drop skills/MCP/plugins that only cost context (this is the pruning practice, now tooled). The **auto-mode safety changes matter for our unattended runs** — fabricated-approval prevention and transcript-tamper protection make background work safer, but note auto mode is **now default on Bedrock/Vertex/Foundry** and **repo-resident `autoMode` settings are ignored**, so review any automated configs. Switch deep reviews to **`/code-review <level> <pr#>`**. And **set expirations on our API keys**.
+
+*Sources: [Claude Cowork on web and mobile](https://claude.com/blog/cowork-web-mobile) · [Reflect with Claude](https://www.anthropic.com/news/reflect-with-claude) · [Claude Code + Cowork for Government](https://claude.com/blog/bringing-claude-code-and-claude-cowork-to-government) · [Claude Code changelog](https://code.claude.com/docs/en/changelog) · [Release notes](https://support.claude.com/en/articles/12138966-release-notes) · [Releasebot — Anthropic](https://releasebot.io/updates/anthropic)*
+
+---
+
 ## Week of 6 Jul 2026
 
 **Models — big reversal: Fable 5 & Mythos 5 are back**

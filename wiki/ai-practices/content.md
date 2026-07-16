@@ -22,7 +22,7 @@ Our living knowledge base for working well with AI — agent skills, coding work
 
 ## Agent Skills
 
-*Last updated: 30 Jun 2026 · Standout — full deck available · Sources: [Building Great Agent Skills: The Missing Manual](https://www.youtube.com/watch?v=UNzCG3lw6O0) (Matt Pocock / AI Engineer) · [mattpocock/skills v1.0 — progressive disclosure](https://www.aihero.dev/posts)*
+*Last updated: 12 Jul 2026 · Standout — full deck available · Sources: [Building Great Agent Skills: The Missing Manual](https://www.youtube.com/watch?v=UNzCG3lw6O0) (Matt Pocock / AI Engineer) · [mattpocock/skills v1.1 changelog](https://www.aihero.dev/skills/skills-changelog-v1-1-wayfinder-to-spec-to-tickets-grilling-improvements) · [How To Kill The Bloat In Claude Code's System Prompt](https://www.aihero.dev/how-to-kill-the-bloat-in-claude-codes-system-prompt) · [Claude Code — Week 28 (`/doctor` checkup)](https://code.claude.com/docs/en/changelog)*
 
 🎬 *Watch — Matt Pocock / AI Engineer (45 min):*
 
@@ -42,6 +42,10 @@ A skill is its **description** + a **SKILL.md** file + any **reference material*
 
 **Progressive disclosure is the load-bearing pattern (update, late Jun 2026).** Matt Pocock's open-source `mattpocock/skills` collection shipped a v1.0 built around progressive disclosure — keep the always-loaded `SKILL.md` tiny and push detail behind context pointers that the agent only opens when a branch needs it. He reports this cut token cost on his skills by roughly 63% with no loss of capability. The takeaway reinforces points 2 and 4 above: the cheapest, most maintainable skill is the one that surfaces the least text per use.
 
+**The collection is maturing into a phase-based system (update, 8 Jul 2026).** `mattpocock/skills` **v1.1** adds workflow skills that map onto his phases of AI development — `/wayfinder` (up-front planning that stops the agent rushing into a build), `/to-spec` (conversation + codebase → a PRD) and `/to-tickets` (a plan → tracer-bullet implementation issues), plus improvements to the `/grilling` interview skills. The pattern worth stealing isn't the specific skills, it's the shape: each phase of the work is its own small, single-purpose skill the agent sees one at a time — the "leg work" fix from point 3, applied across a whole workflow.
+
+**Pruning now has native tooling (new, early Jul 2026).** The manual "deletion test" from point 4 got a power tool. Claude Code's revamped **`/doctor` (a full setup checkup, alias `/checkup`, from 2.1.205)** finds skills, MCP servers, and plugins that aren't earning their **context cost**, de-duplicates local `CLAUDE.md` files against checked-in ones, proposes trimming `CLAUDE.md` content the model could just derive from the codebase, and flags slow hooks — reporting first and asking before it changes anything. It pairs with Matt Pocock's *"How To Kill The Bloat In Claude Code's System Prompt"* (7 Jul), which makes the same case by hand: every always-loaded skill description, MCP tool, and rule is a standing token tax on every turn, so audit the always-on surface and cut what doesn't change behaviour. Practical move: run `/doctor` periodically and treat "unused / derivable / duplicated" as the deletion test made automatic.
+
 **How we apply it at Coreshift:** build in vertical slices not horizontal layers; one source of truth (generated Supabase types, shared validation, RLS for authz); a deletion-test prompt in the PR template; human-in-the-loop gates before migrations and prod deploys.
 
 📊 *Slides — click through inline (or use fullscreen):*
@@ -56,7 +60,7 @@ A skill is its **description** + a **SKILL.md** file + any **reference material*
 
 ## Evals & self-verifying agents
 
-*Last updated: 30 Jun 2026 · Standout — full deck available · Sources: [LangChain June 2026 newsletter — Deep Agents RubricMiddleware](https://www.langchain.com/blog/june-2026-langchain-newsletter) · [Karpathy's Software 3.0 / verifiability framework](https://www.startuphub.ai/ai-news/ai-figures/2026/figure-andrej-karpathy-software-thesis-evolution-2026-06-17)*
+*Last updated: 12 Jul 2026 · Standout — full deck available · Sources: [LangChain — Improving Agents is a Data Mining Problem (7 Jul 2026)](https://www.langchain.com/blog/improving-agents-is-a-data-mining-problem) · [LangChain June 2026 newsletter — Deep Agents RubricMiddleware](https://www.langchain.com/blog/june-2026-langchain-newsletter) · [Karpathy's Software 3.0 / verifiability framework](https://www.startuphub.ai/ai-news/ai-figures/2026/figure-andrej-karpathy-software-thesis-evolution-2026-06-17)*
 
 The biggest practice signal this week is a convergence: **agents get reliable when you give them a way to check their own work.** Andrej Karpathy's framing — "traditional software automates what you can *specify*; LLMs automate what you can *verify*" — is now showing up directly in tooling.
 
@@ -69,6 +73,8 @@ The biggest practice signal this week is a convergence: **agents get reliable wh
 **Tooling is catching up.** LangChain's June release added **RubricMiddleware** for Deep Agents: you hand the agent an explicit rubric and it grades its own output against it and keeps iterating until the work meets the criteria — V1 verification operationalised inside the agent. The same newsletter's on-call triage copilot leans on the same idea: a clear pass/fail signal (alert resolved or not) makes the loop trustworthy.
 
 **Make it a lifecycle, not a one-off.** The same June newsletter also frames an **agent development lifecycle (ADLC) — Build → Test → Deploy → Monitor** — where production behaviour is fed back into stronger evals over time, so failures get caught earlier and the agent improves without guesswork. The practical read for us: don't treat the verifier as a launch gate you write once; keep harvesting real failures into the eval set so the success signal sharpens with use.
+
+**"Evals are training data" — mine your traces (new, 7 Jul 2026).** LangChain's Vivek Trivedy sharpened the ADLC point into a memorable recipe (from his AI Engineer World's Fair talk): agent behaviour is more opaque than normal code, so **traces are the currency of improvement** — the record of what the agent actually did that you mine for signal. The loop is: ship a decent agent to start the data flywheel → mine traces to see what to fix → **turn every production failure into an eval** → hill-climb until those evals pass. His framing that *"evals are training data for agents"* is the key line: the behaviours you measure are the behaviours you get, so a failure you can't yet express as an eval is a failure you can't fix on purpose. Two practical notes even without LangChain's tooling: reading traces at scale is a real cost + context problem, so a cheap **small/open model can act as the trace judge** (he reports fine-tuned small models beating frontier models on that narrow task at a fraction of the cost — dovetails with the model-routing topic below); and for most teams **"harness engineering" — better prompts, tools, skills, and context — beats fine-tuning** as the first lever, with fine-tuning reserved for when prompt tweaks stop paying off (his recommended order is harness → fine-tune → harness).
 
 **The discipline: write the verifier first.** Before automating a step, ask "what's the automatic success signal?" If there isn't one, either build one (a test, a checker, a rubric) or accept it's V2 and keep the human checkpoint. Karpathy calls good evals one of the highest-leverage things an AI team can build, and that matches what we see.
 
@@ -86,7 +92,7 @@ The biggest practice signal this week is a convergence: **agents get reliable wh
 
 ## Context engineering for coding agents
 
-*Last updated: 6 Jul 2026 · Sources: [Cole Medin — "The Best AI Coding Setup Isn't the Most Autonomous One" (3 Jul 2026)](https://www.youtube.com/watch?v=muwRbfuKbR4) · [LangChain — How to Use RLMs in Deep Agents](https://www.langchain.com/blog/how-to-use-rlms-in-deep-agents) · [Simon Willison — on Geoffrey Litt's AIE talk & cognitive debt](https://simonwillison.net/2026/Jul/2/understand-to-participate/)*
+*Last updated: 12 Jul 2026 · Sources: [Cole Medin — "The Best AI Coding Setup Isn't the Most Autonomous One" (3 Jul 2026)](https://www.youtube.com/watch?v=muwRbfuKbR4) · [LangChain — How to Use RLMs in Deep Agents](https://www.langchain.com/blog/how-to-use-rlms-in-deep-agents) · [Simon Willison — on Geoffrey Litt's AIE talk & cognitive debt](https://simonwillison.net/2026/Jul/2/understand-to-participate/) · [Claude Code — `/doctor` CLAUDE.md checkup](https://code.claude.com/docs/en/changelog)*
 
 🎬 *Watch — Cole Medin (22 min, published 3 Jul 2026):*
 
@@ -104,7 +110,9 @@ In practice this lands as a **curated context pack**: a tight `CLAUDE.md` (or eq
 
 **Watch for cognitive debt (new, 2 Jul 2026).** Simon Willison, riffing on Geoffrey Litt's AI Engineer talk, flags the human-side risk: as you hand more to coding agents, your understanding can drift from how the code actually works — a "cognitive debt" that comes due when something breaks and no one on the team can reason about it. The mitigation is a context-and-review discipline: keep humans reading diffs and holding the mental model, not just approving green checks.
 
-**How we apply it at Coreshift:** keep a maintained `CLAUDE.md` per repo (stack, conventions, gotchas, the commands that prove a change works); point to canonical example files instead of describing patterns in prose; scope long agent jobs into sub-agents with just the context each needs (don't let one thread rot); and keep a human reading the diffs so we don't accrue cognitive debt.
+**Keeping the context pack lean is now tooled (new, early Jul 2026).** A fat `CLAUDE.md` is itself context rot — a standing token tax that dilutes signal on every turn. Claude Code's revamped **`/doctor` checkup** now de-duplicates local `CLAUDE.md` files against checked-in ones and proposes cutting content the model could just derive from the codebase, so the context pack stays tight without hand-auditing (see the Agent Skills topic for the full pruning workflow).
+
+**How we apply it at Coreshift:** keep a maintained `CLAUDE.md` per repo (stack, conventions, gotchas, the commands that prove a change works) and run `/doctor` on it periodically to strip bloat; point to canonical example files instead of describing patterns in prose; scope long agent jobs into sub-agents with just the context each needs (don't let one thread rot); and keep a human reading the diffs so we don't accrue cognitive debt.
 
 ---
 

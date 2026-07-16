@@ -6,6 +6,28 @@ A dated log of every weekly AI Radar run — what topics were added or edited on
 
 ---
 
+## 2026-07-12 — Weekly refresh
+
+*Scanned the watchlist for items published 5–12 Jul. Nothing warranted a brand-new topic or a new deck this run — the week's substantive practice items merged into existing (already-decked) topics, so decks were left as-is to avoid duplication.*
+
+**Claude Updates**
+
+- **Added: Week of 12 Jul 2026 (new block at top)** — Cowork on web & mobile with remote + background execution and scheduled tasks that run with no device online (7 Jul, beta from Max, doubled usage limits through 5 Aug); Microsoft 365 connector write tools (7 Jul); Reflect / monthly recap + Time & focus (9 Jul); Claude Code + Cowork for Government FedRAMP High beta (7 Jul); API key expiration in Console (8 Jul); and Claude Code 2.1.202–2.1.207 (built-in Desktop browser, `/doctor` full setup checkup, auto-mode safety hardening incl. fabricated-approval prevention, auto mode default on Bedrock/Vertex/Foundry → Opus 4.8, `/review` vs `/code-review` split). Older weeks left intact.
+
+**AI Practices**
+
+- **Edited topic: Agent Skills** — merged in **`mattpocock/skills` v1.1** (8 Jul: `/wayfinder`, `/to-spec`, `/to-tickets`, `/grilling` improvements — the collection maturing into a phase-based system) and **native pruning tooling** (Claude Code's revamped `/doctor` checkup + Matt Pocock's *"Kill The Bloat In Claude Code's System Prompt"*, 7 Jul) as the deletion test made automatic. Existing deck retained.
+- **Edited topic: Evals & self-verifying agents** — merged in LangChain's **"Improving Agents is a Data Mining Problem"** (Vivek Trivedy, 7 Jul, from his AIE World's Fair talk): traces as the currency of improvement, **"evals are training data,"** turn every production failure into an eval, small/open models as cheap trace judges, and the harness → fine-tune → harness order. Extends last week's ADLC point. Existing deck retained.
+- **Edited topic: Context engineering for coding agents** — added a note that `/doctor` now de-duplicates and trims `CLAUDE.md`, keeping the context pack lean without hand-auditing; cross-linked to the Agent Skills pruning workflow.
+
+**Assets**
+
+- No new decks this run (see note above).
+
+**Flagged for Abe (not changed):** the *AI security: assessing jailbreak severity* topic on AI Practices ends mid-sentence ("…broadly r") — a pre-existing truncation from an earlier run, left untouched here as the source text wasn't re-fetched this week. Worth completing in a future run.
+
+---
+
 ## 2026-07-06 — Weekly refresh
 
 *Scanned the watchlist for items published 29 Jun – 6 Jul. Merged onto the live page, which had already been updated via the #wiki-submissions pipeline (Fable 5 redeployment) and now carries the "Share a find" submissions box — both preserved.*
