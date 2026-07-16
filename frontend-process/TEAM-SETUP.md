@@ -94,6 +94,43 @@ You can save this as a **scheduled Cowork task** to run every morning.
 
 ---
 
+### Prompt B — add or update projects  *(mainly Keitha)*
+
+Use this to put projects on the board that aren't there yet — established work that skipped
+the assessment funnel — or to set fields on existing ones. A project that already exists is
+**updated**; a new one is **created** (tracked as an established project, no assessment
+needed). Paste into Cowork:
+
+```
+I want to add / update projects on the Coreshift Idea Pipeline board. Here are my projects
+(name, where it is, status, owner, links, one-liner):
+<paste your list — e.g. "Ops Portal — Live, done, owner Ricky, repo github.com/... , 'internal ops dashboard'">
+
+1. Fetch what's already there:  GET https://idea-intake.coreshifthq.workers.dev/api/ideas
+   (no auth) — match each of mine by title so we don't duplicate.
+2. Turn each into an item:
+     { "action": "add",
+       "match": "<title — finds an existing card; if none matches, it's created>",
+       "title": "<project name>",
+       "one_liner": "<one sentence>  (optional)",
+       "stage": "<inbox | assessment | review | pending_validation | rejected | build | harden | business | launch | live>",
+       "dev_status": "<in_progress | on_hold | blocked | at_risk | done>  (optional)",
+       "dev_status_reason": "<why, if on hold/blocked/at risk>  (optional)",
+       "product_owner": "<name>  (optional)",
+       "repo_url" / "kanban_url" / "staging_url" / "production_url": "<links>  (optional)" }
+   Only include fields I gave you; don't invent stages or statuses.
+3. Show me the list first. When I say go, POST in ONE request to
+   https://idea-intake.coreshifthq.workers.dev/api/publish
+   with header  Authorization: Bearer <REVIEW TOKEN>  and body  { "items": [ ...objects... ] }.
+   Ask me for the review token if you don't have it; don't print or save it.
+4. Show me the summary:  created · applied (updated) · skipped (already matched) · error.
+```
+
+A created project lands at the **stage** you give (defaults to Build), marked as an
+established/tracked project — it won't nag for an assessment and moves freely on the board.
+
+---
+
 ### Keitha's extra flows
 
 - **Pull today's stand-up into the board** — see `INGESTION.md`. It's the same idea as
@@ -120,5 +157,6 @@ call transcript), produces a build plan, and lands the card straight in **Build*
 ---
 
 **In short:** everyone uses **Prompt A** to keep the board honest from their calls/notes;
-Keitha additionally pulls the stand-up, publishes her Radar, and reviews. All writes go
-through one tested endpoint, so manual and automatic updates stay consistent.
+**Prompt B** adds or updates whole projects (Keitha, for work that never went through the
+funnel); Keitha additionally pulls the stand-up, publishes her Radar, and reviews. All
+writes go through one tested endpoint, so manual and automatic updates stay consistent.

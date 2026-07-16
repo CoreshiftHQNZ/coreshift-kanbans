@@ -123,6 +123,19 @@ test("routeStandup: returns the emit_updates items, dropping malformed ones", as
   assert.equal(items[1].target_stage, "build");
 });
 
+test("routeStandup: drops any non-status action so ingestion can't add/mutate fields", async () => {
+  const deps = {
+    callAnthropic: async () => ({ content: [{ type: "tool_use", name: "emit_updates", input: { items: [
+      { match: "Tap", action: "move", target_stage: "build" },
+      { match: "Lead Engine", action: "add", product_owner: "X" },  // off-schema → dropped
+      { match: "Store Pro", action: "set", stage: "live" },          // off-schema → dropped
+    ] } }] }),
+  };
+  const items = await routeStandup(deps, IDEAS(), STANDUP);
+  assert.equal(items.length, 1);
+  assert.equal(items[0].action, "move");
+});
+
 test("routeStandup: no tool_use → empty list (nothing changed)", async () => {
   const deps = { callAnthropic: async () => ({ content: [{ type: "text", text: "nothing to update" }] }) };
   assert.deepEqual(await routeStandup(deps, IDEAS(), STANDUP), []);

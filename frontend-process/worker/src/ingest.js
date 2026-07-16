@@ -85,8 +85,12 @@ export async function routeStandup(deps, ideas, standup) {
   );
   const tu = ((resp && resp.content) || []).find((b) => b.type === "tool_use" && b.name === "emit_updates");
   const items = tu && tu.input && Array.isArray(tu.input.items) ? tu.input.items : [];
-  // Keep only well-formed items; the router is instructed but not trusted.
-  return items.filter((it) => it && it.match && it.action);
+  // Keep only well-formed items, and hard-restrict the action to the status verbs a
+  // stand-up may emit — so even an off-schema "add"/"set" from the model can never
+  // reach the shared apply core and mutate/rename a project via the ingestion path.
+  const norm = (a) => String(a).toLowerCase().replace(/[-\s]+/g, "_");
+  const ALLOWED = new Set(["move", "waiting_on", "park", "park_for_later"]);
+  return items.filter((it) => it && it.match && it.action && ALLOWED.has(norm(it.action)));
 }
 
 // Human-readable digest of what the apply did (Slack + the API response body). Pure.

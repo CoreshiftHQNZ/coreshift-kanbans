@@ -15,7 +15,7 @@
 // (Keitha/the stand-up recording reality) and are deliberately NOT run through the
 // ideation→build requirement gate — that gate is for human decisions at Review.
 
-import { STAGES } from "./consts.js";
+import { STAGES, DEV_STATUSES, ENUM_VALUES } from "./consts.js";
 
 // Normalise a title for fuzzy matching ("Growth Partners — 2026 Rebuild" → "growth partners 2026 rebuild").
 export function normTitle(s) {
@@ -45,7 +45,21 @@ export function matchIdea(ideas, match) {
   return contained.length === 1 ? contained[0] : null; // 0 or >1 → unmatched
 }
 
-// Map one update item → a DB patch. Returns { patch } or { error }.
+// Strict match: id or exact-normalised title ONLY (no fuzzy containment). Used for
+// add/upsert so a NEW project name that merely contains an existing title (e.g. "Growth
+// Partners" vs "Growth Partners — 2026 Rebuild") doesn't hijack + rename that card —
+// it creates a distinct one instead. Status tags (move/waiting-on/park) still match fuzzily.
+export function matchIdeaExact(ideas, match) {
+  if (!match) return null;
+  const byId = ideas.find((i) => i.id === match);
+  if (byId) return byId;
+  const q = normTitle(match);
+  if (!q) return null;
+  return ideas.find((i) => normTitle(i.title) === q) || null;
+}
+
+// Map one update item → a DB patch. Returns { patch }, { patch, create } (add/upsert),
+// or { error }. `create: true` lets applyUpdates make a new card when nothing matches.
 export function itemToPatch(item) {
   const action = String((item && item.action) || "").toLowerCase().replace(/[-\s]+/g, "_");
   const note = item && item.note ? String(item.note).slice(0, 500) : null;
@@ -60,6 +74,25 @@ export function itemToPatch(item) {
   if (action === "park" || action === "park_for_later") {
     return { patch: { stage: "pending_validation", dev_status_reason: note } };
   }
+  // add / upsert: set explicit fields on a matched card, or CREATE it when unmatched
+  // (a tracked project that skipped the assessment funnel). All fields optional except
+  // that a create needs a title (enforced in applyUpdates).
+  if (action === "add" || action === "upsert" || action === "set" || action === "new") {
+    const cap = (v, n) => (v == null ? undefined : String(v).slice(0, n));
+    const patch = {};
+    if (item.title != null) patch.title = cap(item.title, 200);
+    if (item.one_liner != null) patch.one_liner = cap(item.one_liner, 500);
+    if (item.stage != null) { if (!STAGES.includes(item.stage)) return { error: `invalid stage "${item.stage}"` }; patch.stage = item.stage; }
+    if (item.dev_status != null) { if (!DEV_STATUSES.includes(item.dev_status)) return { error: `invalid dev_status "${item.dev_status}"` }; patch.dev_status = item.dev_status; }
+    if (item.dev_status_reason != null) patch.dev_status_reason = cap(item.dev_status_reason, 500);
+    if (item.product_owner != null) patch.product_owner = cap(item.product_owner, 120);
+    if (item.intent != null) { if (!ENUM_VALUES.intent.includes(item.intent)) return { error: `invalid intent "${item.intent}"` }; patch.intent = item.intent; }
+    for (const u of ["repo_url", "kanban_url", "staging_url", "production_url"]) {
+      if (item[u] != null) patch[u] = cap(item[u], 500);
+    }
+    if (!Object.keys(patch).length) return { error: "add/upsert item has no fields to set" };
+    return { patch, create: true };
+  }
   return { error: `unknown action "${item && item.action}"` };
 }
 
@@ -68,8 +101,10 @@ function isNoop(idea, patch) {
   return Object.keys(patch).every((k) => (patch[k] || null) === ((idea && idea[k]) || null));
 }
 
-// Apply a batch of items. deps = { listIdeas(): Promise<idea[]>, updateIdea(id, patch): Promise }.
-// An item may name its target via `id`, `match`, `project`, or `title`.
+// Apply a batch of items. deps = { listIdeas(), updateIdea(id, patch), createIdea?(patch) }.
+// An item may name its target via `id`, `match`, `project`, or `title`. An add/upsert
+// item with no match CREATES a card (only when deps.createIdea is provided — e.g.
+// /api/publish, NOT the stand-up ingestion, which must never invent projects).
 // Returns { results: [{status, id?, title?, error?}], summary: {status: count} }.
 export async function applyUpdates(deps, items) {
   const list = Array.isArray(items) ? items : [];
@@ -77,12 +112,35 @@ export async function applyUpdates(deps, items) {
   const results = [];
   for (const item of list) {
     const key = item && (item.id || item.match || item.project || item.title);
-    const idea = matchIdea(ideas, key);
-    if (!idea) { results.push({ item, status: "unmatched" }); continue; }
-    const { patch, error } = itemToPatch(item);
-    if (error) { results.push({ item, id: idea.id, title: idea.title, status: "error", error }); continue; }
-    // A move INTO Live (from a non-live stage) means shipped → dev_status "done".
-    if (patch.stage === "live" && idea.stage !== "live") { patch.dev_status = "done"; patch.dev_status_reason = null; }
+    const { patch, error, create } = itemToPatch(item);
+    if (error) { results.push({ item, status: "error", error }); continue; }
+    // add/upsert matches STRICTLY (exact/id); status tags match fuzzily.
+    const idea = create ? matchIdeaExact(ideas, key) : matchIdea(ideas, key);
+    if (!idea) {
+      // No existing card. Create only for an add/upsert that names a title AND when a
+      // creator is available; everything else is reported as unmatched (never guessed).
+      if (create && deps.createIdea && patch.title) {
+        try {
+          const made = await deps.createIdea(patch);
+          results.push({ item, id: made && made.id, title: patch.title, status: "created", patch });
+        } catch (e) {
+          results.push({ item, title: patch.title, status: "error", transient: true, error: String((e && e.message) || e) });
+        }
+      } else {
+        results.push({ item, status: "unmatched" });
+      }
+      continue;
+    }
+    // Matched → update. Title is a CREATE-only field: never rewrite an existing card's
+    // title from an add/upsert (would echo the match key / lowercased query over the
+    // canonical name). Renaming isn't an add/upsert operation.
+    delete patch.title;
+    // A move INTO Live (from non-live) means shipped → dev_status "done", unless the
+    // item set dev_status explicitly (add/upsert).
+    if (patch.stage === "live" && idea.stage !== "live" && patch.dev_status === undefined) {
+      patch.dev_status = "done";
+      if (patch.dev_status_reason === undefined) patch.dev_status_reason = null;
+    }
     if (isNoop(idea, patch)) { results.push({ item, id: idea.id, title: idea.title, status: "skipped" }); continue; }
     try {
       await deps.updateIdea(idea.id, patch);

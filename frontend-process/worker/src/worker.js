@@ -508,7 +508,13 @@ async function handlePublish(request, env, cors) {
   const items = Array.isArray(body.items) ? body.items : [];
   if (!items.length) return json({ error: "items[] required" }, 400, cors);
   const { results, summary } = await applyUpdates(
-    { listIdeas: () => listIdeas(env), updateIdea: (id, patch) => updateIdea(env, id, patch) },
+    {
+      listIdeas: () => listIdeas(env),
+      updateIdea: (id, patch) => updateIdea(env, id, patch),
+      // Only /api/publish can create (add/upsert). The stand-up ingestion deliberately
+      // omits this, so an unknown project from a stand-up is reported, never invented.
+      createIdea: (patch) => createTrackedProject(env, patch),
+    },
     items,
   );
   return json({ ok: true, summary, results }, 200, cors);
@@ -621,6 +627,28 @@ async function createIdea(env, commissioned) {
 async function updateIdea(env, id, patch) {
   patch.updated_at = new Date().toISOString();
   const rows = await supa(env, "PATCH", `ideas?id=eq.${encodeURIComponent(id)}`, patch);
+  return rows[0];
+}
+// Create a "tracked" project directly, skipping the assessment funnel — used by
+// /api/publish's add/upsert so established, off-pipeline projects can be put on the
+// board. Marked mode:"tracked" so the board doesn't gate its moves on ideation sections.
+async function createTrackedProject(env, patch) {
+  const stage = patch.stage || "build";
+  const rows = await supa(env, "POST", "ideas", {
+    title: patch.title,
+    one_liner: patch.one_liner || null,
+    stage,
+    status: "validated",
+    intent: patch.intent || null,
+    dev_status: patch.dev_status || (WIP_STAGES.includes(stage) ? "in_progress" : null),
+    dev_status_reason: patch.dev_status_reason || null,
+    product_owner: patch.product_owner || null,
+    repo_url: patch.repo_url || null,
+    kanban_url: patch.kanban_url || null,
+    staging_url: patch.staging_url || null,
+    production_url: patch.production_url || null,
+    assessment: { mode: "tracked" },
+  });
   return rows[0];
 }
 
