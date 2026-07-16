@@ -52,7 +52,7 @@
 
 ## ⚪ Backlog
 
-- **Design Engine — Phase B: migrate 7 sections to Tailwind** `enhancement` `post-launch` — Rebuild Hero, Feature grid, Gallery, Rich text, CTA, Team and Contact form in the new Tailwind authoring layer, retire their legacy CSS, and apply the "kill list" (fewer in-section options, more curated layouts). Then scale to new section types + theme families. Parallel quality track — not launch-blocking.
+- **Design Engine — Phase B: 7 sections migrated** `enhancement` `shipped` — Hero, Feature grid, Gallery, Rich text, CTA, Team and Contact form rebuilt in the Tailwind engine (parallel factory run), each with 4–6 real variants + the kill list (columns→smart, hero-buttons→emptiness-hides, etc.); contracts preserved, form capture intact. On the review board. NEXT engine waves: ~15 new section types, themes to 15–18, page + site templates.
 - **Site generation quality** `enhancement` `post-launch` — "Make me a site" works but runs slow and is limited to a few theme styles; speed it up, widen the theme range, sanitise generated copy/links before publish.
 - **Custom-domain lifecycle** `enhancement` — Verify / retry / remove a hostname; purge cache on custom-domain go-live; tear down on cancel.
 - **Account lifecycle** `enhancement` — Rename / leave / transfer-ownership / delete-account (GDPR), a co-owner / recovery path, and an access-change audit trail.
