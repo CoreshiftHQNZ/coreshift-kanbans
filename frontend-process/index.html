@@ -7,6 +7,17 @@
   <title>Coreshift Idea Pipeline — Coreshift HQ</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💡%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* "Add project" quick-create modal (reuses the drawer shell) */
+    .fp-ap-msg { display:none; margin-top:12px; font-size:13px; line-height:1.45; }
+    .fp-ap-msg.show { display:block; }
+    .fp-ap-msg.err  { color:var(--red,#dc2626); }
+    .fp-ap-msg.ok   { color:#047857; }
+    .fp-ap-msg.warn { color:#92400e; background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:8px 10px; }
+    .fp-ap-force { display:none; align-items:center; gap:8px; margin-top:12px; font-size:13px; cursor:pointer; }
+    .fp-ap-force.show { display:flex; }
+    .fp-ap-force input { width:auto; margin:0; }
+  </style>
 </head>
 <body class="fp-app">
   <header class="fp-head">
@@ -32,6 +43,7 @@
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <a class="btn" href="submit.html?mode=commissioned" title="Paid Growth Partners build — skips ideation, produces a build plan">🛠 Commissioned build</a>
+        <button class="btn" id="addProjectBtn" type="button" title="Add an established project directly — no assessment">＋ Add project</button>
         <a class="btn btn-primary" href="submit.html">＋ Submit an idea</a>
       </div>
     </div>
@@ -776,6 +788,103 @@
       return t && t.trim();
     }
 
+    // ── Add an established project directly (tracked — skips the assessment funnel) ──
+    // Creates a card via /api/publish's add/upsert. The Worker guards against a name that
+    // resembles an existing card (status "ambiguous"); we surface that and offer a
+    // "separate, new project" override rather than silently creating a duplicate.
+    function openAddProject() {
+      lastTrigger = document.activeElement;
+      const stageOpts = (F.stages || []).map((s) => `<option value="${esc(s.key)}"${s.key === "build" ? " selected" : ""}>${esc(s.label)}</option>`).join("");
+      const devOpts = ['<option value="">— default —</option>'].concat(
+        Object.keys(L.dev_status || {}).map((k) => `<option value="${esc(k)}">${esc(L.dev_status[k])}</option>`)).join("");
+      const poOpts = ['<option value="">— unassigned —</option>'].concat(
+        PRODUCT_OWNERS.map((n) => `<option value="${esc(n)}">${esc(n)}</option>`)).join("");
+      document.getElementById("overlay").innerHTML = `
+        <div class="fp-scrim" id="scrim"></div>
+        <aside class="fp-drawer" id="fpDialog" role="dialog" aria-modal="true" aria-labelledby="apTitle" tabindex="-1">
+          <button class="fp-drawer-close" id="apClose" aria-label="Close">✕</button>
+          <div class="fp-drawer-head">
+            <h2 id="apTitle" class="fp-drawer-title">Add a project</h2>
+            <div class="fp-drawer-sub">Put an established project straight on the board — no assessment. It lands as a tracked project you can move freely.</div>
+          </div>
+          <div class="fp-drawer-body">
+            <div class="fp-drawer-sec">
+              <div class="fp-edit-field"><label for="ap_title">Project name *</label>
+                <input class="fp-edit-input" id="ap_title" type="text" maxlength="200" placeholder="e.g. Ops Portal" /></div>
+              <div class="fp-edit-field"><label for="ap_stage">Stage</label>
+                <select class="fp-edit-input" id="ap_stage">${stageOpts}</select></div>
+              <div class="fp-edit-field"><label for="ap_dev">Developer status</label>
+                <select class="fp-edit-input" id="ap_dev">${devOpts}</select></div>
+              <div class="fp-edit-field"><label for="ap_po">Product Owner</label>
+                <select class="fp-edit-input" id="ap_po">${poOpts}</select></div>
+              <div class="fp-edit-field"><label for="ap_one">One-liner</label>
+                <textarea class="fp-edit-input" id="ap_one" rows="2" maxlength="500" placeholder="One sentence on what it is"></textarea></div>
+              <label class="fp-ap-force" id="ap_forcewrap"><input type="checkbox" id="ap_force" /> It's a separate, new project — add it anyway</label>
+              <div class="fp-ap-msg" id="ap_msg" role="alert"></div>
+            </div>
+          </div>
+          <div class="fp-drawer-foot">
+            <div class="fp-edit-actions"><button class="btn btn-primary" id="ap_save" type="button">Add project</button><button class="btn btn-ghost" id="ap_cancel" type="button">Cancel</button></div>
+          </div>
+        </aside>`;
+      document.getElementById("scrim").addEventListener("click", closeReview);
+      document.getElementById("apClose").addEventListener("click", closeReview);
+      document.getElementById("ap_cancel").addEventListener("click", closeReview);
+      document.getElementById("ap_save").addEventListener("click", submitAddProject);
+      document.removeEventListener("keydown", trapKeys); document.addEventListener("keydown", trapKeys);
+      const dlg = document.getElementById("fpDialog"); if (dlg) dlg.focus();
+      const ti = document.getElementById("ap_title"); if (ti) ti.focus();
+    }
+
+    async function submitAddProject() {
+      const msg = document.getElementById("ap_msg");
+      const setMsg = (html, kind) => { msg.innerHTML = html; msg.className = "fp-ap-msg show " + (kind || ""); };
+      const title = document.getElementById("ap_title").value.trim();
+      if (!title) { setMsg("Give the project a name.", "err"); document.getElementById("ap_title").focus(); return; }
+      const item = { action: "add", title, stage: document.getElementById("ap_stage").value };
+      const dev = document.getElementById("ap_dev").value; if (dev) item.dev_status = dev;
+      const po = document.getElementById("ap_po").value; if (po) item.product_owner = po;
+      const one = document.getElementById("ap_one").value.trim(); if (one) item.one_liner = one;
+      const forceEl = document.getElementById("ap_force"); if (forceEl && forceEl.checked) item.force_create = true;
+
+      if (!LIVE) { // demo mode — add to the in-memory board
+        ideas.unshift({ id: "local-" + Date.now(), title, stage: item.stage, one_liner: one || "", mode: "tracked",
+          dev_status: item.dev_status || (isWip(item.stage) ? "in_progress" : null), product_owner: item.product_owner || null,
+          updated_at: "just now", filled: {} });
+        const st = (F.stages || []).find((s) => s.key === item.stage); if (st && st.view) view = st.view;
+        closeReview(); render(); return;
+      }
+      const token = ensureToken(); if (!token) return;
+      const btn = document.getElementById("ap_save"); const lbl = btn.textContent;
+      const done = () => { btn.disabled = false; btn.textContent = lbl; };
+      btn.disabled = true; btn.textContent = "Adding…";
+      try {
+        const r = await fetch(F.workerUrl + "/api/publish", {
+          method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer " + token },
+          body: JSON.stringify({ items: [item] }),
+        });
+        if (r.status === 401) { localStorage.removeItem("fp_review_token"); setMsg("Reviewer token rejected — try again.", "err"); done(); return; }
+        const data = await r.json().catch(() => null);
+        if (!r.ok || !data) { setMsg((data && data.error) || "Couldn't add — please retry.", "err"); done(); return; }
+        const res = (data.results && data.results[0]) || {};
+        if (res.status === "created") {
+          const st = (F.stages || []).find((s) => s.key === item.stage); if (st && st.view) view = st.view; // land on the lane it went to
+          closeReview(); await load(); return;
+        }
+        if (res.status === "applied" || res.status === "skipped") { // name matched an existing card exactly → updated it
+          setMsg("That name matches existing card “" + esc(res.title || title) + "” — updated it instead of creating a duplicate.", "ok");
+          done(); await load(); return;
+        }
+        if (res.status === "ambiguous") {
+          const fw = document.getElementById("ap_forcewrap"); if (fw) fw.classList.add("show");
+          setMsg("This looks like existing card <b>“" + esc(res.title || "") + "”</b>. Rename above to update that card, or tick the box to add it as a separate project.", "warn");
+          done(); return;
+        }
+        setMsg("Couldn't add: " + esc(res.error || res.status || "unknown error"), "err"); done();
+      } catch (e) { setMsg("Network error — please retry.", "err"); done(); }
+    }
+
+    document.getElementById("addProjectBtn").addEventListener("click", openAddProject);
     load();
   </script>
 </body>
