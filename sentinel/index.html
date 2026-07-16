@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>73%</strong> complete</div>
-        <div><strong>113</strong>/154 cards done</div>
-        <div>Updated <strong>2026-07-13 15:50 UTC</strong></div>
+        <div><strong>74%</strong> complete</div>
+        <div><strong>114</strong>/155 cards done</div>
+        <div>Updated <strong>2026-07-16 19:27 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">113</div>
+        <div class="status-num">114</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -983,7 +983,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">113</span>
+        <span class="col-count">114</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1550,6 +1550,11 @@
         <div class="card-title">Sentinel V2 — Brief 23: tenant-siloed IA + roles/access (shipped dark)</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">briefs</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">privacy</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">SENTINEL_ACCESS_ENFORCED</span><span class="tag tag-neutral">/access</span><span class="tag tag-neutral">tenant_type</span><span class="tag tag-neutral">access_grants</span><span class="tag tag-neutral">access_events</span><span class="tag tag-neutral">playbook/TENANT-SEGREGATION-SIGNOFF.md</span></div>
         <div class="card-desc">Makes the contractual data-segregation promise real: Sentinel is now tenant-first — a directory (one non-identifying health signal per tenant) → a scoped workspace where only ONE tenant&#39;s data is ever on screen. Enforcement (Owner/Operator/Viewer; out-of-scope→404, Viewer-act→403; account-level scope on social tokens) is wired through every data route but **dark** behind `SENTINEL_ACCESS_ENFORCED` (off = every @coreshifthq.com user is a fleet Owner = today&#39;s behaviour, no lockout). P1 IA+type-axis · P2 grants+enforcement · P3 Owner-only access-mgmt UI (`/access`) + audit · P4 account scope. Both migrations applied+stamped on Sentinel prod (`tenant_type`, `access_grants`, `access_events`). 435 tests. PR [#192](https://github.com/CoreshiftHQNZ/sentinel-app/pull/192) → main, auto-deployed + verified live. **Flag-flip + grant seeding gated on Keitha&#39;s privacy sign-off** (packet: `playbook/TENANT-SEGREGATION-SIGNOFF.md`)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Endpoint audit — ClickFix injection + CSP-strictness detection</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">csp_script_unsafe_inline</span><span class="tag tag-neutral">script-src</span><span class="tag tag-neutral">default-src</span><span class="tag tag-neutral">&#39;unsafe-inline&#39;</span><span class="tag tag-neutral">&lt;script&gt;</span><span class="tag tag-neutral">clickfix_injection</span><span class="tag tag-neutral">auth-code-verif.beer</span></div>
+        <div class="card-desc">Prompted by the active fake-Cloudflare &quot;ClickFix&quot; campaign. The weekly endpoint audit now (1) grades CSP *strictness* (`csp_script_unsafe_inline`, medium — flags `script-src`/`default-src` allowing `&#39;unsafe-inline&#39;`, the vector an injected inline `&lt;script&gt;` needs), and (2) scans a bounded snippet of the served HTML for the ClickFix fingerprint (`clickfix_injection`, high — clipboard-write + Run/PowerShell coaching, raw exec markers like mshta/iex/base64, or a known-C2 reference; seed IOC `auth-code-verif.beer`). Any monitored site that&#39;s ever injected now trips the audit. Fleet posture check: KC + Sentinel ship a strict CSP (injected script won&#39;t run); **DA + GP are missing CSP** (DA = parity gap; GP = live WordPress, the standout — closes at the static cutover). 8 new tests; suite 443. PR [#193](https://github.com/CoreshiftHQNZ/sentinel-app/pull/193) → main, deployed</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
