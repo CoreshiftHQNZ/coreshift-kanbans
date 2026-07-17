@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>74%</strong> complete</div>
         <div><strong>115</strong>/156 cards done</div>
-        <div>Updated <strong>2026-07-17 00:27 UTC</strong></div>
+        <div>Updated <strong>2026-07-17 00:39 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1558,8 +1558,8 @@
       </div>
       <div class="card">
         <div class="card-title">Fleet supply-chain hardening — dep cooldown + save-exact + CI ignore-scripts</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">npm audit</span><span class="tag tag-neutral">save-exact</span><span class="tag tag-neutral">--ignore-scripts</span><span class="tag tag-neutral">minimumReleaseAge=7d</span></div>
-        <div class="card-desc">Prompted by a #sentinel note (Ricky) on hijacked-dependency attacks (a *legitimate* package taken over → malicious version published). Closes the gap `npm audit` can&#39;t: the payload runs at **install time** and isn&#39;t in any advisory DB until reported. Shipped fleet-wide: **Sentinel** (main + staging, [#194](https://github.com/CoreshiftHQNZ/sentinel-app/pull/194)), **KC** ([#234](https://github.com/CoreshiftHQNZ/keycontent-app/pull/234)), **DA** (pnpm, [#111](https://github.com/CoreshiftHQNZ/digital-architect/pull/111)). Each: Dependabot **release cooldown** (~7d, 14d majors) + `save-exact`; npm repos also run the CI audit with **`--ignore-scripts`** (a hijacked postinstall can&#39;t execute on the runner before audit); DA uses pnpm-native **`minimumReleaseAge=7d`** (its audit reads the lockfile without installing, so no CI change). A **Claude dependency-install guardrail** (verify name/provenance/age/scripts before adding any dep) was added to the team CLAUDE.md. **Pending:** Socket.dev PR scanner — flags malicious install scripts/behavior at review time — needs an org GitHub-app install (operator)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">npm audit</span><span class="tag tag-neutral">save-exact</span><span class="tag tag-neutral">--ignore-scripts</span><span class="tag tag-neutral">minimumReleaseAge=7d</span><span class="tag tag-neutral">CoreshiftHQNZ</span></div>
+        <div class="card-desc">Prompted by a #sentinel note (Ricky) on hijacked-dependency attacks (a *legitimate* package taken over → malicious version published). Closes the gap `npm audit` can&#39;t: the payload runs at **install time** and isn&#39;t in any advisory DB until reported. Shipped fleet-wide: **Sentinel** (main + staging, [#194](https://github.com/CoreshiftHQNZ/sentinel-app/pull/194)), **KC** ([#234](https://github.com/CoreshiftHQNZ/keycontent-app/pull/234)), **DA** (pnpm, [#111](https://github.com/CoreshiftHQNZ/digital-architect/pull/111)). Each: Dependabot **release cooldown** (~7d, 14d majors) + `save-exact`; npm repos also run the CI audit with **`--ignore-scripts`** (a hijacked postinstall can&#39;t execute on the runner before audit); DA uses pnpm-native **`minimumReleaseAge=7d`** (its audit reads the lockfile without installing, so no CI change). A **Claude dependency-install guardrail** (verify name/provenance/age/scripts before adding any dep) was added to the team CLAUDE.md. **Socket.dev PR scanner INSTALLED** (operator, 2026-07-17; Socket org `CoreshiftHQNZ`) — scans every PR for malicious install scripts / obfuscation / new maintainers, on top of audit&#39;s known-CVE net</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
