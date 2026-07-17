@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>74%</strong> complete</div>
-        <div><strong>114</strong>/155 cards done</div>
-        <div>Updated <strong>2026-07-16 23:49 UTC</strong></div>
+        <div><strong>115</strong>/156 cards done</div>
+        <div>Updated <strong>2026-07-17 00:27 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">114</div>
+        <div class="status-num">115</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -983,7 +983,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">114</span>
+        <span class="col-count">115</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1555,6 +1555,11 @@
         <div class="card-title">Endpoint audit — ClickFix injection + CSP-strictness detection</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">csp_script_unsafe_inline</span><span class="tag tag-neutral">script-src</span><span class="tag tag-neutral">default-src</span><span class="tag tag-neutral">&#39;unsafe-inline&#39;</span><span class="tag tag-neutral">&lt;script&gt;</span><span class="tag tag-neutral">clickfix_injection</span><span class="tag tag-neutral">auth-code-verif.beer</span></div>
         <div class="card-desc">Prompted by the active fake-Cloudflare &quot;ClickFix&quot; campaign. The weekly endpoint audit now (1) grades CSP *strictness* (`csp_script_unsafe_inline`, medium — flags `script-src`/`default-src` allowing `&#39;unsafe-inline&#39;`, the vector an injected inline `&lt;script&gt;` needs), and (2) scans a bounded snippet of the served HTML for the ClickFix fingerprint (`clickfix_injection`, high — clipboard-write + Run/PowerShell coaching, raw exec markers like mshta/iex/base64, or a known-C2 reference; seed IOC `auth-code-verif.beer`). Any monitored site that&#39;s ever injected now trips the audit. Fleet posture check: KC + Sentinel ship a strict CSP (injected script won&#39;t run); GP now enforces a CSP too (Report-Only→enforced 2026-07-17, post-cutover); **DA is the remaining gap** (Next.js on Railway, no CSP — parity task queued). 8 new tests; suite 443. PR [#193](https://github.com/CoreshiftHQNZ/sentinel-app/pull/193) → main, deployed</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Fleet supply-chain hardening — dep cooldown + save-exact + CI ignore-scripts</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">npm audit</span><span class="tag tag-neutral">save-exact</span><span class="tag tag-neutral">--ignore-scripts</span><span class="tag tag-neutral">minimumReleaseAge=7d</span></div>
+        <div class="card-desc">Prompted by a #sentinel note (Ricky) on hijacked-dependency attacks (a *legitimate* package taken over → malicious version published). Closes the gap `npm audit` can&#39;t: the payload runs at **install time** and isn&#39;t in any advisory DB until reported. Shipped fleet-wide: **Sentinel** (main + staging, [#194](https://github.com/CoreshiftHQNZ/sentinel-app/pull/194)), **KC** ([#234](https://github.com/CoreshiftHQNZ/keycontent-app/pull/234)), **DA** (pnpm, [#111](https://github.com/CoreshiftHQNZ/digital-architect/pull/111)). Each: Dependabot **release cooldown** (~7d, 14d majors) + `save-exact`; npm repos also run the CI audit with **`--ignore-scripts`** (a hijacked postinstall can&#39;t execute on the runner before audit); DA uses pnpm-native **`minimumReleaseAge=7d`** (its audit reads the lockfile without installing, so no CI change). A **Claude dependency-install guardrail** (verify name/provenance/age/scripts before adding any dep) was added to the team CLAUDE.md. **Pending:** Socket.dev PR scanner — flags malicious install scripts/behavior at review time — needs an org GitHub-app install (operator)</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
