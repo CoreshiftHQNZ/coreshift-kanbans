@@ -1,0 +1,40 @@
+# LDM Finance Website — Kanban
+
+> Visual build state for the LDM Finance website. Edit this file and run `node tools/build.js ldm-website` from the coreshift-kanbans repo root to refresh.
+>
+> Card format: `- **Title** \`tag\` \`tag\` — Description.`
+
+---
+
+## ✅ Done
+
+- **Motorcentral sample ingest** `phase-0` `shipped` — Real DMS export unpacked: 49 vehicles with full specs and 950 photos. Curated 12-vehicle photo set derived for design and build (`data/motorcentral-sample`, `design/assets`).
+- **Build specs from the DigitalArchitect report** `phase-0` `docs` `shipped` — `docs/ia.md` (information architecture, keyword mapping) and `docs/seo-readiness.md` (SEO/GEO/AEO acceptance criteria and launch gates) distilled from the July 2026 audit.
+- **Design prototype + handoff bundle** `phase-0` `shipped` — All 16 templates designed in Claude Design against real inventory and exported to `design/handoff` as the source of truth for the build.
+- **Astro site — 16 templates + 49 vehicle pages** `phase-1` `shipped` — Pixel-faithful implementation on Astro 7: URL-state calculator, 3-step apply wizard, filterable stock, galleries, mobile drawer. 8-angle review pass, ~30 findings fixed. PR #1 → dev → main.
+- **SEO/GEO/AEO build items** `phase-1` `shipped` — Per-template JSON-LD, titles/metas in budget, canonical + hreflang, AI-crawler robots.txt, segmented sitemaps, llms.txt + llms-full.txt, /api/finance-products.json, self-hosted fonts, WebP images.
+- **Cloudflare Pages project (staging on Coreshift account)** `phase-1` `infra` `shipped` — GitHub-connected: production tracks main, every branch gets a preview deploy. Node 22 pinned. Client-account move happens at go-live.
+
+## 🟡 In Progress
+
+- **Lead relay — Cloudflare Email Service + Turnstile** `phase-1` `deliverable` — Pages Function relays apply + contact submissions to sales@ldmmotor.group (fleet enquiries as their own lead type), Turnstile + honeypot on both forms. Until this lands the forms show prototype success states without sending.
+
+## 🚫 Blocked
+
+- **UDC-approved disclaimer wording** `phase-3` `blocked-by:client` — Every finance surface carries a flagged placeholder disclaimer pending UDC sign-off. Wording lands once, in `src/lib/disclaimers.ts`.
+- **FSPR number, team profiles, testimonials** `phase-3` `blocked-by:client` — Placeholder blocks are flagged in-page on /about, footer compliance panel and testimonial strips. First-party testimonials only (Brand Foundation rule).
+- **Domain + UDC calculator access** `phase-3` `blocked-by:client` — finance.ldmmotor.group pending final confirmation; UDC iframe embeds as the official-quote option once the client secures access.
+
+## 🔵 This Week
+
+- **Verify production deploy + staging URL** `phase-1` `infra` — dev → main merged; confirm the Pages production URL serves the site and record the canonical staging address on this board.
+
+## ⚪ Backlog
+
+- **Stock feed ingest sidecar** `phase-2` `infra` — SFTPGo on Railway receives the Motorcentral FTP push → R2 → Pages deploy hook rebuilds the site. Swaps the sample dataset for live stock at the `src/lib/vehicles.ts` seam; sold vehicles 410/301 at ingest.
+- **Analytics + measurement** `phase-2` — GA4 (funnel events separating application submits from generic contact), GSC + Bing verification, IndexNow key, Peec AI tracking, Cloudflare Web Analytics. Env-driven slots already in the layout.
+- **SUB-PROCESSORS.md + /sub-processors page** `phase-2` `docs` — Cloudflare, GitHub, Turnstile, Email Service, GA — added in the same PR that wires each vendor.
+- **Level B/C pages from ia.md** `phase-3` — Car finance, commercial vehicle, truck, ute hubs; guide articles (pre-approval, structures compared, credit score NZ); FAQ sub-hubs. Reuses the shipped template patterns.
+- **/finance-eligibility + lender comparison page** `phase-3` `docs` — Machine-readable eligibility criteria and the UDC vs Heartland/Marac vs Avanti matrix page (seo-readiness §2.4) — no designs yet.
+- **Go-live handover** `phase-4` `infra` — Recreate the Pages project on the client's Cloudflare account, Jack/LDM switch DNS, onboard Better Stack uptime + Sentinel weekly audit with primary_url.
+- **Post-launch audit** `phase-4` — Full SEO/GEO/AEO audit skill against the live site before the 3-month review. Targets: SEO ≥8/10, GEO ≥8/10, AEO ≥8/10, Lighthouse mobile ≥85.
