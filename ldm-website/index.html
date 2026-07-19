@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>33%</strong> complete</div>
-        <div><strong>6</strong>/18 cards done</div>
-        <div>Updated <strong>2026-07-18 02:53 UTC</strong></div>
+        <div><strong>38%</strong> complete</div>
+        <div><strong>8</strong>/21 cards done</div>
+        <div>Updated <strong>2026-07-19 18:57 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">6</div>
+        <div class="status-num">8</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">1</div>
+        <div class="status-num">2</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">8</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -995,6 +995,16 @@
         <div class="card-title">Cloudflare Pages project (staging on Coreshift account)</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">GitHub-connected: production tracks main, every branch gets a preview deploy. Node 22 pinned. Client-account move happens at go-live</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Production deploy verified on staging URL</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">dev → main merged and the site serves at https://ldm-website.pages.dev (the canonical staging address until go-live)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">UI/UX audit + full remediation</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Site run through the ui-ux-pro-max skill (docs/ui-ux-review.md): WCAG AA contrast tokens, 44px mobile touch targets, 12px caption floor, skip link, reduced-motion, table scopes, focus management, aria-live. PR #3 awaiting merge</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1034,13 +1044,18 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Verify production deploy + staging URL</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">dev → main merged; confirm the Pages production URL serves the site and record the canonical staging address on this board</div>
+        <div class="card-title">Merge the UI/UX remediation PR</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span></div>
+        <div class="card-desc">PR #3 (audit doc + AA contrast + touch targets + a11y batch) into dev, then release dev → main</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Lead relay — start the build</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-deliverable">deliverable</span></div>
+        <div class="card-desc">Cloudflare Email Service + Turnstile on a Coreshift-controlled staging domain; go-live DNS records for ldmmotor.group documented for the client switch</div>
       </div></div>
     </section>
     <section class="column col-backlog">

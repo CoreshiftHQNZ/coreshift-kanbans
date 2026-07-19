@@ -14,6 +14,8 @@
 - **Astro site — 16 templates + 49 vehicle pages** `phase-1` `shipped` — Pixel-faithful implementation on Astro 7: URL-state calculator, 3-step apply wizard, filterable stock, galleries, mobile drawer. 8-angle review pass, ~30 findings fixed. PR #1 → dev → main.
 - **SEO/GEO/AEO build items** `phase-1` `shipped` — Per-template JSON-LD, titles/metas in budget, canonical + hreflang, AI-crawler robots.txt, segmented sitemaps, llms.txt + llms-full.txt, /api/finance-products.json, self-hosted fonts, WebP images.
 - **Cloudflare Pages project (staging on Coreshift account)** `phase-1` `infra` `shipped` — GitHub-connected: production tracks main, every branch gets a preview deploy. Node 22 pinned. Client-account move happens at go-live.
+- **Production deploy verified on staging URL** `phase-1` `infra` `shipped` — dev → main merged and the site serves at https://ldm-website.pages.dev (the canonical staging address until go-live).
+- **UI/UX audit + full remediation** `phase-1` `shipped` — Site run through the ui-ux-pro-max skill (docs/ui-ux-review.md): WCAG AA contrast tokens, 44px mobile touch targets, 12px caption floor, skip link, reduced-motion, table scopes, focus management, aria-live. PR #3 awaiting merge.
 
 ## 🟡 In Progress
 
@@ -27,7 +29,8 @@
 
 ## 🔵 This Week
 
-- **Verify production deploy + staging URL** `phase-1` `infra` — dev → main merged; confirm the Pages production URL serves the site and record the canonical staging address on this board.
+- **Merge the UI/UX remediation PR** `phase-1` — PR #3 (audit doc + AA contrast + touch targets + a11y batch) into dev, then release dev → main.
+- **Lead relay — start the build** `phase-1` `deliverable` — Cloudflare Email Service + Turnstile on a Coreshift-controlled staging domain; go-live DNS records for ldmmotor.group documented for the client switch.
 
 ## ⚪ Backlog
 
