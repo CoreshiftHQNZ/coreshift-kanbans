@@ -36,7 +36,7 @@
 ## ⚪ Backlog
 
 - **Build-time R2 pull + sold-vehicle pruning** `phase-2` `infra` `blocked-by:motorcentral` — The last feed piece: wired once Peter Knight confirms push semantics (wholesale replace vs incremental) and protocol. Everything either side of it is built.
-- **Analytics + measurement** `phase-2` — GA4 (funnel events separating application submits from generic contact), GSC + Bing verification, IndexNow (key file already served), Peec AI tracking, Cloudflare Web Analytics. Env-driven slots already in the layout; waits on GP platform IDs.
+- **Analytics accounts** `phase-2` `blocked-by:gp` — GA4 property, GSC + Bing verification, Peec AI, Cloudflare Web Analytics. The on-site side is done: GA4 funnel events (calculator/application/enquiry, fleet distinct) are instrumented and dormant, IndexNow key served, env-driven GA4/CF slots in the layout. Just needs the platform IDs from GP.
 - **Level B/C pages from ia.md** `phase-3` — Car finance, commercial vehicle, truck, ute hubs; guide articles (pre-approval, structures compared, credit score NZ); FAQ sub-hubs. Reuses the shipped template patterns.
 - **/finance-eligibility + lender comparison page** `phase-3` `docs` — Machine-readable eligibility criteria and the UDC vs Heartland/Marac vs Avanti matrix page (seo-readiness §2.4) — no designs yet.
 - **Go-live handover** `phase-4` `infra` — Recreate the Pages project on the client's Cloudflare account, Jack/LDM switch DNS, onboard Better Stack uptime + Sentinel weekly audit with primary_url.
