@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>38%</strong> complete</div>
         <div><strong>8</strong>/21 cards done</div>
-        <div>Updated <strong>2026-07-19 18:57 UTC</strong></div>
+        <div>Updated <strong>2026-07-19 19:21 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -825,7 +825,7 @@
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">1</div>
+        <div class="status-num">2</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -837,7 +837,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">7</div>
+        <div class="status-num">6</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -1010,13 +1010,18 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Lead relay — Cloudflare Email Service + Turnstile</div>
+        <div class="card-title">Lead relay — built, awaiting merge + config</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-deliverable">deliverable</span></div>
-        <div class="card-desc">Pages Function relays apply + contact submissions to sales@ldmmotor.group (fleet enquiries as their own lead type), Turnstile + honeypot on both forms. Until this lands the forms show prototype success states without sending</div>
+        <div class="card-desc">Pages Function (Turnstile + honeypot + Cloudflare Email Service) with real form submission, loading states and /sub-processors page, tested end to end with wrangler + browser. PR #4. Needs: merge, Turnstile keys, Email Sending domain onboarding and Pages secrets</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Stock feed — built, awaiting deploy</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">Ingest converter verified against the sample feed; ldm-stock R2 bucket created; SFTPGo Railway container config + deploy guide in infra/sftpgo. Needs: railway login deploy (~10 min), R2 token + deploy hook from the dashboard, then Motorcentral pointed at the endpoint</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1048,36 +1053,31 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Merge the UI/UX remediation PR</div>
+        <div class="card-title">Merge PR #3 then PR #4, release dev → main</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1</span></div>
-        <div class="card-desc">PR #3 (audit doc + AA contrast + touch targets + a11y batch) into dev, then release dev → main</div>
+        <div class="card-desc">UI/UX remediation, then the lead relay + stock feed branch stacked on it</div>
       </div>
       <div class="card">
-        <div class="card-title">Lead relay — start the build</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-deliverable">deliverable</span></div>
-        <div class="card-desc">Cloudflare Email Service + Turnstile on a Coreshift-controlled staging domain; go-live DNS records for ldmmotor.group documented for the client switch</div>
+        <div class="card-title">Configure the relay (Abe, ~15 min in dashboards)</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">Create the real Turnstile widget, onboard a sender domain to Email Sending, set the Pages secrets/vars (PR #4 lists them), railway login + deploy the SFTPGo sidecar per infra/sftpgo/README</div>
       </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Stock feed ingest sidecar</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">src/lib/vehicles.ts</span></div>
-        <div class="card-desc">SFTPGo on Railway receives the Motorcentral FTP push → R2 → Pages deploy hook rebuilds the site. Swaps the sample dataset for live stock at the `src/lib/vehicles.ts` seam; sold vehicles 410/301 at ingest</div>
+        <div class="card-title">Build-time R2 pull + sold-vehicle pruning</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span><span class="tag tag-blocked">blocked-by:motorcentral</span></div>
+        <div class="card-desc">The last feed piece: wired once Peter Knight confirms push semantics (wholesale replace vs incremental) and protocol. Everything either side of it is built</div>
       </div>
       <div class="card">
         <div class="card-title">Analytics + measurement</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
-        <div class="card-desc">GA4 (funnel events separating application submits from generic contact), GSC + Bing verification, IndexNow key, Peec AI tracking, Cloudflare Web Analytics. Env-driven slots already in the layout</div>
-      </div>
-      <div class="card">
-        <div class="card-title">SUB-PROCESSORS.md + /sub-processors page</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">docs</span></div>
-        <div class="card-desc">Cloudflare, GitHub, Turnstile, Email Service, GA — added in the same PR that wires each vendor</div>
+        <div class="card-desc">GA4 (funnel events separating application submits from generic contact), GSC + Bing verification, IndexNow (key file already served), Peec AI tracking, Cloudflare Web Analytics. Env-driven slots already in the layout; waits on GP platform IDs</div>
       </div>
       <div class="card">
         <div class="card-title">Level B/C pages from ia.md</div>

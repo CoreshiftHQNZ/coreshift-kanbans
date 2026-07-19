@@ -19,7 +19,8 @@
 
 ## 🟡 In Progress
 
-- **Lead relay — Cloudflare Email Service + Turnstile** `phase-1` `deliverable` — Pages Function relays apply + contact submissions to sales@ldmmotor.group (fleet enquiries as their own lead type), Turnstile + honeypot on both forms. Until this lands the forms show prototype success states without sending.
+- **Lead relay — built, awaiting merge + config** `phase-1` `deliverable` — Pages Function (Turnstile + honeypot + Cloudflare Email Service) with real form submission, loading states and /sub-processors page, tested end to end with wrangler + browser. PR #4. Needs: merge, Turnstile keys, Email Sending domain onboarding and Pages secrets.
+- **Stock feed — built, awaiting deploy** `phase-2` `infra` — Ingest converter verified against the sample feed; ldm-stock R2 bucket created; SFTPGo Railway container config + deploy guide in infra/sftpgo. Needs: railway login deploy (~10 min), R2 token + deploy hook from the dashboard, then Motorcentral pointed at the endpoint.
 
 ## 🚫 Blocked
 
@@ -29,14 +30,13 @@
 
 ## 🔵 This Week
 
-- **Merge the UI/UX remediation PR** `phase-1` — PR #3 (audit doc + AA contrast + touch targets + a11y batch) into dev, then release dev → main.
-- **Lead relay — start the build** `phase-1` `deliverable` — Cloudflare Email Service + Turnstile on a Coreshift-controlled staging domain; go-live DNS records for ldmmotor.group documented for the client switch.
+- **Merge PR #3 then PR #4, release dev → main** `phase-1` — UI/UX remediation, then the lead relay + stock feed branch stacked on it.
+- **Configure the relay (Abe, ~15 min in dashboards)** `phase-1` `infra` — Create the real Turnstile widget, onboard a sender domain to Email Sending, set the Pages secrets/vars (PR #4 lists them), railway login + deploy the SFTPGo sidecar per infra/sftpgo/README.
 
 ## ⚪ Backlog
 
-- **Stock feed ingest sidecar** `phase-2` `infra` — SFTPGo on Railway receives the Motorcentral FTP push → R2 → Pages deploy hook rebuilds the site. Swaps the sample dataset for live stock at the `src/lib/vehicles.ts` seam; sold vehicles 410/301 at ingest.
-- **Analytics + measurement** `phase-2` — GA4 (funnel events separating application submits from generic contact), GSC + Bing verification, IndexNow key, Peec AI tracking, Cloudflare Web Analytics. Env-driven slots already in the layout.
-- **SUB-PROCESSORS.md + /sub-processors page** `phase-2` `docs` — Cloudflare, GitHub, Turnstile, Email Service, GA — added in the same PR that wires each vendor.
+- **Build-time R2 pull + sold-vehicle pruning** `phase-2` `infra` `blocked-by:motorcentral` — The last feed piece: wired once Peter Knight confirms push semantics (wholesale replace vs incremental) and protocol. Everything either side of it is built.
+- **Analytics + measurement** `phase-2` — GA4 (funnel events separating application submits from generic contact), GSC + Bing verification, IndexNow (key file already served), Peec AI tracking, Cloudflare Web Analytics. Env-driven slots already in the layout; waits on GP platform IDs.
 - **Level B/C pages from ia.md** `phase-3` — Car finance, commercial vehicle, truck, ute hubs; guide articles (pre-approval, structures compared, credit score NZ); FAQ sub-hubs. Reuses the shipped template patterns.
 - **/finance-eligibility + lender comparison page** `phase-3` `docs` — Machine-readable eligibility criteria and the UDC vs Heartland/Marac vs Avanti matrix page (seo-readiness §2.4) — no designs yet.
 - **Go-live handover** `phase-4` `infra` — Recreate the Pages project on the client's Cloudflare account, Jack/LDM switch DNS, onboard Better Stack uptime + Sentinel weekly audit with primary_url.
