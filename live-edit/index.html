@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>55%</strong> complete</div>
-        <div><strong>23</strong>/42 cards done</div>
-        <div>Updated <strong>2026-07-19 22:33 UTC</strong></div>
+        <div><strong>58%</strong> complete</div>
+        <div><strong>26</strong>/45 cards done</div>
+        <div>Updated <strong>2026-07-19 23:31 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">23</div>
+        <div class="status-num">26</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -971,7 +971,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">23</span>
+        <span class="col-count">26</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1028,6 +1028,21 @@
         <div class="card-title">Trial + billing gate</div>
         <div class="card-tags"><span class="tag tag-shipped">shipped</span></div>
         <div class="card-desc">14-day trial from first publish; cancelled/expired sites serve a calm offline page from the renderer</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Per-site billing (partner keystone)</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Billing moved from account-level to **per-site**: each published site carries its own plan + Stripe subscription; the renderer gates per site; the webhook resolves the one site by subscription metadata/id (a customer now holds many subs) with legacy fallbacks for grandfathered subs. Migration 0009 backfilled prod (24/24 served-state preserved, existing multi-site free-riders grandfathered). Also fixes the retail multi-site revenue leak. **Verified on the live webhook with signed events — checkout→active, cancel→offline+domain teardown, and per-site isolation (a failed invoice on one site leaves the other active).**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Global USD pricing</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">US$49/mo · US$499/yr for everyone (Stripe adaptive pricing shows local currency); existing NZ$ subscribers grandfathered. Platform Agreement + UI re-stamped</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Partner program — rails + white-label claim flow</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">become_partner</span></div>
+        <div class="card-desc">The reseller loop, live end-to-end: register as a partner (`become_partner`, admin-gated for now), run the lead engine against your **own** agency (de-anchored — Coreshift HQ seeded as partner #0 so the existing CRM is unchanged), set a one-off build fee, and email the customer a **white-label claim link** (partner&#39;s brand, via our Postmark). The customer signs up (T&amp;C), claims the site (moves to their account, partner keeps edit access + referrer attribution), and checks out (build fee + subscription, **no trial**). Commissioned-reseller model: everything is Coreshift revenue; commissions accrue to the partner (P3). Migrations 0010–0011. *(Deferred within P2: full customer-dashboard white-label chrome, referral links, Partner Agreement page.)*</div>
       </div>
       <div class="card">
         <div class="card-title">Billing hardened + self-serve portal</div>
