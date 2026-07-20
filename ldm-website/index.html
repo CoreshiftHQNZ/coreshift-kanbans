@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>33%</strong> complete</div>
         <div><strong>8</strong>/24 cards done</div>
-        <div>Updated <strong>2026-07-20 00:08 UTC</strong></div>
+        <div>Updated <strong>2026-07-20 00:34 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,11 +833,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">3</div>
+        <div class="status-num">4</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">6</div>
+        <div class="status-num">5</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -1019,9 +1019,9 @@
         <div class="card-desc">Pages Function (Turnstile + honeypot + Cloudflare Email Service) with real form submission, loading states and /sub-processors page, tested end to end with wrangler + browser. PR #4. Needs: merge, Turnstile keys, Email Sending domain onboarding and Pages secrets</div>
       </div>
       <div class="card">
-        <div class="card-title">Stock feed — built, awaiting deploy</div>
+        <div class="card-title">Stock feed — fully built, awaiting endpoint handover</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Ingest converter verified against the sample feed; ldm-stock R2 bucket created; SFTPGo Railway container config + deploy guide in infra/sftpgo. Needs: railway login deploy (~10 min), R2 token + deploy hook from the dashboard, then Motorcentral pointed at the endpoint</div>
+        <div class="card-desc">Converter, R2 bucket, SFTPGo container, build-time R2 pull (fetch-stock) and sold-vehicle 301s (redirect manifest) all done and verified (PR #8). Peter confirmed SFTP + full-snapshot pushes (20 Jul). Needs: finish the Railway deploy, send Peter the SFTP host/port (draft ready), set R2 vars on the Pages build env at go-live</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1059,7 +1059,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1070,7 +1070,12 @@
       <div class="card">
         <div class="card-title">Merge open PRs, release dev → main</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1</span></div>
-        <div class="card-desc">PR #6 (analytics) and PR #7 (client feedback: lender naming, UDC disclaimer, /terms) into dev, then dev → main</div>
+        <div class="card-desc">PR #6 (analytics), #7 (client feedback), #8 (live stock feed) into dev, then dev → main</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Send Peter the SFTP host/port</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
+        <div class="card-desc">Reply drafted; fill the host/port from the Railway TCP proxy once the deploy is up</div>
       </div>
       <div class="card">
         <div class="card-title">Configure the relay (Abe, ~15 min in dashboards)</div>
@@ -1081,14 +1086,9 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Build-time R2 pull + sold-vehicle pruning</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span><span class="tag tag-blocked">blocked-by:motorcentral</span></div>
-        <div class="card-desc">The last feed piece: wired once Peter Knight confirms push semantics (wholesale replace vs incremental) and protocol. Everything either side of it is built</div>
-      </div>
       <div class="card">
         <div class="card-title">Analytics accounts</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-blocked">blocked-by:gp</span></div>

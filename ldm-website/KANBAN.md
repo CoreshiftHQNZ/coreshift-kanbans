@@ -20,7 +20,7 @@
 ## 🟡 In Progress
 
 - **Lead relay — built, awaiting merge + config** `phase-1` `deliverable` — Pages Function (Turnstile + honeypot + Cloudflare Email Service) with real form submission, loading states and /sub-processors page, tested end to end with wrangler + browser. PR #4. Needs: merge, Turnstile keys, Email Sending domain onboarding and Pages secrets.
-- **Stock feed — built, awaiting deploy** `phase-2` `infra` — Ingest converter verified against the sample feed; ldm-stock R2 bucket created; SFTPGo Railway container config + deploy guide in infra/sftpgo. Needs: railway login deploy (~10 min), R2 token + deploy hook from the dashboard, then Motorcentral pointed at the endpoint.
+- **Stock feed — fully built, awaiting endpoint handover** `phase-2` `infra` — Converter, R2 bucket, SFTPGo container, build-time R2 pull (fetch-stock) and sold-vehicle 301s (redirect manifest) all done and verified (PR #8). Peter confirmed SFTP + full-snapshot pushes (20 Jul). Needs: finish the Railway deploy, send Peter the SFTP host/port (draft ready), set R2 vars on the Pages build env at go-live.
 
 ## 🚫 Blocked
 
@@ -33,12 +33,12 @@
 ## 🔵 This Week
 
 - **Domain confirmed** `phase-3` `shipped` — Client confirmed finance.ldmmotor.group (Jack, 20 Jul). DNS + hosting access being chased for go-live.
-- **Merge open PRs, release dev → main** `phase-1` — PR #6 (analytics) and PR #7 (client feedback: lender naming, UDC disclaimer, /terms) into dev, then dev → main.
+- **Merge open PRs, release dev → main** `phase-1` — PR #6 (analytics), #7 (client feedback), #8 (live stock feed) into dev, then dev → main.
+- **Send Peter the SFTP host/port** `phase-2` — Reply drafted; fill the host/port from the Railway TCP proxy once the deploy is up.
 - **Configure the relay (Abe, ~15 min in dashboards)** `phase-1` `infra` — Turnstile widget, Email Sending domain + Pages secrets, railway deploy of the SFTPGo sidecar (in progress). R2 scoped-token decision parked.
 
 ## ⚪ Backlog
 
-- **Build-time R2 pull + sold-vehicle pruning** `phase-2` `infra` `blocked-by:motorcentral` — The last feed piece: wired once Peter Knight confirms push semantics (wholesale replace vs incremental) and protocol. Everything either side of it is built.
 - **Analytics accounts** `phase-2` `blocked-by:gp` — GA4 property, GSC + Bing verification, Peec AI, Cloudflare Web Analytics. The on-site side is done: GA4 funnel events (calculator/application/enquiry, fleet distinct) are instrumented and dormant, IndexNow key served, env-driven GA4/CF slots in the layout. Just needs the platform IDs from GP.
 - **Level B/C pages from ia.md** `phase-3` — Car finance, commercial vehicle, truck, ute hubs; guide articles (pre-approval, structures compared, credit score NZ); FAQ sub-hubs. Reuses the shipped template patterns.
 - **/finance-eligibility + lender comparison page** `phase-3` `docs` — Machine-readable eligibility criteria and the UDC Finance vs Marac vs Avanti matrix page (seo-readiness §2.4) — no designs yet. UDC asset-category list now available in the input notes.
