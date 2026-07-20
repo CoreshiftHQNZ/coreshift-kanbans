@@ -367,7 +367,7 @@
           <p class="subtitle">Coreshift × Growth Partners · CV assessment tool · live build status</p>
         </div>
         <div class="meta">
-          Last updated <strong>2026-07-14</strong><br />
+          Last updated <strong>2026-07-20</strong><br />
           <a href="https://github.com/core-ricky/shortlist" target="_blank" rel="noopener">repo</a> ·
           <a href="https://github.com/core-ricky/shortlist/blob/main/docs/product-roadmap.md" target="_blank" rel="noopener">roadmap</a> ·
           <a href="https://web-staging-b368.up.railway.app" target="_blank" rel="noopener">staging</a>
@@ -508,6 +508,7 @@
             <div class="col-count">48</div>
           </div>
           <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m4">live</span><span class="card-id">20 Jul</span></div><h3 class="card-title">Engine live on real API + combined assess flow</h3><p class="card-note">Anthropic key wired — the engine now scores real CVs end-to-end on staging (was mock-only). A staging worker crashloop (server-only import) and a Railway &ldquo;set-var-doesn&rsquo;t-reload&rdquo; gotcha both fixed. Upload &rarr; extract &rarr; assess &rarr; done merged into one guided flow with a 4-stage progress bar + silent auto-retry of failed assessments. Email switched Resend&rarr;Postmark. Placeholders genericised; onboarding seed no longer uses a real client name; archive now confirms. PRs #13&ndash;#21.</p></article>
             <article class="card"><div class="card-head"><span class="chip m4">design</span><span class="card-id">14 Jul</span></div><h3 class="card-title">Design system + full UI retrofit (PRs #10&ndash;#12)</h3><p class="card-note">Claude Designer mockup translated into <code>docs/design.md</code> + <code>docs/design.html</code> (tokens: cream canvas, ink navy, burnt-orange accent, Bricolage Grotesque + Instrument Sans). Every screen restyled and browser-verified; live on staging. Repo also mirrored to <code>CoreshiftHQNZ/shortlist</code>.</p></article>
             <article class="card"><div class="card-head"><span class="chip m4">P3</span><span class="card-id">14 Jul</span></div><h3 class="card-title">Phases 0&ndash;3 shipped to main (PRs #4&ndash;#9)</h3><p class="card-note">Export pack, run-complete email, loading/error states, onboarding seed + hint strip, a11y announcements, bundle 480&rarr;208KB gz, role-delete with storage cleanup (zero orphans verified), 30 req/min rate limits, <code>/security-review</code> pass (1 finding, fixed), staging worker crashloop hotfix. CI green on hermetic Supabase stack throughout.</p></article>
             <article class="card"><div class="card-head"><span class="chip m3">P2</span><span class="card-id">13 Jul</span></div><h3 class="card-title">Assessment engine + ranked shortlist (magic moment ✓)</h3><p class="card-note">Forced tool-use engine (<code>claude-sonnet-5</code>), zod-validated with retries, citation verification against extracted text, prompts-as-data in <code>engine_versions</code>. 80-candidate simulated run: live progress &rarr; ranked table &rarr; cited report &rarr; PDF quote highlight &rarr; override re-ranks 1&rarr;7 &rarr; shortlist &rarr; 23-page export pack.</p></article>
