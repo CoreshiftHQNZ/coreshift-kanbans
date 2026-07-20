@@ -230,9 +230,13 @@
     const epochDay = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
     const dateStr = now.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" });
 
+    // Order (top → bottom): welcome, daily note, then the weekly digest —
+    // most immediate first. (DOM order is fixed here; the fetches below just
+    // fill these placeholders in whatever order they resolve.)
     contentEl.innerHTML = `
-      <div id="home-digest" class="home-digest"></div>
+      <p class="home-welcome home-welcome-top">Welcome to the Coreshift handbook. Everything lives in the menu on the left — pick a section to dive in.</p>
       <div id="home-quote"></div>
+      <div id="home-digest" class="home-digest"></div>
     `;
 
     // New Toys — weekly digest, published by the AI Radar
@@ -260,14 +264,13 @@
             <blockquote class="home-quote">${escapeHtml(item.q)}</blockquote>
             ${item.a ? `<figcaption class="home-author">${escapeHtml(item.a)}</figcaption>` : ""}
           </figure>
-          <p class="home-welcome">Welcome to the Coreshift handbook. Everything lives in the menu on the left \u2014 pick a section to dive in.</p>
         `;
       })
       .catch((err) => {
         const el = document.getElementById("home-quote");
         if (el) el.innerHTML = `
-          <div class="home-eyebrow">Welcome</div>
-          <p class="home-welcome">Welcome to the Coreshift handbook. Everything lives in the menu on the left \u2014 pick a section to dive in. <span style="opacity:.6">(Daily quote unavailable: ${escapeHtml(err.message)}.)</span></p>
+          <div class="home-eyebrow">Daily note \u00b7 ${dateStr}</div>
+          <p class="home-welcome" style="margin:0;padding:0;border-top:none;opacity:.6">Daily quote unavailable (${escapeHtml(err.message)}).</p>
         `;
       });
   }

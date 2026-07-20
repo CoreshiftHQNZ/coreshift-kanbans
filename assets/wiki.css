@@ -259,7 +259,8 @@ a { color: var(--teal-dark); }
   min-height: calc(100vh - 66px - 120px);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-top: 4px;
 }
 .home-eyebrow {
   font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em;
@@ -294,6 +295,11 @@ a { color: var(--teal-dark); }
   margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--border);
   font-size: 14px; color: var(--text-soft); max-width: 56ch;
 }
+/* Welcome shown as the page intro (top of home), not a footer note under the quote */
+.home-welcome-top {
+  margin: 0 0 44px; padding: 0; border-top: none;
+  font-size: 15px; color: var(--text-soft); max-width: 60ch;
+}
 
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 1100px) {
@@ -324,7 +330,7 @@ a { color: var(--teal-dark); }
 }
 
 /* ── Home: New Toys digest card ─────────────────────────── */
-.home-digest { margin: 0 0 30px; padding: 20px 24px 8px; background: #f2f7f8; border: 1px solid #dfeaea; border-radius: 14px; }
+.home-digest { margin: 48px 0 10px; padding: 20px 24px 8px; background: #f2f7f8; border: 1px solid #dfeaea; border-radius: 14px; }
 .home-digest-body { font-size: 15px; line-height: 1.6; }
 .home-digest-body > :first-child { margin-top: 0; }
 .home-digest-body h2 { font-size: 19px; margin: 16px 0 8px; }
