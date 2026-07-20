@@ -24,20 +24,23 @@
 
 ## 🚫 Blocked
 
-- **UDC-approved disclaimer wording** `phase-3` `blocked-by:client` — Every finance surface carries a flagged placeholder disclaimer pending UDC sign-off. Wording lands once, in `src/lib/disclaimers.ts`.
-- **FSPR number, team profiles, testimonials** `phase-3` `blocked-by:client` — Placeholder blocks are flagged in-page on /about, footer compliance panel and testimonial strips. First-party testimonials only (Brand Foundation rule).
-- **Domain + UDC calculator access** `phase-3` `blocked-by:client` — finance.ldmmotor.group pending final confirmation; UDC iframe embeds as the official-quote option once the client secures access.
+- **UDC final disclaimer wording** `phase-3` `blocked-by:client` — Interim UDC standard wording now live site-wide (PR #7), reframed as pending UDC marketing review. Jack chasing UDC for anything more substantial. Lands once in `src/lib/disclaimers.ts`.
+- **Client Privacy Policy + Terms & Conditions** `phase-3` `blocked-by:client` — /privacy and the new /terms page (PR #7) carry flagged placeholders; per Keitha, final legal wording comes from LDM (with legal advice) given the personal data collected.
+- **FSPR number, team profiles, testimonials** `phase-3` `blocked-by:client` — Placeholder blocks flagged in-page on /about, footer compliance panel and testimonial strips. First-party testimonials only (Brand Foundation rule).
+- **UDC calculator access** `phase-3` `blocked-by:client` — UDC iframe embeds as the official-quote option once the client secures access. Jack has asked the client.
+- **Lender naming — final confirm** `phase-3` `blocked-by:client` — Applied Jack's steer (PR #7): "Marac" not "Heartland Bank (Marac)", dropped "(preferred)". Awaiting his formal confirmation; trivial to adjust a label.
 
 ## 🔵 This Week
 
-- **Merge PR #3 then PR #4, release dev → main** `phase-1` — UI/UX remediation, then the lead relay + stock feed branch stacked on it.
-- **Configure the relay (Abe, ~15 min in dashboards)** `phase-1` `infra` — Create the real Turnstile widget, onboard a sender domain to Email Sending, set the Pages secrets/vars (PR #4 lists them), railway login + deploy the SFTPGo sidecar per infra/sftpgo/README.
+- **Domain confirmed** `phase-3` `shipped` — Client confirmed finance.ldmmotor.group (Jack, 20 Jul). DNS + hosting access being chased for go-live.
+- **Merge open PRs, release dev → main** `phase-1` — PR #6 (analytics) and PR #7 (client feedback: lender naming, UDC disclaimer, /terms) into dev, then dev → main.
+- **Configure the relay (Abe, ~15 min in dashboards)** `phase-1` `infra` — Turnstile widget, Email Sending domain + Pages secrets, railway deploy of the SFTPGo sidecar (in progress). R2 scoped-token decision parked.
 
 ## ⚪ Backlog
 
 - **Build-time R2 pull + sold-vehicle pruning** `phase-2` `infra` `blocked-by:motorcentral` — The last feed piece: wired once Peter Knight confirms push semantics (wholesale replace vs incremental) and protocol. Everything either side of it is built.
 - **Analytics accounts** `phase-2` `blocked-by:gp` — GA4 property, GSC + Bing verification, Peec AI, Cloudflare Web Analytics. The on-site side is done: GA4 funnel events (calculator/application/enquiry, fleet distinct) are instrumented and dormant, IndexNow key served, env-driven GA4/CF slots in the layout. Just needs the platform IDs from GP.
 - **Level B/C pages from ia.md** `phase-3` — Car finance, commercial vehicle, truck, ute hubs; guide articles (pre-approval, structures compared, credit score NZ); FAQ sub-hubs. Reuses the shipped template patterns.
-- **/finance-eligibility + lender comparison page** `phase-3` `docs` — Machine-readable eligibility criteria and the UDC vs Heartland/Marac vs Avanti matrix page (seo-readiness §2.4) — no designs yet.
+- **/finance-eligibility + lender comparison page** `phase-3` `docs` — Machine-readable eligibility criteria and the UDC Finance vs Marac vs Avanti matrix page (seo-readiness §2.4) — no designs yet. UDC asset-category list now available in the input notes.
 - **Go-live handover** `phase-4` `infra` — Recreate the Pages project on the client's Cloudflare account, Jack/LDM switch DNS, onboard Better Stack uptime + Sentinel weekly audit with primary_url.
 - **Post-launch audit** `phase-4` — Full SEO/GEO/AEO audit skill against the live site before the 3-month review. Targets: SEO ≥8/10, GEO ≥8/10, AEO ≥8/10, Lighthouse mobile ≥85.

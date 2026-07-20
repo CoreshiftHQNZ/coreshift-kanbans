@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>38%</strong> complete</div>
-        <div><strong>8</strong>/21 cards done</div>
-        <div>Updated <strong>2026-07-19 23:30 UTC</strong></div>
+        <div><strong>33%</strong> complete</div>
+        <div><strong>8</strong>/24 cards done</div>
+        <div>Updated <strong>2026-07-20 00:08 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -829,11 +829,11 @@
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">3</div>
+        <div class="status-num">5</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">2</div>
+        <div class="status-num">3</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -1027,40 +1027,55 @@
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">UDC-approved disclaimer wording</div>
+        <div class="card-title">UDC final disclaimer wording</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span><span class="tag tag-neutral">src/lib/disclaimers.ts</span></div>
-        <div class="card-desc">Every finance surface carries a flagged placeholder disclaimer pending UDC sign-off. Wording lands once, in `src/lib/disclaimers.ts`</div>
+        <div class="card-desc">Interim UDC standard wording now live site-wide (PR #7), reframed as pending UDC marketing review. Jack chasing UDC for anything more substantial. Lands once in `src/lib/disclaimers.ts`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Client Privacy Policy + Terms &amp; Conditions</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span></div>
+        <div class="card-desc">/privacy and the new /terms page (PR #7) carry flagged placeholders; per Keitha, final legal wording comes from LDM (with legal advice) given the personal data collected</div>
       </div>
       <div class="card">
         <div class="card-title">FSPR number, team profiles, testimonials</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span></div>
-        <div class="card-desc">Placeholder blocks are flagged in-page on /about, footer compliance panel and testimonial strips. First-party testimonials only (Brand Foundation rule)</div>
+        <div class="card-desc">Placeholder blocks flagged in-page on /about, footer compliance panel and testimonial strips. First-party testimonials only (Brand Foundation rule)</div>
       </div>
       <div class="card">
-        <div class="card-title">Domain + UDC calculator access</div>
+        <div class="card-title">UDC calculator access</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span></div>
-        <div class="card-desc">finance.ldmmotor.group pending final confirmation; UDC iframe embeds as the official-quote option once the client secures access</div>
+        <div class="card-desc">UDC iframe embeds as the official-quote option once the client secures access. Jack has asked the client</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Lender naming — final confirm</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span></div>
+        <div class="card-desc">Applied Jack&#39;s steer (PR #7): &quot;Marac&quot; not &quot;Heartland Bank (Marac)&quot;, dropped &quot;(preferred)&quot;. Awaiting his formal confirmation; trivial to adjust a label</div>
       </div></div>
     </section>
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Merge PR #3 then PR #4, release dev → main</div>
+        <div class="card-title">Domain confirmed</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Client confirmed finance.ldmmotor.group (Jack, 20 Jul). DNS + hosting access being chased for go-live</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Merge open PRs, release dev → main</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1</span></div>
-        <div class="card-desc">UI/UX remediation, then the lead relay + stock feed branch stacked on it</div>
+        <div class="card-desc">PR #6 (analytics) and PR #7 (client feedback: lender naming, UDC disclaimer, /terms) into dev, then dev → main</div>
       </div>
       <div class="card">
         <div class="card-title">Configure the relay (Abe, ~15 min in dashboards)</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Create the real Turnstile widget, onboard a sender domain to Email Sending, set the Pages secrets/vars (PR #4 lists them), railway login + deploy the SFTPGo sidecar per infra/sftpgo/README</div>
+        <div class="card-desc">Turnstile widget, Email Sending domain + Pages secrets, railway deploy of the SFTPGo sidecar (in progress). R2 scoped-token decision parked</div>
       </div></div>
     </section>
     <section class="column col-backlog">
@@ -1087,7 +1102,7 @@
       <div class="card">
         <div class="card-title">/finance-eligibility + lender comparison page</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">docs</span></div>
-        <div class="card-desc">Machine-readable eligibility criteria and the UDC vs Heartland/Marac vs Avanti matrix page (seo-readiness §2.4) — no designs yet</div>
+        <div class="card-desc">Machine-readable eligibility criteria and the UDC Finance vs Marac vs Avanti matrix page (seo-readiness §2.4) — no designs yet. UDC asset-category list now available in the input notes</div>
       </div>
       <div class="card">
         <div class="card-title">Go-live handover</div>
