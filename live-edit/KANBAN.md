@@ -74,3 +74,16 @@
 - **Test coverage** `infra` — No tests yet for edge functions, RLS/multitenancy, checkout/webhook, or href sanitization.
 - **Lazy-load the editor** `enhancement` — Code-split the overlay so it never ships to end-visitors on published sites.
 - **Branch flow** `infra` — dev/staging are behind main; reconcile to match the local → dev → staging → main standard.
+
+## 🅿️ Parking Lot — consciously deferred, needs a decision
+
+Things left out of a shipped feature on purpose — not forgotten, parked here for Ricky to review and decide whether they're worth doing. Move up to Backlog / This Week if we want them.
+
+- **Google Places photos into generated sites** `enrichment` `deferred` — We capture Places hours/phone/rating/address, but **not photos**. The Places Photo API returns a photo *reference* needing a second media call, and embedding our API key in public image URLs would leak it. To do it safely we'd resolve each photo server-side into our own Storage during generation. Value: richer auto-generated galleries for imported/discovered businesses. Cost: extra API calls + Storage + build-time latency.
+- **Accurate MRR (per-site billing interval)** `metrics` `deferred` — The admin Business tab's MRR is a **list-price estimate** (paying active sites × US$49/mo); annual subs are counted at the monthly price because we don't store each site's billing interval. To make MRR exact we'd persist the interval on the site at checkout (or read it from Stripe) and compute monthly-equivalent. Value: real MRR vs a proxy. Small schema + webhook change.
+- **Partner payout execution** `partner` `deferred` `needs-ricky` — The ledger accrues correctly; the **money-out** step (Wise/PayPal batch export + mark-paid) and fraud flags (velocity / self-referral holds) are built as schema/dry-run only. Gated on Wise + PayPal business accounts + accountant sign-off on the payout process.
+- **Referral links (`?ref=CODE`)** `partner` `deferred` — Partners were speced to get a ref code attributing *self-serve* signups (same ladder). Deferred out of P2 — the white-label claim flow shipped instead. Value: passive partner acquisition channel.
+- **Customer-dashboard white-label chrome** `partner` `deferred` — Partner-sold customers currently claim + subscribe under partner branding, but their ongoing *dashboard* chrome (partner logo/name + "your website partner" contact card, support routed to partner first) is not yet applied. Deferred out of P2.
+- **Partner education platform** `partner` `deferred` — A "Resources" slot in the partner dashboard was reserved for a future training/education platform. Backlog by Ricky's own call — parked here so it's visible.
+- **Self-serve content export** `legal` `deferred` — Platform Agreement clause 13.2 promises a self-serve content export we haven't built (currently assisted-export). Either build it or lean on the assisted-export clause (flagged to lawyer).
+- **App bundle code-split** `infra` `deferred` — The dashboard bundle is 934 kB (248 kB gzip) in one chunk — over Vite's 500 kB warning. Works fine; splitting would speed first load. Low priority.
