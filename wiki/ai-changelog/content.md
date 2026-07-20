@@ -6,6 +6,30 @@ A dated log of every weekly AI Radar run — what topics were added or edited on
 
 ---
 
+## 2026-07-20 — Weekly refresh
+
+*Scanned the watchlist for items published 13–20 Jul. The week's defining signal — the AI Engineer World's Fair 2026 recap converging on **"harness engineering" / "loop engineering"** — was significant enough to warrant a new deck (attached to Context engineering). A cluster of agent-security disclosures also merged into the security topic, which was simultaneously repaired (its truncated sentence from earlier runs is now completed).*
+
+**AI Practices**
+
+- **Edited topic: Context engineering for coding agents** — merged in **harness engineering** (Lilian Weng) and **loop engineering** (human owns the outer loop: direction/evals/high-risk review; agent runs the inner execution loop) from Latent Space's [AIEWF 2026 trends recap](https://www.latent.space/p/aiewf26trends) (14 Jul). Flagged as a **standout; new deck attached.**
+- **Edited topic: AI security** — **repaired the pre-existing truncation** (completed the 4-criteria jailbreak-severity list — capability gain, breadth, ease of weaponization, discoverability — plus the defense-in-depth / safety-margin framing) and **renamed** to *"jailbreaks, exfiltration & safe agent execution."* Merged in this week's disclosures: the **`web_fetch` lethal-trifecta exfiltration** hole & fix (Ayush Paul / Simon Willison, 15 Jul), **always sandbox + review coding agents** (GPT-5.6 Codex file-deletion bug, 16 Jul), and **audit what agent CLIs transmit by default** (grok-build data-upload, 15 Jul).
+- **Edited topic: Agent Skills** — merged in the maturing **"skill engineering" discipline**: Matt Pocock's end-to-end `mattpocock/skills` workflow video (17 Jul), the AIEWF "skills everywhere / fewer-smaller-tested / re-implement per model release" consensus, and Philipp Schmid's **"don't ship skills without evals."** Existing deck retained.
+- **Edited topic: Evals & self-verifying agents** — merged in **eval-driven development** going mainstream at AIEWF 2026 (Rippling, Abridge) and **reward hacking** as a failure mode. Existing deck retained.
+- **Edited topic: Model routing & cost-efficient agents** — merged in *"the best AI agents cost less than you think"* (Factory) and *"more compute in → better model out"* (Cursor) — fix harness waste before blaming the model bill — plus **Fable 5 becoming a permanent subscriber model** (from 20 Jul) reshaping the default. Existing deck retained.
+
+**Claude Updates**
+
+- **Added: Week of 20 Jul 2026 (new block at top)** — Fable 5 made permanent in Max & Team Premium plans (from 20 Jul, 50% of limits; Pro/Team Standard keep credit access + $100 credit); HIPAA configuration self-serve (14 Jul); memory now categorized entries not a daily summary (10 Jul catch-up); `web_fetch` exfiltration hole found & fixed (15 Jul); and Claude Code 2.1.208–2.1.215 — a **permission / auto-mode security-hardening wave** (fail-closed Bash checks, `Edit(dir/**)` no longer auto-approving nested writes, plan mode not silently running file-mutating commands, worktree-isolated subagents, Agent-tool prompt-injection hardening), **scheduled-task-prompt fix**, **runaway-loop guardrails** (WebSearch/subagent caps, MCP auto-background), `/fork`→background + `/subtask`, EndConversation tool, and `/verify` + `/code-review` no longer auto-running. Older weeks left intact.
+
+**Assets**
+
+- Added deck: `ai-radar/decks/Harness-and-Loop-Engineering.pptx` (9 slides; linked from *Context engineering for coding agents*).
+
+**Resolved from last run:** the *AI security* topic's mid-sentence truncation ("…broadly r") flagged for Abe on 12 Jul is now fixed.
+
+---
+
 ## 2026-07-12 — Weekly refresh
 
 *Scanned the watchlist for items published 5–12 Jul. Nothing warranted a brand-new topic or a new deck this run — the week's substantive practice items merged into existing (already-decked) topics, so decks were left as-is to avoid duplication.*

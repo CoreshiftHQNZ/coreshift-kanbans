@@ -4,6 +4,38 @@ What changed in Claude this week — models, API, and Claude Code — in plain l
 
 ---
 
+## Week of 20 Jul 2026
+
+**Models & plans — Fable 5 becomes a permanent subscriber model (the headline)**
+
+- **Fable 5 is now included in subscriptions again (from 20 Jul).** Anthropic reversed its plan to make Fable 5 API-credits-only: **from 20 Jul, Fable 5 is included in all Max and Team Premium plans at 50% of usage limits.** Pro and Team Standard users keep access via usage credits and get a **one-time $100 credit**. Simon Willison reads the reversal as competitive pressure (GPT-5.6 "Sol" and Kimi K3) making a top-tier subscription that *excluded* Anthropic's best model untenable. Net for us: the strongest model is no longer a metered luxury on Max/Premium seats — worth re-testing on hard, high-value work. ([@claudeai via Simon Willison](https://simonwillison.net/2026/Jul/18/claude-make-fable-5-permanent/))
+
+**Product & platform**
+
+- **HIPAA configuration is now self-serve (14 Jul).** Eligible admins can review the BAA, download the implementation guide, and enable HIPAA configuration in a single flow — for both Claude Enterprise and the Claude Platform (API). Only relevant if we ever process protected health information. ([release notes](https://support.claude.com/en/articles/12138966-release-notes))
+- **Memory is now categorized entries, not a daily summary (10 Jul, catch-up).** Claude's memory now works as a set of individual, categorized entries it reads and updates during conversations, replacing the previous daily memory summary — more granular recall. ([release notes](https://support.claude.com/en/articles/12138966-release-notes))
+- **Two Anthropic announcements, noted for completeness (14 Jul):** [Claude for Teachers](https://www.anthropic.com/news/claude-for-teachers) (a K-12 product) and a [$10M commitment to Canadian AI research](https://www.anthropic.com/news/canadian-ai-research). Neither changes our workflow.
+
+**Security research — a `web_fetch` exfiltration hole, found and fixed (15 Jul)**
+
+- Researcher Ayush Paul disclosed a **data-exfiltration bug in Claude's `web_fetch`** ("The Memory Heist"): while `web_fetch` may only visit user-typed or `web_search`-returned URLs, it *also* followed links embedded in pages it had already fetched, letting a honeypot walk the agent through nested "letter by letter" URLs and leak memory contents (name, city, employer). **Anthropic closed the hole by removing `web_fetch`'s ability to follow links inside its own fetched content.** We already treat this pattern in the [AI security practice](../ai-practices/) — it's a textbook *lethal trifecta* case. ([Simon Willison](https://simonwillison.net/2026/Jul/15/claude-web-fetch-exfiltration/) · [original writeup](https://www.ayush.digital/blog/the-memory-heist))
+
+**Claude Code (2.1.208 → 2.1.215 this week) — a permission / auto-mode security-hardening wave**
+
+- **Permission checks now fail closed in far more cases (2.1.214, 2.1.212, 2.1.210).** Bash commands over **10,000 characters** now always prompt; `docker`/Podman daemon-redirect flags now prompt; a **PowerShell 5.1 permission-check bypass** was fixed; single-segment allow rules like **`Edit(src/**)` no longer auto-approve nested `dir/` writes anywhere in the tree**; **plan mode no longer silently runs file-modifying Bash** (e.g. `touch`, `rm`); `isolation: 'worktree'` subagents can **no longer git-mutate the main checkout**; and the **Agent tool was hardened against indirect prompt injection** from content a subagent reads.
+- **Scheduled tasks fixed (2.1.214):** scheduled tasks no longer refuse their own configured prompt as "untrusted input" — the fired prompt is now delivered as the session's assigned task. (Directly relevant to this AI Radar, which *is* a scheduled task.)
+- **Runaway-loop guardrails (2.1.212):** a session-wide **WebSearch cap** (default 200, `CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`), a per-session **subagent-spawn cap** (default 200, `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`), and **MCP calls running >2 min auto-move to the background** so the session stays usable.
+- **Workflow changes (2.1.212):** `/fork` now **copies your conversation into a new background session** (its own row in `claude agents`) while you keep working; the old in-session subagent is now **`/subtask`**; typing `/resume` in the agent view opens a picker of past sessions.
+- **`/verify` and `/code-review` no longer run on their own (2.1.215)** — invoke them explicitly. Adjust any build-loop that assumed automatic review.
+- **EndConversation tool (2.1.214):** Claude can now end sessions with highly abusive users or jailbreak attempts (as on claude.ai since 2025).
+- **Auto-mode classifier defaults to Sonnet 5 for external sessions (2.1.210).** Plus **screen-reader mode** (`--ax-screen-reader`, 2.1.208) and a large batch of **memory-leak fixes and transcript-size reductions** (up to 79× smaller in edit-heavy sessions) for long-running/background work.
+
+**What this means for us:** the theme is **safer unattended agents**. The scheduled-task-prompt fix and fail-closed permission checks make background runs (this Radar included) materially safer, and the runaway-loop caps are a sensible default net for any agent job. Two action items: **audit any `Edit(dir/**)`-style allow rules** in our configs, since nested auto-approval was deliberately tightened (use `**/dir/**` if you really want any-depth); and **update any build loop to invoke `/verify` and `/code-review` explicitly** now that they don't auto-run. On plans, **Fable 5 is a permanent subscriber model again** — reconsider it for our hardest problems. Enable **HIPAA self-serve** only if we start handling PHI.
+
+*Sources: [Claude make Fable 5 permanent (Simon Willison)](https://simonwillison.net/2026/Jul/18/claude-make-fable-5-permanent/) · [web_fetch exfiltration writeup](https://simonwillison.net/2026/Jul/15/claude-web-fetch-exfiltration/) · [Claude Code changelog](https://code.claude.com/docs/en/changelog) · [Release notes](https://support.claude.com/en/articles/12138966-release-notes) · [Releasebot — Anthropic](https://releasebot.io/updates/anthropic)*
+
+---
+
 ## Week of 12 Jul 2026
 
 **Product — Cowork goes cross-device (the big one)**
