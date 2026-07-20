@@ -1,20 +1,20 @@
-**Week of 30 Jun 2026** — the week's notable new toys, tools, and changes. Full write-ups live in [AI Practices](wiki/ai-practices/) · [Claude Updates](wiki/claude-updates/).
+**Week of 20 Jul 2026** — the week's notable new toys, tools, and changes. Full write-ups live in [AI Practices](wiki/ai-practices/) · [Claude Updates](wiki/claude-updates/).
 
 **🧰 New tools & toys**
 
-- **Claude Tag** — tag `@Claude` in a Slack channel and hand off a task; multiplayer, builds channel memory, runs on Opus 4.8 (beta, Team/Enterprise). [Details](https://www.anthropic.com/news/introducing-claude-tag)
-- **LangChain Deep Agents — RubricMiddleware** — agents grade their own output against a rubric and iterate until it passes; ships with an on-call triage copilot and computer-use in Fleet. [Newsletter](https://www.langchain.com/blog/june-2026-langchain-newsletter)
-- **Claude Code 2.1.x** — `--safe-mode`, `/cd`, sub-agents that spawn sub-agents (5 deep), `sandbox.credentials`, and org-enforced model restrictions.
+- **Claude Code 2.1.208–2.1.215** — a permission / auto-mode **security-hardening wave**: Bash checks fail closed in more cases (>10k-char commands prompt), `Edit(dir/**)` no longer auto-approves nested writes, plan mode won't silently run file-modifying commands, worktree-isolated subagents can't touch the main checkout, and the Agent tool is hardened against prompt injection. Plus **runaway-loop caps** (WebSearch/subagent limits; MCP calls >2 min auto-background), `/fork`→background + `/subtask`, and `/verify` + `/code-review` that **no longer auto-run**.
+- **HIPAA configuration is now self-serve (14 Jul)** — eligible admins review the BAA and enable it in one flow, for Claude Enterprise and the API.
+- **Harness & Loop Engineering deck** — the AI Engineer World's Fair 2026 consensus, now on AI Practices: build the *harness* and the *loop* (human owns the outer loop, agent runs the inner), not a fully autonomous agent.
 
 **✴️ Claude / Anthropic**
 
-- **Models:** **Fable 5 is back (30 Jun)** — US export controls lifted; it returns globally **1 Jul** (included up to 50% of weekly usage through 7 Jul, then usage credits) with a new safety classifier that reroutes blocked requests to Opus 4.8. Mythos 5 stays limited to approved US orgs; our day-to-day stack is still **Opus 4.8 / Sonnet 4.6 / Haiku 4.5**. [Redeploying Fable 5](https://www.anthropic.com/news/redeploying-fable-5)
-- **API:** rate limits raised (Sonnet/Haiku now match Opus); tiers consolidated to **Start / Build / Scale**. **Opus 4.7 fast mode** is deprecated — removed **24 Jul**.
+- **Models: Fable 5 is a permanent subscriber model again (from 20 Jul)** — included in **Max & Team Premium** at 50% of usage limits; Pro / Team Standard keep usage-credit access plus a one-time **$100 credit**. Worth re-testing on the hardest work now the top model isn't API-credits-only.
+- **Security: a `web_fetch` data-exfiltration hole was found and fixed (15 Jul)** — it could follow attacker-planted links inside pages it had already fetched to leak memory contents; Anthropic removed that ability. Textbook *lethal trifecta* case.
 
 **🧠 Practices worth a look**
 
-- **Evals & self-verifying agents** — Karpathy's "automate what you can verify" + sort tasks V1/V2/V3. [Read + slides](wiki/ai-practices/)
-- **Context engineering** — a tight `CLAUDE.md` and worked examples beat a bigger model.
-- **Progressive disclosure for skills** — Matt Pocock's `mattpocock/skills` v1.0 cut token cost ~63%.
+- **Eval-driven development** — mainstream at AIEWF 2026 (Rippling, Abridge): write the eval first, and watch for **reward hacking**. "Don't ship skills without evals."
+- **Safe agent execution** — always run coding agents **sandboxed with review** (the GPT-5.6 Codex file-deletion bug), and **audit what a coding-agent CLI transmits by default** (the grok-build data-upload backlash).
+- **Cost-efficient agents** — "the best AI agents cost less than you think": fix **harness waste** (caching, scoped context, capped budgets) before blaming the model bill.
 
 *Got something for next week? [Share a find →](wiki/ai-practices/) (scroll to "Share a find").*
