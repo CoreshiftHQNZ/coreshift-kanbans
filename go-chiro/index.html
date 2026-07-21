@@ -384,8 +384,8 @@
       <section class="progress">
         <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Milestones — the road to standalone</div>
         <div class="progress-bars">
-          <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Diary</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
-          <div class="pbar future"><div class="pbar-label"><strong>M2</strong> Invoicing</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Diary</div><div class="pbar-track"><div class="pbar-fill" style="width: 85%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Invoicing</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M3</strong> ACC + cutover</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Efficiency</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M5</strong> Insight</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
@@ -403,6 +403,12 @@
           The build work below I can do solo. These need a call from you — flagged where they gate a milestone.
         </p>
         <div class="ricky-tasks">
+          <div class="task">
+            <p class="task-title">✅ Verify the M1 diary on staging &amp; OK the prod push <span class="task-when">M1 · gate</span></p>
+            <p class="task-body">
+              M1 (the diary) is built and <strong>live on staging</strong> — day/week calendar, create/edit/delete, drag-to-move, quick-add client. Migration 0020 applied. Have a click-through on staging (log in as your practitioner account), then give the word and I&rsquo;ll promote M1 (batched with M2) to <code>main</code> → prod. Prod pushes only happen on your say-so.
+            </p>
+          </div>
           <div class="task">
             <p class="task-title">🏥 Grab Luke&rsquo;s ACC IDs out of Splose&rsquo;s settings <span class="task-when">before M3 build</span></p>
             <p class="task-body">
@@ -454,15 +460,15 @@
         <!-- NOW: M1 Diary -->
         <section class="col doing">
           <div class="col-head">
-            <div class="col-title"><span class="dot"></span>Now · M1 Diary</div>
+            <div class="col-title"><span class="dot"></span>On staging · M1 Diary</div>
             <div class="col-count">5</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">DIARY-VIEWS</span></div><h3 class="card-title">Day + week calendar views</h3><p class="card-note">The screen the practice lives in all day. Per-practitioner columns, venue/route-day awareness, mobile-first like the rest of the app. Splose&rsquo;s core job, replaced.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">APPT-CRUD</span></div><h3 class="card-title">Practitioner appointment CRUD</h3><p class="card-note">Create/edit/delete appointments for any patient, service, venue from the practitioner side. Today the API only has confirm/cancel/reschedule — appointments are born in Splose or the patient wizard.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">DIARY-DRAG</span></div><h3 class="card-title">Drag-to-reschedule + conflicts</h3><p class="card-note">Drag appointments between slots/days with the existing overlap detection guarding double-bookings.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">QUICK-PATIENT</span></div><h3 class="card-title">Quick-create patient from diary</h3><p class="card-note">Phone rings, new patient, book them in one flow — name + contact, full record filled in later (or by the M4 intake form).</p></article>
-            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">NATIVE-DEFAULT</span></div><h3 class="card-title">Native booking source default</h3><p class="card-note">Flip <code>appointments.bookingSource</code> default <code>'splose'</code> → <code>'native'</code>. From M1 on, appointments are born here.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1 ✓ staging</span><span class="card-id">DIARY-VIEWS</span></div><h3 class="card-title">Day + week calendar views</h3><p class="card-note">The screen the practice lives in all day. Per-practitioner columns, venue/route-day awareness, mobile-first like the rest of the app. Splose&rsquo;s core job, replaced.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1 ✓ staging</span><span class="card-id">APPT-CRUD</span></div><h3 class="card-title">Practitioner appointment CRUD</h3><p class="card-note">Create/edit/delete appointments for any patient, service, venue from the practitioner side. Today the API only has confirm/cancel/reschedule — appointments are born in Splose or the patient wizard.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1 ✓ staging</span><span class="card-id">DIARY-DRAG</span></div><h3 class="card-title">Drag-to-reschedule + conflicts</h3><p class="card-note">Drag appointments between slots/days with the existing overlap detection guarding double-bookings.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1 ✓ staging</span><span class="card-id">QUICK-PATIENT</span></div><h3 class="card-title">Quick-create patient from diary</h3><p class="card-note">Phone rings, new patient, book them in one flow — name + contact, full record filled in later (or by the M4 intake form).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1 ✓ staging</span><span class="card-id">NATIVE-DEFAULT</span></div><h3 class="card-title">Native booking source default</h3><p class="card-note">Flip <code>appointments.bookingSource</code> default <code>'splose'</code> → <code>'native'</code>. From M1 on, appointments are born here.</p></article>
           </div>
         </section>
 
