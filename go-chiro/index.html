@@ -378,7 +378,7 @@
 
       <section class="direction">
         <p><strong>Direction change (2026-07-21):</strong> Go-Chiro stops being a layer on top of Splose and becomes a complete, standalone practice management system — our own diary, records, invoicing, and reporting. Lighter than Splose, with the efficiency layer that makes the <strong>1&nbsp;→&nbsp;3 staff jump</strong> painless: automate what a solo operator does by hand so hires #2 and #3 are clinicians, not admin.</p>
-        <p>Decisions locked: Go Chiro's own system first, kept SaaS-ready (schema is already practice-scoped) · evolve this codebase, no fresh start · Splose stays source of truth only until M3 cutover, then read-only archive. Full plan: <code>docs/ROADMAP.md</code> in the repo.</p>
+        <p>Decisions locked: Go Chiro's own system first, kept SaaS-ready (schema is already practice-scoped) · evolve this codebase, no fresh start · Splose stays source of truth only until M3 cutover, then read-only archive. Answered: only <strong>Luke</strong> uses Splose (clean cutover, full history migration before the switch) · ACC is billed entirely through Splose → ACC invoicing is built in-app and <strong>gates the cutover</strong>. Full plan: <code>docs/ROADMAP.md</code> in the repo.</p>
       </section>
 
       <section class="progress">
@@ -386,7 +386,7 @@
         <div class="progress-bars">
           <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Diary</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M2</strong> Invoicing</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
-          <div class="pbar future"><div class="pbar-label"><strong>M3</strong> Splose cutover</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M3</strong> ACC + cutover</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Efficiency</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M5</strong> Insight</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M6</strong> SaaS (parked)</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
@@ -404,21 +404,15 @@
         </p>
         <div class="ricky-tasks">
           <div class="task">
-            <p class="task-title">🔍 What does the practice touch Splose for, day to day, besides the diary and invoices? <span class="task-when">gates M3 cutover</span></p>
+            <p class="task-title">🏥 Get Luke&rsquo;s ACC details for the M3 spike <span class="task-when">gates M3</span></p>
             <p class="task-body">
-              The plan replaces the diary (M1) and invoicing (M2) before cutover. If anyone leans on Splose for anything else — SMS, letters, reports, waitlists, stock — each needs a line item before we cut the cord. If the answer is &ldquo;nothing else&rdquo;, M3 is clean.
-            </p>
-          </div>
-          <div class="task">
-            <p class="task-title">🏥 How is ACC billed today — through Splose or manually? <span class="task-when">gates M5 ACC invoicing</span></p>
-            <p class="task-body">
-              Billing ACC for subsidized visits is bread-and-butter revenue for a NZ chiro and a genuine moat feature if we do it well. Need to know the current process (Splose feature? manual via eBusiness/provider portal?) before the M5 research spike.
+              <strong>Answered:</strong> ACC is billed entirely through Splose, so ACC invoicing is now built in-app and gates the cutover. For the spike I need from Luke: ACC provider ID, vendor/contract IDs, and whatever Splose shows about how it submits on his behalf. If direct electronic submission needs an ACC eBusiness registration, that lead time should start early.
             </p>
           </div>
           <div class="task">
             <p class="task-title">📦 Splose subscription — keep paying until after M3 <span class="task-when">at M3 cutover</span></p>
             <p class="task-body">
-              Don&rsquo;t cancel until the final import has run and we&rsquo;ve grabbed a full export as archive. After cutover Splose goes read-only for a safety period, then the subscription ends.
+              Only Luke uses Splose and he&rsquo;s on board with switching. Don&rsquo;t cancel until the full history migration + final import have run and we&rsquo;ve grabbed a complete export as archive. After cutover Splose goes read-only for a safety period, then the subscription ends.
             </p>
           </div>
           <div class="task">
@@ -435,7 +429,7 @@
       <div class="legend">
         <span class="chip m1">M1 · Diary</span>
         <span class="chip m2">M2 · Invoicing</span>
-        <span class="chip m3">M3 · Cutover</span>
+        <span class="chip m3">M3 · ACC + cutover</span>
         <span class="chip m4">M4 · Efficiency</span>
         <span class="chip m5">M5 · Insight</span>
         <span class="chip m6">M6 · SaaS (parked)</span>
@@ -457,7 +451,7 @@
             <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">NOTIF-LIVE</span></div><h3 class="card-title">Un-pause notifications (launch)</h3><p class="card-note">Flip <code>NOTIFICATIONS_PAUSED</code> off on both envs — reminders, confirmations, recalls go live. Gated on Ricky&rsquo;s say-so.</p></article>
             <article class="card"><div class="card-head"><span class="chip m5">M5</span><span class="card-id">REPORTS</span></div><h3 class="card-title">Reporting pack</h3><p class="card-note">Revenue, appointments, no-shows, per-practitioner — simple and glanceable, not enterprise BI.</p></article>
             <article class="card"><div class="card-head"><span class="chip m5">M5</span><span class="card-id">XERO</span></div><h3 class="card-title">Xero export</h3><p class="card-note">NZ small business runs on Xero. CSV export first — buys enormous goodwill for little work; API integration later if it earns it.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m5">M5</span><span class="card-id">ACC-INVOICE</span></div><h3 class="card-title">ACC invoicing (spike → build)</h3><p class="card-note">Bill ACC for subsidized visits from inside the app. Research spike first — depends on how the practice bills ACC today (see Ricky&rsquo;s panel).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">M5</span><span class="card-id">ACC-POLISH</span></div><h3 class="card-title">ACC billing polish</h3><p class="card-note">Bulk schedule runs and a declined-invoice rework flow. Core ACC submission ships in M3 (promoted — it gates the cutover).</p></article>
             <article class="card"><div class="card-head"><span class="chip m6">M6</span><span class="card-id">SAAS-READY</span></div><h3 class="card-title">Tenant onboarding + billing (parked)</h3><p class="card-note">Signup/onboarding for other practices, plan billing, product marketing site, name/brand decision. Parked until the system is proven in Go Chiro&rsquo;s daily use.</p></article>
             <article class="card"><div class="card-head"><span class="chip m0">ACC</span><span class="card-id">ACC18-CAPTURE</span></div><h3 class="card-title">ACC18 work-capacity capture form</h3><p class="card-note">Carried over: ACC18 generator exists but work-capacity + work-modification sections are placeholders. Needs capture form + schema + PDF wiring. Own workstream.</p></article>
           </div>
@@ -482,11 +476,12 @@
         <section class="col next">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Up Next · M2–M3</div>
-            <div class="col-count">4</div>
+            <div class="col-count">5</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">INVOICE-NATIVE</span></div><h3 class="card-title">Native invoice engine</h3><p class="card-note">Invoices born in-app (auto-draft on session completion + manual), GST-correct, sequential numbering, PDF download. Today <code>sploseInvoiceId</code> is NOT NULL — invoices can only come from Splose. Flows into existing Stripe pay/auto-pay.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">FINAL-IMPORT</span></div><h3 class="card-title">Final Splose import + cutover</h3><p class="card-note">Run the existing sync one last time as a full import, grab a complete export as archive, then Splose goes read-only. Its last job before retirement.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">INVOICE-NATIVE</span></div><h3 class="card-title">Native invoice engine (ACC-aware)</h3><p class="card-note">Invoices born in-app (auto-draft on session completion + manual), GST-correct, sequential numbering, PDF download, with the ACC-portion vs patient co-pay split modelled from day one. Today <code>sploseInvoiceId</code> is NOT NULL — invoices can only come from Splose. Flows into existing Stripe pay/auto-pay.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">ACC-INVOICE</span></div><h3 class="card-title">ACC invoicing (spike → build) — cutover gate</h3><p class="card-note">Promoted from M5: ACC is billed entirely through Splose today, so Luke must be able to bill ACC from the app before Splose goes read-only. Spike figures out how Splose submits on his behalf (eBusiness/schedule vs portal) and what direct submission needs; then build submission + status tracking (submitted/accepted/paid/declined) wired to invoices + ACC45 claims.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">FINAL-IMPORT</span></div><h3 class="card-title">Full history migration + final import</h3><p class="card-note">Audit what Splose holds that the sync doesn&rsquo;t pull today (historic treatment notes, patient files, ACC claim + invoice history) and migrate it, then run the existing sync one last time as a full import. Grab a complete export as archive; Splose goes read-only.</p></article>
             <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">RETIRE-SYNC</span></div><h3 class="card-title">Retire the Splose sync (~1k lines)</h3><p class="card-note">Delete polling sync, outbox, and write-backs; make all <code>splose_*</code> columns nullable. The unverified cancel/reschedule payload follow-up dies here with the code that needed it.</p></article>
             <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">RECORD-HARDEN</span></div><h3 class="card-title">System-of-record hardening</h3><p class="card-note">We become the source of truth for health data: confirm Supabase backups/PITR, add a basic audit trail, review against NZ Privacy Act + Health Information Privacy Code 2020.</p></article>
           </div>
@@ -512,8 +507,8 @@
       </div>
 
       <div class="phases"><strong>The road to standalone</strong>
-M1 Diary ──▶ M2 Invoicing ──▶ M3 Splose cutover ──▶ M4 Efficiency layer ──▶ M5 Money &amp; insight ──▶ M6 SaaS (parked)
-<strong>now</strong>         next            cut the cord         launch + un-pause      reports · Xero · ACC     only if proven</div>
+M1 Diary ──▶ M2 Invoicing ──▶ M3 ACC + cutover ──▶ M4 Efficiency layer ──▶ M5 Money &amp; insight ──▶ M6 SaaS (parked)
+<strong>now</strong>         next            ACC gates the cord     launch + un-pause      reports · Xero           only if proven</div>
 
       <footer>
         Go-Chiro · full NZ practice management system · <a href="https://github.com/CoreshiftHQNZ/go-chiro" target="_blank" rel="noopener">CoreshiftHQNZ/go-chiro</a> · direction pivot 2026-07-21 · plan in <code>docs/ROADMAP.md</code>
