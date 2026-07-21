@@ -385,7 +385,7 @@
         <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Milestones — the road to standalone</div>
         <div class="progress-bars">
           <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Diary</div><div class="pbar-track"><div class="pbar-fill" style="width: 85%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Invoicing</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M2</strong> Invoicing</div><div class="pbar-track"><div class="pbar-fill" style="width: 85%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M3</strong> ACC + cutover</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Efficiency</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>M5</strong> Insight</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
@@ -404,9 +404,9 @@
         </p>
         <div class="ricky-tasks">
           <div class="task">
-            <p class="task-title">✅ Verify the M1 diary on staging &amp; OK the prod push <span class="task-when">M1 · gate</span></p>
+            <p class="task-title">✅ Verify M1 + M2 on staging &amp; OK the prod push <span class="task-when">M1+M2 · gate</span></p>
             <p class="task-body">
-              M1 (the diary) is built and <strong>live on staging</strong> — day/week calendar, create/edit/delete, drag-to-move, quick-add client. Migration 0020 applied. Have a click-through on staging (log in as your practitioner account), then give the word and I&rsquo;ll promote M1 (batched with M2) to <code>main</code> → prod. Prod pushes only happen on your say-so.
+              <strong>M1 (diary)</strong> and <strong>M2 (native invoicing)</strong> are both built and <strong>live on staging</strong>. M1: day/week calendar, create/edit/delete, drag-to-move, quick-add client. M2: create invoices (auto-drafted on note publish), GST + ACC/co-pay split, send to patient, GST-compliant PDF download (practitioner + patient); patient pays only their co-pay. Migrations 0020 + 0021 applied. Have a click-through on staging (log in as your practitioner account), then give the word and I&rsquo;ll promote M1+M2 to <code>main</code> → prod. Prod pushes only happen on your say-so.
             </p>
           </div>
           <div class="task">
@@ -479,7 +479,7 @@
             <div class="col-count">5</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">INVOICE-NATIVE</span></div><h3 class="card-title">Native invoice engine (ACC-aware)</h3><p class="card-note">Invoices born in-app (auto-draft on session completion + manual), GST-correct, sequential numbering, PDF download, with the ACC-portion vs patient co-pay split modelled from day one. Today <code>sploseInvoiceId</code> is NOT NULL — invoices can only come from Splose. Flows into existing Stripe pay/auto-pay.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2 ✓ staging</span><span class="card-id">INVOICE-NATIVE</span></div><h3 class="card-title">Native invoice engine (ACC-aware)</h3><p class="card-note">Built + on staging. Invoices born in-app (auto-drafted on note publish + manual), GST-inclusive maths, per-practice sequential numbering, GST-compliant PDF (practitioner + patient), ACC-portion vs patient co-pay split. Patient pays only their co-pay via Stripe. <code>sploseInvoiceId</code> now nullable (migration 0021).</p></article>
             <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">ACC-INVOICE</span></div><h3 class="card-title">ACC invoicing via email channel — cutover gate</h3><p class="card-note">Spike done: ACC accepts emailed PDF invoices (vendor ID + invoice number in subject, one invoice per PDF). Build: compliant ACC invoice PDF (claim number, provider ID, service codes, GST) on the M2 invoice model → one-click &ldquo;Submit to ACC&rdquo; emails it in the required format → status tracking (submitted/paid/declined, marked from ProviderHub remittance). PDFKit + Postmark already in the stack. Electronic channel (8-day, auto-reconciliation) is the M5 upgrade.</p></article>
             <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">FINAL-IMPORT</span></div><h3 class="card-title">Full history migration + final import</h3><p class="card-note">Audit what Splose holds that the sync doesn&rsquo;t pull today (historic treatment notes, patient files, ACC claim + invoice history) and migrate it, then run the existing sync one last time as a full import. Grab a complete export as archive; Splose goes read-only.</p></article>
             <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">RETIRE-SYNC</span></div><h3 class="card-title">Retire the Splose sync (~1k lines)</h3><p class="card-note">Delete polling sync, outbox, and write-backs; make all <code>splose_*</code> columns nullable. The unverified cancel/reschedule payload follow-up dies here with the code that needed it.</p></article>
