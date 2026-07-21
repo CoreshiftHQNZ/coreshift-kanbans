@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>46%</strong> complete</div>
-        <div><strong>39</strong>/85 cards done</div>
-        <div>Updated <strong>2026-07-21 22:17 UTC</strong></div>
+        <div><strong>47%</strong> complete</div>
+        <div><strong>40</strong>/86 cards done</div>
+        <div>Updated <strong>2026-07-21 23:07 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">39</div>
+        <div class="status-num">40</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -920,6 +920,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">🎨 Marketing/legal pages reskin → Upwind system</div>
+            <div class="recent-desc">Fixed the terms/legal pages Ricky flagged as still carrying old branding. All six non-home pages (terms, privacy, refunds, platform-agreement, partner-agreement, partners) share **`legal.css`**, which still had the pre-Upwind warm palette — a pink/maroon accent `#b3456b`, cream `#fffdfa` background, Georgia serif + system sans. Updated that one file to the Upwind tokens (`#5CA6F2` accent, `#15233A` ink, `#F4F6FB` soft, white bg) and pulled **Hanken Grotesk + Source Serif 4** in via `@import`, so every linked page reskins at once; also fixed an &quot;a Upwind&quot; → &quot;an Upwind&quot; grammar slip. Verified on-brand in preview (wordmark, blue nav, serif headings, commission table on the new tokens). Legal-entity wording (&quot;CoreShift Limited trading as Upwind&quot;) intentionally unchanged. **On dev + staging — but marketing deploys only from `main`, so it goes live on tryupwind.com at the next main promotion (not visible on staging).**</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">🛠️ Editor improvements — Pay+Publish · live settings · add-section pills · menu hints</div>
             <div class="recent-desc">Four editor upgrades (on staging): **(1) Pay + Publish** — an unsubscribed site&#39;s Publish button becomes &quot;Pay + Publish&quot; and opens a go-live/subscribe dialog (annual default / monthly) that saves the current edits then routes to Stripe checkout; subscribed sites keep the review-and-publish gate. **(2) Real-time settings** — fixed the bug where panel edits (footer social links, nav, etc.) didn&#39;t show until publish; the live preview now applies all *structural* draft edits (collections, images, icons, section options, theme, pages) while inline text/link edits stay in place — verified a footer social icon renders live the moment it&#39;s added. **(3) Add-section pills** — redesigned to a dashed blue pill on a hairline rule, shown above *and* below the hovered section; clicking inserts a section at that exact spot. **(4) Menu hints** — every Design ▾ item now carries a one-line description. Verified in the editor preview; tsc + build clean, 44/44 tests</div>
           </div>
@@ -952,13 +959,6 @@
             <div class="recent-desc">The onboarding Ricky spec&#39;d: start (bring-existing / start-new) → pick a template → live preview with theme-hover reskin → brand colour + curated font pairing → finalize. **Bring-existing crawls the site and pours the real content into the chosen template&#39;s layout** (generate-site follows the template skeleton, never inventing testimonials/stats/logos). Start-from-scratch drops into a blank editor. 14 templates, 17 themes, 6 font pairings all wired in. *(Pending a live smoke-test of the authed crawl→pour path.)*</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">In-page editor</div>
-            <div class="recent-desc">Click-to-edit text and images, rich text with links, nav/footer editors, add-pages, SEO + settings panels, theme + brand-colour switching, curated font pairings, in-memory draft, and a sign-off gate. In real use across the live sites</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -971,9 +971,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">39</span>
+        <span class="col-count">40</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🎨 Marketing/legal pages reskin → Upwind system</div>
+        <div class="card-tags"><span class="tag tag-neutral">design</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">legal.css</span><span class="tag tag-neutral">#b3456b</span><span class="tag tag-neutral">#fffdfa</span><span class="tag tag-neutral">#5CA6F2</span><span class="tag tag-neutral">#15233A</span><span class="tag tag-neutral">#F4F6FB</span><span class="tag tag-neutral">@import</span><span class="tag tag-neutral">main</span></div>
+        <div class="card-desc">Fixed the terms/legal pages Ricky flagged as still carrying old branding. All six non-home pages (terms, privacy, refunds, platform-agreement, partner-agreement, partners) share **`legal.css`**, which still had the pre-Upwind warm palette — a pink/maroon accent `#b3456b`, cream `#fffdfa` background, Georgia serif + system sans. Updated that one file to the Upwind tokens (`#5CA6F2` accent, `#15233A` ink, `#F4F6FB` soft, white bg) and pulled **Hanken Grotesk + Source Serif 4** in via `@import`, so every linked page reskins at once; also fixed an &quot;a Upwind&quot; → &quot;an Upwind&quot; grammar slip. Verified on-brand in preview (wordmark, blue nav, serif headings, commission table on the new tokens). Legal-entity wording (&quot;CoreShift Limited trading as Upwind&quot;) intentionally unchanged. **On dev + staging — but marketing deploys only from `main`, so it goes live on tryupwind.com at the next main promotion (not visible on staging).**</div>
+      </div>
       <div class="card">
         <div class="card-title">🛠️ Editor improvements — Pay+Publish · live settings · add-section pills · menu hints</div>
         <div class="card-tags"><span class="tag tag-neutral">design</span><span class="tag tag-neutral">editor</span><span class="tag tag-shipped">shipped</span></div>
