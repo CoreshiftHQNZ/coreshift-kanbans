@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
     <title>Go-Chiro — Build Kanban</title>
-    <meta name="description" content="Live build status for Go-Chiro — mobile chiropractic patient + practitioner portal. Internal only." />
+    <meta name="description" content="Live build status for Go-Chiro — full NZ practice management system. Internal only." />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🦴%3C/text%3E%3C/svg%3E" />
     <style>
       :root {
@@ -84,6 +84,20 @@
         margin: 0 0 12px;
       }
 
+      .direction {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--next);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        box-shadow: var(--shadow);
+        font-size: 14px;
+      }
+      .direction strong { font-weight: 700; }
+      .direction p { margin: 0 0 8px; }
+      .direction p:last-child { margin-bottom: 0; color: var(--ink-muted); font-size: 13px; }
+
       .progress {
         background: var(--card);
         border: 1px solid var(--border);
@@ -94,7 +108,7 @@
       }
       .progress-bars {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         gap: 12px;
         margin-top: 8px;
       }
@@ -203,17 +217,6 @@
         margin-left: auto;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-      }
-      .task .task-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 12px;
-        color: var(--ricky);
-        text-decoration: underline;
-        text-underline-offset: 2px;
-        margin-top: 6px;
-        margin-left: 16px;
       }
 
       .legend {
@@ -364,23 +367,29 @@
       <header>
         <div>
           <h1>Go-Chiro — Build Kanban</h1>
-          <p class="subtitle">Mobile chiropractic portal · patient + practitioner · live build status</p>
+          <p class="subtitle">Full NZ practice management system · built for 1–5 person practices · live build status</p>
         </div>
         <div class="meta">
-          Last updated <strong>2026-06-27</strong><br />
+          Last updated <strong>2026-07-21</strong><br />
           <a href="https://github.com/CoreshiftHQNZ/go-chiro" target="_blank" rel="noopener">repo</a> ·
-          <strong>Tiers 1–3 live in prod</strong>
+          <strong>New direction: standalone PMS</strong>
         </div>
       </header>
 
+      <section class="direction">
+        <p><strong>Direction change (2026-07-21):</strong> Go-Chiro stops being a layer on top of Splose and becomes a complete, standalone practice management system — our own diary, records, invoicing, and reporting. Lighter than Splose, with the efficiency layer that makes the <strong>1&nbsp;→&nbsp;3 staff jump</strong> painless: automate what a solo operator does by hand so hires #2 and #3 are clinicians, not admin.</p>
+        <p>Decisions locked: Go Chiro's own system first, kept SaaS-ready (schema is already practice-scoped) · evolve this codebase, no fresh start · Splose stays source of truth only until M3 cutover, then read-only archive. Full plan: <code>docs/ROADMAP.md</code> in the repo.</p>
+      </section>
+
       <section class="progress">
-        <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Where the product is</div>
+        <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">Milestones — the road to standalone</div>
         <div class="progress-bars">
-          <div class="pbar"><div class="pbar-label"><strong>Core</strong> Clinical loop</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar"><div class="pbar-label"><strong>Booking</strong> Self-serve + venues</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar"><div class="pbar-label"><strong>Splose</strong> Two-way sync</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar"><div class="pbar-label"><strong>ACC</strong> Capture + lodge</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar"><div class="pbar-label"><strong>UX</strong> Edges &amp; trust</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>M1</strong> Diary</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M2</strong> Invoicing</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M3</strong> Splose cutover</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M4</strong> Efficiency</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M5</strong> Insight</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>M6</strong> SaaS (parked)</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
         </div>
       </section>
 
@@ -391,25 +400,31 @@
           <span class="badge">Action items</span>
         </div>
         <p class="intro">
-          The build work below I can do solo. These few need a call from you — flagged where they gate a card.
+          The build work below I can do solo. These need a call from you — flagged where they gate a milestone.
         </p>
         <div class="ricky-tasks">
           <div class="task">
-            <p class="task-title">🔑 Set the VAPID env vars in Railway (staging + prod) <span class="task-when">at promotion · push notifications</span></p>
+            <p class="task-title">🔍 What does the practice touch Splose for, day to day, besides the diary and invoices? <span class="task-when">gates M3 cutover</span></p>
             <p class="task-body">
-              <strong>Decided:</strong> reminders go out by <strong>PWA push</strong> (not SMS) plus email. The Web Push stack is built and merged to dev. To turn it on, three env vars need setting in Railway staging + prod: <code>VAPID_PUBLIC_KEY</code>, <code>VAPID_PRIVATE_KEY</code>, <code>VAPID_SUBJECT</code> — I&rsquo;ve generated a keypair and can set them via the Railway CLI for you at promotion. Until they&rsquo;re set the push channel is a graceful no-op (email reminders still send).
+              The plan replaces the diary (M1) and invoicing (M2) before cutover. If anyone leans on Splose for anything else — SMS, letters, reports, waitlists, stock — each needs a line item before we cut the cord. If the answer is &ldquo;nothing else&rdquo;, M3 is clean.
             </p>
           </div>
           <div class="task">
-            <p class="task-title">💳 Confirm auto-pay UX wording before it goes live <span class="task-when">T1 · invoices</span></p>
+            <p class="task-title">🏥 How is ACC billed today — through Splose or manually? <span class="task-when">gates M5 ACC invoicing</span></p>
             <p class="task-body">
-              Fixing the broken auto-pay wire-up means patients&rsquo; saved cards will actually start auto-charging future invoices. Worth a sanity check on the consent copy (&ldquo;Save your card to automatically pay future invoices&rdquo;) and which invoice states should auto-charge, since it now does something real with their money.
+              Billing ACC for subsidized visits is bread-and-butter revenue for a NZ chiro and a genuine moat feature if we do it well. Need to know the current process (Splose feature? manual via eBusiness/provider portal?) before the M5 research spike.
             </p>
           </div>
           <div class="task">
-            <p class="task-title">🚦 Sign off the staging → main promotions per tier <span class="task-when">end of each tier</span></p>
+            <p class="task-title">📦 Splose subscription — keep paying until after M3 <span class="task-when">at M3 cutover</span></p>
             <p class="task-body">
-              Plan is one PR per tier into <code>dev</code> → staging smoke test → promote to <code>main</code>. I&rsquo;ll check in with you at the end of each tier before promoting to prod. Any prod DB migrations get run via Supabase MCP at promotion time.
+              Don&rsquo;t cancel until the final import has run and we&rsquo;ve grabbed a full export as archive. After cutover Splose goes read-only for a safety period, then the subscription ends.
+            </p>
+          </div>
+          <div class="task">
+            <p class="task-title">🔔 Notifications stay paused until launch <span class="task-when">at M4</span></p>
+            <p class="task-body">
+              <code>NOTIFICATIONS_PAUSED=true</code> remains set on staging + prod. Un-pausing (reminders, confirmations, recalls) is an M4 launch step — only on your say-so.
             </p>
           </div>
         </div>
@@ -418,85 +433,91 @@
       <h2 class="section-title">Build board</h2>
 
       <div class="legend">
-        <span class="chip m6">T1 · Defects / broken promises</span>
-        <span class="chip m5">T2 · High-value UX gaps</span>
-        <span class="chip m4">T3 · Polish</span>
-        <span class="chip m2">Shipped</span>
-        <span class="chip ext">⚙ Decision / external</span>
+        <span class="chip m1">M1 · Diary</span>
+        <span class="chip m2">M2 · Invoicing</span>
+        <span class="chip m3">M3 · Cutover</span>
+        <span class="chip m4">M4 · Efficiency</span>
+        <span class="chip m5">M5 · Insight</span>
+        <span class="chip m6">M6 · SaaS (parked)</span>
+        <span class="chip m7">v0 · Splose era</span>
       </div>
 
       <div class="board">
-        <!-- BACKLOG (T3 polish) -->
+        <!-- BACKLOG (M4+) -->
         <section class="col back">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>Backlog</div>
-            <div class="col-count">3</div>
+            <div class="col-count">10</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m6">ACC</span><span class="card-id">ACC18-CAPTURE</span></div><h3 class="card-title">ACC18 work-capacity capture form</h3><p class="card-note">ACC45 is done. The ACC18 medical certificate generator exists but its core sections — work-capacity (ability / tolerance / risk) and work modifications — render as hardcoded placeholders with no capture form or data model. Needs a capture form + schema + PDF wiring before ACC18 is lodge-ready. Own workstream, not polish.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">EX-VIDEO</span></div><h3 class="card-title">Exercise videos via YouTube link</h3><p class="card-note"><strong>Decided:</strong> link YouTube videos rather than host/stream uploads — much simpler. Add a YouTube URL field to the exercise form + an embedded player on the patient homework view. No storage/size concerns. Ready to build.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m4">T3</span><span class="card-id">DOC-PDF</span></div><h3 class="card-title">Invoice / session-note PDF download</h3><p class="card-note">Patients can&rsquo;t download an invoice or summary as PDF. Add-to-calendar (.ics) shipped; PDFKit exists server-side for these. Nice-to-have.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">RECALLS</span></div><h3 class="card-title">Automated recalls</h3><p class="card-note">&ldquo;Time for your adjustment&rdquo; recalls on a per-patient cadence — where small practices leak the most revenue. Rides the existing notification stack (email + push).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">WAITLIST</span></div><h3 class="card-title">Waitlist + auto-offer</h3><p class="card-note">Patients join a waitlist; a cancellation automatically offers the slot. Turns cancellations from lost revenue into filled slots without anyone touching a phone.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">INTAKE-FORMS</span></div><h3 class="card-title">Online intake forms</h3><p class="card-note">New-patient forms filled before the first visit, feeding the record directly — history, consent, ACC eligibility. No reception hire needed to onboard patients.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">ROLES</span></div><h3 class="card-title">Roles &amp; permissions</h3><p class="card-note">Owner / practitioner / admin roles so hire #2 can be a part-time admin with exactly the right access. The structural piece of the 1&nbsp;→&nbsp;3 thesis.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">M4</span><span class="card-id">NOTIF-LIVE</span></div><h3 class="card-title">Un-pause notifications (launch)</h3><p class="card-note">Flip <code>NOTIFICATIONS_PAUSED</code> off on both envs — reminders, confirmations, recalls go live. Gated on Ricky&rsquo;s say-so.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">M5</span><span class="card-id">REPORTS</span></div><h3 class="card-title">Reporting pack</h3><p class="card-note">Revenue, appointments, no-shows, per-practitioner — simple and glanceable, not enterprise BI.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">M5</span><span class="card-id">XERO</span></div><h3 class="card-title">Xero export</h3><p class="card-note">NZ small business runs on Xero. CSV export first — buys enormous goodwill for little work; API integration later if it earns it.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">M5</span><span class="card-id">ACC-INVOICE</span></div><h3 class="card-title">ACC invoicing (spike → build)</h3><p class="card-note">Bill ACC for subsidized visits from inside the app. Research spike first — depends on how the practice bills ACC today (see Ricky&rsquo;s panel).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m6">M6</span><span class="card-id">SAAS-READY</span></div><h3 class="card-title">Tenant onboarding + billing (parked)</h3><p class="card-note">Signup/onboarding for other practices, plan billing, product marketing site, name/brand decision. Parked until the system is proven in Go Chiro&rsquo;s daily use.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">ACC</span><span class="card-id">ACC18-CAPTURE</span></div><h3 class="card-title">ACC18 work-capacity capture form</h3><p class="card-note">Carried over: ACC18 generator exists but work-capacity + work-modification sections are placeholders. Needs capture form + schema + PDF wiring. Own workstream.</p></article>
           </div>
         </section>
 
-        <!-- UP NEXT -->
+        <!-- NOW: M1 Diary -->
+        <section class="col doing">
+          <div class="col-head">
+            <div class="col-title"><span class="dot"></span>Now · M1 Diary</div>
+            <div class="col-count">5</div>
+          </div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">DIARY-VIEWS</span></div><h3 class="card-title">Day + week calendar views</h3><p class="card-note">The screen the practice lives in all day. Per-practitioner columns, venue/route-day awareness, mobile-first like the rest of the app. Splose&rsquo;s core job, replaced.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">APPT-CRUD</span></div><h3 class="card-title">Practitioner appointment CRUD</h3><p class="card-note">Create/edit/delete appointments for any patient, service, venue from the practitioner side. Today the API only has confirm/cancel/reschedule — appointments are born in Splose or the patient wizard.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">DIARY-DRAG</span></div><h3 class="card-title">Drag-to-reschedule + conflicts</h3><p class="card-note">Drag appointments between slots/days with the existing overlap detection guarding double-bookings.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">QUICK-PATIENT</span></div><h3 class="card-title">Quick-create patient from diary</h3><p class="card-note">Phone rings, new patient, book them in one flow — name + contact, full record filled in later (or by the M4 intake form).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">M1</span><span class="card-id">NATIVE-DEFAULT</span></div><h3 class="card-title">Native booking source default</h3><p class="card-note">Flip <code>appointments.bookingSource</code> default <code>'splose'</code> → <code>'native'</code>. From M1 on, appointments are born here.</p></article>
+          </div>
+        </section>
+
+        <!-- UP NEXT: M2 + M3 -->
         <section class="col next">
           <div class="col-head">
-            <div class="col-title"><span class="dot"></span>Up Next</div>
-            <div class="col-count">1</div>
+            <div class="col-title"><span class="dot"></span>Up Next · M2–M3</div>
+            <div class="col-count">4</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m2">✓ done</span><span class="card-id">PROMOTE</span></div><h3 class="card-title">Promoted to production ✅</h3><p class="card-note">Shipped 2026-06-27 (PRs #53 → #54). Migrations <code>0015–0018</code> applied to the go-chiro Supabase DB; <code>VAPID_*</code> set on Railway staging + production. Prod verified healthy (site + login + push key endpoint 200).</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">M2</span><span class="card-id">INVOICE-NATIVE</span></div><h3 class="card-title">Native invoice engine</h3><p class="card-note">Invoices born in-app (auto-draft on session completion + manual), GST-correct, sequential numbering, PDF download. Today <code>sploseInvoiceId</code> is NOT NULL — invoices can only come from Splose. Flows into existing Stripe pay/auto-pay.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">FINAL-IMPORT</span></div><h3 class="card-title">Final Splose import + cutover</h3><p class="card-note">Run the existing sync one last time as a full import, grab a complete export as archive, then Splose goes read-only. Its last job before retirement.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">RETIRE-SYNC</span></div><h3 class="card-title">Retire the Splose sync (~1k lines)</h3><p class="card-note">Delete polling sync, outbox, and write-backs; make all <code>splose_*</code> columns nullable. The unverified cancel/reschedule payload follow-up dies here with the code that needed it.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">M3</span><span class="card-id">RECORD-HARDEN</span></div><h3 class="card-title">System-of-record hardening</h3><p class="card-note">We become the source of truth for health data: confirm Supabase backups/PITR, add a basic audit trail, review against NZ Privacy Act + Health Information Privacy Code 2020.</p></article>
           </div>
         </section>
 
-        <!-- IN DEV — Tiers 1 + 2 + push, merged, awaiting batched promotion -->
+        <!-- SHIPPED: v0 Splose era, condensed -->
         <section class="col done">
           <div class="col-head">
-            <div class="col-title"><span class="dot"></span>Shipped · this release (prod)</div>
-            <div class="col-count">13</div>
+            <div class="col-title"><span class="dot"></span>Shipped · v0 platform</div>
+            <div class="col-count">8</div>
           </div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m2">post-launch ✓ prod</span><span class="card-id">HARDENING</span></div><h3 class="card-title">Post-launch fixes</h3><p class="card-note">Clients list cap 200→all (practice has 327, were hidden). Live Stripe wired correctly — secret + both publishable keys on one live account + live webhook + signing secret (prod was previously mismatched/broken). Invite button → <strong>Active</strong> badge once a client has signed in (new <code>activated_at</code>). PRs #58, #60–#63.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">AUTOPAY-WIRE</span></div><h3 class="card-title">Auto-pay wired up</h3><p class="card-note">Client now reads the confirmed SetupIntent and POSTs the payment method to <code>/api/patients/me/payment-method</code>, so saving a card actually enables auto-charge. <strong>PR #43.</strong></p></article>
-            <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">BOOK-CONFIRM</span></div><h3 class="card-title">Booking confirmation sent</h3><p class="card-note">New <code>appointment_booked</code> template fired after every self-booking — inbox + push confirmation. <strong>PR #43.</strong></p></article>
-            <article class="card"><div class="card-head"><span class="chip m6">T1 ✓ dev</span><span class="card-id">REMINDERS</span></div><h3 class="card-title">Appointment reminders sending</h3><p class="card-note"><code>runReminderCycle()</code> on the scheduler tick (48h/2h). Email now; push via VAPID once env set. <strong>PR #43.</strong></p></article>
-            <article class="card"><div class="card-head"><span class="chip m4">PUSH ✓ dev</span><span class="card-id">PWA-PUSH</span></div><h3 class="card-title">PWA push notifications (VAPID)</h3><p class="card-note">Lit up the push channel for all notification types — service worker, subscription store, <code>web-push</code> fan-out, enable prompt. Needs <code>VAPID_*</code> at promotion. <strong>PR #44.</strong></p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">UX ✓ dev</span><span class="card-id">CLIENTS-SORT</span></div><h3 class="card-title">Clients A–Z + paginate 20/page</h3><p class="card-note">Practitioner Clients list sorts case-insensitively and paginates at 20/page with prev/next. <strong>PR #45.</strong></p></article>
-            <article class="card"><div class="card-head"><span class="chip m5">T2 ✓ dev</span><span class="card-id">PATIENT-SETTINGS</span></div><h3 class="card-title">Patient account & settings page</h3><p class="card-note">Profile, address (re-geocodes), notification toggles (incl. push), and card/auto-pay management. Implements the stubbed <code>PUT /api/patients/me</code>. <strong>PR #46.</strong></p></article>
-            <article class="card"><div class="card-head"><span class="chip m5">T2 ✓ dev</span><span class="card-id">CANCEL-RESCHED</span></div><h3 class="card-title">Patient cancel / reschedule</h3><p class="card-note">Cancel (with Splose <code>cancel_booking</code> write-back + route recompute) and Reschedule (cancel + rebook) on each upcoming appointment. <strong>PR #47.</strong></p></article>
-            <article class="card"><div class="card-head"><span class="chip m5">T2 ✓ dev</span><span class="card-id">PRAC-REPLY</span></div><h3 class="card-title">Practitioner reply to messages</h3><p class="card-note">New <code>sender_role</code> column + <code>/api/messages/reply</code>; dashboard reply box; patient thread shows replies. <strong>PR #48.</strong></p></article>
-            <article class="card"><div class="card-head"><span class="chip m5">T2 ✓ dev</span><span class="card-id">HW-HISTORY</span></div><h3 class="card-title">Homework history + real streak</h3><p class="card-note">Server-computed consecutive-day streak (replaces the fake one) + a &ldquo;view past homework&rdquo; history list. <strong>PR #49.</strong></p></article>
-            <article class="card"><div class="card-head"><span class="chip m5">T2 ✓ dev</span><span class="card-id">PRAC-RESCHED</span></div><h3 class="card-title">Practitioner reschedule from dashboard</h3><p class="card-note">Inline datetime picker → <code>/api/appointments/:id/reschedule</code> with Splose <code>reschedule_booking</code> write-back + route recompute. <strong>PR #50.</strong></p></article>
-            <article class="card"><div class="card-head"><span class="chip m4">T3 ✓ dev</span><span class="card-id">T3-POLISH</span></div><h3 class="card-title">Tier 3 polish (6 of 7)</h3><p class="card-note">Richer markdown notes, persisted note read-state, ACC pre-fill (provider + diagnosis from latest assessment), add-to-calendar (.ics), schedule overlap detection, persisted &ldquo;Invited&rdquo; badge. <strong>PRs #51, #52.</strong></p></article>
-            <article class="card"><div class="card-head"><span class="chip m4">T3 ✓ prod</span><span class="card-id">BOOK-ADDR</span></div><h3 class="card-title">Booking address autocomplete</h3><p class="card-note">NZ Google Places autocomplete on the booking address step, proxied server-side so the Maps key stays off the client (free-text fallback retained). Places API verified. <strong>PR #55 → live in prod.</strong></p></article>
-          </div>
-        </section>
-
-        <!-- DONE (shipped) -->
-        <section class="col done">
-          <div class="col-head">
-            <div class="col-title"><span class="dot"></span>Done · Shipped</div>
-            <div class="col-count">14</div>
-          </div>
-          <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">ACC-CLAIMS</span></div><h3 class="card-title">ACC claims — capture, lodge, patient history</h3><p class="card-note">Point-of-care ACC45 capture, body sites, lodge tracking + claim numbers, patient-visibility toggle, ACC45/ACC18 PDF generation, patient-facing claim history + download. Shipped to staging 2026-06-27.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">CLINICAL-LOOP</span></div><h3 class="card-title">Clinical loop — session → AI SOAP → publish</h3><p class="card-note">Freeform note entry with auto-save, AI formatting into SOAP, editable clinical note + patient-facing summary, publish marks appointment complete and notifies the patient. The core differentiated flow.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">HOMEWORK</span></div><h3 class="card-title">Homework + exercise library</h3><p class="card-note">Practitioner library CRUD; assign per-session with sets/reps/hold overrides + copy-from-last. Patient side: do-the-work UI, descriptions + safety tips, mark-done with confetti/streak, two-way message thread.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">BOOKING</span></div><h3 class="card-title">Patient self-booking wizard</h3><p class="card-note">3–4 step wizard (service → address → day/time → confirm), HQ slots + route days with capacity, Stripe PaymentIntent, Splose push. GST breakdown + ACC eligibility shown upfront.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">BOOKING-CONFIG</span></div><h3 class="card-title">Booking config — types, venues, schedule</h3><p class="card-note">Appointment types, fixed venues with geocoding, weekly + fortnightly schedule blocks (HQ + route zones), one-off date exceptions.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">MULTI-VENUE</span></div><h3 class="card-title">Multi-venue + recurrence</h3><p class="card-note">Venue-aware availability, per-block routing, fortnightly recurrence (V1 + V2).</p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">ROUTE-TODAY</span></div><h3 class="card-title">Route Today — home-visit run sheet</h3><p class="card-note">Ordered stops, ETAs, drive times, navigate deep-link, re-optimise. Route engine computes shortest path + arrival windows.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">SPLOSE-SYNC</span></div><h3 class="card-title">Splose two-way sync hardening</h3><p class="card-note">Durable write outbox with retries, reliable in-process scheduler (no external cron dependency), visible sync-health status on the dashboard.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">BOOKING-LOOP</span></div><h3 class="card-title">Booking loop completion</h3><p class="card-note">Mark bookings paid + auto-create the Splose patient record on first booking.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">PAYMENTS</span></div><h3 class="card-title">Stripe payments + practitioner dashboard</h3><p class="card-note">Patient Pay Now (PaymentIntent), invoice list with status; practitioner revenue / outstanding / collected cards + paid-invoice table. (Auto-pay setup is the T1 fix.)</p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">AUTH</span></div><h3 class="card-title">Auth — login, invite, magic link, reset</h3><p class="card-note">Email/password + magic link + optional Google OAuth, practitioner-invites-patient → set-password flow, password reset, branded Postmark auth emails, role-based route guards.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">NOTIFS</span></div><h3 class="card-title">Notification service + templates</h3><p class="card-note">Postmark/Twilio/push dispatch respecting per-user prefs, with logged delivery. 5 templates live: notes published, homework assigned, invoice issued, payment confirmed, appointment reminder (template ready — trigger is the T1 fix).</p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">RESKIN</span></div><h3 class="card-title">Design system reskin</h3><p class="card-note">Design typography applied across patient + practitioner screens (batches 1 + 2), mobile-first layouts with bottom nav + safe-area handling.</p></article>
-            <article class="card"><div class="card-head"><span class="chip m2">Shipped</span><span class="card-id">CI</span></div><h3 class="card-title">Clean typecheck + green CI</h3><p class="card-note">Resolved all pre-existing tsc errors; GitHub Actions → Railway auto-deploy on staging + main.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m7">v0</span><span class="card-id">CLINICAL-LOOP</span></div><h3 class="card-title">Clinical loop — session → AI SOAP → publish</h3><p class="card-note">Freeform notes with auto-save, AI formatting into SOAP, editable note + patient-facing summary, publish completes the appointment and notifies the patient. The core differentiated flow.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m7">v0</span><span class="card-id">BOOKING-STACK</span></div><h3 class="card-title">Booking wizard + config + venues + routes</h3><p class="card-note">Patient self-booking (mobile vs clinic first, route days with capacity, NZ address autocomplete), appointment types, venues, weekly/fortnightly schedules, Route Today run sheet with optimization.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m7">v0</span><span class="card-id">PAYMENTS</span></div><h3 class="card-title">Stripe payments + auto-pay (live)</h3><p class="card-note">Pay Now, saved-card auto-charge, revenue dashboard. Live keys, webhook + signing secret verified in prod 2026-06-27.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m7">v0</span><span class="card-id">ACC-CLAIMS</span></div><h3 class="card-title">ACC claims — capture, lodge, history</h3><p class="card-note">Point-of-care ACC45 capture, lodge tracking + claim numbers, ACC45/ACC18 PDFs, patient-facing claim history + download.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m7">v0</span><span class="card-id">HOMEWORK</span></div><h3 class="card-title">Homework + exercise library + messaging</h3><p class="card-note">Library CRUD, per-session assignment, patient do-the-work UI with real streaks, two-way messaging with practitioner replies.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m7">v0</span><span class="card-id">NOTIF-STACK</span></div><h3 class="card-title">Notifications — email + PWA push (paused)</h3><p class="card-note">Postmark email + VAPID web push across all templates, per-user prefs, reminders on 48h/2h cycle. Globally paused until launch (M4). SMS is a graceful no-op by choice.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m7">v0</span><span class="card-id">PORTAL-UX</span></div><h3 class="card-title">Patient portal + UX tiers 1–3</h3><p class="card-note">Auth (invite, magic link, reset), patient settings, cancel/reschedule, add-to-calendar, dark theme, design-system reskin, mobile-first with bottom nav.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m7">v0</span><span class="card-id">SPLOSE-SYNC</span></div><h3 class="card-title">Splose two-way sync (to be retired at M3)</h3><p class="card-note">Polling sync + durable write outbox with retries. Served its purpose in the Splose era — scheduled for deletion at cutover.</p></article>
           </div>
         </section>
       </div>
+
+      <div class="phases"><strong>The road to standalone</strong>
+M1 Diary ──▶ M2 Invoicing ──▶ M3 Splose cutover ──▶ M4 Efficiency layer ──▶ M5 Money &amp; insight ──▶ M6 SaaS (parked)
+<strong>now</strong>         next            cut the cord         launch + un-pause      reports · Xero · ACC     only if proven</div>
+
+      <footer>
+        Go-Chiro · full NZ practice management system · <a href="https://github.com/CoreshiftHQNZ/go-chiro" target="_blank" rel="noopener">CoreshiftHQNZ/go-chiro</a> · direction pivot 2026-07-21 · plan in <code>docs/ROADMAP.md</code>
+      </footer>
     </div>
   </body>
 </html>
