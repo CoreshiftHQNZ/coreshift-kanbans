@@ -768,14 +768,18 @@ async function notifySlack(env, idea) {
   const site = env.SITE_URL || "https://coreshifthqnz.github.io/coreshift-kanbans";
   const link = `${site}/frontend-process/#idea=${idea.id}`;
   const dials = [idea.intent, idea.confidence, idea.decision].filter(Boolean).join(" · ") || "—";
+  // Tag the reviewer so they're actually pinged (a mention in the section text notifies).
+  // Defaults to Keitha's Slack id; override per-deploy with SLACK_REVIEWER_MENTION (a
+  // different reviewer, or a group handle like <!subteam^ID>).
+  const reviewer = env.SLACK_REVIEWER_MENTION || "<@U08TBQKNDMF>"; // Keitha
   await fetch(env.SLACK_WEBHOOK_URL, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      text: `💡 New idea for review: *${idea.title}* — ${idea.one_liner || ""}`,
+      text: `${reviewer} 💡 New idea for review: *${idea.title}* — ${idea.one_liner || ""}`,
       blocks: [
         { type: "section", text: { type: "mrkdwn",
-          text: `*💡 New idea submitted for review*\n*${idea.title}*\n${idea.one_liner || ""}` } },
+          text: `*💡 New idea submitted for review*\n*${idea.title}*\n${idea.one_liner || ""}\n\n${reviewer} — ready for your review 👀` } },
         { type: "context", elements: [{ type: "mrkdwn", text: `Route: ${dials}   ·   from ${idea.submitter_name || "someone on the team"}` }] },
         { type: "actions", elements: [{ type: "button", text: { type: "plain_text", text: "Review assessment" }, url: link }] },
       ],
