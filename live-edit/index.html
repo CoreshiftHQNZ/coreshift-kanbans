@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>58%</strong> complete</div>
-        <div><strong>26</strong>/45 cards done</div>
-        <div>Updated <strong>2026-07-19 23:31 UTC</strong></div>
+        <div><strong>45%</strong> complete</div>
+        <div><strong>38</strong>/84 cards done</div>
+        <div>Updated <strong>2026-07-21 20:42 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,15 +821,15 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">26</div>
+        <div class="status-num">38</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">4</div>
+        <div class="status-num">5</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">3</div>
+        <div class="status-num">2</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
@@ -920,6 +920,27 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">🎨 Design overhaul → Upwind design system (LIVE on staging)</div>
+            <div class="recent-desc">Implemented the Claude Design &quot;Upwind design system overhaul&quot; spec across the app chrome, editor and marketing (client-site themes in `coreshift-starter` untouched). **D0 foundation:** full token scale, **Hanken Grotesk + Source Serif 4**, the wind signature (SVG mark + ambient stroke-draw swooshes), refined buttons/focus/elevation, a zero-dependency motion layer (screen entrance, count-up, swoosh-draw — all reduced-motion guarded; GSAP intentionally skipped to avoid a bundle/lockfile dep). **D1 app shell:** a 232px left sidebar (role-gated nav + user block pinned bottom, white-label partner brand in the rail) replaces the old top bar, wrapping Dashboard / Lead Engine / Admin / Earnings; full-screen Editor/Results keep their own chrome. **D2:** serif greeting, theme-tinted site-card thumbnails + status badges, dashed ghost &quot;create&quot; card, gradient plan banner, reskinned sign-in (card on gradient + swooshes). **D3:** count-up stat cards, serif page titles, pipeline lanes as soft wells + spec score-chip colours. **D4:** editor overlay palette/type/rings retuned to Upwind (every `.csle-*`/`data-cs-edit` hook preserved); marketing hero gains the real typefaces + Source Serif 4 display + ambient swooshes. Presentation-only — no data/auth/route changes. Verified: tsc + `vite build` clean, **44/44 tests pass**, sign-in + marketing hero confirmed in preview; **live on `staging.upwind.build` (HTTP 200, new fonts served)**. *(Awaiting Ricky&#39;s visual pass on the authed screens on staging before promoting to main. Editor bottom→top-bar restructure deferred — see Parking Lot.)*</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">🪁 Rebrand → Upwind (LIVE in production)</div>
+            <div class="recent-desc">The product is now **Upwind** (Coreshift Limited stays the legal entity / merchant of record). Full cutover, live: marketing at **tryupwind.com**, app at **upwind.build**, published sites at **\*.upwind.page**, custom-domain SaaS fallback `sites.upwind.page`, email `hello@tryupwind.com` (Postmark-verified + DMARC). New per-zone Cloudflare routing on the CoreshiftHq account; 7 proxied DNS records + SaaS fallback set via the CF API; old coreshift.page routes retired (523). Brand palette **#5CA6F2 / #F4F6FB**, lowercase &quot;upwind&quot; wordmark + favicon (stopgap SVG until the exact logo/favicon/og.png assets land). ~150 edits across app/marketing/edge-functions/renderer + 4 wrangler configs. Verified: all 3 surfaces HTTP 200, production smoke green. Internal ids (packages, RPCs, worker names) intentionally unchanged</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Legal — partner-model compliance (LIVE)</div>
+            <div class="recent-desc">Lawyer&#39;s 5 clause additions applied (Platform Agreement 1.7 &quot;who you contract with&quot; + 1.8 &quot;partner-built sites&quot;; Terms; Privacy &quot;leads&quot;; Refunds &quot;build fee&quot;), and the **Partner Agreement published at /partner-agreement** (CoreShift Limited trading as Upwind, commission-ladder table, footer-linked). Partner signup now requires accepting it. *(Two clauses — principal/agent characterisation + buyer-created/self-billing invoicing — still need accountant/lawyer sign-off before onboarding a real partner.)*</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">New-site flow (redesign)</div>
             <div class="recent-desc">The onboarding Ricky spec&#39;d: start (bring-existing / start-new) → pick a template → live preview with theme-hover reskin → brand colour + curated font pairing → finalize. **Bring-existing crawls the site and pours the real content into the chosen template&#39;s layout** (generate-site follows the template skeleton, never inventing testimonials/stats/logos). Start-from-scratch drops into a blank editor. 14 templates, 17 themes, 6 font pairings all wired in. *(Pending a live smoke-test of the authed crawl→pour path.)*</div>
           </div>
@@ -938,27 +959,6 @@
             <div class="recent-desc">22 section types and 17 theme styles rendered through one shared code path used by both the editor and the edge renderer, so swapping themes never loses content</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Design Engine + Tailwind authoring layer</div>
-            <div class="recent-desc">Sections are now authored in Tailwind v4 utilities bridged to runtime theme tokens (no preflight, so existing themes don&#39;t drift), compiled by the editor&#39;s Vite plugin and the renderer&#39;s CLI from one source. Variety is cheap and theme-swap still keeps content. Canon: the Simplicity Budget (customers pick pictures not parameters; &quot;Ask&quot; is the advanced mode; UI surface frozen)</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Testimonials: 6-layout calibration</div>
-            <div class="recent-desc">First engine-built section: spotlight, cards, mosaic, portrait, stacked and marquee on one content contract with zero toggles. Reviewable on the board (`?gallery=section&amp;type=testimonials`, `?variant=&lt;id&gt;` to deep-link one)</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Expressive motion</div>
-            <div class="recent-desc">Micro-motion as a contract: sections expose hooks (scroll reveal, staggered card cascades, hover), each of the 11 themes carries a tuned motion personality (calm / gentle / snappy / precise / hard), and functional micro-interactions (button press, focus rings) are always on. Fast (CSS + a tiny observer), and fully off under reduced-motion. Preview with `?motion=on` on the review board</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -971,9 +971,24 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">26</span>
+        <span class="col-count">38</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🎨 Design overhaul → Upwind design system (LIVE on staging)</div>
+        <div class="card-tags"><span class="tag tag-neutral">design</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">coreshift-starter</span><span class="tag tag-neutral">.csle-*</span><span class="tag tag-neutral">data-cs-edit</span><span class="tag tag-neutral">vite build</span><span class="tag tag-neutral">staging.upwind.build</span></div>
+        <div class="card-desc">Implemented the Claude Design &quot;Upwind design system overhaul&quot; spec across the app chrome, editor and marketing (client-site themes in `coreshift-starter` untouched). **D0 foundation:** full token scale, **Hanken Grotesk + Source Serif 4**, the wind signature (SVG mark + ambient stroke-draw swooshes), refined buttons/focus/elevation, a zero-dependency motion layer (screen entrance, count-up, swoosh-draw — all reduced-motion guarded; GSAP intentionally skipped to avoid a bundle/lockfile dep). **D1 app shell:** a 232px left sidebar (role-gated nav + user block pinned bottom, white-label partner brand in the rail) replaces the old top bar, wrapping Dashboard / Lead Engine / Admin / Earnings; full-screen Editor/Results keep their own chrome. **D2:** serif greeting, theme-tinted site-card thumbnails + status badges, dashed ghost &quot;create&quot; card, gradient plan banner, reskinned sign-in (card on gradient + swooshes). **D3:** count-up stat cards, serif page titles, pipeline lanes as soft wells + spec score-chip colours. **D4:** editor overlay palette/type/rings retuned to Upwind (every `.csle-*`/`data-cs-edit` hook preserved); marketing hero gains the real typefaces + Source Serif 4 display + ambient swooshes. Presentation-only — no data/auth/route changes. Verified: tsc + `vite build` clean, **44/44 tests pass**, sign-in + marketing hero confirmed in preview; **live on `staging.upwind.build` (HTTP 200, new fonts served)**. *(Awaiting Ricky&#39;s visual pass on the authed screens on staging before promoting to main. Editor bottom→top-bar restructure deferred — see Parking Lot.)*</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🪁 Rebrand → Upwind (LIVE in production)</div>
+        <div class="card-tags"><span class="tag tag-neutral">brand</span><span class="tag tag-neutral">launch</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">sites.upwind.page</span><span class="tag tag-neutral">hello@tryupwind.com</span></div>
+        <div class="card-desc">The product is now **Upwind** (Coreshift Limited stays the legal entity / merchant of record). Full cutover, live: marketing at **tryupwind.com**, app at **upwind.build**, published sites at **\*.upwind.page**, custom-domain SaaS fallback `sites.upwind.page`, email `hello@tryupwind.com` (Postmark-verified + DMARC). New per-zone Cloudflare routing on the CoreshiftHq account; 7 proxied DNS records + SaaS fallback set via the CF API; old coreshift.page routes retired (523). Brand palette **#5CA6F2 / #F4F6FB**, lowercase &quot;upwind&quot; wordmark + favicon (stopgap SVG until the exact logo/favicon/og.png assets land). ~150 edits across app/marketing/edge-functions/renderer + 4 wrangler configs. Verified: all 3 surfaces HTTP 200, production smoke green. Internal ids (packages, RPCs, worker names) intentionally unchanged</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Legal — partner-model compliance (LIVE)</div>
+        <div class="card-tags"><span class="tag tag-neutral">legal</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Lawyer&#39;s 5 clause additions applied (Platform Agreement 1.7 &quot;who you contract with&quot; + 1.8 &quot;partner-built sites&quot;; Terms; Privacy &quot;leads&quot;; Refunds &quot;build fee&quot;), and the **Partner Agreement published at /partner-agreement** (CoreShift Limited trading as Upwind, commission-ladder table, footer-linked). Partner signup now requires accepting it. *(Two clauses — principal/agent characterisation + buyer-created/self-billing invoicing — still need accountant/lawyer sign-off before onboarding a real partner.)*</div>
+      </div>
       <div class="card">
         <div class="card-title">New-site flow (redesign)</div>
         <div class="card-tags"><span class="tag tag-shipped">shipped</span></div>
@@ -1042,7 +1057,52 @@
       <div class="card">
         <div class="card-title">Partner program — rails + white-label claim flow</div>
         <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">become_partner</span></div>
-        <div class="card-desc">The reseller loop, live end-to-end: register as a partner (`become_partner`, admin-gated for now), run the lead engine against your **own** agency (de-anchored — Coreshift HQ seeded as partner #0 so the existing CRM is unchanged), set a one-off build fee, and email the customer a **white-label claim link** (partner&#39;s brand, via our Postmark). The customer signs up (T&amp;C), claims the site (moves to their account, partner keeps edit access + referrer attribution), and checks out (build fee + subscription, **no trial**). Commissioned-reseller model: everything is Coreshift revenue; commissions accrue to the partner (P3). Migrations 0010–0011. *(Deferred within P2: full customer-dashboard white-label chrome, referral links, Partner Agreement page.)*</div>
+        <div class="card-desc">The reseller loop, live end-to-end: register as a partner (`become_partner`, now open self-serve via the signup modal), run the lead engine against your **own** agency (de-anchored — Coreshift HQ seeded as partner #0 so the existing CRM is unchanged), set a one-off build fee, and email the customer a **white-label claim link** (partner&#39;s brand, via our Postmark). The customer signs up (T&amp;C), claims the site (moves to their account, partner keeps edit access + referrer attribution), and checks out (build fee + subscription, **no trial**). Commissioned-reseller model: everything is Coreshift revenue; commissions accrue to the partner (P3). Migrations 0010–0011. *(Deferred within P2: full customer-dashboard white-label chrome, referral links, Partner Agreement page — awaiting lawyer.)*</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Partner ledger + payouts-first dashboard</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">partner_ledger</span><span class="tag tag-neutral">PartnerEarnings.tsx</span></div>
+        <div class="card-desc">Commission ledger (`partner_ledger`, migrations 0012–0013) accrues in **NZD at accrual** (IRD-confirmed accounting): on each paid invoice the webhook reads the Stripe balance transaction for the real net + fee, splits recurring hosting vs one-off build fee, and books a pending commission at the partner&#39;s tier % (10%→20% ladder, 1→60+ active subs), maturing +14 days. Refunds/disputes book a clawback. Partner dashboard (`PartnerEarnings.tsx`) leads with the money — next payout, pending, paid, lifetime, tier progress, projected recurring — plus a payout-method form (NZ bank / Wise / PayPal). GST + self-billing captured at partner signup. **Verified on prod: hosting + build-fee accrual idempotent, ledger math correct at 10%.** *(Payout execution — Wise/PayPal batch export + mark-paid — and fraud flags are built as schema/dry-run, gated on Wise/PayPal business accounts + accountant sign-off.)*</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Retention email (proof-of-value)</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">retention</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">monthly-report</span></div>
+        <div class="card-desc">Monthly per-site &quot;your site had X visits, captured Y enquiries&quot; email (white-label per partner), the year-2-cliff defence for retail and partner renewals. `monthly-report` edge fn is cron-secret-guarded, deployed public, and **scheduled live via pg_cron (1st of each month)**. Verified on prod (dry-run: 11 eligible sites, correct subject lines, wrong-secret → 403). Partner marketing landing page + interactive earnings calculator live at **/partners** (footer-linked)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Lead enrichment + richer generation inputs</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">discover-leads</span><span class="tag tag-neutral">prospects.enrichment</span><span class="tag tag-neutral">crawl-site</span><span class="tag tag-neutral">generate-site</span></div>
+        <div class="card-desc">`discover-leads` now pulls Google Places details (phone, opening hours, rating, address, category, maps URL) and stores them on the prospect (`prospects.enrichment`, migration 0016); `crawl-site` extracts social profiles + contact (tel/mailto); `generate-site` folds enrichment, socials and extra links (menu / online-ordering / booking) into the build so new sites carry real hours/phone/address, footer socials and featured links. Retail onboarding gained an &quot;extra links&quot; field; the lead pipeline shows Places facts + a per-lead extra-links editor</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Admin business metrics</div>
+        <div class="card-tags"><span class="tag tag-neutral">admin</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">admin_business_metrics()</span></div>
+        <div class="card-desc">New **Business** tab in the admin dashboard: MRR + churn by channel (retail / partner / grandfathered), active-site mix (trial/pending/past-due), partner count + activation + avg time-to-first-sale, and commission liability/paid (NZD). Backed by the app-admin-gated `admin_business_metrics()` RPC (migrations 0017/0018). Live prod snapshot: 22 active sites (21 grandfathered legacy free-riders + 1 paying retail), 1 partner (HQ), MRR est US$49</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Partner payout execution (P6)</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">run-payout-batch</span></div>
+        <div class="card-desc">The money-out step, live: `run-payout-batch` nets each partner&#39;s matured, unpaid commission and pays it via a **swappable provider rail**. **Wise** is fully built (recipient → quote → transfer → fund from balance) and **defaults to the Wise sandbox** so a misconfig can&#39;t move real money; PayPal / NZ-bank are &quot;manual&quot; (admin sends, then marks paid in one click). Admin **Payouts tab**: dry-run preview (who&#39;s payable + who&#39;s skipped and why), one-click run (with confirm), manual mark-paid, batch history. Idempotent, server-recomputed net, min ~NZ$85 (≈US$50). Migration 0019. **Gated on Ricky:** provide the Wise API token + profile id (sandbox to rehearse, then live) → I set the secrets and we run a sandbox payout end-to-end</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Partner UX completion (P5)</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">sites.billing_interval</span><span class="tag tag-neutral">?ref=CODE</span><span class="tag tag-neutral">accounts.referrer_partner_account_id</span><span class="tag tag-neutral">ensure_personal_account(p_ref_code)</span><span class="tag tag-neutral">partner_account_id</span><span class="tag tag-neutral">my_website_partner()</span></div>
+        <div class="card-desc">Three pieces closing the partner loop (migration 0018): **(1) Accurate MRR** — `sites.billing_interval` set by the webhook from the Stripe price; MRR now monthly-equivalent (annual at US$499/12). **(2) Referral links** — every partner gets a copyable `?ref=CODE` link; a signup through it stamps `accounts.referrer_partner_account_id` (via `ensure_personal_account(p_ref_code)`), and once that self-serve site becomes a paying sub the webhook inherits `partner_account_id` so it accrues commission at the partner&#39;s tier. **(3) White-label dashboard chrome** — partner-sold/referred customers see the partner&#39;s logo/name (&quot;powered by Coreshift&quot;) in the dashboard top bar, a &quot;your website partner&quot; contact card, and a &quot;contact your partner first&quot; note in support; `my_website_partner()` resolves branding (HQ excluded)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Workspace / quota model — &quot;draft&quot; replaces the trial (P7)</div>
+        <div class="card-tags"><span class="tag tag-neutral">billing</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">*.coreshift.page</span><span class="tag tag-neutral">cancelled</span><span class="tag tag-neutral">site_is_served</span><span class="tag tag-neutral">add_site</span></div>
+        <div class="card-desc">Packaging shift (Ricky, 2026-07-21): every account gets free, private **draft** sites (retail **1**, partner **10**; staff unlimited) — fully editable + previewable, never publicly served. **Publishing = subscribing** (plan→active), which serves the site publicly on its `*.coreshift.page` subdomain, includes a custom domain at **no extra charge**, and **frees the draft slot** (live sites don&#39;t count against quota). A cancelled site falls back into the workspace (counts again, editable, re-subscribe to relive — so churn metrics still read off `cancelled`). This **replaced the 14-day trial entirely**, which also dissolved the trial-reset gaming bug + the missing-trial-warning gap. Migration 0021 (applied prod, verified: 22 active still served, trial sites → draft/offline); dashboard shows Draft/Live badges, &quot;X of Y draft sites used&quot;, and gates &quot;+ New site&quot; at quota. `site_is_served` = active/past_due only; `add_site` enforces the quota</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Real app routes (P8)</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/</span><span class="tag tag-neutral">/admin</span><span class="tag tag-neutral">/admin/payouts</span><span class="tag tag-neutral">/business</span><span class="tag tag-neutral">/partner</span><span class="tag tag-neutral">/earnings</span><span class="tag tag-neutral">/editor/:id</span><span class="tag tag-neutral">/results/:id</span><span class="tag tag-neutral">?claim</span><span class="tag tag-neutral">?ref</span><span class="tag tag-neutral">?preview</span><span class="tag tag-neutral">?template</span><span class="tag tag-neutral">?gallery</span><span class="tag tag-neutral">?start</span></div>
+        <div class="card-desc">The dashboard was a state-driven SPA with one URL; now it has real routes (react-router-dom): `/`, `/admin` (+`/admin/payouts`, `/business`, etc.), `/partner`, `/earnings`, `/editor/:id`, `/results/:id` — deep-linkable, browser-back works, role-guarded, SPA fallback configured. Every pre-auth entry point (`?claim`/`?ref`/`?preview`/`?template`/`?gallery`/`?start`) and the auth roundtrip preserved. 44 tests pass</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Full security + money audit → P0 hardening</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">launch</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">matures_at</span><span class="tag tag-neutral">FOR UPDATE SKIP LOCKED</span><span class="tag tag-neutral">sites</span><span class="tag tag-neutral">SET ROLE anon</span><span class="tag tag-neutral">custom_pct</span><span class="tag tag-neutral">partner_profiles</span><span class="tag tag-neutral">unsubscribe</span></div>
+        <div class="card-desc">Exhaustive audit (4 parallel review agents across security / money-paths / engineering-ops / product-funnel, plus Supabase advisors). Fixed the six P0 defects, all verified: **(1)** clawbacks were structurally inert (`matures_at` never set → refunds never reduced a payout); now set + partial refunds prorate + accrual failures log. **(2)** payout double-pay race → rewritten as two-phase **reserve→pay→finalize/void** RPCs with `FOR UPDATE SKIP LOCKED`; amount reserved==sent==booked, idempotency key = batch id (migration 0022, verified with a zero-residue rollback test on prod). **(3)** commission currency corruption (USD booked as NZD when the balance transaction lagged) → now accrues only the settled NZD, defers+logs otherwise; Earnings dashboard relabelled **NZ$**, monthly cadence. **(4)** `sites` was fully anon-readable (every tenant&#39;s plan / Stripe sub id / partner attribution leaked) → anon SELECT restricted to non-financial columns (migration 0023, verified via `SET ROLE anon`). **(5)** partners could raise their own `custom_pct` / un-suspend themselves → `partner_profiles` UPDATE restricted to branding columns only. **(6)** `unsubscribe` had deployed JWT-closed (cold-outreach links 401&#39;d) → pinned public (verified live 200); + self-referral guard + double-subscription guard. Migrations 0022/0023 + 0020 (prod-only RPC bodies reconstructed for DR). Note: the two security holes (#4/#5) were DB migrations applied to prod immediately; the money-logic (#1/#2/#3) shipped with this deploy</div>
       </div>
       <div class="card">
         <div class="card-title">Billing hardened + self-serve portal</div>
@@ -1108,9 +1168,14 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Domain purchase + auto-connect (P9)</div>
+        <div class="card-tags"><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">revenue</span><span class="tag tag-neutral">DYNADOT_API_KEY</span><span class="tag tag-neutral">DYNADOT_API_SECRET</span></div>
+        <div class="card-desc">Sell domains in-product with margin via the **Dynadot reseller API** (Ricky&#39;s account + `DYNADOT_API_KEY`/`DYNADOT_API_SECRET` set as Supabase secrets). Flow: in-app search → availability + price (our markup) → one-off Stripe charge → register via Dynadot → auto-connect through Cloudflare for SaaS (the connect half already exists for custom hostnames). Annual renewal billing + auto-renew to design. Next build after the audit/P0 batch. Setup notes: fund the Dynadot prepaid balance; set reseller markup; Dynadot API IP-allowlist must permit dynamic edge egress (or route via fixed egress)</div>
+      </div>
       <div class="card">
         <div class="card-title">Email deliverability</div>
         <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-infra">infra</span></div>
@@ -1135,18 +1200,13 @@
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked — remaining go-live gates (need Ricky)</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">1️⃣ Add DMARC record (email → inbox, not junk)</div>
-        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">_dmarc</span><span class="tag tag-neutral">v=DMARC1; p=none; rua=mailto:hello@coreshifthq.com</span></div>
-        <div class="card-desc">SPF/DKIM verified; magic-link + lead emails land in junk without DMARC. Add TXT `_dmarc` → `v=DMARC1; p=none; rua=mailto:hello@coreshifthq.com`</div>
-      </div>
-      <div class="card">
-        <div class="card-title">2️⃣ Flip Stripe to live keys</div>
+        <div class="card-title">2️⃣ Flip Stripe to live keys + trading name</div>
         <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">needs-ricky</span></div>
-        <div class="card-desc">The full test-mode path is verified end-to-end; the only remaining step is swapping test → live keys + the live webhook signing secret, as the final action before opening</div>
+        <div class="card-desc">The full test-mode path is verified end-to-end; remaining: swap test → live keys + live webhook signing secret, AND set the Stripe **statement descriptor / trading name to &quot;Upwind&quot;** (over Coreshift Limited). Final action before opening</div>
       </div>
       <div class="card">
         <div class="card-title">3️⃣ Lawyer sign-off on the Platform Agreement</div>
@@ -1226,6 +1286,148 @@
         <div class="card-title">Branch flow</div>
         <div class="card-tags"><span class="tag tag-infra">infra</span></div>
         <div class="card-desc">dev/staging are behind main; reconcile to match the local → dev → staging → main standard</div>
+      </div></div>
+    </section>
+    <section class="column col-neutral">
+      <header class="col-head">
+        <h2>🅿️ Parking Lot — consciously deferred, needs a decision</h2>
+        <span class="col-count">27</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Google Places photos into generated sites</div>
+        <div class="card-tags"><span class="tag tag-neutral">enrichment</span><span class="tag tag-neutral">deferred</span></div>
+        <div class="card-desc">We capture Places hours/phone/rating/address, but **not photos**. The Places Photo API returns a photo *reference* needing a second media call, and embedding our API key in public image URLs would leak it. To do it safely we&#39;d resolve each photo server-side into our own Storage during generation. Value: richer auto-generated galleries for imported/discovered businesses. Cost: extra API calls + Storage + build-time latency</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Partner payout fraud flags (automated)</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">deferred</span><span class="tag tag-neutral">partner_flags</span></div>
+        <div class="card-desc">The obvious **self-referral** case is now blocked (a user can&#39;t attribute to a partner account they belong to), and manual `partner_flags` are read by the payout runner. Still schema-only: **automated** velocity holds (new partner + anomalous conversions), card-fingerprint/IP self-referral detection, and details-change holds. Gated on real volume + accountant sign-off. ⬆ Priority raised by the global partner push — one motivated bad actor at scale is now the threat model</div>
+      </div>
+      <div class="card">
+        <div class="card-title">PayPal payout rail (auto)</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">deferred</span></div>
+        <div class="card-desc">PayPal payouts are &quot;manual&quot; today (admin sends, then marks paid). Auto-execution via the PayPal Payouts API is a fast-follow if partners prefer PayPal at volume</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Routefusion — embedded global payouts</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">deferred</span></div>
+        <div class="card-desc">If the global push wants payouts *embedded natively* in the partner dashboard (own the flow + FX margin), Routefusion is the strongest candidate — the payout layer is built behind a swappable interface so it&#39;s a rail swap, not a rebuild. Action: get a Routefusion (and Trolley, for contrast) sales quote. Note: the US-tax-form automation those platforms lead with is largely irrelevant to a NZ payer</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Partner education platform</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">deferred</span></div>
+        <div class="card-desc">A &quot;Resources&quot; slot in the partner dashboard was reserved for a future training/education platform. Backlog by Ricky&#39;s own call — parked here so it&#39;s visible</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Self-serve content export</div>
+        <div class="card-tags"><span class="tag tag-neutral">legal</span><span class="tag tag-neutral">deferred</span></div>
+        <div class="card-desc">Platform Agreement clause 13.2 promises a self-serve content export we haven&#39;t built (currently assisted-export). Either build it or lean on the assisted-export clause (flagged to lawyer)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Exact Upwind brand assets</div>
+        <div class="card-tags"><span class="tag tag-neutral">brand</span><span class="tag tag-neutral">deferred</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">logo.svg</span><span class="tag tag-neutral">favicon</span><span class="tag tag-neutral">og.png</span><span class="tag tag-neutral">marketing/public/</span></div>
+        <div class="card-desc">Live logo/favicon are a stopgap SVG (blue swish + &quot;upwind&quot; wordmark). Drop the real `logo.svg` + `favicon` + a 1200×630 `og.png` into `marketing/public/` and I&#39;ll wire the actual mark into the headers + share cards. Colours (#5CA6F2 / #F4F6FB) are exact</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Re-attach test custom domains on upwind.page</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">deferred</span></div>
+        <div class="card-desc">Any test custom hostnames (e.g. theboys.co.nz) were on the retired coreshift.page SaaS zone; they&#39;d need re-adding via connect-domain on the upwind.page zone. Test data — do if a demo needs it</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Editor chrome: bottom→top-bar restructure</div>
+        <div class="card-tags"><span class="tag tag-neutral">design</span><span class="tag tag-neutral">deferred</span></div>
+        <div class="card-desc">The design spec envisions the editor as a dark-ink 54px **top** bar (← Sites · site name+subdomain · Pages/Design/Versions · brand-tint Publish), an add-section dashed pill on inter-section rules, and a publish→plan-modal→success-swoosh moment ending in &quot;● Live&quot;. The editor today is a floating **bottom** toolbar; its palette/type/rings were retuned to Upwind, but the bottom→top restructure is a real UX change that needs testing inside a live editing session (a site loaded in the editor), so it was parked rather than done blind. Task #110</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Marketing &quot;included&quot; grid: emoji → line icons</div>
+        <div class="card-tags"><span class="tag tag-neutral">design</span><span class="tag tag-neutral">deferred</span></div>
+        <div class="card-desc">The spec calls for replacing the emoji icons in the marketing &quot;what&#39;s included&quot; grid with 1.6px-stroke line icons. Low priority — the emojis render fine; the rest of the marketing page is on the new type/motion system</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Stale CI job-name labels (coreshift.page)</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">deferred</span><span class="tag tag-neutral">app-staging.coreshift.page</span><span class="tag tag-neutral">coreshift.page</span><span class="tag tag-neutral">name:</span><span class="tag tag-neutral">wrangler.*.toml</span><span class="tag tag-neutral">staging.upwind.build</span><span class="tag tag-neutral">upwind.build</span><span class="tag tag-neutral">*.upwind.page</span></div>
+        <div class="card-desc">The GitHub Actions workflow **display names** still read `app-staging.coreshift.page` / `coreshift.page` (deploy-staging.yml, deploy-production.yml `name:` fields + comments). Purely cosmetic — the actual `wrangler.*.toml` routes correctly target `staging.upwind.build` / `upwind.build` / `*.upwind.page` and deploys land in the right place — but the labels mislead during ops. Rename when convenient (editing the workflow file triggers a redeploy, so batch it with other CI work)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">App bundle code-split</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">deferred</span><span class="tag tag-neutral">React.lazy</span></div>
+        <div class="card-desc">The dashboard bundle is ~944 kB (one chunk) — the editor, full section/theme registries, lucide icons and admin/partner views all ship to every user. `React.lazy` the Editor / Admin / Pipeline routes + dynamic-import the renderer/overlay. Works fine today; splitting speeds first load</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Edge-function observability + alerting</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">audit-p1</span><span class="tag tag-neutral">error_logs</span><span class="tag tag-neutral">monthly-report</span><span class="tag tag-neutral">error_logs</span><span class="tag tag-neutral">monthly-report</span></div>
+        <div class="card-desc">Accrual + payout failures now write to `error_logs`, but there&#39;s still **no alerting** — a failing webhook or a silently-failing `monthly-report`/pg_cron would go unnoticed until someone complains. Add an alert on new `error_logs` rows (email/Slack) and make `monthly-report` surface wholesale failures instead of returning 200</div>
+      </div>
+      <div class="card">
+        <div class="card-title">CI gates on edge functions + money-path tests</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">audit-p1</span><span class="tag tag-neutral">deploy-functions.yml</span><span class="tag tag-neutral">accrue_commission</span></div>
+        <div class="card-desc">`deploy-functions.yml` deploys with **no typecheck/test/lint**; there are **zero tests** on webhook branch logic, `accrue_commission`, the payout reserve/finalize RPCs, or RLS. Add a Deno test harness + a typecheck gate so money/auth code can&#39;t deploy broken</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Disaster-recovery / staging drift</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">audit-p1</span></div>
+        <div class="card-desc">Core RPC bodies now committed (0020) but **not applied** to staging; the staging DB still lacks the lead-engine + quota/payout RPCs (task #97), so staging can&#39;t exercise money flows. Apply the full migration set to staging and confirm a clean-DB rebuild works end-to-end</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Rate limits / quotas on paid-API functions</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">cost</span><span class="tag tag-neutral">audit-p1</span><span class="tag tag-neutral">generate-site</span><span class="tag tag-neutral">discover-leads</span><span class="tag tag-neutral">crawl-site</span><span class="tag tag-neutral">become_partner</span></div>
+        <div class="card-desc">`generate-site` (Anthropic), `discover-leads` (Google Places), `crawl-site` and `become_partner` have **no per-user rate limit or quota** — a signed-up user can loop them to burn budget. ⬆ More urgent with open global partner signup. Add per-account daily quotas + velocity caps</div>
+      </div>
+      <div class="card">
+        <div class="card-title">`claim_token` expiry + single-use</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">audit-p1</span></div>
+        <div class="card-desc">Partner claim links never expire and the token stays reusable after conversion (grants account ownership); it travels in a URL query string (history/referrer leak). Add expiry (7–14d) + null-on-claim + prefer a one-time POST exchange</div>
+      </div>
+      <div class="card">
+        <div class="card-title">`send-invite` relay + `auth-email` fail-open</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">audit-p1</span><span class="tag tag-neutral">send-invite</span><span class="tag tag-neutral">auth-email</span><span class="tag tag-neutral">true</span></div>
+        <div class="card-desc">`send-invite` sends from Coreshift&#39;s Postmark domain with attacker-controlled recipient/CTA (phishing vector); derive fields server-side from an owned invite row. `auth-email` returns `true` when its hook secret is unset (fail-open) — make it fail closed + constant-time compare</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cancelled site served up to 24h from edge cache</div>
+        <div class="card-tags"><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">audit-p1</span><span class="tag tag-neutral">site_is_served</span><span class="tag tag-neutral">subscription.deleted</span><span class="tag tag-neutral">purge-cache</span></div>
+        <div class="card-desc">The renderer checks the CF cache before `site_is_served`, and `subscription.deleted` doesn&#39;t purge — a cancelled site keeps serving real content for up to 24h. Call `purge-cache` on cancel (+ on going-live)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Out-of-order webhook resurrect</div>
+        <div class="card-tags"><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">audit-p1</span><span class="tag tag-neutral">subscription.updated(active)</span><span class="tag tag-neutral">deleted</span></div>
+        <div class="card-desc">A late `subscription.updated(active)` after `deleted` can flip a cancelled site back to active (Stripe doesn&#39;t guarantee order). Needs an event-timestamp / status guard (deferred — a naive guard would break legitimate re-subscribe)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">`request_access` / `invite_agency` overload ambiguity</div>
+        <div class="card-tags"><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">audit-p1</span></div>
+        <div class="card-desc">Each has a 2-arg + 3-arg-with-default overload → Postgres throws &quot;function is not unique&quot; when called with exactly two args. Drop the legacy 2-arg forms</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Marketing: social proof + SEO batch</div>
+        <div class="card-tags"><span class="tag tag-neutral">marketing</span><span class="tag tag-neutral">audit-p2</span><span class="tag tag-neutral">og.png</span></div>
+        <div class="card-desc">Homepage has **zero third-party proof** (testimonials/logos/counts) — first-order conversion drag. Also: the SEO batch (robots.txt, sitemap.xml, OG/Twitter cards, Organization/SoftwareApplication/FAQ JSON-LD) is **built but held** pending a 1200×630 `og.png` share card — produce it and ship. Add testimonials once real ones exist</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Post-checkout &quot;you&#39;re live&quot; moment</div>
+        <div class="card-tags"><span class="tag tag-neutral">funnel</span><span class="tag tag-neutral">audit-p2</span><span class="tag tag-neutral">?welcome=1</span><span class="tag tag-neutral">?billing=cancelled</span></div>
+        <div class="card-desc">`?welcome=1`/`?billing=cancelled` return params are unhandled — a paying customer lands on a plain dashboard with no confirmation, a cancelled checkout gets no recovery nudge. Cheap activation win</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Two overlapping legal docs</div>
+        <div class="card-tags"><span class="tag tag-neutral">legal</span><span class="tag tag-neutral">audit-p2</span><span class="tag tag-neutral">/terms</span><span class="tag tag-neutral">/platform-agreement</span></div>
+        <div class="card-desc">`/terms` (surfaced everywhere) vs `/platform-agreement` (the actually-binding one, nearly unreachable from marketing). Decide the canonical one, cross-link or merge</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Trial-warning UX now moot, but check dunning</div>
+        <div class="card-tags"><span class="tag tag-neutral">funnel</span><span class="tag tag-neutral">audit-p2</span><span class="tag tag-neutral">past_due</span></div>
+        <div class="card-desc">The trial-expiry surprise-charge risk is gone (draft model replaced the trial), but there&#39;s still no custom dunning beyond Stripe&#39;s on `past_due`, no win-back on cancel, and the happy-customer referral-link ask isn&#39;t surfaced to retail. Lifecycle growth loops</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Supabase advisor lints</div>
+        <div class="card-tags"><span class="tag tag-neutral">perf</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">audit-p2</span><span class="tag tag-neutral">auth.uid()</span><span class="tag tag-neutral">(select auth.uid())</span><span class="tag tag-neutral">site-assets</span><span class="tag tag-neutral">pg_net</span></div>
+        <div class="card-desc">~113 perf lints (unindexed FKs on the busy tables, RLS policies re-evaluating `auth.uid()` per row — wrap in `(select auth.uid())`), plus: `site-assets` bucket allows public listing, Auth leaked-password protection is off, `pg_net` in public schema. None urgent; batch before scale</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Weak preview password + Video `safeUrl` gap</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">audit-p2</span><span class="tag tag-neutral">href</span><span class="tag tag-neutral">safeUrl</span></div>
+        <div class="card-desc">Prospect-preview password is 6 hex chars (brute-forceable, anon, unthrottled) — lengthen / rely on the 64-hex token + throttle. The Video section renders `href` without `safeUrl` (stored-XSS on published sites) — wrap it like every other section</div>
       </div></div>
     </section>
       </div>
