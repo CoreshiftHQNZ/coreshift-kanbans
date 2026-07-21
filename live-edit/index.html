@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>45%</strong> complete</div>
-        <div><strong>38</strong>/84 cards done</div>
-        <div>Updated <strong>2026-07-21 21:50 UTC</strong></div>
+        <div><strong>46%</strong> complete</div>
+        <div><strong>39</strong>/85 cards done</div>
+        <div>Updated <strong>2026-07-21 22:17 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">38</div>
+        <div class="status-num">39</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -920,6 +920,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">🛠️ Editor improvements — Pay+Publish · live settings · add-section pills · menu hints</div>
+            <div class="recent-desc">Four editor upgrades (on staging): **(1) Pay + Publish** — an unsubscribed site&#39;s Publish button becomes &quot;Pay + Publish&quot; and opens a go-live/subscribe dialog (annual default / monthly) that saves the current edits then routes to Stripe checkout; subscribed sites keep the review-and-publish gate. **(2) Real-time settings** — fixed the bug where panel edits (footer social links, nav, etc.) didn&#39;t show until publish; the live preview now applies all *structural* draft edits (collections, images, icons, section options, theme, pages) while inline text/link edits stay in place — verified a footer social icon renders live the moment it&#39;s added. **(3) Add-section pills** — redesigned to a dashed blue pill on a hairline rule, shown above *and* below the hovered section; clicking inserts a section at that exact spot. **(4) Menu hints** — every Design ▾ item now carries a one-line description. Verified in the editor preview; tsc + build clean, 44/44 tests</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">🎨 Design overhaul → Upwind design system (LIVE on staging)</div>
             <div class="recent-desc">Implemented the Claude Design &quot;Upwind design system overhaul&quot; spec across the app chrome, editor and marketing (client-site themes in `coreshift-starter` untouched). **D0 foundation:** full token scale, **Hanken Grotesk + Source Serif 4**, the wind signature (SVG mark + ambient stroke-draw swooshes), refined buttons/focus/elevation, a zero-dependency motion layer (screen entrance, count-up, swoosh-draw — all reduced-motion guarded; GSAP intentionally skipped to avoid a bundle/lockfile dep). **D1 app shell:** a 232px left sidebar (role-gated nav + user block pinned bottom, white-label partner brand in the rail) replaces the old top bar, wrapping Dashboard / Lead Engine / Admin / Earnings; full-screen Editor/Results keep their own chrome. **D2:** serif greeting, theme-tinted site-card thumbnails + status badges, dashed ghost &quot;create&quot; card, gradient plan banner, reskinned sign-in (card on gradient + swooshes). **D3:** count-up stat cards, serif page titles, pipeline lanes as soft wells + spec score-chip colours. **D4:** editor overlay palette/type/rings retuned to Upwind (every `.csle-*`/`data-cs-edit` hook preserved); marketing hero gains the real typefaces + Source Serif 4 display + ambient swooshes. Presentation-only — no data/auth/route changes. Verified: tsc + `vite build` clean, **44/44 tests pass**, sign-in + marketing hero confirmed in preview; **live on `staging.upwind.build` (HTTP 200, new fonts served)**. **D5 (editor top bar) now also done:** the live-edit overlay moved from the floating bottom toolbar to the spec&#39;s dark-ink 54px top bar — ← Sites · site name · subdomain / Pages ▾ · Design ▾ · Versions · ✦ Ask / edit-hint · Preview · brand-tint Publish (Design ▾ folds Theme/Menu/Footer/SEO/Settings/Help); verified in the `?template=` editor preview, menus open downward, all `.csle-*` hooks preserved. *(Awaiting Ricky&#39;s visual pass on the authed screens on staging before promoting to main.)*</div>
           </div>
@@ -952,13 +959,6 @@
             <div class="recent-desc">Click-to-edit text and images, rich text with links, nav/footer editors, add-pages, SEO + settings panels, theme + brand-colour switching, curated font pairings, in-memory draft, and a sign-off gate. In real use across the live sites</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Section + theme engine</div>
-            <div class="recent-desc">22 section types and 17 theme styles rendered through one shared code path used by both the editor and the edge renderer, so swapping themes never loses content</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -971,9 +971,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">38</span>
+        <span class="col-count">39</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🛠️ Editor improvements — Pay+Publish · live settings · add-section pills · menu hints</div>
+        <div class="card-tags"><span class="tag tag-neutral">design</span><span class="tag tag-neutral">editor</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Four editor upgrades (on staging): **(1) Pay + Publish** — an unsubscribed site&#39;s Publish button becomes &quot;Pay + Publish&quot; and opens a go-live/subscribe dialog (annual default / monthly) that saves the current edits then routes to Stripe checkout; subscribed sites keep the review-and-publish gate. **(2) Real-time settings** — fixed the bug where panel edits (footer social links, nav, etc.) didn&#39;t show until publish; the live preview now applies all *structural* draft edits (collections, images, icons, section options, theme, pages) while inline text/link edits stay in place — verified a footer social icon renders live the moment it&#39;s added. **(3) Add-section pills** — redesigned to a dashed blue pill on a hairline rule, shown above *and* below the hovered section; clicking inserts a section at that exact spot. **(4) Menu hints** — every Design ▾ item now carries a one-line description. Verified in the editor preview; tsc + build clean, 44/44 tests</div>
+      </div>
       <div class="card">
         <div class="card-title">🎨 Design overhaul → Upwind design system (LIVE on staging)</div>
         <div class="card-tags"><span class="tag tag-neutral">design</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">coreshift-starter</span><span class="tag tag-neutral">.csle-*</span><span class="tag tag-neutral">data-cs-edit</span><span class="tag tag-neutral">vite build</span><span class="tag tag-neutral">staging.upwind.build</span><span class="tag tag-neutral">?template=</span><span class="tag tag-neutral">.csle-*</span></div>
@@ -1335,9 +1340,9 @@
         <div class="card-desc">Any test custom hostnames (e.g. theboys.co.nz) were on the retired coreshift.page SaaS zone; they&#39;d need re-adding via connect-domain on the upwind.page zone. Test data — do if a demo needs it</div>
       </div>
       <div class="card">
-        <div class="card-title">Editor polish: add-section pill + publish-success moment</div>
+        <div class="card-title">Editor polish: publish-success swoosh</div>
         <div class="card-tags"><span class="tag tag-neutral">design</span><span class="tag tag-neutral">deferred</span></div>
-        <div class="card-desc">Two smaller bits from the editor design still open now the top bar is in: (1) a dashed &quot;add a section&quot; pill on the horizontal rule *between* sections (currently sections are added via ✦ Ask), and (2) a publish → plan-modal → **success-swoosh** moment with the button settling to &quot;● Live&quot;. Both are nice-to-haves; the core top-bar chrome + publish gate work today</div>
+        <div class="card-desc">The last small bit from the editor design: a publish → **success-swoosh** animation with the button settling to &quot;● Live&quot; after a site goes live. Nice-to-have; the publish + Pay+Publish flows work today. *(The dashed &quot;add a section&quot; hover pill it used to be paired with is now shipped — see the editor-improvements card in Done.)*</div>
       </div>
       <div class="card">
         <div class="card-title">Marketing &quot;included&quot; grid: emoji → line icons</div>
