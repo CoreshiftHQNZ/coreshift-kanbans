@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>47%</strong> complete</div>
-        <div><strong>42</strong>/89 cards done</div>
-        <div>Updated <strong>2026-07-22 00:55 UTC</strong></div>
+        <div><strong>48%</strong> complete</div>
+        <div><strong>43</strong>/90 cards done</div>
+        <div>Updated <strong>2026-07-22 05:31 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">42</div>
+        <div class="status-num">43</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -920,6 +920,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">🤝 Partner sell flow — build in dashboard, then sell</div>
+            <div class="recent-desc">Two changes so a partner can build a site and sell it without touching the admin lead engine. **(1) Trimmed the partner view** → an **&quot;Opportunities&quot;** board: the cold-prospecting engine (Google-Places discovery, lead scoring, outreach settings) is now Coreshift-staff-only; partners keep the kanban + preview link + sell/claim. Discriminator: `isStaff = has a team role`. **(2) &quot;Sell&quot; on dashboard site cards** (partner-owned, non-live): a dialog for the one-off build fee + customer email → sends the branded &quot;claim your website&quot; invitation → customer creates their own account + pays (build fee + US$49/mo) → site transfers to them, partner keeps edit access + commission. New RPC `sell_site` (migration 0025, prod) bridges a dashboard-built site into a prospect so the existing send-claim → claim_prospect → checkout path runs; owner+partner-only, refuses live/already-claimed sites (guards verified on prod). Preview stays a **preview link** (not the bare subdomain). tsc + build clean, 44/44 tests. *(On staging, but the partner flow can&#39;t be fully exercised there — staging DB lacks the lead-engine tables, task #97 — so real testing is on prod.)*</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">🗑️ Delete-site action (frees a workspace slot)</div>
             <div class="recent-desc">Owned, non-live site cards get a **Delete** button → a confirm dialog (&quot;permanently removes the site and its content · frees up a slot · can&#39;t be undone&quot;) → deletes and reloads so the freed draft slot shows immediately. Backed by a new **`delete_site(p_site)` RPC** (migration 0024, applied to prod): owner-only (`can_manage_account`/`is_app_admin`) with a **money-safety guard** — a site with a live subscription (plan active/past_due or a Stripe sub) is refused (&quot;cancel billing first&quot;), so deletion can&#39;t orphan a subscription. Child rows clean up via existing FKs (cascade for content/domains/leads/assets; set-null keeps ledger/prospect/change-request history). **Verified on prod**: a live site is refused with the guard message, counts unchanged; tsc + build clean, 44/44 tests. LIVE on upwind.build</div>
           </div>
@@ -952,13 +959,6 @@
             <div class="recent-desc">Implemented the Claude Design &quot;Upwind design system overhaul&quot; spec across the app chrome, editor and marketing (client-site themes in `coreshift-starter` untouched). **D0 foundation:** full token scale, **Hanken Grotesk + Source Serif 4**, the wind signature (SVG mark + ambient stroke-draw swooshes), refined buttons/focus/elevation, a zero-dependency motion layer (screen entrance, count-up, swoosh-draw — all reduced-motion guarded; GSAP intentionally skipped to avoid a bundle/lockfile dep). **D1 app shell:** a 232px left sidebar (role-gated nav + user block pinned bottom, white-label partner brand in the rail) replaces the old top bar, wrapping Dashboard / Lead Engine / Admin / Earnings; full-screen Editor/Results keep their own chrome. **D2:** serif greeting, theme-tinted site-card thumbnails + status badges, dashed ghost &quot;create&quot; card, gradient plan banner, reskinned sign-in (card on gradient + swooshes). **D3:** count-up stat cards, serif page titles, pipeline lanes as soft wells + spec score-chip colours. **D4:** editor overlay palette/type/rings retuned to Upwind (every `.csle-*`/`data-cs-edit` hook preserved); marketing hero gains the real typefaces + Source Serif 4 display + ambient swooshes. Presentation-only — no data/auth/route changes. Verified: tsc + `vite build` clean, **44/44 tests pass**, sign-in + marketing hero confirmed in preview; **LIVE in production** (tryupwind.com / upwind.build / *.upwind.page all HTTP 200, production smoke green). **D5 (editor top bar) also done:** the live-edit overlay moved from the floating bottom toolbar to the spec&#39;s dark-ink 54px top bar — ← Sites · site name · subdomain / Pages ▾ · Design ▾ · Versions · ✦ Ask / edit-hint · Preview · brand-tint Publish (Design ▾ folds Theme/Menu/Footer/SEO/Settings/Help); verified in the `?template=` editor preview, menus open downward, all `.csle-*` hooks preserved</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">🪁 Rebrand → Upwind (LIVE in production)</div>
-            <div class="recent-desc">The product is now **Upwind** (Coreshift Limited stays the legal entity / merchant of record). Full cutover, live: marketing at **tryupwind.com**, app at **upwind.build**, published sites at **\*.upwind.page**, custom-domain SaaS fallback `sites.upwind.page`, email `hello@tryupwind.com` (Postmark-verified + DMARC). New per-zone Cloudflare routing on the CoreshiftHq account; 7 proxied DNS records + SaaS fallback set via the CF API; old coreshift.page routes retired (523). Brand palette **#5CA6F2 / #F4F6FB**, lowercase &quot;upwind&quot; wordmark + favicon (stopgap SVG until the exact logo/favicon/og.png assets land). ~150 edits across app/marketing/edge-functions/renderer + 4 wrangler configs. Verified: all 3 surfaces HTTP 200, production smoke green. Internal ids (packages, RPCs, worker names) intentionally unchanged</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -971,9 +971,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">42</span>
+        <span class="col-count">43</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🤝 Partner sell flow — build in dashboard, then sell</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">dashboard</span><span class="tag tag-neutral">isStaff = has a team role</span><span class="tag tag-neutral">sell_site</span></div>
+        <div class="card-desc">Two changes so a partner can build a site and sell it without touching the admin lead engine. **(1) Trimmed the partner view** → an **&quot;Opportunities&quot;** board: the cold-prospecting engine (Google-Places discovery, lead scoring, outreach settings) is now Coreshift-staff-only; partners keep the kanban + preview link + sell/claim. Discriminator: `isStaff = has a team role`. **(2) &quot;Sell&quot; on dashboard site cards** (partner-owned, non-live): a dialog for the one-off build fee + customer email → sends the branded &quot;claim your website&quot; invitation → customer creates their own account + pays (build fee + US$49/mo) → site transfers to them, partner keeps edit access + commission. New RPC `sell_site` (migration 0025, prod) bridges a dashboard-built site into a prospect so the existing send-claim → claim_prospect → checkout path runs; owner+partner-only, refuses live/already-claimed sites (guards verified on prod). Preview stays a **preview link** (not the bare subdomain). tsc + build clean, 44/44 tests. *(On staging, but the partner flow can&#39;t be fully exercised there — staging DB lacks the lead-engine tables, task #97 — so real testing is on prod.)*</div>
+      </div>
       <div class="card">
         <div class="card-title">🗑️ Delete-site action (frees a workspace slot)</div>
         <div class="card-tags"><span class="tag tag-neutral">dashboard</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">delete_site(p_site)</span><span class="tag tag-neutral">can_manage_account</span><span class="tag tag-neutral">is_app_admin</span></div>
