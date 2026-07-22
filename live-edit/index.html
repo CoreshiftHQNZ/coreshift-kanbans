@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>47%</strong> complete</div>
-        <div><strong>41</strong>/87 cards done</div>
-        <div>Updated <strong>2026-07-21 23:34 UTC</strong></div>
+        <div><strong>41</strong>/88 cards done</div>
+        <div>Updated <strong>2026-07-22 00:05 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -829,7 +829,7 @@
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">2</div>
+        <div class="status-num">3</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
@@ -1215,9 +1215,14 @@
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked — remaining go-live gates (need Ricky)</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🔴 Prod auth Site URL still → app.coreshift.page (breaks Google signup)</div>
+        <div class="card-tags"><span class="tag tag-neutral">auth</span><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">redirect_to=https://upwind.build</span><span class="tag tag-neutral">app.coreshift.page</span><span class="tag tag-neutral">nxrmpeilqxkfshveezfr</span><span class="tag tag-neutral">https://upwind.build</span><span class="tag tag-neutral">https://upwind.build/**</span><span class="tag tag-neutral">app.coreshift.page</span><span class="tag tag-neutral">lnriubajuicrvhfsibpw</span><span class="tag tag-neutral">https://staging.upwind.build</span><span class="tag tag-neutral">APP_URL</span><span class="tag tag-neutral">https://upwind.build</span></div>
+        <div class="card-desc">A test user hit &quot;origin is unreachable&quot; on **app.coreshift.page** completing Google sign-in. The **repo + config are clean** (only cosmetic CI job-name labels reference it); the culprit is the **prod Supabase project&#39;s Auth URL configuration**, never updated in the rebrand (it&#39;s dashboard-only). Google/magic-link pass `redirect_to=https://upwind.build`, but if that host isn&#39;t allow-listed Supabase falls back to the **Site URL** = the retired `app.coreshift.page` → dead. **Fix (Supabase → project `nxrmpeilqxkfshveezfr` → Authentication → URL Configuration):** Site URL → `https://upwind.build`; Redirect URLs → add `https://upwind.build/**`, remove the `app.coreshift.page` entries. Do the same on staging (`lnriubajuicrvhfsibpw` → `https://staging.upwind.build`). Also confirm the prod `APP_URL` secret = `https://upwind.build` (email links). Not fixable via our tools — no auth-config API on the MCP</div>
+      </div>
       <div class="card">
         <div class="card-title">2️⃣ Flip Stripe to live keys + trading name</div>
         <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">needs-ricky</span></div>
