@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>48%</strong> complete</div>
-        <div><strong>43</strong>/90 cards done</div>
-        <div>Updated <strong>2026-07-22 06:21 UTC</strong></div>
+        <div><strong>44</strong>/91 cards done</div>
+        <div>Updated <strong>2026-07-22 06:52 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">43</div>
+        <div class="status-num">44</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -920,6 +920,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">🐛 Partner claim fix — the sale now completes (token survives sign-in)</div>
+            <div class="recent-desc">Diagnosed a broken live partner→customer sale (the site never transferred, the partner never saw a payment). Root cause was **front-end only**: the claim page stashed the `?claim=&lt;token&gt;` in localStorage as its *only* way to survive sign-in, but both auth calls (`signInWithGoogle` / `signInWithEmail`) redirected to the **bare origin**. When the customer signed up by magic link and opened the confirmation email on a **different device**, localStorage wasn&#39;t there — they landed on the plain dashboard with no claim context, so `claim_prospect` never ran; confused, they built and paid for a *different* site. Fix: redirect to `window.location.href` so the confirmation link returns to `/?claim=&lt;token&gt;` and the claim resumes **cross-device**. Verified the DB side is sound — a rolled-back prod test of `claim_prospect` created the account, moved the site, and set the prospect to `won` cleanly. Once the claim runs, the sold site shows in the partner&#39;s dashboard under **Client sites** (Live badge, partner keeps edit access), so &quot;partner sees it&#39;s paid&quot; resolves with it. Shipped dev→staging→main. **Needs Ricky to confirm the `upwind.build/**` redirect wildcard (above) for the cross-device path.** *(Two separate go-live gates surfaced by the same test: the &quot;coreshift&quot; the customer saw is the **Stripe receipt/trading name** — gate 2️⃣ below; the junked email is **deliverability** — gate 1️⃣ below. Neither is a code bug.)*</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">🤝 Partner sell flow — the site card IS the workspace</div>
             <div class="recent-desc">A partner runs the whole build → share → sell → sold lifecycle from the dashboard site card; **the separate Opportunities/pipeline board is retired for partners** and the Lead Engine (discover/score/cold-outreach) is now **Coreshift-staff-only** (nav + route gated on a team role). Partner-owned unsold cards are reshaped to fill the space: status badge (Draft / Offer sent), a status line (&quot;Offer sent to &lt;email&gt; · US$X build fee — awaiting payment&quot;), and actions **Edit · Share preview · Sell/Resend · Delete**. **Share preview** copies the open `?preview=&lt;subdomain&gt;` link (client views the site, nothing published). **Sell** → build fee + customer email → branded claim email → customer creates their own account + pays (build fee + US$49/mo) → site transfers to them, partner keeps edit access + commission. New RPC `sell_site` (migration 0025) bridges a dashboard site into a prospect for the existing send-claim → claim_prospect → checkout path; owner+partner-only, refuses live/already-claimed sites. **LIVE in production.** *(Also fixed live: `prospect_set_claim` used pgcrypto `gen_random_bytes` off its search_path → send-claim 500&#39;d → no sale email; re-minted the token from `gen_random_uuid` (migration 0026). And the Delete button was clipped by the card edge → row now wraps.)*</div>
           </div>
@@ -952,13 +959,6 @@
             <div class="recent-desc">Four editor upgrades (LIVE in production): **(1) Pay + Publish** — an unsubscribed site&#39;s Publish button becomes &quot;Pay + Publish&quot; and opens a go-live/subscribe dialog (annual default / monthly) that saves the current edits then routes to Stripe checkout; subscribed sites keep the review-and-publish gate. **(2) Real-time settings** — fixed the bug where panel edits (footer social links, nav, etc.) didn&#39;t show until publish; the live preview now applies all *structural* draft edits (collections, images, icons, section options, theme, pages) while inline text/link edits stay in place — verified a footer social icon renders live the moment it&#39;s added. **(3) Add-section pills** — redesigned to a dashed blue pill on a hairline rule, shown above *and* below the hovered section; clicking inserts a section at that exact spot. **(4) Menu hints** — every Design ▾ item now carries a one-line description. Verified in the editor preview; tsc + build clean, 44/44 tests</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">🎨 Design overhaul → Upwind design system (LIVE on staging)</div>
-            <div class="recent-desc">Implemented the Claude Design &quot;Upwind design system overhaul&quot; spec across the app chrome, editor and marketing (client-site themes in `coreshift-starter` untouched). **D0 foundation:** full token scale, **Hanken Grotesk + Source Serif 4**, the wind signature (SVG mark + ambient stroke-draw swooshes), refined buttons/focus/elevation, a zero-dependency motion layer (screen entrance, count-up, swoosh-draw — all reduced-motion guarded; GSAP intentionally skipped to avoid a bundle/lockfile dep). **D1 app shell:** a 232px left sidebar (role-gated nav + user block pinned bottom, white-label partner brand in the rail) replaces the old top bar, wrapping Dashboard / Lead Engine / Admin / Earnings; full-screen Editor/Results keep their own chrome. **D2:** serif greeting, theme-tinted site-card thumbnails + status badges, dashed ghost &quot;create&quot; card, gradient plan banner, reskinned sign-in (card on gradient + swooshes). **D3:** count-up stat cards, serif page titles, pipeline lanes as soft wells + spec score-chip colours. **D4:** editor overlay palette/type/rings retuned to Upwind (every `.csle-*`/`data-cs-edit` hook preserved); marketing hero gains the real typefaces + Source Serif 4 display + ambient swooshes. Presentation-only — no data/auth/route changes. Verified: tsc + `vite build` clean, **44/44 tests pass**, sign-in + marketing hero confirmed in preview; **LIVE in production** (tryupwind.com / upwind.build / *.upwind.page all HTTP 200, production smoke green). **D5 (editor top bar) also done:** the live-edit overlay moved from the floating bottom toolbar to the spec&#39;s dark-ink 54px top bar — ← Sites · site name · subdomain / Pages ▾ · Design ▾ · Versions · ✦ Ask / edit-hint · Preview · brand-tint Publish (Design ▾ folds Theme/Menu/Footer/SEO/Settings/Help); verified in the `?template=` editor preview, menus open downward, all `.csle-*` hooks preserved</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -971,9 +971,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">43</span>
+        <span class="col-count">44</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🐛 Partner claim fix — the sale now completes (token survives sign-in)</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">auth</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">?claim=&lt;token&gt;</span><span class="tag tag-neutral">signInWithGoogle</span><span class="tag tag-neutral">signInWithEmail</span><span class="tag tag-neutral">claim_prospect</span><span class="tag tag-neutral">window.location.href</span><span class="tag tag-neutral">/?claim=&lt;token&gt;</span><span class="tag tag-neutral">claim_prospect</span><span class="tag tag-neutral">won</span><span class="tag tag-neutral">upwind.build/**</span></div>
+        <div class="card-desc">Diagnosed a broken live partner→customer sale (the site never transferred, the partner never saw a payment). Root cause was **front-end only**: the claim page stashed the `?claim=&lt;token&gt;` in localStorage as its *only* way to survive sign-in, but both auth calls (`signInWithGoogle` / `signInWithEmail`) redirected to the **bare origin**. When the customer signed up by magic link and opened the confirmation email on a **different device**, localStorage wasn&#39;t there — they landed on the plain dashboard with no claim context, so `claim_prospect` never ran; confused, they built and paid for a *different* site. Fix: redirect to `window.location.href` so the confirmation link returns to `/?claim=&lt;token&gt;` and the claim resumes **cross-device**. Verified the DB side is sound — a rolled-back prod test of `claim_prospect` created the account, moved the site, and set the prospect to `won` cleanly. Once the claim runs, the sold site shows in the partner&#39;s dashboard under **Client sites** (Live badge, partner keeps edit access), so &quot;partner sees it&#39;s paid&quot; resolves with it. Shipped dev→staging→main. **Needs Ricky to confirm the `upwind.build/**` redirect wildcard (above) for the cross-device path.** *(Two separate go-live gates surfaced by the same test: the &quot;coreshift&quot; the customer saw is the **Stripe receipt/trading name** — gate 2️⃣ below; the junked email is **deliverability** — gate 1️⃣ below. Neither is a code bug.)*</div>
+      </div>
       <div class="card">
         <div class="card-title">🤝 Partner sell flow — the site card IS the workspace</div>
         <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">dashboard</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">?preview=&lt;subdomain&gt;</span><span class="tag tag-neutral">sell_site</span><span class="tag tag-neutral">prospect_set_claim</span><span class="tag tag-neutral">gen_random_bytes</span><span class="tag tag-neutral">gen_random_uuid</span></div>
@@ -1229,9 +1234,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">🔴 Prod auth Site URL still → app.coreshift.page (breaks Google signup)</div>
-        <div class="card-tags"><span class="tag tag-neutral">auth</span><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">redirect_to=https://upwind.build</span><span class="tag tag-neutral">app.coreshift.page</span><span class="tag tag-neutral">nxrmpeilqxkfshveezfr</span><span class="tag tag-neutral">https://upwind.build</span><span class="tag tag-neutral">https://upwind.build/**</span><span class="tag tag-neutral">app.coreshift.page</span><span class="tag tag-neutral">lnriubajuicrvhfsibpw</span><span class="tag tag-neutral">https://staging.upwind.build</span><span class="tag tag-neutral">APP_URL</span><span class="tag tag-neutral">https://upwind.build</span></div>
-        <div class="card-desc">A test user hit &quot;origin is unreachable&quot; on **app.coreshift.page** completing Google sign-in. The **repo + config are clean** (only cosmetic CI job-name labels reference it); the culprit is the **prod Supabase project&#39;s Auth URL configuration**, never updated in the rebrand (it&#39;s dashboard-only). Google/magic-link pass `redirect_to=https://upwind.build`, but if that host isn&#39;t allow-listed Supabase falls back to the **Site URL** = the retired `app.coreshift.page` → dead. **Fix (Supabase → project `nxrmpeilqxkfshveezfr` → Authentication → URL Configuration):** Site URL → `https://upwind.build`; Redirect URLs → add `https://upwind.build/**`, remove the `app.coreshift.page` entries. Do the same on staging (`lnriubajuicrvhfsibpw` → `https://staging.upwind.build`). Also confirm the prod `APP_URL` secret = `https://upwind.build` (email links). Not fixable via our tools — no auth-config API on the MCP</div>
+        <div class="card-title">🔴 1️⃣ Email deliverability — SPF + Postmark domain records missing (mail lands in junk)</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">@me.com</span><span class="tag tag-neutral">tryupwind.com</span><span class="tag tag-neutral">p=none</span><span class="tag tag-neutral">tryupwind.com</span></div>
+        <div class="card-desc">Reopened after a live partner-sale test: the &quot;Confirm your email&quot; message to an `@me.com` (iCloud, strict) address **went to junk**. A DNS check of `tryupwind.com` shows **no SPF record at all** and **no Postmark DKIM / Return-Path (bounce) CNAMEs** — only a DMARC `p=none` with nothing to align against. DMARC alone is not enough. **Fix:** in Postmark → Sender Signatures/Domains → `tryupwind.com` → DNS Settings, copy the **DKIM** and **Return-Path** records; add them to Cloudflare (Claude can add them the moment the values are pasted, or given Postmark access). Postmark supplies SPF via the Return-Path bounce domain, so no manual SPF include is needed once the Return-Path CNAME is live. Re-test to iCloud + Gmail after propagation. *(The earlier &quot;DMARC done / Postmark verified&quot; note was optimistic — only DMARC was actually in DNS.)*</div>
       </div>
       <div class="card">
         <div class="card-title">2️⃣ Flip Stripe to live keys + trading name</div>
