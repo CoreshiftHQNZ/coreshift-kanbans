@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>47%</strong> complete</div>
-        <div><strong>41</strong>/88 cards done</div>
-        <div>Updated <strong>2026-07-22 00:05 UTC</strong></div>
+        <div><strong>42</strong>/89 cards done</div>
+        <div>Updated <strong>2026-07-22 00:55 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">41</div>
+        <div class="status-num">42</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -920,6 +920,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">🗑️ Delete-site action (frees a workspace slot)</div>
+            <div class="recent-desc">Owned, non-live site cards get a **Delete** button → a confirm dialog (&quot;permanently removes the site and its content · frees up a slot · can&#39;t be undone&quot;) → deletes and reloads so the freed draft slot shows immediately. Backed by a new **`delete_site(p_site)` RPC** (migration 0024, applied to prod): owner-only (`can_manage_account`/`is_app_admin`) with a **money-safety guard** — a site with a live subscription (plan active/past_due or a Stripe sub) is refused (&quot;cancel billing first&quot;), so deletion can&#39;t orphan a subscription. Child rows clean up via existing FKs (cascade for content/domains/leads/assets; set-null keeps ledger/prospect/change-request history). **Verified on prod**: a live site is refused with the guard message, counts unchanged; tsc + build clean, 44/44 tests. LIVE on upwind.build</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">✉️ Transactional emails → Upwind design system</div>
             <div class="recent-desc">Every email the platform sends now shares one branded shell (`functions/_shared/email.ts`): Upwind palette (#5CA6F2 / #15233A / #F4F6FB), the up·wind wordmark, a rounded brand CTA, and a white-label variant (partner name/logo/accent + a &quot;powered by Upwind&quot; line). Email-safe HTML — tables + inline styles + system fonts. Refactored **8 senders + the unsubscribe page** off their bespoke inline HTML (old `#2b5fb0` blue + &quot;⬡ Upwind&quot;): auth-email (magic-link/signup/recovery), send-invite, create-sale-checkout, notify-support, submit-form (lead notifications) — Upwind-branded; send-invitation, send-claim, monthly-report — white-labelled to the partner. Behaviour unchanged (same recipients, subjects, links, suppression, signature verification, white-label From/ReplyTo). Verified: shared module type-checks + renders (deno run), all files parse clean, no old branding left. **On dev + staging; edge functions reach real inboxes only from `main`.** *(Pairs with the still-open email-deliverability live-send test.)*</div>
           </div>
@@ -952,13 +959,6 @@
             <div class="recent-desc">The product is now **Upwind** (Coreshift Limited stays the legal entity / merchant of record). Full cutover, live: marketing at **tryupwind.com**, app at **upwind.build**, published sites at **\*.upwind.page**, custom-domain SaaS fallback `sites.upwind.page`, email `hello@tryupwind.com` (Postmark-verified + DMARC). New per-zone Cloudflare routing on the CoreshiftHq account; 7 proxied DNS records + SaaS fallback set via the CF API; old coreshift.page routes retired (523). Brand palette **#5CA6F2 / #F4F6FB**, lowercase &quot;upwind&quot; wordmark + favicon (stopgap SVG until the exact logo/favicon/og.png assets land). ~150 edits across app/marketing/edge-functions/renderer + 4 wrangler configs. Verified: all 3 surfaces HTTP 200, production smoke green. Internal ids (packages, RPCs, worker names) intentionally unchanged</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Legal — partner-model compliance (LIVE)</div>
-            <div class="recent-desc">Lawyer&#39;s 5 clause additions applied (Platform Agreement 1.7 &quot;who you contract with&quot; + 1.8 &quot;partner-built sites&quot;; Terms; Privacy &quot;leads&quot;; Refunds &quot;build fee&quot;), and the **Partner Agreement published at /partner-agreement** (CoreShift Limited trading as Upwind, commission-ladder table, footer-linked). Partner signup now requires accepting it. *(Two clauses — principal/agent characterisation + buyer-created/self-billing invoicing — still need accountant/lawyer sign-off before onboarding a real partner.)*</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -971,9 +971,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">41</span>
+        <span class="col-count">42</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🗑️ Delete-site action (frees a workspace slot)</div>
+        <div class="card-tags"><span class="tag tag-neutral">dashboard</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">delete_site(p_site)</span><span class="tag tag-neutral">can_manage_account</span><span class="tag tag-neutral">is_app_admin</span></div>
+        <div class="card-desc">Owned, non-live site cards get a **Delete** button → a confirm dialog (&quot;permanently removes the site and its content · frees up a slot · can&#39;t be undone&quot;) → deletes and reloads so the freed draft slot shows immediately. Backed by a new **`delete_site(p_site)` RPC** (migration 0024, applied to prod): owner-only (`can_manage_account`/`is_app_admin`) with a **money-safety guard** — a site with a live subscription (plan active/past_due or a Stripe sub) is refused (&quot;cancel billing first&quot;), so deletion can&#39;t orphan a subscription. Child rows clean up via existing FKs (cascade for content/domains/leads/assets; set-null keeps ledger/prospect/change-request history). **Verified on prod**: a live site is refused with the guard message, counts unchanged; tsc + build clean, 44/44 tests. LIVE on upwind.build</div>
+      </div>
       <div class="card">
         <div class="card-title">✉️ Transactional emails → Upwind design system</div>
         <div class="card-tags"><span class="tag tag-neutral">design</span><span class="tag tag-neutral">email</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">functions/_shared/email.ts</span><span class="tag tag-neutral">#2b5fb0</span><span class="tag tag-neutral">main</span></div>
