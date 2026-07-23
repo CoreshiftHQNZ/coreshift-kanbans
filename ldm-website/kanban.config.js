@@ -7,13 +7,13 @@ module.exports = {
   tagline: "Vehicle finance built for how New Zealand businesses actually operate.",
   description:
     "Standalone finance-first site for LDM Motor Group at finance.ldmmotor.group — " +
-    "one application assessed across a multi-lender panel (UDC preferred, Heartland/Marac, Avanti). " +
+    "one application assessed across a multi-lender panel (UDC Finance, Marac, Avanti). " +
     "Astro static build on Cloudflare Pages with live Motorcentral stock; the calculator and " +
     "three-step application are the conversion surfaces.",
 
-  phase: "Phase 1 · Code",
+  phase: "Phase 2 · Wiring",
   nextMilestone: {
-    name: "Lead relay live (forms → email)",
+    name: "Live systems on: stock feed + lead relay",
     date: "Q3 2026",
   },
 
@@ -82,25 +82,25 @@ module.exports = {
       title: "Phase 1",
       subtitle: "Code",
       window: "Core shipped · July 2026",
-      desc: "The design implemented as an Astro static site on Cloudflare Pages, reviewed and verified against the SEO spec. Remaining: wire the forms to a real lead relay.",
+      desc: "The design implemented as an Astro static site on Cloudflare Pages, reviewed and verified against the SEO spec. Lead relay built and merged; remaining is dashboard config (Turnstile keys, email domain).",
       deliverables: [
         "16 templates + 49 vehicle pages (shipped)",
         "Schema, sitemaps, llms.txt, products API (shipped)",
         "Pages project — previews per branch, prod on main (shipped)",
-        "Lead relay: Cloudflare Email Service + Turnstile",
+        "Lead relay: Cloudflare Email Service + Turnstile (built, pending config)",
       ],
     },
     {
       key: "phase-2",
-      status: "planned",
+      status: "in-progress",
       title: "Phase 2",
       subtitle: "Wiring",
-      window: "Next",
+      window: "Underway · July 2026",
       desc: "Connect the live systems around the static site: stock feed ingest, analytics and measurement.",
       deliverables: [
-        "SFTPGo sidecar → R2 → deploy hook (live stock)",
+        "SFTPGo sidecar → R2 → deploy hook (live, awaiting first push)",
         "GA4 + GSC + Bing + IndexNow + Peec AI",
-        "SUB-PROCESSORS.md + /sub-processors page",
+        "SUB-PROCESSORS.md + /sub-processors page (shipped)",
       ],
     },
     {
