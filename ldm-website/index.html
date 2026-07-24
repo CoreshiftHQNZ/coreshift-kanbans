@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>33%</strong> complete</div>
         <div><strong>8</strong>/24 cards done</div>
-        <div>Updated <strong>2026-07-23 02:48 UTC</strong></div>
+        <div>Updated <strong>2026-07-24 07:10 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -867,7 +867,7 @@
           <div class="link-icon">📡</div>
           <div class="link-text">
             <div class="link-title">Stock feed architecture</div>
-            <div class="link-desc">SFTPGo on Railway → R2 → Pages deploy hook</div>
+            <div class="link-desc">SFTPGo on Fly.io → R2 → Pages deploy hook</div>
           </div>
           <div class="link-arrow">→</div>
         </a>
@@ -1014,14 +1014,14 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Lead relay — built + merged, awaiting config</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-deliverable">deliverable</span></div>
-        <div class="card-desc">Pages Function (Turnstile + honeypot + Cloudflare Email Service) with real form submission, loading states and /sub-processors page, tested end to end with wrangler + browser. Merged to main. Needs: Turnstile keys, Email Sending domain onboarding and Pages secrets</div>
+        <div class="card-title">Lead relay — live, email delivery pending sending domain</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-deliverable">deliverable</span><span class="tag tag-neutral">/v0/</span><span class="tag tag-neutral">LEAD_FROM</span></div>
+        <div class="card-desc">Pages Function (Turnstile + honeypot + Cloudflare Email Service). Turnstile is configured and working on production (real site key live; fixed a missing `/v0/` in the widget script URL that had been blocking every submission), and the Pages secrets are set. Last step: onboard a Cloudflare Email Sending domain so `LEAD_FROM` can send — testing from a Coreshift subdomain now, switches to the client&#39;s domain at go-live once its DNS is on Cloudflare</div>
       </div>
       <div class="card">
         <div class="card-title">Stock feed — live, awaiting first Motorcentral push</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Full pipeline wired and proven end to end: SFTPGo deployed on Railway with a live TCP proxy, a test upload landed in the ldm-stock R2 bucket, R2 vars set on the Pages build env, and the deploy hook is created. Peter confirmed SFTP + full-snapshot pushes (20 Jul); SFTP credentials drafted to send. The only remaining link is Motorcentral scheduling the first real push</div>
+        <div class="card-desc">Full pipeline wired and proven end to end. Motorcentral requires standard SFTP port 22, which Railway&#39;s TCP proxy can&#39;t bind, so the SFTPGo sidecar now runs on **Fly.io** (dedicated IPv4, port 22); a test upload landed in the ldm-stock R2 bucket, R2 vars are set on the Pages build env, and the deploy-hook rule is loaded. New port-22 details drafted to Peter. The only remaining link is Motorcentral scheduling the first real push</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1074,13 +1074,13 @@
       </div>
       <div class="card">
         <div class="card-title">Send Peter the SFTP host/port</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">motorcentral</span></div>
-        <div class="card-desc">Draft filled with the live Railway TCP-proxy endpoint (user `motorcentral`); awaiting password + send</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
+        <div class="card-desc">Peter confirmed Motorcentral needs standard port 22, so the endpoint moved to Fly.io (dedicated IP, port 22). Reply with the new host + port drafted; username/password unchanged. Retire the Railway service once Peter confirms the first push</div>
       </div>
       <div class="card">
         <div class="card-title">Configure the relay (Abe, dashboards)</div>
         <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Done: SFTPGo sidecar deployed on Railway, R2 vars set on the Pages build env. Remaining: Turnstile widget + keys, Email Sending domain onboarding + Pages secrets. R2 scoped-token decision parked</div>
+        <div class="card-desc">Done: Turnstile widget + keys live, all Pages secrets set, R2 vars on the build env, SFTPGo redeployed to Fly.io on port 22. Remaining: onboard a Cloudflare Email Sending domain so lead emails actually send (Coreshift subdomain for now, the client&#39;s domain at go-live)</div>
       </div></div>
     </section>
     <section class="column col-backlog">

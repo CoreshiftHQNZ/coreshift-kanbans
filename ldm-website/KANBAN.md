@@ -19,8 +19,8 @@
 
 ## 🟡 In Progress
 
-- **Lead relay — built + merged, awaiting config** `phase-1` `deliverable` — Pages Function (Turnstile + honeypot + Cloudflare Email Service) with real form submission, loading states and /sub-processors page, tested end to end with wrangler + browser. Merged to main. Needs: Turnstile keys, Email Sending domain onboarding and Pages secrets.
-- **Stock feed — live, awaiting first Motorcentral push** `phase-2` `infra` — Full pipeline wired and proven end to end: SFTPGo deployed on Railway with a live TCP proxy, a test upload landed in the ldm-stock R2 bucket, R2 vars set on the Pages build env, and the deploy hook is created. Peter confirmed SFTP + full-snapshot pushes (20 Jul); SFTP credentials drafted to send. The only remaining link is Motorcentral scheduling the first real push.
+- **Lead relay — live, email delivery pending sending domain** `phase-1` `deliverable` — Pages Function (Turnstile + honeypot + Cloudflare Email Service). Turnstile is configured and working on production (real site key live; fixed a missing `/v0/` in the widget script URL that had been blocking every submission), and the Pages secrets are set. Last step: onboard a Cloudflare Email Sending domain so `LEAD_FROM` can send — testing from a Coreshift subdomain now, switches to the client's domain at go-live once its DNS is on Cloudflare.
+- **Stock feed — live, awaiting first Motorcentral push** `phase-2` `infra` — Full pipeline wired and proven end to end. Motorcentral requires standard SFTP port 22, which Railway's TCP proxy can't bind, so the SFTPGo sidecar now runs on **Fly.io** (dedicated IPv4, port 22); a test upload landed in the ldm-stock R2 bucket, R2 vars are set on the Pages build env, and the deploy-hook rule is loaded. New port-22 details drafted to Peter. The only remaining link is Motorcentral scheduling the first real push.
 
 ## 🚫 Blocked
 
@@ -34,8 +34,8 @@
 
 - **Domain confirmed** `phase-3` `shipped` — Client confirmed finance.ldmmotor.group (Jack, 20 Jul). DNS + hosting access being chased for go-live.
 - **All PRs merged, production current** `phase-1` `shipped` — PR #6 (analytics), #7 (client feedback), #8/#9 (live stock feed) merged to main. Production serves the current build with the client-feedback changes live (Marac naming, /terms page, UDC disclaimer wording). A Cloudflare build-queue outage (20–23 Jul) was bypassed with a direct `wrangler pages deploy`; auto-deploys have since recovered.
-- **Send Peter the SFTP host/port** `phase-2` — Draft filled with the live Railway TCP-proxy endpoint (user `motorcentral`); awaiting password + send.
-- **Configure the relay (Abe, dashboards)** `phase-1` `infra` — Done: SFTPGo sidecar deployed on Railway, R2 vars set on the Pages build env. Remaining: Turnstile widget + keys, Email Sending domain onboarding + Pages secrets. R2 scoped-token decision parked.
+- **Send Peter the SFTP host/port** `phase-2` — Peter confirmed Motorcentral needs standard port 22, so the endpoint moved to Fly.io (dedicated IP, port 22). Reply with the new host + port drafted; username/password unchanged. Retire the Railway service once Peter confirms the first push.
+- **Configure the relay (Abe, dashboards)** `phase-1` `infra` — Done: Turnstile widget + keys live, all Pages secrets set, R2 vars on the build env, SFTPGo redeployed to Fly.io on port 22. Remaining: onboard a Cloudflare Email Sending domain so lead emails actually send (Coreshift subdomain for now, the client's domain at go-live).
 
 ## ⚪ Backlog
 

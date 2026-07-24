@@ -51,7 +51,7 @@ module.exports = {
     {
       icon: "📡",
       title: "Stock feed architecture",
-      desc: "SFTPGo on Railway → R2 → Pages deploy hook",
+      desc: "SFTPGo on Fly.io → R2 → Pages deploy hook",
       url: "https://github.com/CoreshiftHQNZ/ldm-website/blob/main/docs/stock-feed.md",
     },
   ],
