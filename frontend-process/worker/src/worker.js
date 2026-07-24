@@ -572,7 +572,13 @@ function buildIngestDeps(env) {
     callAnthropic: (system, msgs, tools) => callAnthropic(env, system, msgs, tools),
     wasProcessed: (id) => wasProcessed(env, id),
     markProcessed: (id, meta) => markProcessed(env, id, meta),
-    notify: (text) => slackText(env, text),
+    // No `notify` on purpose: the stand-up ingestion digest ("📥 Stand-up
+    // ingested / ✅ Updated (N)…") is intentionally SILENT. The board already
+    // reflects the moves, and only new-idea notifications are wanted in Slack
+    // (notifySlack — a card sent for review; notifyPublish — new cards). The
+    // stand-up router only ever *updates* existing projects (never creates), so
+    // silencing this digest drops no new-idea signal. ingest() skips its Slack
+    // post when deps.notify is absent.
   };
 }
 
