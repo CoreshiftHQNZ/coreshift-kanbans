@@ -16,10 +16,10 @@
 - **Cloudflare Pages project (staging on Coreshift account)** `phase-1` `infra` `shipped` — GitHub-connected: production tracks main, every branch gets a preview deploy. Node 22 pinned. Client-account move happens at go-live.
 - **Production deploy verified on staging URL** `phase-1` `infra` `shipped` — dev → main merged and the site serves at https://ldm-website.pages.dev (the canonical staging address until go-live).
 - **UI/UX audit + full remediation** `phase-1` `shipped` — Site run through the ui-ux-pro-max skill (docs/ui-ux-review.md): WCAG AA contrast tokens, 44px mobile touch targets, 12px caption floor, skip link, reduced-motion, table scopes, focus management, aria-live. PR #3 awaiting merge.
+- **Lead relay — live and proven end to end** `phase-1` `shipped` — Pages Function (Turnstile + honeypot + Cloudflare Email Service): a real submission verifies Turnstile and delivers to the sales inbox, confirmed end to end (24 Jul). Fixed en route — the Turnstile script URL (missing `/v0/`), the send payload (plain address strings, not objects), and `reply_to` (snake_case on the REST API). Sends from a Coreshift Email Sending subdomain for now; `LEAD_FROM` switches to the client's domain at go-live.
 
 ## 🟡 In Progress
 
-- **Lead relay — live, email delivery pending sending domain** `phase-1` `deliverable` — Pages Function (Turnstile + honeypot + Cloudflare Email Service). Turnstile is configured and working on production (real site key live; fixed a missing `/v0/` in the widget script URL that had been blocking every submission), and the Pages secrets are set. Last step: onboard a Cloudflare Email Sending domain so `LEAD_FROM` can send — testing from a Coreshift subdomain now, switches to the client's domain at go-live once its DNS is on Cloudflare.
 - **Stock feed — live, awaiting first Motorcentral push** `phase-2` `infra` — Full pipeline wired and proven end to end. Motorcentral requires standard SFTP port 22, which Railway's TCP proxy can't bind, so the SFTPGo sidecar now runs on **Fly.io** (dedicated IPv4, port 22); a test upload landed in the ldm-stock R2 bucket, R2 vars are set on the Pages build env, and the deploy-hook rule is loaded. New port-22 details drafted to Peter. The only remaining link is Motorcentral scheduling the first real push.
 
 ## 🚫 Blocked
@@ -34,8 +34,8 @@
 
 - **Domain confirmed** `phase-3` `shipped` — Client confirmed finance.ldmmotor.group (Jack, 20 Jul). DNS + hosting access being chased for go-live.
 - **All PRs merged, production current** `phase-1` `shipped` — PR #6 (analytics), #7 (client feedback), #8/#9 (live stock feed) merged to main. Production serves the current build with the client-feedback changes live (Marac naming, /terms page, UDC disclaimer wording). A Cloudflare build-queue outage (20–23 Jul) was bypassed with a direct `wrangler pages deploy`; auto-deploys have since recovered.
-- **Send Peter the SFTP host/port** `phase-2` — Peter confirmed Motorcentral needs standard port 22, so the endpoint moved to Fly.io (dedicated IP, port 22). Reply with the new host + port drafted; username/password unchanged. Retire the Railway service once Peter confirms the first push.
-- **Configure the relay (Abe, dashboards)** `phase-1` `infra` — Done: Turnstile widget + keys live, all Pages secrets set, R2 vars on the build env, SFTPGo redeployed to Fly.io on port 22. Remaining: onboard a Cloudflare Email Sending domain so lead emails actually send (Coreshift subdomain for now, the client's domain at go-live).
+- **Sent Peter the SFTP details; Railway retired** `phase-2` `shipped` — Endpoint moved to Fly.io (dedicated IP, port 22) after Peter confirmed Motorcentral needs standard port 22; new host + port sent, username/password unchanged. Railway SFTPGo service deleted. Awaiting Motorcentral's first push.
+- **Relay configured end to end** `phase-1` `infra` `shipped` — Turnstile widget + keys live, all Pages secrets set, R2 vars on the build env, Email Sending domain onboarded, `LEAD_TO` set to sales@ldmmotor.group. Lead delivery proven end to end (24 Jul).
 
 ## ⚪ Backlog
 
