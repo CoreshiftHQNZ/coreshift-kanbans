@@ -18,9 +18,10 @@
 - **UI/UX audit + full remediation** `phase-1` `shipped` — Site run through the ui-ux-pro-max skill (docs/ui-ux-review.md): WCAG AA contrast tokens, 44px mobile touch targets, 12px caption floor, skip link, reduced-motion, table scopes, focus management, aria-live. PR #3 awaiting merge.
 - **Lead relay — live and proven end to end** `phase-1` `shipped` — Pages Function (Turnstile + honeypot + Cloudflare Email Service): a real submission verifies Turnstile and delivers to the sales inbox, confirmed end to end (24 Jul). Fixed en route — the Turnstile script URL (missing `/v0/`), the send payload (plain address strings, not objects), and `reply_to` (snake_case on the REST API). Sends from a Coreshift Email Sending subdomain for now; `LEAD_FROM` switches to the client's domain at go-live.
 
+- **Stock feed — LIVE with real Motorcentral stock** `phase-2` `infra` `shipped` — First production push landed 24 Jul: 39 live vehicles with photos rendering across the site, replacing the sample dataset. Full loop proven — Motorcentral → SFTP on Fly.io (dedicated IPv4, port 22, after Railway's proxy couldn't bind 22) → R2 → Pages deploy hook → build. Fixed one bug the live data exposed: the feed's image sequence numbers don't always start at 1 (a vehicle can arrive with only `-2.jpg`), so vehicle cards and the homepage hero now resolve photos via `vehicleHero()` instead of assuming `-1.jpg`. A daily automated check watches subsequent pushes.
+
 ## 🟡 In Progress
 
-- **Stock feed — live, awaiting first Motorcentral push** `phase-2` `infra` — Full pipeline wired and proven end to end. Motorcentral requires standard SFTP port 22, which Railway's TCP proxy can't bind, so the SFTPGo sidecar now runs on **Fly.io** (dedicated IPv4, port 22); a test upload landed in the ldm-stock R2 bucket, R2 vars are set on the Pages build env, and the deploy-hook rule is loaded. New port-22 details drafted to Peter. The only remaining link is Motorcentral scheduling the first real push.
 
 ## 🚫 Blocked
 
