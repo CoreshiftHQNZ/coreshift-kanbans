@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>48%</strong> complete</div>
-        <div><strong>46</strong>/96 cards done</div>
-        <div>Updated <strong>2026-07-27 06:09 UTC</strong></div>
+        <div><strong>47%</strong> complete</div>
+        <div><strong>46</strong>/97 cards done</div>
+        <div>Updated <strong>2026-07-27 08:29 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">3</div>
+        <div class="status-num">4</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -1262,13 +1262,18 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week — launch wave</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">Partner journey walk + W1–W4 rebuild</div>
         <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">ux</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Fernoak Digital</span><span class="tag tag-neutral">5f67a99d</span><span class="tag tag-neutral">32488a8</span><span class="tag tag-neutral">bdfd94f</span><span class="tag tag-neutral">tax_residency</span><span class="tag tag-neutral">SUPABASE_URL</span><span class="tag tag-neutral">AUTH_PUBLIC_URL</span><span class="tag tag-neutral">/billing</span><span class="tag tag-neutral">partner_profiles</span><span class="tag tag-neutral">custom_pct</span><span class="tag tag-neutral">status</span><span class="tag tag-neutral">ref_code</span></div>
         <div class="card-desc">Walked journey #2 end to end as a real self-serve partner on production (`Fernoak Digital`, ref `5f67a99d`) and rebuilt what it exposed. **Root cause of nearly every finding: the partner dashboard was the retail dashboard.** Retail is someone looking at their own website; a partner is a third party building for someone else, so the first-person copy was pointed at the wrong person — most visibly a banner telling new partners to *&quot;publish it for US$49/mo&quot;*, money the partner never pays. Shipped `32488a8` → `bdfd94f`: partner front door rebuilt around the offer (headline &quot;You sell it. We build it. You get paid.&quot;, percentage ladder replaced with a live earnings calculator ported from the marketing page so there&#39;s one ladder not two, consent moved above both auth buttons, per-route page title); partner onboarding taken full-width with a 266-country type-to-filter picker (country now persisted — migration 0027 — since `tax_residency` drives GST but payout rails differ by country); nav re-voiced (Sites→**Clients**, Manage access→**Your team**, Manage billing hidden for partners who are never billed by us); new **Your brand** page giving partners the first-ever surface for the white-label fields their customers actually meet, with a live preview of the client dashboard + invitation email; create-site flow forked out of first person. **Earnings truth pass:** &quot;1 more active site → 10%&quot; at zero sites (one more site to reach the rate already shown), the payout minimum stated as both &quot;US$50&quot; and &quot;NZ$85&quot;, a payout form that asked to be filled in while saying to fill it in later, and an empty state directing partners to the staff-only Lead Engine pipeline — which bounces. **Also fixed:** auth emails still carried the raw project ref because the link was built from the reserved `SUPABASE_URL` (`AUTH_PUBLIC_URL` added), and `/billing` showed a raw *&quot;Edge Function returned a non-2xx status code&quot;* to anyone without a Stripe customer. *Checked and found already safe:* partner writes to `partner_profiles` are restricted by column-level grants, so `custom_pct`, `status` and `ref_code` are not partner-writable</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🚧 Journey #3 · Screen 1 — claim invitation email (design signed off, NOT shippable yet)</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">ux</span><span class="tag tag-neutral">trust</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">scratchpad/claim-email-preview.html</span></div>
+        <div class="card-desc">Redrafted from a short &quot;claim it&quot; note into the journey&#39;s biggest trust document: shows the whole path before the customer takes step one. Four numbered steps (create your login → claim &amp; subscribe → put your own web address on it → change anything, whenever, as much as you want), cost table folded into step 2 where the money actually moves and split by who receives it (build fee → partner, hosting → Upwind), CTA repeated inside step 1 next to the instruction it belongs to, and the reassurance block promoted to a full band — **&quot;Nothing here is a trap&quot;** — with four ticked cards: it&#39;s yours, nothing you already have gets touched, you can stop any month, you&#39;re not on your own with it. Draft: `scratchpad/claim-email-preview.html`</div>
       </div>
       <div class="card">
         <div class="card-title">🎯 Next: journey #3 — the cafe owner</div>
