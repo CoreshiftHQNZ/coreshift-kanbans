@@ -107,7 +107,7 @@
       <span>·</span>
       <a href="https://github.com/CoreshiftHQNZ/ghs-law-website" target="_blank" rel="noopener">repo →</a>
       <span>·</span>
-      <span>Milestone: <strong style="color:#fff">M2 — Blueprint</strong></span>
+      <span>Milestone: <strong style="color:#fff">M2 complete → M3</strong></span>
       <span>·</span>
       <span>Updated 27 Jul 2026</span>
     </div>
@@ -124,8 +124,8 @@
       <div class="phase is-done"><div class="phase-top"><div class="phase-n">1</div><span class="pill p-done">Done</span></div><div class="phase-name">Client intake</div><div class="phase-art">docs/intake.md</div></div>
       <div class="phase is-done"><div class="phase-top"><div class="phase-n">2</div><span class="pill p-done">Done</span></div><div class="phase-name">Content collection</div><div class="phase-art">brand.md · content-map.md</div></div>
       <div class="phase is-done"><div class="phase-top"><div class="phase-n">3</div><span class="pill p-done">Done</span></div><div class="phase-name">Information architecture</div><div class="phase-art">ia.md · redirects.md</div></div>
-      <div class="phase is-now"><div class="phase-top"><div class="phase-n">4</div><span class="pill p-now">Next</span></div><div class="phase-name">Design intake</div><div class="phase-art">design.md · section library</div></div>
-      <div class="phase"><div class="phase-top"><div class="phase-n">5</div><span class="pill p-next">Planned</span></div><div class="phase-name">Infra setup</div><div class="phase-art">docs/infra.md</div></div>
+      <div class="phase is-done"><div class="phase-top"><div class="phase-n">4</div><span class="pill p-done">Done</span></div><div class="phase-name">Design intake</div><div class="phase-art">design.md · section library</div></div>
+      <div class="phase is-now"><div class="phase-top"><div class="phase-n">5</div><span class="pill p-now">Next</span></div><div class="phase-name">Infra setup</div><div class="phase-art">docs/infra.md</div></div>
       <div class="phase"><div class="phase-top"><div class="phase-n">6</div><span class="pill p-next">Planned</span></div><div class="phase-name">Live Edit backend</div><div class="phase-art">Supabase + edge inject</div></div>
       <div class="phase"><div class="phase-top"><div class="phase-n">7</div><span class="pill p-next">Planned</span></div><div class="phase-name">Build site</div><div class="phase-art">36 pages</div></div>
       <div class="phase"><div class="phase-top"><div class="phase-n">8</div><span class="pill p-next">Planned</span></div><div class="phase-name">SEO migration</div><div class="phase-art">docs/seo-parity.md</div></div>
@@ -158,6 +158,18 @@
       Being provisioned fresh. Historical data must be exported before the account lapses
       or the firm's entire baseline is gone.</div>
 
+    <div class="note"><strong>The new design fixed two problems at once.</strong>
+      The old palette had no accent colour and one pairing failed WCAG at ~1.3:1; every
+      pairing in the new one passes AA. And the old body font was Adobe Fonts, which
+      can't be self-hosted under our CSP — the new faces are open-licence. Both
+      blockers closed by the design rather than worked around.</div>
+
+    <div class="note"><strong>The design is bilingual. That wasn't in scope.</strong>
+      Full EN/中文 toggle with translated copy. Scope says English-only. Committing
+      means translating ~23,460 words including 15 legal articles, an hreflang and URL
+      strategy, and per-locale editing keys. Recommendation: ship English, structure
+      for /zh/ later, quote translation separately.</div>
+
     <div class="note"><strong>Four blog images look unlicensed.</strong>
       Filenames indicate a Getty asset and images pulled off news sites and Google Images.
       Quarantined rather than migrated — republishing them on a law firm's own site isn't
@@ -170,7 +182,7 @@
     <div class="board">
 
       <section class="column col-blocked">
-        <header class="col-head"><h2>⛔ Blocked / needs client</h2><span class="col-count">6</span></header>
+        <header class="col-head"><h2>⛔ Blocked / needs client</h2><span class="col-count">8</span></header>
         <div class="cards">
           <div class="card"><div class="card-title">Search Console access</div>
             <div class="card-tags"><span class="tag t-seo">seo</span><span class="tag t-risk">launch gate</span><span class="tag t-client">client</span></div>
@@ -184,9 +196,15 @@
           <div class="card"><div class="card-title">Licensing call on 4 blog images</div>
             <div class="card-tags"><span class="tag t-risk">legal</span><span class="tag t-client">client</span></div>
             <div class="card-desc">Quarantined pending a decision. Default: replace with licensed stock.</div></div>
-          <div class="card"><div class="card-title">Approve a substitute for the body font</div>
-            <div class="card-tags"><span class="tag">design</span><span class="tag t-client">client</span></div>
-            <div class="card-desc">The current body face is Adobe Fonts — it can't be self-hosted under our CSP. Need a self-hostable substitute signed off.</div></div>
+          <div class="card"><div class="card-title">Decide: bilingual, or English-only?</div>
+            <div class="card-tags"><span class="tag t-risk">blocks build</span><span class="tag">scope</span><span class="tag t-client">client</span></div>
+            <div class="card-desc">The approved design ships an EN/中文 toggle that scope excludes. Biggest open question on the project — it changes IA, content, SEO and the editing model.</div></div>
+          <div class="card"><div class="card-title">Verify the 8 testimonials are real</div>
+            <div class="card-tags"><span class="tag t-risk">legal</span><span class="tag t-client">client</span></div>
+            <div class="card-desc">Attributed to named people and not on the current site. Fair Trading Act exposure if they aren't genuine — confirm the source or strip the section.</div></div>
+          <div class="card"><div class="card-title">Confirm "80+ years" and office hours</div>
+            <div class="card-tags"><span class="tag">content</span><span class="tag t-client">client</span></div>
+            <div class="card-desc">Both asserted by the design, neither published anywhere today. Hours feed the LocalBusiness schema.</div></div>
           <div class="card"><div class="card-title">Launch target date</div>
             <div class="card-tags"><span class="tag">scope</span><span class="tag t-client">client</span></div>
             <div class="card-desc">Not set. Cutover should be a Tue–Thu morning NZT, never a Friday.</div></div>
@@ -194,11 +212,14 @@
       </section>
 
       <section class="column">
-        <header class="col-head"><h2>▶ Do now</h2><span class="col-count">3</span></header>
+        <header class="col-head"><h2>▶ Do now</h2><span class="col-count">4</span></header>
         <div class="cards">
-          <div class="card"><div class="card-title">Design intake (phase 4)</div>
-            <div class="card-tags"><span class="tag">design</span><span class="tag t-le">live-edit</span></div>
-            <div class="card-desc">Sync the approved design, derive tokens, and map each component to a tagged, insertable section. Needs a design approved in Claude Design first.</div></div>
+          <div class="card"><div class="card-title">Decompose the design into 36 static pages</div>
+            <div class="card-tags"><span class="tag">build</span><span class="tag t-seo">seo</span><span class="tag t-risk">risk</span></div>
+            <div class="card-desc">The prototype is SPA-routed with client-side view switching. Shipping that forfeits all 33 preserved URLs. Must become real pages with real paths.</div></div>
+          <div class="card"><div class="card-title">Self-host fonts + JS, drop Three.js</div>
+            <div class="card-tags"><span class="tag">build</span><span class="tag">perf</span></div>
+            <div class="card-desc">Design loads GSAP, Three.js and Google Fonts from CDNs our CSP forbids. And the hero uses 600 KB of WebGL to draw contour lines — a 2D canvas is visually identical.</div></div>
           <div class="card"><div class="card-title">Resolve the apex-record strategy</div>
             <div class="card-tags"><span class="tag">infra</span><span class="tag t-risk">risk</span></div>
             <div class="card-desc">A CNAME is illegal at the apex and DNS isn't on Cloudflare. Either the registrar supports ALIAS/ANAME or we use their URL forwarding. Must be settled in phase 5, not at cutover.</div></div>
@@ -223,7 +244,7 @@
       </section>
 
       <section class="column col-done">
-        <header class="col-head"><h2>✅ Done</h2><span class="col-count">7</span></header>
+        <header class="col-head"><h2>✅ Done</h2><span class="col-count">8</span></header>
         <div class="cards">
           <div class="card"><div class="card-title">Repo scaffolded, Live Edit kit in</div><div class="card-tags"><span class="tag">phase-0</span><span class="tag t-le">live-edit</span></div><div class="card-desc">Auditor verified. Widget includes go in page source, not middleware — the auditor greps source files, so a middleware-only page silently fails.</div></div>
           <div class="card"><div class="card-title">Intake + scope lock</div><div class="card-tags"><span class="tag">phase-1</span></div><div class="card-desc">Brochure + 15-post blog + enquiry form + Live Edit. Booking, payments and client portal explicitly out.</div></div>
@@ -231,6 +252,7 @@
           <div class="card"><div class="card-title">Full content harvest — 35 pages, 23,460 words</div><div class="card-tags"><span class="tag">phase-2</span></div><div class="card-desc">Includes the 12 hidden team bios and the JS-rendered contact form spec, neither of which static fetching returns.</div></div>
           <div class="card"><div class="card-title">41 assets secured at native resolution</div><div class="card-tags"><span class="tag">phase-2</span></div><div class="card-desc">17 MB archived before Squarespace can be cancelled. 4 quarantined for licensing.</div></div>
           <div class="card"><div class="card-title">Brand profile</div><div class="card-tags"><span class="tag">phase-2</span></div><div class="card-desc">Monochrome, Instrument Serif display. Flagged: no accent colour for CTA or focus states, and one grey pairing fails WCAG contrast badly.</div></div>
+          <div class="card"><div class="card-title">Design tokens + 9-section Live Edit library</div><div class="card-tags"><span class="tag">phase-4</span><span class="tag t-le">live-edit</span></div><div class="card-desc">18 variants, validated: nothing reveal-gated, every key namespaced. Dropped the three kit-default sections — they'd have inserted unstyled markup into the client's pages.</div></div>
           <div class="card"><div class="card-title">IA + URL migration map</div><div class="card-tags"><span class="tag">phase-3</span><span class="tag t-seo">seo</span></div><div class="card-desc">33 of 35 URLs unchanged. Added a /services hub at a new URL — the nine practice areas currently have no landing page.</div></div>
         </div>
       </section>
