@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>45%</strong> complete</div>
-        <div><strong>46</strong>/102 cards done</div>
-        <div>Updated <strong>2026-07-27 22:19 UTC</strong></div>
+        <div><strong>44%</strong> complete</div>
+        <div><strong>46</strong>/104 cards done</div>
+        <div>Updated <strong>2026-07-27 22:31 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">9</div>
+        <div class="status-num">11</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -1262,7 +1262,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week — launch wave</h2>
-        <span class="col-count">9</span>
+        <span class="col-count">11</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1299,6 +1299,16 @@
         <div class="card-title">🚧 Journey #3 · Screens 6–8 — post-payment (decisions logged, not built)</div>
         <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">ux</span><span class="tag tag-neutral">trust</span></div>
         <div class="card-desc">Real test purchase completed end to end: payment → webhook → site live → celebration → dashboard, in about four seconds, site returns 200. **Screen 7 (celebration) — shipped already:** upsell removed (asking for another US$10/mo during the one unambiguously good moment cheapened it; the domain prompt waits on the dashboard instead) and &quot;Go to my site now&quot; opens a new tab *and* dismisses the celebration, so returning lands on the dashboard rather than a party they have already had. **Screen 8 (their dashboard) — agreed changes:** (1) greeting drops the name entirely — it was rendering the email local-part (&quot;Nzricky&quot;) as though it were a person; (2) **&quot;Your Upwind Partner&quot; card under the left nav** with the partner&#39;s logo, name and contact details — Fernoak was invisible as a *contact* on the dashboard, the Stripe checkout and the billing portal, three screens in a row, while the whole trust model says contact your partner first; (3) the orange &quot;Finish your site&quot; banner becomes a **suggestions dropdown on the site card** instead of a second competing CTA; (4) the green domain banner is far too wordy — cut to two buttons, **&quot;Connect your domain&quot;** and **&quot;Buy a domain and connect $10/mth&quot;**; (5) &quot;Your website&quot; subtitle deleted as fluff. ✅ **Billing portal verified working** for the customer: Upwind $49/mo, next billing 27 Aug, card on file, invoice history, cancel available</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🚧 Journey #3 · Screen 9 — the editor, first look (decisions logged)</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">ux</span></div>
+        <div class="card-desc">Tour fires unprompted and opens well: *&quot;This is your website — have a poke around… You really can&#39;t break it.&quot;* Chrome from the retail restructure holds up. **Fixes:** (1) **stale instruction copy** — the editor still tells people to &quot;hit Review &amp; publish&quot;, a button that no longer exists; (2) **fork the tour by user type** — step 6 says &quot;Publish is what puts your changes in front of visitors&quot;, which is right for a customer and wrong for a partner, whose button now reads &quot;Send this offer&quot;; (3) **&quot;Publish&quot; → &quot;Update my site&quot;** once a site is live — after paying, their mental model is *save my changes*, not *publish*. Seven tour steps confirmed fine for a first run. *Site content itself is throwaway test data — ignored.*</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🚧 Journey #3 · Screen 10 — connect a domain (least-built screen in the journey)</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">ux</span><span class="tag tag-neutral">domains</span><span class="tag tag-neutral">www.yourbusiness.com</span></div>
+        <div class="card-desc">Today it is a single text box. Good: it names their site and promises &quot;your free address keeps working too&quot;, which is the right anxiety-killer up front. **Everything else specified in the conversion workstream is missing.** Fixes agreed: (1) **basic step-by-step registrar instructions**, low-jargon, with a **&quot;contact us to help you&quot;** route — this is where a screenshare with the customer happens, and it also carries the &quot;ask Upwind to do it for you&quot; path; (2) **warn that connecting a domain replaces whatever it currently points at** — if it is on a Wix site today, the public sees this instead; (3) **placeholder is `www.yourbusiness.com`**, which teaches the opposite of the apex-primary + www-CNAME policy — fix it; (4) add a **&quot;don&#39;t worry&quot; section**: email, calendars and everything else on the domain are untouched (this is exactly why the policy is A/CNAME-only, never nameservers); (5) **state propagation times**</div>
       </div>
       <div class="card">
         <div class="card-title">🎯 Next: journey #3 — the cafe owner</div>
