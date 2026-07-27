@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>48%</strong> complete</div>
-        <div><strong>46</strong>/95 cards done</div>
-        <div>Updated <strong>2026-07-27 05:19 UTC</strong></div>
+        <div><strong>46</strong>/96 cards done</div>
+        <div>Updated <strong>2026-07-27 06:09 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -829,7 +829,7 @@
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">2</div>
+        <div class="status-num">3</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
@@ -1240,9 +1240,14 @@
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked — remaining go-live gates (need Ricky)</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🔴 Cross-tenant site listing — any signed-in user reads every site row</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">hgfds</span><span class="tag tag-neutral">sites</span><span class="tag tag-neutral">public reads sites</span><span class="tag tag-neutral">USING (true)</span><span class="tag tag-neutral">SELECT</span><span class="tag tag-neutral">authenticated</span><span class="tag tag-neutral">plan</span><span class="tag tag-neutral">stripe_subscription_id</span><span class="tag tag-neutral">past_due</span><span class="tag tag-neutral">anon</span><span class="tag tag-neutral">plan,stripe_subscription_id</span><span class="tag tag-neutral">42501 permission denied</span><span class="tag tag-neutral">can_manage_site(id)</span><span class="tag tag-neutral">security definer</span></div>
+        <div class="card-desc">Found while walking the partner journey: a brand-new partner account with zero sites and zero memberships showed another customer&#39;s site (`hgfds`, *Claimed — not paid*) in their dashboard. **Cause:** `sites` carries an RLS policy `public reads sites` with `USING (true)` alongside a table-level `SELECT` grant to `authenticated`, so RLS never narrows anything for a logged-in user. **Proven:** a partner sees sites belonging to accounts they are not a member of. **Not yet proven, but implied by the table-level grant:** `plan` and `stripe_subscription_id` come through too, i.e. anyone who signs up free could enumerate the customer base and who is `past_due`. *Anonymous access is fine* — `anon` holds column-level grants only, and requesting `plan,stripe_subscription_id` as anon returns `42501 permission denied`, so no billing data is public. **Why it isn&#39;t fixed yet:** the blanket policy is what makes shared preview links work for someone who doesn&#39;t own the site — precisely the cafe-owner-on-an-iPad path. The fix is to narrow the policy to `can_manage_site(id)` and add a `security definer` RPC for the by-subdomain preview lookup, which must be tested against a signed-out preview link before it ships. **Doing this first, as part of journey #3, since that journey exercises exactly the path at risk.**</div>
+      </div>
       <div class="card">
         <div class="card-title">🟡 1️⃣ Email deliverability — auth records are all in place; needs an inbox-placement re-test</div>
         <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">tryupwind.com</span><span class="tag tag-neutral">20260721045428pm._domainkey.tryupwind.com</span><span class="tag tag-neutral">return.tryupwind.com → pm.mtasv.net</span><span class="tag tag-neutral">p=none</span><span class="tag tag-neutral">rua</span><span class="tag tag-neutral">d=tryupwind.com</span><span class="tag tag-neutral">return.tryupwind.com</span><span class="tag tag-neutral">POSTMARK_TOKEN</span><span class="tag tag-neutral">auth-email</span><span class="tag tag-neutral">@me.com</span><span class="tag tag-neutral">tryupwind.com</span><span class="tag tag-neutral">google-site-verification</span><span class="tag tag-neutral">v=spf1 include:spf.mtasv.net ~all</span><span class="tag tag-neutral">@tryupwind.com</span></div>
