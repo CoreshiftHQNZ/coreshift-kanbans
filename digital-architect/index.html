@@ -539,9 +539,10 @@
         <section class="col doing">
           <div class="col-head">
             <div class="col-title"><span class="dot"></span>In progress</div>
-            <div class="col-count">0</div>
+            <div class="col-count">1</div>
           </div>
           <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip ext">triage</span><span class="card-id">GA4-ACRONYM</span><span class="card-date">27 Jul</span></div><h3 class="card-title">GA4 no_match when the property is named by acronym &mdash; PR open, awaiting approval</h3><p class="card-note">Lloyd (GP): &ldquo;GA4 property not fetching&rdquo; on <strong>Maple Community Services</strong> &mdash; access@ has admin and the domain is right, both true. Root cause: <code>findPropertyForDomain</code> only reads GA4 <em>property</em> display names, and Maple&rsquo;s are named <code>MCS - GA4 - Filtered stream</code> under an <em>account</em> named &ldquo;Maple Community Services&rdquo;. Nothing contains &ldquo;maplecommunity&rdquo; &rarr; <code>no_match</code> (GSC connected fine). Fix (<a href="https://github.com/CoreshiftHQNZ/digital-architect/pull/122">PR #122</a>): a third matching tier that runs <em>only</em> when both property-name tiers miss &mdash; match the brand against the GA4 account name, then narrow to properties carrying the brand or the account acronym as a whole word. It refuses to guess: ambiguous accounts (Growth Partners = GP NZ / AU / LP) stay <code>no_match</code> rather than coin-flip. Verified against the live 98-property list: Maple &rarr; <code>properties/309412419</code> (Data API returns 88,514 organic sessions / 5,243 conversions), all 4 other live project domains unchanged, 105-probe sweep = 0 regressions + 14 newly matched. <strong>Gated deliberately</strong> &mdash; it decides which GA4 data feeds a client deliverable, so Sentinel held it for human review instead of auto-shipping. Ticket <code>37f6b5f1</code> still open; no reply sent yet. Follow-up: a manual property picker for genuinely ambiguous accounts.</p></article>
           </div>
         </section>
 
