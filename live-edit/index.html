@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>47%</strong> complete</div>
-        <div><strong>48</strong>/102 cards done</div>
-        <div>Updated <strong>2026-07-27 23:29 UTC</strong></div>
+        <div><strong>48</strong>/103 cards done</div>
+        <div>Updated <strong>2026-07-27 23:30 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -829,7 +829,7 @@
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">3</div>
+        <div class="status-num">4</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
@@ -1250,9 +1250,14 @@
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked — remaining go-live gates (need Ricky)</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🟠 Stripe product description still reads “Description goes here”</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">needs-ricky</span></div>
+        <div class="card-desc">Visible to every paying customer. Expanding **View details** on the checkout page shows the recurring line as *Upwind — “Description goes here” — Billed monthly*, next to a build line that now reads properly (“Website build by Fernoak Digital (one-off)”). It&#39;s the placeholder left on the product when the new Upwind Stripe account was set up, and it&#39;s a Dashboard field, not code — **Stripe → Product catalogue → Upwind → Description**. Needs doing in **both** test and live mode (they&#39;re separate objects). Suggested: *“Your website, hosted, live and editable — unlimited changes.”*</div>
+      </div>
       <div class="card">
         <div class="card-title">🔴 Cross-tenant site listing — any signed-in user reads every site row</div>
         <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">hgfds</span><span class="tag tag-neutral">sites</span><span class="tag tag-neutral">public reads sites</span><span class="tag tag-neutral">USING (true)</span><span class="tag tag-neutral">SELECT</span><span class="tag tag-neutral">authenticated</span><span class="tag tag-neutral">plan</span><span class="tag tag-neutral">stripe_subscription_id</span><span class="tag tag-neutral">past_due</span><span class="tag tag-neutral">anon</span><span class="tag tag-neutral">plan,stripe_subscription_id</span><span class="tag tag-neutral">42501 permission denied</span><span class="tag tag-neutral">can_manage_site(id)</span><span class="tag tag-neutral">security definer</span></div>
