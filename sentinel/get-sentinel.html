@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Get Sentinel on your project — Coreshift</title>
+<style>
+  :root{
+    --navy:#0F1E3D; --navy-soft:#1A2A4F; --teal:#14B8A6; --teal-dark:#0D9488;
+    --teal-light:#CCFBF1; --amber:#F59E0B; --gray:#64748B; --gray-light:#E2E8F0;
+    --gray-lighter:#F1F5F9; --bg:#F8FAFC; --card:#FFFFFF; --text:#1E293B;
+    --text-muted:#475569; --text-soft:#94A3B8;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter","Helvetica Neue",Arial,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;font-size:15.5px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:56px 24px 96px;}
+  header.cover{border-bottom:1px solid var(--gray-light);padding-bottom:32px;margin-bottom:40px;}
+  .eyebrow{color:var(--teal-dark);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px;}
+  h1{color:var(--navy);font-size:40px;line-height:1.1;letter-spacing:-.02em;margin:0 0 12px;}
+  .lede{color:var(--text-muted);font-size:18px;margin:0;}
+  h2{color:var(--navy);font-size:22px;margin:44px 0 14px;letter-spacing:-.01em;}
+  h3{color:var(--navy);font-size:16px;margin:24px 0 8px;}
+  p{margin:0 0 14px;}
+  a{color:var(--teal-dark);text-decoration:none;border-bottom:1px solid rgba(13,148,136,.3);}
+  a:hover{border-color:var(--teal-dark);}
+  strong{color:var(--navy);}
+  code{font-family:"SF Mono",Consolas,Monaco,monospace;background:var(--gray-lighter);color:var(--navy);padding:2px 6px;border-radius:4px;font-size:.86em;border:1px solid var(--gray-light);}
+  .cta{display:inline-block;background:var(--teal);color:#04211d;font-weight:700;padding:12px 20px;border-radius:8px;border:0;margin:6px 0 4px;}
+  .cta:hover{background:var(--teal-dark);color:#fff;}
+  .tracks{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0 8px;}
+  .track{background:var(--card);border:1px solid var(--gray-light);border-radius:12px;padding:18px 20px;}
+  .track h3{margin-top:0;}
+  .track .tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:var(--teal-light);color:var(--teal-dark);margin-bottom:10px;}
+  .track ul{margin:8px 0 0;padding-left:18px;}
+  .track li{margin-bottom:5px;font-size:14px;color:var(--text-muted);}
+  .step{display:flex;gap:16px;margin:22px 0;}
+  .step .n{flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;}
+  .step .body{flex:1;}
+  .step .body h3{margin-top:2px;}
+  pre{background:var(--navy);color:#CADCFC;padding:18px 20px;border-radius:10px;overflow-x:auto;font-size:12.6px;line-height:1.55;margin:12px 0;}
+  pre code{background:transparent;color:inherit;border:0;padding:0;font-size:inherit;}
+  .callout{background:var(--teal-light);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:14px 18px;margin:16px 0;color:var(--navy);font-size:14.5px;}
+  .callout.amber{background:#FEF3C7;border-left-color:var(--amber);color:#7c4a03;}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;background:var(--card);border-radius:8px;overflow:hidden;box-shadow:0 0 0 1px var(--gray-light);}
+  th{background:var(--gray-lighter);color:var(--navy);text-align:left;padding:10px 14px;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;}
+  td{padding:10px 14px;border-top:1px solid var(--gray-lighter);vertical-align:top;color:var(--text);}
+  .foot{margin-top:56px;padding-top:24px;border-top:1px solid var(--gray-light);color:var(--text-soft);font-size:13px;}
+  @media (max-width:640px){.tracks{grid-template-columns:1fr;}h1{font-size:32px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="cover">
+    <div class="eyebrow">Coreshift · Self-serve</div>
+    <h1>Get Sentinel on your project</h1>
+    <p class="lede">Every Coreshift build — app or website — ships with Sentinel monitoring. You can onboard yours yourself; you don't need to go through Abe to start.</p>
+  </header>
+
+  <p>Sentinel is Coreshift's monitoring layer: uptime, security auditing, and a support path, contractually promised on every build. This page is how <em>anyone</em> at Coreshift gets it onto their project. It takes about 10 minutes of your time; the rest is wired for you.</p>
+
+  <h2>1 · Which track are you?</h2>
+  <div class="tracks">
+    <div class="track">
+      <span class="tag">Website build</span>
+      <h3>Static marketing site</h3>
+      <ul>
+        <li>Cloudflare Pages, no database, no logins</li>
+        <li>e.g. a brochure / lead-gen site</li>
+        <li>Sentinel gives: uptime + a <strong>weekly endpoint security audit</strong></li>
+      </ul>
+    </div>
+    <div class="track">
+      <span class="tag">Product / app</span>
+      <h3>App with accounts + data</h3>
+      <ul>
+        <li>Railway + Supabase</li>
+        <li>Has users, a database, server logic</li>
+        <li>Sentinel gives: the full picture — advisor scans, uptime, error monitoring, bug intake</li>
+      </ul>
+    </div>
+  </div>
+  <p style="font-size:14.5px;color:var(--text-muted)">Not sure? If it has logins or stores user data, it's an <strong>app</strong>. If it's a static site with just a contact form, it's a <strong>website</strong>.</p>
+
+  <h2>2 · Register it in Sentinel yourself</h2>
+  <div class="step">
+    <div class="n">A</div>
+    <div class="body">
+      <h3>Open Sentinel and onboard</h3>
+      <p>Go to <a href="https://sentinel.coreshifthq.com/maintenance">sentinel.coreshifthq.com/maintenance</a>, sign in with your Coreshift Google account, and click <strong>Onboard an app</strong>. Fill in the slug, display name, and GitHub repo.</p>
+      <div class="callout amber">
+        <strong>Website builds — one extra field for now:</strong> the current form doesn't capture your live URL, which is what the weekly endpoint audit points at. After you register, drop the production URL in <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/">#sentinel</a> (or the onboarding request) so it gets set as <code>primary_url</code>. The upcoming onboarding wizard will ask for this directly.
+      </div>
+    </div>
+  </div>
+
+  <h2>3 · Make your repo Sentinel-ready</h2>
+  <p>Do this in your own repo — paste the block for your track into a Claude Code session opened in that repo. It sets up the security + observability baseline so Sentinel finds a clean project.</p>
+
+  <h3>App track — paste this into Claude Code</h3>
+  <pre><code>Bootstrap &lt;app-slug&gt; to Coreshift's secure + observable baseline before feature work:
+1. Supabase — RLS deny-by-default on every new table from the first migration; turn
+   on HIBP leaked-password protection (prod + staging). Both are Coreshift standards.
+2. Sentry — create &lt;UPPER&gt;-BACKEND + &lt;UPPER&gt;-FRONTEND projects in the coreshift-hq
+   org; wire the DSNs + environment tags.
+3. Heartbeat — add a GET route that reads ?marker and calls Sentry.captureMessage,
+   guarded by a shared SENTRY_HEARTBEAT_TOKEN header.
+4. Report Issue widget — add it pointed at KC's report-issue Edge Function with
+   appId: "&lt;app-slug&gt;".
+5. Env vars — the Sentry DSNs, SENTRY_HEARTBEAT_TOKEN, and the report-issue endpoint,
+   on staging + prod.
+Goal: by first deploy the app reports errors, answers a heartbeat, accepts bug reports,
+and passes the advisor baseline.</code></pre>
+
+  <h3>Website track — the checklist</h3>
+  <ul>
+    <li>Add a <code>_headers</code> file (HSTS + CSP + nosniff + frame + referrer). Copy-paste starter: <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#onboarding">Cloudflare Pages security-headers recipe</a> — roll CSP <strong>Report-Only</strong> first, then enforce.</li>
+    <li>Contact form behind <strong>Cloudflare Turnstile</strong> (both the secret and the widget).</li>
+    <li>CI deploy on push (GitHub Actions → <code>wrangler pages deploy</code>).</li>
+    <li>Then register in Sentinel with the live URL (step 2). The weekly endpoint audit picks it up automatically — no widget needed; your <strong>contact form is the support intake</strong>.</li>
+  </ul>
+
+  <h2>4 · What ops wires for you (you don't chase anyone)</h2>
+  <p>A few steps need someone with admin access or the Privacy Officer. Registering in Sentinel is the signal — you're not blocked, and you don't need to DM Abe. These get picked up from the queue:</p>
+  <table>
+    <tr><th>Step</th><th>Track</th><th>Who</th></tr>
+    <tr><td>Sentry projects + alert rules</td><td>App</td><td>Ops</td></tr>
+    <tr><td>Railway env vars / secrets</td><td>App</td><td>Ops</td></tr>
+    <tr><td>Better Stack uptime monitor</td><td>Both</td><td>Ops</td></tr>
+    <tr><td>Postmark sender domain verify</td><td>Both</td><td>Ops</td></tr>
+    <tr><td>Turnstile keys (client's CF account)</td><td>Website</td><td>Ops</td></tr>
+    <tr><td>Privacy Impact Assessment sign-off</td><td>Both</td><td>Privacy Officer (Keitha)</td></tr>
+  </table>
+
+  <h2>What you get</h2>
+  <p>Once you're registered and live: a per-app view in the Sentinel dashboard, uptime alerting, a weekly security audit (endpoint hygiene for websites, advisor scans for apps), and — for apps — error monitoring and a bug-report → GitHub-issue path. Support runs 9am–5pm NZ.</p>
+
+  <div class="foot">
+    <p>Questions or the human-wired bits: <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/">#sentinel</a>. Full detail: the <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#onboarding">Onboarding playbook</a> (Track A / Track B) and <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#cloning">PLAY 9</a> for the app deep-dive.</p>
+    <p>Internal · Coreshift HQ · self-serve onboarding</p>
+  </div>
+</div>
+</body>
+</html>
