@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>46%</strong> complete</div>
-        <div><strong>46</strong>/100 cards done</div>
-        <div>Updated <strong>2026-07-27 08:56 UTC</strong></div>
+        <div><strong>46</strong>/101 cards done</div>
+        <div>Updated <strong>2026-07-27 20:29 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">7</div>
+        <div class="status-num">8</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -1262,7 +1262,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week — launch wave</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">8</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1289,6 +1289,11 @@
         <div class="card-title">🚧 Journey #3 · Screen 4 — &quot;confirm your plan&quot; (redesign agreed, not built)</div>
         <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">ux</span><span class="tag tag-neutral">trust</span><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">tel:</span></div>
         <div class="card-desc">The commitment moment, and today a lone card floating dead-centre in white. Keeps: both prices stated, partner branding, annual as visual default, USD note. **Agreed changes:** (1) **show the annual saving** — $499 vs $588 is $89 / two months free, currently unstated and the cheapest conversion win in the journey; (2) **line-item it as &quot;Pay today&quot; and then the monthly/annual charge** — nothing totals the US$1,299 actually leaving their account on the annual path, and someone clicking &quot;Continue — annual&quot; expecting $499 gets the shock on Stripe&#39;s page (the most likely source of refund requests); (3) **&quot;Confirm your plan&quot; → &quot;Choose how you&#39;d like to pay&quot;**; (4) add the reassurance promised in the email — cancel anytime, it&#39;s yours, nothing you already have gets touched — since this is the point of maximum anxiety and none of it is here; (5) **&quot;Need a hand? Call Sam 021 000 000&quot;** centred at the bottom as a `tel:` link, pulled from the partner&#39;s support phone</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🚧 Journey #3 · Screen 5 — Stripe checkout (mostly good; three changes)</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">trust</span><span class="tag tag-neutral">create-checkout/index.ts:127</span><span class="tag tag-neutral">allow_promotion_codes: &#39;true&#39;</span></div>
+        <div class="card-desc">**First live proof the Stripe rebrand worked:** the page reads **&quot;Subscribe to Upwind&quot;** with the swoosh logo, and the old &quot;Lite Websites / Try Coreshift Website&quot; leak that kicked this whole thread off is gone — that red gate is closed. Email pre-filled, country correct, Link + Amex/UnionPay offered, and Stripe states **$1,299.00 then $499.00 per year**, which is precisely the total Screen 4 refuses to show. Statement descriptor added by Ricky. **Changes:** (1) **🔴 the partner disappears entirely at the moment of payment** — every prior screen carried Fernoak, then the cafe owner pays a company they have never heard of. We are merchant of record so their logo can&#39;t replace ours, but Checkout takes a description line: add *&quot;Website built by Fernoak Digital&quot;* so the connection survives the handover. (2) **🔴 the build fee is invisible** — one total, no breakout of US$800 build + US$499 hosting; Stripe keeps line items under a collapsed **Details ▾**, so expand it or carry the split in the description. (3) **Kill the promo box** — on a partner-negotiated price &quot;Add code&quot; invites *&quot;what code? am I not getting the best price?&quot;*. One line: `create-checkout/index.ts:127` sets `allow_promotion_codes: &#39;true&#39;`; removing it removes the field. Nice-to-have: tell them what shows on their bank statement, and that the site goes live straight after paying</div>
       </div>
       <div class="card">
         <div class="card-title">🎯 Next: journey #3 — the cafe owner</div>
