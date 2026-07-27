@@ -134,7 +134,7 @@
       <div class="phase is-now"><div class="phase-top"><div class="phase-n">7</div><span class="pill p-now">EN done</span></div><div class="phase-name">Build site</div><div class="phase-art">35 EN live · 中文 awaits translation</div></div>
       <div class="phase is-done"><div class="phase-top"><div class="phase-n">8</div><span class="pill p-done">Done</span></div><div class="phase-name">SEO migration</div><div class="phase-art">parity green · 0 regressions</div></div>
       <div class="phase is-done"><div class="phase-top"><div class="phase-n">9</div><span class="pill p-done">Done</span></div><div class="phase-name">QA acceptance</div><div class="phase-art">a11y 100 · 0 failures</div></div>
-      <div class="phase"><div class="phase-top"><div class="phase-n">10</div><span class="pill p-next">Planned</span></div><div class="phase-name">Launch + handover</div><div class="phase-art">DNS cutover · edit guide</div></div>
+      <div class="phase is-done"><div class="phase-top"><div class="phase-n">10</div><span class="pill p-done">Done</span></div><div class="phase-name">Launch + handover</div><div class="phase-art">runbook written</div></div>
     </div>
   </section>
 
@@ -167,6 +167,13 @@
       pairing in the new one passes AA. And the old body font was Adobe Fonts, which
       can't be self-hosted under our CSP — the new faces are open-licence. Both
       blockers closed by the design rather than worked around.</div>
+
+    <div class="note"><strong>Everything buildable is built.</strong>
+      Enquiry form delivering via Postmark, CSP hardened to a script hash with no
+      unsafe-inline, 13 Chinese pages covering the whole marketing site, and
+      <code>docs/launch.md</code> turns cutover into a checklist. What remains is
+      approval and access — two PRs to merge, a GitHub App to install, Search
+      Console, and the client's sign-offs.</div>
 
     <div class="note"><strong>SEO parity is green — 0 regressions across all 34 old URLs.</strong>
       32 answer 200 direct at exactly the old path; only the two mapped redirects fire.
