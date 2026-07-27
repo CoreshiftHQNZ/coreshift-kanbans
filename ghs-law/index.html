@@ -107,7 +107,7 @@
       <span>·</span>
       <a href="https://github.com/CoreshiftHQNZ/ghs-law-website" target="_blank" rel="noopener">repo →</a>
       <span>·</span>
-      <a href="https://ghs-law.pages.dev" target="_blank" rel="noopener">staging →</a>
+      <a href="https://ghs.coreshift.page" target="_blank" rel="noopener">ghs.coreshift.page →</a>
       <span>·</span>
       <span>Milestone: <strong style="color:#fff">M3 — building on staging</strong></span>
       <span>·</span>
@@ -169,7 +169,7 @@
       blockers closed by the design rather than worked around.</div>
 
     <div class="note"><strong>The English site is built and live on staging.</strong>
-      35 pages at <a href="https://ghs-law.pages.dev">ghs-law.pages.dev</a>, Live Edit
+      35 pages at <a href="https://ghs.coreshift.page">ghs.coreshift.page</a>, Live Edit
       auditor READY with every page scanned. All 35 old URLs verified 200 direct against
       the deployment — only the two mapped redirects fire. Images cut 12.3 MB to 2.2 MB;
       fonts, GSAP and the widget self-hosted so the CSP stays default-src 'self'.
@@ -232,11 +232,8 @@
       </section>
 
       <section class="column">
-        <header class="col-head"><h2>▶ Do now</h2><span class="col-count">6</span></header>
+        <header class="col-head"><h2>▶ Do now</h2><span class="col-count">5</span></header>
         <div class="cards">
-          <div class="card"><div class="card-title">Add one DNS record for ghs.coreshift.page</div>
-            <div class="card-tags"><span class="tag t-risk">blocked</span><span class="tag">infra</span></div>
-            <div class="card-desc">CNAME ghs -> ghs-law.pages.dev, proxied. The domain is already attached to the Pages project and waiting. The local wrangler token is zone-read-only so it couldn't be written automatically.</div></div>
           <div class="card"><div class="card-title">Design the /zh/ tree + hreflang</div>
             <div class="card-tags"><span class="tag t-seo">seo</span><span class="tag">i18n</span></div>
             <div class="card-desc">Done in docs/ia.md §8. Subdirectory not subdomain, self-canonicals, reciprocal hreflang, no Accept-Language redirect, language switch preserves the current page.</div></div>
@@ -271,7 +268,7 @@
       </section>
 
       <section class="column col-done">
-        <header class="col-head"><h2>✅ Done</h2><span class="col-count">8</span></header>
+        <header class="col-head"><h2>✅ Done</h2><span class="col-count">9</span></header>
         <div class="cards">
           <div class="card"><div class="card-title">Repo scaffolded, Live Edit kit in</div><div class="card-tags"><span class="tag">phase-0</span><span class="tag t-le">live-edit</span></div><div class="card-desc">Auditor verified. Widget includes go in page source, not middleware — the auditor greps source files, so a middleware-only page silently fails.</div></div>
           <div class="card"><div class="card-title">Intake + scope lock</div><div class="card-tags"><span class="tag">phase-1</span></div><div class="card-desc">Brochure + 15-post blog + enquiry form + Live Edit. Booking, payments and client portal explicitly out.</div></div>
@@ -279,6 +276,7 @@
           <div class="card"><div class="card-title">Full content harvest — 35 pages, 23,460 words</div><div class="card-tags"><span class="tag">phase-2</span></div><div class="card-desc">Includes the 12 hidden team bios and the JS-rendered contact form spec, neither of which static fetching returns.</div></div>
           <div class="card"><div class="card-title">41 assets secured at native resolution</div><div class="card-tags"><span class="tag">phase-2</span></div><div class="card-desc">17 MB archived before Squarespace can be cancelled. 4 quarantined for licensing.</div></div>
           <div class="card"><div class="card-title">Brand profile</div><div class="card-tags"><span class="tag">phase-2</span></div><div class="card-desc">Monochrome, Instrument Serif display. Flagged: no accent colour for CTA or focus states, and one grey pairing fails WCAG contrast badly.</div></div>
+          <div class="card"><div class="card-title">Staging alias live on ghs.coreshift.page</div><div class="card-tags"><span class="tag">phase-5</span><span class="tag">infra</span></div><div class="card-desc">DNS couldn't be written (read-only zone scope, no DNS tool in the connector) so it's served by a small Worker route instead — which also rewrites Pages' absolute redirect Locations so they don't bounce visitors onto pages.dev.</div></div>
           <div class="card"><div class="card-title">Design tokens + 9-section Live Edit library</div><div class="card-tags"><span class="tag">phase-4</span><span class="tag t-le">live-edit</span></div><div class="card-desc">18 variants, validated: nothing reveal-gated, every key namespaced. Dropped the three kit-default sections — they'd have inserted unstyled markup into the client's pages.</div></div>
           <div class="card"><div class="card-title">IA + URL migration map</div><div class="card-tags"><span class="tag">phase-3</span><span class="tag t-seo">seo</span></div><div class="card-desc">33 of 35 URLs unchanged. Added a /services hub at a new URL — the nine practice areas currently have no landing page.</div></div>
         </div>
