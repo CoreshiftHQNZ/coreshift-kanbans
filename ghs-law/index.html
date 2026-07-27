@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>GHS Law Website — Kanban</title>
+  <style>
+    :root {
+      --ink: #0B0B0C;
+      --ink-soft: #1C1C1F;
+      --ink-line: #2A2A2E;
+      --paper: #FAFAFA;
+      --card: #FFFFFF;
+      --line: #E4E4E7;
+      --text: #18181B;
+      --muted: #52525B;
+      --soft: #A1A1AA;
+      --green: #15803D;  --green-bg: #DCFCE7;
+      --amber: #B45309;  --amber-bg: #FEF3C7;
+      --red: #B91C1C;    --red-bg: #FEE2E2;
+      --blue: #1D4ED8;   --blue-bg: #DBEAFE;
+      --violet:#6D28D9;  --violet-bg:#EDE9FE;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; background: var(--paper); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+
+    header.page-head { background: var(--ink); color: #fff; padding: 30px 0 26px; }
+    .wrap { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+    .page-brand { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: #A1A1AA; }
+    h1 { margin: 8px 0 6px; font-size: 30px; letter-spacing: -.02em; font-weight: 600; }
+    .page-sub { color: #D4D4D8; max-width: 74ch; margin: 0; }
+    .page-meta { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 12.5px; color: #A1A1AA; }
+    .page-meta a { color: #E4E4E7; }
+
+    section { padding: 34px 0 6px; }
+    .section-head { font-size: 17px; margin: 0 0 4px; letter-spacing: -.01em; }
+    .section-sub { color: var(--muted); margin: 0 0 18px; max-width: 80ch; }
+    code { background: #EFEFF1; padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
+
+    /* phase strip */
+    .phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 10px; }
+    .phase { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+    .phase-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .phase-n { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center;
+               font-size: 11.5px; font-weight: 700; background: #EFEFF1; color: var(--muted); }
+    .phase-name { font-weight: 600; font-size: 13px; line-height: 1.3; }
+    .phase-art { color: var(--soft); font-size: 11.5px; margin-top: 3px; word-break: break-word; }
+    .pill { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+            padding: 2px 7px; border-radius: 999px; }
+    .p-done { background: var(--green-bg); color: var(--green); }
+    .p-now  { background: var(--blue-bg);  color: var(--blue); }
+    .p-block{ background: var(--red-bg);   color: var(--red); }
+    .p-next { background: #EFEFF1; color: var(--muted); }
+    .phase.is-done { border-color: #BBF7D0; }
+    .phase.is-now  { border-color: #BFDBFE; box-shadow: 0 0 0 3px #EFF6FF; }
+    .phase.is-done .phase-n { background: var(--green-bg); color: var(--green); }
+    .phase.is-now  .phase-n { background: var(--blue-bg);  color: var(--blue); }
+
+    /* board */
+    .board { display: grid; grid-template-columns: repeat(auto-fit, minmax(272px, 1fr)); gap: 14px; align-items: start; }
+    .column { background: #F4F4F5; border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+    .col-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .col-head h2 { font-size: 13px; margin: 0; letter-spacing: .01em; }
+    .col-count { font-size: 11.5px; color: var(--muted); background: #fff; border: 1px solid var(--line);
+                 border-radius: 999px; padding: 1px 8px; }
+    .cards { display: flex; flex-direction: column; gap: 9px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 9px; padding: 11px 12px; }
+    .card-title { font-weight: 600; font-size: 13.5px; margin-bottom: 5px; letter-spacing: -.005em; }
+    .card-desc { color: var(--muted); font-size: 12.5px; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 6px; }
+    .tag { font-size: 10.5px; padding: 1px 6px; border-radius: 5px; background: #EFEFF1; color: var(--muted); }
+    .t-seo { background: var(--violet-bg); color: var(--violet); }
+    .t-le  { background: var(--blue-bg);   color: var(--blue); }
+    .t-risk{ background: var(--red-bg);    color: var(--red); }
+    .t-client { background: var(--amber-bg); color: var(--amber); }
+    .col-blocked { background: #FEF2F2; border-color: #FECACA; }
+    .col-done .card-title { color: var(--muted); }
+
+    .note { background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--ink);
+            border-radius: 9px; padding: 13px 15px; margin-bottom: 10px; }
+    .note strong { display: block; margin-bottom: 3px; }
+    footer { color: var(--soft); font-size: 12px; padding: 28px 0 40px; }
+    @media (max-width: 640px) { h1 { font-size: 24px; } }
+  </style>
+</head>
+<body>
+
+<header class="page-head">
+  <div class="wrap">
+    <div class="page-brand">Coreshift · Client Website Build</div>
+    <h1>GHS Law — Website Rebuild</h1>
+    <p class="page-sub">
+      Rebuild of <strong>ghslaw.co.nz</strong> for Gurnell Harrison Stanley, Hamilton.
+      Off Squarespace onto the Coreshift static + Cloudflare Pages stack, with Live Edit
+      baked in so the firm can edit their own site. Same-domain replatform — the entire
+      job is to add capability without losing a single ranking.
+    </p>
+    <div class="page-meta">
+      <span>Coreshift × GHS Law</span>
+      <span>·</span>
+      <a href="https://github.com/CoreshiftHQNZ/ghs-law-website" target="_blank" rel="noopener">repo →</a>
+      <span>·</span>
+      <span>Milestone: <strong style="color:#fff">M2 — Blueprint</strong></span>
+      <span>·</span>
+      <span>Updated 27 Jul 2026</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <h2 class="section-head">Phases</h2>
+    <p class="section-sub">The <code>coreshift-site-builder</code> workflow. Detail lives in <code>docs/STATUS.md</code> in the build repo.</p>
+    <div class="phases">
+      <div class="phase is-done"><div class="phase-top"><div class="phase-n">0</div><span class="pill p-done">Done</span></div><div class="phase-name">Project setup</div><div class="phase-art">repo + Live Edit kit</div></div>
+      <div class="phase is-done"><div class="phase-top"><div class="phase-n">1</div><span class="pill p-done">Done</span></div><div class="phase-name">Client intake</div><div class="phase-art">docs/intake.md</div></div>
+      <div class="phase is-done"><div class="phase-top"><div class="phase-n">2</div><span class="pill p-done">Done</span></div><div class="phase-name">Content collection</div><div class="phase-art">brand.md · content-map.md</div></div>
+      <div class="phase is-done"><div class="phase-top"><div class="phase-n">3</div><span class="pill p-done">Done</span></div><div class="phase-name">Information architecture</div><div class="phase-art">ia.md · redirects.md</div></div>
+      <div class="phase is-now"><div class="phase-top"><div class="phase-n">4</div><span class="pill p-now">Next</span></div><div class="phase-name">Design intake</div><div class="phase-art">design.md · section library</div></div>
+      <div class="phase"><div class="phase-top"><div class="phase-n">5</div><span class="pill p-next">Planned</span></div><div class="phase-name">Infra setup</div><div class="phase-art">docs/infra.md</div></div>
+      <div class="phase"><div class="phase-top"><div class="phase-n">6</div><span class="pill p-next">Planned</span></div><div class="phase-name">Live Edit backend</div><div class="phase-art">Supabase + edge inject</div></div>
+      <div class="phase"><div class="phase-top"><div class="phase-n">7</div><span class="pill p-next">Planned</span></div><div class="phase-name">Build site</div><div class="phase-art">36 pages</div></div>
+      <div class="phase"><div class="phase-top"><div class="phase-n">8</div><span class="pill p-next">Planned</span></div><div class="phase-name">SEO migration</div><div class="phase-art">docs/seo-parity.md</div></div>
+      <div class="phase"><div class="phase-top"><div class="phase-n">9</div><span class="pill p-next">Planned</span></div><div class="phase-name">QA acceptance</div><div class="phase-art">docs/qa-report.md</div></div>
+      <div class="phase"><div class="phase-top"><div class="phase-n">10</div><span class="pill p-next">Planned</span></div><div class="phase-name">Launch + handover</div><div class="phase-art">DNS cutover · edit guide</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-head">What the discovery turned up</h2>
+    <p class="section-sub">Findings that changed the plan, not just filled it in.</p>
+
+    <div class="note"><strong>The team bios were nearly lost.</strong>
+      All 12 bios live on <code>/team-blocks</code> — a NOINDEX page absent from the sitemap,
+      reachable only via popup anchors. A sitemap-driven harvest drops 1,341 words covering
+      every person in the firm and nobody notices until the client asks. Recovered.</div>
+
+    <div class="note"><strong>Those bios are invisible to Google today.</strong>
+      Because they sit on a NOINDEX page, none of that content ranks. Moving it inline on
+      <code>/our-team</code> makes it crawlable for the first time — the single biggest
+      free SEO gain in the project.</div>
+
+    <div class="note"><strong>33 of 35 URLs keep their exact path.</strong>
+      Same domain, same slugs, www stays canonical. Only <code>/home → /</code> and
+      <code>/team-blocks → /our-team</code> need 301s. This is about as low-risk as a
+      migration gets — provided nobody "tidies" a slug.</div>
+
+    <div class="note"><strong>The site has no analytics at all.</strong>
+      No GA4, no GTM, no pixel — only Squarespace's built-in, which doesn't survive.
+      Being provisioned fresh. Historical data must be exported before the account lapses
+      or the firm's entire baseline is gone.</div>
+
+    <div class="note"><strong>Four blog images look unlicensed.</strong>
+      Filenames indicate a Getty asset and images pulled off news sites and Google Images.
+      Quarantined rather than migrated — republishing them on a law firm's own site isn't
+      a call to make silently. Default is to replace with licensed stock.</div>
+  </section>
+
+  <section>
+    <h2 class="section-head">Board</h2>
+    <p class="section-sub">Updated in the same session that lands the work.</p>
+    <div class="board">
+
+      <section class="column col-blocked">
+        <header class="col-head"><h2>⛔ Blocked / needs client</h2><span class="col-count">6</span></header>
+        <div class="cards">
+          <div class="card"><div class="card-title">Search Console access</div>
+            <div class="card-tags"><span class="tag t-seo">seo</span><span class="tag t-risk">launch gate</span><span class="tag t-client">client</span></div>
+            <div class="card-desc">The redirect map only covers URLs the current sitemap advertises. The Wayback Machine holds no page-level history for this domain, so Search Console is the only way to find pre-2025 legacy URLs. Needed before launch.</div></div>
+          <div class="card"><div class="card-title">Confirm domain ownership + registrar access</div>
+            <div class="card-tags"><span class="tag">infra</span><span class="tag t-client">client</span></div>
+            <div class="card-desc">DNS stays where it is; we only repoint records. Need portal access to do it.</div></div>
+          <div class="card"><div class="card-title">Vector logo + dark-ground variant</div>
+            <div class="card-tags"><span class="tag">design</span><span class="tag t-client">client</span></div>
+            <div class="card-desc">Only a white PNG exists. A white-only logo can't sit on a light background, which constrains every layout decision.</div></div>
+          <div class="card"><div class="card-title">Licensing call on 4 blog images</div>
+            <div class="card-tags"><span class="tag t-risk">legal</span><span class="tag t-client">client</span></div>
+            <div class="card-desc">Quarantined pending a decision. Default: replace with licensed stock.</div></div>
+          <div class="card"><div class="card-title">Approve a substitute for the body font</div>
+            <div class="card-tags"><span class="tag">design</span><span class="tag t-client">client</span></div>
+            <div class="card-desc">The current body face is Adobe Fonts — it can't be self-hosted under our CSP. Need a self-hostable substitute signed off.</div></div>
+          <div class="card"><div class="card-title">Launch target date</div>
+            <div class="card-tags"><span class="tag">scope</span><span class="tag t-client">client</span></div>
+            <div class="card-desc">Not set. Cutover should be a Tue–Thu morning NZT, never a Friday.</div></div>
+        </div>
+      </section>
+
+      <section class="column">
+        <header class="col-head"><h2>▶ Do now</h2><span class="col-count">3</span></header>
+        <div class="cards">
+          <div class="card"><div class="card-title">Design intake (phase 4)</div>
+            <div class="card-tags"><span class="tag">design</span><span class="tag t-le">live-edit</span></div>
+            <div class="card-desc">Sync the approved design, derive tokens, and map each component to a tagged, insertable section. Needs a design approved in Claude Design first.</div></div>
+          <div class="card"><div class="card-title">Resolve the apex-record strategy</div>
+            <div class="card-tags"><span class="tag">infra</span><span class="tag t-risk">risk</span></div>
+            <div class="card-desc">A CNAME is illegal at the apex and DNS isn't on Cloudflare. Either the registrar supports ALIAS/ANAME or we use their URL forwarding. Must be settled in phase 5, not at cutover.</div></div>
+          <div class="card"><div class="card-title">Quote the practice-area copy expansion</div>
+            <div class="card-tags"><span class="tag t-seo">seo</span><span class="tag">out of scope</span></div>
+            <div class="card-desc">The nine commercially important pages average ~150 words. Biggest organic lever available, but it's copywriting — quote it separately rather than absorbing it.</div></div>
+        </div>
+      </section>
+
+      <section class="column">
+        <header class="col-head"><h2>⏳ Backlog</h2><span class="col-count">8</span></header>
+        <div class="cards">
+          <div class="card"><div class="card-title">Cloudflare Pages staging + prod</div><div class="card-tags"><span class="tag">infra</span></div><div class="card-desc">Staging stays noindex.</div></div>
+          <div class="card"><div class="card-title">Live Edit production backend</div><div class="card-tags"><span class="tag t-le">live-edit</span><span class="tag t-risk">launch gate</span></div><div class="card-desc">Supabase persistence + edge inject + client login. Demo mode must not ship.</div></div>
+          <div class="card"><div class="card-title">Build 36 pages, tagged by construction</div><div class="card-tags"><span class="tag t-le">live-edit</span></div><div class="card-desc">Auditor must print READY with every page scanned — a READY on zero pages is meaningless.</div></div>
+          <div class="card"><div class="card-title">Rehost 41 assets off the Squarespace CDN</div><div class="card-tags"><span class="tag">build</span></div><div class="card-desc">Already downloaded at native resolution so nothing depends on Squarespace surviving.</div></div>
+          <div class="card"><div class="card-title">Write 10 missing meta descriptions + all alt text</div><div class="card-tags"><span class="tag t-seo">seo</span><span class="tag">a11y</span></div><div class="card-desc">Every one of the 41 images has empty alt today. Purely additive.</div></div>
+          <div class="card"><div class="card-title">Enquiry form → Pages Function + Turnstile</div><div class="card-tags"><span class="tag">build</span></div><div class="card-desc">Must surface errors, never silently drop an enquiry.</div></div>
+          <div class="card"><div class="card-title">LegalService + Article schema</div><div class="card-tags"><span class="tag t-seo">seo</span></div><div class="card-desc">None exists today.</div></div>
+          <div class="card"><div class="card-title">Propose a headshot top-up shoot</div><div class="card-tags"><span class="tag">design</span><span class="tag t-client">client</span></div><div class="card-desc">5 of 12 aren't from the studio shoot; one person has a stock placeholder avatar live today. Costed extra, not absorbed.</div></div>
+        </div>
+      </section>
+
+      <section class="column col-done">
+        <header class="col-head"><h2>✅ Done</h2><span class="col-count">7</span></header>
+        <div class="cards">
+          <div class="card"><div class="card-title">Repo scaffolded, Live Edit kit in</div><div class="card-tags"><span class="tag">phase-0</span><span class="tag t-le">live-edit</span></div><div class="card-desc">Auditor verified. Widget includes go in page source, not middleware — the auditor greps source files, so a middleware-only page silently fails.</div></div>
+          <div class="card"><div class="card-title">Intake + scope lock</div><div class="card-tags"><span class="tag">phase-1</span></div><div class="card-desc">Brochure + 15-post blog + enquiry form + Live Edit. Booking, payments and client portal explicitly out.</div></div>
+          <div class="card"><div class="card-title">DNS strategy decided</div><div class="card-tags"><span class="tag">phase-1</span><span class="tag">infra</span></div><div class="card-desc">Leave nameservers alone and repoint records only — the domain carries live Microsoft 365 email, so moving it is the one change that could take the firm offline.</div></div>
+          <div class="card"><div class="card-title">Full content harvest — 35 pages, 23,460 words</div><div class="card-tags"><span class="tag">phase-2</span></div><div class="card-desc">Includes the 12 hidden team bios and the JS-rendered contact form spec, neither of which static fetching returns.</div></div>
+          <div class="card"><div class="card-title">41 assets secured at native resolution</div><div class="card-tags"><span class="tag">phase-2</span></div><div class="card-desc">17 MB archived before Squarespace can be cancelled. 4 quarantined for licensing.</div></div>
+          <div class="card"><div class="card-title">Brand profile</div><div class="card-tags"><span class="tag">phase-2</span></div><div class="card-desc">Monochrome, Instrument Serif display. Flagged: no accent colour for CTA or focus states, and one grey pairing fails WCAG contrast badly.</div></div>
+          <div class="card"><div class="card-title">IA + URL migration map</div><div class="card-tags"><span class="tag">phase-3</span><span class="tag t-seo">seo</span></div><div class="card-desc">33 of 35 URLs unchanged. Added a /services hub at a new URL — the nine practice areas currently have no landing page.</div></div>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
+  <footer>
+    Detail lives in <code>docs/</code> in the
+    <a href="https://github.com/CoreshiftHQNZ/ghs-law-website">build repo</a> —
+    <code>STATUS.md</code> first. Infrastructure specifics are deliberately kept off this
+    page and live in the private repo.
+  </footer>
+</div>
+
+</body>
+</html>
