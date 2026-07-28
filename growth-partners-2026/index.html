@@ -269,11 +269,11 @@
     </section>
 
     <section class="status-strip">
-      <div class="status-stat status-done"><div class="status-num">31</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-done"><div class="status-num">34</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">0</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked (CF acct)</div></div>
-      <div class="status-stat status-this-week"><div class="status-num">1</div><div class="status-label">This Week</div></div>
-      <div class="status-stat status-backlog"><div class="status-num">5</div><div class="status-label">Backlog</div></div>
+      <div class="status-stat status-this-week"><div class="status-num">2</div><div class="status-label">This Week</div></div>
+      <div class="status-stat status-backlog"><div class="status-num">8</div><div class="status-label">Backlog</div></div>
     </section>
 
     <section class="links">
@@ -301,7 +301,7 @@
         <div class="column col-this-week">
           <div class="col-head"><h2>Do now</h2><span class="col-count">2</span></div>
           <div class="cards">
-            <div class="card"><div class="card-title">AU pricing page missing — AU CTAs point to NZ pricing</div><div class="card-tags"><span class="tag tag-content">content</span><span class="tag tag-infra">i18n</span></div><div class="card-desc">No <code>/en-au/programmes-and-pricing/</code> exists, so AU home pricing CTAs, the nav "Pricing" link and footer all point to the NZ page — AU users see NZD and land on the NZ site. AU home already shows AUD tiers ($2,195 / $4,150 / $6,595). Fix: build an AU pricing page (AUD, incl. add-ons/offers) or repoint AU CTAs. Also AU footer Services/Resources + logo still link to NZ.</div></div>
+            <div class="card"><div class="card-title">AU pricing page — awaiting Jack / Mal (client-side decision)</div><div class="card-tags"><span class="tag tag-content">content</span><span class="tag tag-infra">i18n</span></div><div class="card-desc"><strong>Not ours to action yet.</strong> No <code>/en-au/programmes-and-pricing/</code> exists, so AU home pricing CTAs, the nav "Pricing" link and footer all point to the NZ page — AU users see NZD and land on the NZ site. Jack is also checking the AUD tiers with Mal (AUD $2,195 / $4,150 / $6,595 read high vs NZD given AUD is the stronger currency), so the page content may change. Once GP decides: build an AU pricing page in AUD, or repoint the AU CTAs. Also AU footer Services/Resources + logo still link to NZ.</div></div>
             <div class="card"><div class="card-title">Vyne review of the live site</div><div class="card-tags"><span class="tag tag-content">review</span></div><div class="card-desc">Shared <code>staging2.growthpartnersgpx.com</code> with Vyne (Rhys) for sign-off on migrated blogs / locations / AU mirror before ship.</div></div>
           </div>
         </div>
@@ -327,8 +327,10 @@
         </div>
 
         <div class="column col-done">
-          <div class="col-head"><h2>Done</h2><span class="col-count">32</span></div>
+          <div class="col-head"><h2>Done</h2><span class="col-count">34</span></div>
           <div class="cards">
+            <div class="card"><div class="card-title">Mobile FCP/LCP: WebGL hero no longer loads on mobile (Jack's PageSpeed flag)</div><div class="card-tags"><span class="tag tag-build">perf</span></div><div class="card-desc"><code>three.min.js</code> (589KB) + a 9,190-particle shader field was loading on every device — the main mobile FCP/LCP cost. Now loaded only on ≥900px, motion-allowed, non-metered connections, and on idle so it never competes with first paint; mobile gets a CSS gradient hero backdrop instead. Particle field also scales by viewport (UI/UX skill's mobile-safe ceiling is ~3k). Verified: mobile 375px → three.js not requested, canvas <code>display:none</code>; desktop 1440px → loads, canvas visible. Deliberately no fade-in, so visibility never depends on JS or a throttled transition.</div></div>
+            <div class="card"><div class="card-title">Our Team grid alignment (orphan card) + hardened deploy guard</div><div class="card-tags"><span class="tag tag-build">bugfix</span><span class="tag tag-infra">infra</span></div><div class="card-desc">10 members on a fixed 3-col grid left a lone card hanging left; now a centred flex wrap → 3/3/3/1 with the last row centred (verified equal 446px gutters). <strong>deploy.ps1 hardened:</strong> guards are now fatal (aborts on missing Functions / truncated tree), and it runs wrangler from inside the dist — wrangler resolves <code>functions/</code> against the CWD, so deploying from elsewhere silently shipped a static-only site with no <code>/api/contact</code> and no middleware. That was the root cause of a brief contact-form outage; now impossible to repeat silently.</div></div>
             <div class="card"><div class="card-title">🚀 5 new case studies live (NZ + AU): SiteMinder, MEX Engineering, Transcoast Express, AeroFlow Filters, Impact HR</div><div class="card-tags"><span class="tag tag-prod">prod</span><span class="tag tag-content">content</span></div><div class="card-desc">Built from the design system (no new CSS); NZ + AU mirrors with hreflang and AU footers, LocalBusiness JSON-LD on the AU pages. Approved client quotes on AeroFlow (Peter), Impact HR (Letizia), SiteMinder (Mark Dawson) and MEX (Gail King). Added to both case-studies index grids (now 9 NZ cards) and <code>sitemap.xml</code> — including the previously-missing SmartShelters / Hot Spring Spas entries. Shipped dev→staging→main; Pages production deploy green, live URLs verified 200.</div></div>
             <div class="card"><div class="card-title">🚀 LIVE on growthpartnersgpx.com — apex cutover + www→apex 301 (SSL valid, email untouched, verified)</div><div class="card-tags"><span class="tag tag-prod">prod</span><span class="tag tag-infra">dns</span></div></div>
             <div class="card"><div class="card-title">Bot spam protection: Cloudflare Turnstile on both contact forms (Mal's request)</div><div class="card-tags"><span class="tag tag-int">security</span></div><div class="card-desc">Managed Turnstile widget added to NZ + AU contact forms; <code>TURNSTILE_SECRET</code> set on Production. Verified: token-less (bot) POST → 400 rejected (no email); real visitor auto-solves + submits. Honeypot retained as first layer. <em>TODO: also add the secret to Preview env for staging-branch consistency.</em></div></div>
