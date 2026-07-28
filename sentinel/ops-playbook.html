@@ -428,13 +428,30 @@
         <div class="md"><p><strong>Status:</strong> Active · v1 · 2026-07-08
 <strong>Applies to:</strong> Every new Coreshift engagement — a <strong>website build</strong> or a <strong>product/app</strong> — from first conversation to live-and-monitored.
 <strong>Owners:</strong> Operator (runs the lifecycle) · Privacy Officer (Keitha — owns the PIA gate) · Claude Code (executes most technical steps under the operator&#39;s account)</p>
+<hr>
+<h2>▶ Start here — three steps</h2>
+<p><strong>Anyone at Coreshift can do this. You don&#39;t need to go through the operator to start.</strong></p>
+<h3>1 · Register the project in Sentinel — <em>2 minutes</em></h3>
+<p>Open <strong><a href="https://sentinel.coreshifthq.com">sentinel.coreshifthq.com</a></strong> → click <strong>Onboard</strong> (top right of the tenant directory) → choose <strong>Website</strong> or <strong>Product / app</strong> → fill in the name, GitHub repo, and — for a website — the <strong>live URL</strong>.</p>
 <blockquote>
-<p><strong>Why this doc exists:</strong> onboarding used to mean one thing — clone Sentinel onto the next Railway+Supabase app (<a href="PLAYBOOK-cloning-to-new-app.md">PLAY 9</a>). That playbook is excellent but it bakes in the <em>app</em> stack end to end: Railway env vars, a Supabase project, RLS/HIBP, KC&#39;s Edge Function. Coreshift now also ships <strong>website builds</strong> — hand-coded/Astro static sites on <strong>Cloudflare Pages</strong>, on the <strong>client&#39;s own Cloudflare account</strong>, with no Railway and no database — and Sentinel is a <strong>named clause in the T&amp;Cs</strong>, so it&#39;s meant to go into <em>every</em> engagement by default. Those two worlds share a spine but diverge on almost every concrete step. This is the front door: it holds the shared lifecycle, then splits into two tracks.</p>
-<p><strong>Relationship to the other plays:</strong> this doc is the <strong>lifecycle wrapper</strong>. It does not replace the deep runbooks — it sequences them. <a href="PLAYBOOK-cloning-to-new-app.md">PLAY 9</a> is now best read as <em>the app track&#39;s Sentinel-wiring detail</em>; <a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a> is the go-live <strong>security</strong> gate; <a href="HOW-WE-DO-PRIVACY.md">PLAY 10</a> is the go-live <strong>privacy</strong> gate.</p>
+<p><strong>Which one am I?</strong> Does it have logins or store user data? <strong>Yes → Product / app.</strong> <strong>No → Website</strong> (a static marketing site is a Website even if it has a contact form). Full comparison in <em>Pick your track</em> below.</p>
+</blockquote>
+<p>That single step is what puts the project on Sentinel&#39;s radar: it appears in the tenant directory, and a website immediately becomes a target for the weekly endpoint security audit.</p>
+<h3>2 · Make the repo secure-by-default — <em>~10 minutes, in your repo</em></h3>
+<p>Open a Claude Code session <strong>in your project&#39;s repo</strong> and work the baseline for your track — <em>Track A · A3</em> for a website, <em>Track B · B3</em> for an app (both below). Headers + Turnstile for a site; RLS + HIBP + Sentry for an app. Do this before feature work so Sentinel finds a clean project on day one.</p>
+<h3>3 · Work the checklist — <em>ongoing</em></h3>
+<p>Your project&#39;s card on <strong>/maintenance</strong> now carries an <strong>onboarding checklist</strong>, seeded automatically. It names every remaining step and who owns it: <strong>Ops</strong> (Sentry, secrets, Better Stack, Postmark, Turnstile), <strong>Privacy</strong> (the PIA sign-off), or <strong>You</strong>. Tick items off as they land — it&#39;s a queue, not a DM thread. Nobody has to chase anybody.</p>
+<p><strong>Handing this to a teammate?</strong> Send them <strong><a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/get-sentinel.html">get-sentinel.html</a></strong> — the same three steps, written for a first-timer, with the copy-paste repo prompts.</p>
+<blockquote>
+<p><strong>Everything below is the detail behind those three steps</strong> — the full lifecycle, both tracks end to end, and the two go-live gates. Read the track section that applies to you; skim the rest.</p>
 </blockquote>
 <hr>
+<h2>Why this doc exists</h2>
+<p>Onboarding used to mean one thing — clone Sentinel onto the next Railway+Supabase app (<a href="PLAYBOOK-cloning-to-new-app.md">PLAY 9</a>). Coreshift now also ships <strong>website builds</strong> (static Cloudflare Pages sites, on the client&#39;s own account, no Railway or database), and Sentinel is a <strong>named clause in the T&amp;Cs</strong> — so it goes into <em>every</em> engagement by default. The two worlds share a spine but diverge on almost every concrete step.</p>
+<p>This doc is the <strong>lifecycle wrapper</strong>: it sequences the deep runbooks rather than replacing them. <a href="PLAYBOOK-cloning-to-new-app.md">PLAY 9</a> is the app track&#39;s Sentinel-wiring detail; <a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a> is the go-live <strong>security</strong> gate; <a href="HOW-WE-DO-PRIVACY.md">PLAY 10</a> is the go-live <strong>privacy</strong> gate.</p>
+<hr>
 <h2>Pick your track — the one decision that changes everything</h2>
-<p>Before anything else, decide which track the engagement is on. It&#39;s almost always obvious, and it sets the stack, the infra ownership, the security baseline, the contract/PIA shape, and what Sentinel can actually monitor.</p>
+<p>The track sets the stack, the infra ownership, the security baseline, the contract/PIA shape, and what Sentinel can actually monitor.</p>
 <table>
 <thead>
 <tr>
