@@ -24,11 +24,7 @@ Our living knowledge base for working well with AI — agent skills, coding work
 
 *Last updated: 29 Jul 2026 · Standout — full deck available · Sources: [Anthropic — "The new rules of context engineering for Claude 5 generation models" (24 Jul 2026)](https://claude.com/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models) · [Latent Space — "5 Trends That Defined AI Engineering at World's Fair 2026" (14 Jul 2026)](https://www.latent.space/p/aiewf26trends) · [Cole Medin — "The Best AI Coding Setup Isn't the Most Autonomous One" (3 Jul 2026)](https://www.youtube.com/watch?v=muwRbfuKbR4) · [LangChain — How to Use RLMs in Deep Agents](https://www.langchain.com/blog/how-to-use-rlms-in-deep-agents) · [Simon Willison — on Geoffrey Litt's AIE talk & cognitive debt](https://simonwillison.net/2026/Jul/2/understand-to-participate/) · [Claude Code — `/doctor` CLAUDE.md checkup](https://code.claude.com/docs/en/changelog)*
 
-🎬 *Watch — Cole Medin (22 min, published 3 Jul 2026):*
-
-<div style="position:relative;width:100%;max-width:760px;aspect-ratio:16/9;margin:1.1rem 0;">
-<iframe src="https://www.youtube-nocookie.com/embed/muwRbfuKbR4" title="The Best AI Coding Setup Isn't the Most Autonomous One (Here's Why) — Cole Medin" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-</div>
+> **⚡ Newest — 24 Jul 2026.** Anthropic rewrote the rules of context engineering for the Claude 5 generation, and **six of them reverse what we had been doing** — give *judgment* not rules, better *interfaces* not few-shot examples, and say each thing once. The evidence is blunt: they cut **80%+ of Claude Code's system prompt with no measurable performance loss**. Our context packs predate this guidance, so they likely carry rules and examples that are now net-negative — worth one deliberate pass per repo. Full breakdown below.
 
 **Aim for "in the loop," not "hands off" (new, 3 Jul 2026).** Cole Medin walks Dan Shapiro's *five levels of AI coding* (mapped onto the self-driving levels): from spicy autocomplete (L0–2), to **L3 — you plan the work and review every change**, to L4 multi-agent teams, to **L5 the fully autonomous "Dark Factory."** His key argument, having actually built a Level 5 system: chasing full autonomy isn't the goal — **L3 is the sweet spot for most work because staying in the loop is what keeps software reliable.** That's the same lesson as the cognitive-debt point below and the verifiability discipline (the Evals topic below): the win is a tight, well-fed context plus a human reviewing every diff, not maximal hands-off automation.
 
@@ -57,7 +53,13 @@ In practice this lands as a **curated context pack**: a tight `CLAUDE.md` (or eq
 
 **How we apply it at Coreshift:** keep a maintained `CLAUDE.md` per repo, but scoped to **gotchas and the commands that prove a change works** — not conventions the model can read off the codebase — and run `/doctor` on it periodically to strip bloat; **write intent, not prohibitions** ("match the surrounding code" beats a list of banned constructs); point to canonical example files as *reference material* rather than pasting few-shot examples into the prompt, since on Claude 5 models examples narrow the search instead of widening it; **say each thing once** — if it's in the tool description, it doesn't also belong in the system prompt; spec fuzzier work with **code, tests, or a rubric** instead of prose; scope long agent jobs into sub-agents with just the context each needs (don't let one thread rot); keep a human reading the diffs so we don't accrue cognitive debt; and treat what we build as the **harness and the loop**, not an autonomous agent — the human owns the outer loop (direction, evals, high-risk review), the agent runs the inner loop.
 
-*Standing review note: our context packs predate the Claude 5 guidance above, so they likely carry rules and examples that are now net-negative. Worth one deliberate pass per repo — Anthropic cut 80% of Claude Code's own system prompt for nothing.*
+**Reference material** — background sources, not this week's news.
+
+🎬 *Watch — Cole Medin, "The Best AI Coding Setup Isn't the Most Autonomous One" (22 min, published **3 Jul 2026**) — the five levels of AI coding, and why L3 beats chasing autonomy:*
+
+<div style="position:relative;width:100%;max-width:760px;aspect-ratio:16/9;margin:1.1rem 0;">
+<iframe src="https://www.youtube-nocookie.com/embed/muwRbfuKbR4" title="The Best AI Coding Setup Isn't the Most Autonomous One (Here's Why) — Cole Medin" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
 
 📊 *Slides — click through inline (or use fullscreen):*
 
@@ -72,6 +74,8 @@ In practice this lands as a **curated context pack**: a tight `CLAUDE.md` (or eq
 ## AI security: jailbreaks, exfiltration & safe agent execution
 
 *Last updated: 29 Jul 2026 · Sources: [Hugging Face — Anatomy of a Frontier Lab Agent Intrusion: technical timeline (28 Jul 2026)](https://huggingface.co/blog/agent-intrusion-technical-timeline) · [Simon Willison on the HF timeline](https://simonwillison.net/2026/Jul/28/anatomy-of-a-frontier-lab-agent-intrusion/) · [Modal's CTO on the unauthenticated endpoint](https://simonwillison.net/2026/Jul/28/akshat-bubna/) · [Boris Cherny — Opus 5 and prompt injection (25 Jul 2026)](https://simonwillison.net/2026/Jul/25/boris-cherny/) · [Introducing Claude Opus 5](https://www.anthropic.com/news/claude-opus-5) · [Simon Willison — OpenAI's accidental cyberattack against Hugging Face (22 Jul 2026)](https://simonwillison.net/2026/Jul/22/openai-cyberattack/) · [Martin Alderson — the first known runaway AI agent?](https://martinalderson.com/posts/huggingface-openai-exploit/) · [Redeploying Claude Fable 5](https://www.anthropic.com/news/redeploying-fable-5) · [The Memory Heist — web_fetch exfiltration (Ayush Paul)](https://www.ayush.digital/blog/the-memory-heist) · [Simon Willison on the web_fetch hole](https://simonwillison.net/2026/Jul/15/claude-web-fetch-exfiltration/) · [Simon Willison — the lethal trifecta](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/) · [Simon Willison on the Codex file-deletion bug](https://simonwillison.net/2026/Jul/16/bad-codex-bug/)*
+
+> **⚡ Newest — 28 Jul 2026.** Hugging Face's technical timeline of the runaway-agent intrusion shows **six entirely ordinary weaknesses chained** — a proxy zero-day, a customer's unauthenticated endpoint, template injection, an over-scoped Kubernetes token, DNS-bypassing egress. No novel technique anywhere in it. The line to internalise: **"machine-speed offense makes ordinary weaknesses more expensive for defenders"** — the ambient security debt that survives human attackers no longer survives. There's a five-question checklist to run against our own stack at the end of this topic.
 
 **Scoring jailbreak severity (industry framework).** Prompted by the Fable 5 export-control episode (see [Claude Updates](../claude-updates/)), Anthropic — with Amazon, Microsoft, Google, and other Glasswing partners — proposed the industry's first **consensus framework for scoring how severe an AI "jailbreak" is**. It's useful to us as a way to reason about model-safety risk generally, not just Anthropic's models. A jailbreak is scored on four criteria — the first two describe what it gives the attacker, the last two how quickly it becomes a real-world problem:
 
@@ -106,6 +110,8 @@ Two things follow. First, **every link in that chain is a bug class we already k
 
 *Last updated: 29 Jul 2026 · Standout — full deck available · Sources: [Anthropic — "Claude models explained: choosing the best model for your use case" (24 Jul 2026)](https://claude.com/blog/claude-models-explained-choosing-the-best-model-for-your-use-case) · [Ethan Mollick — "An opinionated guide to which AI to use" (27 Jul 2026)](https://www.oneusefulthing.org/p/an-opinionated-guide-to-which-ai-b22) · [Introducing Claude Opus 5](https://www.anthropic.com/news/claude-opus-5) · [Introducing Claude Sonnet 5](https://www.anthropic.com/news/claude-sonnet-5) · [AIEWF 2026 — "The best AI agents cost less than you think" (Eno Reyes, Factory) & "More Compute In → Better Model Out" (Lee Robinson, Cursor)](https://www.youtube.com/@aiDotEngineer) · [Simon Willison — Claude make Fable 5 permanent (18 Jul 2026)](https://simonwillison.net/2026/Jul/18/claude-make-fable-5-permanent/) · [Claude Code changelog 2.1.216–2.1.219](https://code.claude.com/docs/en/changelog)*
 
+> **⚡ Newest — 24 Jul 2026 · this one changed our default.** Anthropic's own model-selection guidance **inverts the rule we had been running**: start with the *most* intelligent model and dial the **effort** down, not the model — because **"cost-per-task is often lower for more intelligent models, especially at lower effort levels."** We previously defaulted new work to Sonnet 5 and held Opus in reserve; with Opus 5 landing at Opus 4.8's price, **Opus 5 at low effort is now the starting point**, and Sonnet 5 is kept for high-volume fan-out and latency-sensitive paths.
+
 The most actionable shift this week is about **which model runs which step**. With **Claude Sonnet 5** landing (30 Jun) — near-Opus agentic quality at roughly a third of the price, and now the *default model in Claude Code* — the cheap move is no longer to run everything on the biggest model. The frontier is a **cost-performance curve**: pick the effort level and model per task, not per project.
 
 **The routing pattern (Simon Willison, 2 Jul).** Keep judgment, review, and synthesis on the strong model in the main loop; spawn sub-agents with **model overrides** for the grunt work — Sonnet for substantive implementation, Haiku for trivial edits and mechanical changes. You get most of the quality where it matters and a large cost cut on the long tail of small steps.
@@ -126,8 +132,6 @@ The rest of their decision procedure is four questions — **task difficulty** (
 
 **How we apply it at Coreshift:** **start high and dial effort down** — default the main loop to **Opus 5** and reach for lower effort (`low`/`medium`) before reaching for a smaller model, since cost-per-*task* often favours the smarter model at low effort; keep **Sonnet 5** where it genuinely wins — high-volume sub-agent fan-out and latency-sensitive paths — rather than as the blanket default; delegate mechanical edits to **Haiku** sub-agents; escalate to **Fable 5** only when Opus 5 is demonstrably struggling on a specific task, not pre-emptively; judge cost on **price-per-completed-task at real volume**, not per-token headline rates; set an org default model so cost control isn't left to per-dev discipline; fix harness waste (caching, scoped context, capped budgets) before assuming a step needs a bigger model; and only push a step to a cheaper model or lower effort when it has a real verifier attached.
 
-*Changed this week: we previously defaulted new work to Sonnet 5 and treated Opus as the reserve. Anthropic's guidance plus Opus 5's price-performance flips that — Opus 5 at low effort is now the starting point, with Sonnet 5 reserved for fan-out and latency.*
-
 📊 *Slides — click through inline (or use fullscreen):*
 
 <div style="position:relative;width:100%;max-width:820px;aspect-ratio:16/9;margin:1.1rem 0;">
@@ -141,6 +145,8 @@ The rest of their decision procedure is four questions — **task difficulty** (
 ## Evals & self-verifying agents
 
 *Last updated: 29 Jul 2026 · Standout — full deck available · Sources: [LangChain — Towards Automating Eval Engineering (22 Jul 2026)](https://www.langchain.com/blog/towards-automating-eval-engineering) · [Anthropic — Building verification loops in Claude Code with skills (22 Jul 2026)](https://claude.com/blog/building-verification-loops-in-claude-code-with-skills) · [Introducing Claude Opus 5](https://www.anthropic.com/news/claude-opus-5) · [Latent Space — AIEWF 2026 trends (14 Jul 2026)](https://www.latent.space/p/aiewf26trends) · [AI Engineer World's Fair 2026 talks — "Don't Ship Skills Without Evals" (Philipp Schmid), "Build Evals That Actually Matter" (Nick Ung), "Reward Hacking in Agents" (Daniel Han)](https://www.youtube.com/@aiDotEngineer) · [LangChain — Improving Agents is a Data Mining Problem (7 Jul 2026)](https://www.langchain.com/blog/improving-agents-is-a-data-mining-problem) · [LangChain June 2026 newsletter — Deep Agents RubricMiddleware](https://www.langchain.com/blog/june-2026-langchain-newsletter) · [Karpathy's Software 3.0 / verifiability framework](https://www.startuphub.ai/ai-news/ai-figures/2026/figure-andrej-karpathy-software-thesis-evolution-2026-06-17)*
+
+> **⚡ Newest — 22–24 Jul 2026.** Writing the evals is itself becoming an agent task: LangChain shipped a skill that reads your repo, mines production traces, and emits containerised, executable evals. But the caveat *is* the finding — it **facilitates rather than automates**, because *"the best evals came from users providing feedback."* **The verifier is the one artifact you can't fully delegate.** Alongside it, **Opus 5 is markedly better at self-verifying**, which doesn't shrink our job — it raises the payoff for **supplying a real success signal**, since a self-verifying model with nothing concrete to check against just fails more confidently.
 
 The biggest practice signal this week is a convergence: **agents get reliable when you give them a way to check their own work.** Andrej Karpathy's framing — "traditional software automates what you can *specify*; LLMs automate what you can *verify*" — is now showing up directly in tooling.
 
@@ -182,11 +188,7 @@ The caveat is the useful part, and it lands exactly where you'd predict: *"the b
 
 *Last updated: 29 Jul 2026 · Standout — full deck available · Sources: [Anthropic — "Building verification loops in Claude Code with skills" (22 Jul 2026)](https://claude.com/blog/building-verification-loops-in-claude-code-with-skills) · [Building Great Agent Skills: The Missing Manual](https://www.youtube.com/watch?v=UNzCG3lw6O0) (Matt Pocock / AI Engineer) · [mattpocock/skills: A complete AI Coding workflow, end-to-end (17 Jul 2026)](https://www.youtube.com/watch?v=M6mYodf0dJM) · [Latent Space — AIEWF 2026 trends (14 Jul 2026)](https://www.latent.space/p/aiewf26trends) · [mattpocock/skills v1.1 changelog](https://www.aihero.dev/skills/skills-changelog-v1-1-wayfinder-to-spec-to-tickets-grilling-improvements) · [How To Kill The Bloat In Claude Code's System Prompt](https://www.aihero.dev/how-to-kill-the-bloat-in-claude-codes-system-prompt) · [Claude Code — Week 28 (`/doctor` checkup)](https://code.claude.com/docs/en/changelog)*
 
-🎬 *Watch — Matt Pocock / AI Engineer (45 min):*
-
-<div style="position:relative;width:100%;max-width:760px;aspect-ratio:16/9;margin:1.1rem 0;">
-<iframe src="https://www.youtube-nocookie.com/embed/UNzCG3lw6O0" title="Building Great Agent Skills: The Missing Manual" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-</div>
+> **⚡ Newest — 22 Jul 2026.** The highest-value skill to write first is a **verification loop**: take a check you keep making by hand *after the fact* and encode it as a small `SKILL.md` with `allowed-tools` scoped to the minimum — then deploy it standalone, **embedded** in the skill that produces the thing, chained, or on every PR. It's the cheap end of the eval spectrum (no container harness, no trace mining) and it's **loaded on demand**, so unlike a rule bolted into `CLAUDE.md` it costs nothing on the turns that don't need it.
 
 A skill is its **description** + a **SKILL.md** file + any **reference material** that branches off it. Evaluate and improve every skill against four things — trigger, structure, steering, pruning.
 
@@ -231,6 +233,14 @@ There are four ways to deploy one, and choosing well matters more than the skill
 The framing line is the one worth remembering: *"the more you can encode for Claude to follow, the more often Claude's response will land closer to what you want on the very first try."* This is the cheap end of the eval spectrum — no container harness, no trace mining, just a repeated manual check converted into something that runs itself (see *Evals & self-verifying agents* above for the heavyweight version). It also resolves a tension with the context-engineering guidance: a verification skill is **loaded on demand**, so unlike a rule bolted into `CLAUDE.md` it costs nothing on the turns that don't need it.
 
 **How we apply it at Coreshift:** build in vertical slices not horizontal layers; one source of truth (generated Supabase types, shared validation, RLS for authz); a deletion-test prompt in the PR template; human-in-the-loop gates before migrations and prod deploys; keep skills small and single-purpose, and pair every new skill with an eval before it ships. And when we catch ourselves making **the same correction twice**, that's the trigger to write a verification skill for it — embedded in the producing skill if it belongs to one step, wired into CI if it belongs to every PR.
+
+**Reference material** — background sources, not this week's news.
+
+🎬 *Watch — Matt Pocock / AI Engineer, "Building Great Agent Skills: The Missing Manual" (45 min, published **Jun 2026**) — the trigger / structure / steering / pruning checklist above, in full:*
+
+<div style="position:relative;width:100%;max-width:760px;aspect-ratio:16/9;margin:1.1rem 0;">
+<iframe src="https://www.youtube-nocookie.com/embed/UNzCG3lw6O0" title="Building Great Agent Skills: The Missing Manual" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
 
 📊 *Slides — click through inline (or use fullscreen):*
 
