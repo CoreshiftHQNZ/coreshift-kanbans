@@ -87,7 +87,7 @@
     <div class="n">A</div>
     <div class="body">
       <h3>Open Sentinel and onboard</h3>
-      <p>Go to <a href="https://sentinel.coreshifthq.com/maintenance">sentinel.coreshifthq.com/maintenance</a>, sign in with your Coreshift Google account, and click <strong>Onboard an app</strong>. Fill in the slug, display name, and GitHub repo.</p>
+      <p>Go to <a href="https://sentinel.coreshifthq.com">sentinel.coreshifthq.com</a> and sign in with your Coreshift Google account. On the tenant directory (the home page), click <strong>Onboard</strong> in the top right. Pick <strong>Product / app</strong> or <strong>Website</strong>, then fill in the name, GitHub repo, and — for a website — the <strong>Live URL</strong>.</p>
       <div class="callout">
         <strong>Website builds:</strong> choose <strong>Website</strong> and enter your <strong>Live URL</strong> — that's the address the weekly endpoint audit points at. That's all Sentinel needs to start auditing it; no code scan, no database.
       </div>
@@ -114,7 +114,7 @@ and passes the advisor baseline.</code></pre>
 
   <h3>Website track — the checklist</h3>
   <ul>
-    <li>Add a <code>_headers</code> file (HSTS + CSP + nosniff + frame + referrer). Copy-paste starter: <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#onboarding">Cloudflare Pages security-headers recipe</a> — roll CSP <strong>Report-Only</strong> first, then enforce.</li>
+    <li>Add a <code>_headers</code> file (HSTS + CSP + nosniff + frame + referrer). Copy-paste starter: <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#security-headers">Cloudflare Pages security-headers recipe</a> — roll CSP <strong>Report-Only</strong> first, then enforce.</li>
     <li>Contact form behind <strong>Cloudflare Turnstile</strong> (both the secret and the widget).</li>
     <li>CI deploy on push (GitHub Actions → <code>wrangler pages deploy</code>).</li>
     <li>Then register in Sentinel with the live URL (step 2). The weekly endpoint audit picks it up automatically — no widget needed; your <strong>contact form is the support intake</strong>.</li>
@@ -136,7 +136,7 @@ and passes the advisor baseline.</code></pre>
   <p>Once you're registered and live: a per-app view in the Sentinel dashboard, uptime alerting, a weekly security audit (endpoint hygiene for websites, advisor scans for apps), and — for apps — error monitoring and a bug-report → GitHub-issue path. Support runs 9am–5pm NZ.</p>
 
   <div class="foot">
-    <p>Questions or the human-wired bits: <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/">#sentinel</a>. Full detail: the <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#onboarding">Onboarding playbook</a> (Track A / Track B) and <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#cloning">PLAY 9</a> for the app deep-dive.</p>
+    <p>Questions: ask in <strong>#sentinel</strong> on Slack. Full detail: the <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#onboarding">Onboarding playbook</a> (Track A / Track B), <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/ops-playbook.html#cloning">PLAY 9</a> for the app deep-dive, and the <a href="https://coreshifthqnz.github.io/coreshift-kanbans/sentinel/">Sentinel board</a> for build status.</p>
     <p>Internal · Coreshift HQ · self-serve onboarding</p>
   </div>
 </div>
