@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>40%</strong> complete</div>
-        <div><strong>10</strong>/25 cards done</div>
-        <div>Updated <strong>2026-07-26 22:16 UTC</strong></div>
+        <div><strong>37%</strong> complete</div>
+        <div><strong>10</strong>/27 cards done</div>
+        <div>Updated <strong>2026-07-28 03:59 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">5</div>
+        <div class="status-num">7</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -1031,41 +1031,51 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">UDC final disclaimer wording</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span><span class="tag tag-neutral">src/lib/disclaimers.ts</span></div>
-        <div class="card-desc">Interim UDC standard wording now live site-wide (PR #7), reframed as pending UDC marketing review. Jack chasing UDC for anything more substantial. Lands once in `src/lib/disclaimers.ts`</div>
+        <div class="card-title">UDC wording vs the multi-lender panel</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span></div>
+        <div class="card-desc">UDC&#39;s mandatory CCCFA text says &quot;Finance is provided by UDC Finance Limited&quot;, which is inaccurate on a panel site where the lender may be Marac or Avanti. Interim wording stays until UDC confirm what they will accept; question with Jack to put to UDC</div>
       </div>
       <div class="card">
-        <div class="card-title">Client Privacy Policy + Terms &amp; Conditions</div>
+        <div class="card-title">Legal sign-off on Privacy + Terms</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span></div>
-        <div class="card-desc">/privacy and the new /terms page (PR #7) carry flagged placeholders; per Keitha, final legal wording comes from LDM (with legal advice) given the personal data collected</div>
+        <div class="card-desc">The client&#39;s real draft content is now live on /privacy and /terms, with a visible &quot;working draft, pending final legal review&quot; notice. Their lawyer&#39;s review is the only thing outstanding; removing the notice is a one-line change</div>
       </div>
       <div class="card">
-        <div class="card-title">FSPR number, team profiles, testimonials</div>
+        <div class="card-title">Domain decision: ldmfinance.co.nz</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span></div>
-        <div class="card-desc">Placeholder blocks flagged in-page on /about, footer compliance panel and testimonial strips. First-party testimonials only (Brand Foundation rule)</div>
+        <div class="card-desc">Jack proposed it in place of finance.ldmmotor.group, pending Logan/Louis. Changes canonicals, schema, sitemaps and the email sending domain, so it needs settling before go-live rather than after</div>
       </div>
       <div class="card">
-        <div class="card-title">UDC calculator access</div>
+        <div class="card-title">DNS + Cloudflare account</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span></div>
-        <div class="card-desc">UDC iframe embeds as the official-quote option once the client secures access. Jack has asked the client</div>
+        <div class="card-desc">DNS currently sits with &quot;I want my name&quot;. Moving ldmmotor.group to Cloudflare is needed for both the custom domain and sending finance emails from the client&#39;s domain. Recommendation sent: a client-owned account we administer; commercials are Keitha&#39;s call</div>
       </div>
       <div class="card">
-        <div class="card-title">Lender naming — final confirm</div>
+        <div class="card-title">UDC calculator</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span></div>
-        <div class="card-desc">Applied Jack&#39;s steer (PR #7): &quot;Marac&quot; not &quot;Heartland Bank (Marac)&quot;, dropped &quot;(preferred)&quot;. Awaiting his formal confirmation; trivial to adjust a label</div>
+        <div class="card-desc">Resolved as a misunderstanding: the file supplied was UDC&#39;s *application form* iframe, not a calculator. A drafting note in the client&#39;s legal draft confirms UDC **is** building a calculator from LDM&#39;s rate inputs; not yet available. Our own calculator stays either way</div>
       </div></div>
     </section>
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Domain confirmed</div>
+        <div class="card-title">Client content round 1 shipped</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Client confirmed finance.ldmmotor.group (Jack, 20 Jul). DNS + hosting access being chased for go-live</div>
+        <div class="card-desc">Everything Logan and Louis supplied on 28 Jul is live: approved LDM Finance logo pack (header + footer), both team profiles with real bios and photos, four verified BuyerScore reviews, and the real Privacy + Terms content behind a pending-legal-review notice. PRs #11, #13, #15</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Two live defects corrected</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">The site claimed LDM is &quot;a registered financial service provider&quot; (they hold no FSPR registration; it now describes the referral arrangement), and published a placeholder address and phone — including in the lead-relay error messages, which told customers to ring a number that is not LDM&#39;s. NAP verified against LDM&#39;s live site, the legal draft and Louis&#39;s signature. Stale specs that mandated the FSPR number were corrected too, so it cannot be rebuilt from an obsolete brief</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Domain confirmed (superseded)</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
+        <div class="card-desc">Client confirmed finance.ldmmotor.group (20 Jul), but Jack has since proposed ldmfinance.co.nz. See Blocked</div>
       </div>
       <div class="card">
         <div class="card-title">All PRs merged, production current</div>
