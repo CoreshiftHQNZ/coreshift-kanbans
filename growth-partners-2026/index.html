@@ -269,11 +269,11 @@
     </section>
 
     <section class="status-strip">
-      <div class="status-stat status-done"><div class="status-num">34</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-done"><div class="status-num">35</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">0</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked (CF acct)</div></div>
       <div class="status-stat status-this-week"><div class="status-num">2</div><div class="status-label">This Week</div></div>
-      <div class="status-stat status-backlog"><div class="status-num">8</div><div class="status-label">Backlog</div></div>
+      <div class="status-stat status-backlog"><div class="status-num">9</div><div class="status-label">Backlog</div></div>
     </section>
 
     <section class="links">
@@ -313,7 +313,7 @@
         </div>
 
         <div class="column col-backlog">
-          <div class="col-head"><h2>Backlog / Later</h2><span class="col-count">8</span></div>
+          <div class="col-head"><h2>Backlog / Later</h2><span class="col-count">9</span></div>
           <div class="cards">
             <div class="card"><div class="card-title">Transcoast Express testimonial (Wayne) pending</div><div class="card-tags"><span class="tag tag-content">content</span></div><div class="card-desc">The Transcoast case study shipped without a client quote — the source doc only had a <code>[pending]</code> placeholder, no wording. Add Wayne's approved quote to <code>/case-studies/transcoast-express/</code> (NZ + AU) when available.</div></div>
             <div class="card"><div class="card-title">301 map for old WordPress URLs</div><div class="card-tags"><span class="tag tag-seo">seo</span></div><div class="card-desc">Now live on the apex — audit old-site URLs that don't map 1:1 to the new clean URLs (legacy WP slugs, query-string URLs) and add 301s so inbound links/rankings don't 404. Main clean-URL paths already preserved.</div></div>
@@ -322,13 +322,15 @@
             <div class="card"><div class="card-title">UI/UX polish pass (micro-animations)</div><div class="card-tags"><span class="tag tag-build">design</span></div><div class="card-desc">Dedicated pass with a design eye: add micro-animations / interactions (site is text-heavy) and cherry-pick features. Consider a full mega-menu nav. Deferred until the site is complete, per Ricky.</div></div>
             <div class="card"><div class="card-title">Remaining detail pages</div><div class="card-tags"><span class="tag tag-content">content</span></div><div class="card-desc">Un-migrated testimonial/team detail pages and lower-value blogs (the CSV "ignore" set). Kept out on purpose for now.</div></div>
             <div class="card"><div class="card-title">Content decisions</div><div class="card-tags"><span class="tag tag-content">content</span></div><div class="card-desc">Video &amp; Images tiers (TBD), pricing sign-off, hosted light logo asset. (Branded OG image now shipped.)</div></div>
-            <div class="card"><div class="card-title">Lighthouse + a11y pass</div><div class="card-tags"><span class="tag tag-seo">quality</span></div><div class="card-desc">Full perf/SEO/a11y audit before launch. (A11y basics — nav/FAQ aria, image dimensions — already shipped.)</div></div>
+            <div class="card"><div class="card-title">Lighthouse + a11y pass</div><div class="card-tags"><span class="tag tag-seo">quality</span></div><div class="card-desc">Full perf/SEO/a11y audit. Automated sweep of all 91 pages now clean: every image has alt text, every page has <code>lang</code>, no empty links, no duplicate IDs, and all images have intrinsic dimensions. Mobile FCP/LCP addressed separately. <strong>Remaining:</strong> real-device Lighthouse runs, colour-contrast audit and keyboard-navigation walkthrough.</div></div>
+            <div class="card"><div class="card-title">AU blog index missing (12 orphaned AU articles)</div><div class="card-tags"><span class="tag tag-seo">seo</span></div><div class="card-desc"><code>/en-au/blog/</code> has 12 AU article pages but no index page, so it 404s and every AU page links to the NZ <code>/blog/</code> index instead. Those 12 AU articles are only reachable via sitemap/direct link. Fix: build an AU blog index mirroring the NZ one, then repoint the AU nav/footer blog links. (Enhancement — nothing is broken for users today.)</div></div>
           </div>
         </div>
 
         <div class="column col-done">
-          <div class="col-head"><h2>Done</h2><span class="col-count">34</span></div>
+          <div class="col-head"><h2>Done</h2><span class="col-count">35</span></div>
           <div class="cards">
+            <div class="card"><div class="card-title">AU site no longer leaks to NZ: 224 cross-region links repointed (+ CLS fix)</div><div class="card-tags"><span class="tag tag-infra">i18n</span><span class="tag tag-build">perf</span></div><div class="card-desc">AU footer Services/Resources and the footer logo sent Australian visitors to the NZ site. Repointed 224 links across all 32 AU pages to their AU equivalents (about-us, case-studies, DigitalArchitect, market-research, seo-agency, testimonials, logo → <code>/en-au/</code>); verified every target returns 200 and the NZ/AU region switcher still works. Five links deliberately stay on NZ (competitor-analysis, privacy, terms, pricing, blog) as no AU versions exist. Also added intrinsic width/height to 7 <code>/website-builder/</code> images to stop layout shift (CLS).</div></div>
             <div class="card"><div class="card-title">Mobile FCP/LCP: WebGL hero no longer loads on mobile (Jack's PageSpeed flag)</div><div class="card-tags"><span class="tag tag-build">perf</span></div><div class="card-desc"><code>three.min.js</code> (589KB) + a 9,190-particle shader field was loading on every device — the main mobile FCP/LCP cost. Now loaded only on ≥900px, motion-allowed, non-metered connections, and on idle so it never competes with first paint; mobile gets a CSS gradient hero backdrop instead. Particle field also scales by viewport (UI/UX skill's mobile-safe ceiling is ~3k). Verified: mobile 375px → three.js not requested, canvas <code>display:none</code>; desktop 1440px → loads, canvas visible. Deliberately no fade-in, so visibility never depends on JS or a throttled transition.</div></div>
             <div class="card"><div class="card-title">Our Team grid alignment (orphan card) + hardened deploy guard</div><div class="card-tags"><span class="tag tag-build">bugfix</span><span class="tag tag-infra">infra</span></div><div class="card-desc">10 members on a fixed 3-col grid left a lone card hanging left; now a centred flex wrap → 3/3/3/1 with the last row centred (verified equal 446px gutters). <strong>deploy.ps1 hardened:</strong> guards are now fatal (aborts on missing Functions / truncated tree), and it runs wrangler from inside the dist — wrangler resolves <code>functions/</code> against the CWD, so deploying from elsewhere silently shipped a static-only site with no <code>/api/contact</code> and no middleware. That was the root cause of a brief contact-form outage; now impossible to repeat silently.</div></div>
             <div class="card"><div class="card-title">🚀 5 new case studies live (NZ + AU): SiteMinder, MEX Engineering, Transcoast Express, AeroFlow Filters, Impact HR</div><div class="card-tags"><span class="tag tag-prod">prod</span><span class="tag tag-content">content</span></div><div class="card-desc">Built from the design system (no new CSS); NZ + AU mirrors with hreflang and AU footers, LocalBusiness JSON-LD on the AU pages. Approved client quotes on AeroFlow (Peter), Impact HR (Letizia), SiteMinder (Mark Dawson) and MEX (Gail King). Added to both case-studies index grids (now 9 NZ cards) and <code>sitemap.xml</code> — including the previously-missing SmartShelters / Hot Spring Spas entries. Shipped dev→staging→main; Pages production deploy green, live URLs verified 200.</div></div>
