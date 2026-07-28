@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>48%</strong> complete</div>
-        <div><strong>49</strong>/103 cards done</div>
-        <div>Updated <strong>2026-07-28 05:49 UTC</strong></div>
+        <div><strong>49%</strong> complete</div>
+        <div><strong>50</strong>/103 cards done</div>
+        <div>Updated <strong>2026-07-28 06:01 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">49</div>
+        <div class="status-num">50</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -920,6 +920,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">🌿 Real environments at last — Supabase branching, wired and proved</div>
+            <div class="recent-desc">Ricky&#39;s call, and the right one: *&quot;this isn&#39;t an MVP, we really want to set up for success here.&quot;* Everything this week had been walked against **production** because there was nowhere else — the staging branch had sat in `MIGRATIONS_FAILED` since 28 June with 17 tables against prod&#39;s 27, missing the entire partner and money layer. **Root cause was not drift:** Supabase branching only reads `supabase/migrations/`, and ours had always lived in `db/migrations/`. It was pointed at an empty room for a month. **Repairing the 33 hand-written migrations to replay from empty was the obvious fix and the wrong one** — several were reconstructed from a database that already existed, so making them replayable is archaeology with no guaranteed end. Ricky&#39;s instinct — *&quot;could that be removed by dumping and copying main?&quot;* — was correct: a baseline dumped out of production is **guaranteed** to replay, because it came from something that already runs. 33 files squashed into `20260728000000_baseline.sql` (27 tables, 36 policies); the originals archived with a README explaining why nothing executes them. **Staging rebuilt from it and matches prod exactly** (27 tables, 67 functions, 36 policies, 8/8 key tables). **Production wiped to a clean slate** — Ricky confirmed no real customers, so it now holds his login, his personal account and Coreshift HQ (partner #0, structural) and nothing else; full schema + data backups taken first. **GitHub integration connected** (repo renamed `CoreshiftHQNZ/upwind` first, so it wouldn&#39;t need doing twice): working directory `saas-platform`, production branch `main`, auto-branching capped at 3 and only on Supabase file changes. **Proved end to end** with a throwaway PR (#13): a preview branch provisioned its own database, replayed the baseline **into an empty Postgres**, applied the PR&#39;s migration on top (28 tables = 27 + the smoke table, 67 functions), and tore itself down on close — with production untouched throughout (27 tables, 1 user, 0 leakage). Also: `seed.sql` (a partner, a finished unsold site, a priced prospect with a fixed claim token — the cafe-owner journey one URL away), and `ENVIRONMENTS.md`. **The CLI is now deliberately linked to STAGING** so an absent-minded `db push` lands somewhere harmless. *(Two dashboard fields saved silently-wrong on the first attempt — the working directory became `.saas-platform` because the `.` was real content not a placeholder, and the staging branch&#39;s git-sync silently discarded. Both caught by re-reading rather than trusting the toast; worth knowing when editing these by hand.)*</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">🧹 Dashboard tidy — one rule: anything about a website lives on that website&#39;s card</div>
             <div class="recent-desc">Ricky flagged the customer dashboard as cluttered. It was structural, not cosmetic: **four bands stacked above the sites** — &quot;X isn&#39;t live yet&quot;, &quot;put your own web address on it&quot;, &quot;finish your site&quot;, and a partner contact card — where each belonged to a *specific website* and none of them said which. With two sites they actively contradicted each other: two near-identical green bands about two different sites, sitting above cards that already carried the same actions under different names (*Connect your domain* / *Add custom domain*, *Set my site live* / *Publish · US$49/mo*). Five competing CTAs before you reached a website; even a single-site customer got two banners restating their own card. **Everything site-level moved onto its card**, and the top strip is now reserved for genuinely account-level news — empty most of the time. The card gained the thing it never had: **the site&#39;s name, beside its status** — recognition had been resting on the thumbnail, which works right up until two sites are built from the same template and the previews are identical. **One primary action per card**: unpaid opens the go-live modal rather than the two bare price buttons that used to sit there (those called Stripe straight off the card, so the partner&#39;s build fee never appeared anywhere the customer could see it before they were charged); Delete drops from a red button at equal weight to a quiet link. **&quot;Finish your site&quot; became the suggestions dropdown agreed in the Screen 8 walk** — a collapsed line inside the card, instead of a full-width orange band that was often one bullet and could never say which site it meant. *(The partner contact card was already in the left sidebar from the white-label work and had simply been left on the page twice.)* **Also found while checking it on a phone:** that sidebar partner card had no rule for the collapsed mobile strip, so a 232px block laid out in a row **pushed the whole dashboard sideways** — horizontal scroll on the device a cafe owner is most likely to open it on. The strip now wraps instead of scrolling, which also stops Sign out hiding off the right edge. Verified at 1280 and 375, 44/44 tests, LIVE</div>
           </div>
@@ -952,13 +959,6 @@
             <div class="recent-desc">Walked all 17 screens of the self-serve retail journey live with Ricky and rebuilt against his notes. **Shipped LIVE:** (1) **🐛 Mobile nav bug** — every published site had *zero* navigation on a phone (`.nav { display:none }` under 860px with nothing replacing it); now a burger + drawer, CSS-only so it can&#39;t break on static pages. Fixes every existing site, not just new ones. (2) **Dashboard** — Results / Manage access / Manage billing move to the left sidebar (new `/results` with per-site filter, `/access`, `/billing` routes); **retail is one website** (no &quot;+ New site&quot;, no ghost tile, full-width card); green &quot;Visit live site&quot; + a connect-your-domain banner whose copy flexes by plan (included vs **+US$10/mo** if we source it); labelled web address with a slim **＋ Add custom domain** (pencil once connected); **&quot;Edit this site&quot;**. Retail is now **100% partner-free**. (3) **Site card preview** — instead of a screenshot service, the card renders the site&#39;s *own* home page through the same components the editor and renderer use: never stale, works on drafts, no cost. Single retail card is side-by-side (preview left, details right). (4) **Editor chrome** — menus regrouped as **Pages** (page *names* + pencil for per-page settings + header menu) / **Design** (theme &amp; colours) / **Settings** (footer, logos &amp; tracking); menus open on hover and close on leave (the stuck-open, overlapping bug is gone); a real **Save changes** that writes a *draft* (the old helper published — genuinely different code path); Versions + help become icons; Preview removed; Ask pulled pending work; responsive fixed at 1180/980 so Publish stops clipping; section hover controls are one solid ink toolbar instead of white-on-white. (5) **New-site flow** — the two nested forks collapse to **one tile grid**; the template step is reframed as *what&#39;s on your site* (grey named wireframes from the section catalog, no swatches/search/chips, an &quot;every template includes…&quot; reassurance line, &quot;Skip template&quot;); a new **Your brand** step (logo + primary/secondary colour with plain-English explanations) comes **before** the look step, which then previews in *their* logo and colours with the typeface as a quiet refinement; the free address is **derived, never chosen** (auto `-2` on a clash instead of dead-ending); &quot;Start over&quot; gone; finishes with **Open the editor** *or* **Add my details first** (phone / enquiry email / address / socials → footer, contact-form recipient, social icons). *(Page settings now separate **Page name** from **SEO title** — the menu had been showing titles like &quot;About — Your Company&quot;.)*</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">🐛 Partner claim fix — the sale now completes (token survives sign-in)</div>
-            <div class="recent-desc">Diagnosed a broken live partner→customer sale (the site never transferred, the partner never saw a payment). Root cause was **front-end only**: the claim page stashed the `?claim=&lt;token&gt;` in localStorage as its *only* way to survive sign-in, but both auth calls (`signInWithGoogle` / `signInWithEmail`) redirected to the **bare origin**. When the customer signed up by magic link and opened the confirmation email on a **different device**, localStorage wasn&#39;t there — they landed on the plain dashboard with no claim context, so `claim_prospect` never ran; confused, they built and paid for a *different* site. Fix: redirect to `window.location.href` so the confirmation link returns to `/?claim=&lt;token&gt;` and the claim resumes **cross-device**. Verified the DB side is sound — a rolled-back prod test of `claim_prospect` created the account, moved the site, and set the prospect to `won` cleanly. Once the claim runs, the sold site shows in the partner&#39;s dashboard under **Client sites** (Live badge, partner keeps edit access), so &quot;partner sees it&#39;s paid&quot; resolves with it. Shipped dev→staging→main. **Needs Ricky to confirm the `upwind.build/**` redirect wildcard (above) for the cross-device path.** *(Two separate go-live gates surfaced by the same test: the &quot;coreshift&quot; the customer saw is the **Stripe receipt/trading name** — gate 2️⃣ below; the junked email is **deliverability** — gate 1️⃣ below. Neither is a code bug.)*</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -971,9 +971,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">49</span>
+        <span class="col-count">50</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🌿 Real environments at last — Supabase branching, wired and proved</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">MIGRATIONS_FAILED</span><span class="tag tag-neutral">supabase/migrations/</span><span class="tag tag-neutral">db/migrations/</span><span class="tag tag-neutral">20260728000000_baseline.sql</span><span class="tag tag-neutral">CoreshiftHQNZ/upwind</span><span class="tag tag-neutral">saas-platform</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">seed.sql</span><span class="tag tag-neutral">ENVIRONMENTS.md</span><span class="tag tag-neutral">db push</span><span class="tag tag-neutral">.saas-platform</span><span class="tag tag-neutral">.</span></div>
+        <div class="card-desc">Ricky&#39;s call, and the right one: *&quot;this isn&#39;t an MVP, we really want to set up for success here.&quot;* Everything this week had been walked against **production** because there was nowhere else — the staging branch had sat in `MIGRATIONS_FAILED` since 28 June with 17 tables against prod&#39;s 27, missing the entire partner and money layer. **Root cause was not drift:** Supabase branching only reads `supabase/migrations/`, and ours had always lived in `db/migrations/`. It was pointed at an empty room for a month. **Repairing the 33 hand-written migrations to replay from empty was the obvious fix and the wrong one** — several were reconstructed from a database that already existed, so making them replayable is archaeology with no guaranteed end. Ricky&#39;s instinct — *&quot;could that be removed by dumping and copying main?&quot;* — was correct: a baseline dumped out of production is **guaranteed** to replay, because it came from something that already runs. 33 files squashed into `20260728000000_baseline.sql` (27 tables, 36 policies); the originals archived with a README explaining why nothing executes them. **Staging rebuilt from it and matches prod exactly** (27 tables, 67 functions, 36 policies, 8/8 key tables). **Production wiped to a clean slate** — Ricky confirmed no real customers, so it now holds his login, his personal account and Coreshift HQ (partner #0, structural) and nothing else; full schema + data backups taken first. **GitHub integration connected** (repo renamed `CoreshiftHQNZ/upwind` first, so it wouldn&#39;t need doing twice): working directory `saas-platform`, production branch `main`, auto-branching capped at 3 and only on Supabase file changes. **Proved end to end** with a throwaway PR (#13): a preview branch provisioned its own database, replayed the baseline **into an empty Postgres**, applied the PR&#39;s migration on top (28 tables = 27 + the smoke table, 67 functions), and tore itself down on close — with production untouched throughout (27 tables, 1 user, 0 leakage). Also: `seed.sql` (a partner, a finished unsold site, a priced prospect with a fixed claim token — the cafe-owner journey one URL away), and `ENVIRONMENTS.md`. **The CLI is now deliberately linked to STAGING** so an absent-minded `db push` lands somewhere harmless. *(Two dashboard fields saved silently-wrong on the first attempt — the working directory became `.saas-platform` because the `.` was real content not a placeholder, and the staging branch&#39;s git-sync silently discarded. Both caught by re-reading rather than trusting the toast; worth knowing when editing these by hand.)*</div>
+      </div>
       <div class="card">
         <div class="card-title">🧹 Dashboard tidy — one rule: anything about a website lives on that website&#39;s card</div>
         <div class="card-tags"><span class="tag tag-neutral">ux</span><span class="tag tag-neutral">dashboard</span><span class="tag tag-shipped">shipped</span></div>
@@ -1376,7 +1381,7 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>🅿️ Parking Lot — consciously deferred, needs a decision</h2>
-        <span class="col-count">29</span>
+        <span class="col-count">28</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1458,11 +1463,6 @@
         <div class="card-title">CI gates on edge functions + money-path tests</div>
         <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">audit-p1</span><span class="tag tag-neutral">deploy-functions.yml</span><span class="tag tag-neutral">accrue_commission</span></div>
         <div class="card-desc">`deploy-functions.yml` deploys with **no typecheck/test/lint**; there are **zero tests** on webhook branch logic, `accrue_commission`, the payout reserve/finalize RPCs, or RLS. Add a Deno test harness + a typecheck gate so money/auth code can&#39;t deploy broken</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Disaster-recovery / staging drift</div>
-        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">audit-p1</span></div>
-        <div class="card-desc">Core RPC bodies now committed (0020) but **not applied** to staging; the staging DB still lacks the lead-engine + quota/payout RPCs (task #97), so staging can&#39;t exercise money flows. Apply the full migration set to staging and confirm a clean-DB rebuild works end-to-end</div>
       </div>
       <div class="card">
         <div class="card-title">Rate limits / quotas on paid-API functions</div>
