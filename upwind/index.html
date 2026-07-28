@@ -1244,7 +1244,7 @@
       <div class="card">
         <div class="card-title">Magic-link login</div>
         <div class="card-tags"><span class="tag tag-neutral">auth</span></div>
-        <div class="card-desc">Built, but has never completed a real round trip in production (depends on the Postmark auth hook above)</div>
+        <div class="card-desc">✅ <b>Proved in production 28&#8211;29 Jul.</b> Two full round trips: partner sign-up and customer sign-up, both via the Postmark auth hook, both reaching a real inbox and completing the claim. Remaining caveat is throughput, not function &#8212; custom SMTP is off, so GoTrue caps auth email at roughly 2/hour</div>
       </div>
       <div class="card">
         <div class="card-title">Team invites / agency linking</div>
@@ -1282,9 +1282,29 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week — launch wave</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">10</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🎉 Prod E2E complete &#8212; partner &#8594; site &#8594; customer &#8594; payment &#8594; custom domain</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">Number One BBQ</span><span class="tag tag-neutral">Ricky Digital</span><span class="tag tag-neutral">mansturate.com</span></div>
+        <div class="card-desc">The whole chain ran on live keys and was verified in the prod database rather than on a success screen: <code>sites.plan=&#39;active&#39;</code>, <code>site_is_served()</code> true, prospect <code>paid</code>, two <code>partner_ledger</code> rows exact (hosting <code>(4900&#8722;243)&#215;10%=466</code>, build <code>1000&#8722;49&#8722;50=901</code>), zero duplicate <code>(partner, invoice, type)</code> groups, zero new <code>error_logs</code>. Stripe cross-checked: account is <b>Upwind</b> (<code>acct_1TstvrHtrmVIubMC</code>), <code>balance_transaction.fee</code> 506 NZD &#247; 1.7339 = <b>292</b>, matching the ledger to the cent. <b>And a customer&#39;s own domain is live:</b> <code>mansturate.com</code> is <code>active</code> on Cloudflare for SaaS &#8212; the first ever on prod. Only the payout leg is untested</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔴 Custom domains were broken for every paying customer &#8212; fixed</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">connect-domain</span><span class="tag tag-neutral">site_is_served</span></div>
+        <div class="card-desc"><code>connect-domain</code> authorised against <code>accounts.plan</code>, but per-site billing writes <code>sites.plan</code> &#8212; the webhook only touches <code>accounts.plan</code> when <i>no site matched</i> (legacy account-level subs). So every customer who paid, retail or claim-flow, went live and was then refused their own domain with <code>402 subscription_required</code>. Caught on the first live purchase: <code>sites.plan=&#39;active&#39;</code> sitting next to <code>accounts.plan=&#39;trial&#39;</code>. Now gates on <code>site_is_served()</code>, the same predicate the renderer, editor and dashboard use (it allows <code>past_due</code>, so dunning customers keep their domain). The modal&#39;s recovery button made it worse: &#8220;Set my site live&#8221; called <code>create-checkout</code>, which correctly 409s, and <code>functions.invoke()</code> showed a paying customer the raw string <i>&#8220;Edge Function returned a non-2xx status code&#8221;</i>. PRs #15/#16</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Payout flow &#8212; three known gates before it can run</div>
+        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">payouts</span><span class="tag tag-neutral">needs-ricky</span></div>
+        <div class="card-desc">Not day-one critical (commission matures in 14 days), and none of it is a mystery: (a) <code>partner_payout_details</code> is <b>empty</b> &#8212; zero rows, so <code>prepare_batch</code> skips the partner with &#8220;no payout details&#8221;; (b) <code>details_stable</code> then skips anyone whose details changed under 7 days ago, which will trip the moment (a) is fixed; (c) <code>matures_at</code> is 12 Aug and this run&#39;s commission is <b>US$13.67</b> against a US$50 floor that has no UI override. Checklist items 35/36 cover the systemic two</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Post-E2E UX batch &#8212; stock images, DNS softeners, partner CTA</div>
+        <div class="card-tags"><span class="tag tag-neutral">ux</span><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">marketing</span><span class="tag tag-neutral">DomainModal.tsx</span></div>
+        <div class="card-desc">Straight out of walking the real journey. <b>Stock images:</b> replacing an image is upload-only; add a source (Unsplash first) and decide between inline search or a curated per-industry set &#8212; the latter protects how the finished site looks. <b>DNS is daunting:</b> add &#8220;send this to my developer&#8221; (the CNAME is already computed and returned by <code>connect-domain</code>, so it&#39;s a template plus a field) and promote &#8220;Ask us to do it with you&#8221; from the smallest text in the modal to a peer of the instructions &#8212; it&#39;s the step most likely to lose a customer. <b>Partner CTA is in the wrong funnel:</b> both CTAs on <code>tryupwind.com/partners</code> (<code>partners.html:44</code> and <code>:127</code>) point at <code>upwind.build</code>, the retail door, instead of <code>/partners</code>. Checklist items 37/38/39</div>
+      </div>
       <div class="card">
         <div class="card-title">Partner journey walk + W1–W4 rebuild</div>
         <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">ux</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Fernoak Digital</span><span class="tag tag-neutral">5f67a99d</span><span class="tag tag-neutral">32488a8</span><span class="tag tag-neutral">bdfd94f</span><span class="tag tag-neutral">tax_residency</span><span class="tag tag-neutral">SUPABASE_URL</span><span class="tag tag-neutral">AUTH_PUBLIC_URL</span><span class="tag tag-neutral">/billing</span><span class="tag tag-neutral">partner_profiles</span><span class="tag tag-neutral">custom_pct</span><span class="tag tag-neutral">status</span><span class="tag tag-neutral">ref_code</span></div>
