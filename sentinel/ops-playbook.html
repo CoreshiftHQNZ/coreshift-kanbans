@@ -473,7 +473,7 @@
 <tr>
 <td><strong>Hosting</strong></td>
 <td><strong>Cloudflare Pages</strong>, deployed via GitHub Actions <code>wrangler pages deploy</code></td>
-<td><strong>Railway</strong> (staging + prod envs), auto-deploy via CI</td>
+<td><strong>Railway</strong> (staging + prod envs), auto-deploy via CI — <em>or</em> <strong>Cloudflare Workers</strong> for some apps; see <a href="#-hosting-variant--cloudflare-workers-instead-of-railway">the hosting variant</a> under Track B</td>
 </tr>
 <tr>
 <td><strong>Whose infra</strong></td>
@@ -628,7 +628,49 @@
 </ul>
 <hr>
 <h2>Track B — Product / app</h2>
-<p>Full Railway + Supabase application. This track&#39;s <strong>technical Sentinel-wiring detail lives in <a href="PLAYBOOK-cloning-to-new-app.md">PLAY 9</a></strong> — don&#39;t duplicate it here; this section sequences it into the lifecycle and points at the exact steps.</p>
+<p>An application with accounts and data. This track&#39;s <strong>technical Sentinel-wiring detail lives in <a href="PLAYBOOK-cloning-to-new-app.md">PLAY 9</a></strong> — don&#39;t duplicate it here; this section sequences it into the lifecycle and points at the exact steps.</p>
+<h3>⚠️ Hosting variant — Cloudflare Workers instead of Railway</h3>
+<p>Track B&#39;s steps (and PLAY 9) are written for <strong>Railway + Supabase</strong>, because that&#39;s what KC and DA are. Some apps are <strong>Cloudflare Workers + Supabase</strong> instead — <a href="https://github.com/CoreshiftHQNZ/upwind"><code>CoreshiftHQNZ/upwind</code></a> (Upwind / Coreshift Live Edit) is the reference: Workers for the SPA + renderer + marketing, Supabase edge functions for the backend, no Railway at all.</p>
+<p><strong>Everything in the lifecycle still applies</strong> — it has accounts, a database, and the full <a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a> security surface. Only the hosting-shaped steps change:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Railway app</th>
+<th>Cloudflare-Workers app</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Where secrets live</strong></td>
+<td>Railway env vars per environment</td>
+<td><strong>Supabase</strong> function secrets (edge functions) + <strong>Cloudflare</strong> Workers vars/secrets. There is no Railway step — tell Ops so they don&#39;t wait on one.</td>
+</tr>
+<tr>
+<td><strong>Env-var parity check</strong> (B3)</td>
+<td><code>railway variables</code> diff staging↔prod</td>
+<td>Diff <strong>Supabase secrets</strong> and <strong>Cloudflare vars</strong> per environment instead. Same discipline, different consoles.</td>
+</tr>
+<tr>
+<td><strong>PLAY 6 Railway section</strong></td>
+<td>Applies in full</td>
+<td><strong>N/A</strong> — use the Cloudflare section, plus the Supabase section as normal. <code>PORT</code>/watch-branch/health-check checks don&#39;t exist here.</td>
+</tr>
+<tr>
+<td><strong>Deploys</strong></td>
+<td>Railway auto-deploy on branch push</td>
+<td>GitHub Actions → <code>wrangler deploy</code> / <code>supabase functions deploy</code>. Verify the workflow, not the Railway watch-branch.</td>
+</tr>
+<tr>
+<td><strong>Heartbeat endpoint</strong></td>
+<td>Express route, Sentinel&#39;s default <code>/api/__sentry-test</code></td>
+<td>A <strong>Supabase edge function</strong> — so set <code>heartbeat_path</code> (and <code>heartbeat_url</code> if it differs from <code>public_url</code>) at registration, or Sentinel probes a path that doesn&#39;t exist. Needs <code>verify_jwt = false</code> in <code>config.toml</code>.</td>
+</tr>
+</tbody></table>
+<p>⚠️ <strong>Two heartbeat contract details that bite regardless of stack</strong> (found on Upwind, 2026-07-29 — <a href="https://github.com/CoreshiftHQNZ/upwind/pull/22">upwind#22</a>):</p>
+<ol>
+<li>Sentinel sends the token in the <strong><code>x-sentry-heartbeat-token</code></strong> header, <em>not</em> <code>Authorization: Bearer</code> — an endpoint that only reads <code>Authorization</code> 401s every ping.</li>
+<li>The endpoint <strong>must call <code>Sentry.captureMessage(marker)</code></strong> with the marker as the message text. Sentinel verifies in a second pass by free-text-searching Sentry&#39;s events for that marker; echoing it in the HTTP response only satisfies the first pass, so the heartbeat stays unverified forever.</li>
+</ol>
 <h3>B0 · Discovery &amp; kickoff</h3>
 <ul>
 <li><input disabled="" type="checkbox"> Confirm Track B (accounts and/or stored data → yes).</li>
@@ -1967,7 +2009,7 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 </tr>
 <tr>
 <td><strong>Railway</strong></td>
-<td>✅ Full</td>
+<td>✅ Full — <strong>unless</strong> the app is hosted on <strong>Cloudflare Workers</strong> instead (e.g. Upwind), in which case this section is N/A: secrets live in Supabase + Cloudflare, and the <code>PORT</code>/watch-branch/health-check checks don&#39;t exist. Diff Supabase + Cloudflare vars instead, and use the Cloudflare section below. See <a href="HOW-WE-DO-ONBOARDING.md">HOW-WE-DO-ONBOARDING</a> → Track B hosting variant.</td>
 <td>⬜ N/A — hosted on Cloudflare Pages</td>
 </tr>
 <tr>
@@ -2031,7 +2073,7 @@ Screenshot: https://...supabase.co/storage/v1/.../screenshot.png?token=...
 </li>
 <li><input disabled="" type="checkbox"> <strong>Migration history matches between staging and prod</strong> — every row in staging&#39;s <code>schema_migrations</code> also exists in prod&#39;s (modulo intentional staging-only branches that are clearly noted)</li>
 </ul>
-<h3>Railway — App Hosting  <em>(Track B — apps only; website builds deploy to Cloudflare Pages, see the Cloudflare section)</em></h3>
+<h3>Railway — App Hosting  <em>(Track B — apps only, and only Railway-hosted ones; Cloudflare-Workers apps and website builds skip this — see the Cloudflare section)</em></h3>
 <ul>
 <li><input disabled="" type="checkbox"> Production and staging environments both exist for the app&#39;s service</li>
 <li><input disabled="" type="checkbox"> <strong>Watch branch is correctly set per environment</strong> — production environment watches <code>main</code>; staging environment watches <code>staging</code> (Settings → Deploys → Watch Branch)</li>
