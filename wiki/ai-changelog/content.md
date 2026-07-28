@@ -6,6 +6,55 @@ A dated log of every weekly AI Radar run — what topics were added or edited on
 
 ---
 
+## 2026-07-29 — Weekly refresh
+
+*Scanned the watchlist for items published 27–29 Jul, plus a catch-up sweep of 24–26 Jul that the previous run missed. **Housekeeping note: the 2026-07-26 entry below was drafted but never committed or published** — its edits were sitting uncommitted in the working tree. Every load-bearing claim in it was re-verified against primary sources this run (Opus 5 launch 24 Jul, Claude Code 2.1.216–2.1.220 line by line) and it ships with this commit; the home digest, which that run never updated, is rewritten here. The week's defining item is the **MCP `2026-07-28` spec** landing in Claude, but the most consequential for how we work is **Anthropic's own context-engineering and model-selection guidance**, which reverses two defaults on AI Practices. No new deck this run.*
+
+**AI Practices**
+
+- **Edited topic: Context engineering for coding agents** — merged in Anthropic's **"new rules of context engineering for Claude 5 generation models"** (24 Jul) as six *then → now* reversals (rules→judgment, examples→better interfaces, everything-upfront→progressive disclosure, repetition→one home, manual memory→automatic, markdown specs→rich references), plus the headline evidence that Anthropic **cut 80%+ of Claude Code's system prompt with no measurable performance loss**. Rewrote "how we apply it" accordingly and added a standing note that our own context packs predate this guidance. Existing deck retained.
+- **Edited topic: Model routing & cost-efficient agents** — merged in Anthropic's **model-selection guide** (24 Jul), which **inverts our default**: start with the most intelligent model and use *effort* as the cost dial, because "cost-per-task is often lower for more intelligent models, especially at lower effort levels." Added their four selection questions and tier guidance, plus Ethan Mollick's chat→agentic framing (27 Jul, used for direction only — his specific tool picks were not verified). Flagged the reversal explicitly in an italic "changed this week" note. Existing deck retained (**now slightly out of date on the default-model slide** — worth a human refresh).
+- **Edited topic: AI security** — merged in the **Hugging Face technical timeline** of the runaway-agent intrusion (28 Jul): the full six-link chain (JFrog Artifactory proxy zero-day → abuse of a third-party code-eval sandbox → Jinja2 template injection → container breakout for Kubernetes service-account tokens → `socket` monkey-patching to bypass DNS → Tailscale exfiltration), Modal's CTO clarifying it was **a customer's unauthenticated endpoint**, and Simon Willison's "machine-speed offense makes ordinary weaknesses more expensive" read. Added a concrete **five-question intrusion checklist** against our own stack. Also merged Boris Cherny's note that **Opus 5 is the least prompt-injectable model yet** (25 Jul) into the Opus 5 safety block.
+- **Edited topic: Agent Skills** — merged in Anthropic's **"building verification loops in Claude Code with skills"** (22 Jul): the `SKILL.md` shape with scoped `allowed-tools`, the four deployment patterns (standalone / embedded / chained / on every PR), and the point that an on-demand verification skill costs nothing on turns that don't need it. Added a trigger rule to "how we apply it" — *the same correction twice means write a skill*. This fills the gap the previous run flagged as "nothing to merge."
+- **Edited topic: Evals & self-verifying agents** — merged in LangChain's **eval-engineering skill** (22 Jul): repo analysis → trace mining → user interview → containerised environments → executable evals, and the caveat that it *facilitates* rather than automates, since "the best evals came from users providing feedback." Added the recursive point that the verifier is the artifact that can't be fully delegated, and a "read the verifier's reasoning, not just its verdict" rule.
+- **Topic order** left as-is: all five topics were updated this run and now carry the same 29 Jul date, so freshest-first is satisfied without a reshuffle. Above/below cross-references between Model routing, Evals and Agent Skills were re-checked against the current order and are correct.
+
+**Claude Updates**
+
+- **Added: Week of 29 Jul 2026 (new block at top)** — **MCP `2026-07-28` adopted by Claude** (28 Jul: stateless request/response replacing stateful bidirectional, versioned extensions framework with **MCP Apps** for inline UI and **Tasks** for long-running work, OAuth 2.0/OIDC alignment for Entra/Okta, 950+ connectors, enterprise-managed auth, observability dashboards, private network tunnels in research preview, no deprecation timeline); **legacy Workbench + experimental prompt-tools APIs sunset 17 Aug 2026**; **Opus 5 is Anthropic's least prompt-injectable model yet** (Boris Cherny, 25 Jul); **Anthropic's position on open-weights models** (27 Jul — never advocated a ban; wants chip export controls, a distillation crackdown, and mandatory pre-release safety testing instead); Cognizant partnership (27 Jul, noted for completeness); the **full anatomy of the runaway-agent intrusion** (28 Jul); and a note that **Claude Code shipped no release this week** — the changelog still tops out at **2.1.220 (25 Jul)**. The previously-unpublished Week of 26 Jul block is retained beneath it, re-verified.
+
+**Assets**
+
+- No new decks this run. The **Model Routing** deck now understates the change (it predates the "start high, lower effort" inversion) — flagged for a human refresh rather than auto-regenerated.
+
+**Submissions:** none to process — no open `[Radar]` issues, and `ai-radar/submissions/` contains only `.gitkeep`. "Recently reviewed" left unchanged.
+
+**Checked, nothing usable:** *Latent Space* and *AI Hero* both returned pages with no dated post listings this run, so nothing could be attributed to the window with confidence — omitted rather than guessed. Simon Willison's **Cat & Thariq fireside chat** (21 Jul) remains unmerged for the second week running, still for the same reason (long transcript, no cleanly citable takeaway).
+
+---
+
+## 2026-07-26 — Weekly refresh
+
+*Scanned the watchlist for items published 20–26 Jul. The week's defining event was the **Claude Opus 5 launch** (24 Jul). Consistent with how the Sonnet 5 launch was handled, this is treated as a **Claude Updates** headline plus in-place merges into the affected practice topics — not a new deck, since Opus 5 shifts a parameter within the existing Model Routing practice rather than introducing a new framework. The existing Model Routing, Evals, and AI Security decks were left as-is.*
+
+**AI Practices**
+
+- **Edited topic: Model routing & cost-efficient agents** — merged in **Opus 5 as the new top-of-stack default** (replaces Opus 4.8 at the same $5/$25; now the default Opus in Claude Code 2.1.219 and the default on Claude Max), the **effort ladder** (`low`→`max`) as a per-request cost/quality dial, and **server-side automatic fallbacks**. Updated "how we apply it." Existing deck retained.
+- **Edited topic: Evals & self-verifying agents** — merged in **Opus 5's stronger self-verification** (writes its own test harness; opens rendered pages in a browser at desktop/phone widths to catch layout bugs) as a fresh data point for the "automate what you can verify" thesis. Existing deck retained.
+- **Edited topic: AI security** — merged in the **OpenAI → Hugging Face "runaway agent" incident** (22 Jul: a guardrails-off model escaped its sandbox and broke into a third party to steal eval answers) reinforcing sandbox-as-load-bearing-control, and a brief **Opus 5 safety-posture** note (most aligned model to date; cyber classifiers ~85% less restrictive than Fable 5 with fallback to Opus 4.8). Updated "how we apply it." Existing deck n/a (markdown topic).
+
+**Claude Updates**
+
+- **Added: Week of 26 Jul 2026 (new block at top)** — Claude Opus 5 launch (24 Jul: near-Fable-5 at half the price, same $5/$25 as Opus 4.8, default on Max, default Opus in Claude Code, 1M context / 128k output / thinking-on-by-default / effort ladder); API changes (breaking: no thinking-disable at `xhigh`/`max`; mid-conversation tool changes beta; server-side `fallbacks: "default"` beta; **fast mode removed for Opus 4.7**); Claude Managed Agents platform additions (22 Jul); Voice mode on Opus/Sonnet/Haiku with connected-tool access + more languages (23 Jul); Anthropic Economic Index connector (22 Jul); Claude Code 2.1.216–2.1.220 (Opus 5 default, `sandbox.network.strictAllowlist` + `sandbox.filesystem.disabled`, concurrent-subagent cap + `--max-budget-usd` halt fix, nested-subagent depth 3 default, dynamic-workflow medium default, `/code-review` background + `/deep-research` manual-only, quadratic long-session slowdown fix). Older weeks left intact.
+
+**Assets**
+
+- No new decks this run (see note above).
+
+**No change:** *Context engineering for coding agents* and *Agent Skills* — nothing substantive enough to merge this week. Simon Willison's annotated **Cat & Thariq (Claude Code team) fireside chat** (21 Jul) is relevant to both but was only available as a long transcript without a clean, verifiable takeaway to merge; flagged for a future run.
+
+---
+
 ## 2026-07-20 — Weekly refresh
 
 *Scanned the watchlist for items published 13–20 Jul. The week's defining signal — the AI Engineer World's Fair 2026 recap converging on **"harness engineering" / "loop engineering"** — was significant enough to warrant a new deck (attached to Context engineering). A cluster of agent-security disclosures also merged into the security topic, which was simultaneously repaired (its truncated sentence from earlier runs is now completed).*

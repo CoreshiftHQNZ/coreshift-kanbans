@@ -1,20 +1,21 @@
-**Week of 20 Jul 2026** — the week's notable new toys, tools, and changes. Full write-ups live in [AI Practices](wiki/ai-practices/) · [Claude Updates](wiki/claude-updates/).
+**Week of 29 Jul 2026** — the week's notable new toys, tools, and changes. Full write-ups live in [AI Practices](wiki/ai-practices/) · [Claude Updates](wiki/claude-updates/).
 
 **🧰 New tools & toys**
 
-- **Claude Code 2.1.208–2.1.215** — a permission / auto-mode **security-hardening wave**: Bash checks fail closed in more cases (>10k-char commands prompt), `Edit(dir/**)` no longer auto-approves nested writes, plan mode won't silently run file-modifying commands, worktree-isolated subagents can't touch the main checkout, and the Agent tool is hardened against prompt injection. Plus **runaway-loop caps** (WebSearch/subagent limits; MCP calls >2 min auto-background), `/fork`→background + `/subtask`, and `/verify` + `/code-review` that **no longer auto-run**.
-- **HIPAA configuration is now self-serve (14 Jul)** — eligible admins review the BAA and enable it in one flow, for Claude Enterprise and the API.
-- **Harness & Loop Engineering deck** — the AI Engineer World's Fair 2026 consensus, now on AI Practices: build the *harness* and the *loop* (human owns the outer loop, agent runs the inner), not a fully autonomous agent.
+- **MCP `2026-07-28` — and Claude already supports it (28 Jul)** — the protocol goes **stateless** (request/response, no session plumbing), so MCP servers now deploy cleanly on serverless and edge. Two extensions ship under a new versioned framework: **MCP Apps** (a server can render interactive UI *inline in the conversation*) and **Tasks** (long-running work). Auth now aligns with real OAuth 2.0 / OIDC, so Entra and Okta work without hacks. No deprecation deadline — design new servers this way rather than scrambling.
+- **Verification loops as skills** — Anthropic's most copyable pattern in a while: take a check you keep making by hand, encode it as a small `SKILL.md` with scoped `allowed-tools`, then run it standalone, embedded in the producing skill, chained, or on every PR.
+- **Automated eval engineering (LangChain)** — a skill that reads your repo, mines production traces, interviews you, and emits containerised, executable evals. The honest caveat: it *facilitates* rather than automates — "the best evals came from users providing feedback."
 
 **✴️ Claude / Anthropic**
 
-- **Models: Fable 5 is a permanent subscriber model again (from 20 Jul)** — included in **Max & Team Premium** at 50% of usage limits; Pro / Team Standard keep usage-credit access plus a one-time **$100 credit**. Worth re-testing on the hardest work now the top model isn't API-credits-only.
-- **Security: a `web_fetch` data-exfiltration hole was found and fixed (15 Jul)** — it could follow attacker-planted links inside pages it had already fetched to leak memory contents; Anthropic removed that ability. Textbook *lethal trifecta* case.
+- **Claude Opus 5 (24 Jul)** — near-Fable-5 intelligence at **the same $5/$25 as Opus 4.8**, which it replaces; now the default Opus in Claude Code and the default on Max. 1M context, thinking on by default, and a `low`→`max` **effort ladder**. Follow-up worth knowing: it's Anthropic's **least prompt-injectable model yet**.
+- **Anthropic's position on open-weights models (27 Jul)** — it has **never advocated a ban**, and opposes protectionist ones. The asks instead: chip export controls, a crackdown on state-backed industrial distillation, and mandatory pre-release safety testing for *all* capable models, open or closed.
+- **Housekeeping:** legacy Workbench and experimental prompt-tools APIs **sunset 17 Aug 2026**. Claude Code shipped no release this week — still **2.1.220**.
 
 **🧠 Practices worth a look**
 
-- **Eval-driven development** — mainstream at AIEWF 2026 (Rippling, Abridge): write the eval first, and watch for **reward hacking**. "Don't ship skills without evals."
-- **Safe agent execution** — always run coding agents **sandboxed with review** (the GPT-5.6 Codex file-deletion bug), and **audit what a coding-agent CLI transmits by default** (the grok-build data-upload backlash).
-- **Cost-efficient agents** — "the best AI agents cost less than you think": fix **harness waste** (caching, scoped context, capped budgets) before blaming the model bill.
+- **The new rules of context engineering** — Anthropic reversed six of its own recommendations for Claude 5 models: give **judgment not rules**, **better interfaces not examples**, progressive disclosure, say each thing once. The evidence: they cut **80%+ of Claude Code's system prompt with no measurable performance loss**. Most context packs are too big, and the fix is deletion.
+- **Model routing, inverted** — the new advice is **start with the most intelligent model and lower the *effort*, not the model**, because cost-per-*task* is often lower on a smarter model at low effort. We've changed our default accordingly.
+- **Anatomy of the runaway-agent intrusion (28 Jul)** — Hugging Face's timeline shows six *ordinary* weaknesses chained: a proxy zero-day, a customer's unauthenticated endpoint, template injection, an over-scoped Kubernetes token. Nothing exotic — but "machine-speed offense makes ordinary weaknesses more expensive for defenders."
 
 *Got something for next week? [Share a find →](wiki/ai-practices/) (scroll to "Share a find").*
