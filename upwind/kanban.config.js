@@ -5,10 +5,10 @@ module.exports = {
   output: "index.html",
 
   // ── Hero ──────────────────────────────────────────────────────
-  title: "Coreshift Live Edit",
+  title: "Upwind",
   brandMark: "✎",
   brandSub: "Product Dashboard",
-  tagline: "Self-serve $100/mo websites the client edits themselves — click any text or image on the live page and change it.",
+  tagline: "Websites small businesses can edit themselves — and a partner program that sells them. US$49/mo, built on Coreshift Limited as merchant of record.",
   description:
     "The core Coreshift product: clients get a beautiful site they can edit in place, with unlimited redesigns across a library of theme styles. " +
     "Edge-native — publishing is a database pointer flip, so go-live is instant; one Cloudflare Worker server-renders every tenant. " +
@@ -44,8 +44,8 @@ module.exports = {
     {
       icon: "📦",
       title: "Repo",
-      desc: "CoreshiftHQNZ/coreshift-live-edit — the whole monorepo",
-      url: "https://github.com/CoreshiftHQNZ/coreshift-live-edit",
+      desc: "CoreshiftHQNZ/upwind — the whole monorepo",
+      url: "https://github.com/CoreshiftHQNZ/upwind",
     },
     {
       icon: "🚀",
@@ -149,7 +149,7 @@ module.exports = {
   ],
 
   footerHtml:
-    'Edit <code>live-edit/KANBAN.md</code> and run <code>node tools/build.js live-edit</code> to refresh this view. ' +
+    'Edit <code>upwind/KANBAN.md</code> and run <code>node tools/build.js upwind</code> to refresh this view. ' +
     "&nbsp;·&nbsp; " +
     'Source: <a href="https://github.com/CoreshiftHQNZ/coreshift-kanbans">CoreshiftHQNZ/coreshift-kanbans</a>.',
 };

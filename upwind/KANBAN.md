@@ -1,6 +1,6 @@
-# Coreshift Live Edit — Kanban
+# Upwind — Kanban
 
-> Visual build state for the core product. Edit this file and run `node tools/build.js live-edit` from the coreshift-kanbans repo root to refresh the published board.
+> Visual build state for the core product. Edit this file and run `node tools/build.js upwind` from the coreshift-kanbans repo root to refresh the published board.
 >
 > **Card format:** `- **Title** \`tag\` \`tag\` — Description.`
 >
