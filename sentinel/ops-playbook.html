@@ -91,8 +91,10 @@
       font-weight: 700;
       letter-spacing: 0.15em;
       text-transform: uppercase;
+      margin-top: 24px;
       margin-bottom: 10px;
     }
+    nav .nav-label:first-child { margin-top: 0; }
     nav a {
       display: flex;
       align-items: center;
@@ -379,6 +381,8 @@
         <div class="brand-sub">Ops Playbook</div>
       </div>
       <nav>
+        <div class="nav-label">Start here</div>
+        <a href="#onboarding"><span class="play-num">▶</span><span>Onboarding</span></a>
         <div class="nav-label">The Plays</div>
         <a href="#priority"><span class="play-num">01</span><span>Priority Framework</span></a>
         <a href="#pr-reviews"><span class="play-num">02</span><span>PR Reviews</span></a>
@@ -390,9 +394,9 @@
         <a href="#triage"><span class="play-num">08</span><span>Triage Rhythm</span></a>
         <a href="#cloning"><span class="play-num">09</span><span>Cloning to a New App</span></a>
         <a href="#privacy"><span class="play-num">10</span><span>Privacy</span></a>
-        <a href="#onboarding"><span class="play-num">11</span><span>Onboarding</span></a>
-        <a href="#drag-and-drop"><span class="play-num">12</span><span>Drag-and-Drop</span></a>
-        <a href="#security-headers"><span class="play-num">13</span><span>Cloudflare Pages Security Headers</span></a>
+        <div class="nav-label">Recipes</div>
+        <a href="#drag-and-drop"><span class="play-num">R1</span><span>Drag-and-Drop</span></a>
+        <a href="#security-headers"><span class="play-num">R2</span><span>Cloudflare Pages Security Headers</span></a>
         <div class="nav-foot">
           Internal · Updated Jul 2026<br>
           For Coreshift HQ team
@@ -414,6 +418,284 @@
       </header>
 
       
+      <section id="onboarding" class="play" data-accent="amber">
+        <div class="play-header">
+          <span class="play-eyebrow">START HERE</span>
+        </div>
+        <h2 class="play-title">Onboarding</h2>
+        <p class="play-tagline">The full client lifecycle — website builds vs products/apps — that ties the plays together.</p>
+        <div class="play-divider"></div>
+        <div class="md"><p><strong>Status:</strong> Active · v1 · 2026-07-08
+<strong>Applies to:</strong> Every new Coreshift engagement — a <strong>website build</strong> or a <strong>product/app</strong> — from first conversation to live-and-monitored.
+<strong>Owners:</strong> Operator (runs the lifecycle) · Privacy Officer (Keitha — owns the PIA gate) · Claude Code (executes most technical steps under the operator&#39;s account)</p>
+<blockquote>
+<p><strong>Why this doc exists:</strong> onboarding used to mean one thing — clone Sentinel onto the next Railway+Supabase app (<a href="PLAYBOOK-cloning-to-new-app.md">PLAY 9</a>). That playbook is excellent but it bakes in the <em>app</em> stack end to end: Railway env vars, a Supabase project, RLS/HIBP, KC&#39;s Edge Function. Coreshift now also ships <strong>website builds</strong> — hand-coded/Astro static sites on <strong>Cloudflare Pages</strong>, on the <strong>client&#39;s own Cloudflare account</strong>, with no Railway and no database — and Sentinel is a <strong>named clause in the T&amp;Cs</strong>, so it&#39;s meant to go into <em>every</em> engagement by default. Those two worlds share a spine but diverge on almost every concrete step. This is the front door: it holds the shared lifecycle, then splits into two tracks.</p>
+<p><strong>Relationship to the other plays:</strong> this doc is the <strong>lifecycle wrapper</strong>. It does not replace the deep runbooks — it sequences them. <a href="PLAYBOOK-cloning-to-new-app.md">PLAY 9</a> is now best read as <em>the app track&#39;s Sentinel-wiring detail</em>; <a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a> is the go-live <strong>security</strong> gate; <a href="HOW-WE-DO-PRIVACY.md">PLAY 10</a> is the go-live <strong>privacy</strong> gate.</p>
+</blockquote>
+<hr>
+<h2>Pick your track — the one decision that changes everything</h2>
+<p>Before anything else, decide which track the engagement is on. It&#39;s almost always obvious, and it sets the stack, the infra ownership, the security baseline, the contract/PIA shape, and what Sentinel can actually monitor.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>Track A — Website build</strong></th>
+<th><strong>Track B — Product / app</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>What it is</strong></td>
+<td>Marketing / lead-gen / brochure site</td>
+<td>An application with accounts, data, logic</td>
+</tr>
+<tr>
+<td><strong>Stack</strong></td>
+<td>Static (hand-coded HTML or Astro) + vendored JS + <strong>Cloudflare Pages Functions</strong> for the dynamic bits</td>
+<td>React/Vite front end + Node/Express back end + <strong>Supabase</strong></td>
+</tr>
+<tr>
+<td><strong>Hosting</strong></td>
+<td><strong>Cloudflare Pages</strong>, deployed via GitHub Actions <code>wrangler pages deploy</code></td>
+<td><strong>Railway</strong> (staging + prod envs), auto-deploy via CI</td>
+</tr>
+<tr>
+<td><strong>Whose infra</strong></td>
+<td>The <strong>client&#39;s own Cloudflare account</strong> (target model). Some early builds sit on <strong>CoreshiftHq</strong> — confirm per project.</td>
+<td><strong>Coreshift&#39;s</strong> Railway + Supabase (org <code>CoreShift</code>)</td>
+</tr>
+<tr>
+<td><strong>Data at rest</strong></td>
+<td>Usually <strong>none retained</strong> (contact form → Postmark → inbox, nothing stored)</td>
+<td>A real database — accounts, user data, the works</td>
+</tr>
+<tr>
+<td><strong>Auth</strong></td>
+<td>None</td>
+<td>Supabase Auth</td>
+</tr>
+<tr>
+<td><strong>Reference build</strong></td>
+<td><a href="https://github.com/CoreshiftHQNZ/growth-partners-website"><code>CoreshiftHQNZ/growth-partners-website</code></a> (Astro) · <code>growth-partners-2026</code> (hand-coded)</td>
+<td><a href="https://github.com/CoreshiftHQNZ/keycontent-app"><code>CoreshiftHQNZ/keycontent-app</code></a>, Digital Architect</td>
+</tr>
+<tr>
+<td><strong>Security baseline</strong></td>
+<td>CF security headers, Turnstile on forms, SSL Full(Strict), DNSSEC, WAF/Bot-Fight, Postmark DKIM/SPF/DMARC, secrets as Pages env vars, staging behind a password gate</td>
+<td>RLS-on everywhere, HIBP, private buckets, <code>sendDefaultPii:false</code>, env-var parity, branch protection — the full <a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a></td>
+</tr>
+<tr>
+<td><strong>What Sentinel monitors</strong></td>
+<td>Uptime (Better Stack) + the <strong>weekly endpoint security audit</strong> (Brief 20 — black-box HTTP hygiene, live since ~2026-07-07). Support intake = the site&#39;s <strong>contact form</strong> (the Report-Issue widget is app-oriented — see A5/A6). <em>(No code/advisor scan — no Supabase project.)</em></td>
+<td>The full picture: code/credential scan + Supabase advisors + uptime + Sentry FE/BE + Report-Issue widget</td>
+</tr>
+<tr>
+<td><strong>Go-live gate</strong></td>
+<td>The <strong>web-build audit subset</strong> (§Track A, Stage 4) + PIA</td>
+<td>The full <a href="HOW-WE-DO-APP-AUDITS.md">App Audit (PLAY 6)</a> + PIA</td>
+</tr>
+</tbody></table>
+<p><strong>If you&#39;re unsure:</strong> ask &quot;does it hold user data or have logins?&quot; Yes → Track B. No → Track A. A site with <em>only</em> a contact form is Track A even though it has one Pages Function. The moment it grows accounts or a database, it graduates to Track B and re-onboards on that track.</p>
+<hr>
+<h2>The lifecycle (shared spine)</h2>
+<p>Both tracks walk the same six stages. This section defines each stage once; the two track sections below say <em>how</em> each stage lands on that stack. Treat the two <strong>gates</strong> (Privacy, Go-live) as hard — nothing goes live past a red gate without an explicit, dated &quot;consciously deferred&quot; note.</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>What it is</th>
+<th>Gate?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>0 · Discovery &amp; kickoff</strong></td>
+<td>Confirm the track, the domain, the client&#39;s accounts, who owns what</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>1 · Contract &amp; commercial</strong></td>
+<td>The agreement, incl. the <strong>named Sentinel clause</strong>; what the recurring fee actually buys</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>2 · Privacy &amp; PIA</strong></td>
+<td>What personal data (if any) is touched; a current PIA on file</td>
+<td><strong>GATE</strong> (<a href="HOW-WE-DO-PRIVACY.md">PLAY 10</a>)</td>
+</tr>
+<tr>
+<td><strong>3 · Secure build baseline</strong></td>
+<td>Born-secure, not remediated-after — the shift-left baseline for the stack</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>4 · Launch / go-live</strong></td>
+<td>The security gate for the stack + the privacy sign-off, then flip to live</td>
+<td><strong>GATE</strong> (<a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a> or its web subset)</td>
+</tr>
+<tr>
+<td><strong>5 · Sentinel + monitoring</strong></td>
+<td>Wire the engagement into Sentinel so it&#39;s watched</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>6 · Support handover</strong></td>
+<td>Bug-report path, triage rhythm, the 9–5 NZ SLA clock</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<h3>The two gates, stated once</h3>
+<ul>
+<li><strong>Privacy gate (Stage 2, <a href="HOW-WE-DO-PRIVACY.md">PLAY 10</a>).</strong> <em>Should we be holding this data at all? Did we tell people? How long do we keep it?</em> No toggle answers that — it&#39;s the Privacy Officer&#39;s call, recorded in a per-app <strong>PIA</strong> (see <a href="PIA-keycontent.md"><code>PIA-keycontent.md</code></a>, <a href="PIA-digital-architect.md"><code>PIA-digital-architect.md</code></a> for shape). A website that stores nothing still gets a one-paragraph PIA saying so — &quot;contact form → Postmark → inbox, nothing retained&quot; is a valid, fast PIA, but it&#39;s still written down.</li>
+<li><strong>Go-live security gate (Stage 4, <a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a>).</strong> <em>Is the data hard to steal or leak? Did we turn on every default-off setting?</em> PLAY 6 is the app-track gate in full. Track A runs the <strong>web-build subset</strong> of it (defined in Track A · Stage 4) because most PLAY 6 checks are Supabase/Railway-specific and simply don&#39;t apply to a static site.</li>
+</ul>
+<h3>Access the driving session needs (both tracks)</h3>
+<p>The standard Coreshift access set (one-time per machine): <code>gh</code> CLI, Supabase MCP, Cloudflare MCP, Railway CLI. Track A leans on <code>gh</code> + Cloudflare; Track B uses all four. See Coreshift&#39;s account-level access doc.</p>
+<hr>
+<h2>Track A — Website build</h2>
+<p>Static site on Cloudflare Pages, on the client&#39;s Cloudflare account. Reference: <a href="https://github.com/CoreshiftHQNZ/growth-partners-website"><code>growth-partners-website</code></a>.</p>
+<h3>A0 · Discovery &amp; kickoff</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Confirm it&#39;s genuinely Track A (no accounts, no stored data). If a &quot;site&quot; needs logins or a dashboard, it&#39;s Track B.</li>
+<li><input disabled="" type="checkbox"> <strong>Whose Cloudflare account?</strong> The target model is the <strong>client&#39;s own</strong> (so the annual fee is monitoring + maintenance + support, not compute). Get them to invite Coreshift, or agree it lands on <strong>CoreshiftHq</strong> for now and note the migration. Capture the account ID.</li>
+<li><input disabled="" type="checkbox"> Confirm the <strong>production domain</strong> and <strong>where its DNS lives</strong>. If DNS isn&#39;t already on Cloudflare, plan the nameserver move — SSL, DDoS, WAF, DNSSEC and the CDN all depend on it.</li>
+<li><input disabled="" type="checkbox"> Pick a <strong>slug</strong> (<code>^[a-z][a-z0-9-]{1,40}$</code>) — used for the repo, the Pages project, and later <code>maintained_apps.slug</code>.</li>
+<li><input disabled="" type="checkbox"> Create the repo <code>CoreshiftHQNZ/&lt;repo&gt;</code> with <code>dev</code>/<code>staging</code>/<code>main</code> and branch protection per <a href="HOW-WE-DO-DEPLOYS.md">HOW-WE-DO-DEPLOYS</a>.</li>
+</ul>
+<h3>A1 · Contract &amp; commercial</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Base agreement = <strong>Type-2 Bespoke Build</strong> (it fits a custom static build and already carries the named Sentinel clause + a 9–5 NZ SLA). <strong>Not</strong> the old WordPress-shaped web-build+hosting template (it references CMS/plugins/database export — none of which exists here). Fill the website-shaped SOW + SLA from the draft: <a href="drafts/WEBSITE-BUILD-SOW-SLA.md">drafts/WEBSITE-BUILD-SOW-SLA.md</a>. The SOW must describe <strong>this</strong> stack — static Cloudflare Pages, Pages Functions, Postmark, Turnstile — not Railway/Supabase and not a CMS.</li>
+<li><input disabled="" type="checkbox"> Include the <strong>named Sentinel clause</strong> (monitoring is a contractual deliverable now). For a website, Sentinel delivers: <strong>uptime monitoring</strong> + the <strong>weekly endpoint security audit</strong> (Brief 20 — HTTPS/HSTS/TLS-expiry/exposed-file checks; live and honouring the &quot;weekly endpoint audits&quot; clause) + the <strong>Report-Issue path</strong>. Don&#39;t promise app-grade coverage (advisor/RLS scans) — a static site has no database to advise on.</li>
+<li><input disabled="" type="checkbox"> Frame the recurring fee honestly: on the client&#39;s own CF account, compute is ~free; the fee is <strong>monitoring + maintenance + support</strong>.</li>
+</ul>
+<h3>A2 · Privacy &amp; PIA  ·  <strong>GATE</strong></h3>
+<ul>
+<li><input disabled="" type="checkbox"> Map the data. For most sites it&#39;s just the contact form: <strong>name, email, company, message → Postmark → an inbox. Nothing stored server-side.</strong> (<a href="https://github.com/CoreshiftHQNZ/growth-partners-website/blob/main/functions/api/contact.ts"><code>contact.ts</code></a> retains nothing.)</li>
+<li><input disabled="" type="checkbox"> Note the third parties that <em>do</em> touch data: <strong>Postmark</strong> (email transit), <strong>Cloudflare</strong> (Turnstile + logs + analytics), plus any <strong>Google Analytics/Ads / Peec AI</strong> per spec. These belong in the sub-processor register.</li>
+<li><input disabled="" type="checkbox"> File a short <strong>PIA</strong> with the Privacy Officer — even if the finding is &quot;no personal data retained.&quot; Green-light this gate before go-live.</li>
+</ul>
+<h3>A3 · Secure build baseline (born-secure)</h3>
+<p>Build these in from the start — don&#39;t ship then remediate.</p>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>Security headers.</strong> Drop in a <code>_headers</code> file (CSP, <code>nosniff</code>, <code>Referrer-Policy</code>, <code>X-Frame-Options</code>/frame-ancestors, HSTS, Permissions-Policy) — copy-paste starter + CSP tuning in <a href="recipes/cloudflare-pages-security-headers.md">recipes/cloudflare-pages-security-headers.md</a>. ⚠️ The GP reference build&#39;s <code>functions/_middleware.ts</code> is a <em>staging password gate</em>, <strong>not</strong> a headers layer — headers are easy to forget. Roll CSP out Report-Only first, then enforce before go-live.</li>
+<li><input disabled="" type="checkbox"> <strong>Forms behind Turnstile.</strong> The contact Function verifies <code>cf-turnstile-response</code> server-side <em>only if</em> <code>TURNSTILE_SECRET</code> is set <strong>and</strong> the widget renders (<code>PUBLIC_TURNSTILE_SITE_KEY</code> present at build). <strong>Both halves are required</strong> — one without the other is silent no-protection. Verify both.</li>
+<li><input disabled="" type="checkbox"> <strong>Secrets as Pages env vars, never committed.</strong> <code>POSTMARK_TOKEN</code> + <code>TURNSTILE_SECRET</code> as <strong>Secret</strong>-type Pages vars; <code>CONTACT_FROM</code>/<code>CONTACT_TO</code>/<code>PUBLIC_TURNSTILE_SITE_KEY</code> as plaintext. <code>.gitignore</code> covers <code>.env*</code>.</li>
+<li><input disabled="" type="checkbox"> <strong>Staging is private.</strong> Set <code>STAGING_PASSWORD</code> on the preview environment (the <code>_middleware</code> gate) and <code>noindex</code> on non-prod. Production sets no password → public.</li>
+<li><input disabled="" type="checkbox"> <strong>Cloudflare posture:</strong> SSL/TLS <strong>Full (Strict)</strong>, DNSSEC on, Bot Fight Mode on, and (once forms/endpoints exist) a WAF rate-limit rule on <code>/api/*</code>.</li>
+<li><input disabled="" type="checkbox"> <strong>Postmark deliverability:</strong> verify the sender domain — <strong>DKIM + SPF + Return-Path all green</strong> — or the first send 422s. Use a <code>MessageStream: &#39;outbound&#39;</code> for transactional.</li>
+<li><input disabled="" type="checkbox"> <strong>CI deploy</strong> (<a href="https://github.com/CoreshiftHQNZ/growth-partners-website/blob/main/.github/workflows/deploy.yml"><code>.github/workflows/deploy.yml</code></a>): <code>main</code> → production, <code>staging</code> → preview. Needs repo secrets <code>CLOUDFLARE_API_TOKEN</code> (scoped <strong>Account → Cloudflare Pages → Edit</strong>) + <code>CLOUDFLARE_ACCOUNT_ID</code>. Claude can set these with <code>gh secret set</code>.</li>
+</ul>
+<h3>A4 · Launch / go-live  ·  <strong>GATE</strong></h3>
+<p>Run the <strong>web-build audit subset</strong> — the slice of <a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a> that actually applies to a static site. (The Supabase, Railway, and Sentry-backend sections are <strong>N/A</strong> — no DB, no Railway, no server.)</p>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>Cloudflare:</strong> SSL Full(Strict) · DNSSEC on · Bot Fight Mode on · WAF rate-limit on <code>/api/*</code> · Pages preview deploys gated (staging password) · env vars present in <strong>both</strong> Preview and Production.</li>
+<li><input disabled="" type="checkbox"> <strong>GitHub:</strong> branch protection on <code>main</code> + <code>staging</code> · <code>.gitignore</code> excludes <code>.env*</code>/keys · secret scanning + Dependabot on · no secrets in history.</li>
+<li><input disabled="" type="checkbox"> <strong>Postmark:</strong> sender domain verified (DKIM+SPF+Return-Path green) · sender matches the site&#39;s domain · <code>outbound</code> stream.</li>
+<li><input disabled="" type="checkbox"> <strong>Forms:</strong> submit a real contact-form entry end to end — Turnstile challenge shows, email lands in <code>CONTACT_TO</code>, <code>/thanks</code> renders. Try a no-JS POST too (it 303-redirects).</li>
+<li><input disabled="" type="checkbox"> <strong>Headers:</strong> <code>_headers</code> live — confirm CSP + nosniff + HSTS on a prod response.</li>
+<li><input disabled="" type="checkbox"> <strong>DNS cutover:</strong> custom domain attached in Pages, CNAME → <code>&lt;project&gt;.pages.dev</code>, <code>site:</code> in <code>astro.config.mjs</code> matches the final domain.</li>
+<li><input disabled="" type="checkbox"> <strong>Privacy gate:</strong> PIA on file (A2) — green.</li>
+</ul>
+<h3>A5 · Sentinel + monitoring</h3>
+<p>A static site can&#39;t be code/advisor-scanned the way an app is (no Supabase project), but it <strong>does</strong> get the black-box weekly endpoint audit — so its Sentinel coverage is <strong>uptime + weekly endpoint audit + bug widget</strong>.</p>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>Register in Sentinel</strong> (<code>/maintenance</code> → Onboard app, or <code>POST /api/maintenance/apps</code>): slug, display_name, repo. <strong>Set <code>primary_url</code> to the prod URL</strong> — this is the column the endpoint audit keys off (<code>maintained_apps WHERE primary_url IS NOT NULL</code>, added by the Brief 20 migration <code>20260707010000</code>). Optionally set <code>public_url</code> too (dashboard link / heartbeat — a separate column). Leave <code>supabase_project_ref</code> empty (no DB to advisor-scan). Use <code>audit_paths</code> to add extra exposure-probe paths beyond the built-in list.</li>
+<li><input disabled="" type="checkbox"> <strong>Weekly endpoint security audit (Brief 20) — LIVE (shipped ~2026-07-07).</strong> <code>server/lib/endpoint-audit.ts</code> runs <strong>Mondays 6am NZ</strong> against every <code>primary_url</code>: HTTPS reachability, HTTP→HTTPS redirect, <strong>HSTS</strong> (≥180-day max-age), <strong>TLS cert expiry</strong> (high if &lt;21 days), <strong>exposed sensitive files</strong> (<code>/.env</code>, <code>/.git/config</code>, <code>/deploy.ps1</code>, <code>/HANDOVER.md</code>, <code>/README.md</code>, …), and the contact endpoint. Black-box, unauthenticated, ~&lt;15 requests/site, 10s timeout. Findings upsert into <code>endpoint_audit_findings</code> and surface in the Monday digest. This is what makes the &quot;weekly endpoint audits&quot; contract clause real.</li>
+<li><input disabled="" type="checkbox"> <strong>Better Stack uptime monitor</strong> on the prod URL (3-min cadence, email to <code>abe@coreshifthq.com</code>). Sentinel&#39;s <code>/api/status</code> auto-discovers it.</li>
+<li><input disabled="" type="checkbox"> <strong>Support intake = the contact form (the default; skip the Report-Issue widget).</strong> The app-style widget doesn&#39;t transfer cleanly to a brochure site: KC&#39;s shared <code>report-issue</code> Edge Function validates a reporter <strong>JWT against the app&#39;s own Supabase project</strong> (<code>authProjects</code>) and 500s an app with none — it&#39;s built for authenticated apps (KC, DA), not anonymous static sites. So a static site can&#39;t use the widget as-is; the site&#39;s <strong>contact form is the support path</strong>, and operator-side signals (endpoint-audit findings + uptime alerts) drive fixes, filed as GitHub issues by hand into the site&#39;s repo. <strong>Only if</strong> you genuinely want visitor-submitted bug reports in Sentinel: extend <code>report-issue</code> to accept an anonymous app (reporter email from the form, <strong>gated by Turnstile</strong> against abuse) + a <code>&lt;slug&gt;</code> case + secrets + redeploy — a shared-backend change that opens an unauthenticated ingestion endpoint, so treat it as its own security-reviewed brief. <em>(Decision for GP, 2026-07-09: skipped — contact form is the intake.)</em></li>
+<li><input disabled="" type="checkbox"> <strong>Sentry:</strong> optional for a brochure site. If wanted, a lightweight <strong>frontend-only</strong> project is enough — skip the backend project (there&#39;s no server).</li>
+</ul>
+<h3>A6 · Support handover</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>Support intake = the contact form</strong> (not the app Report-Issue widget — see A5). Operator-driven issues, sourced from endpoint-audit findings + uptime alerts, are filed as GitHub issues into the site&#39;s repo by hand; there&#39;s no automated widget → <code>bug_reports</code> path for a brochure site.</li>
+<li><input disabled="" type="checkbox"> SLA clock is <strong>business hours, 9am–5pm NZ</strong> — not 24/7. Set that expectation in the contract and the handover note.</li>
+<li><input disabled="" type="checkbox"> Update the kanban + the sub-processor register; add the site to the DATA-INVENTORY (even as &quot;no data retained&quot;).</li>
+</ul>
+<hr>
+<h2>Track B — Product / app</h2>
+<p>Full Railway + Supabase application. This track&#39;s <strong>technical Sentinel-wiring detail lives in <a href="PLAYBOOK-cloning-to-new-app.md">PLAY 9</a></strong> — don&#39;t duplicate it here; this section sequences it into the lifecycle and points at the exact steps.</p>
+<h3>B0 · Discovery &amp; kickoff</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Confirm Track B (accounts and/or stored data → yes).</li>
+<li><input disabled="" type="checkbox"> Pick the slug (<code>^[a-z][a-z0-9-]{1,40}$</code>) — used in <code>bug_reports.app_id</code>, <code>maintained_apps.slug</code>, env-var names, and Sentry project names (<a href="PLAYBOOK-cloning-to-new-app.md#step-0--pre-flight">PLAY 9 Step 0</a>).</li>
+<li><input disabled="" type="checkbox"> Repo at <code>CoreshiftHQNZ/&lt;repo&gt;</code> with <code>dev</code>/<code>staging</code>/<code>main</code> + branch protection (<a href="HOW-WE-DO-DEPLOYS.md">HOW-WE-DO-DEPLOYS</a>).</li>
+<li><input disabled="" type="checkbox"> Its <strong>own Supabase project</strong> (org <code>CoreShift</code>) — staging + prod refs.</li>
+</ul>
+<h3>B1 · Contract &amp; commercial</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Use the <strong>app/platform</strong> agreement (e.g. the Type-3 Platform Subscription Agreement — Sentinel is its named role, clause 8).</li>
+<li><input disabled="" type="checkbox"> Include the <strong>named Sentinel clause</strong>: for an app this is the full coverage — advisor/credential scanning, uptime, error monitoring, and the Report-Issue → GitHub-issue support path.</li>
+</ul>
+<h3>B2 · Privacy &amp; PIA  ·  <strong>GATE</strong></h3>
+<ul>
+<li><input disabled="" type="checkbox"> Real data → a real PIA. Follow the per-app PIA shape (<a href="PIA-digital-architect.md"><code>PIA-digital-architect.md</code></a>); it&#39;s a data-minimisation exercise, not a form.</li>
+<li><input disabled="" type="checkbox"> Set the retention windows per data class (<a href="HOW-WE-DO-RETENTION.md">HOW-WE-DO-RETENTION</a>); wire the deletion path (<a href="HOW-WE-DO-DATA-DELETION.md">HOW-WE-DO-DATA-DELETION</a>).</li>
+<li><input disabled="" type="checkbox"> Add every sub-processor (Supabase, Postmark, Sentry, Better Stack, any vendor) to the register. Privacy Officer green-lights before go-live.</li>
+</ul>
+<h3>B3 · Secure build baseline (born-secure)</h3>
+<p>The whole point of shift-left: a new app should be <strong>born</strong> passing <a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a>, so Sentinel finds a clean project on day one. (Contrast: Velocity was born with 35 RLS-off tables — that&#39;s what <em>not</em> doing this looks like.)</p>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>RLS on every <code>public</code> table</strong>, and every RLS table has ≥1 policy.</li>
+<li><input disabled="" type="checkbox"> <strong>HIBP</strong> leaked-password protection on (a Coreshift standard — enable on prod <strong>and</strong> staging at onboarding; the advisor flags it when off).</li>
+<li><input disabled="" type="checkbox"> <strong>Private buckets</strong> by default; storage policies scope writes to <code>{user_id}/...</code>.</li>
+<li><input disabled="" type="checkbox"> <strong>No <code>SERVICE_ROLE</code> in client code</strong>; Edge Function CORS lists known origins (no <code>*</code>) — except the shared <code>report-issue</code> function, which is intentionally <code>*</code> + <code>verify_jwt=false</code>.</li>
+<li><input disabled="" type="checkbox"> <strong>Env-var parity</strong> staging↔prod (full key diff — see PLAY 6&#39;s one-liner); no secrets shared across envs; <code>PORT</code> unset on Railway.</li>
+<li><input disabled="" type="checkbox"> <strong>Sentry</strong> wired FE+BE with <code>sendDefaultPii:false</code>, replay masking, and <strong>catch-block discipline</strong> (every 5xx <code>catch</code> calls <code>Sentry.captureException</code> before responding).</li>
+</ul>
+<h3>B4 · Launch / go-live  ·  <strong>GATE</strong></h3>
+<ul>
+<li><input disabled="" type="checkbox"> Run the <strong>full <a href="HOW-WE-DO-APP-AUDITS.md">App Audit (PLAY 6)</a></strong> — Supabase, Railway, Cloudflare, GitHub, Postmark, Sentry, Better Stack, Operational Hygiene. 100% pass or every failure consciously deferred with a reason + reconsider date.</li>
+<li><input disabled="" type="checkbox"> <strong>Privacy gate:</strong> current approved PIA on file (B2).</li>
+<li><input disabled="" type="checkbox"> Note the prod/staging DB split for testing the support leg: Sentinel <strong>staging</strong> reads KC <strong>staging</strong>, Sentinel <strong>prod</strong> reads KC <strong>prod</strong> — a widget on the app&#39;s staging writes to KC <strong>prod</strong>, so the report shows in Sentinel <strong>prod</strong> (<a href="PLAYBOOK-cloning-to-new-app.md#lessons-from-app-2-digital-architect--read-before-app-3">PLAY 9 lesson #9</a>).</li>
+</ul>
+<h3>B5 · Sentinel + monitoring</h3>
+<p>Drive the full <a href="PLAYBOOK-cloning-to-new-app.md">PLAY 9</a> onboarding — it&#39;s already config-only (the code generalizations shipped in PRs #133/#137):</p>
+<ul>
+<li><input disabled="" type="checkbox"> Register in <code>maintained_apps</code> (<a href="PLAYBOOK-cloning-to-new-app.md#step-1--register-the-app-in-sentinel">Step 1</a>).</li>
+<li><input disabled="" type="checkbox"> Install the Report-Issue widget with <code>app_id: &quot;&lt;slug&gt;&quot;</code> (<a href="PLAYBOOK-cloning-to-new-app.md#step-2--install-the-report-issue-widget-in-the-new-app">Step 2</a>); for a Next.js/non-Vite app, rebuild on its own primitives (lesson #5).</li>
+<li><input disabled="" type="checkbox"> GitHub PAT: the org-wide <code>GITHUB_TOKEN</code> already covers all repos (no per-app PAT). ⚠️ It expires <strong>2026-09-09</strong> — rotation breaks every app&#39;s file-issue at once.</li>
+<li><input disabled="" type="checkbox"> Sentry projects <code>&lt;UPPER&gt;-FRONTEND</code> + <code>&lt;UPPER&gt;-BACKEND</code> + the 3-rule alert recipe (<a href="PLAYBOOK-cloning-to-new-app.md#step-4--sentry-projects--alerts">Step 4</a> · <a href="HOW-WE-DO-SENTRY-ALERTS.md">HOW-WE-DO-SENTRY-ALERTS</a>).</li>
+<li><input disabled="" type="checkbox"> Better Stack monitor (<a href="PLAYBOOK-cloning-to-new-app.md#step-5--better-stack-monitor">Step 5</a>); Postmark sender (<a href="PLAYBOOK-cloning-to-new-app.md#step-6--postmark-sender">Step 6</a>); first scan + smoke test (<a href="PLAYBOOK-cloning-to-new-app.md#step-7--first-scan--first-smoke-test">Step 7</a>).</li>
+<li><input disabled="" type="checkbox"> Run PLAY 9&#39;s <a href="PLAYBOOK-cloning-to-new-app.md#verification-checklist">verification checklist</a>.</li>
+</ul>
+<h3>B6 · Support handover</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Bug-report → GitHub-issue path verified into the app&#39;s <strong>own</strong> repo (<a href="HOW-WE-DO-BUG-REPORTS.md">HOW-WE-DO-BUG-REPORTS</a>).</li>
+<li><input disabled="" type="checkbox"> Triage rhythm + priority per <a href="HOW-WE-DO-TRIAGE.md">HOW-WE-DO-TRIAGE</a> / <a href="HOW-WE-DO-PRIORITY.md">HOW-WE-DO-PRIORITY</a>.</li>
+<li><input disabled="" type="checkbox"> SLA clock <strong>9am–5pm NZ</strong>, not 24/7.</li>
+<li><input disabled="" type="checkbox"> Update kanban + roadmap (<a href="PLAYBOOK-cloning-to-new-app.md#step-8--update-the-kanban--roadmap">PLAY 9 Step 8</a>).</li>
+</ul>
+<hr>
+<h2>Verification — &quot;onboarding is done&quot; checklist</h2>
+<p><strong>Track A (website):</strong> custom domain live on Cloudflare Pages with SSL Full(Strict) · <code>_headers</code> serving CSP/HSTS · contact form sends via Postmark with Turnstile · staging password-gated · CI deploys on push · registered in <code>maintained_apps</code> with <strong><code>primary_url</code> set</strong> (weekly endpoint-audit target) · first endpoint audit clean (or findings triaged) · Better Stack monitor green · support intake = contact form (widget skipped for brochure sites) · PIA on file · sub-processor register + DATA-INVENTORY updated · kanban synced.</p>
+<p><strong>Track B (app):</strong> full <a href="HOW-WE-DO-APP-AUDITS.md">App Audit (PLAY 6)</a> passing · approved PIA on file · <a href="PLAYBOOK-cloning-to-new-app.md#verification-checklist">PLAY 9 verification checklist</a> all-green · kanban + roadmap synced.</p>
+<hr>
+<h2>Follow-ups this doc surfaced — status</h2>
+<p>All four gaps flagged when this doc was first drafted are now closed (2026-07-08):</p>
+<ol>
+<li>✅ <strong>PLAY 6 now has a web-build track.</strong> <a href="HOW-WE-DO-APP-AUDITS.md">HOW-WE-DO-APP-AUDITS</a> v2.4 added a track-applicability map + <code>_headers</code>/Turnstile checks; Track A · A4 mirrors the subset.</li>
+<li>✅ <strong>The weekly endpoint audit is live.</strong> Brief 20 shipped ~2026-07-07 — <code>server/lib/endpoint-audit.ts</code> + the <code>endpoint_audit_findings</code> table + a Monday-6am-NZ cron off <code>maintained_apps.primary_url</code>. The &quot;weekly endpoint audits&quot; clause is now honourable. <em>(An earlier &quot;not built&quot; note here was written against a stale local checkout that was 30 commits behind <code>main</code> — corrected.)</em></li>
+<li>✅ <strong>Static-site contract drafted.</strong> <a href="drafts/WEBSITE-BUILD-SOW-SLA.md">drafts/WEBSITE-BUILD-SOW-SLA.md</a> — a website-shaped SOW + SLA under the Type-2 base. Pending Operator/Privacy-Officer sign-off before first use.</li>
+<li>✅ <strong><code>_headers</code> recipe exists.</strong> <a href="recipes/cloudflare-pages-security-headers.md">recipes/cloudflare-pages-security-headers.md</a>. Remaining nicety: fold it into a reusable web-starter repo so it&#39;s copied in by default, not by hand.</li>
+</ol>
+<p><strong>The one thing that silently breaks the contract clause:</strong> the endpoint audit only runs on rows with <code>primary_url</code> set. So the operator action that makes the &quot;weekly endpoint audit&quot; real for a given site is <strong>setting <code>primary_url</code> at onboarding</strong> (A5) — miss it and the site is never audited, with no error.</p>
+<hr>
+<h2>When this doc changes</h2>
+<ul>
+<li>A new stack enters the picture (a third track) → add it to the track table + a track section.</li>
+<li>The gates move (PLAY 6 / PLAY 10 change) → update the shared-spine references.</li>
+<li>Any follow-up above lands → strike it and note the date.</li>
+<li>Bump the version at the top.</li>
+</ul>
+<h2>See also</h2>
+<ul>
+<li><a href="PLAYBOOK-cloning-to-new-app.md">PLAYBOOK-cloning-to-new-app.md</a> (PLAY 9) — the app track&#39;s Sentinel-wiring detail</li>
+<li><a href="HOW-WE-DO-APP-AUDITS.md">HOW-WE-DO-APP-AUDITS.md</a> (PLAY 6) — the go-live security gate</li>
+<li><a href="HOW-WE-DO-PRIVACY.md">HOW-WE-DO-PRIVACY.md</a> (PLAY 10) — the go-live privacy gate</li>
+<li><a href="HOW-WE-DO-DEPLOYS.md">HOW-WE-DO-DEPLOYS.md</a> — branch flow for both tracks</li>
+<li><a href="HOW-WE-DO-BUG-REPORTS.md">HOW-WE-DO-BUG-REPORTS.md</a> — the support path both tracks hand over to</li>
+</ul>
+</div>
+      </section>
+
       <section id="priority" class="play" data-accent="teal">
         <div class="play-header">
           <span class="play-eyebrow">PLAY 1</span>
@@ -2847,284 +3129,6 @@ gh secret set SENTRY_PROJECT   --repo CoreshiftHQNZ/&lt;repo-name&gt; --body &#3
 <li><code>HOW-WE-DO-APP-AUDITS.md</code> (PLAY 6) — the security gate, and the PIA checkbox</li>
 <li><code>PLAYBOOK-cloning-to-new-app.md</code> (PLAY 9) — the cloning playbook, where the PIA gate sits in onboarding</li>
 <li><strong>CoreShift Privacy Policy</strong> + the <strong>per-app PIA template</strong> — the privacy docs themselves (Privacy Officer owns these)</li>
-</ul>
-</div>
-      </section>
-
-      <section id="onboarding" class="play" data-accent="amber">
-        <div class="play-header">
-          <span class="play-eyebrow">FRONT DOOR</span>
-        </div>
-        <h2 class="play-title">Onboarding</h2>
-        <p class="play-tagline">The full client lifecycle — website builds vs products/apps — that ties the plays together.</p>
-        <div class="play-divider"></div>
-        <div class="md"><p><strong>Status:</strong> Active · v1 · 2026-07-08
-<strong>Applies to:</strong> Every new Coreshift engagement — a <strong>website build</strong> or a <strong>product/app</strong> — from first conversation to live-and-monitored.
-<strong>Owners:</strong> Operator (runs the lifecycle) · Privacy Officer (Keitha — owns the PIA gate) · Claude Code (executes most technical steps under the operator&#39;s account)</p>
-<blockquote>
-<p><strong>Why this doc exists:</strong> onboarding used to mean one thing — clone Sentinel onto the next Railway+Supabase app (<a href="PLAYBOOK-cloning-to-new-app.md">PLAY 9</a>). That playbook is excellent but it bakes in the <em>app</em> stack end to end: Railway env vars, a Supabase project, RLS/HIBP, KC&#39;s Edge Function. Coreshift now also ships <strong>website builds</strong> — hand-coded/Astro static sites on <strong>Cloudflare Pages</strong>, on the <strong>client&#39;s own Cloudflare account</strong>, with no Railway and no database — and Sentinel is a <strong>named clause in the T&amp;Cs</strong>, so it&#39;s meant to go into <em>every</em> engagement by default. Those two worlds share a spine but diverge on almost every concrete step. This is the front door: it holds the shared lifecycle, then splits into two tracks.</p>
-<p><strong>Relationship to the other plays:</strong> this doc is the <strong>lifecycle wrapper</strong>. It does not replace the deep runbooks — it sequences them. <a href="PLAYBOOK-cloning-to-new-app.md">PLAY 9</a> is now best read as <em>the app track&#39;s Sentinel-wiring detail</em>; <a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a> is the go-live <strong>security</strong> gate; <a href="HOW-WE-DO-PRIVACY.md">PLAY 10</a> is the go-live <strong>privacy</strong> gate.</p>
-</blockquote>
-<hr>
-<h2>Pick your track — the one decision that changes everything</h2>
-<p>Before anything else, decide which track the engagement is on. It&#39;s almost always obvious, and it sets the stack, the infra ownership, the security baseline, the contract/PIA shape, and what Sentinel can actually monitor.</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th><strong>Track A — Website build</strong></th>
-<th><strong>Track B — Product / app</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>What it is</strong></td>
-<td>Marketing / lead-gen / brochure site</td>
-<td>An application with accounts, data, logic</td>
-</tr>
-<tr>
-<td><strong>Stack</strong></td>
-<td>Static (hand-coded HTML or Astro) + vendored JS + <strong>Cloudflare Pages Functions</strong> for the dynamic bits</td>
-<td>React/Vite front end + Node/Express back end + <strong>Supabase</strong></td>
-</tr>
-<tr>
-<td><strong>Hosting</strong></td>
-<td><strong>Cloudflare Pages</strong>, deployed via GitHub Actions <code>wrangler pages deploy</code></td>
-<td><strong>Railway</strong> (staging + prod envs), auto-deploy via CI</td>
-</tr>
-<tr>
-<td><strong>Whose infra</strong></td>
-<td>The <strong>client&#39;s own Cloudflare account</strong> (target model). Some early builds sit on <strong>CoreshiftHq</strong> — confirm per project.</td>
-<td><strong>Coreshift&#39;s</strong> Railway + Supabase (org <code>CoreShift</code>)</td>
-</tr>
-<tr>
-<td><strong>Data at rest</strong></td>
-<td>Usually <strong>none retained</strong> (contact form → Postmark → inbox, nothing stored)</td>
-<td>A real database — accounts, user data, the works</td>
-</tr>
-<tr>
-<td><strong>Auth</strong></td>
-<td>None</td>
-<td>Supabase Auth</td>
-</tr>
-<tr>
-<td><strong>Reference build</strong></td>
-<td><a href="https://github.com/CoreshiftHQNZ/growth-partners-website"><code>CoreshiftHQNZ/growth-partners-website</code></a> (Astro) · <code>growth-partners-2026</code> (hand-coded)</td>
-<td><a href="https://github.com/CoreshiftHQNZ/keycontent-app"><code>CoreshiftHQNZ/keycontent-app</code></a>, Digital Architect</td>
-</tr>
-<tr>
-<td><strong>Security baseline</strong></td>
-<td>CF security headers, Turnstile on forms, SSL Full(Strict), DNSSEC, WAF/Bot-Fight, Postmark DKIM/SPF/DMARC, secrets as Pages env vars, staging behind a password gate</td>
-<td>RLS-on everywhere, HIBP, private buckets, <code>sendDefaultPii:false</code>, env-var parity, branch protection — the full <a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a></td>
-</tr>
-<tr>
-<td><strong>What Sentinel monitors</strong></td>
-<td>Uptime (Better Stack) + the <strong>weekly endpoint security audit</strong> (Brief 20 — black-box HTTP hygiene, live since ~2026-07-07). Support intake = the site&#39;s <strong>contact form</strong> (the Report-Issue widget is app-oriented — see A5/A6). <em>(No code/advisor scan — no Supabase project.)</em></td>
-<td>The full picture: code/credential scan + Supabase advisors + uptime + Sentry FE/BE + Report-Issue widget</td>
-</tr>
-<tr>
-<td><strong>Go-live gate</strong></td>
-<td>The <strong>web-build audit subset</strong> (§Track A, Stage 4) + PIA</td>
-<td>The full <a href="HOW-WE-DO-APP-AUDITS.md">App Audit (PLAY 6)</a> + PIA</td>
-</tr>
-</tbody></table>
-<p><strong>If you&#39;re unsure:</strong> ask &quot;does it hold user data or have logins?&quot; Yes → Track B. No → Track A. A site with <em>only</em> a contact form is Track A even though it has one Pages Function. The moment it grows accounts or a database, it graduates to Track B and re-onboards on that track.</p>
-<hr>
-<h2>The lifecycle (shared spine)</h2>
-<p>Both tracks walk the same six stages. This section defines each stage once; the two track sections below say <em>how</em> each stage lands on that stack. Treat the two <strong>gates</strong> (Privacy, Go-live) as hard — nothing goes live past a red gate without an explicit, dated &quot;consciously deferred&quot; note.</p>
-<table>
-<thead>
-<tr>
-<th>Stage</th>
-<th>What it is</th>
-<th>Gate?</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>0 · Discovery &amp; kickoff</strong></td>
-<td>Confirm the track, the domain, the client&#39;s accounts, who owns what</td>
-<td>—</td>
-</tr>
-<tr>
-<td><strong>1 · Contract &amp; commercial</strong></td>
-<td>The agreement, incl. the <strong>named Sentinel clause</strong>; what the recurring fee actually buys</td>
-<td>—</td>
-</tr>
-<tr>
-<td><strong>2 · Privacy &amp; PIA</strong></td>
-<td>What personal data (if any) is touched; a current PIA on file</td>
-<td><strong>GATE</strong> (<a href="HOW-WE-DO-PRIVACY.md">PLAY 10</a>)</td>
-</tr>
-<tr>
-<td><strong>3 · Secure build baseline</strong></td>
-<td>Born-secure, not remediated-after — the shift-left baseline for the stack</td>
-<td>—</td>
-</tr>
-<tr>
-<td><strong>4 · Launch / go-live</strong></td>
-<td>The security gate for the stack + the privacy sign-off, then flip to live</td>
-<td><strong>GATE</strong> (<a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a> or its web subset)</td>
-</tr>
-<tr>
-<td><strong>5 · Sentinel + monitoring</strong></td>
-<td>Wire the engagement into Sentinel so it&#39;s watched</td>
-<td>—</td>
-</tr>
-<tr>
-<td><strong>6 · Support handover</strong></td>
-<td>Bug-report path, triage rhythm, the 9–5 NZ SLA clock</td>
-<td>—</td>
-</tr>
-</tbody></table>
-<h3>The two gates, stated once</h3>
-<ul>
-<li><strong>Privacy gate (Stage 2, <a href="HOW-WE-DO-PRIVACY.md">PLAY 10</a>).</strong> <em>Should we be holding this data at all? Did we tell people? How long do we keep it?</em> No toggle answers that — it&#39;s the Privacy Officer&#39;s call, recorded in a per-app <strong>PIA</strong> (see <a href="PIA-keycontent.md"><code>PIA-keycontent.md</code></a>, <a href="PIA-digital-architect.md"><code>PIA-digital-architect.md</code></a> for shape). A website that stores nothing still gets a one-paragraph PIA saying so — &quot;contact form → Postmark → inbox, nothing retained&quot; is a valid, fast PIA, but it&#39;s still written down.</li>
-<li><strong>Go-live security gate (Stage 4, <a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a>).</strong> <em>Is the data hard to steal or leak? Did we turn on every default-off setting?</em> PLAY 6 is the app-track gate in full. Track A runs the <strong>web-build subset</strong> of it (defined in Track A · Stage 4) because most PLAY 6 checks are Supabase/Railway-specific and simply don&#39;t apply to a static site.</li>
-</ul>
-<h3>Access the driving session needs (both tracks)</h3>
-<p>The standard Coreshift access set (one-time per machine): <code>gh</code> CLI, Supabase MCP, Cloudflare MCP, Railway CLI. Track A leans on <code>gh</code> + Cloudflare; Track B uses all four. See Coreshift&#39;s account-level access doc.</p>
-<hr>
-<h2>Track A — Website build</h2>
-<p>Static site on Cloudflare Pages, on the client&#39;s Cloudflare account. Reference: <a href="https://github.com/CoreshiftHQNZ/growth-partners-website"><code>growth-partners-website</code></a>.</p>
-<h3>A0 · Discovery &amp; kickoff</h3>
-<ul>
-<li><input disabled="" type="checkbox"> Confirm it&#39;s genuinely Track A (no accounts, no stored data). If a &quot;site&quot; needs logins or a dashboard, it&#39;s Track B.</li>
-<li><input disabled="" type="checkbox"> <strong>Whose Cloudflare account?</strong> The target model is the <strong>client&#39;s own</strong> (so the annual fee is monitoring + maintenance + support, not compute). Get them to invite Coreshift, or agree it lands on <strong>CoreshiftHq</strong> for now and note the migration. Capture the account ID.</li>
-<li><input disabled="" type="checkbox"> Confirm the <strong>production domain</strong> and <strong>where its DNS lives</strong>. If DNS isn&#39;t already on Cloudflare, plan the nameserver move — SSL, DDoS, WAF, DNSSEC and the CDN all depend on it.</li>
-<li><input disabled="" type="checkbox"> Pick a <strong>slug</strong> (<code>^[a-z][a-z0-9-]{1,40}$</code>) — used for the repo, the Pages project, and later <code>maintained_apps.slug</code>.</li>
-<li><input disabled="" type="checkbox"> Create the repo <code>CoreshiftHQNZ/&lt;repo&gt;</code> with <code>dev</code>/<code>staging</code>/<code>main</code> and branch protection per <a href="HOW-WE-DO-DEPLOYS.md">HOW-WE-DO-DEPLOYS</a>.</li>
-</ul>
-<h3>A1 · Contract &amp; commercial</h3>
-<ul>
-<li><input disabled="" type="checkbox"> Base agreement = <strong>Type-2 Bespoke Build</strong> (it fits a custom static build and already carries the named Sentinel clause + a 9–5 NZ SLA). <strong>Not</strong> the old WordPress-shaped web-build+hosting template (it references CMS/plugins/database export — none of which exists here). Fill the website-shaped SOW + SLA from the draft: <a href="drafts/WEBSITE-BUILD-SOW-SLA.md">drafts/WEBSITE-BUILD-SOW-SLA.md</a>. The SOW must describe <strong>this</strong> stack — static Cloudflare Pages, Pages Functions, Postmark, Turnstile — not Railway/Supabase and not a CMS.</li>
-<li><input disabled="" type="checkbox"> Include the <strong>named Sentinel clause</strong> (monitoring is a contractual deliverable now). For a website, Sentinel delivers: <strong>uptime monitoring</strong> + the <strong>weekly endpoint security audit</strong> (Brief 20 — HTTPS/HSTS/TLS-expiry/exposed-file checks; live and honouring the &quot;weekly endpoint audits&quot; clause) + the <strong>Report-Issue path</strong>. Don&#39;t promise app-grade coverage (advisor/RLS scans) — a static site has no database to advise on.</li>
-<li><input disabled="" type="checkbox"> Frame the recurring fee honestly: on the client&#39;s own CF account, compute is ~free; the fee is <strong>monitoring + maintenance + support</strong>.</li>
-</ul>
-<h3>A2 · Privacy &amp; PIA  ·  <strong>GATE</strong></h3>
-<ul>
-<li><input disabled="" type="checkbox"> Map the data. For most sites it&#39;s just the contact form: <strong>name, email, company, message → Postmark → an inbox. Nothing stored server-side.</strong> (<a href="https://github.com/CoreshiftHQNZ/growth-partners-website/blob/main/functions/api/contact.ts"><code>contact.ts</code></a> retains nothing.)</li>
-<li><input disabled="" type="checkbox"> Note the third parties that <em>do</em> touch data: <strong>Postmark</strong> (email transit), <strong>Cloudflare</strong> (Turnstile + logs + analytics), plus any <strong>Google Analytics/Ads / Peec AI</strong> per spec. These belong in the sub-processor register.</li>
-<li><input disabled="" type="checkbox"> File a short <strong>PIA</strong> with the Privacy Officer — even if the finding is &quot;no personal data retained.&quot; Green-light this gate before go-live.</li>
-</ul>
-<h3>A3 · Secure build baseline (born-secure)</h3>
-<p>Build these in from the start — don&#39;t ship then remediate.</p>
-<ul>
-<li><input disabled="" type="checkbox"> <strong>Security headers.</strong> Drop in a <code>_headers</code> file (CSP, <code>nosniff</code>, <code>Referrer-Policy</code>, <code>X-Frame-Options</code>/frame-ancestors, HSTS, Permissions-Policy) — copy-paste starter + CSP tuning in <a href="recipes/cloudflare-pages-security-headers.md">recipes/cloudflare-pages-security-headers.md</a>. ⚠️ The GP reference build&#39;s <code>functions/_middleware.ts</code> is a <em>staging password gate</em>, <strong>not</strong> a headers layer — headers are easy to forget. Roll CSP out Report-Only first, then enforce before go-live.</li>
-<li><input disabled="" type="checkbox"> <strong>Forms behind Turnstile.</strong> The contact Function verifies <code>cf-turnstile-response</code> server-side <em>only if</em> <code>TURNSTILE_SECRET</code> is set <strong>and</strong> the widget renders (<code>PUBLIC_TURNSTILE_SITE_KEY</code> present at build). <strong>Both halves are required</strong> — one without the other is silent no-protection. Verify both.</li>
-<li><input disabled="" type="checkbox"> <strong>Secrets as Pages env vars, never committed.</strong> <code>POSTMARK_TOKEN</code> + <code>TURNSTILE_SECRET</code> as <strong>Secret</strong>-type Pages vars; <code>CONTACT_FROM</code>/<code>CONTACT_TO</code>/<code>PUBLIC_TURNSTILE_SITE_KEY</code> as plaintext. <code>.gitignore</code> covers <code>.env*</code>.</li>
-<li><input disabled="" type="checkbox"> <strong>Staging is private.</strong> Set <code>STAGING_PASSWORD</code> on the preview environment (the <code>_middleware</code> gate) and <code>noindex</code> on non-prod. Production sets no password → public.</li>
-<li><input disabled="" type="checkbox"> <strong>Cloudflare posture:</strong> SSL/TLS <strong>Full (Strict)</strong>, DNSSEC on, Bot Fight Mode on, and (once forms/endpoints exist) a WAF rate-limit rule on <code>/api/*</code>.</li>
-<li><input disabled="" type="checkbox"> <strong>Postmark deliverability:</strong> verify the sender domain — <strong>DKIM + SPF + Return-Path all green</strong> — or the first send 422s. Use a <code>MessageStream: &#39;outbound&#39;</code> for transactional.</li>
-<li><input disabled="" type="checkbox"> <strong>CI deploy</strong> (<a href="https://github.com/CoreshiftHQNZ/growth-partners-website/blob/main/.github/workflows/deploy.yml"><code>.github/workflows/deploy.yml</code></a>): <code>main</code> → production, <code>staging</code> → preview. Needs repo secrets <code>CLOUDFLARE_API_TOKEN</code> (scoped <strong>Account → Cloudflare Pages → Edit</strong>) + <code>CLOUDFLARE_ACCOUNT_ID</code>. Claude can set these with <code>gh secret set</code>.</li>
-</ul>
-<h3>A4 · Launch / go-live  ·  <strong>GATE</strong></h3>
-<p>Run the <strong>web-build audit subset</strong> — the slice of <a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a> that actually applies to a static site. (The Supabase, Railway, and Sentry-backend sections are <strong>N/A</strong> — no DB, no Railway, no server.)</p>
-<ul>
-<li><input disabled="" type="checkbox"> <strong>Cloudflare:</strong> SSL Full(Strict) · DNSSEC on · Bot Fight Mode on · WAF rate-limit on <code>/api/*</code> · Pages preview deploys gated (staging password) · env vars present in <strong>both</strong> Preview and Production.</li>
-<li><input disabled="" type="checkbox"> <strong>GitHub:</strong> branch protection on <code>main</code> + <code>staging</code> · <code>.gitignore</code> excludes <code>.env*</code>/keys · secret scanning + Dependabot on · no secrets in history.</li>
-<li><input disabled="" type="checkbox"> <strong>Postmark:</strong> sender domain verified (DKIM+SPF+Return-Path green) · sender matches the site&#39;s domain · <code>outbound</code> stream.</li>
-<li><input disabled="" type="checkbox"> <strong>Forms:</strong> submit a real contact-form entry end to end — Turnstile challenge shows, email lands in <code>CONTACT_TO</code>, <code>/thanks</code> renders. Try a no-JS POST too (it 303-redirects).</li>
-<li><input disabled="" type="checkbox"> <strong>Headers:</strong> <code>_headers</code> live — confirm CSP + nosniff + HSTS on a prod response.</li>
-<li><input disabled="" type="checkbox"> <strong>DNS cutover:</strong> custom domain attached in Pages, CNAME → <code>&lt;project&gt;.pages.dev</code>, <code>site:</code> in <code>astro.config.mjs</code> matches the final domain.</li>
-<li><input disabled="" type="checkbox"> <strong>Privacy gate:</strong> PIA on file (A2) — green.</li>
-</ul>
-<h3>A5 · Sentinel + monitoring</h3>
-<p>A static site can&#39;t be code/advisor-scanned the way an app is (no Supabase project), but it <strong>does</strong> get the black-box weekly endpoint audit — so its Sentinel coverage is <strong>uptime + weekly endpoint audit + bug widget</strong>.</p>
-<ul>
-<li><input disabled="" type="checkbox"> <strong>Register in Sentinel</strong> (<code>/maintenance</code> → Onboard app, or <code>POST /api/maintenance/apps</code>): slug, display_name, repo. <strong>Set <code>primary_url</code> to the prod URL</strong> — this is the column the endpoint audit keys off (<code>maintained_apps WHERE primary_url IS NOT NULL</code>, added by the Brief 20 migration <code>20260707010000</code>). Optionally set <code>public_url</code> too (dashboard link / heartbeat — a separate column). Leave <code>supabase_project_ref</code> empty (no DB to advisor-scan). Use <code>audit_paths</code> to add extra exposure-probe paths beyond the built-in list.</li>
-<li><input disabled="" type="checkbox"> <strong>Weekly endpoint security audit (Brief 20) — LIVE (shipped ~2026-07-07).</strong> <code>server/lib/endpoint-audit.ts</code> runs <strong>Mondays 6am NZ</strong> against every <code>primary_url</code>: HTTPS reachability, HTTP→HTTPS redirect, <strong>HSTS</strong> (≥180-day max-age), <strong>TLS cert expiry</strong> (high if &lt;21 days), <strong>exposed sensitive files</strong> (<code>/.env</code>, <code>/.git/config</code>, <code>/deploy.ps1</code>, <code>/HANDOVER.md</code>, <code>/README.md</code>, …), and the contact endpoint. Black-box, unauthenticated, ~&lt;15 requests/site, 10s timeout. Findings upsert into <code>endpoint_audit_findings</code> and surface in the Monday digest. This is what makes the &quot;weekly endpoint audits&quot; contract clause real.</li>
-<li><input disabled="" type="checkbox"> <strong>Better Stack uptime monitor</strong> on the prod URL (3-min cadence, email to <code>abe@coreshifthq.com</code>). Sentinel&#39;s <code>/api/status</code> auto-discovers it.</li>
-<li><input disabled="" type="checkbox"> <strong>Support intake = the contact form (the default; skip the Report-Issue widget).</strong> The app-style widget doesn&#39;t transfer cleanly to a brochure site: KC&#39;s shared <code>report-issue</code> Edge Function validates a reporter <strong>JWT against the app&#39;s own Supabase project</strong> (<code>authProjects</code>) and 500s an app with none — it&#39;s built for authenticated apps (KC, DA), not anonymous static sites. So a static site can&#39;t use the widget as-is; the site&#39;s <strong>contact form is the support path</strong>, and operator-side signals (endpoint-audit findings + uptime alerts) drive fixes, filed as GitHub issues by hand into the site&#39;s repo. <strong>Only if</strong> you genuinely want visitor-submitted bug reports in Sentinel: extend <code>report-issue</code> to accept an anonymous app (reporter email from the form, <strong>gated by Turnstile</strong> against abuse) + a <code>&lt;slug&gt;</code> case + secrets + redeploy — a shared-backend change that opens an unauthenticated ingestion endpoint, so treat it as its own security-reviewed brief. <em>(Decision for GP, 2026-07-09: skipped — contact form is the intake.)</em></li>
-<li><input disabled="" type="checkbox"> <strong>Sentry:</strong> optional for a brochure site. If wanted, a lightweight <strong>frontend-only</strong> project is enough — skip the backend project (there&#39;s no server).</li>
-</ul>
-<h3>A6 · Support handover</h3>
-<ul>
-<li><input disabled="" type="checkbox"> <strong>Support intake = the contact form</strong> (not the app Report-Issue widget — see A5). Operator-driven issues, sourced from endpoint-audit findings + uptime alerts, are filed as GitHub issues into the site&#39;s repo by hand; there&#39;s no automated widget → <code>bug_reports</code> path for a brochure site.</li>
-<li><input disabled="" type="checkbox"> SLA clock is <strong>business hours, 9am–5pm NZ</strong> — not 24/7. Set that expectation in the contract and the handover note.</li>
-<li><input disabled="" type="checkbox"> Update the kanban + the sub-processor register; add the site to the DATA-INVENTORY (even as &quot;no data retained&quot;).</li>
-</ul>
-<hr>
-<h2>Track B — Product / app</h2>
-<p>Full Railway + Supabase application. This track&#39;s <strong>technical Sentinel-wiring detail lives in <a href="PLAYBOOK-cloning-to-new-app.md">PLAY 9</a></strong> — don&#39;t duplicate it here; this section sequences it into the lifecycle and points at the exact steps.</p>
-<h3>B0 · Discovery &amp; kickoff</h3>
-<ul>
-<li><input disabled="" type="checkbox"> Confirm Track B (accounts and/or stored data → yes).</li>
-<li><input disabled="" type="checkbox"> Pick the slug (<code>^[a-z][a-z0-9-]{1,40}$</code>) — used in <code>bug_reports.app_id</code>, <code>maintained_apps.slug</code>, env-var names, and Sentry project names (<a href="PLAYBOOK-cloning-to-new-app.md#step-0--pre-flight">PLAY 9 Step 0</a>).</li>
-<li><input disabled="" type="checkbox"> Repo at <code>CoreshiftHQNZ/&lt;repo&gt;</code> with <code>dev</code>/<code>staging</code>/<code>main</code> + branch protection (<a href="HOW-WE-DO-DEPLOYS.md">HOW-WE-DO-DEPLOYS</a>).</li>
-<li><input disabled="" type="checkbox"> Its <strong>own Supabase project</strong> (org <code>CoreShift</code>) — staging + prod refs.</li>
-</ul>
-<h3>B1 · Contract &amp; commercial</h3>
-<ul>
-<li><input disabled="" type="checkbox"> Use the <strong>app/platform</strong> agreement (e.g. the Type-3 Platform Subscription Agreement — Sentinel is its named role, clause 8).</li>
-<li><input disabled="" type="checkbox"> Include the <strong>named Sentinel clause</strong>: for an app this is the full coverage — advisor/credential scanning, uptime, error monitoring, and the Report-Issue → GitHub-issue support path.</li>
-</ul>
-<h3>B2 · Privacy &amp; PIA  ·  <strong>GATE</strong></h3>
-<ul>
-<li><input disabled="" type="checkbox"> Real data → a real PIA. Follow the per-app PIA shape (<a href="PIA-digital-architect.md"><code>PIA-digital-architect.md</code></a>); it&#39;s a data-minimisation exercise, not a form.</li>
-<li><input disabled="" type="checkbox"> Set the retention windows per data class (<a href="HOW-WE-DO-RETENTION.md">HOW-WE-DO-RETENTION</a>); wire the deletion path (<a href="HOW-WE-DO-DATA-DELETION.md">HOW-WE-DO-DATA-DELETION</a>).</li>
-<li><input disabled="" type="checkbox"> Add every sub-processor (Supabase, Postmark, Sentry, Better Stack, any vendor) to the register. Privacy Officer green-lights before go-live.</li>
-</ul>
-<h3>B3 · Secure build baseline (born-secure)</h3>
-<p>The whole point of shift-left: a new app should be <strong>born</strong> passing <a href="HOW-WE-DO-APP-AUDITS.md">PLAY 6</a>, so Sentinel finds a clean project on day one. (Contrast: Velocity was born with 35 RLS-off tables — that&#39;s what <em>not</em> doing this looks like.)</p>
-<ul>
-<li><input disabled="" type="checkbox"> <strong>RLS on every <code>public</code> table</strong>, and every RLS table has ≥1 policy.</li>
-<li><input disabled="" type="checkbox"> <strong>HIBP</strong> leaked-password protection on (a Coreshift standard — enable on prod <strong>and</strong> staging at onboarding; the advisor flags it when off).</li>
-<li><input disabled="" type="checkbox"> <strong>Private buckets</strong> by default; storage policies scope writes to <code>{user_id}/...</code>.</li>
-<li><input disabled="" type="checkbox"> <strong>No <code>SERVICE_ROLE</code> in client code</strong>; Edge Function CORS lists known origins (no <code>*</code>) — except the shared <code>report-issue</code> function, which is intentionally <code>*</code> + <code>verify_jwt=false</code>.</li>
-<li><input disabled="" type="checkbox"> <strong>Env-var parity</strong> staging↔prod (full key diff — see PLAY 6&#39;s one-liner); no secrets shared across envs; <code>PORT</code> unset on Railway.</li>
-<li><input disabled="" type="checkbox"> <strong>Sentry</strong> wired FE+BE with <code>sendDefaultPii:false</code>, replay masking, and <strong>catch-block discipline</strong> (every 5xx <code>catch</code> calls <code>Sentry.captureException</code> before responding).</li>
-</ul>
-<h3>B4 · Launch / go-live  ·  <strong>GATE</strong></h3>
-<ul>
-<li><input disabled="" type="checkbox"> Run the <strong>full <a href="HOW-WE-DO-APP-AUDITS.md">App Audit (PLAY 6)</a></strong> — Supabase, Railway, Cloudflare, GitHub, Postmark, Sentry, Better Stack, Operational Hygiene. 100% pass or every failure consciously deferred with a reason + reconsider date.</li>
-<li><input disabled="" type="checkbox"> <strong>Privacy gate:</strong> current approved PIA on file (B2).</li>
-<li><input disabled="" type="checkbox"> Note the prod/staging DB split for testing the support leg: Sentinel <strong>staging</strong> reads KC <strong>staging</strong>, Sentinel <strong>prod</strong> reads KC <strong>prod</strong> — a widget on the app&#39;s staging writes to KC <strong>prod</strong>, so the report shows in Sentinel <strong>prod</strong> (<a href="PLAYBOOK-cloning-to-new-app.md#lessons-from-app-2-digital-architect--read-before-app-3">PLAY 9 lesson #9</a>).</li>
-</ul>
-<h3>B5 · Sentinel + monitoring</h3>
-<p>Drive the full <a href="PLAYBOOK-cloning-to-new-app.md">PLAY 9</a> onboarding — it&#39;s already config-only (the code generalizations shipped in PRs #133/#137):</p>
-<ul>
-<li><input disabled="" type="checkbox"> Register in <code>maintained_apps</code> (<a href="PLAYBOOK-cloning-to-new-app.md#step-1--register-the-app-in-sentinel">Step 1</a>).</li>
-<li><input disabled="" type="checkbox"> Install the Report-Issue widget with <code>app_id: &quot;&lt;slug&gt;&quot;</code> (<a href="PLAYBOOK-cloning-to-new-app.md#step-2--install-the-report-issue-widget-in-the-new-app">Step 2</a>); for a Next.js/non-Vite app, rebuild on its own primitives (lesson #5).</li>
-<li><input disabled="" type="checkbox"> GitHub PAT: the org-wide <code>GITHUB_TOKEN</code> already covers all repos (no per-app PAT). ⚠️ It expires <strong>2026-09-09</strong> — rotation breaks every app&#39;s file-issue at once.</li>
-<li><input disabled="" type="checkbox"> Sentry projects <code>&lt;UPPER&gt;-FRONTEND</code> + <code>&lt;UPPER&gt;-BACKEND</code> + the 3-rule alert recipe (<a href="PLAYBOOK-cloning-to-new-app.md#step-4--sentry-projects--alerts">Step 4</a> · <a href="HOW-WE-DO-SENTRY-ALERTS.md">HOW-WE-DO-SENTRY-ALERTS</a>).</li>
-<li><input disabled="" type="checkbox"> Better Stack monitor (<a href="PLAYBOOK-cloning-to-new-app.md#step-5--better-stack-monitor">Step 5</a>); Postmark sender (<a href="PLAYBOOK-cloning-to-new-app.md#step-6--postmark-sender">Step 6</a>); first scan + smoke test (<a href="PLAYBOOK-cloning-to-new-app.md#step-7--first-scan--first-smoke-test">Step 7</a>).</li>
-<li><input disabled="" type="checkbox"> Run PLAY 9&#39;s <a href="PLAYBOOK-cloning-to-new-app.md#verification-checklist">verification checklist</a>.</li>
-</ul>
-<h3>B6 · Support handover</h3>
-<ul>
-<li><input disabled="" type="checkbox"> Bug-report → GitHub-issue path verified into the app&#39;s <strong>own</strong> repo (<a href="HOW-WE-DO-BUG-REPORTS.md">HOW-WE-DO-BUG-REPORTS</a>).</li>
-<li><input disabled="" type="checkbox"> Triage rhythm + priority per <a href="HOW-WE-DO-TRIAGE.md">HOW-WE-DO-TRIAGE</a> / <a href="HOW-WE-DO-PRIORITY.md">HOW-WE-DO-PRIORITY</a>.</li>
-<li><input disabled="" type="checkbox"> SLA clock <strong>9am–5pm NZ</strong>, not 24/7.</li>
-<li><input disabled="" type="checkbox"> Update kanban + roadmap (<a href="PLAYBOOK-cloning-to-new-app.md#step-8--update-the-kanban--roadmap">PLAY 9 Step 8</a>).</li>
-</ul>
-<hr>
-<h2>Verification — &quot;onboarding is done&quot; checklist</h2>
-<p><strong>Track A (website):</strong> custom domain live on Cloudflare Pages with SSL Full(Strict) · <code>_headers</code> serving CSP/HSTS · contact form sends via Postmark with Turnstile · staging password-gated · CI deploys on push · registered in <code>maintained_apps</code> with <strong><code>primary_url</code> set</strong> (weekly endpoint-audit target) · first endpoint audit clean (or findings triaged) · Better Stack monitor green · support intake = contact form (widget skipped for brochure sites) · PIA on file · sub-processor register + DATA-INVENTORY updated · kanban synced.</p>
-<p><strong>Track B (app):</strong> full <a href="HOW-WE-DO-APP-AUDITS.md">App Audit (PLAY 6)</a> passing · approved PIA on file · <a href="PLAYBOOK-cloning-to-new-app.md#verification-checklist">PLAY 9 verification checklist</a> all-green · kanban + roadmap synced.</p>
-<hr>
-<h2>Follow-ups this doc surfaced — status</h2>
-<p>All four gaps flagged when this doc was first drafted are now closed (2026-07-08):</p>
-<ol>
-<li>✅ <strong>PLAY 6 now has a web-build track.</strong> <a href="HOW-WE-DO-APP-AUDITS.md">HOW-WE-DO-APP-AUDITS</a> v2.4 added a track-applicability map + <code>_headers</code>/Turnstile checks; Track A · A4 mirrors the subset.</li>
-<li>✅ <strong>The weekly endpoint audit is live.</strong> Brief 20 shipped ~2026-07-07 — <code>server/lib/endpoint-audit.ts</code> + the <code>endpoint_audit_findings</code> table + a Monday-6am-NZ cron off <code>maintained_apps.primary_url</code>. The &quot;weekly endpoint audits&quot; clause is now honourable. <em>(An earlier &quot;not built&quot; note here was written against a stale local checkout that was 30 commits behind <code>main</code> — corrected.)</em></li>
-<li>✅ <strong>Static-site contract drafted.</strong> <a href="drafts/WEBSITE-BUILD-SOW-SLA.md">drafts/WEBSITE-BUILD-SOW-SLA.md</a> — a website-shaped SOW + SLA under the Type-2 base. Pending Operator/Privacy-Officer sign-off before first use.</li>
-<li>✅ <strong><code>_headers</code> recipe exists.</strong> <a href="recipes/cloudflare-pages-security-headers.md">recipes/cloudflare-pages-security-headers.md</a>. Remaining nicety: fold it into a reusable web-starter repo so it&#39;s copied in by default, not by hand.</li>
-</ol>
-<p><strong>The one thing that silently breaks the contract clause:</strong> the endpoint audit only runs on rows with <code>primary_url</code> set. So the operator action that makes the &quot;weekly endpoint audit&quot; real for a given site is <strong>setting <code>primary_url</code> at onboarding</strong> (A5) — miss it and the site is never audited, with no error.</p>
-<hr>
-<h2>When this doc changes</h2>
-<ul>
-<li>A new stack enters the picture (a third track) → add it to the track table + a track section.</li>
-<li>The gates move (PLAY 6 / PLAY 10 change) → update the shared-spine references.</li>
-<li>Any follow-up above lands → strike it and note the date.</li>
-<li>Bump the version at the top.</li>
-</ul>
-<h2>See also</h2>
-<ul>
-<li><a href="PLAYBOOK-cloning-to-new-app.md">PLAYBOOK-cloning-to-new-app.md</a> (PLAY 9) — the app track&#39;s Sentinel-wiring detail</li>
-<li><a href="HOW-WE-DO-APP-AUDITS.md">HOW-WE-DO-APP-AUDITS.md</a> (PLAY 6) — the go-live security gate</li>
-<li><a href="HOW-WE-DO-PRIVACY.md">HOW-WE-DO-PRIVACY.md</a> (PLAY 10) — the go-live privacy gate</li>
-<li><a href="HOW-WE-DO-DEPLOYS.md">HOW-WE-DO-DEPLOYS.md</a> — branch flow for both tracks</li>
-<li><a href="HOW-WE-DO-BUG-REPORTS.md">HOW-WE-DO-BUG-REPORTS.md</a> — the support path both tracks hand over to</li>
 </ul>
 </div>
       </section>
