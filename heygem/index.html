@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>71%</strong> complete</div>
-        <div><strong>20</strong>/28 cards done</div>
-        <div>Updated <strong>2026-07-29 03:27 UTC</strong></div>
+        <div><strong>72%</strong> complete</div>
+        <div><strong>21</strong>/29 cards done</div>
+        <div>Updated <strong>2026-07-29 06:43 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">20</div>
+        <div class="status-num">21</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -923,6 +923,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Marketing: live job reel replaces the hero photo (verified)</div>
+            <div class="recent-desc">The hero is no longer a stock-feeling photo: the morning-tea job now plays out as a real chat thread — ask → Gem typing → quote with the GST breakdown → approve → done → paid → rated — then settles so it can be read back. Also drops the **409KB hero JPEG** from the bundle entirely. New dark band under the ideas grid plays **five** example jobs end to end with a picker: morning tea, a repeat water-bottle order (&quot;same as last time&quot; — the Gem recalls the spec and waives the print setup), Sydney conference travel (hotel chosen for the 6-minute walk to ICC, flights with no 5am alarm and no red-eye, Airpoints added to both legs, &quot;would you like me to quote it?&quot;), a skip bin where the Gem catches that monitors are e-waste and can&#39;t legally go in the bin, and an end-of-lease clean booked on a supplier they&#39;ve watched do the job. A lifecycle rail stamps Enquiry → Quote → Order → Completed → Paid &amp; rated using the real numbering model. Scene copy and pricing live in one module and every total is computed with the same 15% GST rule `stripe-charge-job` applies, so the marketing numbers can&#39;t drift from the product&#39;s arithmetic. `#reel-&lt;scene-id&gt;` renders the band alone, sized for a 1280×800 screen recording, so LinkedIn clips are cut from the real site rather than a copy. Fixed the page title + meta description, which still said &quot;coming soon&quot; a month after go-live. Verified on production: hero and band render, all five totals match hand-calculation, mobile stacks with no horizontal overflow, bundle carries all five scenes and zero hero-photo references</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Ratings, Stripe webhook + payment visibility for Gems (verified)</div>
             <div class="recent-desc">Closes the core loop: completed jobs now prompt the customer for stars + feedback + optional photo via a new `submit_rating` RPC (the old direct-INSERT policy on `ratings` is gone — it couldn&#39;t enforce that the job was actually finished). New `stripe-webhook` edge function reconciles everything Stripe decides *after* the initial charge POST — async success, later decline, refund, dispute, detached card — signature-verified (HMAC over the raw body, 300s replay window, constant-time compare) and idempotent via a `stripe_events` ledger. **Two real double-charge bugs found and fixed in the existing live code:** `stripe-charge-job` sent no Stripe `Idempotency-Key`, so a double-clicked retry could create two real PaymentIntents; and it discarded the PaymentIntent Stripe attaches to a 402, orphaning declined charge rows. Receipt emails are now gated on an atomic compare-and-set so a race can&#39;t send two. Gems see payment state per job (paid / failed / refunded / disputed / processing) with a Retry button, ratings in-thread, and a &quot;completed but not paid&quot; signal on the Done tab; CRM shows avg rating + outstanding charges. Verified live: signed/unsigned/replayed/stale webhook probes all behave, migrations applied, all three apps build clean</div>
           </div>
@@ -955,13 +962,6 @@
             <div class="recent-desc">`is_gem()` now authorizes any authenticated `@heygem.co.nz` user, and `ensure_gem()` auto-provisions their gems row on load. Auth switched from password to self-serve magic link, guarded to the domain. Verified a brand-new @heygem.co.nz user gets full access and a non-@heygem.co.nz user is blocked. Revoke by offboarding the email</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Marketing site live — coming-soon off, CTAs into the app (verified)</div>
-            <div class="recent-desc">heygem.co.nz is a live landing page, not a waitlist: coming-soon pill and early-access form removed, Get started + Log in CTAs into app.heygem.co.nz. Customer auth reworked signup-first with a value-prop screen; the marketing Log in link deep-links via `?mode=login`</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -974,9 +974,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">20</span>
+        <span class="col-count">21</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Marketing: live job reel replaces the hero photo (verified)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">stripe-charge-job</span><span class="tag tag-neutral">#reel-&lt;scene-id&gt;</span></div>
+        <div class="card-desc">The hero is no longer a stock-feeling photo: the morning-tea job now plays out as a real chat thread — ask → Gem typing → quote with the GST breakdown → approve → done → paid → rated — then settles so it can be read back. Also drops the **409KB hero JPEG** from the bundle entirely. New dark band under the ideas grid plays **five** example jobs end to end with a picker: morning tea, a repeat water-bottle order (&quot;same as last time&quot; — the Gem recalls the spec and waives the print setup), Sydney conference travel (hotel chosen for the 6-minute walk to ICC, flights with no 5am alarm and no red-eye, Airpoints added to both legs, &quot;would you like me to quote it?&quot;), a skip bin where the Gem catches that monitors are e-waste and can&#39;t legally go in the bin, and an end-of-lease clean booked on a supplier they&#39;ve watched do the job. A lifecycle rail stamps Enquiry → Quote → Order → Completed → Paid &amp; rated using the real numbering model. Scene copy and pricing live in one module and every total is computed with the same 15% GST rule `stripe-charge-job` applies, so the marketing numbers can&#39;t drift from the product&#39;s arithmetic. `#reel-&lt;scene-id&gt;` renders the band alone, sized for a 1280×800 screen recording, so LinkedIn clips are cut from the real site rather than a copy. Fixed the page title + meta description, which still said &quot;coming soon&quot; a month after go-live. Verified on production: hero and band render, all five totals match hand-calculation, mobile stacks with no horizontal overflow, bundle carries all five scenes and zero hero-photo references</div>
+      </div>
       <div class="card">
         <div class="card-title">Ratings, Stripe webhook + payment visibility for Gems (verified)</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">phase-r4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">submit_rating</span><span class="tag tag-neutral">ratings</span><span class="tag tag-neutral">stripe-webhook</span><span class="tag tag-neutral">stripe_events</span><span class="tag tag-neutral">stripe-charge-job</span><span class="tag tag-neutral">Idempotency-Key</span></div>
@@ -1133,7 +1138,7 @@
       <div class="card">
         <div class="card-title">SEO + analytics</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-r1</span></div>
-        <div class="card-desc">Meta/OG, sitemap, analytics on the repositioned site</div>
+        <div class="card-desc">Sitemap, OG image, analytics. (Title + meta description un-stale-d 2026-07-29 when the reel shipped; OG image and analytics still outstanding.)</div>
       </div>
       <div class="card">
         <div class="card-title">Real testimonials &amp; stats</div>
