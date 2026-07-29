@@ -991,9 +991,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">115</span>
+        <span class="col-count">116</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">LLM credit canary (29 Jul 2026)</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Every 30 min Sentinel probes each app&#39;s authenticated /api/llm-health and alerts on credit exhaustion or a rejected key — after DA ran out of Anthropic credits mid-run and a client&#39;s failed run was our first signal. Anthropic exposes no balance endpoint, so a real probe call is the only honest detection. Apps self-probe with their own key (keys never move to Sentinel); Sentinel classifies. 429 never alerts; transient faults need 3 consecutive; state persisted so a redeploy can&#39;t re-fire the alarm. Dark until SENTINEL_PROBE_TOKEN is set.</div>
+      </div>
       <div class="card">
         <div class="card-title">Report Issue widget V1</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span></div>
