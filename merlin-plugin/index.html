@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Merlin Plugin — Build Kanban</title>
+    <meta name="description" content="Live build status for the Merlin plugin — CoreShift’s AI Implementation Wizard as a Claude Code / Cowork plugin." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔌%3C/text%3E%3C/svg%3E" />
+    <style>
+      :root {
+        --bg: #fafaf9;
+        --card: #ffffff;
+        --ink: #18181b;
+        --ink-muted: #71717a;
+        --ink-subtle: #a1a1aa;
+        --border: #e4e4e7;
+        --done: #059669;
+        --doing: #d97706;
+        --next: #2563eb;
+        --back: #475569;
+        --back-bg: #f1f5f9;
+        --ricky: #7c3aed;
+        --ricky-bg: #f5f3ff;
+        --ricky-border: #ddd6fe;
+        --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+        --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+        --radius: 10px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0a0a;
+          --card: #18181b;
+          --ink: #fafafa;
+          --ink-muted: #a1a1aa;
+          --ink-subtle: #71717a;
+          --border: #27272a;
+          --done: #10b981;
+          --doing: #f59e0b;
+          --next: #3b82f6;
+          --back: #94a3b8;
+          --back-bg: #0f172a;
+          --ricky: #a78bfa;
+          --ricky-bg: #1e1b4b;
+          --ricky-border: #312e81;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 1400px; margin: 0 auto; padding: 32px 24px 80px; }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0 0 4px;
+      }
+      .subtitle { color: var(--ink-muted); font-size: 14px; margin: 0; }
+      .meta { text-align: right; font-size: 13px; color: var(--ink-muted); }
+      .meta a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+      .meta a:hover { color: var(--ink); }
+
+      h2.section-title {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink-muted);
+        margin: 0 0 12px;
+      }
+
+      .progress {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        box-shadow: var(--shadow);
+      }
+      .progress-bars {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .pbar { font-size: 12px; }
+      .pbar-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+        color: var(--ink-muted);
+      }
+      .pbar-label strong { color: var(--ink); font-weight: 600; }
+      .pbar-track { height: 6px; background: var(--back-bg); border-radius: 999px; overflow: hidden; }
+      .pbar-fill { height: 100%; background: var(--done); border-radius: 999px; transition: width 200ms ease; }
+      .pbar.active .pbar-fill { background: var(--doing); }
+      .pbar.future .pbar-fill { background: var(--ink-subtle); opacity: 0.3; }
+
+      .ricky-panel {
+        background: var(--ricky-bg);
+        border: 1px solid var(--ricky-border);
+        border-radius: var(--radius);
+        padding: 22px 24px;
+        margin-bottom: 28px;
+      }
+      .ricky-panel-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .ricky-panel-head h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .ricky-panel-head .badge {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        background: var(--ricky);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 999px;
+      }
+      .ricky-panel p.intro { font-size: 14px; color: var(--ink-muted); margin: 0 0 18px; }
+      .ricky-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+      @media (max-width: 740px) { .ricky-grid { grid-template-columns: 1fr; } }
+      .ricky-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px 18px;
+      }
+      .ricky-section h3 {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 0 0 4px;
+        color: var(--ricky);
+      }
+      .ricky-section .helper { font-size: 12px; color: var(--ink-muted); margin: 0 0 14px; }
+      .task {
+        border-top: 1px solid var(--border);
+        padding: 14px 0;
+      }
+      .task:first-of-type { border-top: 0; padding-top: 4px; }
+      .task:last-of-type { padding-bottom: 4px; }
+      .task .task-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 0 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .task .task-title::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--ricky);
+        flex-shrink: 0;
+      }
+      .ricky-section.later .task .task-title::before { background: var(--ink-subtle); }
+      .task .task-body {
+        font-size: 13px;
+        color: var(--ink-muted);
+        margin: 0;
+        line-height: 1.5;
+        padding-left: 16px;
+      }
+      .task .task-body code {
+        font-size: 12px;
+        background: var(--back-bg);
+        padding: 1px 6px;
+        border-radius: 4px;
+        color: var(--ink);
+      }
+      .task .task-when {
+        font-size: 11px;
+        color: var(--ink-subtle);
+        font-weight: 500;
+        margin-left: auto;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .task .task-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: var(--ricky);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        margin-top: 6px;
+        margin-left: 16px;
+      }
+
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      .chip {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: var(--back-bg);
+        color: var(--back);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .chip.m0 { background: #fce7f3; color: #be185d; }
+      .chip.m1 { background: #ede9fe; color: #6d28d9; }
+      .chip.m2 { background: #e0e7ff; color: #3730a3; }
+      .chip.m3 { background: #cffafe; color: #155e75; }
+      .chip.m4 { background: #ccfbf1; color: #115e59; }
+      .chip.m5 { background: #fef3c7; color: #b45309; }
+      .chip.m6 { background: #fee2e2; color: #b91c1c; }
+      .chip.m7 { background: #f1f5f9; color: #475569; }
+      .chip.ext { background: var(--back-bg); color: var(--back); }
+      @media (prefers-color-scheme: dark) {
+        .chip.m0 { background: #500724; color: #f9a8d4; }
+        .chip.m1 { background: #2e1065; color: #c4b5fd; }
+        .chip.m2 { background: #1e1b4b; color: #a5b4fc; }
+        .chip.m3 { background: #083344; color: #67e8f9; }
+        .chip.m4 { background: #042f2e; color: #5eead4; }
+        .chip.m5 { background: #422006; color: #fcd34d; }
+        .chip.m6 { background: #450a0a; color: #fca5a5; }
+        .chip.m7 { background: #1e293b; color: #cbd5e1; }
+      }
+
+      .board {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+      }
+      @media (max-width: 1100px) { .board { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 640px)  { .board { grid-template-columns: 1fr; } .progress-bars { grid-template-columns: repeat(2, 1fr); } }
+
+      .col {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .col-head {
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .col-head .dot { width: 8px; height: 8px; border-radius: 999px; margin-right: 8px; }
+      .col-title {
+        font-weight: 600;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: flex;
+        align-items: center;
+      }
+      .col-count {
+        font-size: 12px;
+        color: var(--ink-muted);
+        background: var(--back-bg);
+        padding: 2px 8px;
+        border-radius: 999px;
+        min-width: 24px;
+        text-align: center;
+      }
+      .col.done .dot { background: var(--done); }
+      .col.doing .dot { background: var(--doing); }
+      .col.next .dot { background: var(--next); }
+      .col.back .dot { background: var(--back); }
+
+      .col-body {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: calc(100vh - 280px);
+        overflow-y: auto;
+      }
+
+      .card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 14px;
+        transition: transform 80ms ease, box-shadow 120ms ease;
+      }
+      .card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+      .card-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+      .card-id {
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--ink-muted);
+      }
+      .card-date { font-size: 11px; color: var(--ink-subtle); margin-left: auto; }
+      .card-title { font-size: 14px; font-weight: 500; margin: 0 0 4px; line-height: 1.4; }
+      .card-note { font-size: 12px; color: var(--ink-muted); margin: 0; line-height: 1.45; }
+      .card.ext { background: transparent; border-style: dashed; }
+      .card.ext .card-id::before { content: '⚙ '; }
+
+      .phases {
+        margin-top: 40px;
+        padding: 18px 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 12px;
+        line-height: 1.7;
+        white-space: pre;
+        overflow-x: auto;
+        color: var(--ink-muted);
+      }
+      .phases strong { color: var(--ink); font-weight: 600; }
+
+      footer {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--ink-subtle);
+        text-align: center;
+      }
+      footer a { color: var(--ink-muted); text-decoration: underline; text-underline-offset: 3px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div>
+          <h1>🔌 Merlin Plugin — Build Kanban</h1>
+          <p class="subtitle">CoreShift&rsquo;s AI Implementation Wizard, as a Claude Code / Cowork plugin · live build status</p>
+        </div>
+        <div class="meta">
+          Last updated <strong>2026-07-29</strong><br />
+          <a href="https://github.com/CoreshiftHQNZ/merlin-plugin" target="_blank" rel="noopener">repo</a> ·
+          <a href="https://github.com/CoreshiftHQNZ/merlin-plugin/blob/main/docs/prd.md" target="_blank" rel="noopener">PRD</a> ·
+          <a href="https://github.com/CoreshiftHQNZ/merlin-plugin/blob/main/docs/product-roadmap.md" target="_blank" rel="noopener">roadmap</a>
+        </div>
+      </header>
+
+      <section class="progress">
+        <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500; border-left: 3px solid var(--ricky); padding-left: 12px; margin-bottom: 14px;">
+          <span style="color: var(--ink);">⚠ Two Merlins &mdash; this is the <strong>plugin</strong>.</span>
+          Skills, hooks and a bundled MCP server running inside the learner&rsquo;s own Claude, over a
+          privacy-preserving telemetry spine. Repo <code>CoreshiftHQNZ/merlin-plugin</code>, Supabase
+          <code>muzroxahdgcfxnmbacjc</code>. The app-era Next.js product &mdash; M0&ndash;M5, heymerlin.ai,
+          Stripe seats, Supabase <code>egjpqixhwvvekjqldnyz</code> &mdash; is Ricky&rsquo;s and lives on
+          <a href="../merlin/">its own board</a>. The names are one hyphen apart; the systems are not related.
+        </div>
+        <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">
+          <span style="color: var(--ink);">Phase 0 complete (29 Jul).</span> The telemetry spine works end to end:
+          a signed event emitted by the plugin lands in Supabase, and a forged one doesn&rsquo;t. Schema with
+          RLS default-deny on every table, server-issued identity tokens the client cannot mint or alter,
+          an ingest path that never touches the secret key, a local outbox that survives being offline, and
+          passive session telemetry that adds 52ms to session start. <strong>Verified:</strong> 36 integration
+          tests against the deployed backend plus 30 database-level assertions, all green.
+          <strong>Next:</strong> Phase 1 &mdash; and the work turns from code to writing.
+        </div>
+        <div class="progress-bars">
+          <div class="pbar"><div class="pbar-label"><strong>P0</strong> Foundations</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>P1</strong> Engine + memory</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>P2</strong> Magic moment</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>P3</strong> Real work</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>P4</strong> Invisible assessment</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>P5</strong> Manager visibility</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+          <div class="pbar future"><div class="pbar-label"><strong>P6</strong> Launch readiness</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
+        </div>
+      </section>
+
+      <section class="ricky-panel">
+        <div class="ricky-panel-head">
+          <h2>Decisions &amp; blockers</h2>
+          <span class="badge">Who owns what</span>
+        </div>
+        <p class="intro">
+          <strong>Nothing in Phases 1&ndash;3 is blocked.</strong> The open items sit in Phase 4 (Keitha&rsquo;s
+          competency wording), Phase 5 (email prerequisites) and the commercial model &mdash; so the build can
+          run straight through the learner-facing skills while those settle. Two decisions closed this week:
+          credential-vs-badge (badges, 28 Jul) and business-transfer semantics (29 Jul).
+        </p>
+
+        <div class="ricky-grid">
+          <div class="ricky-section">
+            <h3>Do now</h3>
+            <div class="task">
+              <p class="task-title">Run <code>/security-review</code> over Phase 0 <span class="task-when">Abe</span></p>
+              <p class="task-body">CLAUDE.md requires it for Phases 0, 4 and 5. Now genuinely due: identity issuance, RLS and the ingest path all exist to review. The only Phase 0 item still outstanding.</p>
+            </div>
+            <div class="task">
+              <p class="task-title">Foundation competency wording F1&ndash;F10 <span class="task-when">Keitha</span></p>
+              <p class="task-body">Her 1 Jun competency document is the source. Blocks <strong>TASK-037</strong> only &mdash; the framework and schema are built, and criteria load as bundled JSON, so her wording drops in without a release.</p>
+            </div>
+            <div class="task">
+              <p class="task-title">Commercial model <span class="task-when">Keitha · Mal · Russ</span></p>
+              <p class="task-body">Subscription vs a high-touch implementation engagement. Gates <strong>FR-024</strong> and all of PRD §10. Nothing payment-related is being built until it lands; <code>businesses.tier</code> is deliberately free text rather than an enum so the decision isn&rsquo;t pre-empted in the schema.</p>
+            </div>
+            <div class="task">
+              <p class="task-title">Client install: make the repo public, or distribute during setup? <span class="task-when">Ricky</span></p>
+              <p class="task-body">Both <code>merlin-plugin</code> and the marketplace <code>coreshift-plugins</code> are private, so <code>/plugin marketplace add</code> resolves only for org members. Making it public is a commercial call &mdash; the skills carry the competency methodology.</p>
+            </div>
+          </div>
+
+          <div class="ricky-section later">
+            <h3>Later — heads-up only</h3>
+            <div class="task">
+              <p class="task-title">Cloudflare Email Sending prerequisites <span class="task-when">Phase 5</span></p>
+              <p class="task-body">Replaces Resend (29 Jul). Public beta, needs Workers Paid, and the sending domain must be on Cloudflare DNS &mdash; confirm <code>coreshifthq.com</code> is on the <code>CoreshiftHq</code> account before TASK-052.</p>
+            </div>
+            <div class="task">
+              <p class="task-title">Reset the backend before the pilot <span class="task-when">TASK-058</span></p>
+              <p class="task-body"><code>events</code> is append-only at the storage layer &mdash; <code>DELETE</code> raises even for the secret key &mdash; so verification runs cannot tidy up after themselves. Nine scratch businesses named <code>verify-*</code> exist. Plan a project reset, not a cleanup script.</p>
+            </div>
+            <div class="task">
+              <p class="task-title">Archetype weighting table <span class="task-when">Open question 6</span></p>
+              <p class="task-body">The concrete role → archetype weights, and the fallback when a business&rsquo;s role doesn&rsquo;t map cleanly. Needed for TASK-018, not before.</p>
+            </div>
+            <div class="task">
+              <p class="task-title">Business transfer <span class="task-when">Decided 29 Jul</span></p>
+              <p class="task-body">Effort stays with the business where it happened; the person carries their own level. A buyer&rsquo;s ROI figure never shrinks retroactively, and nobody redoes work. Build TASK-056 to this.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <h2 class="section-title">Build board</h2>
+      <p class="helper">Phase 0 shipped in two commits on <code>feat/phase-0-foundations</code>. Cards carry their roadmap task ids.</p>
+
+      <div class="board">
+        <div class="col next">
+          <div class="col-head"><div class="col-title"><span class="dot"></span>Next — Phase 1</div><div class="col-count">5</div></div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m1">P1</span><span class="card-id">TASK-011 · 014</span></div><h3 class="card-title">The shared adaptive engine block</h3><p class="card-note">Three dials &mdash; pace, technical depth, expressiveness &mdash; as a shared instruction block every skill includes. Stated preference is a strong prior but behaviour can override; least-explanation rule; lead, don&rsquo;t interrogate; never reveal assessment. Plus the stance transitions: repeated struggle softens, impatience briskens, and anti-lock-in re-stances rather than doing more of the same. <strong>This is writing, not coding</strong> &mdash; the draft in the architecture doc is the starting text.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">P1</span><span class="card-id">TASK-012 · 013</span></div><h3 class="card-title">Per-user memory + dial persistence</h3><p class="card-note"><code>profile.md</code>, <code>pathway.md</code>, <code>ledger.jsonl</code>, <code>outbox.jsonl</code>. Each dial stores a value, a one-line rationale and when it last moved. Middle-safe cold start &mdash; standard pace, plain-leaning depth, balanced expressiveness &mdash; so a first session never feels mis-pitched.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">P1</span><span class="card-id">TASK-015</span></div><h3 class="card-title">Append-only hashed ledger</h3><p class="card-note">One judgement per line, integrity-hashed, and <strong>explicitly exempt from the memory consolidation pass</strong> &mdash; consolidation must never rewrite a certified record. Restorable from <code>competency_digests</code> after a device re-seed.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">P1</span><span class="card-id">TASK-016</span></div><h3 class="card-title">Expressiveness stays local</h3><p class="card-note">Per the 23 Jul decision: build it, don&rsquo;t surface it. Present in <code>profile.md</code> and used for calibration, absent from every payload. <strong>Already enforced server-side</strong> &mdash; <code>expressiveness_read</code> is on the ingest forbidden-key list, so an accidental emit is refused and alerted rather than quietly stored.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m1">P1</span><span class="card-id">TASK-017</span></div><h3 class="card-title">Phase 1 verification</h3><p class="card-note">Dials persist across a restart; a stated preference overrides inference; repeated struggle softens the stance; consolidation leaves the ledger byte-identical; no payload carries an expressiveness field.</p></article>
+          </div>
+        </div>
+
+        <div class="col back">
+          <div class="col-head"><div class="col-title"><span class="dot"></span>Backlog — Phases 2&ndash;7</div><div class="col-count">46</div></div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m2">P2</span><span class="card-id">TASK-018 → 026</span></div><h3 class="card-title">⭐ The magic moment</h3><p class="card-note">The phase that decides whether Merlin works. <code>merlin-onboarding</code> draws someone out about their week &mdash; ten questions as <em>territory</em>, not a script &mdash; and <code>merlin-guide</code> answers with 2&ndash;4 concrete options that reference the connectors their org actually has. <strong>Never a bare &ldquo;what do you want to do?&rdquo;</strong> Completion is 2&ndash;3 named archetypes each with a concrete example, never a question count. Gated by a full Julie walkthrough.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">P3</span><span class="card-id">TASK-027 → 035</span></div><h3 class="card-title">Doing real work</h3><p class="card-note"><code>merlin-module</code> on the proven seven-beat anatomy (5&ndash;12 minutes, parallel <code>step_hints</code>, a recovery line per step) and <code>merlin-loop</code>&rsquo;s five-step closure. <strong>Merlin guides; it never does the user&rsquo;s work</strong> &mdash; it hands over a prompt for a fresh session and walks them through. Free-text reflection is reduced to <code>change_tags</code> + <code>reflection_present</code> on-device, before anything is queued.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">P4</span><span class="card-id">TASK-036 → 044</span></div><h3 class="card-title">Invisible assessment</h3><p class="card-note">Competency criteria as bundled JSON so Keitha&rsquo;s wording changes without a release. Three layers &mdash; judge the real output, then the what/why/what-you&rsquo;d-change conversation, then light self-report. Confidence-thresholded: below threshold, keep gathering rather than award. Rubrics target the <em>person&rsquo;s</em> prompting, judgement and iteration, not artefact polish, because the artefact is co-produced with Claude. <strong>The learner is never told they are being assessed.</strong></p></article>
+            <article class="card"><div class="card-head"><span class="chip m5">P5</span><span class="card-id">TASK-045 → 053</span></div><h3 class="card-title">Manager visibility</h3><p class="card-note">Derived views, manager-only reads that take <strong>no business parameter</strong> (it is derived from the token), the ROI headline, and a single-file Cowork dashboard artifact. Manager read tools are absent from the learner install entirely. Ends with the mandatory privacy audit &mdash; any prose in <code>events</code> or <code>competency_digests</code> is a P0.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m6">P6</span><span class="card-id">TASK-054 → 058</span></div><h3 class="card-title">Support, polish, pilot rehearsal</h3><p class="card-note"><code>ask-merlin</code> with tiered escalation (Merlin → refined prompt → the CoreShift support agent → a human), on-device frustration aggregation that emits only a bucketed count, the identity lifecycle, and event schema versioning. Then a full pilot run as both Julie and a confident developer.</p></article>
+            <article class="card ext"><div class="card-head"><span class="chip ext">post-MVP</span><span class="card-id">TASK-059 → 063</span></div><h3 class="card-title">Hosted manager site</h3><p class="card-note">Next.js on Railway for stakeholders who don&rsquo;t use Cowork. A <em>second client</em> onto the same read API &mdash; the only genuinely new work is session auth. If a business rule ends up in a client, that&rsquo;s a bug.</p></article>
+          </div>
+        </div>
+
+        <div class="col done">
+          <div class="col-head"><div class="col-title"><span class="dot"></span>Done — Phase 0</div><div class="col-count">11</div></div>
+          <div class="col-body">
+            <article class="card"><div class="card-head"><span class="chip m0">P0</span><span class="card-id">TASK-010</span><span class="card-date">29 Jul</span></div><h3 class="card-title">Phase 0 verification ✓ — all five properties hold</h3><p class="card-note">A forged token is refused, a learner token can&rsquo;t read team rows, a prose payload is rejected, a duplicate <code>event_id</code> dedupes, and the outbox survives an offline flush. <strong>36 vitest tests against the real deployed backend</strong> &mdash; mocks would pass equally well on a system that was wide open &mdash; plus <strong>30 database-level assertions</strong> in <code>tests/phase0-rls.sql</code>, which covers what a test client cannot reach: the policies need a session with claims set, and a Merlin token is deliberately not a database credential. Two assertions worth keeping: one proves a rejection names the offending field but never quotes its contents; another reads back every stored event and proves no string contains a space.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">P0</span><span class="card-id">TASK-009</span><span class="card-date">29 Jul</span></div><h3 class="card-title">Sentry on Edge Functions only ✓</h3><p class="card-note">Never the MCP server &mdash; that runs on the learner&rsquo;s machine, where a stack trace is an egress path the payload validator never inspects. <code>defaultIntegrations: false</code> is mandatory rather than tuning: the Deno SDK doesn&rsquo;t instrument <code>Deno.serve</code>, so on a reused runtime one learner&rsquo;s context can surface attached to another learner&rsquo;s error. There is deliberately <strong>no <code>captureException</code> and no free-form message</strong> &mdash; the only entry point takes a closed set of enum fields, each checked against a safe pattern, so &ldquo;never interpolate a rejected value&rdquo; is a property of the code rather than a rule to remember. Pinned to <code>sentry@8.55.0</code>; the unpinned URL the spec suggested would resolve to whatever is latest at deploy time.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">P0</span><span class="card-id">TASK-008</span><span class="card-date">29 Jul</span></div><h3 class="card-title">Passive session telemetry ✓</h3><p class="card-note">The signal that separates &ldquo;nobody is using this&rdquo; from &ldquo;eight of ten seats were active this week&rdquo; &mdash; and it costs the learner nothing, because it never asks them anything. Shipped as <code>.mjs</code> rather than <code>.sh</code>: Merlin has to run on Windows, and Node is already required, which also lets the hook reuse the server&rsquo;s event-id code instead of reimplementing the hash in shell. <strong>SessionStart does no network I/O at all &mdash; 52ms.</strong> Session duration is recorded via a per-session marker so <code>duration_minutes</code> reaches the utilisation metric. <code>cwd</code> is discarded outright; the session id is hashed into the event id and never transmitted.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">P0</span><span class="card-id">TASK-007</span><span class="card-date">29 Jul</span></div><h3 class="card-title">Local outbox + <code>merlin_emit_event</code> ✓</h3><p class="card-note">Disk first, network later: emit measured at <strong>~40ms</strong> and returns before any request is made, so an unreachable backend is invisible to the learner. <code>event_id = sha256(learner_id | type | natural_key)</code> &mdash; a random UUID would make every retry a new row, so utilisation and ROI would drift upward on exactly the flaky connections where someone retries most, and nothing would look wrong. <code>natural_key</code> is hashed and discarded, never transmitted, which is what lets the session hook key on a session id without it becoming telemetry. Compaction renames rather than locks, so two concurrent sessions sharing one outbox is safe.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">P0</span><span class="card-id">TASK-006</span><span class="card-date">29 Jul</span></div><h3 class="card-title">Ingest + the payload allow-list ✓</h3><p class="card-note"><strong>No secret key on this path.</strong> It connects over the database URL, drops to the <code>authenticated</code> role and sets the claims from the verified token, so RLS enforces rather than an <code>if</code> in the handler. Privilege drops mid-transaction on purpose &mdash; the revocation check runs first, because that function isn&rsquo;t executable by <code>authenticated</code>. The allow-list contains <strong>no bare string type</strong>: every string derives from the same pattern the database CHECK enforces, so nothing can pass validation and then fail in Postgres. A structural scan runs before schema validation and rejects <code>reflection</code>, <code>evidence</code>, <code>expressiveness_read</code> at any depth, so smuggled content produces a named, alertable rejection. Each row inserts in its own savepoint &mdash; without that, one poison event would abort every batch forever and silently end a learner&rsquo;s telemetry.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">P0</span><span class="card-id">TASK-005</span><span class="card-date">29 Jul</span></div><h3 class="card-title">Bundled MCP server ✓</h3><p class="card-note">stdio, and <strong>fail-soft by contract</strong>: missing, expired, malformed and corrupt identity are all states it reports calmly, never exceptions it throws, because a broken tool panel makes Julie think she broke something. The token never reaches a tool result or stderr. The client decodes claims <em>without verifying</em> &mdash; it has no key, by design &mdash; so that gate is surface reduction for TASK-047, never the permission check.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">P0</span><span class="card-id">TASK-004</span><span class="card-date">29 Jul</span></div><h3 class="card-title">Server-issued identity that can&rsquo;t be forged ✓</h3><p class="card-note">HS256 tokens signed with a key held only as a project secret, so the plugin can <em>present</em> an identity but never invent one. The key id is derived from the key material, so rotation needs no bookkeeping. One entry point does signature, claims and revocation together &mdash; a caller cannot skip the revocation check &mdash; and a registry outage fails closed rather than falling through to &ldquo;valid&rdquo;. Failures are enum codes; no rejected value ever reaches a log. The registry stores only the token id, never the token, so a dump of it grants nothing. <strong>Verified:</strong> self-elevation to owner, impersonation, business switching, <code>alg:none</code> and unknown-key are all refused.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">P0</span><span class="card-id">TASK-003</span><span class="card-date">29 Jul</span></div><h3 class="card-title">RLS default-deny on every table ✓</h3><p class="card-note">Seven tables, 14 policies, and <code>anon</code> holds <strong>zero grants anywhere</strong> &mdash; there is no unauthenticated surface. Team reads require the token to claim manager/owner <em>and</em> the live row to agree, so demoting someone takes effect on the next request rather than at token expiry, and a stale elevated token stops working immediately. <code>business_id</code> is derived from the learners table, never read from the token: a team-scoped read must never take a caller-supplied business, and a claimed one is still caller-supplied. A manager cannot read rubric-level judgement at all &mdash; that is exactly the &ldquo;individual fumbles&rdquo; they are never shown.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">P0</span><span class="card-id">TASK-002</span><span class="card-date">29 Jul</span></div><h3 class="card-title">Schema — with the no-prose rule as a constraint ✓</h3><p class="card-note">Six tables per the PRD, no <code>messages</code> table, and exactly one documented free-text column (<code>nominations.label</code>, present only after an explicit human decision to share). <strong>The privacy invariant is a CHECK constraint, not an ingest convention:</strong> every payload string must be space-free and under 128 characters, so a sentence cannot be stored at all &mdash; a whitelist rather than a length heuristic, because &ldquo;reject strings over N chars&rdquo; would still let <code>too_slow_again</code> through as smuggled sentiment. <code>events</code> is append-only by trigger (UPDATE and DELETE raise even for the secret key), <code>event_id</code> must be a hash so a later change can&rsquo;t regress to random UUIDs, and <code>business_id</code> is stamped from the learner rather than trusted from the request.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m0">P0</span><span class="card-id">TASK-001 · 001b</span><span class="card-date">29 Jul</span></div><h3 class="card-title">Plugin bundle + repo front matter ✓</h3><p class="card-note">Manifest, MCP declaration and component dirs at the plugin root, named <code>merlin</code> to match the marketplace entry so install-by-name resolves. The README and <code>.env.example</code> both described the <em>app-era</em> product &mdash; naming <code>egjpqixhwvvekjqldnyz</code> as the database and Railway as the deploy target &mdash; which would have sent a coding agent to build the wrong thing against the wrong system. Both rewritten, with the two-Merlins distinction stated up front.</p></article>
+            <article class="card ext"><div class="card-head"><span class="chip ext">hardening</span><span class="card-id">SCOPE-TOKEN-CHECK</span><span class="card-date">29 Jul</span></div><h3 class="card-title">Revocation check moved out of the public API ✓</h3><p class="card-note">It started in the exposed schema so ingest could reach it over RPC with only the publishable key. A probe of the Edge runtime then showed <code>SUPABASE_JWT_SECRET</code> is absent &mdash; this project uses asymmetric signing keys &mdash; which forced the direct-connection route and made the RPC surface dead. Moved to the unexposed schema and dropped from <code>public</code>: an unauthenticated entry point into the auth system that no caller needs isn&rsquo;t worth keeping for a route we aren&rsquo;t taking. Cleared two advisor warnings.</p></article>
+          </div>
+        </div>
+      </div>
+
+      <div class="phases">
+<strong>Merlin plugin build phases</strong> — 66 tasks, 61 in the MVP
+<strong>P0</strong>  Foundations           ✓ DONE — plugin skeleton · schema + content-free CHECK · RLS default-deny · server-issued identity · ingest + allow-list · outbox · session hooks · Sentry · verification
+<strong>P1</strong>  Engine + memory        adaptive engine block (3 dials) · per-user memory · dial persistence + rationale · stance transitions · append-only hashed ledger · expressiveness local-only
+<strong>P2</strong>  Magic moment         ⭐ role-primed intake · concrete installed-aware first menu · follow-up technique for thin answers · role prior reconciliation · Julie walkthrough as the gate
+<strong>P3</strong>  Real work              prompt wizard · seven-beat module anatomy · guide-not-execute boundary · five-step loop closure · on-device reflection reduction · achievement framing
+<strong>P4</strong>  Invisible assessment   competency criteria as data · Foundation F1–F10 (Keitha) · three assessment layers · rigour + confidence thresholding · content-free digests · device restore
+<strong>P5</strong>  Manager visibility     derived views · manager-only reads (no business parameter) · ROI calculation · dashboard artifact · empty/gap states · weekly digest cron · privacy audit
+<strong>P6</strong>  Launch readiness       ask-merlin + tiered escalation · frustration aggregation (bucketed counts only) · identity lifecycle · schema versioning · pilot rehearsal
+<strong>P7</strong>  Hosted site            post-MVP — a second client onto the same read API; the only new work is session auth
+
+<strong>The six non-negotiables:</strong> no conversation content, evidence or free text in any payload · never a bare &ldquo;what do you want to do?&rdquo; · Merlin guides, it never does the work for you · the learner is never told they are being assessed · team data is unreachable by a learner token · the Julie test on every piece of learner-facing copy
+<strong>Locked:</strong> plugin (not an app) · badges, not a qualification (28 Jul) · Cloudflare Email Sending, not Resend (29 Jul) · Sentry on Edge Functions only (29 Jul) · transfer keeps effort with the business (29 Jul)
+<strong>Open:</strong> commercial model (Keitha/Mal/Russ) · Foundation F1–F10 wording (Keitha) · public repo vs setup-engagement install (Ricky) · archetype weighting table · whether a team-level expressiveness mix is ever surfaced
+      </div>
+
+      <footer>
+        Merlin plugin — CoreShift&rsquo;s AI Implementation Wizard as a Claude Code / Cowork plugin · kept in sync with the work ·
+        <a href="https://github.com/CoreshiftHQNZ/merlin-plugin" target="_blank" rel="noopener">repo</a> ·
+        <a href="../merlin/">app-era board</a>
+      </footer>
+    </div>
+  </body>
+</html>
