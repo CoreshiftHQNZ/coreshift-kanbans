@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>65%</strong> complete</div>
-        <div><strong>20</strong>/31 cards done</div>
-        <div>Updated <strong>2026-07-29 03:10 UTC</strong></div>
+        <div><strong>71%</strong> complete</div>
+        <div><strong>20</strong>/28 cards done</div>
+        <div>Updated <strong>2026-07-29 03:27 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">Phase R5 · native apps + push</span>
+          <span class="phase-pill-value">Core loop complete · seeking first customers</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Capacitor iOS/Android + push <span class="phase-pill-date">Phase R5</span></span>
+          <span class="phase-pill-value">First paying customers on the live loop <span class="phase-pill-date">Native mobile deferred</span></span>
         </div>
       </div>
     </section>
@@ -815,13 +815,13 @@
             <li>Save card at first approval</li><li>Charge-on-complete edge function</li><li>GST receipt email</li><li>Live keys in Vault + client (test data cleared)</li><li>Webhook reconciliation: refunds, disputes, late declines</li><li>Double-charge guard + Gem-facing retry</li>
           </ul>
         </div>
-        <div class="phase-card phase-in-progress">
+        <div class="phase-card phase-done">
           <div class="phase-card-head">
             <div class="phase-marker">R5</div>
-            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
           </div>
           <div class="phase-title">Phase R5 <span class="phase-subtitle">Capacitor + push + ratings</span></div>
-          <div class="phase-window">Ratings shipped; native builds gated on toolchain + accounts</div>
+          <div class="phase-window">Ratings shipped 2026-07-29 · native mobile deferred</div>
           <p class="phase-desc">The rating flow is live — a completed job prompts for stars, feedback and an optional photo, visible to Gems in-thread and aggregated per customer in the CRM. Still to come: wrapping the customer app for iOS/Android with Capacitor and FCM/APNs push (new quote, job done, rate it). Blocked on a build machine with Xcode + the Android SDK, a Firebase project for FCM, an APNs key, and the Google Play org account.</p>
           <ul class="phase-deliverables">
             <li>Rating + photo upload</li><li>Capacitor iOS/Android builds</li><li>Push: new quote / job done / rate it</li><li>App Store + Play submissions</li>
@@ -841,11 +841,11 @@
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">1</div>
+        <div class="status-num">0</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">2</div>
+        <div class="status-num">0</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -1085,39 +1085,24 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Phase R5: native apps + push + ratings</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span></div>
-        <div class="card-desc">**Rating flow is DONE** (stars + feedback + photo, live). Remaining: wrap the customer app with Capacitor (iOS/Android) and FCM/APNs push (new quote / job done / rate it). Apple account ready; Google Play account and the local native toolchain still to sort</div>
+        <div class="card-title">Ratings live; native mobile deferred</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">decision</span></div>
+        <div class="card-desc">The rating flow (stars + feedback + photo) is shipped and verified, which closes the core loop end to end on the web. Native iOS/Android + push is **deliberately backlogged** as of 2026-07-29: no value in it until there are customers asking for an app, and it needs a build machine with Xcode + the Android SDK, a Firebase project (FCM), an APNs key, and the Google Play org account. Note for later: none of those credentials require owning an Android phone — Play registration is documents + US$25, and Android Studio&#39;s emulator covers testing</div>
       </div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">0</span>
       </header>
-      <div class="cards">
-      <div class="card">
-        <div class="card-title">Google Play org account</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">needs-ricky</span></div>
-        <div class="card-desc">Apple is DONE (CORESHIFT LIMITED + D-U-N-S). Remaining: Google Play Console org account (US$25 + identity verification, wants the same D-U-N-S). Only gates Android store submission, not the build</div>
-      </div></div>
+      <div class="cards"><div class="empty">No items</div></div>
     </section>
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">0</span>
       </header>
-      <div class="cards">
-      <div class="card">
-        <div class="card-title">Capacitor wrap</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">blocked-toolchain</span><span class="tag tag-neutral">google-services.json</span></div>
-        <div class="card-desc">Add Capacitor to the customer app; first iOS/Android builds. **Build machine can&#39;t produce a binary yet:** no Xcode (command-line tools only), no Android SDK, no Java runtime. Push also needs a Firebase project + `google-services.json` (FCM) and an APNs auth key (.p8). Scaffolding and device-registration plumbing can be written before any of that lands; verification can&#39;t</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Google Play account</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">needs-ricky</span></div>
-        <div class="card-desc">US$25 + verification under CORESHIFT LIMITED</div>
-      </div></div>
+      <div class="cards"><div class="empty">No items</div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
@@ -1136,9 +1121,9 @@
         <div class="card-desc">Card on file at first approval (SetupIntent), off-session charge on completion, GST receipts, decline handling. Test mode until registered</div>
       </div>
       <div class="card">
-        <div class="card-title">Capacitor wrap + push + ratings</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span></div>
-        <div class="card-desc">iOS/Android builds from the same React app, FCM/APNs push (quote/done/rate), rating flow with photo upload, store assets + submission</div>
+        <div class="card-title">Native mobile: Capacitor + push</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">deferred</span></div>
+        <div class="card-desc">iOS/Android builds from the same React app, FCM/APNs push (new quote / job done / rate it), store assets + submission. Ratings already shipped on web. Deferred 2026-07-29 until there&#39;s customer pull. Needs: Xcode + Android SDK + JDK on a build machine, a Firebase project for FCM, an APNs .p8 key, and the Google Play org account (US$25 + identity verification — no phone required)</div>
       </div>
       <div class="card">
         <div class="card-title">Consolidate Railway to one service</div>

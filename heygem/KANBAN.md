@@ -31,22 +31,19 @@
 
 ## 🟡 In Progress
 
-- **Phase R5: native apps + push + ratings** `phase-r5` — **Rating flow is DONE** (stars + feedback + photo, live). Remaining: wrap the customer app with Capacitor (iOS/Android) and FCM/APNs push (new quote / job done / rate it). Apple account ready; Google Play account and the local native toolchain still to sort.
+- **Ratings live; native mobile deferred** `phase-r5` `decision` — The rating flow (stars + feedback + photo) is shipped and verified, which closes the core loop end to end on the web. Native iOS/Android + push is **deliberately backlogged** as of 2026-07-29: no value in it until there are customers asking for an app, and it needs a build machine with Xcode + the Android SDK, a Firebase project (FCM), an APNs key, and the Google Play org account. Note for later: none of those credentials require owning an Android phone — Play registration is documents + US$25, and Android Studio's emulator covers testing.
 
 ## 🚫 Blocked
 
-- **Google Play org account** `phase-r5` `needs-ricky` — Apple is DONE (CORESHIFT LIMITED + D-U-N-S). Remaining: Google Play Console org account (US$25 + identity verification, wants the same D-U-N-S). Only gates Android store submission, not the build.
 
 ## 🔵 This Week
 
-- **Capacitor wrap** `phase-r5` `blocked-toolchain` — Add Capacitor to the customer app; first iOS/Android builds. **Build machine can't produce a binary yet:** no Xcode (command-line tools only), no Android SDK, no Java runtime. Push also needs a Firebase project + `google-services.json` (FCM) and an APNs auth key (.p8). Scaffolding and device-registration plumbing can be written before any of that lands; verification can't.
-- **Google Play account** `phase-r5` `needs-ricky` — US$25 + verification under CORESHIFT LIMITED.
 
 ## ⚪ Backlog
 
 - **Gem web workspace** `phase-r3` — Pooled request queue, claim, chat, quote composer, mark complete (fires the charge). Lead inbox moves here from Supabase Studio.
 - **Stripe pay-per-job** `phase-r4` — Card on file at first approval (SetupIntent), off-session charge on completion, GST receipts, decline handling. Test mode until registered.
-- **Capacitor wrap + push + ratings** `phase-r5` — iOS/Android builds from the same React app, FCM/APNs push (quote/done/rate), rating flow with photo upload, store assets + submission.
+- **Native mobile: Capacitor + push** `phase-r5` `deferred` — iOS/Android builds from the same React app, FCM/APNs push (new quote / job done / rate it), store assets + submission. Ratings already shipped on web. Deferred 2026-07-29 until there's customer pull. Needs: Xcode + Android SDK + JDK on a build machine, a Firebase project for FCM, an APNs .p8 key, and the Google Play org account (US$25 + identity verification — no phone required).
 - **Consolidate Railway to one service** `infra` `tech-debt` — Two services exist (`marketing` → heygem.co.nz prod; `heygem` → staging.heygem.co.nz staging). Collapse to one service with two environments.
 - **SEO + analytics** `phase-r1` — Meta/OG, sitemap, analytics on the repositioned site.
 - **Real testimonials & stats** `content` — Replace placeholders with concierge-flavoured proof once first customers land.

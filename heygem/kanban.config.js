@@ -13,10 +13,10 @@ module.exports = {
     "followed by a push notification for a star rating, feedback and a photo. One React codebase ships the customer " +
     "experience as a web app AND native iOS/Android apps via Capacitor; Gems work from a web workspace.",
 
-  phase: "Phase R5 · native apps + push",
+  phase: "Core loop complete · seeking first customers",
   nextMilestone: {
-    name: "Capacitor iOS/Android + push",
-    date: "Phase R5",
+    name: "First paying customers on the live loop",
+    date: "Native mobile deferred",
   },
 
   // ── Goals ─────────────────────────────────────────────────────
@@ -135,10 +135,10 @@ module.exports = {
     },
     {
       key: "phase-r5",
-      status: "in-progress",
+      status: "done",
       title: "Phase R5",
       subtitle: "Capacitor + push + ratings",
-      window: "Ratings shipped; native builds gated on toolchain + accounts",
+      window: "Ratings shipped 2026-07-29 · native mobile deferred",
       desc: "The rating flow is live — a completed job prompts for stars, feedback and an optional photo, visible to Gems in-thread and aggregated per customer in the CRM. Still to come: wrapping the customer app for iOS/Android with Capacitor and FCM/APNs push (new quote, job done, rate it). Blocked on a build machine with Xcode + the Android SDK, a Firebase project for FCM, an APNs key, and the Google Play org account.",
       deliverables: [
         "Rating + photo upload",
