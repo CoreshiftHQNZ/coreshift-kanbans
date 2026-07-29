@@ -15,7 +15,7 @@ module.exports = {
 
   phase: "Phase R5 · native apps + push",
   nextMilestone: {
-    name: "Capacitor iOS/Android + push + ratings",
+    name: "Capacitor iOS/Android + push",
     date: "Phase R5",
   },
 
@@ -121,13 +121,16 @@ module.exports = {
       key: "phase-r4",
       status: "done",
       title: "Phase R4",
-      subtitle: "Payments (Stripe test)",
-      window: "Live keys gated on company registration",
-      desc: "Card on file at first quote-approval (SetupIntent), off-session PaymentIntent on completion, GST receipts, decline/retry handling. Test mode until the business + bank exist.",
+      subtitle: "Payments — LIVE",
+      window: "Live Stripe (NZD) since 2026-07-02",
+      desc: "Card on file at first quote-approval (SetupIntent), off-session PaymentIntent on completion, GST receipts, decline/retry handling. On live keys — real cards, real charges (acct NZ/NZD, charges + payouts enabled). Hardened 2026-07-29 with a signature-verified Stripe webhook, an idempotency ledger, and an Idempotency-Key on the charge itself.",
       deliverables: [
         "Save card at first approval",
         "Charge-on-complete edge function",
         "GST receipt email",
+        "Live keys in Vault + client (test data cleared)",
+        "Webhook reconciliation: refunds, disputes, late declines",
+        "Double-charge guard + Gem-facing retry",
       ],
     },
     {
@@ -135,12 +138,12 @@ module.exports = {
       status: "in-progress",
       title: "Phase R5",
       subtitle: "Capacitor + push + ratings",
-      window: "Store accounts gate submission, not the build",
-      desc: "Wrap the customer app for iOS/Android, FCM/APNs push (quote, completion, rating request), rating flow with stars + feedback + photo, store submission.",
+      window: "Ratings shipped; native builds gated on toolchain + accounts",
+      desc: "The rating flow is live — a completed job prompts for stars, feedback and an optional photo, visible to Gems in-thread and aggregated per customer in the CRM. Still to come: wrapping the customer app for iOS/Android with Capacitor and FCM/APNs push (new quote, job done, rate it). Blocked on a build machine with Xcode + the Android SDK, a Firebase project for FCM, an APNs key, and the Google Play org account.",
       deliverables: [
+        "Rating + photo upload",
         "Capacitor iOS/Android builds",
         "Push: new quote / job done / rate it",
-        "Rating + photo upload",
         "App Store + Play submissions",
       ],
     },

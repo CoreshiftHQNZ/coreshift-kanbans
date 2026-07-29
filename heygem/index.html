@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>48%</strong> complete</div>
-        <div><strong>12</strong>/25 cards done</div>
-        <div>Updated <strong>2026-06-19 04:12 UTC</strong></div>
+        <div><strong>65%</strong> complete</div>
+        <div><strong>20</strong>/31 cards done</div>
+        <div>Updated <strong>2026-07-29 03:10 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -721,7 +721,7 @@
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Capacitor iOS/Android + push + ratings <span class="phase-pill-date">Phase R5</span></span>
+          <span class="phase-pill-value">Capacitor iOS/Android + push <span class="phase-pill-date">Phase R5</span></span>
         </div>
       </div>
     </section>
@@ -772,11 +772,11 @@
             <div class="phase-marker">R1</div>
             <div class="phase-status-pill phase-status-done">Done</div>
           </div>
-          <div class="phase-title">Phase R1 <span class="phase-subtitle">Marketing site (live)</span></div>
-          <div class="phase-window">Splash 2026-06-12 · went live 2026-06-24</div>
-          <p class="phase-desc">heygem.co.nz: “Business Concierge &amp; Errands”, example requests as chat bubbles. Now flipped from coming-soon/waitlist to a live landing page — Get started + Log in CTAs into app.heygem.co.nz (coming-soon pill + early-access lead form removed).</p>
+          <div class="phase-title">Phase R1 <span class="phase-subtitle">Coming-soon splash</span></div>
+          <div class="phase-window">Shipped 2026-06-12</div>
+          <p class="phase-desc">heygem.co.nz repositioned as a coming-soon splash: “Business Concierge &amp; Errands”, example requests as chat bubbles, early-access form (name + email + example ask) into the leads pipeline.</p>
           <ul class="phase-deliverables">
-            <li>Live landing page, CTAs into the app</li><li>Chat-bubble example requests (the product demo)</li><li>(Early-access lead pipeline retired at go-live)</li>
+            <li>Splash live on production + staging</li><li>Chat-bubble example requests (the product demo)</li><li>Early-access capture w/ email column + notify pipeline</li>
           </ul>
         </div>
         <div class="phase-card phase-done">
@@ -810,9 +810,9 @@
           </div>
           <div class="phase-title">Phase R4 <span class="phase-subtitle">Payments — LIVE</span></div>
           <div class="phase-window">Live Stripe (NZD) since 2026-07-02</div>
-          <p class="phase-desc">Card on file at first quote-approval (SetupIntent), off-session PaymentIntent on completion, GST receipts, decline/retry handling. Now on live keys — real cards, real charges (acct NZ/NZD, charges + payouts enabled).</p>
+          <p class="phase-desc">Card on file at first quote-approval (SetupIntent), off-session PaymentIntent on completion, GST receipts, decline/retry handling. On live keys — real cards, real charges (acct NZ/NZD, charges + payouts enabled). Hardened 2026-07-29 with a signature-verified Stripe webhook, an idempotency ledger, and an Idempotency-Key on the charge itself.</p>
           <ul class="phase-deliverables">
-            <li>Save card at first approval</li><li>Charge-on-complete edge function</li><li>GST receipt email</li><li>Live keys in Vault + client (test data cleared)</li>
+            <li>Save card at first approval</li><li>Charge-on-complete edge function</li><li>GST receipt email</li><li>Live keys in Vault + client (test data cleared)</li><li>Webhook reconciliation: refunds, disputes, late declines</li><li>Double-charge guard + Gem-facing retry</li>
           </ul>
         </div>
         <div class="phase-card phase-in-progress">
@@ -821,10 +821,10 @@
             <div class="phase-status-pill phase-status-in-progress">In progress</div>
           </div>
           <div class="phase-title">Phase R5 <span class="phase-subtitle">Capacitor + push + ratings</span></div>
-          <div class="phase-window">Store accounts gate submission, not the build</div>
-          <p class="phase-desc">Wrap the customer app for iOS/Android, FCM/APNs push (quote, completion, rating request), rating flow with stars + feedback + photo, store submission.</p>
+          <div class="phase-window">Ratings shipped; native builds gated on toolchain + accounts</div>
+          <p class="phase-desc">The rating flow is live — a completed job prompts for stars, feedback and an optional photo, visible to Gems in-thread and aggregated per customer in the CRM. Still to come: wrapping the customer app for iOS/Android with Capacitor and FCM/APNs push (new quote, job done, rate it). Blocked on a build machine with Xcode + the Android SDK, a Firebase project for FCM, an APNs key, and the Google Play org account.</p>
           <ul class="phase-deliverables">
-            <li>Capacitor iOS/Android builds</li><li>Push: new quote / job done / rate it</li><li>Rating + photo upload</li><li>App Store + Play submissions</li>
+            <li>Rating + photo upload</li><li>Capacitor iOS/Android builds</li><li>Push: new quote / job done / rate it</li><li>App Store + Play submissions</li>
           </ul>
         </div>
       </div>
@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">19</div>
+        <div class="status-num">20</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -841,11 +841,11 @@
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">2</div>
+        <div class="status-num">1</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">3</div>
+        <div class="status-num">2</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -919,96 +919,47 @@
     <section class="recent">
       <h2 class="section-head">Recently Shipped</h2>
       <div class="recent-list">
-
+        
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Ratings, Stripe webhook + payment visibility for Gems (verified)</div>
+            <div class="recent-desc">Closes the core loop: completed jobs now prompt the customer for stars + feedback + optional photo via a new `submit_rating` RPC (the old direct-INSERT policy on `ratings` is gone — it couldn&#39;t enforce that the job was actually finished). New `stripe-webhook` edge function reconciles everything Stripe decides *after* the initial charge POST — async success, later decline, refund, dispute, detached card — signature-verified (HMAC over the raw body, 300s replay window, constant-time compare) and idempotent via a `stripe_events` ledger. **Two real double-charge bugs found and fixed in the existing live code:** `stripe-charge-job` sent no Stripe `Idempotency-Key`, so a double-clicked retry could create two real PaymentIntents; and it discarded the PaymentIntent Stripe attaches to a 402, orphaning declined charge rows. Receipt emails are now gated on an atomic compare-and-set so a race can&#39;t send two. Gems see payment state per job (paid / failed / refunded / disputed / processing) with a Retry button, ratings in-thread, and a &quot;completed but not paid&quot; signal on the Done tab; CRM shows avg rating + outstanding charges. Verified live: signed/unsigned/replayed/stale webhook probes all behave, migrations applied, all three apps build clean</div>
+          </div>
+        </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
             <div class="recent-title">Gem workspace: assignment · My jobs · typing · chat images · auto Gem fee (verified)</div>
-            <div class="recent-desc">Five workspace/chat upgrades, all verified in a live two-app (Gem + customer) session. (1) Opening a job auto-assigns it to the Gem, with a new <strong>My jobs</strong> tab + count badge. (2) Chat now scrolls the message list only — header and composer stay pinned (desktop). (3) <strong>"Gem is typing…"</strong> shown to the customer via a realtime broadcast channel (separate from DB-change channels; routed robustly so remounts don't drop it). (4) Gems can <strong>attach images</strong> to the chat (public chat-images bucket, gem-upload policy) — rendered on both sides in real time. (5) Every quote now auto-carries a <strong>15% Gem fee</strong> as its own line item (shown in the composer, the customer quote, and the receipt). Shipped dev→staging→main (migration applied).</div>
+            <div class="recent-desc">Opening a job auto-assigns it to the Gem, with a My jobs tab + count badge. Chat scrolls the message list only (header/composer pinned). &quot;Gem is typing…&quot; shown to the customer via a realtime broadcast channel. Gems can attach images (public `chat-images` bucket). Every quote auto-carries a 15% Gem fee as its own line item, through the composer, the customer quote and the receipt</div>
           </div>
         </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
             <div class="recent-title">Archive flow · card-modal fix · better new-request prompt (verified)</div>
-            <div class="recent-desc">(1) <strong>Archive</strong>: a declined/quiet request can be tidied away by either side — new 'archived' status + archive_job RPC (owning customer or any Gem). Team workspace is now <strong>New / Active / Archive / Done</strong> (Done = completed only; declined/cancelled/archived sit in Archive); customers get an Archive action in the thread and an Archived filter. (2) Fixed the "add card modal pops up then vanishes" — it was the Payment Element failing to load during the live-key cutover; the modal now shows a clear error instead of blanking (root cause was the brief test/live key mismatch mid-deploy, resolved). (3) New-request sheet: removed the pre-filled idea chips; placeholder now prompts for pax / budget / delivery-location / when. Verified all three in preview; shipped dev→staging→main.</div>
+            <div class="recent-desc">A declined or quiet request can be tidied away by either side (new `archived` status + `archive_job` RPC). Team workspace is New / Active / Archive / Done. Fixed the &quot;add card modal pops up then vanishes&quot; — the Payment Element was failing to load during the live-key cutover; it now shows a clear error instead of blanking. New-request sheet prompts for pax / budget / delivery location / when instead of pre-filled idea chips</div>
           </div>
         </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
             <div class="recent-title">Stripe switched to LIVE (verified)</div>
-            <div class="recent-desc">HeyGem is now taking real payments. Swapped the Vault <code>stripe_secret_key</code> to the live secret (edge functions use it at runtime) and set the customer app's <code>VITE_STRIPE_PUBLISHABLE_KEY</code> to the live publishable key on Railway — confirmed the rebuilt app.heygem.co.nz bundle carries <code>pk_live</code> and no longer the old test key. Cleared all test-mode Stripe state (customer IDs + saved cards) so live mode creates fresh customers. Live account verified read-only: NZ / NZD, charges + payouts enabled, details submitted. Local dev stays on test keys.</div>
+            <div class="recent-desc">HeyGem takes real payments. Vault `stripe_secret_key` swapped to the live secret; the customer app&#39;s publishable key set to `pk_live` on Railway and confirmed in the rebuilt bundle. All test-mode Stripe state (customer IDs + saved cards) cleared so live mode creates fresh customers. Account verified read-only: NZ / NZD, charges + payouts enabled. Local dev stays on test keys</div>
           </div>
         </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
             <div class="recent-title">Team panel: any @heygem.co.nz email can sign in (verified)</div>
-            <div class="recent-desc">Opened up the Gem workspace (team.heygem.co.nz) to the whole team: <code>is_gem()</code> now authorizes any authenticated <strong>@heygem.co.nz</strong> user (not just hand-added gems rows), and <code>ensure_gem()</code> auto-provisions their gems row on load so gem-owned foreign keys resolve. Auth switched from password to <strong>self-serve magic link</strong>, guarded to @heygem.co.nz. Verified: a brand-new @heygem.co.nz user gets full access + auto-provisioned; a non-@heygem.co.nz user is blocked at "Not a Gem". Revoke by offboarding the email. Shipped dev→staging→main (migration applied).</div>
+            <div class="recent-desc">`is_gem()` now authorizes any authenticated `@heygem.co.nz` user, and `ensure_gem()` auto-provisions their gems row on load. Auth switched from password to self-serve magic link, guarded to the domain. Verified a brand-new @heygem.co.nz user gets full access and a non-@heygem.co.nz user is blocked. Revoke by offboarding the email</div>
           </div>
         </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
             <div class="recent-title">Marketing site live — coming-soon off, CTAs into the app (verified)</div>
-            <div class="recent-desc">heygem.co.nz is now a live landing page, not a waitlist: removed the "Coming soon" pill and the early-access lead form, added <strong>Get started</strong> (signup) + <strong>Log in</strong> CTAs pointing to <strong>app.heygem.co.nz</strong> (header, hero, and a closing CTA band). Customer auth reworked to be <strong>signup-first</strong>: a value-prop screen (your own Gem on chat · ask→quote→approve · pay-per-job, no subscriptions · GST receipts) with login as the secondary path; the marketing "Log in" link deep-links straight to login via <code>?mode=login</code>. Verified both flows in preview. Shipped dev→staging→main.</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Job lifecycle + numbers, and a Gems-only CRM (verified)</div>
-            <div class="recent-desc">Reworked the core model so every job carries one persistent number for its whole life: <strong>Enquiry #1024 → Quote #1024 → Order #1024</strong> (Order = In process → Completed). Collapsed the old 9-status machine; approval now opens the order directly as In process (no manual "Start"); payment state stays in the charges table (no more "charged" job status). Numbers (global seq from #1000) show to both customers and Gems. <strong>New CRM tab</strong> in the Gem workspace ("Customers"): per-company editable facts (industry, approx team size, phone, website, address), multiple contacts (+ primary), gem-only internal notes (separate table so they can't leak to the customer), and full order history with incl-GST totals. Verified the whole lifecycle on both apps end-to-end with a real $506 test charge + receipt. Shipped dev→staging→main (DB migrations applied).</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Approval confirm dialog · GST receipt email · account menu (verified)</div>
-            <div class="recent-desc">Three customer-app polish items, verified end-to-end on a real Stripe test charge. (1) Approve now opens a confirmation dialog — "your card is charged automatically once your Gem marks the job complete, nothing before then" — showing the incl-GST total. (2) The "receipt on its way" promise is now real: charge-on-complete emails a branded Postmark receipt with line items + Subtotal/GST 15%/Total paid + card last4 (confirmed in Postmark outbound). (3) New Account screen (header menu) to change payment method (SetupIntent) and browse past receipts, each expandable to its per-quote line-item GST breakdown. Quote line items (added previously) flow through both the email and in-app receipt. Shipped dev→staging→main.</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Auth + lead emails via Postmark (branded, verified)</div>
-            <div class="recent-desc">Supabase Auth SMTP switched from built-in to Postmark; branded amethyst templates (magic link / confirm / recovery) live + verified rendering. Email rate limit raised 2→100/hr (the 2/hr default was silently throttling sign-ins). Lead-notification emails switched on (notify-lead edge secrets) and verified end-to-end. site_url + redirect allowlist set (customer magic-link login unblocked)</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">R4: Stripe pay-per-job (test mode) verified</div>
-            <div class="recent-desc">Card on file at first approval (SetupIntent + Stripe Elements), off-session charge when the Gem marks complete, idempotent. Stripe secret in Supabase Vault (service-role RPC, no plaintext env); 3 edge functions + a charge-on-complete trigger. **Verified with a real Stripe test charge**: complete → PaymentIntent succeeded → job “charged” → customer UI “Paid” live ($95 + GST = $109.25). Live keys still gated on company registration; Payment Element to eyeball on the HTTPS deploy (preview iframe shows it blank)</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">R3: Gem web workspace verified</div>
-            <div class="recent-desc">apps/staff: password sign-in + is_gem gate, master-detail workspace (New/Active/Done queues across all businesses), per-job Gem thread, quote composer (ex-GST + live GST preview), status actions. Gem RPCs: claim_job, send_quote, set_in_progress, complete_job. Drove the whole loop through the real UI — open request → send quote → (customer approves, live) → Start → Mark complete. Email also switched Resend → Postmark</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">R2: schema v2 (jobs/chat) verified</div>
-            <div class="recent-desc">businesses → profiles, pooled gems, jobs (status machine), per-job message threads, quotes, ratings, push devices. RLS throughout (cross-business isolation proven in a rolled-back impersonation test); customer transitions via SECURITY DEFINER RPCs (setup_account, create_job, approve/decline_quote, cancel_job); Realtime on jobs/messages/quotes</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">R2: customer chat app verified</div>
-            <div class="recent-desc">apps/customer: magic-link sign-in, onboarding, job list (active/archived), live per-job thread with the quote card (GST breakdown) + approve/decline. Drove the whole loop through the real UI with a seeded session — request → live Gem quote via Realtime → approve → &quot;On it&quot;. Not deployed yet (app.heygem.co.nz comes with the Railway consolidation)</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">R1: coming-soon splash LIVE</div>
-            <div class="recent-desc">heygem.co.nz + staging now serve a &quot;Business Concierge &amp; Errands&quot; coming-soon page. Example requests rendered as chat bubbles (morning tea, Terry&#39;s $500 gift, branded water bottles, Christmas party, team building, Sydney conference travel). Early-access form (name + email + &quot;what would you ask your Gem?&quot;) → leads table with new `email` column, source `coming_soon`; notify pipeline updated + verified e2e. Old plans-model marketing removed</div>
+            <div class="recent-desc">heygem.co.nz is a live landing page, not a waitlist: coming-soon pill and early-access form removed, Get started + Log in CTAs into app.heygem.co.nz. Customer auth reworked signup-first with a value-prop screen; the marketing Log in link deep-links via `?mode=login`</div>
           </div>
         </div>
       </div>
@@ -1023,9 +974,49 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">12</span>
+        <span class="col-count">20</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Ratings, Stripe webhook + payment visibility for Gems (verified)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">phase-r4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">submit_rating</span><span class="tag tag-neutral">ratings</span><span class="tag tag-neutral">stripe-webhook</span><span class="tag tag-neutral">stripe_events</span><span class="tag tag-neutral">stripe-charge-job</span><span class="tag tag-neutral">Idempotency-Key</span></div>
+        <div class="card-desc">Closes the core loop: completed jobs now prompt the customer for stars + feedback + optional photo via a new `submit_rating` RPC (the old direct-INSERT policy on `ratings` is gone — it couldn&#39;t enforce that the job was actually finished). New `stripe-webhook` edge function reconciles everything Stripe decides *after* the initial charge POST — async success, later decline, refund, dispute, detached card — signature-verified (HMAC over the raw body, 300s replay window, constant-time compare) and idempotent via a `stripe_events` ledger. **Two real double-charge bugs found and fixed in the existing live code:** `stripe-charge-job` sent no Stripe `Idempotency-Key`, so a double-clicked retry could create two real PaymentIntents; and it discarded the PaymentIntent Stripe attaches to a 402, orphaning declined charge rows. Receipt emails are now gated on an atomic compare-and-set so a race can&#39;t send two. Gems see payment state per job (paid / failed / refunded / disputed / processing) with a Retry button, ratings in-thread, and a &quot;completed but not paid&quot; signal on the Done tab; CRM shows avg rating + outstanding charges. Verified live: signed/unsigned/replayed/stale webhook probes all behave, migrations applied, all three apps build clean</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Gem workspace: assignment · My jobs · typing · chat images · auto Gem fee (verified)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">chat-images</span></div>
+        <div class="card-desc">Opening a job auto-assigns it to the Gem, with a My jobs tab + count badge. Chat scrolls the message list only (header/composer pinned). &quot;Gem is typing…&quot; shown to the customer via a realtime broadcast channel. Gems can attach images (public `chat-images` bucket). Every quote auto-carries a 15% Gem fee as its own line item, through the composer, the customer quote and the receipt</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Archive flow · card-modal fix · better new-request prompt (verified)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">archived</span><span class="tag tag-neutral">archive_job</span></div>
+        <div class="card-desc">A declined or quiet request can be tidied away by either side (new `archived` status + `archive_job` RPC). Team workspace is New / Active / Archive / Done. Fixed the &quot;add card modal pops up then vanishes&quot; — the Payment Element was failing to load during the live-key cutover; it now shows a clear error instead of blanking. New-request sheet prompts for pax / budget / delivery location / when instead of pre-filled idea chips</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Stripe switched to LIVE (verified)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r4</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">stripe_secret_key</span><span class="tag tag-neutral">pk_live</span></div>
+        <div class="card-desc">HeyGem takes real payments. Vault `stripe_secret_key` swapped to the live secret; the customer app&#39;s publishable key set to `pk_live` on Railway and confirmed in the rebuilt bundle. All test-mode Stripe state (customer IDs + saved cards) cleared so live mode creates fresh customers. Account verified read-only: NZ / NZD, charges + payouts enabled. Local dev stays on test keys</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Team panel: any @heygem.co.nz email can sign in (verified)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">is_gem()</span><span class="tag tag-neutral">@heygem.co.nz</span><span class="tag tag-neutral">ensure_gem()</span></div>
+        <div class="card-desc">`is_gem()` now authorizes any authenticated `@heygem.co.nz` user, and `ensure_gem()` auto-provisions their gems row on load. Auth switched from password to self-serve magic link, guarded to the domain. Verified a brand-new @heygem.co.nz user gets full access and a non-@heygem.co.nz user is blocked. Revoke by offboarding the email</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Marketing site live — coming-soon off, CTAs into the app (verified)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">?mode=login</span></div>
+        <div class="card-desc">heygem.co.nz is a live landing page, not a waitlist: coming-soon pill and early-access form removed, Get started + Log in CTAs into app.heygem.co.nz. Customer auth reworked signup-first with a value-prop screen; the marketing Log in link deep-links via `?mode=login`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Job lifecycle + numbers, and a Gems-only CRM (verified)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">charges</span><span class="tag tag-neutral">charged</span></div>
+        <div class="card-desc">Every job carries one persistent number for its whole life: Enquiry #1024 → Quote #1024 → Order #1024. Collapsed the old 9-status machine; approval opens the order directly as In process; payment state stays in `charges` (no `charged` status). New Customers tab: editable company facts, multiple contacts, gem-only internal notes (separate table so they can&#39;t leak to the customer), full order history with incl-GST totals. Verified end-to-end on both apps with a real $506 test charge + receipt</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Approval confirm dialog · GST receipt email · account menu (verified)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r4</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Approve opens a confirmation showing the incl-GST total and explaining the card is charged only on completion. Charge-on-complete emails a branded Postmark receipt with line items + Subtotal / GST 15% / Total paid + card last4. New Account screen to change payment method and browse past receipts, each expandable to its per-quote line-item breakdown</div>
+      </div>
       <div class="card">
         <div class="card-title">Auth + lead emails via Postmark (branded, verified)</div>
         <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span></div>
@@ -1096,20 +1087,15 @@
       <div class="card">
         <div class="card-title">Phase R5: native apps + push + ratings</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-r5</span></div>
-        <div class="card-desc">Wrap the customer app with Capacitor (iOS/Android), FCM/APNs push (new quote / job done / rate it), and the rating flow (stars + feedback + photo) that fires after a charge. Apple acct ready; Google Play acct still to set up</div>
+        <div class="card-desc">**Rating flow is DONE** (stars + feedback + photo, live). Remaining: wrap the customer app with Capacitor (iOS/Android) and FCM/APNs push (new quote / job done / rate it). Apple account ready; Google Play account and the local native toolchain still to sort</div>
       </div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">1</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Stripe LIVE keys</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r4</span><span class="tag tag-neutral">blocked</span></div>
-        <div class="card-desc">Test mode is built + verified. Going live (real charges) is gated on company registration + bank + GST; then swap the Vault secret + client publishable to live keys. Also add a Stripe webhook for hardening + a Postmark GST receipt email</div>
-      </div>
       <div class="card">
         <div class="card-title">Google Play org account</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">needs-ricky</span></div>
@@ -1119,18 +1105,13 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Deploy customer + staff apps</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">customer</span><span class="tag tag-neutral">staff</span></div>
-        <div class="card-desc">Railway `customer` (app.heygem.co.nz) + `staff` (team.heygem.co.nz) services created with all env vars + APP config; custom domains attached. 3 dashboard steps left (CLI can&#39;t): (1) connect repo CoreshiftHQNZ/heygem to both services, (2) add Cloudflare DNS (app/team CNAMEs + railway-verify TXTs), (3) Supabase Auth redirect allowlist for app.heygem.co.nz. Then both go live (+ confirms Payment Element over HTTPS). Consolidating the duplicate marketing services is a separate later cleanup</div>
-      </div>
-      <div class="card">
         <div class="card-title">Capacitor wrap</div>
-        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span></div>
-        <div class="card-desc">Add Capacitor to the customer app; first iOS/Android builds</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r5</span><span class="tag tag-neutral">blocked-toolchain</span><span class="tag tag-neutral">google-services.json</span></div>
+        <div class="card-desc">Add Capacitor to the customer app; first iOS/Android builds. **Build machine can&#39;t produce a binary yet:** no Xcode (command-line tools only), no Android SDK, no Java runtime. Push also needs a Firebase project + `google-services.json` (FCM) and an APNs auth key (.p8). Scaffolding and device-registration plumbing can be written before any of that lands; verification can&#39;t</div>
       </div>
       <div class="card">
         <div class="card-title">Google Play account</div>
