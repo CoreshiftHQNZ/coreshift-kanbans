@@ -109,11 +109,11 @@
       <span>·</span>
       <a href="https://ghs.coreshift.page" target="_blank" rel="noopener">ghs.coreshift.page →</a>
       <span>·</span>
-      <span>Milestone: <strong style="color:#fff">M4 — 3 launch gates open</strong></span>
+      <span>Milestone: <strong style="color:#fff">M5 — building the editing backend</strong></span>
       <span>·</span>
       <span>Scope: <strong style="color:#fff">bilingual EN/中文</strong></span>
       <span>·</span>
-      <span>Updated 27 Jul 2026</span>
+      <span>Updated 29 Jul 2026</span>
     </div>
   </div>
 </header>
@@ -130,7 +130,7 @@
       <div class="phase is-done"><div class="phase-top"><div class="phase-n">3</div><span class="pill p-done">Done</span></div><div class="phase-name">Information architecture</div><div class="phase-art">ia.md · redirects.md</div></div>
       <div class="phase is-done"><div class="phase-top"><div class="phase-n">4</div><span class="pill p-done">Done</span></div><div class="phase-name">Design intake</div><div class="phase-art">design.md · section library</div></div>
       <div class="phase is-now"><div class="phase-top"><div class="phase-n">5</div><span class="pill p-now">Partial</span></div><div class="phase-name">Infra setup</div><div class="phase-art">CF Pages live</div></div>
-      <div class="phase"><div class="phase-top"><div class="phase-n">6</div><span class="pill p-next">Planned</span></div><div class="phase-name">Live Edit backend</div><div class="phase-art">Supabase + edge inject</div></div>
+      <div class="phase is-now"><div class="phase-top"><div class="phase-n">6</div><span class="pill p-now">Now</span></div><div class="phase-name">Live Edit backend</div><div class="phase-art">own repo + Cloudflare KV</div></div>
       <div class="phase is-now"><div class="phase-top"><div class="phase-n">7</div><span class="pill p-now">EN done</span></div><div class="phase-name">Build site</div><div class="phase-art">35 EN live · 中文 awaits translation</div></div>
       <div class="phase is-done"><div class="phase-top"><div class="phase-n">8</div><span class="pill p-done">Done</span></div><div class="phase-name">SEO migration</div><div class="phase-art">parity green · 0 regressions</div></div>
       <div class="phase is-done"><div class="phase-top"><div class="phase-n">9</div><span class="pill p-done">Done</span></div><div class="phase-name">QA acceptance</div><div class="phase-art">a11y 100 · 0 failures</div></div>
@@ -253,23 +253,20 @@
       </section>
 
       <section class="column">
-        <header class="col-head"><h2>▶ Do now</h2><span class="col-count">5</span></header>
+        <header class="col-head"><h2>▶ Do now</h2><span class="col-count">4</span></header>
         <div class="cards">
-          <div class="card"><div class="card-title">Design the /zh/ tree + hreflang</div>
-            <div class="card-tags"><span class="tag t-seo">seo</span><span class="tag">i18n</span></div>
-            <div class="card-desc">Done in docs/ia.md §8. Subdirectory not subdomain, self-canonicals, reciprocal hreflang, no Accept-Language redirect, language switch preserves the current page.</div></div>
-          <div class="card"><div class="card-title">Decompose the design into 72 static pages</div>
-            <div class="card-tags"><span class="tag">build</span><span class="tag t-seo">seo</span><span class="tag t-risk">risk</span></div>
-            <div class="card-desc">The prototype is SPA-routed with client-side view switching. Shipping that forfeits all 33 preserved URLs. Must become real pages with real paths — 36 English plus 36 under /zh/.</div></div>
-          <div class="card"><div class="card-title">Self-host fonts + JS, drop Three.js</div>
-            <div class="card-tags"><span class="tag">build</span><span class="tag">perf</span></div>
-            <div class="card-desc">Design loads GSAP, Three.js and Google Fonts from CDNs our CSP forbids. And the hero uses 600 KB of WebGL to draw contour lines — a 2D canvas is visually identical.</div></div>
-          <div class="card"><div class="card-title">Resolve the apex-record strategy</div>
-            <div class="card-tags"><span class="tag">infra</span><span class="tag t-risk">risk</span></div>
-            <div class="card-desc">A CNAME is illegal at the apex and DNS isn't on Cloudflare. Either the registrar supports ALIAS/ANAME or we use their URL forwarding. Must be settled in phase 5, not at cutover.</div></div>
-          <div class="card"><div class="card-title">Quote the practice-area copy expansion</div>
-            <div class="card-tags"><span class="tag t-seo">seo</span><span class="tag">out of scope</span></div>
-            <div class="card-desc">The nine commercially important pages average ~150 words. Biggest organic lever available, but it's copywriting — quote it separately rather than absorbing it.</div></div>
+          <div class="card"><div class="card-title">Build the editing backend — option C</div>
+            <div class="card-tags"><span class="tag t-le">live-edit</span><span class="tag t-risk">launch gate</span><span class="tag">phase-6</span></div>
+            <div class="card-desc">Editing built into this repo, changes stored in Cloudflare KV, injected at the edge. No shared service, nothing to onboard, and publishing is instant — which is what a client expects when they press the button. Decision and reasoning in docs/editing-architecture.md.</div></div>
+          <div class="card"><div class="card-title">Add a page / add a blog post</div>
+            <div class="card-tags"><span class="tag t-le">live-edit</span><span class="tag t-risk">blocks demo</span></div>
+            <div class="card-desc">Genuinely never built — no UI exists for either, and the templates/ files are for us, not the client. Can't be faked in demo mode: a new page means a new URL that has to really exist, plus menu and sitemap updates. For a law firm that publishes Insights, this is the single most likely thing they will ever want to do.</div></div>
+          <div class="card"><div class="card-title">Port the pattern back to the plugin</div>
+            <div class="card-tags"><span class="tag t-le">live-edit</span><span class="tag">process</span></div>
+            <div class="card-desc">Once the backend is proven here, it goes into coreshift-site-builder so the next client gets it for free. This loop has now paid off three times: plugins#1, live-edit#12, plugins#2.</div></div>
+          <div class="card"><div class="card-title">Client demo — deliberately deferred</div>
+            <div class="card-tags"><span class="tag t-client">client</span><span class="tag">scope</span></div>
+            <div class="card-desc">Site is live and editable on ghs.coreshift.page. Held back until add-post works, rather than showing GHS an editor that cannot publish an article — which invites exactly the reaction that found the section bug.</div></div>
         </div>
       </section>
 
@@ -277,7 +274,7 @@
         <header class="col-head"><h2>⏳ Backlog</h2><span class="col-count">9</span></header>
         <div class="cards">
           <div class="card"><div class="card-title">Cloudflare Pages staging + prod</div><div class="card-tags"><span class="tag">infra</span></div><div class="card-desc">Staging stays noindex.</div></div>
-          <div class="card"><div class="card-title">Live Edit production backend</div><div class="card-tags"><span class="tag t-le">live-edit</span><span class="tag t-risk">launch gate</span></div><div class="card-desc">Supabase persistence + edge inject + client login. Demo mode must not ship.</div></div>
+          <div class="card"><div class="card-title">Retire the shared edit-service for bespoke builds</div><div class="card-tags"><span class="tag t-le">live-edit</span><span class="tag">process</span></div><div class="card-desc">coreshift-edit-service stays, but for the self-serve tier where Coreshift hosts the sites and central control is the point. It is the wrong shape for a build we hand over: one credential has to reach every client repo, and it could not reach this one. Two products, two shapes.</div></div>
           <div class="card"><div class="card-title">Build the 36 /zh/ pages once copy lands</div><div class="card-tags"><span class="tag t-le">live-edit</span></div><div class="card-desc">English half is done and audited. The Chinese half is blocked on translation, not on build capacity.</div></div>
           <div class="card"><div class="card-title">Subset + self-host CJK fonts for /zh/</div><div class="card-tags"><span class="tag">i18n</span><span class="tag">perf</span></div><div class="card-desc">Noto Serif/Sans SC are OFL but full CJK faces run to megabytes. Subset with unicode-range and load only on /zh/ — never ship them to English pages.</div></div>
           <div class="card"><div class="card-title">Rehost 41 assets off the Squarespace CDN</div><div class="card-tags"><span class="tag">build</span></div><div class="card-desc">Already downloaded at native resolution so nothing depends on Squarespace surviving.</div></div>
@@ -289,8 +286,15 @@
       </section>
 
       <section class="column col-done">
-        <header class="col-head"><h2>✅ Done</h2><span class="col-count">9</span></header>
+        <header class="col-head"><h2>✅ Done</h2><span class="col-count">16</span></header>
         <div class="cards">
+          <div class="card"><div class="card-title">Add / move / delete sections was dead on all 48 pages</div><div class="card-tags"><span class="tag t-le">live-edit</span><span class="tag t-risk">bug</span></div><div class="card-desc">The feature was fully written. Every page emitted an <em>empty</em> container as the section region while the real sections sat beside it, and the widget only wires controls for sections inside the region. Result: one stray "+ Add section" at the foot of the page, no move or delete anywhere. Found by a human clicking around, not by any tool.</div></div>
+          <div class="card"><div class="card-title">The auditor said READY over a dead feature</div><div class="card-tags"><span class="tag t-le">live-edit</span><span class="tag t-risk">process</span></div><div class="card-desc">It checked "a region exists" and "sections are tagged" as two independent facts and never asked whether they were connected — 12/12 READY on a broken build. A gate that green-lights a broken build is worse than no gate: it turns an unknown into a false assurance. Two containment checks added; against the broken build they fail on 48/48 while both original checks still pass. Ported to the plugin, which shipped the same blind spot and whose rules literally instructed the bug — plugins#2.</div></div>
+          <div class="card"><div class="card-title">Editing architecture decided — built in, not bolted on</div><div class="card-tags"><span class="tag t-le">live-edit</span><span class="tag">decision</span></div><div class="card-desc">Earlier steer toward one shared service was wrong. "Reliable and repeatable" reads better as one repeatable pattern each client gets a clean copy of. The argument against per-client backends was really an argument against per-client Supabase projects, and does not transfer to identical generated code shipping with every site.</div></div>
+          <div class="card"><div class="card-title">Demo mode made honest</div><div class="card-tags"><span class="tag t-le">live-edit</span></div><div class="card-desc">Publishing used to announce "changes are live" when the edit only reached that browser's storage — a client who publishes, believes it, and sends the link to a partner who sees nothing has learned the tool is broken. Now says so plainly, with a "Practice mode" chip. Widget assets carry a content hash so a mid-demo fix is not hidden behind an hour of caching.</div></div>
+          <div class="card"><div class="card-title">35 EN pages built, decomposed off the SPA prototype</div><div class="card-tags"><span class="tag">phase-7</span><span class="tag t-seo">seo</span></div><div class="card-desc">Real pages at real paths — the prototype was SPA-routed and shipping it would have forfeited all 33 preserved URLs. Flat .html output, not directories, so Pages serves the old slash-less URLs as a straight 200 rather than putting a redirect in front of every one.</div></div>
+          <div class="card"><div class="card-title">Fonts + JS self-hosted, Three.js dropped</div><div class="card-tags"><span class="tag">phase-7</span><span class="tag">perf</span></div><div class="card-desc">The design pulled GSAP, Three.js and Google Fonts from CDNs our CSP forbids. The hero spent 600 KB of WebGL drawing contour lines; a 2D canvas is visually identical.</div></div>
+          <div class="card"><div class="card-title">/zh/ tree, hreflang, and 13 Chinese pages</div><div class="card-tags"><span class="tag">i18n</span><span class="tag t-seo">seo</span></div><div class="card-desc">Subdirectory not subdomain, self-canonicals, reciprocal hreflang, no Accept-Language redirect. Every /zh/ page ships noindex until GHS signs off — unreviewed machine-assisted translation of legal content does not go live.</div></div>
           <div class="card"><div class="card-title">Repo scaffolded, Live Edit kit in</div><div class="card-tags"><span class="tag">phase-0</span><span class="tag t-le">live-edit</span></div><div class="card-desc">Auditor verified. Widget includes go in page source, not middleware — the auditor greps source files, so a middleware-only page silently fails.</div></div>
           <div class="card"><div class="card-title">Intake + scope lock</div><div class="card-tags"><span class="tag">phase-1</span></div><div class="card-desc">Brochure + 15-post blog + enquiry form + Live Edit. Booking, payments and client portal explicitly out.</div></div>
           <div class="card"><div class="card-title">DNS strategy decided</div><div class="card-tags"><span class="tag">phase-1</span><span class="tag">infra</span></div><div class="card-desc">Leave nameservers alone and repoint records only — the domain carries live Microsoft 365 email, so moving it is the one change that could take the firm offline.</div></div>
