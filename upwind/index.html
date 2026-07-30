@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>48%</strong> complete</div>
-        <div><strong>60</strong>/124 cards done</div>
-        <div>Updated <strong>2026-07-30 20:11 UTC</strong></div>
+        <div><strong>47%</strong> complete</div>
+        <div><strong>63</strong>/135 cards done</div>
+        <div>Updated <strong>2026-07-30 21:35 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">60</div>
+        <div class="status-num">63</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -837,7 +837,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">11</div>
+        <div class="status-num">16</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -920,6 +920,27 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">📜 A consent record now means someone consented</div>
+            <div class="recent-desc">Two defects, and the second matters directly to the Partner Agreement sitting with the lawyer. **(a) The Partner Agreement had never been recorded as accepted by anyone.** The partner signup box reads &quot;I agree to the Partner Terms, Platform &amp; Hosting Agreement and Privacy Policy&quot;, but the only writer hardcoded `document=&#39;platform_agreement&#39;` — all 14 rows in prod&#39;s `terms_acceptances` are that one document, and the `kind` column has never held anything but its default. **(b) The rows that existed were not evidence.** `recordTermsAcceptance()` was called from `App.tsx` under `if (session)` — every sign-in, every reload, no reference to whether anyone ticked anything. The 13 rows at `2026-07-17` are 13 sign-ins, and bumping `TERMS_VERSION` would have filed a fresh &quot;accepted&quot; row for every existing user for a document none of them had been shown. A manufactured consent record is worse than a missing one: a gap is obviously a gap, this looked like proof. Consent is now noted at the moment of the act (on submit — ticking then closing the tab accepts nothing), carried across the magic-link roundtrip because there is no `user_id` at the moment they act, and written once a session exists; nothing pending means nothing written. Each surface records the documents it actually names. `kind` is derived server-side so it cannot disagree with the document, and an unrecognised document is refused rather than filed under a name nothing reads back. **Deliberately not backfilled** — there is no honest way to write &quot;this partner accepted the Partner Agreement&quot; for someone whose acceptance was never captured. 620 tests, `tsc` clean; staging verified `kind` derivation, idempotency, and refusal of both a typo&#39;d document and an empty version. `1b17386`</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">🔐 Staff can&#39;t claim a customer site, because they never could</div>
+            <div class="recent-desc">The claim path still inserted the caller as `owner` of the account it creates, so claiming as staff put a staff membership straight back into a customer workspace — the exact grant `20260730190000` removed. Prod had one: `ricky@coreshifthq.com` owning &quot;Best Chef 厨匠&quot; since 06:33 on 30 Jul. **The card&#39;s suggested fix — skip the membership insert — would have been worse:** it creates an account with a site and no members, which nobody can manage and nothing can pay for. The deeper point is that a staff claim cannot work even when it appears to, because `ensure_personal_account()` resolves staff to Coreshift HQ, so they own on paper an account they cannot open. So it refuses. The refusal raises, rolling the transaction back, so `claim_token_used_at` is never stamped and the link still works — a guard that burned the token would turn one wrong click into a dead invitation for a real customer. **Also guarded client-side, and not as belt-and-braces:** the auto-claim effect stashes the token in `localStorage` and clears it only on success, and App routes to ClaimPage while that key exists — so hitting the database refusal would have locked staff out of their own dashboard until they cleared browser storage, and staff are the people most likely to click a claim link. Staff lose nothing: `is_app_admin()` already reads everything for support, and agency access runs through `account_links`. Verified on staging both ways (refused as staff with the token intact; the same token then claimed successfully as a non-staff user). `d540df2`</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">💰 Show every amount owed, not just the payable ones</div>
+            <div class="recent-desc">The by-hand payout fallback depended on a screen that said *&quot;No matured commission to pay right now&quot;* over a ledger holding real money. Staging had **US$451.97** behind that sentence, all inside the 14-day maturity hold. **The card&#39;s own diagnosis was wrong, and so was LAUNCH-CHECKLIST #35:** passing a lower minimum would have shown nothing. `payout_eligibility()` filters `matures_at &lt;= now()` *first*, then applies `having sum(...) &gt;= p_min_cents` to only the rows that survived — and production holds matured clawbacks of −2734 against held commission of +2734, so the `having` fails at **every** minimum including 0. Checked both minimums against staging through the real RLS path before writing any code. Fixed with `partner_owed_summary()` (migration `20260731100000`), a read-only RPC returning held / below-minimum / net-negative partners as *columns* rather than erasing them, so the screen decides what to show. `payout_eligibility()` is untouched and stays the sole authority on who a run pays. **Second half nobody had spotted:** `markPayoutPaid()` sent no `min_cents`, so the function looked the partner up in `payout_eligibility(5000)` *before* reserving — for a US$27 partner that hit the `eligible.length === 0` early return and returned **HTTP 200 having done nothing**, while the UI printed &quot;Marked paid.&quot; Now sends `min_cents: 0` (the reserve call already intended it; the lookup above it disagreed) and reports what actually happened. Mark-paid is offered only on matured money with a positive net and no flag — on a negative net that button would have written off a debt owed *to us*. Also revoked `EXECUTE` from **PUBLIC**, not just `anon`: `CREATE FUNCTION` grants to PUBLIC and `anon` inherits it, so `anon` could call a payouts function (it returned nothing — `is_app_admin()` gates the rows — but the row filter shouldn&#39;t be the only defence here). Verified: 611 tests (+21), `tsc` clean, RPC returns the held partner as an authenticated admin and permission-denies `anon`, grants now exactly `authenticated`/`postgres`/`service_role` on both projects, migration applied by hand to prod + staging with both version stamps corrected. `4431fac`</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">🧭 A preview can be walked around</div>
             <div class="recent-desc">Clicking anything in a preview&#39;s navigation ejected the visitor to the partner dashboard. Site links are real root-relative paths (`/about`, `/contact`) — correct on the published host where a Worker serves them, but a preview lives at `upwind.build/?preview=&lt;subdomain&gt;`, so the click dropped the query string and hit the dashboard&#39;s router. `ReadOnlySite` also rendered `slug=&quot;home&quot;` with no page state, so even a correct link had nowhere to go: a one-page trap on the screen a partner shows a customer. Internal paths now switch page in place; anchors, `tel:`, `mailto:`, external links and unknown paths are untouched. `?page=&lt;slug&gt;` in the URL makes refresh, shared links and the browser Back button work. Verified on production (`tk-steel`) and staging (`couttas-bar-grill`, 4 pages)</div>
           </div>
@@ -938,27 +959,6 @@
             <div class="recent-desc">Postmark SMTP configured and the hourly email limit raised on production AND the staging branch. Staging mattered as much as prod: the user-testing invites point testers at `staging.upwind.build`, and at the built-in mailer&#39;s default of a handful per hour a group of testers starting together would have silently locked each other out — which reads as &quot;the tool is broken&quot;, not &quot;the mail is throttled&quot;</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">🧪 User-testing round — a form, a scoring model and an admin sender</div>
-            <div class="recent-desc">Observed testing without sitting next to anyone: task / hint / success-rating per step, timed from page load, at **testing.upwind.build** (no password — a password is a task in itself and would have cost us testers). Answers are **anonymous** and submitted through a `SECURITY DEFINER` RPC, so `anon` holds no write grant on the tables at all; they collate for analysis. Two tracks, split at Ricky&#39;s call rather than one form pretending to serve both. Plus a **pretty HTML invite email with buttons** and a **Send testing invite** tab in the admin area, from `hello@tryupwind.com` via Postmark, with step-by-step instructions. Testers are pointed at **staging** and Stripe&#39;s `4242` test card, never at production. Temporary by design: the `research/` directory, the `testing` admin tab, the `send-testing-invite` function and its deploy step all come out together when the round ends</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">🔎 Lead finder — pick an area, pick an industry, press Run</div>
-            <div class="recent-desc">Google Places discovery into a `found` holding stage that is deliberately absent from the pipeline board: sales never sees a lead until a human promotes it. `lead_runs` records each run. Rate-limited at 10/hour through `api_rate_limits` rather than by counting rows, so history cannot be deleted to reset the cap — and `authenticated` has no DELETE on that table anyway. **The 29 Jul default-privileges change protected this table for free:** created afterwards, it picked up no anon write grants without anyone remembering the rule existed. That is the difference between fixing an instance and fixing a class</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">🛒 Buy-a-domain, honestly</div>
-            <div class="recent-desc">The two-option modal, real availability search and one stated price (**US$5/mo**) are live; the registrar is **Openprovider** after Dynadot failed on `.co.nz`. What is NOT built is the registration itself — see the In Progress card. The offer used to be advertised with nowhere to go; now the search is real and the last leg is a fulfilment ticket</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -971,7 +971,7 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1003,14 +1003,34 @@
         <div class="card-title">Inbox placement, iCloud + Gmail</div>
         <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">launch</span></div>
         <div class="card-desc">Not checked since the Postmark token swap. Custom SMTP and the raised rate limits went in on 30 Jul, so the throttle is no longer the blocker</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Request zero-data-retention from Anthropic, and get a DPA signed</div>
+        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">PIA</span><span class="tag tag-neutral">legal</span><span class="tag tag-neutral">ZDR</span><span class="tag tag-neutral">IPP-12</span></div>
+        <div class="card-desc">Confirmed 31 Jul: ZDR is **not** enabled, so Upwind&#39;s prompts sit in Anthropic&#39;s standard retention window (understood to be 30 days). Enabling it is an email to Anthropic, costs nothing, and deletes a whole line of questioning from this and every future PIA. Two things to keep straight: **(1)** ZDR does *not* answer the cross-border IPP 12 question — Anthropic processes in the US, so the data leaves NZ during processing either way; that call stays with the Privacy Officer. **(2)** the bigger gap is that there appears to be no signed **DPA** with Anthropic — a sub-processor handling personal information without one is a cleaner audit finding than a retention window. Not a launch blocker: what we send is already-public website copy, no credentials / payment / lead data, and volume is single-digit generations today. Cheap now, annoying at 500 customers</div>
       </div></div>
     </section>
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">60</span>
+        <span class="col-count">63</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">📜 A consent record now means someone consented</div>
+        <div class="card-tags"><span class="tag tag-neutral">legal</span><span class="tag tag-neutral">trust</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">document=&#39;platform_agreement&#39;</span><span class="tag tag-neutral">terms_acceptances</span><span class="tag tag-neutral">kind</span><span class="tag tag-neutral">recordTermsAcceptance()</span><span class="tag tag-neutral">App.tsx</span><span class="tag tag-neutral">if (session)</span><span class="tag tag-neutral">2026-07-17</span><span class="tag tag-neutral">TERMS_VERSION</span><span class="tag tag-neutral">user_id</span><span class="tag tag-neutral">kind</span><span class="tag tag-neutral">tsc</span><span class="tag tag-neutral">kind</span><span class="tag tag-neutral">1b17386</span></div>
+        <div class="card-desc">Two defects, and the second matters directly to the Partner Agreement sitting with the lawyer. **(a) The Partner Agreement had never been recorded as accepted by anyone.** The partner signup box reads &quot;I agree to the Partner Terms, Platform &amp; Hosting Agreement and Privacy Policy&quot;, but the only writer hardcoded `document=&#39;platform_agreement&#39;` — all 14 rows in prod&#39;s `terms_acceptances` are that one document, and the `kind` column has never held anything but its default. **(b) The rows that existed were not evidence.** `recordTermsAcceptance()` was called from `App.tsx` under `if (session)` — every sign-in, every reload, no reference to whether anyone ticked anything. The 13 rows at `2026-07-17` are 13 sign-ins, and bumping `TERMS_VERSION` would have filed a fresh &quot;accepted&quot; row for every existing user for a document none of them had been shown. A manufactured consent record is worse than a missing one: a gap is obviously a gap, this looked like proof. Consent is now noted at the moment of the act (on submit — ticking then closing the tab accepts nothing), carried across the magic-link roundtrip because there is no `user_id` at the moment they act, and written once a session exists; nothing pending means nothing written. Each surface records the documents it actually names. `kind` is derived server-side so it cannot disagree with the document, and an unrecognised document is refused rather than filed under a name nothing reads back. **Deliberately not backfilled** — there is no honest way to write &quot;this partner accepted the Partner Agreement&quot; for someone whose acceptance was never captured. 620 tests, `tsc` clean; staging verified `kind` derivation, idempotency, and refusal of both a typo&#39;d document and an empty version. `1b17386`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔐 Staff can&#39;t claim a customer site, because they never could</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">owner</span><span class="tag tag-neutral">20260730190000</span><span class="tag tag-neutral">ricky@coreshifthq.com</span><span class="tag tag-neutral">ensure_personal_account()</span><span class="tag tag-neutral">claim_token_used_at</span><span class="tag tag-neutral">localStorage</span><span class="tag tag-neutral">is_app_admin()</span><span class="tag tag-neutral">account_links</span><span class="tag tag-neutral">d540df2</span></div>
+        <div class="card-desc">The claim path still inserted the caller as `owner` of the account it creates, so claiming as staff put a staff membership straight back into a customer workspace — the exact grant `20260730190000` removed. Prod had one: `ricky@coreshifthq.com` owning &quot;Best Chef 厨匠&quot; since 06:33 on 30 Jul. **The card&#39;s suggested fix — skip the membership insert — would have been worse:** it creates an account with a site and no members, which nobody can manage and nothing can pay for. The deeper point is that a staff claim cannot work even when it appears to, because `ensure_personal_account()` resolves staff to Coreshift HQ, so they own on paper an account they cannot open. So it refuses. The refusal raises, rolling the transaction back, so `claim_token_used_at` is never stamped and the link still works — a guard that burned the token would turn one wrong click into a dead invitation for a real customer. **Also guarded client-side, and not as belt-and-braces:** the auto-claim effect stashes the token in `localStorage` and clears it only on success, and App routes to ClaimPage while that key exists — so hitting the database refusal would have locked staff out of their own dashboard until they cleared browser storage, and staff are the people most likely to click a claim link. Staff lose nothing: `is_app_admin()` already reads everything for support, and agency access runs through `account_links`. Verified on staging both ways (refused as staff with the token intact; the same token then claimed successfully as a non-staff user). `d540df2`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">💰 Show every amount owed, not just the payable ones</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">money</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">payout_eligibility()</span><span class="tag tag-neutral">matures_at &lt;= now()</span><span class="tag tag-neutral">having sum(...) &gt;= p_min_cents</span><span class="tag tag-neutral">having</span><span class="tag tag-neutral">partner_owed_summary()</span><span class="tag tag-neutral">20260731100000</span><span class="tag tag-neutral">payout_eligibility()</span><span class="tag tag-neutral">markPayoutPaid()</span><span class="tag tag-neutral">min_cents</span><span class="tag tag-neutral">payout_eligibility(5000)</span><span class="tag tag-neutral">eligible.length === 0</span><span class="tag tag-neutral">min_cents: 0</span><span class="tag tag-neutral">EXECUTE</span><span class="tag tag-neutral">anon</span><span class="tag tag-neutral">CREATE FUNCTION</span><span class="tag tag-neutral">anon</span><span class="tag tag-neutral">anon</span><span class="tag tag-neutral">is_app_admin()</span><span class="tag tag-neutral">tsc</span><span class="tag tag-neutral">anon</span><span class="tag tag-neutral">authenticated</span><span class="tag tag-neutral">postgres</span><span class="tag tag-neutral">service_role</span><span class="tag tag-neutral">4431fac</span></div>
+        <div class="card-desc">The by-hand payout fallback depended on a screen that said *&quot;No matured commission to pay right now&quot;* over a ledger holding real money. Staging had **US$451.97** behind that sentence, all inside the 14-day maturity hold. **The card&#39;s own diagnosis was wrong, and so was LAUNCH-CHECKLIST #35:** passing a lower minimum would have shown nothing. `payout_eligibility()` filters `matures_at &lt;= now()` *first*, then applies `having sum(...) &gt;= p_min_cents` to only the rows that survived — and production holds matured clawbacks of −2734 against held commission of +2734, so the `having` fails at **every** minimum including 0. Checked both minimums against staging through the real RLS path before writing any code. Fixed with `partner_owed_summary()` (migration `20260731100000`), a read-only RPC returning held / below-minimum / net-negative partners as *columns* rather than erasing them, so the screen decides what to show. `payout_eligibility()` is untouched and stays the sole authority on who a run pays. **Second half nobody had spotted:** `markPayoutPaid()` sent no `min_cents`, so the function looked the partner up in `payout_eligibility(5000)` *before* reserving — for a US$27 partner that hit the `eligible.length === 0` early return and returned **HTTP 200 having done nothing**, while the UI printed &quot;Marked paid.&quot; Now sends `min_cents: 0` (the reserve call already intended it; the lookup above it disagreed) and reports what actually happened. Mark-paid is offered only on matured money with a positive net and no flag — on a negative net that button would have written off a debt owed *to us*. Also revoked `EXECUTE` from **PUBLIC**, not just `anon`: `CREATE FUNCTION` grants to PUBLIC and `anon` inherits it, so `anon` could call a payouts function (it returned nothing — `is_app_admin()` gates the rows — but the row filter shouldn&#39;t be the only defence here). Verified: 611 tests (+21), `tsc` clean, RPC returns the held partner as an authenticated admin and permission-denies `anon`, grants now exactly `authenticated`/`postgres`/`service_role` on both projects, migration applied by hand to prod + staging with both version stamps corrected. `4431fac`</div>
+      </div>
       <div class="card">
         <div class="card-title">🧭 A preview can be walked around</div>
         <div class="card-tags"><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">ux</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/about</span><span class="tag tag-neutral">/contact</span><span class="tag tag-neutral">upwind.build/?preview=&lt;subdomain&gt;</span><span class="tag tag-neutral">ReadOnlySite</span><span class="tag tag-neutral">slug=&quot;home&quot;</span><span class="tag tag-neutral">tel:</span><span class="tag tag-neutral">mailto:</span><span class="tag tag-neutral">?page=&lt;slug&gt;</span><span class="tag tag-neutral">tk-steel</span><span class="tag tag-neutral">couttas-bar-grill</span></div>
@@ -1388,14 +1408,14 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Show every amount owed, not just the payable ones</div>
-        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">money</span><span class="tag tag-neutral">AdminDashboard.tsx:348</span><span class="tag tag-neutral">previewPayouts()</span><span class="tag tag-neutral">PAYOUT_MIN_CENTS_DEFAULT = 5000</span></div>
-        <div class="card-desc">Ricky&#39;s fallback if the Wise rail misbehaves is to pay partners by hand, which depends on the admin screen telling him who is owed what. It doesn&#39;t: `AdminDashboard.tsx:348` calls `previewPayouts()` with no argument, so `PAYOUT_MIN_CENTS_DEFAULT = 5000` applies and anyone owed under US$50 shows as nothing payable — and the 14-day maturity hold hides anything recent. A partner owed US$27 is invisible on the one screen the fallback relies on. Add a minimum input (or pass 0) so the view shows everything accrued, separating &quot;owed&quot; from &quot;payable this run&quot;. ~1 hour, and it is what makes &quot;worst case we pay them manually&quot; true</div>
+        <div class="card-title">🔴 `discover-leads` collects prospect PII with no IPP 2 / IPP 3 basis</div>
+        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">PIA</span><span class="tag tag-neutral">IPP-2</span><span class="tag tag-neutral">IPP-3</span><span class="tag tag-neutral">places.googleapis.com</span><span class="tag tag-neutral">discover-leads</span><span class="tag tag-neutral">lookup-business</span><span class="tag tag-neutral">places.googleapis.com</span></div>
+        <div class="card-desc">Found on 31 Jul while answering legal&#39;s PIA questions — nobody had asked about this one. `discover-leads` and `lookup-business` call `places.googleapis.com` to collect business contact details for prospects who have not consented and have no existing relationship with us. Under IPP 2 that is collection from a source other than the individual concerned, and under IPP 3 there is no notification. For the sole traders and owner-operators Upwind actually sells to, a business email and phone number **is** personal information. Google Places is also not on the sub-processor list at all. Of everything the PIA turned up, this is the one with real exposure. Needs a decision from the Privacy Officer on lawful basis + notification before the lead-finder is used at any volume, and Google Places added to Section 4</div>
       </div>
       <div class="card">
-        <div class="card-title">Claiming a site re-adds a staff member to the customer&#39;s account</div>
-        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">tidy-up</span><span class="tag tag-neutral">@coreshifthq.com</span><span class="tag tag-neutral">ensure_personal_account()</span><span class="tag tag-neutral">members</span><span class="tag tag-neutral">ricky@coreshifthq.com</span><span class="tag tag-neutral">can_manage_site</span></div>
-        <div class="card-desc">The 30 Jul consolidation put all `@coreshifthq.com` staff in Coreshift HQ only, and `ensure_personal_account()` now always resolves them there — but the CLAIM path still inserts a `members` row for whoever claims a site. Seen the same evening: `ricky@coreshifthq.com` became a member of the &quot;Best Chef&quot; customer account at 06:31 while testing. Harmless today (the dashboard never works in that account, and the agency attribution correctly stays Coreshift HQ), so this is tidy-up, not a bug — but it quietly re-grants staff `can_manage_site` on a customer&#39;s workspace, which is exactly what Ricky asked to avoid. Fix is either to skip the membership insert for staff emails on claim, or to sweep them periodically</div>
+        <div class="card-title">Wise belongs on the sub-processor list now, not at first payout</div>
+        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">PIA</span><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">partner_payout_details</span><span class="tag tag-neutral">WISE_API_TOKEN</span><span class="tag tag-neutral">run-payout-batch</span><span class="tag tag-neutral">api.wise.com</span><span class="tag tag-neutral">partner_payout_details</span><span class="tag tag-neutral">payout_batches</span><span class="tag tag-neutral">partner_payout_details</span><span class="tag tag-neutral">WISE_API_TOKEN</span><span class="tag tag-neutral">WISE_PROFILE</span></div>
+        <div class="card-desc">Legal&#39;s PIA asked us to &quot;confirm the payout rails remain un-integrated&quot;. They are not — `run-payout-batch` implements the full Wise rail (recipient → quote → transfer → fund) against `api.wise.com` and ships today. It has simply never run: `partner_payout_details` and `payout_batches` are both 0 rows in prod (verified 31 Jul), and the base URL defaults to the Wise sandbox. The trap: the trigger for Wise becoming a live sub-processor is the **first row in `partner_payout_details`**, which a config change alone (`WISE_API_TOKEN` + `WISE_PROFILE`) can produce — no code release, so no release review will catch it. List Wise now marked not-yet-active, with its DPA and processing locations confirmed before the first payout rather than after</div>
       </div>
       <div class="card">
         <div class="card-title">Partner journey walk + W1–W4 rebuild</div>
@@ -1431,9 +1451,34 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">11</span>
+        <span class="col-count">16</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Wire CI security scanning — secret scanning, dependency audit, DAST</div>
+        <div class="card-tags"><span class="tag tag-neutral">PIA</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">CI</span><span class="tag tag-neutral">.github/workflows</span></div>
+        <div class="card-desc">PIA Section 5, and legal is right: `.github/workflows` holds four workflows and **all four are deploys** (deploy-production, deploy-staging, deploy-functions, deploy-edit-service). No secret scanning, no dependency audit, no DAST — verified 31 Jul. The other CoreShift apps have these. A few hours of work and the cheapest of the three PIA build items; do this one first so the App Audit has something to record</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Run and record the Upwind App Audit</div>
+        <div class="card-tags"><span class="tag tag-neutral">PIA</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">Section-5</span></div>
+        <div class="card-desc">PIA Section 5 wants to reference an App Audit record and none exists anywhere in the repo (verified 31 Jul). Sequence it **after** the CI scanning card so the audit has real scan output to record rather than a note saying scanning isn&#39;t wired</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Actually enforce the stated retention periods</div>
+        <div class="card-tags"><span class="tag tag-neutral">PIA</span><span class="tag tag-neutral">retention</span><span class="tag tag-neutral">Section-6</span><span class="tag tag-neutral">pg_cron</span><span class="tag tag-neutral">pg_cron</span><span class="tag tag-neutral">error_logs</span><span class="tag tag-neutral">20260729120000_preview_site_archive.sql</span></div>
+        <div class="card-desc">PIA Section 6. Verified against prod 31 Jul: three `pg_cron` jobs are scheduled and **all three are observability** — alert-errors (*/15), uptime-check (*/5), monthly-report (1st). Nothing deletes or prunes anything. `error_logs` is unbounded (10 rows, oldest 28 Jul — simply never pruned). Note the preview-archive sweep was *deliberately* left unbuilt with its predicate already written into `20260729120000_preview_site_archive.sql`, because an unattended process taking a live customer&#39;s site dark is the one failure here that doesn&#39;t fail safe — that decision stands and should be recorded as a decision, not a gap. **This carries the real deadline of the three PIA build items:** stated retention periods that nothing enforces become a live compliance gap the moment the policy is published</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Strip PII from the crawl blob before it goes to Anthropic</div>
+        <div class="card-tags"><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">Anthropic</span><span class="tag tag-neutral">crawl-site</span><span class="tag tag-neutral">generate-site</span><span class="tag tag-neutral">generate-site</span><span class="tag tag-neutral">crawl-site</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">body</span><span class="tag tag-neutral">team</span><span class="tag tag-neutral">&quot;Name — Role&quot;</span><span class="tag tag-neutral">mailto:</span><span class="tag tag-neutral">tel:</span></div>
+        <div class="card-desc">The cheapest real risk reduction available, and unlike ZDR it is entirely ours to control. `generate-site` currently ships up to **24,000 characters** of unfiltered scrape to Anthropic — `crawl-site` takes `main`/`body` textContent across the homepage and internal pages, which in practice sweeps up staff bios, named testimonials, client names, direct-dial numbers and personal email addresses. Plus a `team` field explicitly formatted `&quot;Name — Role&quot;` per line. There is no redaction, sanitisation or PII filtering anywhere before the call (grepped 31 Jul — zero). Stripping obvious `mailto:` / `tel:` patterns and name-dense bio blocks would cut the third-party PII surface regardless of what any provider retains</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Declare Openprovider as a sub-processor before registration ships</div>
+        <div class="card-tags"><span class="tag tag-neutral">PIA</span><span class="tag tag-neutral">privacy</span><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">api.openprovider.eu</span><span class="tag tag-neutral">domain-search</span><span class="tag tag-neutral">api.openprovider.eu</span></div>
+        <div class="card-desc">`domain-search` calls `api.openprovider.eu` today and it is not on the sub-processor list. Right now it transmits only the domain string being checked, so arguably no personal data passes — but domain **registration** is the obvious next feature (M7) and registration transmits full registrant WHOIS details. Get it listed now with that boundary written down explicitly, so the line moves before the feature does rather than after</div>
+      </div>
       <div class="card">
         <div class="card-title">Design Engine — Phase B: 7 sections migrated</div>
         <div class="card-tags"><span class="tag tag-neutral">enhancement</span><span class="tag tag-shipped">shipped</span></div>
@@ -1493,9 +1538,19 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>🅿️ Parking Lot — consciously deferred, needs a decision</h2>
-        <span class="col-count">28</span>
+        <span class="col-count">30</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Three memberless prod accounts, all leftover test data</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">cleanup</span><span class="tag tag-neutral">20260731110000</span><span class="tag tag-neutral">5eed0001…</span><span class="tag tag-neutral">0f69bf13…</span><span class="tag tag-neutral">18ba231a…</span><span class="tag tag-neutral">trial</span><span class="tag tag-neutral">prospects.agency_account_id</span><span class="tag tag-neutral">account_links.agency_account_id</span><span class="tag tag-neutral">delete from accounts</span></div>
+        <div class="card-desc">Surfaced (not caused) by `20260731110000`, which reports them rather than deleting them: **Fernoak Digital** `5eed0001…` (seed, no site), **TK Steel** `0f69bf13…` (has a site; Russ&#39;s membership was removed by the 30 Jul consolidation), **Best Chef 厨匠** `18ba231a…` (has a site; Ricky&#39;s test claim, membership swept). All three are unpaid `trial` accounts with no Stripe subscription, so no customer and no money is involved — but two of them own sites nobody can manage, and TK Steel carries the Stripe and ledger history behind the US$27.34 clawback. **Deleting an account cascades** `prospects.agency_account_id` and `account_links.agency_account_id`, and a cascade has eaten a seed site here before, so this needs the move-children-first treatment, not a `delete from accounts`. Not urgent, but it should not still be true when a real customer&#39;s data is in the same tables</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Re-consent when `TERMS_VERSION` changes</div>
+        <div class="card-tags"><span class="tag tag-neutral">legal</span><span class="tag tag-neutral">product</span><span class="tag tag-neutral">terms_acceptances</span></div>
+        <div class="card-desc">Now that consent is only recorded on the act, bumping the version no longer silently marks everyone as having accepted (which is the fix). But the flip side is that after a bump, existing users hold consent to the *old* version only, and nothing asks them to accept the new one. That gap is now visible in `terms_acceptances` instead of being papered over. Needs a product call from Ricky on the prompt: a blocking modal on next sign-in, or a banner. Also the honest route to backfilling the Partner Agreement rows that were never captured — ask the existing partners to accept it, rather than inventing rows</div>
+      </div>
       <div class="card">
         <div class="card-title">Deferred out of the partner W1–W4 rebuild</div>
         <div class="card-tags"><span class="tag tag-neutral">partner</span></div>
