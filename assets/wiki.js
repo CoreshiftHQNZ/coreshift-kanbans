@@ -46,6 +46,7 @@
       items: [
         { key: "access",     icon: "🔑", text: "Account & access", href: "wiki/access/" },
         { key: "setup",      icon: "🧭", text: "Setup & onboarding", href: "wiki/setup/" },
+        { key: "how-claude-works", icon: "🧩", text: "How Claude works", href: "wiki/how-claude-works/" },
          { key: "slack",      icon: "💬", text: "Slack",            href: "wiki/slack/" },
         { key: "playbooks",  icon: "📕", text: "Playbooks",        href: "wiki/playbooks/" },
         { key: "wiki-submissions", icon: "📥", text: "Wiki submissions", href: "wiki/wiki-submissions/" },
