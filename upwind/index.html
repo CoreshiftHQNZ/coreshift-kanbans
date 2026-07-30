@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>51%</strong> complete</div>
-        <div><strong>60</strong>/118 cards done</div>
-        <div>Updated <strong>2026-07-30 08:56 UTC</strong></div>
+        <div><strong>48%</strong> complete</div>
+        <div><strong>60</strong>/124 cards done</div>
+        <div>Updated <strong>2026-07-30 20:11 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">In production · hardening</span>
+          <span class="phase-pill-value">M0–M3 closed · selling (M4)</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Prove billing end-to-end + close the security gaps <span class="phase-pill-date">P0–P1</span></span>
+          <span class="phase-pill-value">M4 — Start selling: a partner who isn&#39;t us sends an offer a real customer pays for <span class="phase-pill-date">M4</span></span>
         </div>
       </div>
     </section>
@@ -825,7 +825,7 @@
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">5</div>
+        <div class="status-num">4</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">7</div>
+        <div class="status-num">8</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -968,6 +968,43 @@
       <p class="section-sub">Every task across every phase. Updated by editing <code>KANBAN.md</code> and running <code>update-kanban.cmd</code>.</p>
       <div class="board">
         
+    <section class="column col-neutral">
+      <header class="col-head">
+        <h2>👉 On Ricky</h2>
+        <span class="col-count">6</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Legal sign-off on the Partner Agreement</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">legal</span></div>
+        <div class="card-desc">This is the document a recruited partner accepts, so it gates selling at any scale beyond us. Ricky, 29 Jul: *&quot;I will get legal to check your change before we go live for real.&quot;* The commission model changed after the draft (100% of build fee less real payment costs and 5%)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">A purchase with a build fee over US$60</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">decision</span></div>
+        <div class="card-desc">The only way to get a matured commission worth paying. Under US$60 the partner nets less than the US$50 minimum and never appears in the payout list at all</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Fund the Openprovider balance</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">decision</span></div>
+        <div class="card-desc">Sits at US$0.00. Domain search and quoting are live; registration cannot be built against an unfunded account</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Approve or reject `SCOPE-one-key-set-per-environment.md`</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">STRIPE_MODE</span><span class="tag tag-neutral">*_TEST</span></div>
+        <div class="card-desc">Removes `STRIPE_MODE` and the `*_TEST` twin key sets so any future developer can see which keys an environment uses. Needs two verification purchases, so it wants a clear morning</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Prod&#39;s `*_TEST` Stripe secrets belong to a different Stripe account</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">HXnhNJQhs8</span><span class="tag tag-neutral">HtrmVIubMC</span><span class="tag tag-neutral">STRIPE_MODE=live</span></div>
+        <div class="card-desc">Fragment `HXnhNJQhs8`, not Upwind&#39;s `HtrmVIubMC`. Dormant under `STRIPE_MODE=live`, live ammunition if it flips; it has already misrouted one production payment once. Replace or delete</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Inbox placement, iCloud + Gmail</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">launch</span></div>
+        <div class="card-desc">Not checked since the Postmark token swap. Custom SMTP and the raised rate limits went in on 30 Jul, so the throttle is no longer the blocker</div>
+      </div></div>
+    </section>
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
@@ -1278,7 +1315,7 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1294,12 +1331,7 @@
       <div class="card">
         <div class="card-title">Email deliverability</div>
         <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Postmark is wired for leads, auth, support and invites, but no inbox placement has been confirmed since the token swap. **Unblocked 2026-07-30:** custom SMTP is now configured and the hourly limit raised on prod and staging. What remains is the actual inbox-placement check — iCloud + Gmail — which has not been run since the Postmark token swap</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Magic-link login</div>
-        <div class="card-tags"><span class="tag tag-neutral">auth</span></div>
-        <div class="card-desc">Built, never completed a real round trip in production. No longer throttled — needs one real sign-in end to end</div>
+        <div class="card-desc">Postmark is wired for leads, auth, support and invites, but no inbox placement has been confirmed since the token swap. **Unblocked 2026-07-30:** custom SMTP configured and the hourly limit raised on prod and staging, and magic-link delivery is now proved by real sign-ins. What remains is only inbox PLACEMENT — does it land in the inbox or the spam folder — on iCloud and Gmail, unchecked since the token swap</div>
       </div>
       <div class="card">
         <div class="card-title">Team invites / agency linking</div>
@@ -1352,9 +1384,14 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week — launch wave</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">8</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Show every amount owed, not just the payable ones</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">money</span><span class="tag tag-neutral">AdminDashboard.tsx:348</span><span class="tag tag-neutral">previewPayouts()</span><span class="tag tag-neutral">PAYOUT_MIN_CENTS_DEFAULT = 5000</span></div>
+        <div class="card-desc">Ricky&#39;s fallback if the Wise rail misbehaves is to pay partners by hand, which depends on the admin screen telling him who is owed what. It doesn&#39;t: `AdminDashboard.tsx:348` calls `previewPayouts()` with no argument, so `PAYOUT_MIN_CENTS_DEFAULT = 5000` applies and anyone owed under US$50 shows as nothing payable — and the 14-day maturity hold hides anything recent. A partner owed US$27 is invisible on the one screen the fallback relies on. Add a minimum input (or pass 0) so the view shows everything accrued, separating &quot;owed&quot; from &quot;payable this run&quot;. ~1 hour, and it is what makes &quot;worst case we pay them manually&quot; true</div>
+      </div>
       <div class="card">
         <div class="card-title">Claiming a site re-adds a staff member to the customer&#39;s account</div>
         <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">tidy-up</span><span class="tag tag-neutral">@coreshifthq.com</span><span class="tag tag-neutral">ensure_personal_account()</span><span class="tag tag-neutral">members</span><span class="tag tag-neutral">ricky@coreshifthq.com</span><span class="tag tag-neutral">can_manage_site</span></div>

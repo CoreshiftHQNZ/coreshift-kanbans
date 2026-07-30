@@ -10,6 +10,15 @@
 
 ---
 
+## 👉 On Ricky
+
+- **Legal sign-off on the Partner Agreement** `M4` `legal` — This is the document a recruited partner accepts, so it gates selling at any scale beyond us. Ricky, 29 Jul: *"I will get legal to check your change before we go live for real."* The commission model changed after the draft (100% of build fee less real payment costs and 5%).
+- **A purchase with a build fee over US$60** `M5` `decision` — The only way to get a matured commission worth paying. Under US$60 the partner nets less than the US$50 minimum and never appears in the payout list at all.
+- **Fund the Openprovider balance** `M7` `decision` — Sits at US$0.00. Domain search and quoting are live; registration cannot be built against an unfunded account.
+- **Approve or reject `SCOPE-one-key-set-per-environment.md`** `M6` `decision` — Removes `STRIPE_MODE` and the `*_TEST` twin key sets so any future developer can see which keys an environment uses. Needs two verification purchases, so it wants a clear morning.
+- **Prod's `*_TEST` Stripe secrets belong to a different Stripe account** `M6` `security` — Fragment `HXnhNJQhs8`, not Upwind's `HtrmVIubMC`. Dormant under `STRIPE_MODE=live`, live ammunition if it flips; it has already misrouted one production payment once. Replace or delete.
+- **Inbox placement, iCloud + Gmail** `M4` `launch` — Not checked since the Postmark token swap. Custom SMTP and the raised rate limits went in on 30 Jul, so the throttle is no longer the blocker.
+
 ## ✅ Done
 
 - **🧭 A preview can be walked around** `bug` `ux` `shipped` — Clicking anything in a preview's navigation ejected the visitor to the partner dashboard. Site links are real root-relative paths (`/about`, `/contact`) — correct on the published host where a Worker serves them, but a preview lives at `upwind.build/?preview=<subdomain>`, so the click dropped the query string and hit the dashboard's router. `ReadOnlySite` also rendered `slug="home"` with no page state, so even a correct link had nowhere to go: a one-page trap on the screen a partner shows a customer. Internal paths now switch page in place; anchors, `tel:`, `mailto:`, external links and unknown paths are untouched. `?page=<slug>` in the URL makes refresh, shared links and the browser Back button work. Verified on production (`tk-steel`) and staging (`couttas-bar-grill`, 4 pages).
@@ -84,8 +93,8 @@
 
 - **Domain purchase + auto-connect (P9)** `billing` `revenue` — **Registrar decision made: Openprovider, NOT Dynadot.** Dynadot was rejected on 2026-07-30 — it cannot sell `.co.nz`, and NZ is the home market. Openprovider covers `.co.nz`, `.nz`, `.com`, `.co`, `.io`, `.co.uk`; `.com.au` is deferred (auDA requires an Australian presence). **Price is US$5/month, not US$10** — Ricky: *"$10/mth is a bit exhaustive."* **Shipped:** the two-option modal (own one / get one for me), live availability search through `_shared/domainProvider.ts`, one price from `_shared/domainPricing.ts`, and `domain-search` behind `verify_jwt = true`. **Not built, deliberately:** registration and the recurring charge. Blocked on the Openprovider balance (US$0.00) plus a registrant-details form; policy agreed — domains are registered in the **customer's** name. Optional IP allowlisting is available on the Openprovider account if we want it.
 - **Money-path tests** `infra` `money` — Replay recorded Stripe events against the webhook. Would have caught the uncharged build fee, the currency mismatch AND the unstamped prospect. Turns "we fixed nine bugs" into "those nine cannot come back". Biggest remaining engineering item, about a day.
-- **Email deliverability** `launch` `infra` — Postmark is wired for leads, auth, support and invites, but no inbox placement has been confirmed since the token swap. **Unblocked 2026-07-30:** custom SMTP is now configured and the hourly limit raised on prod and staging. What remains is the actual inbox-placement check — iCloud + Gmail — which has not been run since the Postmark token swap.
-- **Magic-link login** `auth` — Built, never completed a real round trip in production. No longer throttled — needs one real sign-in end to end.
+- **Email deliverability** `launch` `infra` — Postmark is wired for leads, auth, support and invites, but no inbox placement has been confirmed since the token swap. **Unblocked 2026-07-30:** custom SMTP configured and the hourly limit raised on prod and staging, and magic-link delivery is now proved by real sign-ins. What remains is only inbox PLACEMENT — does it land in the inbox or the spam folder — on iCloud and Gmail, unchecked since the token swap.
+- ~~**Magic-link login**~~ ✅ **proved in production 2026-07-30** — `auth.users` shows 9 sign-ins in 24 hours, four of the five most recent with `provider: email` (magic link) and the rest Google. This card sat open for weeks waiting for something that had already happened.
 - **Team invites / agency linking** `auth` — Partly wired; the invite-accept surface still needs connecting and one real run-through. **Staff sharing is done separately and is live:** any `@coreshifthq.com` address auto-joins the one Coreshift HQ account and gets CRM role `admin` with no invite at all.
 
 ## 🚫 Blocked — remaining go-live gates (need Ricky)
@@ -110,6 +119,8 @@
 - **🟡 One Stripe key set per environment — approve or reject** `infra` `needs-ricky` — `SCOPE-one-key-set-per-environment.md` in the repo. Removes `STRIPE_MODE` and the `*_TEST` twin sets so any future developer can see exactly which keys an environment uses. Needs **two verification purchases**, so not on a demo day.
 
 ## 🔵 This Week — launch wave
+
+- **Show every amount owed, not just the payable ones** `M5` `money` — Ricky's fallback if the Wise rail misbehaves is to pay partners by hand, which depends on the admin screen telling him who is owed what. It doesn't: `AdminDashboard.tsx:348` calls `previewPayouts()` with no argument, so `PAYOUT_MIN_CENTS_DEFAULT = 5000` applies and anyone owed under US$50 shows as nothing payable — and the 14-day maturity hold hides anything recent. A partner owed US$27 is invisible on the one screen the fallback relies on. Add a minimum input (or pass 0) so the view shows everything accrued, separating "owed" from "payable this run". ~1 hour, and it is what makes "worst case we pay them manually" true.
 
 - **Claiming a site re-adds a staff member to the customer's account** `infra` `tidy-up` — The 30 Jul consolidation put all `@coreshifthq.com` staff in Coreshift HQ only, and `ensure_personal_account()` now always resolves them there — but the CLAIM path still inserts a `members` row for whoever claims a site. Seen the same evening: `ricky@coreshifthq.com` became a member of the "Best Chef" customer account at 06:31 while testing. Harmless today (the dashboard never works in that account, and the agency attribution correctly stays Coreshift HQ), so this is tidy-up, not a bug — but it quietly re-grants staff `can_manage_site` on a customer's workspace, which is exactly what Ricky asked to avoid. Fix is either to skip the membership insert for staff emails on claim, or to sweep them periodically.
 

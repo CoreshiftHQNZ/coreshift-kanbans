@@ -14,11 +14,40 @@ module.exports = {
     "Edge-native — publishing is a database pointer flip, so go-live is instant; one Cloudflare Worker server-renders every tenant. " +
     "Cloudflare + Supabase + Stripe + Postmark. Live in production with real customer sites; current focus is proving the money path and hardening security.",
 
-  phase: "In production · hardening",
+  phase: "M0–M3 closed · selling (M4)",
   nextMilestone: {
-    name: "Prove billing end-to-end + close the security gaps",
-    date: "P0–P1",
+    name: "M4 — Start selling: a partner who isn't us sends an offer a real customer pays for",
+    date: "M4",
   },
+
+  // ── Milestones ────────────────────────────────────────────────
+  // Adopted into the working model 2026-07-30, reconstructed from this board.
+  // Numbering follows the existing phases[] (phase-0..phase-4) rather than being
+  // restarted, so every past reference to "Phase 3" still means something.
+  //
+  // The list is short on purpose. Ricky's own read on 2026-07-30 — "I feel like
+  // the app is finished" — checked out against production: 9 sign-ins in 24h
+  // across magic link AND Google, two prospects through to `paid`, custom domains
+  // proved. What remains is proof, ops and paperwork, plus one capability that has
+  // never run anywhere (payouts) and one deliberately unbuilt (domain registration).
+  milestones: [
+    { id: "M0", name: "Edge-native foundation", status: "done",
+      doneWhen: "The renderer serves a published tenant site from the edge" },
+    { id: "M1", name: "The in-page editor", status: "done",
+      doneWhen: "A customer edits their live page and publishes it" },
+    { id: "M2", name: "A live product", status: "done",
+      doneWhen: "A real customer signs up, generates a site and connects a custom domain (theboys.co.nz active)" },
+    { id: "M3", name: "Money path + security hardening", status: "done",
+      doneWhen: "The production ledger reconciles to zero and no anon write grant remains (both closed 2026-07-30)" },
+    { id: "M4", name: "Start selling", status: "current",
+      doneWhen: "A partner who isn't us sends an offer that a real customer pays for" },
+    { id: "M5", name: "Payouts proved", status: "next",
+      doneWhen: "One partner receives money and a `payout` entry appears in partner_ledger" },
+    { id: "M6", name: "Money path can't regress", status: "next",
+      doneWhen: "CI runs the recorded-Stripe-event replay suite green, with no STRIPE_MODE in the codebase" },
+    { id: "M7", name: "Sell a domain", status: "next",
+      doneWhen: "A domain is registered in the customer's name and charged at US$5/mo" },
+  ],
 
   // ── Goals ─────────────────────────────────────────────────────
   goals: [
