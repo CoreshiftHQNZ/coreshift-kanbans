@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>49%</strong> complete</div>
-        <div><strong>57</strong>/116 cards done</div>
-        <div>Updated <strong>2026-07-30 03:49 UTC</strong></div>
+        <div><strong>51%</strong> complete</div>
+        <div><strong>59</strong>/116 cards done</div>
+        <div>Updated <strong>2026-07-30 05:08 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">57</div>
+        <div class="status-num">59</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -829,7 +829,7 @@
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">9</div>
+        <div class="status-num">7</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
@@ -920,6 +920,20 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">💸 The refund clawback, closed against real live events</div>
+            <div class="recent-desc">Two live US$59 refunds on 28 Jul reversed nothing: the handler read `obj.invoice` on a charge, a field Stripe removed in the 2025 API, so it returned 200 and wrote no clawback. Both partners stayed credited for money that had been given back — **US$27.34**. The fix matches by CHARGE (every commission row already stores `stripe_charge_id`) and logs when a refund matches no commission, so it can never be silent again. **Resending the two events was blocked by our own idempotency guard** — the event ids were already in `stripe_events` from the buggy delivery, so the replay was acked as a duplicate without processing; the dedup rows had to be dropped first. Verified in prod 2026-07-30: 4 clawback rows (−466, −901, −466, −901), each carrying the charge id of the commission it reverses, `matures_at` set (the old null made every clawback invisible to the payout selector), **net US$0.00**</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">📧 Custom SMTP + auth rate limits, both environments</div>
+            <div class="recent-desc">Postmark SMTP configured and the hourly email limit raised on production AND the staging branch. Staging mattered as much as prod: the user-testing invites point testers at `staging.upwind.build`, and at the built-in mailer&#39;s default of a handful per hour a group of testers starting together would have silently locked each other out — which reads as &quot;the tool is broken&quot;, not &quot;the mail is throttled&quot;</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">🧪 User-testing round — a form, a scoring model and an admin sender</div>
             <div class="recent-desc">Observed testing without sitting next to anyone: task / hint / success-rating per step, timed from page load, at **testing.upwind.build** (no password — a password is a task in itself and would have cost us testers). Answers are **anonymous** and submitted through a `SECURITY DEFINER` RPC, so `anon` holds no write grant on the tables at all; they collate for analysis. Two tracks, split at Ricky&#39;s call rather than one form pretending to serve both. Plus a **pretty HTML invite email with buttons** and a **Send testing invite** tab in the admin area, from `hello@tryupwind.com` via Postmark, with step-by-step instructions. Testers are pointed at **staging** and Stripe&#39;s `4242` test card, never at production. Temporary by design: the `research/` directory, the `testing` admin tab, the `send-testing-invite` function and its deploy step all come out together when the round ends</div>
           </div>
@@ -945,20 +959,6 @@
             <div class="recent-desc">Two bugs on the same surface, both mine. (1) The card had no `max-height`, and a centred flex item overflows in **both** directions while a `position: fixed` backdrop has nothing to scroll — so on a MacBook Air the &quot;no website yet&quot; step ran off the top AND the bottom, and **Continue was unreachable**. The card now bounds itself to the viewport, scrolls internally, and pins its action row. (2) Highlight text, drag past the card&#39;s edge, release — and the modal closed, taking the form with it, because a `click` fires on the nearest common ancestor of mousedown and mouseup. Five backdrops had it; all now close on `onMouseDown` guarded by `e.target === e.currentTarget`, with a test across every backdrop in the app</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">👥 All @coreshifthq.com staff share one account</div>
-            <div class="recent-desc">Ricky, Russ and Keitha in **one** Coreshift HQ account: build a site, and anyone can send the offer. Auto-join by email domain already existed; what was broken was which account the dashboard *worked in* — `ensure_personal_account()` did `limit 1` over `members` with **no ORDER BY**, and every staff member had two memberships. Already biting: a `won` prospect had its agency pointed at a personal account. Staff now always resolve to Coreshift HQ; everyone else gets their oldest membership, deterministically. Cleanup moved child rows first — `prospects.agency_account_id` is `ON DELETE CASCADE`, so deleting the personal accounts first would have silently eaten a `won` prospect</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">🔴 The claim-page preview was dead for logged-out visitors</div>
-            <div class="recent-desc">&quot;Loading preview…&quot; forever, and the site picture never appeared. `anon` does not hold a table-level SELECT on `sites`; it holds a **column allowlist**. `archived_at` shipped on 29 Jul, the claim page both selects and filters on it, and it was never granted — and Postgres answers `42501` for the **entire row**, not the column. One ungranted column took out the whole read for the duration of the testing round. Granted that column only; `plan` and the Stripe ids stay invisible. The table now carries a comment naming the allowlist, because there was no other way for the next person to know the rule exists</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -971,9 +971,19 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">57</span>
+        <span class="col-count">59</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">💸 The refund clawback, closed against real live events</div>
+        <div class="card-tags"><span class="tag tag-neutral">money</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">obj.invoice</span><span class="tag tag-neutral">stripe_charge_id</span><span class="tag tag-neutral">stripe_events</span><span class="tag tag-neutral">matures_at</span></div>
+        <div class="card-desc">Two live US$59 refunds on 28 Jul reversed nothing: the handler read `obj.invoice` on a charge, a field Stripe removed in the 2025 API, so it returned 200 and wrote no clawback. Both partners stayed credited for money that had been given back — **US$27.34**. The fix matches by CHARGE (every commission row already stores `stripe_charge_id`) and logs when a refund matches no commission, so it can never be silent again. **Resending the two events was blocked by our own idempotency guard** — the event ids were already in `stripe_events` from the buggy delivery, so the replay was acked as a duplicate without processing; the dedup rows had to be dropped first. Verified in prod 2026-07-30: 4 clawback rows (−466, −901, −466, −901), each carrying the charge id of the commission it reverses, `matures_at` set (the old null made every clawback invisible to the payout selector), **net US$0.00**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📧 Custom SMTP + auth rate limits, both environments</div>
+        <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">staging.upwind.build</span></div>
+        <div class="card-desc">Postmark SMTP configured and the hourly email limit raised on production AND the staging branch. Staging mattered as much as prod: the user-testing invites point testers at `staging.upwind.build`, and at the built-in mailer&#39;s default of a handful per hour a group of testers starting together would have silently locked each other out — which reads as &quot;the tool is broken&quot;, not &quot;the mail is throttled&quot;</div>
+      </div>
       <div class="card">
         <div class="card-title">🧪 User-testing round — a form, a scoring model and an admin sender</div>
         <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">ux</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">SECURITY DEFINER</span><span class="tag tag-neutral">anon</span><span class="tag tag-neutral">hello@tryupwind.com</span><span class="tag tag-neutral">4242</span><span class="tag tag-neutral">research/</span><span class="tag tag-neutral">testing</span><span class="tag tag-neutral">send-testing-invite</span></div>
@@ -1279,12 +1289,12 @@
       <div class="card">
         <div class="card-title">Email deliverability</div>
         <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Postmark is wired for leads, auth, support and invites, but no inbox placement has been confirmed since the token swap. **Now gated on one thing Ricky owns:** custom SMTP is OFF on prod, so auth email is rate-limited to a handful an hour by the built-in mailer — and the magic link is the entire front door</div>
+        <div class="card-desc">Postmark is wired for leads, auth, support and invites, but no inbox placement has been confirmed since the token swap. **Unblocked 2026-07-30:** custom SMTP is now configured and the hourly limit raised on prod and staging. What remains is the actual inbox-placement check — iCloud + Gmail — which has not been run since the Postmark token swap</div>
       </div>
       <div class="card">
         <div class="card-title">Magic-link login</div>
         <div class="card-tags"><span class="tag tag-neutral">auth</span></div>
-        <div class="card-desc">Built, never completed a real round trip in production. Same blocker as above</div>
+        <div class="card-desc">Built, never completed a real round trip in production. No longer throttled — needs one real sign-in end to end</div>
       </div>
       <div class="card">
         <div class="card-title">Team invites / agency linking</div>
@@ -1295,7 +1305,7 @@
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked — remaining go-live gates (need Ricky)</h2>
-        <span class="col-count">9</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1314,11 +1324,6 @@
         <div class="card-desc">The click-through agreement is live + accepted at signup, but reconciled by us from the draft. Send the lawyer the corrections: (a) 5 open points — 4 confirmed from the product (offline-on-cancel, customer domain, customer content, V2 out of scope), setup fee = none; (b) we reconciled the 12-month term → cancel-anytime to match the product/marketing; (c) corrected sub-processor list (Anthropic, +Railway, +Postmark, −Higgs Field); (d) clause 13.2 promises a self-serve content export we haven&#39;t built yet — build it or lean on the assisted-export clause</div>
       </div>
       <div class="card">
-        <div class="card-title">🔴 Prod ledger still credits two partners for refunded money</div>
-        <div class="card-tags"><span class="tag tag-neutral">money</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">evt_3Ty9CMHtrmVIubMC1qf7Yk4I</span><span class="tag tag-neutral">evt_3Ty9wPHtrmVIubMC1VPj7a0s</span></div>
-        <div class="card-desc">4 commission rows (US$18.02 build fee + US$9.32 hosting = **US$27.34**), **0 clawbacks**. Re-confirmed by query on 2026-07-30. The clawback code is fixed and deployed; it only fires on new events, and the refunds happened before it shipped. **2-minute fix, Ricky&#39;s:** Stripe → Developers → Webhooks → live endpoint → resend `evt_3Ty9CMHtrmVIubMC1qf7Yk4I` and `evt_3Ty9wPHtrmVIubMC1VPj7a0s`. That also proves the repair against real production events rather than tests</div>
-      </div>
-      <div class="card">
         <div class="card-title">🔴 Prod&#39;s `*_TEST` Stripe secrets belong to a different Stripe account</div>
         <div class="card-tags"><span class="tag tag-neutral">money</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">HXnhNJQhs8</span><span class="tag tag-neutral">HtrmVIubMC</span><span class="tag tag-neutral">STRIPE_MODE=live</span></div>
         <div class="card-desc">Fragment `HXnhNJQhs8`, not Upwind&#39;s `HtrmVIubMC`. Dormant while `STRIPE_MODE=live`, live ammunition if it ever flips — and it has already caused one misrouted production payment. Replace or delete them</div>
@@ -1332,11 +1337,6 @@
         <div class="card-title">🟡 Three surfaces that have never been seen working</div>
         <div class="card-tags"><span class="tag tag-neutral">launch</span><span class="tag tag-neutral">needs-ricky</span><span class="tag tag-neutral">/help</span></div>
         <div class="card-desc">15 minutes total: reply to a support ticket as admin and confirm the email arrives in the customer&#39;s inbox (the reply leg shipped and has never been *seen* to land); open `/help` and read two of the 8 articles on screen; try to archive a live paying site and confirm it refuses with *&quot;This site is live on a subscription.&quot;* (proved in SQL, never through the UI)</div>
-      </div>
-      <div class="card">
-        <div class="card-title">🟡 Minimum partner age 18</div>
-        <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">legal</span><span class="tag tag-neutral">needs-ricky</span></div>
-        <div class="card-desc">Raised by Ricky, still unresolved. Blocks partner recruitment, and the go-to-market discussed is explicitly students door-knocking. Needs a ToS change plus a signup gate</div>
       </div>
       <div class="card">
         <div class="card-title">🟡 One Stripe key set per environment — approve or reject</div>
