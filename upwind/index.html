@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>51%</strong> complete</div>
-        <div><strong>59</strong>/116 cards done</div>
-        <div>Updated <strong>2026-07-30 05:08 UTC</strong></div>
+        <div><strong>60</strong>/118 cards done</div>
+        <div>Updated <strong>2026-07-30 08:56 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">59</div>
+        <div class="status-num">60</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">6</div>
+        <div class="status-num">7</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -920,6 +920,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">🧭 A preview can be walked around</div>
+            <div class="recent-desc">Clicking anything in a preview&#39;s navigation ejected the visitor to the partner dashboard. Site links are real root-relative paths (`/about`, `/contact`) — correct on the published host where a Worker serves them, but a preview lives at `upwind.build/?preview=&lt;subdomain&gt;`, so the click dropped the query string and hit the dashboard&#39;s router. `ReadOnlySite` also rendered `slug=&quot;home&quot;` with no page state, so even a correct link had nowhere to go: a one-page trap on the screen a partner shows a customer. Internal paths now switch page in place; anchors, `tel:`, `mailto:`, external links and unknown paths are untouched. `?page=&lt;slug&gt;` in the URL makes refresh, shared links and the browser Back button work. Verified on production (`tk-steel`) and staging (`couttas-bar-grill`, 4 pages)</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">💸 The refund clawback, closed against real live events</div>
             <div class="recent-desc">Two live US$59 refunds on 28 Jul reversed nothing: the handler read `obj.invoice` on a charge, a field Stripe removed in the 2025 API, so it returned 200 and wrote no clawback. Both partners stayed credited for money that had been given back — **US$27.34**. The fix matches by CHARGE (every commission row already stores `stripe_charge_id`) and logs when a refund matches no commission, so it can never be silent again. **Resending the two events was blocked by our own idempotency guard** — the event ids were already in `stripe_events` from the buggy delivery, so the replay was acked as a duplicate without processing; the dedup rows had to be dropped first. Verified in prod 2026-07-30: 4 clawback rows (−466, −901, −466, −901), each carrying the charge id of the commission it reverses, `matures_at` set (the old null made every clawback invisible to the payout selector), **net US$0.00**</div>
           </div>
@@ -952,13 +959,6 @@
             <div class="recent-desc">The two-option modal, real availability search and one stated price (**US$5/mo**) are live; the registrar is **Openprovider** after Dynadot failed on `.co.nz`. What is NOT built is the registration itself — see the In Progress card. The offer used to be advertised with nowhere to go; now the search is real and the last leg is a fulfilment ticket</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">🖥️ Modals fit a 13&quot; laptop, and stop closing themselves</div>
-            <div class="recent-desc">Two bugs on the same surface, both mine. (1) The card had no `max-height`, and a centred flex item overflows in **both** directions while a `position: fixed` backdrop has nothing to scroll — so on a MacBook Air the &quot;no website yet&quot; step ran off the top AND the bottom, and **Continue was unreachable**. The card now bounds itself to the viewport, scrolls internally, and pins its action row. (2) Highlight text, drag past the card&#39;s edge, release — and the modal closed, taking the form with it, because a `click` fires on the nearest common ancestor of mousedown and mouseup. Five backdrops had it; all now close on `onMouseDown` guarded by `e.target === e.currentTarget`, with a test across every backdrop in the app</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -971,9 +971,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">59</span>
+        <span class="col-count">60</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🧭 A preview can be walked around</div>
+        <div class="card-tags"><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">ux</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/about</span><span class="tag tag-neutral">/contact</span><span class="tag tag-neutral">upwind.build/?preview=&lt;subdomain&gt;</span><span class="tag tag-neutral">ReadOnlySite</span><span class="tag tag-neutral">slug=&quot;home&quot;</span><span class="tag tag-neutral">tel:</span><span class="tag tag-neutral">mailto:</span><span class="tag tag-neutral">?page=&lt;slug&gt;</span><span class="tag tag-neutral">tk-steel</span><span class="tag tag-neutral">couttas-bar-grill</span></div>
+        <div class="card-desc">Clicking anything in a preview&#39;s navigation ejected the visitor to the partner dashboard. Site links are real root-relative paths (`/about`, `/contact`) — correct on the published host where a Worker serves them, but a preview lives at `upwind.build/?preview=&lt;subdomain&gt;`, so the click dropped the query string and hit the dashboard&#39;s router. `ReadOnlySite` also rendered `slug=&quot;home&quot;` with no page state, so even a correct link had nowhere to go: a one-page trap on the screen a partner shows a customer. Internal paths now switch page in place; anchors, `tel:`, `mailto:`, external links and unknown paths are untouched. `?page=&lt;slug&gt;` in the URL makes refresh, shared links and the browser Back button work. Verified on production (`tk-steel`) and staging (`couttas-bar-grill`, 4 pages)</div>
+      </div>
       <div class="card">
         <div class="card-title">💸 The refund clawback, closed against real live events</div>
         <div class="card-tags"><span class="tag tag-neutral">money</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">obj.invoice</span><span class="tag tag-neutral">stripe_charge_id</span><span class="tag tag-neutral">stripe_events</span><span class="tag tag-neutral">matures_at</span></div>
@@ -1347,9 +1352,14 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week — launch wave</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Claiming a site re-adds a staff member to the customer&#39;s account</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">tidy-up</span><span class="tag tag-neutral">@coreshifthq.com</span><span class="tag tag-neutral">ensure_personal_account()</span><span class="tag tag-neutral">members</span><span class="tag tag-neutral">ricky@coreshifthq.com</span><span class="tag tag-neutral">can_manage_site</span></div>
+        <div class="card-desc">The 30 Jul consolidation put all `@coreshifthq.com` staff in Coreshift HQ only, and `ensure_personal_account()` now always resolves them there — but the CLAIM path still inserts a `members` row for whoever claims a site. Seen the same evening: `ricky@coreshifthq.com` became a member of the &quot;Best Chef&quot; customer account at 06:31 while testing. Harmless today (the dashboard never works in that account, and the agency attribution correctly stays Coreshift HQ), so this is tidy-up, not a bug — but it quietly re-grants staff `can_manage_site` on a customer&#39;s workspace, which is exactly what Ricky asked to avoid. Fix is either to skip the membership insert for staff emails on claim, or to sweep them periodically</div>
+      </div>
       <div class="card">
         <div class="card-title">Partner journey walk + W1–W4 rebuild</div>
         <div class="card-tags"><span class="tag tag-neutral">partner</span><span class="tag tag-neutral">ux</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">Fernoak Digital</span><span class="tag tag-neutral">5f67a99d</span><span class="tag tag-neutral">32488a8</span><span class="tag tag-neutral">bdfd94f</span><span class="tag tag-neutral">tax_residency</span><span class="tag tag-neutral">SUPABASE_URL</span><span class="tag tag-neutral">AUTH_PUBLIC_URL</span><span class="tag tag-neutral">/billing</span><span class="tag tag-neutral">partner_profiles</span><span class="tag tag-neutral">custom_pct</span><span class="tag tag-neutral">status</span><span class="tag tag-neutral">ref_code</span></div>
