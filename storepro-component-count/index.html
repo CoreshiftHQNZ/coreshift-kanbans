@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>55%</strong> complete</div>
-        <div><strong>31</strong>/56 cards done</div>
-        <div>Updated <strong>2026-07-31 03:15 UTC</strong></div>
+        <div><strong>56%</strong> complete</div>
+        <div><strong>32</strong>/57 cards done</div>
+        <div>Updated <strong>2026-07-31 03:23 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">31</div>
+        <div class="status-num">32</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -979,9 +979,9 @@
         <div class="card-desc">**Draft is written and ready to send: `Storepro_Reply_to_Shiv_Cottonsoft_Reconciliation.md`** in the project working dir. It reports the three lines his count fixed (frames 80, heights 4267/4877/7013, mesh decks 398) and asks the only two questions the drawing can&#39;t answer: (1) the 4877-vs-4267 split for 8 run-end frames — his numbers imply 4 and 4, needs confirming; (2) Beam 2700x80 is drawn `TW Rebate` but his count says MW — which is right? Also flags for Joanna that run-end frames are drawn as baseplate-named blocks on layer `0`. **This send is the last thing standing between M7 and done.**</div>
       </div>
       <div class="card">
-        <div class="card-title">Rotate the Anthropic API key</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span></div>
-        <div class="card-desc">Key was pasted in chat history in May and is still live in Railway staging. Needs an Anthropic Console login, so only Ricky can mint the replacement. Hand Claude the new key and it will set it via the Railway CLI and confirm the old one is revoked</div>
+        <div class="card-title">Rotate the Anthropic API key — AND the Azure AD client secret</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">MORE URGENT NOW</span><span class="tag tag-neutral">railway variables</span><span class="tag tag-neutral">ANTHROPIC_API_KEY</span><span class="tag tag-neutral">AZURE_AD_CLIENT_SECRET</span><span class="tag tag-neutral">railway variables</span></div>
+        <div class="card-desc">The Anthropic key was pasted in chat in May and is still live in Railway staging. **It was re-exposed on 2026-07-31**: a `railway variables` call meant to list only variable NAMES printed full values into the session transcript, so `ANTHROPIC_API_KEY` *and* `AZURE_AD_CLIENT_SECRET` are both now in a second transcript. Rotate both. The Anthropic key needs a Console login; the Azure secret needs the app registration (and Zoltan may need to know). Hand Claude the replacements and it will set them via the Railway CLI and confirm the old ones are dead. Lesson recorded: never dump `railway variables` unredacted — query one name at a time</div>
       </div>
       <div class="card">
         <div class="card-title">Ping Zoltan with the confirmed SSO setup</div>
@@ -997,7 +997,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">31</span>
+        <span class="col-count">32</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1149,6 +1149,11 @@
         <div class="card-title">Cottonsoft oracle locked before the engine moved</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">tests/test_cottonsoft_oracle.py</span><span class="tag tag-neutral">test_dxf_count.py</span><span class="tag tag-neutral">test_topology_generalization.py</span></div>
         <div class="card-desc">Second ground-truth oracle, committed BEFORE any fix so the three already-matching lines couldn&#39;t drift. Three layers: fixture identities; a reconciliation lock that runs in CI off a committed extraction snapshot (the DXF is 37 MB and lives outside the repo); and a DXF-gated extraction lock. The two genuinely-open gaps are asserted AS gaps, so closing one fails the test on purpose rather than passing silently. 15/15 against the real DXF. Also wired `test_dxf_count.py` + `test_topology_generalization.py` into CI — the clean-slate engine&#39;s own guards had never run there</div>
+      </div>
+      <div class="card">
+        <div class="card-title">M7 engine verified end-to-end on deployed staging</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">verified</span><span class="tag tag-neutral">job 24a05878</span><span class="tag tag-neutral">OPPAK Cottonsoft.dxf</span><span class="tag tag-neutral">bay-total</span><span class="tag tag-neutral">run-end-frames</span><span class="tag tag-neutral">frame-height-split</span><span class="tag tag-neutral">mesh-decks</span><span class="tag tag-neutral">railway up</span></div>
+        <div class="card-desc">Not just green tests: the real 37 MB `OPPAK Cottonsoft.dxf` was re-uploaded to the deployed staging API after the M7 merge and returned the new BOM live — Bays 63, **Frame 80**, Frame 7013x900 **12**, Frame 4877x900 48, Frame 4267x900 12, **Baseplate 126**, **Mesh deck 398**, Mesh (as drawn) 36, Beam 2700 MW 352, Beam 2700 TW 36, Beam 1350 MW 20, plus the four genuine clarifications (`bay-total`, `run-end-frames`, `frame-height-split`, `mesh-decks`). In at 03:21:00, complete 03:22:14 — **74 seconds**, no error. Also proved Railway auto-deploy is alive again: the staging push built and released with no `railway up`</div>
       </div>
       <div class="card">
         <div class="card-title">Cottonsoft run end-to-end through the staging UI</div>
