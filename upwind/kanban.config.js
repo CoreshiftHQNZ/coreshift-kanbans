@@ -43,7 +43,7 @@ module.exports = {
       doneWhen: "A partner who isn't us sends an offer that a real customer pays for" },
     { id: "M5", name: "Payouts proved", status: "next",
       doneWhen: "One partner receives money and a `payout` entry appears in partner_ledger" },
-    { id: "M6", name: "Money path can't regress", status: "next",
+    { id: "M6", name: "Money path can't regress", status: "done",
       doneWhen: "CI runs the recorded-Stripe-event replay suite green, with no STRIPE_MODE in the codebase" },
     { id: "M7", name: "Sell a domain", status: "next",
       doneWhen: "A domain is registered in the customer's name and charged at US$5/mo" },
