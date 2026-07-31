@@ -974,7 +974,7 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -985,15 +985,25 @@
       <div class="card">
         <div class="card-title">Confirm who covers the Gem queue when a real request lands</div>
         <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">@heygem.co.nz</span></div>
-        <div class="card-desc">The workspace is pooled and any `@heygem.co.nz` address has full access, but there is no record of who is actually on shift or what the response-time promise is. A first customer messaging into an unwatched queue is the fastest way to lose them. *(Reconstructed 2026-07-31 — inferred from the board, not confirmed with Ricky.)*</div>
+        <div class="card-desc">The workspace is pooled and any `@heygem.co.nz` address has full access, but there is no record of who is actually on shift or what the response-time promise is. **The build half of this is now done** (2026-07-31) — a request, a customer reply and a quote approval each email the queue, so the arrival of work no longer depends on someone having a tab open. What is still only Ricky&#39;s: who is on shift, and what response time we promise a paying customer.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Confirm the queue-alert address is one a human actually reads</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">LEAD_NOTIFY_TO</span></div>
+        <div class="card-desc">Queue alerts (and the existing Stripe ops alerts) both send to the `LEAD_NOTIFY_TO` edge-function secret. Supabase only exposes secret *digests*, so its value could not be read from this session — the default in code is hello@heygem.co.nz but the secret is set, so something is overriding it. Three real alert emails were sent to it on 2026-07-31 as probes; Postmark accepted all three (that is what `sent_at` in `public.queue_alerts` records) but **inbox delivery was not verified** — checking the Postmark activity stream, or just confirming those three probes arrived, closes it. If they did not arrive, alerts are on but going nowhere, which is the same as off.</div>
       </div></div>
     </section>
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">22</span>
+        <span class="col-count">23</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">The Gem queue now tells a human when a customer is waiting (verified)</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">queue_alerts</span><span class="tag tag-neutral">notify-gem-queue</span><span class="tag tag-neutral">LEAD_NOTIFY_TO</span></div>
+        <div class="card-desc">**Nothing notified the team that work had arrived.** The only inbound notification in the whole system was the `leads` trigger, and the marketing lead form it fed was removed in `5ac0f5d` — so it had been firing for nothing (the table has never held a row). The Gem workspace learned about new work purely over Realtime, meaning only while a browser tab was open. A real customer filing a request at 6am reached nobody until someone next opened the workspace — the fastest possible way to lose a first paying customer, and the build half of the &quot;who covers the queue&quot; question. Three triggers now raise an alert — new request, customer reply, quote approved — dispatched by a new `notify-gem-queue` edge function that emails the ops address with the business, job number, the customer&#39;s own words and a deep link into the workspace. Two things keep it usable rather than noisy: a **debounce**, so four messages in a row produce one email (an alert fires only when a message opens a new stretch of silence from us, with a one-hour escalation floor so a still-waiting customer can re-raise a hand), and a **ledger** — `public.queue_alerts` records the alert *before* the email is attempted, so `where sent_at is null` is a queryable list of alerts that were owed and never delivered, instead of a silent loss. Triggers go through `try_notify_gem_queue`, which swallows every exception: a broken alert path must never roll back the request it exists to announce. **Security bug caught and fixed mid-change:** the new `SECURITY DEFINER` functions inherited Postgres&#39;s default PUBLIC EXECUTE grant, so PostgREST was exposing `notify_gem_queue` at `/rest/v1/rpc/` — it takes a job id and kind straight from its caller, making it a forged-alert generator and a write path into `queue_alerts` past its own RLS. Caught by the Supabase advisor, revoked from public/anon/authenticated (triggers are unaffected). Staff workspace also gained `?job=&lt;id&gt;` deep-link handling so the email button opens the right job on the right tab, and the dead leads trigger was dropped. Verified on the live database: probe request plus two back-to-back customer messages raised exactly one `new_request`; a gem reply then a customer reply raised `customer_reply`; status → `in_process` raised `quote_approved` once and a repeat no-op update raised nothing; all three delivered (pg_net 200, `sent_at` stamped); re-POST of a sent alert returned `already_sent` with no second email; wrong secret returned 403; anon RPC returned 401 / permission denied; triggers re-probed after the revoke and still fire; probe data deleted. Staff build live on team.heygem.co.nz (bundle `index-CNsYEY8s.js`). **Not verified:** that the alert emails land in a monitored inbox — see the `LEAD_NOTIFY_TO` card under On Ricky.</div>
+      </div>
       <div class="card">
         <div class="card-title">Customer app: team addresses signposted, job list scoped (verified)</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-r2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">@heygem.co.nz</span><span class="tag tag-neutral">select * from jobs</span><span class="tag tag-neutral">business_id = current_business_id() OR is_gem()</span><span class="tag tag-neutral">is_gem()</span><span class="tag tag-neutral">@heygem.co.nz</span><span class="tag tag-neutral">business_id</span></div>
@@ -1155,7 +1165,7 @@
       <div class="card">
         <div class="card-title">Consolidate Railway to one service</div>
         <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">tech-debt</span><span class="tag tag-neutral">marketing</span><span class="tag tag-neutral">heygem</span></div>
-        <div class="card-desc">Two services exist (`marketing` → heygem.co.nz prod; `heygem` → staging.heygem.co.nz staging). Collapse to one service with two environments</div>
+        <div class="card-desc">Two services exist (`marketing` → heygem.co.nz prod; `heygem` → staging.heygem.co.nz staging). Collapse to one service with two environments. **Found 2026-07-31 while shipping the queue alerts:** the split is worse than &quot;two services&quot; — the Railway `heygem` project&#39;s **production** environment has four services (`heygem`, `customer`, `marketing`, `staff`) but **staging** has only two (`heygem`, `marketing`). There is no `staff` service on staging at all, so a change to team.heygem.co.nz cannot be rehearsed anywhere: dev → staging is a no-op for it and `main` is the first environment that ever runs the code. Same likely true for `customer`. Whatever the consolidation ends up being, environment parity is the actual requirement</div>
       </div>
       <div class="card">
         <div class="card-title">SEO + analytics</div>
@@ -1176,9 +1186,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>🅿️ Parking Lot</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Retire the dead lead-capture path</div>
+        <div class="card-tags"><span class="tag tag-neutral">tech-debt</span><span class="tag tag-neutral">leads</span><span class="tag tag-neutral">submitLead</span></div>
+        <div class="card-desc">The `leads` table has never held a row, its `notify-lead` edge function has no live caller, and `submitLead()` in `apps/marketing/src/lib/supabase.ts` is an exported function nobody calls — all left over from the pre-pivot lead form dropped in `5ac0f5d`. The DB trigger was dropped on 2026-07-31 with the queue-alert work so the trigger list only shows live wiring; the rest was deliberately left alone rather than ridden along in a money-adjacent migration. Worth noting the two `leads` INSERT policies are `WITH CHECK (true)` for anon, which the Supabase advisor flags — harmless on an unused table, but it disappears with the cleanup</div>
+      </div>
       <div class="card">
         <div class="card-title">Google Play organisation account</div>
         <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">deferred</span></div>
