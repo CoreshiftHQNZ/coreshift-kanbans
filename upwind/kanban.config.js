@@ -36,7 +36,7 @@ module.exports = {
     { id: "M1", name: "The in-page editor", status: "done",
       doneWhen: "A customer edits their live page and publishes it" },
     { id: "M2", name: "A live product", status: "done",
-      doneWhen: "A real customer signs up, generates a site and connects a custom domain (theboys.co.nz active)" },
+      doneWhen: "A real customer signs up, generates a site and connects a custom domain (proved on theboys.co.nz in the rehearsal; that test was torn down afterwards and its hostname lived on the retired coreshift.page zone, so `domains` being empty today is expected, not a regression — see the Parking Lot)" },
     { id: "M3", name: "Money path + security hardening", status: "done",
       doneWhen: "The production ledger reconciles to zero and no anon write grant remains (both closed 2026-07-30)" },
     { id: "M4", name: "Start selling", status: "current",
