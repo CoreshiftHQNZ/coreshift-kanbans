@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>72%</strong> complete</div>
-        <div><strong>21</strong>/29 cards done</div>
-        <div>Updated <strong>2026-07-29 06:43 UTC</strong></div>
+        <div><strong>67%</strong> complete</div>
+        <div><strong>22</strong>/33 cards done</div>
+        <div>Updated <strong>2026-07-31 02:42 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">21</div>
+        <div class="status-num">22</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -923,6 +923,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Customer app: team addresses signposted, job list scoped (verified)</div>
+            <div class="recent-desc">A `@heygem.co.nz` address signing in to app.heygem.co.nz had no customer profile, so it fell into onboarding and created a customer business for a team address — which then appeared in our own CRM looking like a real client. Team addresses now get a signpost to team.heygem.co.nz, with a deliberate &quot;set up a customer account anyway&quot; escape hatch for testing the customer side; anyone who already has a profile falls straight through. Found while verifying it: the customer job list was an unfiltered `select * from jobs` trusting RLS to scope it — but every customer-side policy reads `business_id = current_business_id() OR is_gem()`, and `is_gem()` is true for any `@heygem.co.nz` email, so a team address in the *customer* app saw every customer&#39;s jobs, with their messages and quotes reachable from there. Not privilege escalation (they already had workspace access to that data) but an unintended second surface for it. Home now filters on `business_id` explicitly. Verified with a seeded team address: other businesses&#39; jobs before, correct empty state after; seed data removed</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Marketing: live job reel replaces the hero photo (verified)</div>
             <div class="recent-desc">The hero is no longer a stock-feeling photo: the morning-tea job now plays out as a real chat thread — ask → Gem typing → quote with the GST breakdown → approve → done → paid → rated — then settles so it can be read back. Also drops the **409KB hero JPEG** from the bundle entirely. New dark band under the ideas grid plays **five** example jobs end to end with a picker: morning tea, a repeat water-bottle order (&quot;same as last time&quot; — the Gem recalls the spec and waives the print setup), Sydney conference travel (hotel chosen for the 6-minute walk to ICC, flights with no 5am alarm and no red-eye, Airpoints added to both legs, &quot;would you like me to quote it?&quot;), a skip bin where the Gem catches that monitors are e-waste and can&#39;t legally go in the bin, and an end-of-lease clean booked on a supplier they&#39;ve watched do the job. A lifecycle rail stamps Enquiry → Quote → Order → Completed → Paid &amp; rated using the real numbering model. Scene copy and pricing live in one module and every total is computed with the same 15% GST rule `stripe-charge-job` applies, so the marketing numbers can&#39;t drift from the product&#39;s arithmetic. `#reel-&lt;scene-id&gt;` renders the band alone, sized for a 1280×800 screen recording, so LinkedIn clips are cut from the real site rather than a copy. Fixed the page title + meta description, which still said &quot;coming soon&quot; a month after go-live. Verified on production: hero and band render, all five totals match hand-calculation, mobile stacks with no horizontal overflow, bundle carries all five scenes and zero hero-photo references</div>
           </div>
@@ -955,13 +962,6 @@
             <div class="recent-desc">HeyGem takes real payments. Vault `stripe_secret_key` swapped to the live secret; the customer app&#39;s publishable key set to `pk_live` on Railway and confirmed in the rebuilt bundle. All test-mode Stripe state (customer IDs + saved cards) cleared so live mode creates fresh customers. Account verified read-only: NZ / NZD, charges + payouts enabled. Local dev stays on test keys</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Team panel: any @heygem.co.nz email can sign in (verified)</div>
-            <div class="recent-desc">`is_gem()` now authorizes any authenticated `@heygem.co.nz` user, and `ensure_gem()` auto-provisions their gems row on load. Auth switched from password to self-serve magic link, guarded to the domain. Verified a brand-new @heygem.co.nz user gets full access and a non-@heygem.co.nz user is blocked. Revoke by offboarding the email</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -971,12 +971,34 @@
       <p class="section-sub">Every task across every phase. Updated by editing <code>KANBAN.md</code> and running <code>update-kanban.cmd</code>.</p>
       <div class="board">
         
+    <section class="column col-neutral">
+      <header class="col-head">
+        <h2>👉 On Ricky</h2>
+        <span class="col-count">2</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Get the first paying customer through the live loop</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">decision</span></div>
+        <div class="card-desc">Everything technical is shipped and on live Stripe keys; M6 cannot close without a real business that isn&#39;t us. Only Ricky can decide who to approach and how it&#39;s pitched. Nothing in the build is blocking this</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Confirm who covers the Gem queue when a real request lands</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">@heygem.co.nz</span></div>
+        <div class="card-desc">The workspace is pooled and any `@heygem.co.nz` address has full access, but there is no record of who is actually on shift or what the response-time promise is. A first customer messaging into an unwatched queue is the fastest way to lose them. *(Reconstructed 2026-07-31 — inferred from the board, not confirmed with Ricky.)*</div>
+      </div></div>
+    </section>
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">21</span>
+        <span class="col-count">22</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Customer app: team addresses signposted, job list scoped (verified)</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-r2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">@heygem.co.nz</span><span class="tag tag-neutral">select * from jobs</span><span class="tag tag-neutral">business_id = current_business_id() OR is_gem()</span><span class="tag tag-neutral">is_gem()</span><span class="tag tag-neutral">@heygem.co.nz</span><span class="tag tag-neutral">business_id</span></div>
+        <div class="card-desc">A `@heygem.co.nz` address signing in to app.heygem.co.nz had no customer profile, so it fell into onboarding and created a customer business for a team address — which then appeared in our own CRM looking like a real client. Team addresses now get a signpost to team.heygem.co.nz, with a deliberate &quot;set up a customer account anyway&quot; escape hatch for testing the customer side; anyone who already has a profile falls straight through. Found while verifying it: the customer job list was an unfiltered `select * from jobs` trusting RLS to scope it — but every customer-side policy reads `business_id = current_business_id() OR is_gem()`, and `is_gem()` is true for any `@heygem.co.nz` email, so a team address in the *customer* app saw every customer&#39;s jobs, with their messages and quotes reachable from there. Not privilege escalation (they already had workspace access to that data) but an unintended second surface for it. Home now filters on `business_id` explicitly. Verified with a seeded team address: other businesses&#39; jobs before, correct empty state after; seed data removed</div>
+      </div>
       <div class="card">
         <div class="card-title">Marketing: live job reel replaces the hero photo (verified)</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-r1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">stripe-charge-job</span><span class="tag tag-neutral">#reel-&lt;scene-id&gt;</span></div>
@@ -1149,6 +1171,18 @@
         <div class="card-title">Brand polish pass</div>
         <div class="card-tags"><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">content</span></div>
         <div class="card-desc">On-dark logo variant, brand guide, type refinements when a designer is involved</div>
+      </div></div>
+    </section>
+    <section class="column col-neutral">
+      <header class="col-head">
+        <h2>🅿️ Parking Lot</h2>
+        <span class="col-count">1</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Google Play organisation account</div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">deferred</span></div>
+        <div class="card-desc">US$25 + identity verification, no Android phone required. Parked with native mobile until there&#39;s customer pull; Apple side is already registered under CORESHIFT LIMITED</div>
       </div></div>
     </section>
       </div>

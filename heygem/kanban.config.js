@@ -19,6 +19,30 @@ module.exports = {
     date: "Native mobile deferred",
   },
 
+  // ── Milestones ────────────────────────────────────────────────
+  // Reconstructed from the board 2026-07-31 (/adopt). M0–M5 map 1:1 onto the
+  // existing Phase 0 / R1–R5 keys — the numbering was kept, not reinvented.
+  milestones: [
+    { id: "M0", name: "Foundations (pre-pivot)", status: "done",
+      doneWhen: "heygem.co.nz serves from Railway and a form submission lands in Supabase `leads` (verified e2e)" },
+    { id: "M1", name: "Coming-soon splash", status: "done",
+      doneWhen: "Production + staging serve the concierge splash and an early-access submission reaches the leads pipeline" },
+    { id: "M2", name: "Accounts + job/chat core", status: "done",
+      doneWhen: "A customer drives request → live Gem quote → approve through the real UI, with cross-business isolation proven under RLS" },
+    { id: "M3", name: "Gem workspace", status: "done",
+      doneWhen: "A Gem runs a job the whole way through the workspace UI — claim, quote, start, mark complete" },
+    { id: "M4", name: "Payments — LIVE", status: "done",
+      doneWhen: "Completion charges a saved card on live Stripe keys and a GST receipt is emailed (real $506 test charge, then live cutover)" },
+    { id: "M5", name: "Ratings + closed loop", status: "done",
+      doneWhen: "A completed job is rated via `submit_rating` and the Stripe webhook reconciles a signed event (native mobile deliberately deferred 2026-07-29)" },
+    { id: "M6", name: "First paying customers on the live loop", status: "current",
+      doneWhen: "A real customer who isn't us runs a job end to end — request → quote approved → live card charged → rated" },
+    { id: "M7", name: "Launch-readiness polish", status: "next",
+      doneWhen: "heygem.co.nz serves an OG image, analytics records a real session, and one Railway service serves both environments" },
+    { id: "M8", name: "Native mobile + push", status: "next",
+      doneWhen: "The customer app is installable from the App Store and Play, and a new-quote push arrives on a real device" },
+  ],
+
   // ── Goals ─────────────────────────────────────────────────────
   goals: [
     {

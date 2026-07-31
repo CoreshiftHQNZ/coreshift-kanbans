@@ -55,3 +55,7 @@
 - **SEO + analytics** `phase-r1` — Sitemap, OG image, analytics. (Title + meta description un-stale-d 2026-07-29 when the reel shipped; OG image and analytics still outstanding.)
 - **Real testimonials & stats** `content` — Replace placeholders with concierge-flavoured proof once first customers land.
 - **Brand polish pass** `low-priority` `content` — On-dark logo variant, brand guide, type refinements when a designer is involved.
+
+## 🅿️ Parking Lot
+
+- **Google Play organisation account** `M8` `deferred` — US$25 + identity verification, no Android phone required. Parked with native mobile until there's customer pull; Apple side is already registered under CORESHIFT LIMITED.
