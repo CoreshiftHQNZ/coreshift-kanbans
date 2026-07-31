@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>49%</strong> complete</div>
-        <div><strong>73</strong>/149 cards done</div>
-        <div>Updated <strong>2026-07-31 23:15 UTC</strong></div>
+        <div><strong>73</strong>/150 cards done</div>
+        <div>Updated <strong>2026-07-31 23:22 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1578,9 +1578,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>🅿️ Parking Lot — consciously deferred, needs a decision</h2>
-        <span class="col-count">36</span>
+        <span class="col-count">37</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Kill light/dark mode — make each theme simply light or dark</div>
+        <div class="card-tags"><span class="tag tag-neutral">themes</span><span class="tag tag-neutral">a11y</span><span class="tag tag-neutral">simplicity</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">.cta</span><span class="tag tag-neutral">.site-footer</span><span class="tag tag-neutral">background: var(--ink); color: #fff</span><span class="tag tag-neutral">--ink</span><span class="tag tag-neutral">[data-mode=&quot;dark&quot;]</span><span class="tag tag-neutral">prefers-color-scheme</span></div>
+        <div class="card-desc">Ricky, 1 Aug: *&quot;Every theme having light and dark makes subtleties that we don&#39;t pick up break. Like a dark theme (Nocturne) having light and dark mode?? Simple is easy and easy is better for this product.&quot;* Today all 17 themes carry both modes, so the review surface is **themes × modes × layouts** and the mode axis is the one that keeps producing silent breakage. **The evidence is already on this board, in the Done column.** The 31 Jul colour work found `.cta` and `.site-footer` set to `background: var(--ink); color: #fff` — and `--ink` is the *text* token, so it inverted under `[data-mode=&quot;dark&quot;]` and the panel went near-white with white text. Nocturne broke a second, separate way: it is **dark-native**, so it was white-on-near-white in its own *ordinary light mode*, no toggle needed — and that case was only caught by a test written *after* the first fix, which would have shipped Nocturne still broken. Exactly the class of subtlety this card proposes to delete. **The argument for:** a theme is a design language, and &quot;Nocturne in light mode&quot; is not one — it is the absence of the thing the customer chose. Halving the axis halves the review board, removes reverse-colour sections as a category of bug, and matches the Simplicity Budget (*we pay the curation cost, not the customer*). **The argument against, worth answering before deciding:** `prefers-color-scheme` and OS-level dark mode are a real user expectation on some site types, and dropping the axis means a visitor who wants dark gets whatever the business picked. **Also unresolved:** what happens to the 11 published sites that already carry a mode, and whether the light/dark control leaves the editor panel or stays as a per-site choice made once. Ricky&#39;s call — discuss, don&#39;t build</div>
+      </div>
       <div class="card">
         <div class="card-title">M9 — the Foundry: automate section variation at scale</div>
         <div class="card-tags"><span class="tag tag-neutral">M9</span><span class="tag tag-neutral">sections</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">CORESHIFT-DESIGN-ENGINE.md</span><span class="tag tag-neutral">SPEC → GENERATE (parallel) → AUTO-GATES → REVIEW BOARD → TAG → SHIP → WEEKLY DROP</span><span class="tag tag-neutral">TASTE.md</span></div>
