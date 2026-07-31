@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>56%</strong> complete</div>
-        <div><strong>29</strong>/52 cards done</div>
-        <div>Updated <strong>2026-07-31 02:32 UTC</strong></div>
+        <div><strong>55%</strong> complete</div>
+        <div><strong>31</strong>/56 cards done</div>
+        <div>Updated <strong>2026-07-31 03:15 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">29</div>
+        <div class="status-num">31</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">2</div>
+        <div class="status-num">5</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -970,23 +970,18 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Reply to Shivneel with the Cottonsoft reconciliation</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">client-facing</span></div>
-        <div class="card-desc">Shiv&#39;s confirmed count arrived (via Ricky, 2026-07-31): bays + 2700 MW + 1350 MW match; frames 80 (52 × 4877x900, 12 × 7013x900, 16 × 4267x900), mesh decks 398, mesh backs 36, and the 36 beams re-specced as 2700x80MW. His read: &quot;AI system confused between Mesh Backs and Mesh Decks.&quot; Anything the drawing genuinely can&#39;t settle goes back as a question — Ricky sends, since it&#39;s client-facing</div>
+        <div class="card-title">Send the Cottonsoft reconciliation reply to Shivneel</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">client-facing</span><span class="tag tag-neutral">DRAFT READY</span><span class="tag tag-neutral">Storepro_Reply_to_Shiv_Cottonsoft_Reconciliation.md</span><span class="tag tag-neutral">TW Rebate</span><span class="tag tag-neutral">0</span></div>
+        <div class="card-desc">**Draft is written and ready to send: `Storepro_Reply_to_Shiv_Cottonsoft_Reconciliation.md`** in the project working dir. It reports the three lines his count fixed (frames 80, heights 4267/4877/7013, mesh decks 398) and asks the only two questions the drawing can&#39;t answer: (1) the 4877-vs-4267 split for 8 run-end frames — his numbers imply 4 and 4, needs confirming; (2) Beam 2700x80 is drawn `TW Rebate` but his count says MW — which is right? Also flags for Joanna that run-end frames are drawn as baseplate-named blocks on layer `0`. **This send is the last thing standing between M7 and done.**</div>
       </div>
       <div class="card">
         <div class="card-title">Rotate the Anthropic API key</div>
         <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span></div>
         <div class="card-desc">Key was pasted in chat history in May and is still live in Railway staging. Needs an Anthropic Console login, so only Ricky can mint the replacement. Hand Claude the new key and it will set it via the Railway CLI and confirm the old one is revoked</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Reconnect the Railway GitHub source</div>
-        <div class="card-tags"><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Both services show repo: null, so pushes never trigger builds and every staging deploy since 2026-07-03 has been a manual railway up. Attaching a GitHub source is dashboard-only — the CLI cannot do it. Service → Settings → Source → CoreshiftHQNZ/storepro-component-count, branch staging</div>
       </div>
       <div class="card">
         <div class="card-title">Ping Zoltan with the confirmed SSO setup</div>
@@ -1002,7 +997,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">29</span>
+        <span class="col-count">31</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1146,6 +1141,16 @@
         <div class="card-desc">DXF uploads run the clean engine through the app; the web Review screen renders the new bom output instead of the legacy counts; real uploads never fall back to demo rows; xlsx + PDF exports rebuilt as a clean client-facing document. On staging 2026-07-30, CI green on all three pushes</div>
       </div>
       <div class="card">
+        <div class="card-title">Layer-awareness — three of four Cottonsoft deltas closed in one fix</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">PR #6</span><span class="tag tag-neutral">ground-truth</span><span class="tag tag-neutral">parse_spec()</span><span class="tag tag-neutral">Plan_View_Baseplate_100_Dynamic</span><span class="tag tag-neutral">0</span><span class="tag tag-neutral">SP_</span><span class="tag tag-neutral">SP_Bay_References</span><span class="tag tag-neutral">Frame 7013x900</span><span class="tag tag-neutral">Σ(bays × levels × width)</span><span class="tag tag-neutral">basis</span></div>
+        <div class="card-desc">All three fixable deltas had ONE root cause: `parse_spec()` read a block&#39;s NAME and threw away its LAYER, and Storepro&#39;s layers are as self-describing as their block names. (1) **Frames 63 → 80 and baseplates 143 → 126.** 17 blocks named `Plan_View_Baseplate_100_Dynamic` sit on layer `0`, not an `SP_` baseplate layer like the other 126; they&#39;re the run-END frames (a run of N bays needs N+1). One misread caused two wrong lines, and the remaining 126 are then exactly 2 per frame. (2) **Frame heights emitted for the first time** — they were always in the drawing as a dimension text on `SP_Bay_References` inside each elevation: 4267 / 4877 / 7013, Storepro&#39;s exact three, with `Frame 7013x900` landing on their 12. (3) **Mesh decks 36 → 398** — only 36 blocks are placed, but a decked bay carries one deck per pallet position per beam level; `Σ(bays × levels × width)` = 398 against their 398. Shipped at MED with the rule in the `basis` and a clarification against the drawn figure — a derivation, never a silent coefficient. Merged to dev + staging 2026-07-31, CI green</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cottonsoft oracle locked before the engine moved</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">tests/test_cottonsoft_oracle.py</span><span class="tag tag-neutral">test_dxf_count.py</span><span class="tag tag-neutral">test_topology_generalization.py</span></div>
+        <div class="card-desc">Second ground-truth oracle, committed BEFORE any fix so the three already-matching lines couldn&#39;t drift. Three layers: fixture identities; a reconciliation lock that runs in CI off a committed extraction snapshot (the DXF is 37 MB and lives outside the repo); and a DXF-gated extraction lock. The two genuinely-open gaps are asserted AS gaps, so closing one fails the test on purpose rather than passing silently. 15/15 against the real DXF. Also wired `test_dxf_count.py` + `test_topology_generalization.py` into CI — the clean-slate engine&#39;s own guards had never run there</div>
+      </div>
+      <div class="card">
         <div class="card-title">Cottonsoft run end-to-end through the staging UI</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">verified</span></div>
         <div class="card-desc">Job 31ee6719 on staging: OPPAK Cottonsoft.dxf in at 02:42, complete at 02:43 (2026-07-30). BOM returned 63 bays (from the PALLET CAPACITY table A:10 A1:2 A2:10 A3:2 B:24 B2:6 C:9), 63 frames, 143 baseplates, 36 mesh, 352 + 36 + 20 beams, two genuine clarifications. Verified live against the staging API on 2026-07-31</div>
@@ -1159,8 +1164,8 @@
       <div class="cards">
       <div class="card">
         <div class="card-title">M7 — reconcile Cottonsoft against Shivneel&#39;s confirmed count</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">ground-truth</span></div>
-        <div class="card-desc">Ground truth arrived 2026-07-31. MATCHES: bays, Beam 2700 MW 352, Beam 1350 MW 20. DELTAS: (1) frames 63 vs 80 — and the engine already flagged 17 standalone baseplates, 63 + 17 = 80, so the flag was the bug; also needs the height breakdown Shiv gives (52 × 4877x900, 12 × 7013x900, 16 × 4267x900) which the BOM doesn&#39;t emit at all. (2) Mesh decks 398 vs our 36, mesh backs 36 vs our 0 — Shiv&#39;s read is that the two are being conflated, and 36 is suspiciously our whole mesh line. (3) The 36 beams we label 2700 TW he calls 2700x80MW — quantity agrees, spec doesn&#39;t. Lock the three matching lines behind a Cottonsoft oracle test, fix what the DXF can settle, send back only what it genuinely can&#39;t</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">ground-truth</span><span class="tag tag-neutral">PR #6 on staging</span></div>
+        <div class="card-desc">**Engine work complete; waiting only on Ricky sending the reply.** Six BOM lines now equal Storepro&#39;s confirmed count (bays 63, Beam 2700 MW 352, Beam 1350 MW 20, frames 80, Frame 7013x900 12, mesh decks 398) and baseplates dropped to 126 — exactly 2 per frame. Two lines stay open as written questions because the DXF can&#39;t settle them, which is what the doneWhen allows. Oracle locked BEFORE any engine change; 15/15 against the real DXF, full CI 45 passed / 8 skipped, OPPAK engine untouched</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1178,9 +1183,24 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Close the two open Cottonsoft lines once Shiv answers</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">blocked-on-storepro</span><span class="tag tag-neutral">frame-height-split</span><span class="tag tag-neutral">Front_View_Beam_2700x80 TW Rebate</span></div>
+        <div class="card-desc">Both are in the sent reply and both are one-line engine changes once answered. (1) **The 4877/4267 split.** 8 run-end frames sit in the one rack group whose bays mix both heights and the drawing doesn&#39;t say which run takes which, so the total is right (80) but the split reads 48 + 12 against his 52 + 16. His figures imply 4 and 4. Raised in-app as the `frame-height-split` clarification. (2) **Beam 2700x80 weld.** Drawn as `Front_View_Beam_2700x80 TW Rebate`, his count says MW; quantity agrees at 36. We report as drawn rather than overriding</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Frame-height assumption to re-check on the third drawing</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">assumption</span><span class="tag tag-neutral">frame_heights()</span></div>
+        <div class="card-desc">Each Cottonsoft elevation carries TWO dimensions (e.g. 4267 and 4606) and `frame_heights()` takes the **smaller** as the frame height, on the reasoning that the larger is overall/top-of-load. True on all five Cottonsoft elevations and it reproduces Storepro&#39;s three heights exactly — but it is a one-drawing-deep assumption, flagged in the code. First thing to test when Shiv&#39;s next drawing set lands</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Mesh connectors still not counted</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span></div>
+        <div class="card-desc">Not in the BOM at all, and Storepro&#39;s Cottonsoft count didn&#39;t include a connector line either so nothing flagged it. The backlog rule is 6 connectors when the beam is &gt; 2743 mm else 4, and beam length is now read per level — so this is close to shippable</div>
+      </div>
       <div class="card">
         <div class="card-title">PDF export BOM section + Review-screen BOM table</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">polish</span></div>
@@ -1271,9 +1291,9 @@
         <div class="card-desc">The clean-slate dxf_count engine now handles DXF end-to-end, but the libredwg block parse, the Claude-vision recipe extractor and the reconciler all still run on every job (they&#39;re what produced the legacy counts block on the Cottonsoft staging job). Keeping them costs an Anthropic call and a pile of confusing output per job; deleting them drops the DWG path until dxf_count reads DWG too. Needs a call on whether Storepro will ever send a non-standardised drawing again</div>
       </div>
       <div class="card">
-        <div class="card-title">Local clone is 28 commits behind origin/dev</div>
-        <div class="card-tags"><span class="tag tag-neutral">hygiene</span><span class="tag tag-neutral">~/Documents/Claude/Projects/storepro-component-count</span><span class="tag tag-neutral">5aa2710</span><span class="tag tag-neutral">git pull</span></div>
-        <div class="card-desc">`~/Documents/Claude/Projects/storepro-component-count` still sits at the May-era `5aa2710`; all the July work exists only on the remote. A `git pull` fixes it, but worth understanding why the July sessions weren&#39;t committing from this clone before trusting it as the working copy</div>
+        <div class="card-title">Retire the `_visible_leaves` name-only path</div>
+        <div class="card-tags"><span class="tag tag-neutral">tech-debt</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">_visible_placements()</span><span class="tag tag-neutral">_visible_leaves()</span><span class="tag tag-neutral">elevation_recipes()</span></div>
+        <div class="card-desc">M7 added `_visible_placements()` (name + layer + world position) and left `_visible_leaves()` as a thin wrapper for the older callers. Once `elevation_recipes()` is moved across, the wrapper can go. Harmless as-is; two functions where one would do</div>
       </div></div>
     </section>
       </div>
