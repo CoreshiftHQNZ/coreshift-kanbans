@@ -384,7 +384,7 @@
           <a href="../merlin/">its own board</a>. The names are one hyphen apart; the systems are not related.
         </div>
         <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">
-          <span style="color: var(--ink);">Phases 0, 1 and 2 complete &middot; Phase 3 built (31 Jul) &mdash; 36 of 69 tasks.</span>
+          <span style="color: var(--ink);">Phases 0, 1 and 2 complete &middot; Phase 3 built (31 Jul), gate run four times through 1 Aug &mdash; 36 of 69 tasks.</span>
           The telemetry spine works end to end: a signed event emitted by the plugin lands in Supabase, and a
           forged one doesn&rsquo;t. The adaptive engine, per-user memory and the hash-chained ledger are written.
           <strong>The plugin has now been loaded by a host</strong>, both skills surface, and a real intake
@@ -399,13 +399,24 @@
           <strong>kindness pressure</strong> &mdash; the harder direction, because she was deferring rather than
           demanding and offered no seam to hand back. <strong>Verified across both personas</strong>, and Phase 3
           was then built on that copy rather than re-deriving it.
-          <strong>Verified:</strong> 175 tests green, plus 30 database-level assertions. Phase 3 is written &mdash;
+          <strong>Verified:</strong> 179 tests green, plus 30 database-level assertions. Phase 3 is written &mdash;
           modules on real work, the Prompt Wizard, and a five-step closure in which the learner is asked at most
           four things, because the change-tags step is derived rather than asked. Free-text reflection now reduces
           to a <em>closed</em> twelve-key vocabulary on-device, so prose in a change tag stopped being something we
           ask a skill not to do and became something the wire will not carry.
-          <strong>Next:</strong> run the Phase 3 gate. The skills are written and the wire is green, but the
-          walkthrough has never been executed &mdash; and that, deliberately, is what keeps Phase 3 open.
+          <strong>The Phase 3 gate has now run four times</strong> (31 Jul &times;3, 1 Aug), and every blocking item
+          has a pass on record: asked outright to build it, a paste-ready prompt comes back with a reason about what
+          Merlin cannot see rather than a policy &mdash; and when a learner reported a non-outcome, Merlin read the
+          result with her and did not produce the corrected version. <strong>Run seven diagnosed the run&rsquo;s
+          longest-standing puzzle: reading a skill file is not running it.</strong> A menu had been missing its
+          &ldquo;or tell me what&rsquo;s actually on your plate&rdquo; escape for three runs, with the instruction
+          demonstrably loaded in one of them; the first run to <em>invoke</em> the skill produced the escape
+          immediately. So the fix is orchestration &mdash; a handoff has to invoke, not point &mdash; and a pointer
+          in a file is not an instruction.
+          <strong>Next:</strong> one more gate run, and it is now a narrow one. <strong>A learner who builds
+          something and then comes back to report on it.</strong> Seven runs have produced exactly one of those:
+          the last two modules were abandoned mid-flight (one learner declined the handover, one ran out of day),
+          which is legitimate both times and leaves three assertions still resting on an unexercised path.
         </div>
         <div class="progress-bars">
           <div class="pbar"><div class="pbar-label"><strong>P0</strong> Foundations</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
@@ -434,8 +445,8 @@
           <div class="ricky-section">
             <h3>Do now</h3>
             <div class="task">
-              <p class="task-title">Run the Phase 3 gate <span class="task-when">Abe</span></p>
-              <p class="task-body">Phase 3 is <strong>built and unverified</strong>, and that is the only thing keeping it open. The wire half is green &mdash; no prose in any event, &ldquo;not yet&rdquo; accepted on identical terms, a broken reducer now distinguishable from an honest empty result. The other half is eighteen numbered failure conditions in <code>tests/phase3-walkthrough.md</code> that need a fresh session and a human. <strong>The blocking ones are all the same boundary:</strong> asked to do the work, does a paste-ready prompt come back rather than the artefact &mdash; and, the new one, does Merlin stay out of it when someone reports that they didn&rsquo;t get to it. A gate that is written but unrun is the thing run two proved you cannot skip.</p>
+              <p class="task-title">One more Phase 3 gate run &mdash; a learner who finishes and reports back <span class="task-when">Abe</span></p>
+              <p class="task-body">The gate has run four times and <strong>every blocking item has passed</strong>, so what is left is narrow and specific rather than &ldquo;run the walkthrough&rdquo;. <strong>Three assertions still rest on a path nobody has walked:</strong> that &ldquo;not yet&rdquo; carries no penalty, that Merlin stays out of it after a non-outcome, and that a stated duration holds. All three need the same thing &mdash; someone who builds a module, uses it or fails to, and comes back to say so. Seven runs have produced one, and the last two modules were abandoned mid-flight: one learner declined the handover twice, one accepted it and ran out of day. <strong>Both are legitimate, which is the problem</strong> &mdash; a learner who parked, a learner who walked, and a learner who quietly gave up all look identical on the wire, and only the third means something is wrong with Merlin.</p>
             </div>
             <div class="task">
               <p class="task-title">Foundation competency wording F1&ndash;F10 <span class="task-when">Keitha</span></p>
@@ -480,7 +491,7 @@
         <div class="col next">
           <div class="col-head"><div class="col-title"><span class="dot"></span>Next — Phase 3 gate</div><div class="col-count">1</div></div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m3">P3</span><span class="card-id">TASK-027 → 035</span></div><h3 class="card-title">Doing real work</h3><p class="card-note"><code>merlin-module</code> on the proven seven-beat anatomy (5&ndash;12 minutes, parallel <code>step_hints</code>, a recovery line per step) and <code>merlin-loop</code>&rsquo;s five-step closure. <strong>Merlin guides; it never does the user&rsquo;s work</strong> &mdash; it hands over a prompt for a fresh session and walks them through. Free-text reflection is reduced to <code>change_tags</code> + <code>reflection_present</code> on-device, before anything is queued. <strong>Built 31 Jul; the gate has not been run.</strong> TASK-029 <em>is</em> the guide-not-execute boundary, so it points at Phase 2&rsquo;s copy rather than restating it &mdash; a second copy would drift, and a test now fails the build if one appears. <strong>Two things went further than the spec.</strong> The reflection vocabulary is <em>closed</em>, not just reduced, so an invented tag is refused rather than stored; and a <code>reduction_ran</code> flag separates &ldquo;the reducer ran and found nothing&rdquo; from &ldquo;the reducer never ran&rdquo;, which on the wire had been the same row &mdash; meaning a silently broken reducer would have looked exactly like a team doing unremarkable work.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">P3</span><span class="card-id">TASK-027 → 035</span></div><h3 class="card-title">Doing real work</h3><p class="card-note"><code>merlin-module</code> on the proven seven-beat anatomy (5&ndash;12 minutes, parallel <code>step_hints</code>, a recovery line per step) and <code>merlin-loop</code>&rsquo;s five-step closure. <strong>Merlin guides; it never does the user&rsquo;s work</strong> &mdash; it hands over a prompt for a fresh session and walks them through. Free-text reflection is reduced to <code>change_tags</code> + <code>reflection_present</code> on-device, before anything is queued. <strong>Built 31 Jul; the gate has run four times and every blocking item has passed.</strong> Held open by one missing run &mdash; a learner who finishes a module and comes back to report on it. TASK-029 <em>is</em> the guide-not-execute boundary, so it points at Phase 2&rsquo;s copy rather than restating it &mdash; a second copy would drift, and a test now fails the build if one appears. <strong>The gate&rsquo;s own biggest lesson so far is about handoffs:</strong> a skill file that gets <em>read</em> delivers its wording and not its behaviour, so an instruction to load another skill has to be an invocation. Three separate runs lost a required menu element to that, with the copy sitting in context. <strong>Two things went further than the spec.</strong> The reflection vocabulary is <em>closed</em>, not just reduced, so an invented tag is refused rather than stored; and a <code>reduction_ran</code> flag separates &ldquo;the reducer ran and found nothing&rdquo; from &ldquo;the reducer never ran&rdquo;, which on the wire had been the same row &mdash; meaning a silently broken reducer would have looked exactly like a team doing unremarkable work.</p></article>
           </div>
         </div>
 
