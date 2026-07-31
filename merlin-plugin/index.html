@@ -384,21 +384,28 @@
           <a href="../merlin/">its own board</a>. The names are one hyphen apart; the systems are not related.
         </div>
         <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">
-          <span style="color: var(--ink);">Phases 0, 1 and 2 complete (31 Jul) &mdash; 28 of 69 tasks.</span>
+          <span style="color: var(--ink);">Phases 0, 1 and 2 complete &middot; Phase 3 built (31 Jul) &mdash; 36 of 69 tasks.</span>
           The telemetry spine works end to end: a signed event emitted by the plugin lands in Supabase, and a
           forged one doesn&rsquo;t. The adaptive engine, per-user memory and the hash-chained ledger are written.
           <strong>The plugin has now been loaded by a host</strong>, both skills surface, and a real intake
           conversation has run from the opening line through to the first concrete menu &mdash; a colleague&rsquo;s
           name and a job description stayed on the machine while the wire carried two enums and a number.
-          <strong>The Phase 2 gate ran three times.</strong> Run one as a low-confidence learner; run two as a
+          <strong>The Phase 2 gate ran four times.</strong> Run one as a low-confidence learner; run two as a
           sceptical developer, which <strong>failed non-negotiable #3</strong> &mdash; asked to just write the
           skill, Merlin wrote it, and the host surfaced the result as a live skill in that learner&rsquo;s session.
           That blocked Phase 3, and the fix was copy rather than code: the actual sentences that hand over a
-          prompt to someone who has just said <em>&ldquo;don&rsquo;t hand me a plan&rdquo;</em>. A third run
-          verified them at that exact moment and <strong>Phase 3 is unblocked</strong>. Verified for one persona
-          so far &mdash; the same request from a nervous learner has not been run.
-          <strong>Verified:</strong> 154 tests green, plus 30 database-level assertions.
-          <strong>Next:</strong> Phase 3 &mdash; a person completes real work and closes the loop.
+          prompt to someone who has just said <em>&ldquo;don&rsquo;t hand me a plan&rdquo;</em>. Two further runs
+          verified them at that exact moment: the sceptical developer, and then the low-confidence learner under
+          <strong>kindness pressure</strong> &mdash; the harder direction, because she was deferring rather than
+          demanding and offered no seam to hand back. <strong>Verified across both personas</strong>, and Phase 3
+          was then built on that copy rather than re-deriving it.
+          <strong>Verified:</strong> 175 tests green, plus 30 database-level assertions. Phase 3 is written &mdash;
+          modules on real work, the Prompt Wizard, and a five-step closure in which the learner is asked at most
+          four things, because the change-tags step is derived rather than asked. Free-text reflection now reduces
+          to a <em>closed</em> twelve-key vocabulary on-device, so prose in a change tag stopped being something we
+          ask a skill not to do and became something the wire will not carry.
+          <strong>Next:</strong> run the Phase 3 gate. The skills are written and the wire is green, but the
+          walkthrough has never been executed &mdash; and that, deliberately, is what keeps Phase 3 open.
         </div>
         <div class="progress-bars">
           <div class="pbar"><div class="pbar-label"><strong>P0</strong> Foundations</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
@@ -427,8 +434,8 @@
           <div class="ricky-section">
             <h3>Do now</h3>
             <div class="task">
-              <p class="task-title">Run the &ldquo;just do it&rdquo; moment as a nervous learner <span class="task-when">Abe</span></p>
-              <p class="task-body">The copy that unblocked Phase 3 is <strong>verified against a sceptical developer only</strong>. The same moment from a low-confidence learner &mdash; <em>&ldquo;could you just write the email for me?&rdquo;</em> &mdash; has never been run, and the engine file itself says the developer framing would land badly on her. A verification gap, not a build gap: the copy exists and is unexercised.</p>
+              <p class="task-title">Run the Phase 3 gate <span class="task-when">Abe</span></p>
+              <p class="task-body">Phase 3 is <strong>built and unverified</strong>, and that is the only thing keeping it open. The wire half is green &mdash; no prose in any event, &ldquo;not yet&rdquo; accepted on identical terms, a broken reducer now distinguishable from an honest empty result. The other half is eighteen numbered failure conditions in <code>tests/phase3-walkthrough.md</code> that need a fresh session and a human. <strong>The blocking ones are all the same boundary:</strong> asked to do the work, does a paste-ready prompt come back rather than the artefact &mdash; and, the new one, does Merlin stay out of it when someone reports that they didn&rsquo;t get to it. A gate that is written but unrun is the thing run two proved you cannot skip.</p>
             </div>
             <div class="task">
               <p class="task-title">Foundation competency wording F1&ndash;F10 <span class="task-when">Keitha</span></p>
@@ -467,13 +474,13 @@
       </section>
 
       <h2 class="section-title">Build board</h2>
-      <p class="helper">Cards carry their roadmap task ids, and column counts are <em>tasks</em> rather than cards &mdash; 28 of 69 done.</p>
+      <p class="helper">Cards carry their roadmap task ids, and column counts are <em>tasks</em> rather than cards &mdash; 36 of 69 done.</p>
 
       <div class="board">
         <div class="col next">
-          <div class="col-head"><div class="col-title"><span class="dot"></span>Next — Phase 3</div><div class="col-count">9</div></div>
+          <div class="col-head"><div class="col-title"><span class="dot"></span>Next — Phase 3 gate</div><div class="col-count">1</div></div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m3">P3</span><span class="card-id">TASK-027 → 035</span></div><h3 class="card-title">Doing real work</h3><p class="card-note"><code>merlin-module</code> on the proven seven-beat anatomy (5&ndash;12 minutes, parallel <code>step_hints</code>, a recovery line per step) and <code>merlin-loop</code>&rsquo;s five-step closure. <strong>Merlin guides; it never does the user&rsquo;s work</strong> &mdash; it hands over a prompt for a fresh session and walks them through. Free-text reflection is reduced to <code>change_tags</code> + <code>reflection_present</code> on-device, before anything is queued. <strong>Unblocked 31 Jul.</strong> TASK-029 <em>is</em> the guide-not-execute boundary, so it inherits Phase 2&rsquo;s copy rather than re-deriving it &mdash; and that copy is verified against a sceptical developer only.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m3">P3</span><span class="card-id">TASK-027 → 035</span></div><h3 class="card-title">Doing real work</h3><p class="card-note"><code>merlin-module</code> on the proven seven-beat anatomy (5&ndash;12 minutes, parallel <code>step_hints</code>, a recovery line per step) and <code>merlin-loop</code>&rsquo;s five-step closure. <strong>Merlin guides; it never does the user&rsquo;s work</strong> &mdash; it hands over a prompt for a fresh session and walks them through. Free-text reflection is reduced to <code>change_tags</code> + <code>reflection_present</code> on-device, before anything is queued. <strong>Built 31 Jul; the gate has not been run.</strong> TASK-029 <em>is</em> the guide-not-execute boundary, so it points at Phase 2&rsquo;s copy rather than restating it &mdash; a second copy would drift, and a test now fails the build if one appears. <strong>Two things went further than the spec.</strong> The reflection vocabulary is <em>closed</em>, not just reduced, so an invented tag is refused rather than stored; and a <code>reduction_ran</code> flag separates &ldquo;the reducer ran and found nothing&rdquo; from &ldquo;the reducer never ran&rdquo;, which on the wire had been the same row &mdash; meaning a silently broken reducer would have looked exactly like a team doing unremarkable work.</p></article>
           </div>
         </div>
 
@@ -488,9 +495,9 @@
         </div>
 
         <div class="col done">
-          <div class="col-head"><div class="col-title"><span class="dot"></span>Done — Phases 0&ndash;2</div><div class="col-count">28</div></div>
+          <div class="col-head"><div class="col-title"><span class="dot"></span>Done — Phases 0&ndash;2, and Phase 3 built</div><div class="col-count">36</div></div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m2">P2</span><span class="card-id">TASK-018 → 026b</span><span class="card-date">31 Jul</span></div><h3 class="card-title">⭐ The magic moment ✓ — and the gate that caught a real failure</h3><p class="card-note"><code>merlin-onboarding</code> draws someone out about their week &mdash; ten questions as <em>territory</em>, not a script &mdash; and <code>merlin-guide</code> answers with 2&ndash;4 concrete options. <strong>Never a bare &ldquo;what do you want to do?&rdquo;</strong> Completion is 2&ndash;3 named archetypes each with a concrete example, never a question count. <strong>The gate ran three times and earned its keep.</strong> Run one, as a nervous learner, passed. Run two, as a sceptical developer, <strong>failed non-negotiable #3</strong>: asked to just write the skill, Merlin wrote 586 lines into the learner&rsquo;s directory and the host surfaced it as a live skill &mdash; installed tooling they had never read, which would have made any later competency claim about them false. The failure mode is the hard one: a competent person asking for exactly the right deliverable, in good faith, offering the seam to split at. <strong>The fix was copy, not code</strong> &mdash; the actual sentences that hand over a prompt to someone who has just said <em>&ldquo;don&rsquo;t hand me a plan&rdquo;</em>, leading with what Merlin cannot see rather than with what they would learn. Run 2b re-ran that exact turn and got a paste-ready prompt back: <strong>not an artifact, not a refusal.</strong> <strong>Verified for one persona only</strong> &mdash; the same request from a nervous learner is on the not-tested list.</p></article>
+            <article class="card"><div class="card-head"><span class="chip m2">P2</span><span class="card-id">TASK-018 → 026b</span><span class="card-date">31 Jul</span></div><h3 class="card-title">⭐ The magic moment ✓ — and the gate that caught a real failure</h3><p class="card-note"><code>merlin-onboarding</code> draws someone out about their week &mdash; ten questions as <em>territory</em>, not a script &mdash; and <code>merlin-guide</code> answers with 2&ndash;4 concrete options. <strong>Never a bare &ldquo;what do you want to do?&rdquo;</strong> Completion is 2&ndash;3 named archetypes each with a concrete example, never a question count. <strong>The gate ran four times and earned its keep.</strong> Run one, as a nervous learner, passed. Run two, as a sceptical developer, <strong>failed non-negotiable #3</strong>: asked to just write the skill, Merlin wrote 586 lines into the learner&rsquo;s directory and the host surfaced it as a live skill &mdash; installed tooling they had never read, which would have made any later competency claim about them false. The failure mode is the hard one: a competent person asking for exactly the right deliverable, in good faith, offering the seam to split at. <strong>The fix was copy, not code</strong> &mdash; the actual sentences that hand over a prompt to someone who has just said <em>&ldquo;don&rsquo;t hand me a plan&rdquo;</em>, leading with what Merlin cannot see rather than with what they would learn. Run 2b re-ran that exact turn and got a paste-ready prompt back: <strong>not an artifact, not a refusal.</strong> <strong>Now verified across both personas.</strong> A fourth run put the same moment to a low-confidence learner &mdash; <em>&ldquo;could you just write me one? I&rsquo;d only muddle it&rdquo;</em> &mdash; and what carried it was proof rather than reassurance: evidence from her own behaviour four turns earlier, placed last as an aside so her opinion of her own writing never became the subject.</p></article>
             <article class="card"><div class="card-head"><span class="chip m1">P1</span><span class="card-id">TASK-011 · 014</span><span class="card-date">31 Jul</span></div><h3 class="card-title">The shared adaptive engine block ✓</h3><p class="card-note">Three dials &mdash; pace, technical depth, expressiveness &mdash; as a shared instruction block every skill includes. <strong>Where reassurance lives got settled:</strong> it rides on <em>pace</em>, because depth exposes concepts and expressiveness governs how much someone opens up, and neither of those is about comfort. Warmth is the floor and never moves; reassurance is the dial. Stance transitions too: repeated struggle softens, impatience briskens, and anti-lock-in re-stances after <strong>one</strong> failed adjustment rather than two &mdash; two-to-trigger plus two-to-re-stance leaves someone stuck six turns, and a nervous learner has gone by four.</p></article>
             <article class="card"><div class="card-head"><span class="chip m1">P1</span><span class="card-id">TASK-012 · 013</span><span class="card-date">31 Jul</span></div><h3 class="card-title">Per-user memory + dial persistence ✓</h3><p class="card-note"><code>profile.md</code>, <code>pathway.md</code>, <code>ledger.jsonl</code>, <code>outbox.jsonl</code>, in two directories rather than one: recoverable state where auto-loading helps, the irreplaceable record where no consolidator walks. Each dial stores a value, a one-line reason and when it last moved &mdash; and <strong>the reason is held to a stricter test than surviving the next session: it has to survive being read by the person it is about.</strong> Write what someone did, never what they are.</p></article>
             <article class="card"><div class="card-head"><span class="chip m1">P1</span><span class="card-id">TASK-015</span><span class="card-date">31 Jul</span></div><h3 class="card-title">Append-only hashed ledger ✓</h3><p class="card-note">One judgement per line, hash-<em>chained</em> rather than hashed per line &mdash; because the realistic tamper is a <strong>deletion</strong>, which a per-line hash cannot see. Exempt from the memory consolidation pass <strong>by where it lives</strong> rather than by a code guard: anything in the memory directory is in reach of a pass we do not control.</p></article>
