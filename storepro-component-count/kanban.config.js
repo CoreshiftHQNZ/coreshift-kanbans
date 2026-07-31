@@ -10,15 +10,39 @@ module.exports = {
 
   // ── Hero ──────────────────────────────────────────────────────
   title: "Storepro Component Count",
-  tagline: "Drop a DWG, get back a Storepro-format BOM. Pre-prod ready.",
+  tagline: "Drop a drawing, get back a Storepro-format BOM. Two real jobs in, reconciling the second.",
   description:
-    "Reads DWG / DXF / PDF warehouse layouts. Cross-validates a deterministic DWG-block parse with a Claude-vision per-bay-type recipe. Applies the Storepro counting rules (frames = bays + runs, splice kits at 11,400 mm, back ties × 2, frame-end protectors per run, copy-paste anomaly detection). Outputs an Excel + PDF matrix matching Storepro's Phase 1 Stage 2 working sheet — no Excel hand-editing, no second-person re-check.",
+    "Reads Storepro's standardised DXF/DWG layouts directly: scopes to the labelled count box so the embedded component library is never counted, takes the PALLET CAPACITY table as the authoritative bay spine, resolves frames and baseplates from placed blocks in the plan, and derives beams from a per-bay-type elevation recipe. Every assumption it can't settle from the drawing surfaces as a structured clarification rather than a silent guess. On OPPAK-12515 (Glowbal NZ) it reproduced Storepro's confirmed count line-for-line. On Cottonsoft — the second real job, live on staging — bays and the 2700 MW / 1350 MW beam lines match Storepro's count; frames, mesh decks, mesh backs and one beam spec are being reconciled.",
 
-  phase: "Phase 1 · Pre-prod ship complete",
+  phase: "Phase 2 · M7 — reconciling the second real job",
   nextMilestone: {
-    name: "First job through with Storepro's standardised drawings",
-    date: "Once Storepro delivers the new files",
+    name: "Cottonsoft BOM reconciled against Shivneel's confirmed count",
+    date: "Ground truth in hand — 2026-07-31",
   },
+
+  // ── Milestones ────────────────────────────────────────────────
+  // Reconstructed from the board + repo history on 2026-07-31 (/adopt).
+  // status: "done" | "current" | "next"
+  milestones: [
+    { id: "M1", name: "Prove the parse", status: "done",
+      doneWhen: "A real Storepro DWG parses to clean component counts (Sigma, prototype/storepro_count.py)" },
+    { id: "M2", name: "v1 app live on staging", status: "done",
+      doneWhen: "A real drawing uploaded on staging returns a matrix plus xlsx + PDF downloads (Suntory, 144 s, 350 bays)" },
+    { id: "M3", name: "Real engine wired + SP_ library mapped", status: "done",
+      doneWhen: "The clarifications screen shows output from the live engine, not the prototype stub (PRs #1 + #2)" },
+    { id: "M4", name: "Oracle parity on OPPAK-12515", status: "done",
+      doneWhen: "The engine reproduces Storepro's confirmed count line-for-line and the job is locked as a CI regression oracle" },
+    { id: "M5", name: "Storepro's answers encoded + engine generalised", status: "done",
+      doneWhen: "Shivneel's 7 rule answers are in the clarifications and OPPAK still passes with every hardcode derived (PR #5)" },
+    { id: "M6", name: "Clean-slate DXF engine on staging", status: "done",
+      doneWhen: "A real drawing runs end-to-end through the staging UI on the new engine (Cottonsoft job 31ee6719, 2026-07-30)" },
+    { id: "M7", name: "Cottonsoft reconciled against Storepro's count", status: "current",
+      doneWhen: "Every line of the Cottonsoft BOM either matches Shivneel's confirmed count or is a written question sent to Storepro with the reason the drawing can't settle it" },
+    { id: "M8", name: "Production rollout", status: "next",
+      doneWhen: "A Storepro operator completes a job on the production environment with SSO enforced" },
+    { id: "M9", name: "Module 4 — BOM rollup", status: "next",
+      doneWhen: "A per-bay matrix rolls up into a Storepro-shaped quote (Sigma ALL IN.xls form)" },
+  ],
 
   // ── Goals ─────────────────────────────────────────────────────
   goals: [
@@ -131,15 +155,16 @@ module.exports = {
       key: "phase-2",
       status: "in-progress",
       title: "Phase 2",
-      subtitle: "Pilot with new drawings",
-      window: "Blocked on Storepro delivering standardised files",
+      subtitle: "Pilot with the standardised drawings",
+      window: "In progress · M7 — two real jobs in",
       desc:
-        "Run the live app against Storepro's NEW standardised drawings (with a fixed component library + consistent naming). Verify accuracy against their manual counts on 3+ real jobs. Tune rules where needed. Close the loop with Gareth + Gino on any remaining ambiguities.",
+        "Run the live app against Storepro's standardised drawings and benchmark every line against their confirmed counts. OPPAK-12515 reproduces line-for-line and is locked as a CI oracle. Cottonsoft is the second job: bays and two of three beam lines match, and frames / mesh decks / mesh backs / one beam spec are being reconciled against Shivneel's count. A third drawing set is promised.",
       deliverables: [
-        "First standardised drawing accepted from Storepro",
-        "Matrix accuracy benchmarked against manual count on ≥ 3 real jobs",
-        "Rules + alias library tuned where the standardised drawings need different handling",
-        "Clarifications workflow validated — Gareth/Gino can resolve in-app, not via email",
+        "Standardised drawings parsed via the count box, with the embedded library excluded",
+        "OPPAK-12515 reproduced line-for-line and locked as a regression oracle",
+        "Cottonsoft reconciled against Storepro's confirmed count (M7 — in flight)",
+        "Clean-slate dxf_count engine live on staging with client-facing xlsx + PDF",
+        "Clarifications workflow validated — Gareth/Gino resolve in-app, not via email",
       ],
     },
     {

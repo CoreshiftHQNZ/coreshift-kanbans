@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coreshift HQ Ops — Kanban</title>
+  <title>Storepro Component Count — Kanban</title>
   <style>
     :root {
       --navy: #0F1E3D;
@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>55%</strong> complete</div>
-        <div><strong>23</strong>/41 cards done</div>
-        <div>Updated <strong>2026-07-21 11:30 UTC</strong></div>
+        <div><strong>56%</strong> complete</div>
+        <div><strong>29</strong>/52 cards done</div>
+        <div>Updated <strong>2026-07-31 02:32 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -712,16 +712,16 @@
     <section class="hero">
       <div class="hero-eyebrow">INTERNAL · LIVE OPS DASHBOARD</div>
       <h1 class="hero-title">Storepro Component Count</h1>
-      <p class="hero-tagline">Drop a DWG, get back a Storepro-format BOM. Counting engine validated against a Storepro-confirmed job.</p>
-      <p class="hero-desc">Reads Storepro&#39;s standardised dynamic-block DWGs directly: resolves anonymous dynamic blocks to their source components, reads bay strips + letters from the plan, levels/beam specs off the elevations, applies the Storepro rules (frames = bays + runs with shared-frame max-height, splice kits at 11,400 mm, back ties only where back-to-back frames align, protectors LH/RH by run end). On OPPAK-12515 (Glowbal NZ) the engine reproduced Storepro&#39;s confirmed component count <strong>line-for-line</strong> — 11/11 part-coded BOM lines — with every assumption surfaced as a clarification.</p>
+      <p class="hero-tagline">Drop a drawing, get back a Storepro-format BOM. Two real jobs in, reconciling the second.</p>
+      <p class="hero-desc">Reads Storepro&#39;s standardised DXF/DWG layouts directly: scopes to the labelled count box so the embedded component library is never counted, takes the PALLET CAPACITY table as the authoritative bay spine, resolves frames and baseplates from placed blocks in the plan, and derives beams from a per-bay-type elevation recipe. Every assumption it can&#39;t settle from the drawing surfaces as a structured clarification rather than a silent guess. On OPPAK-12515 (Glowbal NZ) it reproduced Storepro&#39;s confirmed count line-for-line. On Cottonsoft — the second real job, live on staging — bays and the 2700 MW / 1350 MW beam lines match Storepro&#39;s count; frames, mesh decks, mesh backs and one beam spec are being reconciled.</p>
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">Phase 2 · Counting engine at oracle parity</span>
+          <span class="phase-pill-value">Phase 2 · M7 — reconciling the second real job</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">First live job through the staging UI <span class="phase-pill-date">then Storepro answers → lock the rule hypotheses</span></span>
+          <span class="phase-pill-value">Cottonsoft BOM reconciled against Shivneel&#39;s confirmed count <span class="phase-pill-date">Ground truth in hand — 2026-07-31</span></span>
         </div>
       </div>
     </section>
@@ -784,11 +784,11 @@
             <div class="phase-marker">2</div>
             <div class="phase-status-pill phase-status-in-progress">In progress</div>
           </div>
-          <div class="phase-title">Phase 2 <span class="phase-subtitle">Pilot with new drawings</span></div>
-          <div class="phase-window">Blocked on Storepro delivering standardised files</div>
-          <p class="phase-desc">Run the live app against Storepro&#39;s NEW standardised drawings (with a fixed component library + consistent naming). Verify accuracy against their manual counts on 3+ real jobs. Tune rules where needed. Close the loop with Gareth + Gino on any remaining ambiguities.</p>
+          <div class="phase-title">Phase 2 <span class="phase-subtitle">Pilot with the standardised drawings</span></div>
+          <div class="phase-window">In progress · M7 — two real jobs in</div>
+          <p class="phase-desc">Run the live app against Storepro&#39;s standardised drawings and benchmark every line against their confirmed counts. OPPAK-12515 reproduces line-for-line and is locked as a CI oracle. Cottonsoft is the second job: bays and two of three beam lines match, and frames / mesh decks / mesh backs / one beam spec are being reconciled against Shivneel&#39;s count. A third drawing set is promised.</p>
           <ul class="phase-deliverables">
-            <li>First standardised drawing accepted from Storepro</li><li>Matrix accuracy benchmarked against manual count on ≥ 3 real jobs</li><li>Rules + alias library tuned where the standardised drawings need different handling</li><li>Clarifications workflow validated — Gareth/Gino can resolve in-app, not via email</li>
+            <li>Standardised drawings parsed via the count box, with the embedded library excluded</li><li>OPPAK-12515 reproduced line-for-line and locked as a regression oracle</li><li>Cottonsoft reconciled against Storepro&#39;s confirmed count (M7 — in flight)</li><li>Clean-slate dxf_count engine live on staging with client-facing xlsx + PDF</li><li>Clarifications workflow validated — Gareth/Gino resolve in-app, not via email</li>
           </ul>
         </div>
         <div class="phase-card phase-planned">
@@ -821,11 +821,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">13</div>
+        <div class="status-num">29</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
+        <div class="status-num">1</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -833,11 +833,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">3</div>
+        <div class="status-num">2</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">13</div>
+        <div class="status-num">12</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -967,10 +967,42 @@
       <p class="section-sub">Every task across every phase. Updated by editing <code>KANBAN.md</code> and running <code>update-kanban.cmd</code>.</p>
       <div class="board">
         
+    <section class="column col-neutral">
+      <header class="col-head">
+        <h2>👉 On Ricky</h2>
+        <span class="col-count">5</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Reply to Shivneel with the Cottonsoft reconciliation</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">client-facing</span></div>
+        <div class="card-desc">Shiv&#39;s confirmed count arrived (via Ricky, 2026-07-31): bays + 2700 MW + 1350 MW match; frames 80 (52 × 4877x900, 12 × 7013x900, 16 × 4267x900), mesh decks 398, mesh backs 36, and the 36 beams re-specced as 2700x80MW. His read: &quot;AI system confused between Mesh Backs and Mesh Decks.&quot; Anything the drawing genuinely can&#39;t settle goes back as a question — Ricky sends, since it&#39;s client-facing</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Rotate the Anthropic API key</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span></div>
+        <div class="card-desc">Key was pasted in chat history in May and is still live in Railway staging. Needs an Anthropic Console login, so only Ricky can mint the replacement. Hand Claude the new key and it will set it via the Railway CLI and confirm the old one is revoked</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Reconnect the Railway GitHub source</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">Both services show repo: null, so pushes never trigger builds and every staging deploy since 2026-07-03 has been a manual railway up. Attaching a GitHub source is dashboard-only — the CLI cannot do it. Service → Settings → Source → CoreshiftHQNZ/storepro-component-count, branch staging</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Ping Zoltan with the confirmed SSO setup</div>
+        <div class="card-tags"><span class="tag tag-ops">ops</span></div>
+        <div class="card-desc">Loop back to Marksmen IT now that all three Azure AD env vars are wired and verified against Microsoft. Confirms his side is complete and unlocks production redirect-URI registration when M8 starts</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Chase the promised new drawing set</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">client-facing</span></div>
+        <div class="card-desc">Shiv: &quot;I will do another follow-up with a new drawing set soon.&quot; A third real job is what turns the engine from two-drawings-validated into something generalisable</div>
+      </div></div>
+    </section>
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">23</span>
+        <span class="col-count">29</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1040,8 +1072,8 @@
       </div>
       <div class="card">
         <div class="card-title">Exit prototype mode — real engine wired to the clarifications screen</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">merged-to-dev</span><span class="tag tag-neutral">PR #1 + #2</span></div>
-        <div class="card-desc">Reconciler now runs in the job pipeline and its clarifications reach the Review screen (was: dead compliance flags saying &quot;not implemented in this prototype&quot;); silent-zero splice/mesh/protector counts replaced with manual-confirm clarifications; stale prototype wording stripped; empty-export bug fixed (bay_counts was never persisted); SP_ standardised library mapped (95.6% block coverage, longest-match matcher). Merged to dev 2026-07-02 — <strong>staging promotion still pending</strong></div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">merged-to-dev</span><span class="tag tag-neutral">PR #1 + #2</span></div>
+        <div class="card-desc">Reconciler now runs in the job pipeline and its clarifications reach the Review screen (was: dead compliance flags saying &quot;not implemented in this prototype&quot;); silent-zero splice/mesh/protector counts replaced with manual-confirm clarifications; stale prototype wording stripped; empty-export bug fixed (bay_counts was never persisted); SP_ standardised library mapped (95.6% block coverage, longest-match matcher). Merged to dev 2026-07-02 — staging promotion still pending at the time</div>
       </div>
       <div class="card">
         <div class="card-title">Phase B — validated against a Storepro-confirmed count (OPPAK-12515)</div>
@@ -1051,42 +1083,72 @@
       <div class="card">
         <div class="card-title">Dynamic-block topology engine — full BOM parity, line-for-line</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">parser/topology_spike.py</span><span class="tag tag-neutral">feature/plan-topology</span></div>
-        <div class="card-desc">Decoded Storepro&#39;s real drawing format (dynamic blocks: *U anonymous inserts → source blocks via eed; bays = arrayed strips; letters nested per bay-unit; spec via visibility states) and built a deterministic engine that reproduced OPPAK-12515&#39;s confirmed count <strong>exactly</strong>: bays 83/46/3, frames 93/54 (shared-frame max-height rule), beams 498/18/368 from elevation reading, back ties 112 (aligned-pairs rule), anchors 588, protectors 11 LH + 11 RH (by rotation), load signs 3. Component-space palette auto-excluded by bay-pitch signature. No vision needed. 4 hypotheses surfaced as clarifications, end-to-end test env-gated on the job minJSON</div>
+        <div class="card-desc">Decoded Storepro&#39;s real drawing format (dynamic blocks: *U anonymous inserts → source blocks via eed; bays = arrayed strips; letters nested per bay-unit; spec via visibility states) and built a deterministic engine that reproduced OPPAK-12515&#39;s confirmed count exactly: bays 83/46/3, frames 93/54 (shared-frame max-height rule), beams 498/18/368 from elevation reading, back ties 112 (aligned-pairs rule), anchors 588, protectors 11 LH + 11 RH (by rotation), load signs 3. Component-space palette auto-excluded by bay-pitch signature. No vision needed. 4 hypotheses surfaced as clarifications, end-to-end test env-gated on the job minJSON</div>
       </div>
       <div class="card">
         <div class="card-title">CI green again — vision deps were never installed</div>
         <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Every CI run since 2026-05-20 failed at `import cv2`: the parser job never installed parser/vision/requirements.txt (Docker did). One workflow fix later, all three jobs pass — first fully green build in 6 weeks — and the newer test files (SP library mapping, reconciler clarifications, OPPAK oracle) now run in CI</div>
+        <div class="card-desc">Every CI run since 2026-05-20 failed at import cv2: the parser job never installed parser/vision/requirements.txt (Docker did). One workflow fix later, all three jobs pass — first fully green build in 6 weeks — and the newer test files (SP library mapping, reconciler clarifications, OPPAK oracle) now run in CI</div>
       </div>
       <div class="card">
         <div class="card-title">bom() graduated into the upload pipeline</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">merged-to-dev</span><span class="tag tag-neutral">PR #3</span></div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">merged-to-dev</span><span class="tag tag-neutral">PR #3</span></div>
         <div class="card-desc">count_standardised() runs at job finalise: job.bom + topology_summary on JobResult, TOP-clarifications merged into the Review-screen wiring, export.xlsx gains a &quot;BOM (part-coded)&quot; first sheet. Legacy drawings → applicable=false, existing engines stand alone. Merged to dev 2026-07-03, CI green</div>
       </div>
       <div class="card">
         <div class="card-title">Staging promoted + deployed — full stack live</div>
-        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">staging.up.railway.app</span></div>
-        <div class="card-desc">staging fast-forwarded to dev (all 3 PRs: exit-prototype-mode, SP_ library, topology engine + BOM pipeline). CI green on the branch. Railway auto-deploy found dead (repo disconnected — see auto-deploy card), so both services deployed via `railway up` from the staging checkout: API healthy (/api/health OK, SSO enabled), web serving. Next: run one real job through the staging UI to eyeball the clarifications screen + BOM sheet in export.xlsx</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">staging fast-forwarded to dev (all 3 PRs: exit-prototype-mode, SP_ library, topology engine + BOM pipeline). CI green on the branch. Railway auto-deploy found dead (repo disconnected — see the On Ricky item), so both services deployed via railway up from the staging checkout: API healthy (/api/health OK, SSO enabled), web serving</div>
       </div>
       <div class="card">
         <div class="card-title">Clarification actions + cutout automation + export fix (PR #4)</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">on-staging</span><span class="tag tag-neutral">PR #4</span></div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">on-staging</span><span class="tag tag-neutral">PR #4</span></div>
         <div class="card-desc">Post-protector cutout rule AUTOMATED (protector height vs lowest beam level from elevations). AI review now sees the topology result (no more &quot;4541 unclassified *U&quot; scare) and proposes actionable include/exclude/adjust options per comment. Clarification answers + free-text now PERSIST (POST /clarifications → feedback corpus for refining rules). Exports front the part-coded BOM (PDF was showing only the legacy vision-matrix → looked wrong though the count was right). Merged + on staging 2026-07-04</div>
       </div>
       <div class="card">
         <div class="card-title">Storepro&#39;s rule answers encoded (PR #5)</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">pr-open</span><span class="tag tag-neutral">PR #5</span></div>
-        <div class="card-desc">Shivneel replied 2026-07-05. Encoded as corrected clarification wording (OPPAK count unchanged): splice kits de-automated (1/post, load-driven, 2 variants — manual flag); load signs → per-aisle estimate not per-bay-type; weld reads from block name (OPPAK unmarked → MW confirmed); Bay B custom-height cut-to-size documented (FSL6629→6477); back-tie Gino-vs-count contradiction flagged. Reply drafted to Shiv (Gmail draft) requesting the NetSuite catalogue + stock sizes. 30 tests pass</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">merged-to-dev</span><span class="tag tag-neutral">PR #5</span></div>
+        <div class="card-desc">Shivneel replied 2026-07-05. Encoded as corrected clarification wording (OPPAK count unchanged): splice kits de-automated (1/post, load-driven, 2 variants — manual flag); load signs → per-aisle estimate not per-bay-type; weld reads from block name (OPPAK unmarked → MW confirmed); Bay B custom-height cut-to-size documented (FSL6629→6477); back-tie Gino-vs-count contradiction flagged. 30 tests pass. Merged to dev 2026-07-13</div>
       </div>
       <div class="card">
         <div class="card-title">Engine generalised off OPPAK-specific hardcodes</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">on-staging</span><span class="tag tag-neutral">parser/topology_spike.py</span></div>
-        <div class="card-desc">The BOM is the deliverable (Storepro never provides one) — so the engine must work on unseen drawings. Removed 6 OPPAK-baked assumptions, all now DERIVED: bay pitch (any consistent arrayed strip), bay letters (regex discovery, not A/B), taller-at-shared-frame (from elevation heights not hardcoded &#39;B&#39;), half-bays (pattern-matched + width→type), BOM groups (by frame height). OPPAK still reproduces line-for-line; new synthetic test proves it on C/D/E bays at non-OPPAK pitches. Still 1-real-job-validated → next real drawing is the true test</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">on-staging</span><span class="tag tag-neutral">parser/topology_spike.py</span></div>
+        <div class="card-desc">The BOM is the deliverable (Storepro never provides one) — so the engine must work on unseen drawings. Removed 6 OPPAK-baked assumptions, all now DERIVED: bay pitch (any consistent arrayed strip), bay letters (regex discovery, not A/B), taller-at-shared-frame (from elevation heights not hardcoded &#39;B&#39;), half-bays (pattern-matched + width→type), BOM groups (by frame height). OPPAK still reproduces line-for-line; new synthetic test proves it on C/D/E bays at non-OPPAK pitches</div>
       </div>
       <div class="card">
         <div class="card-title">Storepro questions email sent</div>
-        <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-shipped">done</span></div>
-        <div class="card-desc">Sent 2026-07-04: OPPAK line-for-line proof + part-code table request + 7 rule questions (draft in Storepro_Questions_Email_Draft.md). Awaiting reply — tracked by the Blocked card</div>
+        <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-neutral">done</span></div>
+        <div class="card-desc">Sent 2026-07-04: OPPAK line-for-line proof + part-code table request + 7 rule questions (draft in Storepro_Questions_Email_Draft.md). Answered by Shivneel 2026-07-05 and encoded in PR #5</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Second real job (Cottonsoft) — library over-count diagnosed</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">analysis</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Joanna&#39;s first drawing on the new library (types A/A1/A2/A3/B/B2/C, table=48 bays). Engine PARSED the new format cleanly (new letters/heights/beam) but counted ~144 vs 48: it was counting the embedded STOREPRO LIBRARY plus duplicated plan/elevation regions (the pitch-signature filter fails — this library has real arrayed strips), and didn&#39;t split A2/A3/B2. Diagnosis drove the count-box + clean-slate rebuild below</div>
+      </div>
+      <div class="card">
+        <div class="card-title">One engine — capacity table authoritative, DWG as gospel</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Killed the two-engines ambiguity: the capacity table is the authoritative bay count and geometry is gated on agreeing with it. Mesh decks counted from placed blocks rather than inferred; weld and cutout reported honestly (weld lives in the visibility state, not the block name — the named beam blocks are library templates). 2026-07-23</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Count box — isolate the job from the embedded library</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Storepro&#39;s standardised drawings ship the component library inside the same model space as the job, near AND far. The labelled count box scopes geometry to the actual job before anything is counted, which is what the pitch-signature filter could never do on a library full of genuine arrayed strips</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Clean-slate dxf_count engine — count what&#39;s drawn</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">feature/dxf-count</span></div>
+        <div class="card-desc">Rebuilt the counter on ezdxf around one principle: count what is drawn, drop the manual-count rules inherited from the spreadsheet era. View reconciliation (capacity-table spine + direct plan counts), beams from a per-bay-type elevation recipe, frame/baseplate resolution, and genuine-only structured clarifications (three real options, no filler). Merged to dev 2026-07-29, CI green</div>
+      </div>
+      <div class="card">
+        <div class="card-title">New engine wired end-to-end + clean client-facing exports</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">on-staging</span></div>
+        <div class="card-desc">DXF uploads run the clean engine through the app; the web Review screen renders the new bom output instead of the legacy counts; real uploads never fall back to demo rows; xlsx + PDF exports rebuilt as a clean client-facing document. On staging 2026-07-30, CI green on all three pushes</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cottonsoft run end-to-end through the staging UI</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">verified</span></div>
+        <div class="card-desc">Job 31ee6719 on staging: OPPAK Cottonsoft.dxf in at 02:42, complete at 02:43 (2026-07-30). BOM returned 63 bays (from the PALLET CAPACITY table A:10 A1:2 A2:10 A3:2 B:24 B2:6 C:9), 63 frames, 143 baseplates, 36 mesh, 352 + 36 + 20 beams, two genuine clarifications. Verified live against the staging API on 2026-07-31</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1096,9 +1158,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Second real job (Cottonsoft) — library over-count + sub-types</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">generalisation-test</span></div>
-        <div class="card-desc">Joanna&#39;s first drawing on the new library (types A/A1/A2/A3/B/B2/C, table=48 bays). Engine PARSED the new format cleanly (new letters/heights/beam) but counted ~144 vs 48: it&#39;s counting the embedded STOREPRO LIBRARY + duplicated plan/elevation regions (pitch-signature filter fails — this library has real arrayed strips), and doesn&#39;t split A2/A3/B2. Fix = scope to Shiv&#39;s labelled &quot;count box&quot; + exclude LIBRARY regions + read sub-type variants. Held: NO confirmed count supplied → no oracle to validate a fix (discipline). Reply drafted asking Shiv for the Cottonsoft confirmed count + the box/library layer convention + how A2/A3/B2 are labelled</div>
+        <div class="card-title">M7 — reconcile Cottonsoft against Shivneel&#39;s confirmed count</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">ground-truth</span></div>
+        <div class="card-desc">Ground truth arrived 2026-07-31. MATCHES: bays, Beam 2700 MW 352, Beam 1350 MW 20. DELTAS: (1) frames 63 vs 80 — and the engine already flagged 17 standalone baseplates, 63 + 17 = 80, so the flag was the bug; also needs the height breakdown Shiv gives (52 × 4877x900, 12 × 7013x900, 16 × 4267x900) which the BOM doesn&#39;t emit at all. (2) Mesh decks 398 vs our 36, mesh backs 36 vs our 0 — Shiv&#39;s read is that the two are being conflated, and 36 is suspiciously our whole mesh line. (3) The 36 beams we label 2700 TW he calls 2700x80MW — quantity agrees, spec doesn&#39;t. Lock the three matching lines behind a Cottonsoft oracle test, fix what the DXF can settle, send back only what it genuinely can&#39;t</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1116,40 +1178,30 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Rotate Anthropic API key</div>
-        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">railway variables --set &quot;ANTHROPIC_API_KEY=…&quot;</span></div>
-        <div class="card-desc">Key was pasted in chat history weeks ago. Still live in Railway staging env (powers the vision pipeline). Generate a new one in Anthropic Console, set via `railway variables --set &quot;ANTHROPIC_API_KEY=…&quot;`, revoke the old</div>
+        <div class="card-title">PDF export BOM section + Review-screen BOM table</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">polish</span></div>
+        <div class="card-desc">The part-coded BOM ships in export.xlsx (first sheet) and its clarifications reach the Review screen; remaining polish is a BOM section in the PDF export and a proper BOM table in the Review UI (job.bom is already on JobResult + ApiJob)</div>
       </div>
       <div class="card">
-        <div class="card-title">Investigate Railway GitHub auto-deploy</div>
-        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">railway up --path-as-root</span><span class="tag tag-neutral">railway.json</span><span class="tag tag-neutral">web/railway.json</span></div>
-        <div class="card-desc"><strong>Root cause found (2026-07-03): both services show repo: null</strong> — the GitHub source connection is gone entirely, so pushes never trigger builds. Reconnecting the repo to each service needs the Railway dashboard (CLI can&#39;t attach GitHub sources): service → Settings → Source → connect CoreshiftHQNZ/storepro-component-count, branch staging. Until then the workaround stands (manual `railway up` per service — used for the 2026-07-03 staging deploy)</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Ping Zoltan with confirmed SSO setup</div>
-        <div class="card-tags"><span class="tag tag-ops">ops</span></div>
-        <div class="card-desc">Loop back to Marksmen IT now that all three Azure AD env vars are wired and verified against Microsoft. Confirms his side of the work is complete and unlocks production redirect URI registration when Phase 3 starts</div>
+        <div class="card-title">Hide demo job rows once usage builds</div>
+        <div class="card-tags"><span class="tag tag-neutral">polish</span><span class="tag tag-neutral">low-priority</span></div>
+        <div class="card-desc">Dashboard falls back to sample rows when the API has few real jobs. Real uploads no longer fall back (fixed 2026-07-30); removing the demo fallback entirely is trivial once Storepro has ~10 real jobs running through</div>
       </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">14</span>
+        <span class="col-count">12</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">Geometric design-review checks (Phase C epic)</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">epic</span><span class="tag tag-neutral">design-review</span></div>
-        <div class="card-desc">The senior-reviewer judgment layer. Was four checks; the topology engine (2026-07-03) already solved <strong>row spacers / back ties</strong> (aligned back-to-back pairs) and proved the extraction path for the rest. Remaining three, easiest-value-first: (1) <strong>Mesh connector 6-vs-4</strong> — 6 connectors when beam &gt; 2743 mm, else 4 (beam length now read per level from elevations); (2) <strong>Post-protector cutout variant</strong> — protector height vs lowest beam level (level heights now extracted; needs protector height from catalogue); (3) <strong>Double-deep backstop quantity</strong> — needs drive-through/double-deep detection in plan topology. Each independently shippable</div>
-      </div>
-      <div class="card">
-        <div class="card-title">PDF export BOM section + Review-screen BOM table</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">polish</span></div>
-        <div class="card-desc">The part-coded BOM ships in export.xlsx (first sheet) and its clarifications reach the Review screen; remaining polish is a BOM section in the PDF export and a proper BOM table in the Review UI (job.bom is already on JobResult + ApiJob)</div>
+        <div class="card-desc">The senior-reviewer judgment layer. Was four checks; the topology engine (2026-07-03) already solved row spacers / back ties (aligned back-to-back pairs) and proved the extraction path for the rest. Remaining three, easiest-value-first: (1) Mesh connector 6-vs-4 — 6 connectors when beam &gt; 2743 mm, else 4 (beam length now read per level from elevations); (2) Post-protector cutout variant — protector height vs lowest beam level (level heights now extracted; needs protector height from catalogue); (3) Double-deep backstop quantity — needs drive-through/double-deep detection in plan topology. Each independently shippable</div>
       </div>
       <div class="card">
         <div class="card-title">Production Railway environment</div>
@@ -1170,11 +1222,6 @@
         <div class="card-title">Per-row confidence from the real reconciler</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">low-priority</span><span class="tag tag-neutral">confidenceFor()</span></div>
         <div class="card-desc">Web adapter currently uses a heuristic (`confidenceFor()`) for the per-row confidence bar. The reconciler already produces real per-cell confidence — expose it via JobResult so the bar reflects actual cross-source agreement</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Hide demo job rows once usage builds</div>
-        <div class="card-tags"><span class="tag tag-neutral">polish</span><span class="tag tag-neutral">low-priority</span></div>
-        <div class="card-desc">Dashboard falls back to sample rows when the API has few real jobs. Trivial to remove the fallback once Storepro has ~10 real jobs running through</div>
       </div>
       <div class="card">
         <div class="card-title">Email + share-link delivery on Export</div>
@@ -1204,12 +1251,29 @@
       <div class="card">
         <div class="card-title">Two more sample drawings</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-neutral">low-priority</span></div>
-        <div class="card-desc">Once standardised. Lets us test rule generalisation beyond the first standardised file</div>
+        <div class="card-desc">Lets us test rule generalisation beyond the first two standardised files. Shiv has promised a new drawing set</div>
       </div>
       <div class="card">
         <div class="card-title">Quarterly review rhythm</div>
         <div class="card-tags"><span class="tag tag-recurring">recurring</span></div>
         <div class="card-desc">Once the app is in real use, schedule a quarterly check-in with Gareth + Gino to revisit rules + sample new edge cases</div>
+      </div></div>
+    </section>
+    <section class="column col-neutral">
+      <header class="col-head">
+        <h2>🅿️ Parking Lot</h2>
+        <span class="col-count">2</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Retire the legacy vision + reconciler engines</div>
+        <div class="card-tags"><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">tech-debt</span></div>
+        <div class="card-desc">The clean-slate dxf_count engine now handles DXF end-to-end, but the libredwg block parse, the Claude-vision recipe extractor and the reconciler all still run on every job (they&#39;re what produced the legacy counts block on the Cottonsoft staging job). Keeping them costs an Anthropic call and a pile of confusing output per job; deleting them drops the DWG path until dxf_count reads DWG too. Needs a call on whether Storepro will ever send a non-standardised drawing again</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Local clone is 28 commits behind origin/dev</div>
+        <div class="card-tags"><span class="tag tag-neutral">hygiene</span><span class="tag tag-neutral">~/Documents/Claude/Projects/storepro-component-count</span><span class="tag tag-neutral">5aa2710</span><span class="tag tag-neutral">git pull</span></div>
+        <div class="card-desc">`~/Documents/Claude/Projects/storepro-component-count` still sits at the May-era `5aa2710`; all the July work exists only on the remote. A `git pull` fixes it, but worth understanding why the July sessions weren&#39;t committing from this clone before trusting it as the working copy</div>
       </div></div>
     </section>
       </div>
