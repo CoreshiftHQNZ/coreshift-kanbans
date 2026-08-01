@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>48%</strong> complete</div>
-        <div><strong>21</strong>/44 cards done</div>
-        <div>Updated <strong>2026-08-01 00:07 UTC</strong></div>
+        <div><strong>41%</strong> complete</div>
+        <div><strong>21</strong>/51 cards done</div>
+        <div>Updated <strong>2026-08-01 00:44 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">M1–M2 + M4 shipped · M3 proving the day</span>
+          <span class="phase-pill-value">M3 blocked on Luke · building M7 retail</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">M3 — ACC billing + Splose cutover: rehearse a full patient day end-to-end on staging <span class="phase-pill-date">M3</span></span>
+          <span class="phase-pill-value">M7 — Retail: the clinic shop, sellable with backorder and pre-order <span class="phase-pill-date">M7</span></span>
         </div>
       </div>
     </section>
@@ -779,16 +779,16 @@
             <li>Day + week diary, per-practitioner columns, drag-to-reschedule</li><li>Practitioner appointment CRUD + quick-create patient</li><li>Native invoice origination, GST maths, sequential numbering, PDF</li><li>ACC portion vs patient co-pay split from day one</li>
           </ul>
         </div>
-        <div class="phase-card phase-in-progress">
+        <div class="phase-card phase-planned">
           <div class="phase-card-head">
             <div class="phase-marker">M3</div>
-            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
           </div>
-          <div class="phase-title">M3 <span class="phase-subtitle">ACC billing + cutting the Splose cord</span></div>
-          <div class="phase-window">Now</div>
-          <p class="phase-desc">ACC invoicing is the cutover gate — today ACC is billed entirely through Splose, so Splose cannot go read-only until the app can bill ACC. The code is built and in production but has never been exercised: Vendor ID is unset, the sync is deliberately back ON, and no one has run a whole day through it. M3 now closes on a rehearsal, not a go-live.</p>
+          <div class="phase-title">M3 <span class="phase-subtitle">Prove the day — blocked on Luke</span></div>
+          <div class="phase-window">Blocked</div>
+          <p class="phase-desc">The clinical and money loop, rehearsed end to end with Ricky as the patient: book, attend, note published with summary and reports on both sides, homework live in the patient&#39;s app, invoice raised automatically and auto-charged to the saved card. The code is all in production and none of it has ever been run as one continuous flow. Blocked because it needs Luke, and because ACC submission cannot be exercised until his Vendor ID exists — so ACC moved to M3.5.</p>
           <ul class="phase-deliverables">
-            <li>One-click Submit to ACC via the email channel (built, inert)</li><li>Reversible SPLOSE_CUTOVER flag (built, sync intentionally back ON)</li><li>A scripted full-day rehearsal on staging, evidenced step by step</li><li>Whatever the rehearsal breaks, fixed</li>
+            <li>A scripted full-day rehearsal, evidenced step by step</li><li>Notes → summary → reports visible in both views</li><li>Homework auto-created and live in the patient app</li><li>Invoice auto-raised and auto-charged to a saved card</li>
           </ul>
         </div>
         <div class="phase-card phase-planned">
@@ -813,6 +813,18 @@
           <p class="phase-desc">The efficiency thesis, shipped ahead of go-live: automated recalls, a waitlist for cancellations, online new-patient intake forms, and staff accounts with practitioner/admin roles. All live in production, all silent until notifications un-pause.</p>
           <ul class="phase-deliverables">
             <li>Automated recalls — the revenue-recovery lever</li><li>Waitlist — fill cancellations instead of losing them</li><li>Online intake forms — reception-less onboarding</li><li>Staff accounts + roles — the 1→3 hire enabler</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-in-progress">
+          <div class="phase-card-head">
+            <div class="phase-marker">M7</div>
+            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+          </div>
+          <div class="phase-title">M7 <span class="phase-subtitle">Retail — the clinic shop</span></div>
+          <div class="phase-window">Now</div>
+          <p class="phase-desc">Luke sells a few pieces of clothing. A lean public storefront on the existing marketing site: browse, pick a size, pay by card via Stripe Checkout, then either collect at the clinic or have it shipped flat-rate anywhere in NZ. Stock is counted but never blocks a sale — running out puts the line on backorder rather than turning the customer away, and products can be listed for pre-order before stock lands. Luke runs the catalogue himself.</p>
+          <ul class="phase-deliverables">
+            <li>Products + variants + orders schema, Luke-managed catalogue</li><li>Public storefront, cart, guest checkout via Stripe Checkout</li><li>Backorder + pre-order: stock counts, never blocks a sale</li><li>Fulfilment queue: collect at clinic or flat-rate NZ shipping</li>
           </ul>
         </div>
         <div class="phase-card phase-future">
@@ -841,15 +853,15 @@
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">2</div>
+        <div class="status-num">6</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">3</div>
+        <div class="status-num">4</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">7</div>
+        <div class="status-num">9</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -988,12 +1000,12 @@
       <div class="card">
         <div class="card-title">Run the full-day rehearsal as a real patient</div>
         <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">decision</span></div>
-        <div class="card-desc">This is the M3 gate and it is on you, because you are an actual customer of Luke&#39;s and the only person who can play the patient without touching a real one. Book a mobile and a clinic appointment on staging, attend them, have the note published, take the invoice, pay the co-pay, and let the ACC portion submit. Nothing else in M3 can be proved without it</div>
+        <div class="card-desc">This is the M3 gate and it is on you, because you are an actual customer of Luke&#39;s and the only person who can play the patient without touching a real one. Book, attend, have the note published with summary and reports, check homework lands in the patient app, and let the invoice auto-raise and auto-charge your saved card. Nothing else in M3 can be proved without it. Deferred 2026-08-01 — Luke was not working, so M7 was pulled forward instead</div>
       </div>
       <div class="card">
-        <div class="card-title">Enter Luke&#39;s ACC Vendor ID + Contract ID</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">blocked</span></div>
-        <div class="card-desc">Everything M1–M3 plus recalls is live in production, but the Submit to ACC button is inert until these are set in Payments → ⚙ Practice settings. Heads-up: they are NOT exposed by the Splose API (checked) — they have to be read off Splose → Settings → ACC by hand, along with the GST number (tax invoices legally need it), Luke&#39;s ACC provider number and provider type. Screenshot that screen and we are set</div>
+        <div class="card-title">Still missing: Luke&#39;s ACC Vendor ID + Contract ID</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">blocked</span></div>
+        <div class="card-desc">Ricky supplied the provider number (24HAPQ) and practice number (G0M661) on 2026-08-01, which are two of the five fields needed — but the Submit to ACC button is gated specifically on the Vendor ID and Contract ID, which are different fields on the same screen. Also still missing: the GST number (tax invoices legally need it) and Luke&#39;s ACC provider type. None are exposed by the Splose API (checked) — they have to be read off Splose → Settings → ACC by hand. Screenshot that screen and we are set. Note: identifiers are not recorded on this board because it is a public site</div>
       </div>
       <div class="card">
         <div class="card-title">Pick Luke&#39;s switch morning</div>
@@ -1130,43 +1142,68 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Re-orient on the project after the July pause</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-ops">ops</span></div>
-        <div class="card-desc">Nothing has moved since 2026-07-21. Before the rehearsal can be scripted, the next session has to re-read docs/ROADMAP.md, confirm what staging and prod are actually running, and check the Supabase and Railway state matches what the board claims. Cheap, and it stops the rehearsal script being written against a remembered system rather than the real one</div>
+        <div class="card-title">Shop spec</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">spec</span></div>
+        <div class="card-desc">docs/SHOP.md in the repo: the data model, the backorder and pre-order rules, order state machine, GST treatment, and what is deliberately out of scope. Written before any code so the three build phases have something to be checked against</div>
       </div>
       <div class="card">
-        <div class="card-title">Script the full-day rehearsal</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">test</span></div>
-        <div class="card-desc">Write the step-by-step run sheet the rehearsal follows, with an evidence slot per step: book mobile + clinic as a patient, practitioner sees them in the diary, session note written and published with AI SOAP, invoice auto-drafts with the correct ACC/co-pay split, co-pay charged via Stripe, ACC portion submitted, statuses land. Named evidence per step, not &quot;looked fine&quot;</div>
+        <div class="card-title">Phase 1 — schema + product admin</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span></div>
+        <div class="card-desc">Migration 0027 (0026_intake_forms is the current head): products, product_variants, orders, order_items. Then a Products page on the practitioner side for owner and admin roles: create, image upload via the existing Supabase Storage helpers, price GST-inclusive, sizes, stock counts, pre-order flag, publish toggle, drag-order. Nothing customer-facing ships in this phase — the goal is that Luke can load the real catalogue before the storefront exists</div>
       </div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
       <div class="card">
+        <div class="card-title">Run the full-day rehearsal</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-blocked">blocked-by-luke</span></div>
+        <div class="card-desc">The M3 gate. Needs Luke working and needs Ricky playing the patient. Deferred 2026-08-01 because Luke was not in. Nothing else in M3 can be proved without it</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Re-orient on the project after the July pause</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-ops">ops</span></div>
+        <div class="card-desc">Nothing moved between 2026-07-21 and 2026-08-01. Before the rehearsal can be scripted, confirm what staging and prod are actually running and that the Supabase and Railway state matches what this board claims. Cheap, and it stops the rehearsal script being written against a remembered system rather than the real one</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Script the full-day rehearsal</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">test</span></div>
+        <div class="card-desc">The step-by-step run sheet with an evidence slot per step: book, practitioner sees it in the diary, session note published with AI SOAP, summary and reports visible in both the client record and the patient view, homework created and live in the patient app, invoice auto-raised, saved card auto-charged. Named evidence per step, not &quot;looked fine&quot;</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Fix whatever the rehearsal breaks</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span></div>
+        <div class="card-desc">The point of a rehearsal is that it fails somewhere. Whatever it surfaces is M3 work, not a new milestone — it is needed for M3&#39;s doneWhen to be true</div>
+      </div>
+      <div class="card">
         <div class="card-title">First real ACC submission</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-blocked">blocked-by-ricky</span></div>
-        <div class="card-desc">Cannot be tested at all until the ACC Vendor ID and Contract ID are in Practice settings. Until then the Submit to ACC button is inert by design, so the last step of the rehearsal is unrunnable</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-blocked">blocked-by-luke</span></div>
+        <div class="card-desc">Cannot be tested at all until the ACC Vendor ID and Contract ID are in Practice settings. Until then the Submit to ACC button is inert by design. Moved out of M3 on 2026-08-01 precisely because it is unrunnable</div>
       </div>
       <div class="card">
         <div class="card-title">Un-pause notifications (launch)</div>
         <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-blocked">blocked-by-ricky</span></div>
-        <div class="card-desc">Flip NOTIFICATIONS_PAUSED off on both envs — reminders, confirmations, recalls go live. Gated on Ricky&#39;s say-so</div>
+        <div class="card-desc">Flip NOTIFICATIONS_PAUSED off on both envs — reminders, confirmations, recalls go live. Gated on Ricky&#39;s say-so. Note this also gags every shop email, so retail launching before this flip means buyers get Stripe&#39;s receipt and nothing from Go-Chiro</div>
       </div></div>
     </section>
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Fix whatever the rehearsal breaks</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span></div>
-        <div class="card-desc">The point of a rehearsal is that it fails somewhere. Whatever it surfaces is M3 work, not a new milestone — it is needed for M3&#39;s doneWhen to be true</div>
+        <div class="card-title">Phase 2 — storefront + checkout</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span></div>
+        <div class="card-desc">Public Shop and product pages on the existing marketing site (wouter, root paths, alongside /about and /services), a localStorage cart with no server-side cart table, and guest checkout through Stripe Checkout. Webhook gains a checkout.session.completed branch beside the existing payment_intent handlers. Stock decrements on payment and is allowed to go negative — a sale is never refused</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase 3 — fulfilment + notifications</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span></div>
+        <div class="card-desc">Orders page for staff: the awaiting-stock queue for backordered and pre-order lines, then collect-at-clinic (ready → collected) or ship-within-NZ (packed → shipped, with a tracking number). Four emails on the existing Postmark stack: order confirmation, awaiting stock, ready to collect, shipped</div>
       </div>
       <div class="card">
         <div class="card-title">System-of-record hardening (remaining)</div>
@@ -1182,7 +1219,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">9</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1214,6 +1251,16 @@
         <div class="card-title">Exercise videos via YouTube link</div>
         <div class="card-tags"><span class="tag tag-neutral">backlog</span></div>
         <div class="card-desc">Decided: URL field + embedded player. Carried from the v0 backlog, never scheduled</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Retail revenue in the reporting pack</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">M7</span></div>
+        <div class="card-desc">Shop orders are a separate table from clinical invoices on purpose: different tax treatment, and ACC must never touch a hoodie. Both need to land in the M5 reporting pack as separate revenue lines</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Shop discount codes</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">follow-up</span></div>
+        <div class="card-desc">Deliberately out of v1. Stripe Checkout supports promotion codes natively, so this is a config flag plus a UI toggle later, not a build</div>
       </div>
       <div class="card">
         <div class="card-title">Fine-grained per-role permission enforcement</div>

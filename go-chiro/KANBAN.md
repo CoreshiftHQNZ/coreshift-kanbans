@@ -6,7 +6,7 @@
 >
 > The column headings below are what the renderer looks for. Keep the leading emoji — it's how the engine assigns colours.
 >
-> **🎯 Current focus: M3 — prove the day.** Direction change 2026-07-21: Go-Chiro stops being a layer on top of Splose and becomes a complete, standalone practice management system. M1 (diary), M2 (native invoicing) and M4 (recalls, waitlist, intake, roles) are all in production. M3's code is in production too — but it has never been exercised. The ACC Vendor ID is unset, the Splose sync is deliberately back ON, notifications are paused, and no one has run a whole patient day through the system end to end. M3 now closes on a rehearsal, and the switch morning became M3.5. Full plan: `docs/ROADMAP.md` in the repo.
+> **🎯 Current focus: M7 — retail.** Direction change 2026-07-21: Go-Chiro stops being a layer on top of Splose and becomes a complete, standalone practice management system. M1 (diary), M2 (native invoicing) and M4 (recalls, waitlist, intake, roles) are all in production. M3 — proving a full patient day end to end — is **blocked on Luke** (his ACC Vendor ID, and his time to run the rehearsal), so on 2026-08-01 Ricky pulled M7 forward: a lean clinic storefront for the clothing Luke sells. Retail shares no tables and no flows with the cutover, so the two run in parallel. Full plan: `docs/ROADMAP.md`, shop spec in `docs/SHOP.md`.
 >
 > Retrofitted into the working model on 2026-08-01 from the hand-rolled board of 2026-07-21. Cards below are preserved as written.
 
@@ -14,8 +14,8 @@
 
 ## 👉 On Ricky
 
-- **Run the full-day rehearsal as a real patient** `M3` `decision` — This is the M3 gate and it is on you, because you are an actual customer of Luke's and the only person who can play the patient without touching a real one. Book a mobile and a clinic appointment on staging, attend them, have the note published, take the invoice, pay the co-pay, and let the ACC portion submit. Nothing else in M3 can be proved without it.
-- **Enter Luke's ACC Vendor ID + Contract ID** `M3` `blocked` — Everything M1–M3 plus recalls is live in production, but the Submit to ACC button is inert until these are set in Payments → ⚙ Practice settings. Heads-up: they are NOT exposed by the Splose API (checked) — they have to be read off Splose → Settings → ACC by hand, along with the GST number (tax invoices legally need it), Luke's ACC provider number and provider type. Screenshot that screen and we are set.
+- **Run the full-day rehearsal as a real patient** `M3` `decision` — This is the M3 gate and it is on you, because you are an actual customer of Luke's and the only person who can play the patient without touching a real one. Book, attend, have the note published with summary and reports, check homework lands in the patient app, and let the invoice auto-raise and auto-charge your saved card. Nothing else in M3 can be proved without it. Deferred 2026-08-01 — Luke was not working, so M7 was pulled forward instead.
+- **Still missing: Luke's ACC Vendor ID + Contract ID** `M3.5` `blocked` — Ricky supplied the provider number (24HAPQ) and practice number (G0M661) on 2026-08-01, which are two of the five fields needed — but the Submit to ACC button is gated specifically on the Vendor ID and Contract ID, which are different fields on the same screen. Also still missing: the GST number (tax invoices legally need it) and Luke's ACC provider type. None are exposed by the Splose API (checked) — they have to be read off Splose → Settings → ACC by hand. Screenshot that screen and we are set. Note: identifiers are not recorded on this board because it is a public site.
 - **Pick Luke's switch morning** `M3.5` `decision` — Audit done 2026-07-21. On the agreed morning Luke stops booking in Splose, we flip SPLOSE_CUTOVER=true and NOTIFICATIONS_PAUSED=false, and he logs in on his phone and adds Go-Chiro to his home screen. 79 future appointments, 332 clients and the booking config are already in the app. Not to be picked until the rehearsal passes.
 - **Say when notifications go live** `M3.5` `decision` — Reminders, confirmations and recalls stay silent on staging and prod until NOTIFICATIONS_PAUSED=false on both envs. That flip is the moment patients start receiving mail from Go-Chiro rather than Splose, so it is your call and nobody else's.
 - **Grab a full Splose export before cancelling the subscription** `M3.5` `ops` — Splose is month-to-month. Once the cord is cut it becomes a read-only archive for a period, but the export has to be taken while the account is still live.
@@ -46,17 +46,22 @@
 
 ## 🟡 In Progress
 
-- **Re-orient on the project after the July pause** `M3` `ops` — Nothing has moved since 2026-07-21. Before the rehearsal can be scripted, the next session has to re-read docs/ROADMAP.md, confirm what staging and prod are actually running, and check the Supabase and Railway state matches what the board claims. Cheap, and it stops the rehearsal script being written against a remembered system rather than the real one.
-- **Script the full-day rehearsal** `M3` `test` — Write the step-by-step run sheet the rehearsal follows, with an evidence slot per step: book mobile + clinic as a patient, practitioner sees them in the diary, session note written and published with AI SOAP, invoice auto-drafts with the correct ACC/co-pay split, co-pay charged via Stripe, ACC portion submitted, statuses land. Named evidence per step, not "looked fine".
+- **Shop spec** `M7` `spec` — docs/SHOP.md in the repo: the data model, the backorder and pre-order rules, order state machine, GST treatment, and what is deliberately out of scope. Written before any code so the three build phases have something to be checked against.
+- **Phase 1 — schema + product admin** `M7` `build` — Migration 0027 (0026_intake_forms is the current head): products, product_variants, orders, order_items. Then a Products page on the practitioner side for owner and admin roles: create, image upload via the existing Supabase Storage helpers, price GST-inclusive, sizes, stock counts, pre-order flag, publish toggle, drag-order. Nothing customer-facing ships in this phase — the goal is that Luke can load the real catalogue before the storefront exists.
 
 ## 🚫 Blocked
 
-- **First real ACC submission** `M3` `blocked-by-ricky` — Cannot be tested at all until the ACC Vendor ID and Contract ID are in Practice settings. Until then the Submit to ACC button is inert by design, so the last step of the rehearsal is unrunnable.
-- **Un-pause notifications (launch)** `M3.5` `blocked-by-ricky` — Flip NOTIFICATIONS_PAUSED off on both envs — reminders, confirmations, recalls go live. Gated on Ricky's say-so.
+- **Run the full-day rehearsal** `M3` `blocked-by-luke` — The M3 gate. Needs Luke working and needs Ricky playing the patient. Deferred 2026-08-01 because Luke was not in. Nothing else in M3 can be proved without it.
+- **Re-orient on the project after the July pause** `M3` `ops` — Nothing moved between 2026-07-21 and 2026-08-01. Before the rehearsal can be scripted, confirm what staging and prod are actually running and that the Supabase and Railway state matches what this board claims. Cheap, and it stops the rehearsal script being written against a remembered system rather than the real one.
+- **Script the full-day rehearsal** `M3` `test` — The step-by-step run sheet with an evidence slot per step: book, practitioner sees it in the diary, session note published with AI SOAP, summary and reports visible in both the client record and the patient view, homework created and live in the patient app, invoice auto-raised, saved card auto-charged. Named evidence per step, not "looked fine".
+- **Fix whatever the rehearsal breaks** `M3` — The point of a rehearsal is that it fails somewhere. Whatever it surfaces is M3 work, not a new milestone — it is needed for M3's doneWhen to be true.
+- **First real ACC submission** `M3.5` `blocked-by-luke` — Cannot be tested at all until the ACC Vendor ID and Contract ID are in Practice settings. Until then the Submit to ACC button is inert by design. Moved out of M3 on 2026-08-01 precisely because it is unrunnable.
+- **Un-pause notifications (launch)** `M3.5` `blocked-by-ricky` — Flip NOTIFICATIONS_PAUSED off on both envs — reminders, confirmations, recalls go live. Gated on Ricky's say-so. Note this also gags every shop email, so retail launching before this flip means buyers get Stripe's receipt and nothing from Go-Chiro.
 
 ## 🔵 This Week
 
-- **Fix whatever the rehearsal breaks** `M3` — The point of a rehearsal is that it fails somewhere. Whatever it surfaces is M3 work, not a new milestone — it is needed for M3's doneWhen to be true.
+- **Phase 2 — storefront + checkout** `M7` `build` — Public Shop and product pages on the existing marketing site (wouter, root paths, alongside /about and /services), a localStorage cart with no server-side cart table, and guest checkout through Stripe Checkout. Webhook gains a checkout.session.completed branch beside the existing payment_intent handlers. Stock decrements on payment and is allowed to go negative — a sale is never refused.
+- **Phase 3 — fulfilment + notifications** `M7` `build` — Orders page for staff: the awaiting-stock queue for backordered and pre-order lines, then collect-at-clinic (ready → collected) or ship-within-NZ (packed → shipped, with a tracking number). Four emails on the existing Postmark stack: order confirmation, awaiting stock, ready to collect, shipped.
 - **System-of-record hardening (remaining)** `M3.5` `infra` — Now the source of truth for health data: confirm Supabase backups/PITR, add a basic audit trail, review against NZ Privacy Act + Health Information Privacy Code 2020. Must be done before the cord is cut, not after.
 - **Full history migration audit** `M3.5` — Audit what Splose holds that the sync doesn't pull today (historic treatment notes, patient files/attachments, ACC claim + invoice history) and migrate it, then run the final full import via the existing sync — its last job.
 
@@ -68,6 +73,8 @@
 - **Tenant onboarding + billing (parked)** `M6` — Signup/onboarding for other practices, plan billing, product marketing site. Name locked: Go-Chiro. Parked until the system is proven in Go Chiro's daily use.
 - **ACC18 work-capacity capture form** `backlog` — Carried over: ACC18 generator exists but work-capacity + work-modification sections are placeholders. Needs capture form + schema + PDF wiring. Own workstream.
 - **Exercise videos via YouTube link** `backlog` — Decided: URL field + embedded player. Carried from the v0 backlog, never scheduled.
+- **Retail revenue in the reporting pack** `M5` `M7` — Shop orders are a separate table from clinical invoices on purpose: different tax treatment, and ACC must never touch a hoodie. Both need to land in the M5 reporting pack as separate revenue lines.
+- **Shop discount codes** `M7` `follow-up` — Deliberately out of v1. Stripe Checkout supports promotion codes natively, so this is a config flag plus a UI toggle later, not a build.
 - **Fine-grained per-role permission enforcement** `M4` `follow-up` — Staff accounts ship with practitioner/admin roles and a diary column distinction, but per-role permission enforcement was explicitly left as a follow-up when roles shipped in PR #86.
 
 ## 🅿️ Parking Lot

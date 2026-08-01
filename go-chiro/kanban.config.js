@@ -15,10 +15,10 @@ module.exports = {
     "The product thesis is the 1 → 3 staff jump: automate everything a solo operator does by hand (reminders, recalls, intake, payments, forms) so hires #2 and #3 are clinicians, not admin. " +
     "Built for Go Chiro first, kept SaaS-ready (every table is already practice-scoped). Node/Express + React + Drizzle on Supabase, deployed to Railway. Full plan: docs/ROADMAP.md in the repo.",
 
-  phase: "M1–M2 + M4 shipped · M3 proving the day",
+  phase: "M3 blocked on Luke · building M7 retail",
   nextMilestone: {
-    name: "M3 — ACC billing + Splose cutover: rehearse a full patient day end-to-end on staging",
-    date: "M3",
+    name: "M7 — Retail: the clinic shop, sellable with backorder and pre-order",
+    date: "M7",
   },
 
   // ── Milestones ────────────────────────────────────────────────
@@ -40,16 +40,29 @@ module.exports = {
       doneWhen: "The practice can run a day from the in-app diary and appointments are born native (appointments.bookingSource default flipped 'splose' → 'native', PR #73, in prod)" },
     { id: "M2", name: "Native invoicing", status: "done",
       doneWhen: "A GST-compliant invoice originates in the app and is paid via Stripe with no Splose invoice ID (migration 0021 made sploseInvoiceId nullable, PR #75, in prod)" },
-    { id: "M3", name: "ACC billing + Splose cutover", status: "current",
-      doneWhen: "A full patient day is rehearsed end-to-end on staging with Ricky as the patient — book → attend → note published → invoice → ACC submit → pay — with every step evidenced" },
-    { id: "M3.5", name: "Go-live cutover", status: "next",
-      doneWhen: "SPLOSE_CUTOVER=true, NOTIFICATIONS_PAUSED=false, and Luke works a full day with Splose read-only" },
+    // doneWhen rewritten by Ricky 2026-08-01, and it is deliberately the clinical
+    // + money loop rather than the ACC one: ACC submission cannot be rehearsed at
+    // all until Luke's Vendor ID exists, so the first real ACC submission moved to
+    // M3.5. The milestone kept its number; only its name and doneWhen changed.
+    { id: "M3", name: "Prove the day", status: "blocked",
+      doneWhen: "A full customer booking runs end to end: session completed with notes recorded, summary and reports written and visible in both the client record and the patient's own view, homework created and live in the patient's app, invoice sent automatically, and paid automatically off the patient's saved card under the auto-charge authority given at the end of the session" },
+    { id: "M3.5", name: "Go-live cutover + first ACC submission", status: "next",
+      doneWhen: "SPLOSE_CUTOVER=true, NOTIFICATIONS_PAUSED=false, Luke works a full day with Splose read-only, and one real ACC invoice is submitted from the app and marked paid" },
     { id: "M4", name: "Front desk without a front desk", status: "done",
       doneWhen: "Recalls, waitlist, online intake forms and staff accounts/roles are all live in production (PRs #80, #86, #89, #92 — all shipped 2026-07-21)" },
     { id: "M5", name: "Money & insight", status: "next",
       doneWhen: "Luke reads a month's revenue report in-app and exports it to Xero" },
     { id: "M6", name: "SaaS-ready", status: "next",
       doneWhen: "A second practice signs up, onboards and pays without anyone touching the database" },
+    // Added 2026-08-01. Pulled ahead of M3 because M3 is blocked on Luke (ACC
+    // Vendor ID + the rehearsal) and he was not working that day. Retail shares
+    // no tables and no flows with the cutover, so it can run in parallel safely.
+    // Scope answered by Ricky: public storefront with guest checkout · collect
+    // at clinic or flat-rate NZ shipping, buyer chooses · sizes with tracked
+    // stock BUT overselling allowed (backorder) and pre-order supported ·
+    // Luke manages the catalogue himself in-app.
+    { id: "M7", name: "Retail: the clinic shop", status: "current",
+      doneWhen: "A real customer buys a real garment through the public storefront, pays by card, and Luke marks it collected or shipped" },
   ],
 
   // ── Goals ─────────────────────────────────────────────────────
@@ -133,16 +146,16 @@ module.exports = {
     },
     {
       key: "m3",
-      status: "in-progress",
+      status: "planned",
       title: "M3",
-      subtitle: "ACC billing + cutting the Splose cord",
-      window: "Now",
-      desc: "ACC invoicing is the cutover gate — today ACC is billed entirely through Splose, so Splose cannot go read-only until the app can bill ACC. The code is built and in production but has never been exercised: Vendor ID is unset, the sync is deliberately back ON, and no one has run a whole day through it. M3 now closes on a rehearsal, not a go-live.",
+      subtitle: "Prove the day — blocked on Luke",
+      window: "Blocked",
+      desc: "The clinical and money loop, rehearsed end to end with Ricky as the patient: book, attend, note published with summary and reports on both sides, homework live in the patient's app, invoice raised automatically and auto-charged to the saved card. The code is all in production and none of it has ever been run as one continuous flow. Blocked because it needs Luke, and because ACC submission cannot be exercised until his Vendor ID exists — so ACC moved to M3.5.",
       deliverables: [
-        "One-click Submit to ACC via the email channel (built, inert)",
-        "Reversible SPLOSE_CUTOVER flag (built, sync intentionally back ON)",
-        "A scripted full-day rehearsal on staging, evidenced step by step",
-        "Whatever the rehearsal breaks, fixed",
+        "A scripted full-day rehearsal, evidenced step by step",
+        "Notes → summary → reports visible in both views",
+        "Homework auto-created and live in the patient app",
+        "Invoice auto-raised and auto-charged to a saved card",
       ],
     },
     {
@@ -171,6 +184,20 @@ module.exports = {
         "Waitlist — fill cancellations instead of losing them",
         "Online intake forms — reception-less onboarding",
         "Staff accounts + roles — the 1→3 hire enabler",
+      ],
+    },
+    {
+      key: "m7",
+      status: "in-progress",
+      title: "M7",
+      subtitle: "Retail — the clinic shop",
+      window: "Now",
+      desc: "Luke sells a few pieces of clothing. A lean public storefront on the existing marketing site: browse, pick a size, pay by card via Stripe Checkout, then either collect at the clinic or have it shipped flat-rate anywhere in NZ. Stock is counted but never blocks a sale — running out puts the line on backorder rather than turning the customer away, and products can be listed for pre-order before stock lands. Luke runs the catalogue himself.",
+      deliverables: [
+        "Products + variants + orders schema, Luke-managed catalogue",
+        "Public storefront, cart, guest checkout via Stripe Checkout",
+        "Backorder + pre-order: stock counts, never blocks a sale",
+        "Fulfilment queue: collect at clinic or flat-rate NZ shipping",
       ],
     },
     {
