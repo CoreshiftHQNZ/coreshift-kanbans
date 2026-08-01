@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>38%</strong> complete</div>
-        <div><strong>22</strong>/58 cards done</div>
-        <div>Updated <strong>2026-08-01 01:56 UTC</strong></div>
+        <div><strong>40%</strong> complete</div>
+        <div><strong>23</strong>/58 cards done</div>
+        <div>Updated <strong>2026-08-01 02:21 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -845,11 +845,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">22</div>
+        <div class="status-num">23</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">2</div>
+        <div class="status-num">1</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -943,6 +943,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Real staging environment</div>
+            <div class="recent-desc">Staging existed but shared production&#39;s database and held live Stripe keys — a second front door onto live data and live money, not an environment. Now on its own Supabase branch (`khcuxlkhjscmlmasmwuw`, ~$0.32/day), verified an exact schema match for production (identical fingerprint `bd37241…`, 425 columns, 32 tables) and empty of patient data. Railway repointed server *and* client: the `VITE_` vars mattered because `client/src/lib/supabase.ts` falls back to hardcoded production values when unset, so staging&#39;s login had been silently authenticating against the production auth server. Stripe now a matched **test** pair (account `51TzRyLH`), verified baked into the served bundle. Seeded with a practice and a practitioner login. **Verified end to end against the deployed app:** product created with sizes, stock driven to −3 without clamping, duplicate size 409, unknown id 404, and production still reads 0 products / 0 orders with its 338 users and 3,751 appointments intact. Getting here also required repairing the migration ledger and force-aligning the diverged `staging` branch (content proven byte-identical to `main` first)</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Shop spec</div>
             <div class="recent-desc">docs/SHOP.md: the data model, the backorder and pre-order rules, order state machine, GST treatment, and what is deliberately out of scope. Written and scope-locked before any code, so the three build phases have something to be checked against. Merged to dev on 2026-08-01 via PR #98, on its own so it stays reviewable independently of the build</div>
           </div>
@@ -973,13 +980,6 @@
           <div class="recent-text">
             <div class="recent-title">Staff accounts &amp; roles</div>
             <div class="recent-desc">Live in prod. Add team members in-app from the new Team page: invite as practitioner (gets a diary column) or admin (reception/billing login, no column), with role change + activate/deactivate. Portal invite emailed via Supabase. Migration 0024 (native practitioners). Fine-grained per-role permission enforcement is a follow-up. PR #86, promoted to production 2026-07-21</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">ACC invoicing via email channel — cutover gate</div>
-            <div class="recent-desc">Built and in production. One-click &quot;Submit to ACC&quot; emails a compliant invoice PDF (ACC billing block: provider no., vendor ID, claim no., NHI + service codes + GST) to providerinvoices@acc.co.nz, subject vendorId INV-n, one per email. Status tracking (submitted/paid/declined from ProviderHub). Billing &amp; ACC settings screen for the IDs. Inert until Luke&#39;s Vendor ID is entered — see On Ricky. Electronic channel (8-day, auto-reconciliation) is the M5 upgrade. PR #78</div>
           </div>
         </div>
       </div>
@@ -1018,9 +1018,9 @@
         <div class="card-desc">Reminders, confirmations and recalls stay silent on staging and prod until NOTIFICATIONS_PAUSED=false on both envs. That flip is the moment patients start receiving mail from Go-Chiro rather than Splose, so it is your call and nobody else&#39;s</div>
       </div>
       <div class="card">
-        <div class="card-title">Hand over Stripe TEST keys for staging</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">blocked</span><span class="tag tag-neutral">sk_live_</span><span class="tag tag-neutral">pk_test_</span></div>
-        <div class="card-desc">Staging is running **live** Stripe secret keys (`sk_live_`), with a mismatched `pk_test_` client key. No danger yet because checkout is not built, but a phase 2 purchase test on staging would attempt a real charge on the live account. Nothing else about staging is blocked; this is the last gap before checkout can be tested</div>
+        <div class="card-title">Two-minute staging tidy-up</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">STRIPE_SECRET_KEY</span><span class="tag tag-neutral">STRIPE_PUBLISHABLE_KEY</span><span class="tag tag-neutral">51TEKvRH</span></div>
+        <div class="card-desc">Both are small and neither blocks phase 2. (1) Roll the staging Stripe **test** secret key — it was exposed in a session transcript on 2026-08-01 by a bad redaction regex. Test-mode only, so no real money or data is reachable, but roll it and re-set `STRIPE_SECRET_KEY`. (2) Delete the leftover `STRIPE_PUBLISHABLE_KEY` var from staging — it still holds an old **live** key from a third Stripe account (`51TEKvRH`) and nothing in the codebase reads it. Worth deleting from production too, for the same reason</div>
       </div>
       <div class="card">
         <div class="card-title">Decide on the identifiers left in this repo&#39;s git history</div>
@@ -1036,9 +1036,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">22</span>
+        <span class="col-count">23</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Real staging environment</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">khcuxlkhjscmlmasmwuw</span><span class="tag tag-neutral">bd37241…</span><span class="tag tag-neutral">VITE_</span><span class="tag tag-neutral">client/src/lib/supabase.ts</span><span class="tag tag-neutral">51TzRyLH</span><span class="tag tag-neutral">staging</span><span class="tag tag-neutral">main</span></div>
+        <div class="card-desc">Staging existed but shared production&#39;s database and held live Stripe keys — a second front door onto live data and live money, not an environment. Now on its own Supabase branch (`khcuxlkhjscmlmasmwuw`, ~$0.32/day), verified an exact schema match for production (identical fingerprint `bd37241…`, 425 columns, 32 tables) and empty of patient data. Railway repointed server *and* client: the `VITE_` vars mattered because `client/src/lib/supabase.ts` falls back to hardcoded production values when unset, so staging&#39;s login had been silently authenticating against the production auth server. Stripe now a matched **test** pair (account `51TzRyLH`), verified baked into the served bundle. Seeded with a practice and a practitioner login. **Verified end to end against the deployed app:** product created with sizes, stock driven to −3 without clamping, duplicate size 409, unknown id 404, and production still reads 0 products / 0 orders with its 338 users and 3,751 appointments intact. Getting here also required repairing the migration ledger and force-aligning the diverged `staging` branch (content proven byte-identical to `main` first)</div>
+      </div>
       <div class="card">
         <div class="card-title">Shop spec</div>
         <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">spec</span><span class="tag tag-neutral">merged</span></div>
@@ -1153,14 +1158,9 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">1</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Real staging environment</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">khcuxlkhjscmlmasmwuw</span><span class="tag tag-neutral">VITE_</span><span class="tag tag-neutral">client/src/lib/supabase.ts</span></div>
-        <div class="card-desc">**Done bar the Stripe keys.** Staging existed but shared production&#39;s database — a second front door onto live data, not an environment. Now on its own Supabase branch (`khcuxlkhjscmlmasmwuw`, ~$0.32/day), verified an exact schema match for production (identical fingerprint, 425 columns, 32 tables) and empty of patient data. Railway staging repointed, server *and* client — the `VITE_` vars mattered because `client/src/lib/supabase.ts` falls back to hardcoded production values when unset, so staging&#39;s login was silently authenticating against production. Seeded with a practice and a practitioner login. Phase 1 is deployed and exercised end to end against it: product created with sizes, stock driven to −3 without clamping, duplicate size 409, bogus id 404, and production still reads 0 products / 0 orders. **Outstanding: staging still holds LIVE Stripe keys** — see On Ricky</div>
-      </div>
       <div class="card">
         <div class="card-title">Phase 1 — schema + product admin</div>
         <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span><span class="tag tag-neutral">routes/products.ts</span><span class="tag tag-neutral">services/shop.ts</span></div>
