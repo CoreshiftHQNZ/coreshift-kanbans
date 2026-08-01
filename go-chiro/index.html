@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>41%</strong> complete</div>
-        <div><strong>21</strong>/51 cards done</div>
-        <div>Updated <strong>2026-08-01 00:48 UTC</strong></div>
+        <div><strong>22</strong>/54 cards done</div>
+        <div>Updated <strong>2026-08-01 01:09 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -845,11 +845,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">21</div>
+        <div class="status-num">22</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">2</div>
+        <div class="status-num">1</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -857,11 +857,11 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">4</div>
+        <div class="status-num">5</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">9</div>
+        <div class="status-num">10</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -943,6 +943,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Shop spec</div>
+            <div class="recent-desc">docs/SHOP.md: the data model, the backorder and pre-order rules, order state machine, GST treatment, and what is deliberately out of scope. Written and scope-locked before any code, so the three build phases have something to be checked against. Merged to dev on 2026-08-01 via PR #98, on its own so it stays reviewable independently of the build</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Automated recalls</div>
             <div class="recent-desc">Live in prod. Nudges patients whose last visit was ≥ the practice&#39;s recall interval ago with nothing booked; throttled one-per-interval. Off by default (per-practice toggle + interval in Practice settings); rides the notification stack so it&#39;s silent until launch. &quot;Clients due for a recall&quot; card on the Today dashboard. PR #80, promoted to production 2026-07-21</div>
           </div>
@@ -975,13 +982,6 @@
             <div class="recent-desc">Built and in production. One-click &quot;Submit to ACC&quot; emails a compliant invoice PDF (ACC billing block: provider no., vendor ID, claim no., NHI + service codes + GST) to providerinvoices@acc.co.nz, subject vendorId INV-n, one per email. Status tracking (submitted/paid/declined from ProviderHub). Billing &amp; ACC settings screen for the IDs. Inert until Luke&#39;s Vendor ID is entered — see On Ricky. Electronic channel (8-day, auto-reconciliation) is the M5 upgrade. PR #78</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Splose cutover — built; sync resumed pending switch day</div>
-            <div class="recent-desc">The reversible SPLOSE_CUTOVER flag is built and proven, but the audit showed Luke hasn&#39;t switched off Splose yet — so the sync is back ON to prevent silent divergence (anything he books in Splose keeps flowing in). On the agreed switch morning: Luke stops using Splose → flip the flag → app is sole source of truth. One env var, 30 seconds. PR #83</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -994,7 +994,7 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1018,6 +1018,11 @@
         <div class="card-desc">Reminders, confirmations and recalls stay silent on staging and prod until NOTIFICATIONS_PAUSED=false on both envs. That flip is the moment patients start receiving mail from Go-Chiro rather than Splose, so it is your call and nobody else&#39;s</div>
       </div>
       <div class="card">
+        <div class="card-title">Decide on the identifiers left in this repo&#39;s git history</div>
+        <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">0017a9c</span></div>
+        <div class="card-desc">Luke&#39;s provider and practice numbers were briefly committed to this public repo on 2026-08-01 (commit `0017a9c`). They are gone from the files and the live page but remain in the history. Leave it, or rewrite history and force-push main? Recommendation: leave it — those numbers appear on every ACC invoice Luke issues, so they are not secret. Your call either way, and it stays open until you make it</div>
+      </div>
+      <div class="card">
         <div class="card-title">Grab a full Splose export before cancelling the subscription</div>
         <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-ops">ops</span></div>
         <div class="card-desc">Splose is month-to-month. Once the cord is cut it becomes a read-only archive for a period, but the export has to be taken while the account is still live</div>
@@ -1026,9 +1031,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">21</span>
+        <span class="col-count">22</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Shop spec</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">spec</span><span class="tag tag-neutral">merged</span></div>
+        <div class="card-desc">docs/SHOP.md: the data model, the backorder and pre-order rules, order state machine, GST treatment, and what is deliberately out of scope. Written and scope-locked before any code, so the three build phases have something to be checked against. Merged to dev on 2026-08-01 via PR #98, on its own so it stays reviewable independently of the build</div>
+      </div>
       <div class="card">
         <div class="card-title">Automated recalls</div>
         <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-shipped">shipped</span></div>
@@ -1138,18 +1148,13 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">1</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Shop spec</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">spec</span></div>
-        <div class="card-desc">docs/SHOP.md in the repo: the data model, the backorder and pre-order rules, order state machine, GST treatment, and what is deliberately out of scope. Written before any code so the three build phases have something to be checked against</div>
-      </div>
-      <div class="card">
         <div class="card-title">Phase 1 — schema + product admin</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span></div>
-        <div class="card-desc">Migration 0027 (0026_intake_forms is the current head): products, product_variants, orders, order_items. Then a Products page on the practitioner side for owner and admin roles: create, image upload via the existing Supabase Storage helpers, price GST-inclusive, sizes, stock counts, pre-order flag, publish toggle, drag-order. Nothing customer-facing ships in this phase — the goal is that Luke can load the real catalogue before the storefront exists</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span><span class="tag tag-neutral">routes/products.ts</span><span class="tag tag-neutral">services/shop.ts</span></div>
+        <div class="card-desc">**Code complete, PR #99 open into dev.** Migration 0027 applied to Supabase (verified live: 4 tables, 15 indexes, practices.shop_shipping_flat_cents, product-images bucket). `routes/products.ts` for catalogue CRUD with every query practice-scoped, `services/shop.ts` for slugs, and a Products page with per-size stock steppers, publish toggle, pre-order + expected date, photo upload and the flat shipping rate. Verified: tsc clean, build passes, all six endpoints 401 unauthenticated, slug helpers unit-tested, and the two load-bearing spec claims exercised against the live schema — stock reached −3 after selling 5 against 2, and an order line survived product deletion with its snapshot intact. **Not yet verified:** the page has not been driven in a browser against real data (no local .env, and the only database is shared with production, so no test products were written). First real exercise is Luke loading the catalogue on staging</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1166,7 +1171,7 @@
       <div class="card">
         <div class="card-title">Re-orient on the project after the July pause</div>
         <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-ops">ops</span></div>
-        <div class="card-desc">Nothing moved between 2026-07-21 and 2026-08-01. Before the rehearsal can be scripted, confirm what staging and prod are actually running and that the Supabase and Railway state matches what this board claims. Cheap, and it stops the rehearsal script being written against a remembered system rather than the real one</div>
+        <div class="card-desc">Nothing moved between 2026-07-21 and 2026-08-01. **Supabase half done 2026-08-01:** the live database was checked before migration 0027 and matched the board — head was 0026_intake_forms, 28 public tables, buckets avatars / exercise-videos / session-clips, and Luke is the only non-patient user. **Railway still unchecked** — no one has confirmed what the staging and production services are actually running, or that the env vars match what&#39;s recorded. Do that before the rehearsal is scripted, so it isn&#39;t written against a remembered system</div>
       </div>
       <div class="card">
         <div class="card-title">Script the full-day rehearsal</div>
@@ -1192,7 +1197,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1204,6 +1209,11 @@
         <div class="card-title">Phase 3 — fulfilment + notifications</div>
         <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span></div>
         <div class="card-desc">Orders page for staff: the awaiting-stock queue for backordered and pre-order lines, then collect-at-clinic (ready → collected) or ship-within-NZ (packed → shipped, with a tracking number). Four emails on the existing Postmark stack: order confirmation, awaiting stock, ready to collect, shipped</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Drag-to-reorder the catalogue</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">follow-up</span><span class="tag tag-neutral">sort_order</span></div>
+        <div class="card-desc">The phase 1 plan said &quot;drag-order&quot; and it was not built. The `sort_order` column exists and both the API and the page honour it, so ordering works — there is just no drag UI, and nothing sets it away from 0 today. Not needed for the milestone&#39;s doneWhen (Luke can load and sell a catalogue without reordering it), so it is a card rather than a blocker. Cheapest version: up/down arrows on each row, not a drag library</div>
       </div>
       <div class="card">
         <div class="card-title">System-of-record hardening (remaining)</div>
@@ -1219,7 +1229,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">9</span>
+        <span class="col-count">10</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1264,8 +1274,13 @@
       </div>
       <div class="card">
         <div class="card-title">Fine-grained per-role permission enforcement</div>
-        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">follow-up</span></div>
-        <div class="card-desc">Staff accounts ship with practitioner/admin roles and a diary column distinction, but per-role permission enforcement was explicitly left as a follow-up when roles shipped in PR #86</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">follow-up</span><span class="tag tag-neutral">routes/exercises.ts</span><span class="tag tag-neutral">practitioner</span></div>
+        <div class="card-desc">Staff accounts ship with practitioner/admin roles and a diary column distinction, but per-role permission enforcement was explicitly left as a follow-up when roles shipped in PR #86. Two concrete inconsistencies found while building M7 phase 1: `routes/exercises.ts` gates exercise *creation* on the role being exactly `practitioner`, so a practice_admin cannot add an exercise (while the PUT/DELETE on the same file accept both) — meaning promoting anyone to admin silently costs them a capability. And there is no &quot;owner&quot; role at all, which is why the shop had to gate on the practitioner/admin/super_admin trio rather than the owner-only gate the spec asked for</div>
+      </div>
+      <div class="card">
+        <div class="card-title">A real owner role</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">follow-up</span><span class="tag tag-neutral">practitioner</span></div>
+        <div class="card-desc">docs/SHOP.md wanted the shop restricted to &quot;owner and admin&quot;; the role enum has no owner, and Luke — who owns the practice — is a `practitioner`. So the shop uses the same trio as every other practitioner surface. The distinction only starts to matter with a second practitioner who should not manage retail or see revenue, which is a M6 (SaaS-ready) concern. Doing it properly means an owner role plus a permissions matrix, not another special case</div>
       </div></div>
     </section>
     <section class="column col-neutral">
