@@ -10,7 +10,7 @@
 >
 > Retrofitted into the working model on 2026-08-01 from the hand-rolled board of 2026-07-21. Cards below are preserved as written.
 >
-> **Phase 1 of 3 built 2026-08-01** — schema + product admin, PR #99 open into dev. Migration 0027 is applied to the live database. Phase 2 is the storefront and Stripe Checkout; phase 3 is fulfilment and the four emails.
+> **Phases 1 and 2 built 2026-08-01.** Schema, product admin and the public storefront are live on staging (migrations 0027 and 0028 applied). The shop is held shut on production by `SHOP_PUBLIC_ENABLED=false` until launch day. Phase 3 is fulfilment and the four emails.
 
 ---
 
