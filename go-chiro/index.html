@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>41%</strong> complete</div>
-        <div><strong>22</strong>/54 cards done</div>
-        <div>Updated <strong>2026-08-01 01:09 UTC</strong></div>
+        <div><strong>38%</strong> complete</div>
+        <div><strong>22</strong>/58 cards done</div>
+        <div>Updated <strong>2026-08-01 01:56 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -849,7 +849,7 @@
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">1</div>
+        <div class="status-num">2</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -857,7 +857,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">5</div>
+        <div class="status-num">7</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -994,7 +994,7 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1016,6 +1016,11 @@
         <div class="card-title">Say when notifications go live</div>
         <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">decision</span></div>
         <div class="card-desc">Reminders, confirmations and recalls stay silent on staging and prod until NOTIFICATIONS_PAUSED=false on both envs. That flip is the moment patients start receiving mail from Go-Chiro rather than Splose, so it is your call and nobody else&#39;s</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Hand over Stripe TEST keys for staging</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">blocked</span><span class="tag tag-neutral">sk_live_</span><span class="tag tag-neutral">pk_test_</span></div>
+        <div class="card-desc">Staging is running **live** Stripe secret keys (`sk_live_`), with a mismatched `pk_test_` client key. No danger yet because checkout is not built, but a phase 2 purchase test on staging would attempt a real charge on the live account. Nothing else about staging is blocked; this is the last gap before checkout can be tested</div>
       </div>
       <div class="card">
         <div class="card-title">Decide on the identifiers left in this repo&#39;s git history</div>
@@ -1148,9 +1153,14 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Real staging environment</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">khcuxlkhjscmlmasmwuw</span><span class="tag tag-neutral">VITE_</span><span class="tag tag-neutral">client/src/lib/supabase.ts</span></div>
+        <div class="card-desc">**Done bar the Stripe keys.** Staging existed but shared production&#39;s database — a second front door onto live data, not an environment. Now on its own Supabase branch (`khcuxlkhjscmlmasmwuw`, ~$0.32/day), verified an exact schema match for production (identical fingerprint, 425 columns, 32 tables) and empty of patient data. Railway staging repointed, server *and* client — the `VITE_` vars mattered because `client/src/lib/supabase.ts` falls back to hardcoded production values when unset, so staging&#39;s login was silently authenticating against production. Seeded with a practice and a practitioner login. Phase 1 is deployed and exercised end to end against it: product created with sizes, stock driven to −3 without clamping, duplicate size 409, bogus id 404, and production still reads 0 products / 0 orders. **Outstanding: staging still holds LIVE Stripe keys** — see On Ricky</div>
+      </div>
       <div class="card">
         <div class="card-title">Phase 1 — schema + product admin</div>
         <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span><span class="tag tag-neutral">routes/products.ts</span><span class="tag tag-neutral">services/shop.ts</span></div>
@@ -1197,7 +1207,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1209,6 +1219,16 @@
         <div class="card-title">Phase 3 — fulfilment + notifications</div>
         <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span></div>
         <div class="card-desc">Orders page for staff: the awaiting-stock queue for backordered and pre-order lines, then collect-at-clinic (ready → collected) or ship-within-NZ (packed → shipped, with a tracking number). Four emails on the existing Postmark stack: order confirmation, awaiting stock, ready to collect, shipped</div>
+      </div>
+      <div class="card">
+        <div class="card-title">The `Deploy` workflow is broken</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">follow-up</span><span class="tag tag-neutral">.github/workflows/deploy.yml</span><span class="tag tag-neutral">bervProject/railway-deploy@main</span><span class="tag tag-neutral">railway: not found</span></div>
+        <div class="card-desc">`.github/workflows/deploy.yml` uses `bervProject/railway-deploy@main`, which fails with `railway: not found` and warns on invalid inputs. It has been failing on every run, not just recent ones. Railway auto-deploys from the watched branch anyway, so nothing is actually broken in the pipeline — this workflow is a redundant legacy step producing permanent red X&#39;s on the repo. Delete it or fix it; red CI that everyone ignores is worse than no CI</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Migration ledger drift — watch for a repeat</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">follow-up</span><span class="tag tag-neutral">supabase_migrations.schema_migrations</span><span class="tag tag-neutral">001_initial_schema</span><span class="tag tag-neutral">apply_migration</span><span class="tag tag-neutral">apply_migration</span></div>
+        <div class="card-desc">`supabase_migrations.schema_migrations` was missing its first four migrations, including `001_initial_schema`, because the earliest ones were applied by drizzle push or the dashboard rather than `apply_migration`. Repaired 2026-08-01 (23 → 27 rows), which is what made the staging branch buildable. Anything applied outside `apply_migration` from here re-opens the same hole and silently breaks the next branch, clone or restore</div>
       </div>
       <div class="card">
         <div class="card-title">Drag-to-reorder the catalogue</div>
