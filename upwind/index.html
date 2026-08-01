@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>49%</strong> complete</div>
-        <div><strong>74</strong>/151 cards done</div>
-        <div>Updated <strong>2026-08-01 02:46 UTC</strong></div>
+        <div><strong>48%</strong> complete</div>
+        <div><strong>74</strong>/154 cards done</div>
+        <div>Updated <strong>2026-08-01 02:59 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">9</div>
+        <div class="status-num">10</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -971,7 +971,7 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -988,6 +988,11 @@
         <div class="card-title">Fund the Openprovider balance</div>
         <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">decision</span></div>
         <div class="card-desc">Sits at US$0.00. Domain search and quoting are live; registration cannot be built against an unfunded account</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sign off the plugins scope — five decisions</div>
+        <div class="card-tags"><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">plugins</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">SCOPE-plugins.md</span><span class="tag tag-neutral">splitInvoiceAmounts()</span></div>
+        <div class="card-desc">`SCOPE-plugins.md` is written and the research is done; nothing else on plugins can start until these are answered. **(1) Do partners earn commission on plugin add-ons, at what rate, and does it count toward their tier?** Today the answer is *yes, at the hosting rate, by accident* — `splitInvoiceAmounts()` never looks at a price id. **(2) Pricing** — recommended: Tier 1 free inside the US$49, Request-a-booking US$15/mo, Order-ahead US$29/mo. **(3) Does the native booking/ordering tier wait for the support stack?** Recommended yes — today our worst failure is &quot;my website looks wrong&quot;; with ordering it becomes &quot;we lost a Friday night&quot;, and the wiki/help/chat/escalation stack is still unbuilt. **(4) Which vendor first for Tier 1?** Recommended **Timely** — NZ-built, strong in barber/salon/physio, overlay widget keeps the visitor on the site. **(5) Hardware in or out for the first two years?** Recommended out — software notification rail first, cloud receipt printer only against a customer asking for one</div>
       </div>
       <div class="card">
         <div class="card-title">Request zero-data-retention from Anthropic, and get a DPA signed</div>
@@ -1439,9 +1444,14 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week — launch wave</h2>
-        <span class="col-count">9</span>
+        <span class="col-count">10</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🔴 Cache purge skips custom domains entirely — and two shipped fixes are narrower than their cards claim</div>
+        <div class="card-tags"><span class="tag tag-neutral">bug</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">purgeSiteCache()</span><span class="tag tag-neutral">{files:[…]}</span><span class="tag tag-neutral">urlsFor()</span><span class="tag tag-neutral">https://&lt;subdomain&gt;.&lt;zoneRoot&gt;</span><span class="tag tag-neutral">_shared/purgeCache.ts:62-78</span><span class="tag tag-neutral">:95-100</span><span class="tag tag-neutral">domains</span><span class="tag tag-neutral">purge-cache/index.ts:49</span><span class="tag tag-neutral">stripe-webhook/index.ts:92</span><span class="tag tag-neutral">s-maxage=86400</span><span class="tag tag-neutral">&lt;sub&gt;.upwind.page</span><span class="tag tag-neutral">upwind.page</span><span class="tag tag-neutral">theboys.co.nz</span><span class="tag tag-neutral">domains.hostname</span><span class="tag tag-neutral">Cache-Tag: site:&lt;id&gt;</span><span class="tag tag-neutral">index.ts:128</span></div>
+        <div class="card-desc">Found 1 Aug while scoping plugins. `purgeSiteCache()` posts `{files:[…]}` and `urlsFor()` builds every URL from `https://&lt;subdomain&gt;.&lt;zoneRoot&gt;` (`_shared/purgeCache.ts:62-78`, `:95-100`). **Nothing on the purge path ever reads the `domains` table**, and both callers pass only a subdomain (`purge-cache/index.ts:49`, `stripe-webhook/index.ts:92`). Pages are cached `s-maxage=86400`. **Two consequences, both of which contradict a Done card.** (1) A customer on their own domain publishes an edit and can wait **up to 24 hours** to see it, while `&lt;sub&gt;.upwind.page` updates instantly — the worst possible shape, because the one URL they check is the slow one. (2) **&quot;Cancelled sites stop being served&quot; only holds on `upwind.page`.** The webhook purge on cancel has the same gap, so a cancelled site on a custom domain keeps serving real content for 24h — which is the audit-p1 bug that card records as closed. Not hypothetical for long: Cloudflare for SaaS is live and verified on `theboys.co.nz`. **Fix:** add active `domains.hostname` rows to the URL list. **Not** the `Cache-Tag: site:&lt;id&gt;` the renderer emits at `index.ts:128` — tag purging is Cloudflare **Enterprise**, so that header is decorative on our plan and reaching for it would look like a fix and do nothing. Verify the plan tier before either route</div>
+      </div>
       <div class="card">
         <div class="card-title">✅ DECIDED: when is it a layout, and when is it a setting?</div>
         <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">sections</span><span class="tag tag-neutral">taxonomy</span><span class="tag tag-neutral">CORESHIFT-DESIGN-ENGINE.md</span><span class="tag tag-neutral">8e8680b</span><span class="tag tag-neutral">items.length</span></div>
@@ -1583,9 +1593,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>🅿️ Parking Lot — consciously deferred, needs a decision</h2>
-        <span class="col-count">37</span>
+        <span class="col-count">38</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">M10–M13 — Plugins: booking and ordering on an Upwind site</div>
+        <div class="card-tags"><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">plugins</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">research</span><span class="tag tag-neutral">SCOPE-plugins.md</span><span class="tag tag-neutral">NewSiteModal.tsx:244</span><span class="tag tag-neutral">TRACK_FMT</span><span class="tag tag-neutral">render.tsx:37-67</span><span class="tag tag-neutral">submit-form</span><span class="tag tag-neutral">leads</span><span class="tag tag-neutral">splitInvoiceAmounts()</span><span class="tag tag-neutral">hosting_commission</span><span class="tag tag-neutral">purge-cache</span></div>
+        <div class="card-desc">Ricky, 1 Aug: *&quot;if we sell a site to a cafe they have other 3rd parties (or manual processes) that mean booking a table, ordering for pickup or delivery needs to happen off the Upwind site… a plugins marketplace… not a now function but I would like to research and plan it.&quot;* **Researched and scoped 1 Aug — `SCOPE-plugins.md` in the repo.** Two different problems hide inside the word &quot;plugins&quot;: the business that **already has** a tool (integration — small) and the business that **has nothing** (product — large). **Tier 0 is already shipped and nobody noticed:** the no-website create path already puts their Uber Eats / booking link in the hero as a button (`NewSiteModal.tsx:244`), so the real question is what is worth more than a link. **So is the injection mechanism:** published sites already run whitelisted third-party JS — `TRACK_FMT` validates a GTM/GA4/Meta/TikTok id shape and emits that vendor&#39;s snippet server-side (`render.tsx:37-67`). A plugin is that, with a button attached. **And the interactive round trip:** the contact form is an injected capture script → `submit-form` edge function → `leads` row → email, with the recipient resolved server-side from published content — which is most of a booking request already. **Recommendations, all Ricky&#39;s to accept or reject:** Tier 1 (embed the tool they already pay for — Timely first, NZ-built, overlay widget) ships **free inside the US$49**, because charging to paste a Fresha button is a toll booth on day one; the first *native* plugin is **&quot;Request a booking&quot;, not &quot;Booking&quot;** — a form with a date and a two-state machine, no availability engine, no deposits, no Stripe Connect, ~10% of the build for most of the value; **pickup only, delivery never** (delivery is a driver fleet). The commercial case is the commission maths: Uber Eats takes ~30% in NZ, Delivereasy up to 20%, so a cafe doing NZ$3k/mo of pickup pays ~NZ$900/mo — against a US$29/mo module. **🔴 One silent money bug found while scoping:** `splitInvoiceAmounts()` buckets invoice lines into recurring vs everything-else and never looks at a price id, so a recurring add-on wired today would pay the partner `hosting_commission` at their hosting tier automatically, and the clawback matcher would not reverse it. **🔴 One trap that would surface as a customer losing money:** the pause switch (&quot;we&#39;re slammed, stop taking orders&quot;) cannot live in published HTML — pages cache 24h at the edge and `purge-cache` purges **by URL list, which omits custom domains**, so a cafe on their own domain would keep taking orders for a day. Anything time-sensitive must be fetched at runtime. **Sequencing:** M10 decision → M11 Connect → M12 add-on billing → M13 Request a booking; **must not jump M4 (first sale) or M8**, and displacing M9 is a decision not a default. Five open questions for Ricky are listed at the end of the scope doc</div>
+      </div>
       <div class="card">
         <div class="card-title">Kill light/dark mode — make each theme simply light or dark</div>
         <div class="card-tags"><span class="tag tag-neutral">themes</span><span class="tag tag-neutral">a11y</span><span class="tag tag-neutral">simplicity</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">.cta</span><span class="tag tag-neutral">.site-footer</span><span class="tag tag-neutral">background: var(--ink); color: #fff</span><span class="tag tag-neutral">--ink</span><span class="tag tag-neutral">[data-mode=&quot;dark&quot;]</span><span class="tag tag-neutral">prefers-color-scheme</span></div>
