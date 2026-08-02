@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>34%</strong> complete</div>
-        <div><strong>10</strong>/29 cards done</div>
-        <div>Updated <strong>2026-08-02 23:21 UTC</strong></div>
+        <div><strong>39%</strong> complete</div>
+        <div><strong>11</strong>/28 cards done</div>
+        <div>Updated <strong>2026-08-02 23:56 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,11 +821,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">10</div>
+        <div class="status-num">11</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">2</div>
+        <div class="status-num">0</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">10</span>
+        <span class="col-count">11</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1008,8 +1008,13 @@
       </div>
       <div class="card">
         <div class="card-title">Lead relay — live and proven end to end</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/v0/</span><span class="tag tag-neutral">reply_to</span><span class="tag tag-neutral">LEAD_FROM</span></div>
-        <div class="card-desc">Pages Function (Turnstile + honeypot + Cloudflare Email Service): a real submission verifies Turnstile and delivers to the sales inbox, confirmed end to end (24 Jul). Fixed en route — the Turnstile script URL (missing `/v0/`), the send payload (plain address strings, not objects), and `reply_to` (snake_case on the REST API). Sends from a Coreshift Email Sending subdomain for now; `LEAD_FROM` switches to the client&#39;s domain at go-live</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/v0/</span><span class="tag tag-neutral">reply_to</span><span class="tag tag-neutral">no-reply@ldmfinance.co.nz</span></div>
+        <div class="card-desc">Pages Function (Turnstile + honeypot + Cloudflare Email Service). Fixed en route: the Turnstile script URL (missing `/v0/`), the send payload (plain address strings, not objects), and `reply_to` (snake_case on the REST API). Now sends from `no-reply@ldmfinance.co.nz` to sales@ldmmotor.group, re-verified end to end from the live domain after the switch (2 Aug)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">No invented content left on the site</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">article()</span></div>
+        <div class="card-desc">Removed in three passes: fabricated homepage testimonials, a fabricated testimonial on /apply, and fabricated guide authors (&quot;Jordan Mackenzie&quot;, &quot;Priya Sharma&quot;). Guides are now attributed to LDM Finance itself, with `article()` referencing the Organization node and taking an optional named author so a real expert can be credited later. Verified testimonials live in one shared module so the pages cannot drift (PRs #13, #15, #19)</div>
       </div>
       <div class="card">
         <div class="card-title">Stock feed — LIVE with real Motorcentral stock</div>
@@ -1020,19 +1025,9 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">0</span>
       </header>
-      <div class="cards">
-      <div class="card">
-        <div class="card-title">Point lead emails at the new domain</div>
-        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">LEAD_FROM</span><span class="tag tag-neutral">no-reply@ldmfinance.co.nz</span><span class="tag tag-neutral">no-reply@send.coreshifthq.com</span></div>
-        <div class="card-desc">ldmfinance.co.nz is onboarded to Cloudflare Email Sending. Last step is switching `LEAD_FROM` on the Pages project to `no-reply@ldmfinance.co.nz` and redeploying. Leads currently send from `no-reply@send.coreshifthq.com` and arrive fine, so this is polish rather than a blocker</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Guide author bylines</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
-        <div class="card-desc">Six guides are still attributed to invented authors (&quot;Jordan Mackenzie&quot;, &quot;Priya Sharma&quot;), flagged in-page as placeholders. Last fabricated content on the site. Options: attribute to LDM Finance as the organisation (safe, recommended), to Louis or Logan (stronger E-E-A-T but implies they wrote it), or ask the client whether they will be credited as reviewers</div>
-      </div></div>
+      <div class="cards"><div class="empty">No items</div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -1093,9 +1088,9 @@
         <div class="card-desc">PR #6 (analytics), #7 (client feedback), #8/#9 (live stock feed) merged to main. Production serves the current build with the client-feedback changes live (Marac naming, /terms page, UDC disclaimer wording). A Cloudflare build-queue outage (20–23 Jul) was bypassed with a direct `wrangler pages deploy`; auto-deploys have since recovered</div>
       </div>
       <div class="card">
-        <div class="card-title">Sent Peter the SFTP details; Railway retired</div>
+        <div class="card-title">SFTP endpoint handed over; Railway retired</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Endpoint moved to Fly.io (dedicated IP, port 22) after Peter confirmed Motorcentral needs standard port 22; new host + port sent, username/password unchanged. Railway SFTPGo service deleted. Awaiting Motorcentral&#39;s first push</div>
+        <div class="card-desc">Endpoint moved to Fly.io (dedicated IP, port 22) after Peter confirmed Motorcentral needs standard port 22; details sent and Motorcentral&#39;s first push landed successfully. Railway SFTPGo service deleted</div>
       </div>
       <div class="card">
         <div class="card-title">Relay configured end to end</div>
@@ -1103,9 +1098,9 @@
         <div class="card-desc">Turnstile widget + keys live, all Pages secrets set, R2 vars on the build env, Email Sending domain onboarded, `LEAD_TO` set to sales@ldmmotor.group. Lead delivery proven end to end (24 Jul)</div>
       </div>
       <div class="card">
-        <div class="card-title">Phase 2/3 content pages — built, in PR</div>
+        <div class="card-title">Phase 2/3 content pages — live</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">17 pages from ia.md built and verified (astro check + build clean, browser-smoke-tested): car / commercial / truck / ute / balloon-pcp hubs, fleet + machinery finance, two truck Level-C pages, five guides + the guides hub, and the calculator + commercial FAQ sub-hubs. Hub/guide/FAQ cross-links and FINANCE_PRODUCTS wired to match. PR #10 into dev</div>
+        <div class="card-desc">17 pages from ia.md, merged and serving: car / commercial / truck / ute / balloon-pcp hubs, fleet + machinery finance, two truck Level-C pages, five guides + the guides hub, and the calculator + commercial FAQ sub-hubs. Hub/guide/FAQ cross-links and FINANCE_PRODUCTS wired to match. Site is now 84 pages (PR #10)</div>
       </div></div>
     </section>
     <section class="column col-backlog">
@@ -1115,9 +1110,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Analytics accounts</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-blocked">blocked-by:gp</span></div>
-        <div class="card-desc">GA4 property, GSC + Bing verification, Peec AI, Cloudflare Web Analytics. The on-site side is done: GA4 funnel events (calculator/application/enquiry, fleet distinct) are instrumented and dormant, IndexNow key served, env-driven GA4/CF slots in the layout. Just needs the platform IDs from GP</div>
+        <div class="card-title">Named-expert bylines (E-E-A-T upside)</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">article()</span></div>
+        <div class="card-desc">Guides are attributed to LDM Finance as the organisation, which is accurate but weaker than a named expert on the E-E-A-T axis that seo-readiness §2.2 targets. If Louis or Logan will be credited as reviewers, `article()` already accepts a named author — no markup change needed. Only worth raising if the conversation comes up naturally; do not invent a person</div>
       </div>
       <div class="card">
         <div class="card-title">Remaining ia.md pages (deferred)</div>
