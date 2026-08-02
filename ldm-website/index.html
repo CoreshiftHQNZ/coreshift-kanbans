@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>37%</strong> complete</div>
         <div><strong>10</strong>/27 cards done</div>
-        <div>Updated <strong>2026-07-28 03:59 UTC</strong></div>
+        <div>Updated <strong>2026-08-02 23:08 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1041,14 +1041,14 @@
         <div class="card-desc">The client&#39;s real draft content is now live on /privacy and /terms, with a visible &quot;working draft, pending final legal review&quot; notice. Their lawyer&#39;s review is the only thing outstanding; removing the notice is a one-line change</div>
       </div>
       <div class="card">
-        <div class="card-title">Domain decision: ldmfinance.co.nz</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span></div>
-        <div class="card-desc">Jack proposed it in place of finance.ldmmotor.group, pending Logan/Louis. Changes canonicals, schema, sitemaps and the email sending domain, so it needs settling before go-live rather than after</div>
+        <div class="card-title">Analytics + Search Console accounts</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-blocked">blocked-by:gp</span></div>
+        <div class="card-desc">GA4 property, Search Console and Bing verification, Peec AI. The on-site instrumentation is built and dormant; only the platform IDs are missing</div>
       </div>
       <div class="card">
-        <div class="card-title">DNS + Cloudflare account</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span></div>
-        <div class="card-desc">DNS currently sits with &quot;I want my name&quot;. Moving ldmmotor.group to Cloudflare is needed for both the custom domain and sending finance emails from the client&#39;s domain. Recommendation sent: a client-owned account we administer; commercials are Keitha&#39;s call</div>
+        <div class="card-title">Keyword sign-off for the phase-2 pages</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:gp</span></div>
+        <div class="card-desc">Also gates the deferred OPPORTUNITY pages (audience hubs, model landers), which stay unbuilt until target volumes are confirmed</div>
       </div>
       <div class="card">
         <div class="card-title">UDC calculator</div>
@@ -1073,9 +1073,9 @@
         <div class="card-desc">The site claimed LDM is &quot;a registered financial service provider&quot; (they hold no FSPR registration; it now describes the referral arrangement), and published a placeholder address and phone — including in the lead-relay error messages, which told customers to ring a number that is not LDM&#39;s. NAP verified against LDM&#39;s live site, the legal draft and Louis&#39;s signature. Stale specs that mandated the FSPR number were corrected too, so it cannot be rebuilt from an obsolete brief</div>
       </div>
       <div class="card">
-        <div class="card-title">Domain confirmed (superseded)</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
-        <div class="card-desc">Client confirmed finance.ldmmotor.group (20 Jul), but Jack has since proposed ldmfinance.co.nz. See Blocked</div>
+        <div class="card-title">Domain settled: ldmfinance.co.nz, Coreshift-managed</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">site</span><span class="tag tag-neutral">SITE.url</span></div>
+        <div class="card-desc">Replaces the finance.ldmmotor.group subdomain, keeping the finance site independent of the Motorcentral-hosted parent. Applied in the two places that drive everything (astro.config `site`, `SITE.url`); canonicals, both sitemaps, robots, JSON-LD @ids, og:url, llms.txt and the products API all verified on the new origin (PR #17/#18). **Unblocks the DNS question entirely** — no access to ldmmotor.group is needed now. Remaining: register the domain, add it to the Coreshift Cloudflare account, attach it to the Pages project, and move the lead-relay sending address to it</div>
       </div>
       <div class="card">
         <div class="card-title">All PRs merged, production current</div>
