@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>37%</strong> complete</div>
-        <div><strong>10</strong>/27 cards done</div>
-        <div>Updated <strong>2026-08-02 23:08 UTC</strong></div>
+        <div><strong>34%</strong> complete</div>
+        <div><strong>10</strong>/29 cards done</div>
+        <div>Updated <strong>2026-08-02 23:21 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -713,15 +713,15 @@
       <div class="hero-eyebrow">INTERNAL · LIVE OPS DASHBOARD</div>
       <h1 class="hero-title">LDM Finance Website</h1>
       <p class="hero-tagline">Vehicle finance built for how New Zealand businesses actually operate.</p>
-      <p class="hero-desc">Standalone finance-first site for LDM Motor Group at finance.ldmmotor.group — one application assessed across a multi-lender panel (UDC Finance, Marac, Avanti). Astro static build on Cloudflare Pages with live Motorcentral stock; the calculator and three-step application are the conversion surfaces.</p>
+      <p class="hero-desc">Standalone finance-first site for LDM Motor Group, live at ldmfinance.co.nz — one application assessed across a multi-lender panel (UDC Finance, Marac, Avanti). Astro static build on Cloudflare Pages with live Motorcentral stock; the calculator and three-step application are the conversion surfaces.</p>
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">Phase 2 · Wiring</span>
+          <span class="phase-pill-value">Phase 3 · Content &amp; sign-off</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Live systems on: stock feed + lead relay <span class="phase-pill-date">Q3 2026</span></span>
+          <span class="phase-pill-value">Client sign-off: UDC wording + legal review <span class="phase-pill-date">Q3 2026</span></span>
         </div>
       </div>
     </section>
@@ -810,9 +810,9 @@
           </div>
           <div class="phase-title">Phase 4 <span class="phase-subtitle">Go-live</span></div>
           <div class="phase-window">After sign-off</div>
-          <p class="phase-desc">Move hosting to the client&#39;s Cloudflare account and cut DNS. The SFTPGo sidecar insulates Motorcentral from the switch.</p>
+          <p class="phase-desc">Final sign-off and post-launch monitoring. The domain is already live on ldmfinance.co.nz under Coreshift management, so there is no DNS cutover to run.</p>
           <ul class="phase-deliverables">
-            <li>Pages project recreated on client account</li><li>DNS switch to finance.ldmmotor.group (Jack/LDM)</li><li>Better Stack uptime + Sentinel onboarding</li><li>Post-launch SEO/GEO/AEO audit vs targets</li>
+            <li>Domain live at ldmfinance.co.nz (done — Coreshift-managed)</li><li>Better Stack uptime + Sentinel onboarding</li><li>Post-launch SEO/GEO/AEO audit vs targets</li>
           </ul>
         </div>
       </div>
@@ -825,7 +825,7 @@
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
+        <div class="status-num">2</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -897,7 +897,7 @@
           <div class="role-avatar">L</div>
           <div class="role-text">
             <div class="role-name">Client <span class="role-person">LDM Motor Group (Jack)</span></div>
-            <div class="role-verbs">Approve · supply content · switch DNS</div>
+            <div class="role-verbs">Approve · supply content · sign off legals</div>
           </div>
         </div>
       </div>
@@ -1020,9 +1020,19 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">0</span>
+        <span class="col-count">2</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Point lead emails at the new domain</div>
+        <div class="card-tags"><span class="tag tag-phase-1">phase-1</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">LEAD_FROM</span><span class="tag tag-neutral">no-reply@ldmfinance.co.nz</span><span class="tag tag-neutral">no-reply@send.coreshifthq.com</span></div>
+        <div class="card-desc">ldmfinance.co.nz is onboarded to Cloudflare Email Sending. Last step is switching `LEAD_FROM` on the Pages project to `no-reply@ldmfinance.co.nz` and redeploying. Leads currently send from `no-reply@send.coreshifthq.com` and arrive fine, so this is polish rather than a blocker</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Guide author bylines</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span></div>
+        <div class="card-desc">Six guides are still attributed to invented authors (&quot;Jordan Mackenzie&quot;, &quot;Priya Sharma&quot;), flagged in-page as placeholders. Last fabricated content on the site. Options: attribute to LDM Finance as the organisation (safe, recommended), to Louis or Logan (stronger E-E-A-T but implies they wrote it), or ask the client whether they will be credited as reviewers</div>
+      </div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -1073,9 +1083,9 @@
         <div class="card-desc">The site claimed LDM is &quot;a registered financial service provider&quot; (they hold no FSPR registration; it now describes the referral arrangement), and published a placeholder address and phone — including in the lead-relay error messages, which told customers to ring a number that is not LDM&#39;s. NAP verified against LDM&#39;s live site, the legal draft and Louis&#39;s signature. Stale specs that mandated the FSPR number were corrected too, so it cannot be rebuilt from an obsolete brief</div>
       </div>
       <div class="card">
-        <div class="card-title">Domain settled: ldmfinance.co.nz, Coreshift-managed</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">site</span><span class="tag tag-neutral">SITE.url</span></div>
-        <div class="card-desc">Replaces the finance.ldmmotor.group subdomain, keeping the finance site independent of the Motorcentral-hosted parent. Applied in the two places that drive everything (astro.config `site`, `SITE.url`); canonicals, both sitemaps, robots, JSON-LD @ids, og:url, llms.txt and the products API all verified on the new origin (PR #17/#18). **Unblocks the DNS question entirely** — no access to ldmmotor.group is needed now. Remaining: register the domain, add it to the Coreshift Cloudflare account, attach it to the Pages project, and move the lead-relay sending address to it</div>
+        <div class="card-title">LIVE on ldmfinance.co.nz</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">The site now serves on its own domain, registered and managed by Coreshift, replacing the finance.ldmmotor.group subdomain so the finance site stays independent of the Motorcentral-hosted parent. Domain on the Coreshift Cloudflare account, attached to the Pages project, TLS issued, Turnstile hostname added, and ldmfinance.co.nz onboarded to Email Sending. Verified end to end: every key page 200, valid certificate, http→https 301, and canonicals, both sitemaps, robots, JSON-LD @ids, og:url, llms.txt and the products API all on the new origin (PR #17/#18). **Killed the DNS blocker outright** — no access to ldmmotor.group needed, and no migration for the client to plan</div>
       </div>
       <div class="card">
         <div class="card-title">All PRs merged, production current</div>

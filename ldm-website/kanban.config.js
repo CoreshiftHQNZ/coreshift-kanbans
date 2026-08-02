@@ -6,14 +6,14 @@ module.exports = {
   title: "LDM Finance Website",
   tagline: "Vehicle finance built for how New Zealand businesses actually operate.",
   description:
-    "Standalone finance-first site for LDM Motor Group at finance.ldmmotor.group — " +
+    "Standalone finance-first site for LDM Motor Group, live at ldmfinance.co.nz — " +
     "one application assessed across a multi-lender panel (UDC Finance, Marac, Avanti). " +
     "Astro static build on Cloudflare Pages with live Motorcentral stock; the calculator and " +
     "three-step application are the conversion surfaces.",
 
-  phase: "Phase 2 · Wiring",
+  phase: "Phase 3 · Content & sign-off",
   nextMilestone: {
-    name: "Live systems on: stock feed + lead relay",
+    name: "Client sign-off: UDC wording + legal review",
     date: "Q3 2026",
   },
 
@@ -59,7 +59,7 @@ module.exports = {
   roles: [
     { initial: "A", name: "Owner", person: "Abe", verbs: "Decide · prioritise · review" },
     { initial: "C", name: "Builder", person: "Claude Code", verbs: "Design · code · ship" },
-    { initial: "L", name: "Client", person: "LDM Motor Group (Jack)", verbs: "Approve · supply content · switch DNS" },
+    { initial: "L", name: "Client", person: "LDM Motor Group (Jack)", verbs: "Approve · supply content · sign off legals" },
   ],
 
   phases: [
@@ -122,10 +122,9 @@ module.exports = {
       title: "Phase 4",
       subtitle: "Go-live",
       window: "After sign-off",
-      desc: "Move hosting to the client's Cloudflare account and cut DNS. The SFTPGo sidecar insulates Motorcentral from the switch.",
+      desc: "Final sign-off and post-launch monitoring. The domain is already live on ldmfinance.co.nz under Coreshift management, so there is no DNS cutover to run.",
       deliverables: [
-        "Pages project recreated on client account",
-        "DNS switch to finance.ldmmotor.group (Jack/LDM)",
+        "Domain live at ldmfinance.co.nz (done — Coreshift-managed)",
         "Better Stack uptime + Sentinel onboarding",
         "Post-launch SEO/GEO/AEO audit vs targets",
       ],
