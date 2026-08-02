@@ -384,7 +384,7 @@
           <a href="../merlin/">its own board</a>. The names are one hyphen apart; the systems are not related.
         </div>
         <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">
-          <span style="color: var(--ink);">Phases 0&ndash;3 complete &middot; Phase 4 half built &mdash; the recording step is observable at last, and closing it found a Phase 0 security defect &mdash; 41 of 72 tasks.</span>
+          <span style="color: var(--ink);">Phases 0&ndash;3 complete &middot; Phase 4 half built &mdash; the invisible step has now been <strong>caught working in a live session</strong>, and closing it found a Phase 0 security defect &mdash; 41 of 72 tasks.</span>
           The telemetry spine works end to end: a signed event emitted by the plugin lands in Supabase, and a
           forged one doesn&rsquo;t. The adaptive engine, per-user memory and the hash-chained ledger are written.
           <strong>The plugin has now been loaded by a host</strong>, both skills surface, and a real intake
@@ -455,13 +455,27 @@
           than a cover story</strong>: Merlin never volunteers that it is assessing, and it never lies about what it
           does either &mdash; ask it outright and it still answers straight. A test now refuses assessment language
           in any skill&rsquo;s name, so the next one fails the build rather than eight walkthroughs.
+          <strong>And then the review found the thing none of that would have caught: the step had never actually
+          run.</strong> Nine walkthroughs, every visible part of the closure correct, and the one invisible part
+          silently skipped every single time &mdash; the test that was supposed to guard it only ever checked that
+          the instruction was written down, not that anything acted on it. <strong>The fix was to stop asking a
+          separate step to run and fold the work into the one already happening</strong>, and the reason it went
+          undetected for nine runs is the same reason it broke: something that produces nothing leaves nothing
+          behind when it doesn&rsquo;t happen.
+          <strong>Fixed 2 Aug and confirmed working 3 Aug &mdash; in a real session, checked at the database rather
+          than by reading the transcript.</strong> The step ran 51 seconds after the conversation closed, reported
+          honestly that it had nothing to judge yet (Keitha&rsquo;s wording is still outstanding), and said not one
+          word about it to the learner. <strong>That last part is the whole promise of this phase</strong>, and it
+          is the first run in ten that could actually test it: on the previous nine there was nothing running to
+          stay quiet about. <em>Three new ways it could have gone wrong were each watched for, and none of them
+          happened.</em>
         </div>
         <div class="progress-bars">
           <div class="pbar"><div class="pbar-label"><strong>P0</strong> Foundations</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>P1</strong> Engine + memory</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>P2</strong> Magic moment</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>P3</strong> Real work</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>P4</strong> Invisible assessment</div><div class="pbar-track"><div class="pbar-fill" style="width: 20%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>P4</strong> Invisible assessment</div><div class="pbar-track"><div class="pbar-fill" style="width: 33%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>P5</strong> Manager visibility</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>P6</strong> Launch readiness</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
         </div>
@@ -529,7 +543,7 @@
         <div class="col next">
           <div class="col-head"><div class="col-title"><span class="dot"></span>Now — Phase 4, the rigour half</div><div class="col-count">9</div></div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m4">P4</span><span class="card-id">TASK-039 → 044</span></div><h3 class="card-title">The rigour half of invisible assessment</h3><p class="card-note"><strong>The writes landed 3 Aug, so what is left here is judgement quality rather than plumbing.</strong> What is left: the rigour mechanisms (judge against the criterion as written, more than one pass, and a confidence threshold below which nothing is awarded), the ledger and digest writes, and the phase gate. <strong>Nothing is awarded until the threshold exists</strong> &mdash; the assessor currently reads, judges, and records that it judged without concluding, which is a real state rather than a stub. <strong>Three disagreements between existing files were found while writing it and are each filed where they will bite:</strong> the confidence scale is stated three different ways in three documents; one field name means a local pointer in one place and a hash in another, so the natural implementation would silently drop a competency somebody earned; and the database would accept the reserved example id. <em>Also here: Keitha&rsquo;s F1&ndash;F10 wording, and the Cowork reference refresh.</em></p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">P4</span><span class="card-id">TASK-039 → 044</span></div><h3 class="card-title">The rigour half of invisible assessment</h3><p class="card-note"><strong>The writes landed 2 Aug and were confirmed working in a live session on 3 Aug, so what is left here is judgement quality rather than plumbing.</strong> The step that does the recognising has now been watched running, at the right moment, silently &mdash; which was the one thing blocking everything else in this column. What is left: the rigour mechanisms (judge against the criterion as written, more than one pass, and a confidence threshold below which nothing is awarded) and the phase gate. <strong>Nothing is awarded until the threshold exists</strong> &mdash; the assessor currently reads, judges, and records that it judged without concluding, which is a real state rather than a stub. <strong>Three disagreements between existing files were found while writing it and are each filed where they will bite:</strong> the confidence scale is stated three different ways in three documents; one field name means a local pointer in one place and a hash in another, so the natural implementation would silently drop a competency somebody earned; and the database would accept the reserved example id. <em>Also here: Keitha&rsquo;s F1&ndash;F10 wording, and the Cowork reference refresh.</em></p></article>
             <article class="card"><div class="card-head"><span class="chip m3">P3</span><span class="card-id">TASK-035b</span></div><h3 class="card-title">What &ldquo;finished&rdquo; means</h3><p class="card-note"><strong>Found by the gate closing, not by the gate failing.</strong> A module may not finish until the learner has run the thing they built &mdash; the rule that stops a module ending as a good conversation. The closure then offers <em>&ldquo;not yet&rdquo;</em> for a learner who hasn&rsquo;t used it, which by that point can never be true. Three closures exist and read <em>tried it</em> &middot; <em>used once</em> &middot; <em>tried it</em>. <strong>Eight runs failed to reach the value the same way each time, and it was twice recorded as missing test coverage before the cause was seen</strong> &mdash; which is the more useful half of the finding: an unreachable state and an untested one look identical from the outside. Soften the finishing rule, redefine the value as <em>not used again since</em>, or retire it and give the parked and abandoned cases their own signal. <strong>The third option also closes a blind spot on the wire</strong> &mdash; a learner who parked, one who walked, and one who quietly gave up are currently indistinguishable, and only the last means something is wrong. <strong>Must land before the manager views read the field.</strong></p></article>
           </div>
         </div>
