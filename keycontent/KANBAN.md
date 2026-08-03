@@ -23,6 +23,7 @@
 - **Report-issue Edge Function + bug_reports table** `phase-2` `shipped` — In-app floating widget (Bug / Suggestion / Question) persists reports to Supabase and fires operator + user-ack emails via Postmark.
 - **PR review standards doc** `phase-2` `shipped` — `docs/standards/pr-reviews.md` in repo; two-phase review (pre-merge description + post-merge staging verification).
 - **W5 in-repo docs** `phase-2` `shipped` — `priority.md`, `incidents.md`, and `OPERATOR.md` published in keycontent-app.
+- **Client-outcomes endpoint for Sentinel** `phase-3` `ops` — `GET /api/client-outcomes` reports per-client job rollups so Sentinel's outcome watch can spot repeat generation failures instead of waiting for a client to complain. Deployed to prod 2026-08-03 (PRs #262/#263/#264) but inert: returns 503 until `SENTINEL_PROBE_TOKEN` is set on KC prod and `keycontent` is added to Sentinel's `OUTCOME_WATCH_TARGETS`.
 
 ## 🟡 In Progress
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coreshift HQ Ops — Kanban</title>
+  <title>KeyContent — Kanban</title>
   <style>
     :root {
       --navy: #0F1E3D;
@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>62%</strong> complete</div>
-        <div><strong>13</strong>/21 cards done</div>
-        <div>Updated <strong>2026-06-01 21:49 UTC</strong></div>
+        <div><strong>64%</strong> complete</div>
+        <div><strong>14</strong>/22 cards done</div>
+        <div>Updated <strong>2026-08-03 15:35 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">13</div>
+        <div class="status-num">14</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -959,7 +959,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">13</span>
+        <span class="col-count">14</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1026,6 +1026,11 @@
         <div class="card-title">W5 in-repo docs</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">priority.md</span><span class="tag tag-neutral">incidents.md</span><span class="tag tag-neutral">OPERATOR.md</span></div>
         <div class="card-desc">`priority.md`, `incidents.md`, and `OPERATOR.md` published in keycontent-app</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Client-outcomes endpoint for Sentinel</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">GET /api/client-outcomes</span><span class="tag tag-neutral">SENTINEL_PROBE_TOKEN</span><span class="tag tag-neutral">keycontent</span><span class="tag tag-neutral">OUTCOME_WATCH_TARGETS</span></div>
+        <div class="card-desc">`GET /api/client-outcomes` reports per-client job rollups so Sentinel&#39;s outcome watch can spot repeat generation failures instead of waiting for a client to complain. Deployed to prod 2026-08-03 (PRs #262/#263/#264) but inert: returns 503 until `SENTINEL_PROBE_TOKEN` is set on KC prod and `keycontent` is added to Sentinel&#39;s `OUTCOME_WATCH_TARGETS`</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
