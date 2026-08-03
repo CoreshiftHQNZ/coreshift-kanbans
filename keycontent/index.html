@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>64%</strong> complete</div>
-        <div><strong>14</strong>/22 cards done</div>
-        <div>Updated <strong>2026-08-03 15:35 UTC</strong></div>
+        <div><strong>65%</strong> complete</div>
+        <div><strong>15</strong>/23 cards done</div>
+        <div>Updated <strong>2026-08-03 21:13 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">14</div>
+        <div class="status-num">15</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -959,7 +959,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">14</span>
+        <span class="col-count">15</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1029,8 +1029,13 @@
       </div>
       <div class="card">
         <div class="card-title">Client-outcomes endpoint for Sentinel</div>
-        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">GET /api/client-outcomes</span><span class="tag tag-neutral">SENTINEL_PROBE_TOKEN</span><span class="tag tag-neutral">keycontent</span><span class="tag tag-neutral">OUTCOME_WATCH_TARGETS</span></div>
-        <div class="card-desc">`GET /api/client-outcomes` reports per-client job rollups so Sentinel&#39;s outcome watch can spot repeat generation failures instead of waiting for a client to complain. Deployed to prod 2026-08-03 (PRs #262/#263/#264) but inert: returns 503 until `SENTINEL_PROBE_TOKEN` is set on KC prod and `keycontent` is added to Sentinel&#39;s `OUTCOME_WATCH_TARGETS`</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">GET /api/client-outcomes</span><span class="tag tag-neutral">keycontent</span><span class="tag tag-neutral">OUTCOME_WATCH_TARGETS</span></div>
+        <div class="card-desc">`GET /api/client-outcomes` reports per-client job rollups so Sentinel&#39;s outcome watch spots repeat generation failures instead of waiting for a client to complain. Deployed to prod 2026-08-03 (PRs #262/#263/#264) and **live** — token set, `keycontent` added to Sentinel&#39;s `OUTCOME_WATCH_TARGETS`, first sweep wrote 3 client rows</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Stalled-job detection (`oldestRunningAt`)</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">generating</span></div>
+        <div class="card-desc">Reports the oldest in-flight job so Sentinel can escalate work that **hangs** rather than fails (PRs #265 → #266 → #267). A stuck job never errors and never completes, so nothing emailed anyone. Immediately surfaced a job wedged in `generating` since **2026-03-23** for Kepner-Tregoe ANZ — ~4 months, hidden behind newer successful jobs. Follow-up fix (#268 → #269 → #270) exempts in-flight work from the 60-day window, which had been filtering current state and hiding long stalls. **Open item: that Kepner-Tregoe job still needs resuming or failing** — detection doesn&#39;t clear it</div>
       </div></div>
     </section>
     <section class="column col-in-progress">

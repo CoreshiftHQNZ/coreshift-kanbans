@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>73%</strong> complete</div>
-        <div><strong>115</strong>/157 cards done</div>
-        <div>Updated <strong>2026-07-17 02:09 UTC</strong></div>
+        <div><strong>116</strong>/158 cards done</div>
+        <div>Updated <strong>2026-08-03 21:13 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">115</div>
+        <div class="status-num">116</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -859,14 +859,6 @@
       <h2 class="section-head">Key Artifacts</h2>
       <div class="links-grid">
         
-        <a class="link-card" href="get-sentinel.html" target="_blank" rel="noopener">
-          <div class="link-icon">🛡️</div>
-          <div class="link-text">
-            <div class="link-title">Get Sentinel on your project</div>
-            <div class="link-desc">Self-serve onboarding for anyone at Coreshift — pick your track, register it yourself, and see what ops wires for you</div>
-          </div>
-          <div class="link-arrow">→</div>
-        </a>
         <a class="link-card" href="privacy-security/" target="_blank" rel="noopener">
           <div class="link-icon">🔐</div>
           <div class="link-text">
@@ -994,11 +986,6 @@
         <span class="col-count">116</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">LLM credit canary (29 Jul 2026)</div>
-        <div class="card-tags"><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Every 30 min Sentinel probes each app&#39;s authenticated /api/llm-health and alerts on credit exhaustion or a rejected key — after DA ran out of Anthropic credits mid-run and a client&#39;s failed run was our first signal. Anthropic exposes no balance endpoint, so a real probe call is the only honest detection. Apps self-probe with their own key (keys never move to Sentinel); Sentinel classifies. 429 never alerts; transient faults need 3 consecutive; state persisted so a redeploy can&#39;t re-fire the alarm. Dark until SENTINEL_PROBE_TOKEN is set.</div>
-      </div>
       <div class="card">
         <div class="card-title">Report Issue widget V1</div>
         <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-shipped">shipped</span></div>
@@ -1573,6 +1560,11 @@
         <div class="card-title">Fleet supply-chain hardening — dep cooldown + save-exact + CI ignore-scripts</div>
         <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-neutral">security</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">npm audit</span><span class="tag tag-neutral">save-exact</span><span class="tag tag-neutral">--ignore-scripts</span><span class="tag tag-neutral">minimumReleaseAge=7d</span><span class="tag tag-neutral">CoreshiftHQNZ</span></div>
         <div class="card-desc">Prompted by a #sentinel note (Ricky) on hijacked-dependency attacks (a *legitimate* package taken over → malicious version published). Closes the gap `npm audit` can&#39;t: the payload runs at **install time** and isn&#39;t in any advisory DB until reported. Shipped fleet-wide: **Sentinel** (main + staging, [#194](https://github.com/CoreshiftHQNZ/sentinel-app/pull/194)), **KC** ([#234](https://github.com/CoreshiftHQNZ/keycontent-app/pull/234)), **DA** (pnpm, [#111](https://github.com/CoreshiftHQNZ/digital-architect/pull/111)). Each: Dependabot **release cooldown** (~7d, 14d majors) + `save-exact`; npm repos also run the CI audit with **`--ignore-scripts`** (a hijacked postinstall can&#39;t execute on the runner before audit); DA uses pnpm-native **`minimumReleaseAge=7d`** (its audit reads the lockfile without installing, so no CI change). A **Claude dependency-install guardrail** (verify name/provenance/age/scripts before adding any dep) was added to the team CLAUDE.md. **Socket.dev PR scanner INSTALLED** (operator, 2026-07-17; Socket org `CoreshiftHQNZ`) — scans every PR for malicious install scripts / obfuscation / new maintainers, on top of audit&#39;s known-CVE net</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Client outcome watch — delivery failures, KeyContent coverage, stuck attempts</div>
+        <div class="card-tags"><span class="tag tag-neutral">phase-5</span><span class="tag tag-ops">ops</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">GET /api/client-outcomes</span><span class="tag tag-neutral">draft</span><span class="tag tag-neutral">createdAt</span><span class="tag tag-neutral">updatedAt</span><span class="tag tag-neutral">stuck</span><span class="tag tag-neutral">ok &lt; stuck &lt; failing &lt; repeat_failure</span><span class="tag tag-neutral">oldestRunningAt</span><span class="tag tag-neutral">generating</span><span class="tag tag-neutral">20260804010000</span></div>
+        <div class="card-desc">Sentinel&#39;s first watch that isn&#39;t infrastructure: *did the product actually DELIVER for this client?* Origin: 8 of 17 DA runs failed across 2026-06/07, **three** clients hit repeat failures, and only one ever filed a ticket — the other two were found by hand-querying the DB weeks later, while every uptime/advisor/heartbeat check stayed green. Hourly per-project sweep; each app reports its own rollup via authenticated `GET /api/client-outcomes` and **Sentinel judges centrally** (severity rules live in one place; Sentinel holds no other app&#39;s DB creds). **KeyContent now covered** (2026-08-04, KC [#262](https://github.com/CoreshiftHQNZ/keycontent-app/pull/262) → [#263](https://github.com/CoreshiftHQNZ/keycontent-app/pull/263) → [#264](https://github.com/CoreshiftHQNZ/keycontent-app/pull/264)) — a job lifecycle mapped onto the run-shaped contract: downstream review/publish states count as delivered, `draft` excluded (never attempted), ordering by `createdAt` not `updatedAt` so a later edit can&#39;t fake a current failure. **Stuck-attempt escalation** (sentinel-app [#223](https://github.com/CoreshiftHQNZ/sentinel-app/pull/223), KC [#265](https://github.com/CoreshiftHQNZ/keycontent-app/pull/265), DA [#129](https://github.com/CoreshiftHQNZ/digital-architect/pull/129)): new `stuck` severity (rank `ok &lt; stuck &lt; failing &lt; repeat_failure`) + `oldestRunningAt`, 12h threshold — an attempt that hangs never fails into Sentry and never completes into the success email, so it notified nobody at all. Immediately caught a KC job wedged in `generating` since **2026-03-23** (Kepner-Tregoe ANZ, ~4 months) that was invisible behind newer successes. Follow-up fix found by verifying against live prod (KC [#268](https://github.com/CoreshiftHQNZ/keycontent-app/pull/268), DA [#130](https://github.com/CoreshiftHQNZ/digital-architect/pull/130)): in-flight work is now **exempt from the 60-day window**, which had been filtering *current state* — the longer a job hung, the more certainly it was hidden. Migration `20260804010000` applied + stamped on Sentinel prod. Suite 604</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
