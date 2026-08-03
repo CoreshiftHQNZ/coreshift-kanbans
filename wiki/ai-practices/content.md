@@ -159,7 +159,7 @@ The construction lesson generalises past code review. A synthetic benchmark can 
 
 ## Context engineering for coding agents
 
-*Last updated: 3 Aug 2026 · Standout — full deck available · Sources: [Simon Willison — "Stateless MCP has recaptured my interest" (31 Jul 2026)](https://simonwillison.net/2026/Jul/31/stateless-mcp/) · [Anthropic — "The new rules of context engineering for Claude 5 generation models" (24 Jul 2026)](https://claude.com/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models) · [Latent Space — "5 Trends That Defined AI Engineering at World's Fair 2026" (14 Jul 2026)](https://www.latent.space/p/aiewf26trends) · [Cole Medin — "The Best AI Coding Setup Isn't the Most Autonomous One" (3 Jul 2026)](https://www.youtube.com/watch?v=muwRbfuKbR4) · [LangChain — How to Use RLMs in Deep Agents](https://www.langchain.com/blog/how-to-use-rlms-in-deep-agents) · [Simon Willison — on Geoffrey Litt's AIE talk & cognitive debt](https://simonwillison.net/2026/Jul/2/understand-to-participate/) · [Claude Code — `/doctor` CLAUDE.md checkup](https://code.claude.com/docs/en/changelog)*
+*Last updated: 3 Aug 2026 · Standout — full deck available · Sources: [AI Engineer — "Rethinking Environments for Long-Horizon Work" (Rayan Garg, Theta Software, 31 Jul 2026)](https://www.youtube.com/watch?v=2aS7aKoXn64) · [Simon Willison — "Stateless MCP has recaptured my interest" (31 Jul 2026)](https://simonwillison.net/2026/Jul/31/stateless-mcp/) · [Anthropic — "The new rules of context engineering for Claude 5 generation models" (24 Jul 2026)](https://claude.com/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models) · [Latent Space — "5 Trends That Defined AI Engineering at World's Fair 2026" (14 Jul 2026)](https://www.latent.space/p/aiewf26trends) · [Cole Medin — "The Best AI Coding Setup Isn't the Most Autonomous One" (3 Jul 2026)](https://www.youtube.com/watch?v=muwRbfuKbR4) · [LangChain — How to Use RLMs in Deep Agents](https://www.langchain.com/blog/how-to-use-rlms-in-deep-agents) · [Simon Willison — on Geoffrey Litt's AIE talk & cognitive debt](https://simonwillison.net/2026/Jul/2/understand-to-participate/) · [Claude Code — `/doctor` CLAUDE.md checkup](https://code.claude.com/docs/en/changelog)*
 
 > **⚡ Newest — 24 Jul 2026.** Anthropic rewrote the rules of context engineering for the Claude 5 generation, and **six of them reverse what we had been doing** — give *judgment* not rules, better *interfaces* not few-shot examples, and say each thing once. The evidence is blunt: they cut **80%+ of Claude Code's system prompt with no measurable performance loss**. Our context packs predate this guidance, so they likely carry rules and examples that are now net-negative — worth one deliberate pass per repo. Full breakdown below.
 
@@ -196,11 +196,13 @@ In practice this lands as a **curated context pack**: a tight `CLAUDE.md` (or eq
 
 **Reference material** — background sources, not this week's news.
 
-🎬 *Watch — Cole Medin, "The Best AI Coding Setup Isn't the Most Autonomous One" (22 min, published **3 Jul 2026**) — the five levels of AI coding, and why L3 beats chasing autonomy:*
+🎬 *Watch — AI Engineer, "Rethinking Environments for Long-Horizon Work" — Rayan Garg, Theta Software (21 min, published **31 Jul 2026**) — the harness argument at its sharpest: what "long horizon" even means, why the way you measure it distorts what you conclude about a model, and how to design the environments and verifiers that make the measurement honest:*
 
 <div style="position:relative;width:100%;max-width:760px;aspect-ratio:16/9;margin:1.1rem 0;">
-<iframe src="https://www.youtube-nocookie.com/embed/muwRbfuKbR4" title="The Best AI Coding Setup Isn't the Most Autonomous One (Here's Why) — Cole Medin" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe src="https://www.youtube-nocookie.com/embed/2aS7aKoXn64" title="Rethinking Environments for Long-Horizon Work — Rayan Garg, Theta Software (AI Engineer)" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
+
+*(Replaced Cole Medin's "The Best AI Coding Setup Isn't the Most Autonomous One" — 3 Jul 2026 — which had aged past a month. His five-levels argument is still written up above and still cited in Sources; only the embed moved on.)*
 
 📊 *Slides — click through inline (or use fullscreen):*
 
