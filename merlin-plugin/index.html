@@ -367,7 +367,7 @@
           <p class="subtitle">CoreShift&rsquo;s AI Implementation Wizard, as a Claude Code / Cowork plugin · live build status</p>
         </div>
         <div class="meta">
-          Last updated <strong>2026-07-31</strong><br />
+          Last updated <strong>2026-08-04</strong><br />
           <a href="https://github.com/CoreshiftHQNZ/merlin-plugin" target="_blank" rel="noopener">repo</a> ·
           <a href="https://github.com/CoreshiftHQNZ/merlin-plugin/blob/main/docs/prd.md" target="_blank" rel="noopener">PRD</a> ·
           <a href="https://github.com/CoreshiftHQNZ/merlin-plugin/blob/main/docs/product-roadmap.md" target="_blank" rel="noopener">roadmap</a>
@@ -384,7 +384,8 @@
           <a href="../merlin/">its own board</a>. The names are one hyphen apart; the systems are not related.
         </div>
         <div style="font-size: 13px; color: var(--ink-muted); font-weight: 500;">
-          <span style="color: var(--ink);">Phases 0&ndash;3 complete &middot; Phase 4 half built and partly waiting on Keitha &middot; <strong>Phase 5 has begun &mdash; the manager&rsquo;s five views are live</strong>, and building them found a default that would have handed one learner every business in the database &mdash; 43 of 73 tasks.</span>
+          <span style="color: var(--ink);">Phases 0&ndash;3 complete &middot; <strong>Phase 4&rsquo;s assessment layer was STOPPED on Keitha&rsquo;s ruling of 3 Aug &mdash; four tasks withdrawn, badges replaced by facts</strong> &middot; Phase 5 has begun &mdash; the manager&rsquo;s five views, reads and tools are live, and building them found a default that would have handed one learner every business in the database &mdash; <strong>45 built &middot; 4 withdrawn &middot; 27 open, of 76 tasks.</strong></span>
+          <strong>The ruling, because it is the biggest change on this board since the plugin pivot.</strong> Keitha withdrew the decision to author ten Foundation competency criteria rather than answering it: the transcripts already contain a working per-person progression pathway, built from the learner&rsquo;s own stated reason for a confidence score, so a graded ladder would be a second and worse progression model beside a working one &mdash; and coverage does not hold, because several of the ten never arose across six sessions of real work, so marking someone off against ten means inventing reasons for them to prune memory and configure preferences. That is teaching Claude&rsquo;s features to satisfy a checklist, which is the thing Merlin exists not to do. <strong>What dies:</strong> criteria, bands, evidence gates, assessor judgement, drift monitoring, awarding, levels, certificates &mdash; no badge for anything judged. <strong>What replaces them:</strong> the ten competencies become a <em>coverage reference</em> Merlin consults to notice a natural moment (&ldquo;about to paste a customer&rsquo;s details into Claude&rdquo;), badges become <em>facts</em> &mdash; first thing built, first thing reused without help, first time you brought your own piece of work &mdash; and the manager gains a fourth number, <strong>the proportion of work the person brought themselves</strong>, which she names as the number that shows somebody becoming independent. <strong>No code was deleted:</strong> Keitha asked to be told what her ruling makes redundant rather than have it absorbed quietly, and nothing was ever awarded &mdash; 81 digests, all withheld, zero awards, zero authored criteria.
           The telemetry spine works end to end: a signed event emitted by the plugin lands in Supabase, and a
           forged one doesn&rsquo;t. The adaptive engine, per-user memory and the hash-chained ledger are written.
           <strong>The plugin has now been loaded by a host</strong>, both skills surface, and a real intake
@@ -426,7 +427,7 @@
           allowed to finish until they have, so the value cannot be reached. Eight runs of trying is the evidence.
           <strong>Two shipped skills disagree about what finishing means</strong>, and that is now its own task
           rather than a coverage gap that keeps getting re-filed.
-          <strong>Phase 4 &mdash; invisible assessment &mdash; started 1 Aug, stopped deliberately two tasks in, and restarted 3 Aug once the stop point had been reviewed.</strong>
+          <strong>Phase 4 &mdash; and it is no longer invisible assessment. It started 1 Aug, stopped deliberately two tasks in, restarted 3 Aug once the stop point had been reviewed, and then stopped for good the same day when Keitha ruled.</strong> The four withdrawn tasks are struck through in place rather than deleted, and the roadmap now keeps <em>three</em> counts &mdash; built, withdrawn and open &mdash; because a withdrawn task is not a built one and the only other options were to tick work nobody did or leave four tasks open forever. What survives is worth naming: the append-only ledger and the content-free digest pipe both keep working with new cargo, carrying <em>facts</em> instead of judgements, and &ldquo;enums, ids and numbers only&rdquo; turns out to be exactly the right shape for a fact.
           The competency criteria are bundled JSON now, so Keitha&rsquo;s wording drops in without a release; the
           schema ships with <em>one</em> worked placeholder rather than ten plausible inventions, and the build fails
           if authored criteria ever appear under a task nobody closed. <strong>The phase&rsquo;s own written
@@ -475,7 +476,7 @@
           <div class="pbar"><div class="pbar-label"><strong>P1</strong> Engine + memory</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>P2</strong> Magic moment</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
           <div class="pbar"><div class="pbar-label"><strong>P3</strong> Real work</div><div class="pbar-track"><div class="pbar-fill" style="width: 100%"></div></div></div>
-          <div class="pbar active"><div class="pbar-label"><strong>P4</strong> Invisible assessment</div><div class="pbar-track"><div class="pbar-fill" style="width: 33%"></div></div></div>
+          <div class="pbar active"><div class="pbar-label"><strong>P4</strong> Noticing, without assessing</div><div class="pbar-track"><div class="pbar-fill" style="width: 45%"></div></div></div>
           <div class="pbar active"><div class="pbar-label"><strong>P5</strong> Manager visibility</div><div class="pbar-track"><div class="pbar-fill" style="width: 30%"></div></div></div>
           <div class="pbar future"><div class="pbar-label"><strong>P6</strong> Launch readiness</div><div class="pbar-track"><div class="pbar-fill" style="width: 0%"></div></div></div>
         </div>
@@ -487,10 +488,11 @@
           <span class="badge">Who owns what</span>
         </div>
         <p class="intro">
-          <strong>Nothing in Phases 1&ndash;3 is blocked.</strong> The open items sit in Phase 4 (Keitha&rsquo;s
-          competency wording), Phase 5 (email prerequisites) and the commercial model &mdash; so the build can
-          run straight through the learner-facing skills while those settle. Two decisions closed this week:
-          credential-vs-badge (badges, 28 Jul) and business-transfer semantics (29 Jul).
+          <strong>Nothing in Phases 1&ndash;3 is blocked, and as of 3 Aug nothing in Phase 4 is either.</strong>
+          Keitha&rsquo;s competency wording was the one Phase 4 blocker and it is gone &mdash; not delivered,
+          <em>withdrawn</em>. The remaining open items sit in Phase 5 (email prerequisites) and the commercial
+          model. Three decisions closed this week: credential-vs-badge (badges, 28 Jul), business-transfer
+          semantics (29 Jul) and <strong>stop building the assessment layer (3 Aug)</strong>.
         </p>
 
         <div class="ricky-grid">
@@ -501,8 +503,8 @@
               <p class="task-body"><strong>Two shipped skills disagree, and the disagreement makes one reported outcome impossible.</strong> A module isn&rsquo;t allowed to finish until the learner has actually run the thing they built &mdash; that is the rule that stops a module ending as a nice conversation. But the closure then offers &ldquo;not yet&rdquo; for someone who hasn&rsquo;t used it, which by then can never be true. Three closures exist and they read <em>tried it</em>, <em>used it once</em>, <em>tried it</em>. <strong>Eight gate runs failed to reach &ldquo;not yet&rdquo; the same way every time</strong>, and it was twice written down as missing test coverage before the cause was seen. Three ways out: soften the finishing rule, redefine &ldquo;not yet&rdquo; as <em>not used again since</em>, or retire it and give the parked/abandoned cases their own signal. <strong>The third also fixes a known blind spot</strong> &mdash; a learner who parked, one who walked away, and one who quietly gave up currently look identical, and only the last means something is wrong with Merlin. <strong>Needs deciding before the manager dashboard reads the field.</strong></p>
             </div>
             <div class="task">
-              <p class="task-title">Foundation competency wording F1&ndash;F10 <span class="task-when">Keitha</span></p>
-              <p class="task-body">Her 1 Jun competency document is the source. Blocks <strong>TASK-037</strong> only &mdash; <strong>as of 1 Aug the framework and schema are built and shipped</strong>, with one worked placeholder and an empty folder that explains itself, so her wording drops in as ten JSON files without a release. Nothing will be invented in the meantime: the build now fails if criteria appear while this is still open.</p>
+              <p class="task-title">Ten one-line notes: what a natural moment looks like <span class="task-when">Keitha · TASK-064 · not blocking</span></p>
+              <p class="task-body"><strong>This replaces &ldquo;Foundation competency wording F1&ndash;F10&rdquo;, which she withdrew on 3 Aug rather than answering.</strong> What is wanted now is far smaller: one line per competency saying what a natural moment for it looks like &mdash; her own example is the data-safety one, <em>&ldquo;about to paste a customer&rsquo;s details into Claude&rdquo;</em>. The ten become a <strong>coverage reference</strong> Merlin consults to notice such a moment: not sequenced, not assessed, not awarded, and with no count anywhere, because &ldquo;3 of 10&rdquo; is the ladder rebuilt out of a reference. <strong>Nothing waits on these</strong> &mdash; no view, no digest, no manager number reads them, so an empty reference is a Merlin that notices nothing extra rather than a Merlin with a hole in it. That is the difference from the withdrawn task, which was blocked <em>and</em> blocking.</p>
             </div>
             <div class="task">
               <p class="task-title">Commercial model <span class="task-when">Keitha · Mal · Russ</span></p>
@@ -537,13 +539,13 @@
       </section>
 
       <h2 class="section-title">Build board</h2>
-      <p class="helper">Cards carry their roadmap task ids, and column counts are <em>tasks</em> rather than cards &mdash; 45 of 73 done.</p>
+      <p class="helper">Cards carry their roadmap task ids, and column counts are <em>tasks</em> rather than cards &mdash; 45 built, 4 withdrawn, 27 open, of 76.</p>
 
       <div class="board">
         <div class="col next">
-          <div class="col-head"><div class="col-title"><span class="dot"></span>Now — Phase 4, the rigour half</div><div class="col-count">9</div></div>
+          <div class="col-head"><div class="col-title"><span class="dot"></span>Now — Phase 4, what survives the ruling</div><div class="col-count">7</div></div>
           <div class="col-body">
-            <article class="card"><div class="card-head"><span class="chip m4">P4</span><span class="card-id">TASK-039 → 044</span></div><h3 class="card-title">The rigour half of invisible assessment</h3><p class="card-note"><strong>The writes landed 2 Aug and were confirmed working in a live session on 3 Aug, so what is left here is judgement quality rather than plumbing.</strong> The step that does the recognising has now been watched running, at the right moment, silently &mdash; which was the one thing blocking everything else in this column. What is left: the rigour mechanisms (judge against the criterion as written, more than one pass, and a confidence threshold below which nothing is awarded) and the phase gate. <strong>Nothing is awarded until the threshold exists</strong> &mdash; the assessor currently reads, judges, and records that it judged without concluding, which is a real state rather than a stub. <strong>Three disagreements between existing files were found while writing it and are each filed where they will bite:</strong> the confidence scale is stated three different ways in three documents; one field name means a local pointer in one place and a hash in another, so the natural implementation would silently drop a competency somebody earned; and the database would accept the reserved example id. <em>Also here: Keitha&rsquo;s F1&ndash;F10 wording, and the Cowork reference refresh.</em></p></article>
+            <article class="card"><div class="card-head"><span class="chip m4">P4</span><span class="card-id">TASK-064 · 065 · 043 · 044</span><span class="card-date">3 Aug</span></div><h3 class="card-title">Noticing, without assessing</h3><p class="card-note"><strong>The rigour half of invisible assessment was withdrawn on 3 Aug, mid-build, and what is here now is what survived it.</strong> Four tasks are struck through in place &mdash; the ten criteria, the rigour mechanisms, the rubrics, and what the recorders would have had to capture for a judgement. <strong>The step that does the noticing already works</strong>: it was watched running in a live session at the right moment, silently, which is the one thing that had been blocking this column, and it still works because it never depended on there being a judgement. What is left: the <strong>coverage reference</strong> (a list Merlin consults to notice a natural moment, and the schema reduced to fit it); <strong>badge the facts</strong> &mdash; first thing built, first thing reused without help, first time you brought your own piece of work; <strong>device restore</strong>, kept deliberately rather than dropped alongside levels, because facts are more worth restoring than judgements were; and the phase gate, which now verifies what survives. <strong>One of the three facts has no input and it is named rather than approximated:</strong> &ldquo;without help&rdquo; is unmeasured on the wire, so it is either a new signal or an honest gap &mdash; the same shape as the ROI headline whose multiplier exists and whose multiplicand does not. <em>Also here: the Cowork reference refresh, untouched by the ruling.</em></p></article>
             <article class="card"><div class="card-head"><span class="chip m3">P3</span><span class="card-id">TASK-035b</span></div><h3 class="card-title">What &ldquo;finished&rdquo; means</h3><p class="card-note"><strong>Found by the gate closing, not by the gate failing.</strong> A module may not finish until the learner has run the thing they built &mdash; the rule that stops a module ending as a good conversation. The closure then offers <em>&ldquo;not yet&rdquo;</em> for a learner who hasn&rsquo;t used it, which by that point can never be true. Three closures exist and read <em>tried it</em> &middot; <em>used once</em> &middot; <em>tried it</em>. <strong>Eight runs failed to reach the value the same way each time, and it was twice recorded as missing test coverage before the cause was seen</strong> &mdash; which is the more useful half of the finding: an unreachable state and an untested one look identical from the outside. Soften the finishing rule, redefine the value as <em>not used again since</em>, or retire it and give the parked and abandoned cases their own signal. <strong>The third option also closes a blind spot on the wire</strong> &mdash; a learner who parked, one who walked, and one who quietly gave up are currently indistinguishable, and only the last means something is wrong. <strong>Must land before the manager views read the field.</strong></p></article>
           </div>
         </div>
@@ -593,7 +595,7 @@
 <strong>P1</strong>  Engine + memory        adaptive engine block (3 dials) · per-user memory · dial persistence + rationale · stance transitions · append-only hashed ledger · expressiveness local-only
 <strong>P2</strong>  Magic moment         ⭐ role-primed intake · concrete installed-aware first menu · follow-up technique for thin answers · role prior reconciliation · Julie walkthrough as the gate
 <strong>P3</strong>  Real work              prompt wizard · seven-beat module anatomy · guide-not-execute boundary · five-step loop closure · on-device reflection reduction · achievement framing
-<strong>P4</strong>  Invisible assessment   competency criteria as data · Foundation F1–F10 (Keitha) · three assessment layers · rigour + confidence thresholding · content-free digests · device restore
+<strong>P4</strong>  Noticing (was assessment)  coverage reference (not a ladder) · facts, not badges · content-free digests carrying facts · device restore · 4 tasks withdrawn 3 Aug
 <strong>P5</strong>  Manager visibility     derived views · manager-only reads (no business parameter) · ROI calculation · dashboard artifact · empty/gap states · weekly digest cron · privacy audit
 <strong>P6</strong>  Launch readiness       ask-merlin + tiered escalation · frustration aggregation (bucketed counts only) · identity lifecycle · schema versioning · pilot rehearsal
 <strong>P7</strong>  Hosted site            post-MVP — a second client onto the same read API; the only new work is session auth
