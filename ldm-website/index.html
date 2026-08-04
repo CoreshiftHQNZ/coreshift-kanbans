@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>39%</strong> complete</div>
-        <div><strong>11</strong>/28 cards done</div>
-        <div>Updated <strong>2026-08-02 23:56 UTC</strong></div>
+        <div><strong>37%</strong> complete</div>
+        <div><strong>11</strong>/30 cards done</div>
+        <div>Updated <strong>2026-08-04 23:32 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">7</div>
+        <div class="status-num">9</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -1036,19 +1036,19 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">UDC wording vs the multi-lender panel</div>
+        <div class="card-title">Client review of the site</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span></div>
-        <div class="card-desc">UDC&#39;s mandatory CCCFA text says &quot;Finance is provided by UDC Finance Limited&quot;, which is inaccurate on a panel site where the lender may be Marac or Avanti. Interim wording stays until UDC confirm what they will accept; question with Jack to put to UDC</div>
+        <div class="card-desc">The site is gated behind a password so Jack can walk Logan and Louis through it before it goes public. Logan is the project lead and is UK-based, so scheduling is the constraint. The gate comes off once they have seen it and the legal sign-off lands</div>
       </div>
       <div class="card">
         <div class="card-title">Legal sign-off on Privacy + Terms</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span></div>
-        <div class="card-desc">The client&#39;s real draft content is now live on /privacy and /terms, with a visible &quot;working draft, pending final legal review&quot; notice. Their lawyer&#39;s review is the only thing outstanding; removing the notice is a one-line change</div>
+        <div class="card-desc">The client&#39;s real draft content is live on /privacy and /terms, with a visible &quot;working draft, pending final legal review&quot; notice. Their lawyer&#39;s review is the only thing outstanding; removing the notice is a one-line change. Jack has raised it with the client and they are aware</div>
       </div>
       <div class="card">
         <div class="card-title">Analytics + Search Console accounts</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-blocked">blocked-by:gp</span></div>
-        <div class="card-desc">GA4 property, Search Console and Bing verification, Peec AI. The on-site instrumentation is built and dormant; only the platform IDs are missing</div>
+        <div class="card-desc">GA4 property, Search Console and Bing verification, Peec AI. The on-site instrumentation is built and dormant; only the platform IDs are missing. Nichee Orocio at GP now looping in on this</div>
       </div>
       <div class="card">
         <div class="card-title">Keyword sign-off for the phase-2 pages</div>
@@ -1064,9 +1064,19 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">9</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Site gated for client review</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">SITE_PASSWORD</span></div>
+        <div class="card-desc">Jack asked for the site to be password protected until the client has seen it, given the financial nature of the business and the outstanding legal sign-off. A Pages middleware puts everything behind HTTP Basic Auth when `SITE_PASSWORD` is set — pages, assets, API and robots.txt — with noindex/nofollow and no-store on every response so it cannot be indexed or cached. Deliberately fail-open: with the variable absent the site is public, so going live is deleting a variable rather than a code change. Verified both directions locally and on production (PR #21/#22). Note the site was publicly reachable 2–4 Aug, so a page or two may have been crawled before gating</div>
+      </div>
+      <div class="card">
+        <div class="card-title">UDC wording resolved</div>
+        <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">The client confirmed (4 Aug) that UDC&#39;s standard sentence &quot;Finance is provided by UDC Finance Limited&quot; is not required on a multi-lender site. Removed the &quot;pending UDC marketing review&quot; caveat from the shared disclaimers, the DisclaimerSlot title row on every finance page, and the compliance page intro and warning box. **Clears one of the two client blockers.**</div>
+      </div>
       <div class="card">
         <div class="card-title">Client content round 1 shipped</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-shipped">shipped</span></div>
