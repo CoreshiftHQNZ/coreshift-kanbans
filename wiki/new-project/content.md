@@ -12,9 +12,11 @@ Spin up a new build the Coreshift way — the **Fable 5 workflow**, milestone-ga
 - The **Coreshift Ideation** plugin installed from the org marketplace. If you don't have it yet:
 
 ```
-/plugin marketplace add CoreshiftHQNZ/coreshift-ideation
-/plugin install coreshift-ideation@coreshift
+/plugin marketplace add CoreshiftHQNZ/coreshift-plugins
+/plugin install coreshift-ideation@coreshift-plugins
 ```
+
+That's the same marketplace `coreshift-site-builder` and `merlin` come from — add it once and you have all three available.
 
 Once installed, its skills load automatically — you never pick them from a menu. The nested skill list is only a manual override.
 
