@@ -1032,9 +1032,14 @@
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Stock feed stalled since 26 July — no pushes landing</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span><span class="tag tag-blocked">blocked-by:client</span><span class="tag tag-neutral">feed.pushedAt</span></div>
+        <div class="card-desc">Found 5 Aug, within minutes of `feed.pushedAt` going live: Motorcentral last wrote `Vehicles.xml` to R2 on <strong>26 Jul 21:15 UTC</strong>, nine days earlier. Peter Knight described the cadence as normally scheduled overnight, so pushes have stopped. Our side checks out — the SFTPGo endpoint (`ldm-stock-ingest` on Fly.io) has both machines started and port 22 publicly answering, and the last push it did receive landed in R2 correctly. So the landing zone is not the fault; the next step is client-side confirmation that Motorcentral&#39;s scheduled export is still enabled and still pointed at our host. Site content is unaffected but frozen at 26 Jul stock — 39 vehicles, all with photos. Note this was invisible before `pushedAt` existed: `ingestedAt` moves on every code deploy, so the feed looked fresh on every rebuild</div>
+      </div>
       <div class="card">
         <div class="card-title">Client review of the site</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-blocked">blocked-by:client</span></div>
@@ -1070,12 +1075,12 @@
       <div class="card">
         <div class="card-title">Feed health endpoint — the daily stock check survives the gate</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/api/stock-status.json</span><span class="tag tag-neutral">heroMissing</span><span class="tag tag-neutral">feed.source</span></div>
-        <div class="card-desc">Gating the site blinded the daily stock-feed check (5 Aug): it scraped `/vehicles/` for card counts, and every path started returning 401, which reads identically to an empty feed. Replaced the scrape with `/api/stock-status.json` — a build-time snapshot of feed provenance, vehicle counts, photo coverage and hero-image resolution, listed in `OPEN_PATHS` in the gate middleware so a monitor reads it without the preview password. Aggregate counts and vehicle titles only, `noindex` + `no-store`, exact-path match (a trailing slash still 401s). Two things make it better than the scrape it replaces: `photos.heroMissing` resolves heroes through the same `vehicleHero()` the cards call, so it cannot disagree with what renders — proven by breaking a photo set on purpose and watching it flip to `ok: false`; and `feed.source` is written by the ingest itself, so a silent fallback to the committed sample is visible instead of masquerading as fresh stock. PRs #23/#24</div>
+        <div class="card-desc">Gating the site blinded the daily stock-feed check (5 Aug): it scraped `/vehicles/` for card counts, and every path started returning 401, which reads identically to an empty feed. Replaced the scrape with `/api/stock-status.json` — a build-time snapshot of feed provenance, vehicle counts, photo coverage and hero-image resolution, listed in `OPEN_PATHS` in the gate middleware so a monitor reads it without the preview password. Aggregate counts and vehicle titles only, `noindex` + `no-store`, exact-path match (a trailing slash still 401s). Two things make it better than the scrape it replaces: `photos.heroMissing` resolves heroes through the same `vehicleHero()` the cards call, so it cannot disagree with what renders — proven by breaking a photo set on purpose and watching it flip to `ok: false`; and `feed.source` is written by the ingest itself, so a silent fallback to the committed sample is visible instead of masquerading as fresh stock. Extended the same day with `feed.pushedAt` / `feed.imagesPushedAt` — the R2 `LastModified` the listing already returned and the build was discarding, so dealer write time is now separate from build time at no extra request cost. That distinction immediately earned itself: it exposed that the feed has been stalled since 26 Jul. PRs #23/#24, #25/#26</div>
       </div>
       <div class="card">
         <div class="card-title">Photo coverage now 100% of live stock</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">39/39</span></div>
-        <div class="card-desc">The new endpoint&#39;s first live read (5 Aug) shows all 39 vehicles now carry photos — 195 image files, five per vehicle at the build-time gallery cap — up from 5 of 39 on the 24 Jul first push. Every hero resolves, so the card grid has replaced the text-row fallback list entirely. Also confirms production is building from the live R2 feed (`feed.source: "live-r2"`), not the committed sample</div>
+        <div class="card-desc">The new endpoint&#39;s first live read (5 Aug) shows all 39 vehicles carrying photos — 195 image files, five per vehicle at the build-time gallery cap — up from 5 of 39 on the 24 Jul first push. The images arrived in the 26 Jul push and a later code deploy picked them up, which is why nobody noticed the improvement. Every hero resolves, so the card grid has replaced the text-row fallback list entirely. Also confirms production is building from the live R2 feed (`feed.source: "live-r2"`), not the committed sample</div>
       </div>
       <div class="card">
         <div class="card-title">Site gated for client review</div>
