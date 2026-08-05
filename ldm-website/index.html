@@ -1019,7 +1019,7 @@
       <div class="card">
         <div class="card-title">Stock feed — LIVE with real Motorcentral stock</div>
         <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">-2.jpg</span><span class="tag tag-neutral">vehicleHero()</span><span class="tag tag-neutral">-1.jpg</span></div>
-        <div class="card-desc">First production push landed 24 Jul: 39 live vehicles with photos rendering across the site, replacing the sample dataset. Full loop proven — Motorcentral → SFTP on Fly.io (dedicated IPv4, port 22, after Railway&#39;s proxy couldn&#39;t bind 22) → R2 → Pages deploy hook → build. Fixed one bug the live data exposed: the feed&#39;s image sequence numbers don&#39;t always start at 1 (a vehicle can arrive with only `-2.jpg`), so vehicle cards and the homepage hero now resolve photos via `vehicleHero()` instead of assuming `-1.jpg`. A daily automated check watches subsequent pushes</div>
+        <div class="card-desc">First production push landed 24 Jul: 39 live vehicles with photos rendering across the site, replacing the sample dataset. Full loop proven — Motorcentral → SFTP on Fly.io (dedicated IPv4, port 22, after Railway&#39;s proxy couldn&#39;t bind 22) → R2 → Pages deploy hook → build. Fixed one bug the live data exposed: the feed&#39;s image sequence numbers don&#39;t always start at 1 (a vehicle can arrive with only `-2.jpg`), so vehicle cards and the homepage hero now resolve photos via `vehicleHero()` instead of assuming `-1.jpg`. A daily automated check watches subsequent pushes — since 5 Aug via `/api/stock-status.json` rather than by scraping the page</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1064,9 +1064,19 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">9</span>
+        <span class="col-count">11</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Feed health endpoint — the daily stock check survives the gate</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/api/stock-status.json</span><span class="tag tag-neutral">heroMissing</span><span class="tag tag-neutral">feed.source</span></div>
+        <div class="card-desc">Gating the site blinded the daily stock-feed check (5 Aug): it scraped `/vehicles/` for card counts, and every path started returning 401, which reads identically to an empty feed. Replaced the scrape with `/api/stock-status.json` — a build-time snapshot of feed provenance, vehicle counts, photo coverage and hero-image resolution, listed in `OPEN_PATHS` in the gate middleware so a monitor reads it without the preview password. Aggregate counts and vehicle titles only, `noindex` + `no-store`, exact-path match (a trailing slash still 401s). Two things make it better than the scrape it replaces: `photos.heroMissing` resolves heroes through the same `vehicleHero()` the cards call, so it cannot disagree with what renders — proven by breaking a photo set on purpose and watching it flip to `ok: false`; and `feed.source` is written by the ingest itself, so a silent fallback to the committed sample is visible instead of masquerading as fresh stock. PRs #23/#24</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Photo coverage now 100% of live stock</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">39/39</span></div>
+        <div class="card-desc">The new endpoint&#39;s first live read (5 Aug) shows all 39 vehicles now carry photos — 195 image files, five per vehicle at the build-time gallery cap — up from 5 of 39 on the 24 Jul first push. Every hero resolves, so the card grid has replaced the text-row fallback list entirely. Also confirms production is building from the live R2 feed (`feed.source: "live-r2"`), not the committed sample</div>
+      </div>
       <div class="card">
         <div class="card-title">Site gated for client review</div>
         <div class="card-tags"><span class="tag tag-phase-3">phase-3</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">SITE_PASSWORD</span></div>
