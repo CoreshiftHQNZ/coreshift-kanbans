@@ -932,6 +932,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Undelivered severity — a later success no longer clears a failed post (2026-08-06)</div>
+            <div class="recent-desc">Severity was driven by <em>consecutive</em> failures, so one later success on unrelated content reset the streak and flipped the client to <code>ok</code> — clearing <code>alerted_at</code> and emitting "back to a successful post" while the original post had never gone out. The escalation deleted itself from triage's queue. New <code>undelivered</code> severity (ranked ok &lt; stuck &lt; undelivered &lt; failing &lt; repeat_failure), reported by the source app rather than inferred from <code>failed</code>, and bounded by a 14-day horizon so it can't become an unclearable permanent alert. Surfaced a previously-invisible 3-day outage at Impact HR Group (15 posts, 22–24 Jul) that nobody had reported. sentinel-app#226 + keycontent-app#289.</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Publish-outcome watch (2026-08-05)</div>
             <div class="recent-desc">The outcome watch only asked "did we generate?" — never "did it go out?". New <code>keycontent-publishing</code> target rolls up calendar_entries per client, so a batch that fails at its slot alerts on its own. Found 7 posts overdue since Mar/Apr 2026 (Wholesale Meats Direct, Sunrise Bakery) that nothing was watching.</div>
           </div>
