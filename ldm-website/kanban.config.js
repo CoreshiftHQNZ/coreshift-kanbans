@@ -98,7 +98,7 @@ module.exports = {
       window: "Underway · July 2026",
       desc: "Connect the live systems around the static site: stock feed ingest, analytics and measurement.",
       deliverables: [
-        "SFTPGo sidecar → R2 → deploy hook (live, awaiting first push)",
+        "SFTPGo sidecar → R2 → deploy hook (live — scheduled pushes landing, hook verified)",
         "GA4 + GSC + Bing + IndexNow + Peec AI",
         "SUB-PROCESSORS.md + /sub-processors page (shipped)",
       ],

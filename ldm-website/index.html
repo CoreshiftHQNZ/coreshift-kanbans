@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>37%</strong> complete</div>
-        <div><strong>11</strong>/30 cards done</div>
-        <div>Updated <strong>2026-08-04 23:32 UTC</strong></div>
+        <div><strong>36%</strong> complete</div>
+        <div><strong>12</strong>/33 cards done</div>
+        <div>Updated <strong>2026-08-09 21:36 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -788,7 +788,7 @@
           <div class="phase-window">Underway · July 2026</div>
           <p class="phase-desc">Connect the live systems around the static site: stock feed ingest, analytics and measurement.</p>
           <ul class="phase-deliverables">
-            <li>SFTPGo sidecar → R2 → deploy hook (live, awaiting first push)</li><li>GA4 + GSC + Bing + IndexNow + Peec AI</li><li>SUB-PROCESSORS.md + /sub-processors page (shipped)</li>
+            <li>SFTPGo sidecar → R2 → deploy hook (live — scheduled pushes landing, hook verified)</li><li>GA4 + GSC + Bing + IndexNow + Peec AI</li><li>SUB-PROCESSORS.md + /sub-processors page (shipped)</li>
           </ul>
         </div>
         <div class="phase-card phase-planned">
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">11</div>
+        <div class="status-num">12</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">9</div>
+        <div class="status-num">11</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -963,7 +963,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">11</span>
+        <span class="col-count">12</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1018,21 +1018,21 @@
       </div>
       <div class="card">
         <div class="card-title">Stock feed — LIVE with real Motorcentral stock</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">-2.jpg</span><span class="tag tag-neutral">vehicleHero()</span><span class="tag tag-neutral">-1.jpg</span></div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">-2.jpg</span><span class="tag tag-neutral">vehicleHero()</span><span class="tag tag-neutral">-1.jpg</span><span class="tag tag-neutral">/api/stock-status.json</span></div>
         <div class="card-desc">First production push landed 24 Jul: 39 live vehicles with photos rendering across the site, replacing the sample dataset. Full loop proven — Motorcentral → SFTP on Fly.io (dedicated IPv4, port 22, after Railway&#39;s proxy couldn&#39;t bind 22) → R2 → Pages deploy hook → build. Fixed one bug the live data exposed: the feed&#39;s image sequence numbers don&#39;t always start at 1 (a vehicle can arrive with only `-2.jpg`), so vehicle cards and the homepage hero now resolve photos via `vehicleHero()` instead of assuming `-1.jpg`. A daily automated check watches subsequent pushes — since 5 Aug via `/api/stock-status.json` rather than by scraping the page</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Stock feed running unattended, end to end</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">live-r2</span><span class="tag tag-neutral">heroMissing</span></div>
+        <div class="card-desc">The 24 and 26 Jul pushes turned out to be manual: no scheduler had ever been configured at the Motorcentral end, so the feed sat frozen on the 26 Jul snapshot for nine days. Peter Knight set the schedule up on 5 Aug and pushes have landed since, around 07:20 UTC (~19:20 NZ) — confirmed 7 and 9 Aug. This is also the first time the whole chain has been observed running with no one touching it: a push landed in R2 at 07:16 and the Pages deploy hook fired a rebuild one minute later, which is what proves the hook works — it had never actually been seen firing, because nothing was pushed after it was wired up. Stock is now 45 vehicles (up from 39), all with photos resolving, feed reading `live-r2` rather than the committed sample. Only loose end: images push less often than the vehicle file (last image push 7 Aug), so a future arrival could land without photos — the daily check watches `heroMissing` for exactly that</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">0</span>
       </header>
-      <div class="cards">
-      <div class="card">
-        <div class="card-title">Feed scheduler configured — awaiting the first scheduled push</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">feed.pushedAt</span><span class="tag tag-neutral">deploy hook</span></div>
-        <div class="card-desc">Root cause of the stall found and fixed within hours on 5 Aug. `feed.pushedAt` shipped that morning and immediately showed the last write to R2 was <strong>26 Jul 21:15 UTC</strong>, nine days earlier. Raised with Motorcentral; Peter Knight replied that <strong>no scheduler had ever been set up</strong> — the 24 and 26 Jul pushes were manual — and he has now configured one. So this was never a broken pipe: our SFTPGo endpoint on Fly.io was up throughout and the two manual pushes landed correctly. First scheduled push expected overnight 5–6 Aug. Watching for two things: `pushedAt` advancing (proves the schedule works), and the site rebuilding off the back of it — which would be the <strong>first time the Pages deploy hook has been observed firing</strong>, since no push has landed since it was wired. `pushedAt` moving proves the whole chain at once, because the endpoint can only be regenerated by a build</div>
-      </div></div>
+      <div class="cards"><div class="empty">No items</div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -1074,13 +1074,13 @@
       <div class="cards">
       <div class="card">
         <div class="card-title">Feed health endpoint — the daily stock check survives the gate</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/api/stock-status.json</span><span class="tag tag-neutral">heroMissing</span><span class="tag tag-neutral">feed.source</span></div>
-        <div class="card-desc">Gating the site blinded the daily stock-feed check (5 Aug): it scraped `/vehicles/` for card counts, and every path started returning 401, which reads identically to an empty feed. Replaced the scrape with `/api/stock-status.json` — a build-time snapshot of feed provenance, vehicle counts, photo coverage and hero-image resolution, listed in `OPEN_PATHS` in the gate middleware so a monitor reads it without the preview password. Aggregate counts and vehicle titles only, `noindex` + `no-store`, exact-path match (a trailing slash still 401s). Two things make it better than the scrape it replaces: `photos.heroMissing` resolves heroes through the same `vehicleHero()` the cards call, so it cannot disagree with what renders — proven by breaking a photo set on purpose and watching it flip to `ok: false`; and `feed.source` is written by the ingest itself, so a silent fallback to the committed sample is visible instead of masquerading as fresh stock. Extended the same day with `feed.pushedAt` / `feed.imagesPushedAt` — the R2 `LastModified` the listing already returned and the build was discarding, so dealer write time is now separate from build time at no extra request cost. That distinction immediately earned itself: it exposed that the feed has been stalled since 26 Jul. PRs #23/#24, #25/#26</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">/vehicles/</span><span class="tag tag-neutral">/api/stock-status.json</span><span class="tag tag-neutral">OPEN_PATHS</span><span class="tag tag-neutral">photos.heroMissing</span><span class="tag tag-neutral">vehicleHero()</span><span class="tag tag-neutral">ok: false</span><span class="tag tag-neutral">feed.source</span><span class="tag tag-neutral">feed.pushedAt</span><span class="tag tag-neutral">feed.imagesPushedAt</span></div>
+        <div class="card-desc">Gating the site blinded the daily stock-feed check (5 Aug): it scraped `/vehicles/` for card counts, and every path started returning 401, which reads identically to an empty feed. Replaced the scrape with `/api/stock-status.json` — a build-time snapshot of feed provenance, vehicle counts, photo coverage and hero-image resolution, listed in `OPEN_PATHS` in the gate middleware so a monitor reads it without the preview password. Aggregate counts and vehicle titles only, noindex + no-store, exact-path match (a trailing slash still 401s). Two things make it better than the scrape it replaces: `photos.heroMissing` resolves heroes through the same `vehicleHero()` the cards call, so it cannot disagree with what renders — proven by breaking a photo set on purpose and watching it flip to `ok: false`; and `feed.source` is written by the ingest itself, so a silent fallback to the committed sample is visible instead of masquerading as fresh stock. Extended the same day with `feed.pushedAt` / `feed.imagesPushedAt` — the R2 LastModified the listing already returned and the build was discarding, so dealer write time is now separate from build time at no extra request cost. That distinction immediately earned itself: it exposed that the feed had been stalled since 26 Jul. PRs #23/#24, #25/#26</div>
       </div>
       <div class="card">
         <div class="card-title">Photo coverage now 100% of live stock</div>
-        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">39/39</span></div>
-        <div class="card-desc">The new endpoint&#39;s first live read (5 Aug) shows all 39 vehicles carrying photos — 195 image files, five per vehicle at the build-time gallery cap — up from 5 of 39 on the 24 Jul first push. The images arrived in the 26 Jul push and a later code deploy picked them up, which is why nobody noticed the improvement. Every hero resolves, so the card grid has replaced the text-row fallback list entirely. Also confirms production is building from the live R2 feed (`feed.source: "live-r2"`), not the committed sample</div>
+        <div class="card-tags"><span class="tag tag-phase-2">phase-2</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">feed.source: &quot;live-r2&quot;</span></div>
+        <div class="card-desc">The new endpoint&#39;s first live read (5 Aug) shows all 39 vehicles carrying photos — 195 image files, five per vehicle at the build-time gallery cap — up from 5 of 39 on the 24 Jul first push. The images arrived in the 26 Jul push and a later code deploy picked them up, which is why nobody noticed the improvement. Every hero resolves, so the card grid has replaced the text-row fallback list entirely. Also confirms production is building from the live R2 feed (`feed.source: &quot;live-r2&quot;`), not the committed sample</div>
       </div>
       <div class="card">
         <div class="card-title">Site gated for client review</div>
