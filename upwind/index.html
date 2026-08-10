@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>48%</strong> complete</div>
-        <div><strong>74</strong>/154 cards done</div>
-        <div>Updated <strong>2026-08-01 02:59 UTC</strong></div>
+        <div><strong>47%</strong> complete</div>
+        <div><strong>75</strong>/158 cards done</div>
+        <div>Updated <strong>2026-08-10 20:41 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">74</div>
+        <div class="status-num">75</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">10</div>
+        <div class="status-num">11</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -920,6 +920,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">💰 Where every dollar actually goes — the cost analysis, measured not modelled</div>
+            <div class="recent-desc">Ricky asked, 2 Aug: cost to create, cost to host, cost while live, and the split between every party and supplier. Written up in `COST-ANALYSIS.md` in the repo, with each figure tagged **measured / published / modelled / unverified** so nothing soft is presented as hard. **The headline is that suppliers are irrelevant and the partner is the business&#39;s main cost.** Over five years on a US$500 build + US$49/mo: customer pays ~US$3,440, of which **partner ~23.6%, Stripe ~4.9%, every supplier combined ~0.3%, Upwind ~71%.** **Marginal cost to keep one site live is ~US$0.13/month** against US$49 of revenue — Cloudflare custom hostname US$0.10, Worker requests ~US$0.001, Supabase egress ≈0 because the renderer caches 24h at the edge, Postmark ~US$0.01. **Fixed platform is ~US$35/mo**, so **break-even is the first live site**; no scale is required to cover the stack. **Creating a site costs under 50 US cents** — Places ~US$0.38 for a 12-call run yielding up to 240 leads, Sonnet 4.6 ~US$0.13 a generation, crawl and Unsplash free. The real cost of a site is human time and none of it is in this stack. **Stripe was measured, not assumed:** the prod ledger carries the real `balance_transaction.fee` on a live charge — **US$2.43 on US$49 = 4.96%**, which decomposes exactly to Stripe&#39;s published NZ rates of **2.65% domestic + 2.00% currency conversion + NZ$0.30**. Two of those five points are pure FX from presenting in USD and settling in NZD; pricing NZ customers in NZD would recover ~2% of every dollar but breaks the USD partner ledger, so it is a real trade rather than free money. **🔴 The build fee is a partner subsidy, not a revenue line.** On US$500: partner **US$451.57 (90.3%)**, Stripe US$23.43, **Upwind US$25.00 (5%)** — `accrue_commission` pays `gross − stripe_fee − 5% admin`. That is the deliberate shape of the offer (the partner does the selling and the client work), but it means **the whole business is the hosting annuity** and anyone modelling build fees as revenue is wrong by a factor of twenty. Year 1 on one customer is US$1,088 gross split partner 46.6% / Upwind 48.3%; year 2 onward it is Upwind 85.2% at the 10% tier, 73.8% at 22%. **🔴 The annual plan is discounted out of our share, not the partner&#39;s.** US$499/yr against US$588/yr gives away US$89 — the partner loses US$8.36 and **Upwind loses US$80.64**. Possibly the right call for churn, but it is a decision and it has never been named as one. Three findings that came out of this and are now their own cards: the `tax_behavior` mismatch between the two prices, who pays the Wise transfer fee, and `uptime-check`&#39;s invocation growth</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">🖼️ Three drawings for Services, and the fill rule that flattened the CTA picker</div>
             <div class="recent-desc">The pilot for *a layout must be worth a picture*, and it answered the question it was built to answer. Services&#39; three layouts all pointed at `VWF.generic`, so the picker showed **one grey box three times** and the customer was choosing between text labels — which is choosing between parameters in disguise. Drawn properly (List: wide rows, price hard right, hairlines. Cards: three outlined cards with a divided price. Menu: 2×2 with dotted leaders) they are told apart instantly and the labels drop to **List / Cards / Menu**. `Menu` also stops advertising a column count it should not be promising. **🔴 The more useful half was found while drawing them.** `.csle-varwire svg rect { fill }` in `live-edit/src/styles.ts` beats a `fill` **presentation attribute** — those rank below any author CSS rule. So every `&lt;rect fill=&quot;#fff&quot;&gt;` and `&lt;rect fill=&quot;none&quot;&gt;` in a wireframe is silently repainted solid grey: **all four CTA layouts plus the section icon**, meaning Banner, Split and Boxed have been rendering as three identical slabs with their buttons and outline invisible. Verified by computed style rather than by eye — an attribute fill resolves to `rgb(203,214,228)`, an inline `style=&quot;fill:none&quot;` resolves to `none`. Fixed by moving the declaration to an inline style, which outranks the stylesheet; geometry untouched. `heroFull` had already hit this and worked around it with a `&lt;path&gt;`, but the finding never left that one line — the note now sits with the wireframes so the remaining ~50 do not rediscover it. 696 tests, `tsc` clean, starter build clean. `b83484e`, **on `dev`** — not yet promoted</div>
           </div>
@@ -952,13 +959,6 @@
             <div class="recent-desc">`STRIPE_MODE` is gone from the codebase and now from both projects&#39; secrets. Staging holds Upwind&#39;s test keys, production holds Upwind&#39;s live keys, read from plain names with no branching. **The guard is the point.** `assertStripeMode()` was written to catch &quot;a live key while STRIPE_MODE=test — real money during a rehearsal&quot; and was **never invoked** — one grep hit, its own definition. It is now `assertStripeEnv()`, driven off `APP_ENV`, called at the top of all five Stripe handlers in the exact position their ad-hoc `if (!SK || !PRICE) return 500 &#39;stripe not configured&#39;` checks already occupied, so it replaces them rather than layering. It names the mismatch instead of saying &quot;not configured&quot; for six different faults, and it refuses to guess: no default for `APP_ENV`, because defaulting is the class of bug being removed. **🔴 A correction bigger than the migration:** two of the three incidents that justified this work **never happened**. The 28 Jul investigation concluded prod&#39;s `*_TEST` set belonged to a different Stripe account (`HXnhNJQhs8` vs Upwind&#39;s `HtrmVIubMC`) and that staging had been transacting against it for a month. Both wrong — `HXnhNJQhs8` is Upwind&#39;s own **test-mode** fragment; an account&#39;s test and live objects do not share a fragment, so the original comparison proved nothing. Verified in the Stripe dashboard: the staging subscription resolves inside Upwind&#39;s test mode. There was never a second account. Corrected in `stripeEnv.ts` and the scope doc, with a standing note: **never infer a Stripe account from an object id — look it up in the dashboard for that mode.** The first incident was real and reason enough alone: prod in `STRIPE_MODE=test` delivered a production payment to *staging&#39;s* webhook. One switch, real money, no warning. **Verified:** real test-card purchase on staging through the new code (`create-checkout` v55) with all three webhook events recorded; prod guard probed **400 bad signature** (guard passed — a 500 would be refusal); prod&#39;s `APP_ENV=production` and both live price IDs cross-checked by hash against `acct_1TstvrHtrmVIubMC` read from the Stripe API; 684 tests, `tsc` and `deno check` clean; zero prod errors after deploy. `#71`, `#72`, `#73`</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">📬 Email deliverability closed, and the `*_TEST` keys are gone</div>
-            <div class="recent-desc">**Inbox placement passed:** Ricky confirmed 31 Jul that a magic link lands in the **inbox on both iCloud and Gmail** — the last unknown on the front door, and the original junk-folder report predated both the verified DNS and the 27 Jul Postmark token switch. All four auth records re-checked live at the same time: SPF at the apex now reads `v=spf1 include:spf.mtasv.net include:_spf.google.com ~all`, covering **both** Postmark and Google Workspace, which was exactly the condition set before an apex SPF could safely be added; DKIM published at `20260721045428pm._domainkey`; Return-Path `return.tryupwind.com → pm.mtasv.net`; DMARC `p=none` with `rua`. **And the wrong-account Stripe keys are deleted:** prod no longer holds `STRIPE_SECRET_KEY_TEST`, `STRIPE_WEBHOOK_SECRET_TEST`, `STRIPE_PRICE_ID_TEST` or `STRIPE_PRICE_ID_ANNUAL_TEST` — the set belonging to `HXnhNJQhs8` rather than Upwind&#39;s `HtrmVIubMC`, which had already misrouted one production payment. The live ammunition is off the premises; `STRIPE_MODE` itself is still there and is the remaining half (see This Week)</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -971,13 +971,13 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">Legal sign-off on the Partner Agreement</div>
-        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">legal</span></div>
-        <div class="card-desc">This is the document a recruited partner accepts, so it gates selling at any scale beyond us. Ricky, 29 Jul: *&quot;I will get legal to check your change before we go live for real.&quot;* The commission model changed after the draft (100% of build fee less real payment costs and 5%)</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">legal</span><span class="tag tag-neutral">run-payout-batch</span><span class="tag tag-neutral">sourceAmount = netCents</span><span class="tag tag-neutral">_shared/money.ts:306</span><span class="tag tag-neutral">partner_payout_details</span><span class="tag tag-neutral">payout_batches</span><span class="tag tag-neutral">payout</span></div>
+        <div class="card-desc">This is the document a recruited partner accepts, so it gates selling at any scale beyond us. Ricky, 29 Jul: *&quot;I will get legal to check your change before we go live for real.&quot;* The commission model changed after the draft (100% of build fee less real payment costs and 5%). **🔴 One more thing to put in front of legal, found 2 Aug in the cost analysis: on the current code the partner pays the Wise transfer fee, not us.** `run-payout-batch` raises the quote with `sourceAmount = netCents` (`_shared/money.ts:306`), and with Wise a **source** amount means the fee is deducted from it and the recipient gets the converted remainder — so a partner owed US$100 receives roughly US$99. If the agreement promises &quot;you receive US$X&quot;, the code does not do that. Whether that is a code fix or an agreement wording fix is Ricky&#39;s call, but it should be decided before the document is signed rather than after. **Nobody has ever observed this either way** — `partner_payout_details`, `payout_batches` and `payout` ledger entries are still 0 rows in both prod and staging, so the rail has never moved money. The Wise fee itself is unverified (~0.6% + a fixed component is an estimate, not a retrieved figure)</div>
       </div>
       <div class="card">
         <div class="card-title">A purchase with a build fee over US$60</div>
@@ -986,8 +986,13 @@
       </div>
       <div class="card">
         <div class="card-title">Fund the Openprovider balance</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">decision</span></div>
-        <div class="card-desc">Sits at US$0.00. Domain search and quoting are live; registration cannot be built against an unfunded account</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">_shared/domainPricing.ts:49</span><span class="tag tag-neutral">.io</span><span class="tag tag-neutral">.design</span><span class="tag tag-neutral">wholesale &gt; $60</span></div>
+        <div class="card-desc">Sits at US$0.00. Domain search and quoting are live; registration cannot be built against an unfunded account. **Cost side is now known:** we charge US$5/mo = **US$60/yr**, .com wholesale is Verisign&#39;s **US$10.26** plus Openprovider&#39;s cost-price margin (~US$10.50–11 all in), so **~US$49/yr at ~82% margin**. The allowlist in `_shared/domainPricing.ts:49` is what makes a flat price safe — `.io` at ~US$53.50 and `.design` at ~US$48 would be break-even or worse. ⚠️ The `wholesale &gt; $60` backstop checks the **create** price and many TLDs renew above it, so a name that passes at signup can renew above our take in year 2. Low risk across the eight allowlisted TLDs; a real risk if the list grows</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Confirm whether Stripe Billing&#39;s 0.7% is being charged</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">finance</span><span class="tag tag-neutral">stripe</span><span class="tag tag-neutral">balance_transaction.fee</span><span class="tag tag-neutral">COST-ANALYSIS.md</span><span class="tag tag-neutral">STRIPE_TAX</span><span class="tag tag-neutral">automatic_tax[enabled]</span><span class="tag tag-neutral">create-checkout/index.ts:147</span></div>
+        <div class="card-desc">🔑 I can read charges and balance transactions through the Stripe MCP but not the account&#39;s own Stripe invoices, so this is the one number in the cost analysis I could not close. Stripe NZ lists **Billing (pay-as-you-go) at 0.7% of Billing volume**, charged separately from processing — so it would **not** appear in the `balance_transaction.fee` the ledger records, and every hosting margin in `COST-ANALYSIS.md` would be 0.7pp lower than stated. On US$49/mo that is US$0.34. One look at the Stripe dashboard billing settings settles it. Same trip, worth checking: whether **Stripe Tax** is on — `STRIPE_TAX` gates `automatic_tax[enabled]` in `create-checkout/index.ts:147`, and Tax Complete starts at NZ$150/mo on a one-year contract</div>
       </div>
       <div class="card">
         <div class="card-title">Sign off the plugins scope — five decisions</div>
@@ -1003,9 +1008,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">74</span>
+        <span class="col-count">75</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">💰 Where every dollar actually goes — the cost analysis, measured not modelled</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">finance</span><span class="tag tag-neutral">analysis</span><span class="tag tag-neutral">COST-ANALYSIS.md</span><span class="tag tag-neutral">balance_transaction.fee</span><span class="tag tag-neutral">accrue_commission</span><span class="tag tag-neutral">gross − stripe_fee − 5% admin</span><span class="tag tag-neutral">tax_behavior</span><span class="tag tag-neutral">uptime-check</span></div>
+        <div class="card-desc">Ricky asked, 2 Aug: cost to create, cost to host, cost while live, and the split between every party and supplier. Written up in `COST-ANALYSIS.md` in the repo, with each figure tagged **measured / published / modelled / unverified** so nothing soft is presented as hard. **The headline is that suppliers are irrelevant and the partner is the business&#39;s main cost.** Over five years on a US$500 build + US$49/mo: customer pays ~US$3,440, of which **partner ~23.6%, Stripe ~4.9%, every supplier combined ~0.3%, Upwind ~71%.** **Marginal cost to keep one site live is ~US$0.13/month** against US$49 of revenue — Cloudflare custom hostname US$0.10, Worker requests ~US$0.001, Supabase egress ≈0 because the renderer caches 24h at the edge, Postmark ~US$0.01. **Fixed platform is ~US$35/mo**, so **break-even is the first live site**; no scale is required to cover the stack. **Creating a site costs under 50 US cents** — Places ~US$0.38 for a 12-call run yielding up to 240 leads, Sonnet 4.6 ~US$0.13 a generation, crawl and Unsplash free. The real cost of a site is human time and none of it is in this stack. **Stripe was measured, not assumed:** the prod ledger carries the real `balance_transaction.fee` on a live charge — **US$2.43 on US$49 = 4.96%**, which decomposes exactly to Stripe&#39;s published NZ rates of **2.65% domestic + 2.00% currency conversion + NZ$0.30**. Two of those five points are pure FX from presenting in USD and settling in NZD; pricing NZ customers in NZD would recover ~2% of every dollar but breaks the USD partner ledger, so it is a real trade rather than free money. **🔴 The build fee is a partner subsidy, not a revenue line.** On US$500: partner **US$451.57 (90.3%)**, Stripe US$23.43, **Upwind US$25.00 (5%)** — `accrue_commission` pays `gross − stripe_fee − 5% admin`. That is the deliberate shape of the offer (the partner does the selling and the client work), but it means **the whole business is the hosting annuity** and anyone modelling build fees as revenue is wrong by a factor of twenty. Year 1 on one customer is US$1,088 gross split partner 46.6% / Upwind 48.3%; year 2 onward it is Upwind 85.2% at the 10% tier, 73.8% at 22%. **🔴 The annual plan is discounted out of our share, not the partner&#39;s.** US$499/yr against US$588/yr gives away US$89 — the partner loses US$8.36 and **Upwind loses US$80.64**. Possibly the right call for churn, but it is a decision and it has never been named as one. Three findings that came out of this and are now their own cards: the `tax_behavior` mismatch between the two prices, who pays the Wise transfer fee, and `uptime-check`&#39;s invocation growth</div>
+      </div>
       <div class="card">
         <div class="card-title">🖼️ Three drawings for Services, and the fill rule that flattened the CTA picker</div>
         <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">editor</span><span class="tag tag-neutral">sections</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">VWF.generic</span><span class="tag tag-neutral">Menu</span><span class="tag tag-neutral">.csle-varwire svg rect { fill }</span><span class="tag tag-neutral">live-edit/src/styles.ts</span><span class="tag tag-neutral">fill</span><span class="tag tag-neutral">&lt;rect fill=&quot;#fff&quot;&gt;</span><span class="tag tag-neutral">&lt;rect fill=&quot;none&quot;&gt;</span><span class="tag tag-neutral">rgb(203,214,228)</span><span class="tag tag-neutral">style=&quot;fill:none&quot;</span><span class="tag tag-neutral">none</span><span class="tag tag-neutral">heroFull</span><span class="tag tag-neutral">&lt;path&gt;</span><span class="tag tag-neutral">tsc</span><span class="tag tag-neutral">b83484e</span><span class="tag tag-neutral">dev</span></div>
@@ -1444,9 +1454,14 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week — launch wave</h2>
-        <span class="col-count">10</span>
+        <span class="col-count">11</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🔴 The two hosting prices are taxed differently</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">stripe</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">price_1TxemUHtrmVIubMCMqiPL5N8</span><span class="tag tag-neutral">tax_behavior: &quot;inclusive&quot;</span><span class="tag tag-neutral">price_1Txek8HtrmVIubMC9mhLAwZ8</span><span class="tag tag-neutral">&quot;unspecified&quot;</span><span class="tag tag-neutral">automatic_tax[enabled]</span><span class="tag tag-neutral">create-checkout/index.ts:147</span><span class="tag tag-neutral">active</span><span class="tag tag-neutral">tax_behavior</span></div>
+        <div class="card-desc">Found 2 Aug in the cost analysis, by reading both Stripe prices rather than the checkout code. The **annual** price `price_1TxemUHtrmVIubMCMqiPL5N8` (US$499/yr) carries **`tax_behavior: &quot;inclusive&quot;`**; the **monthly** price `price_1Txek8HtrmVIubMC9mhLAwZ8` (US$49/mo) carries **`&quot;unspecified&quot;`**, which falls through to the account default. With `automatic_tax[enabled]` on (`create-checkout/index.ts:147`), that means the annual price is treated as **GST-inclusive** — a NZ customer paying US$499 nets us ~US$434 — while the monthly price has tax **added on top** and nets the full US$49. **Same product, two tax treatments, and the annual one silently costs us 13% more than the monthly one on top of the discount it already carries.** This is not a design decision anyone made; it is two prices created at different moments. Neither is obviously the right answer — inclusive is the friendlier retail presentation, exclusive is the honest B2B one — but they must match. **Nothing is bleeding today** (production has 0 `active` sites), which is exactly why it is cheap to fix now and expensive to fix after the first cohort of annual subscribers. Fixing it means creating a replacement price, not editing the existing one: `tax_behavior` is immutable on a Stripe price once set</div>
+      </div>
       <div class="card">
         <div class="card-title">🔴 Cache purge skips custom domains entirely — and two shipped fixes are narrower than their cards claim</div>
         <div class="card-tags"><span class="tag tag-neutral">bug</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">billing</span><span class="tag tag-neutral">purgeSiteCache()</span><span class="tag tag-neutral">{files:[…]}</span><span class="tag tag-neutral">urlsFor()</span><span class="tag tag-neutral">https://&lt;subdomain&gt;.&lt;zoneRoot&gt;</span><span class="tag tag-neutral">_shared/purgeCache.ts:62-78</span><span class="tag tag-neutral">:95-100</span><span class="tag tag-neutral">domains</span><span class="tag tag-neutral">purge-cache/index.ts:49</span><span class="tag tag-neutral">stripe-webhook/index.ts:92</span><span class="tag tag-neutral">s-maxage=86400</span><span class="tag tag-neutral">&lt;sub&gt;.upwind.page</span><span class="tag tag-neutral">upwind.page</span><span class="tag tag-neutral">theboys.co.nz</span><span class="tag tag-neutral">domains.hostname</span><span class="tag tag-neutral">Cache-Tag: site:&lt;id&gt;</span><span class="tag tag-neutral">index.ts:128</span></div>
@@ -1593,9 +1608,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>🅿️ Parking Lot — consciously deferred, needs a decision</h2>
-        <span class="col-count">38</span>
+        <span class="col-count">39</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">`uptime-check` is the only supplier line that scales badly</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">supabase</span><span class="tag tag-neutral">cost</span><span class="tag tag-neutral">active</span><span class="tag tag-neutral">uptime-check</span></div>
+        <div class="card-desc">Fell out of the cost analysis 2 Aug. Every other cost line is flat or trivial as sites multiply: Cloudflare custom hostnames are US$0.10/mo each above the free 100 (900 sites = US$90/mo against a 50,000 cap), Workers requests cross the included 10M at ~3,300 sites, Postmark crosses 10,000 emails at ~1,500 sites, and Supabase **egress** barely moves because the renderer caches 24h at the edge. **Supabase edge-function invocations are the exception.** The Pro plan includes **2M/month**; hourly uptime checking is **720k/month at 1,000 sites** — 36% of the quota consumed by one cron — and at roughly 2,500 sites it consumes the entire allowance, US$2/M thereafter. **Not urgent and deliberately parked:** production has 0 `active` sites, so this is a problem two orders of magnitude away. It is on the board because it is cheap to fix while it is theoretical (batch many hostnames into one invocation, or move the loop to a Cloudflare cron where requests are far cheaper) and annoying to fix once it is a line on a bill. **Do not do this before M4.** Modelled, not measured — the 720k figure assumes one invocation per site per hour and should be checked against the actual `uptime-check` loop before anyone acts on it</div>
+      </div>
       <div class="card">
         <div class="card-title">M10–M13 — Plugins: booking and ordering on an Upwind site</div>
         <div class="card-tags"><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">plugins</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">research</span><span class="tag tag-neutral">SCOPE-plugins.md</span><span class="tag tag-neutral">NewSiteModal.tsx:244</span><span class="tag tag-neutral">TRACK_FMT</span><span class="tag tag-neutral">render.tsx:37-67</span><span class="tag tag-neutral">submit-form</span><span class="tag tag-neutral">leads</span><span class="tag tag-neutral">splitInvoiceAmounts()</span><span class="tag tag-neutral">hosting_commission</span><span class="tag tag-neutral">purge-cache</span></div>
