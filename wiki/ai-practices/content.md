@@ -180,7 +180,7 @@ His methodological note is worth stealing too: he reads the **METR task-length c
 <iframe src="https://www.youtube-nocookie.com/embed/-npY6XjM8CQ" title="When Will The Benchmaxxing Plague End? — Nick Heiner, Surge AI (AI Engineer)" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
 
-📊 *Slides — click through inline (or use fullscreen):*
+📊 *Slides — 15 slides, rebuilt **10 Aug 2026** around this topic's current lead (the reviewer, not just the grader). Click through inline, or use fullscreen:*
 
 <div style="position:relative;width:100%;max-width:820px;aspect-ratio:16/9;margin:1.1rem 0;">
 <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FCoreshiftHQNZ%2Fcoreshift-kanbans%2Fmain%2Fai-radar%2Fdecks%2FEvals-and-Self-Verifying-Agents.pptx" title="Evals & Self-Verifying Agents — slides" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:10px;" allowfullscreen></iframe>
