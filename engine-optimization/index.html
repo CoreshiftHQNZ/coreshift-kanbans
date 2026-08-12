@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engine Optimization — Kanban</title>
+  <style>
+    :root {
+      --navy: #0F1E3D;
+      --navy-deep: #081530;
+      --navy-soft: #1A2A4F;
+      --teal: #14B8A6;
+      --teal-dark: #0D9488;
+      --teal-light: #CCFBF1;
+      --amber: #F59E0B;
+      --amber-light: #FEF3C7;
+      --red: #DC2626;
+      --red-light: #FEE2E2;
+      --green: #10B981;
+      --green-light: #D1FAE5;
+      --purple: #8B5CF6;
+      --purple-light: #EDE9FE;
+      --blue: #3B82F6;
+      --blue-light: #DBEAFE;
+      --indigo: #6366F1;
+      --indigo-light: #E0E7FF;
+      --pink: #EC4899;
+      --pink-light: #FCE7F3;
+      --gray: #64748B;
+      --gray-light: #E2E8F0;
+      --gray-lighter: #F1F5F9;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #475569;
+      --text-soft: #94A3B8;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 14px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    header.page-head {
+      background: var(--navy);
+      color: #FFFFFF;
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--navy-deep);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .page-head-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .page-brand { display: flex; align-items: center; gap: 14px; }
+    .brand-mark {
+      width: 36px; height: 36px;
+      background: var(--teal);
+      color: var(--navy);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 18px;
+    }
+    .brand-title {
+      font-size: 18px; font-weight: 700; letter-spacing: -0.01em;
+    }
+    .brand-sub {
+      font-size: 11px; color: var(--teal);
+      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .page-meta {
+      font-size: 12px; color: #8EA5C8;
+      display: flex; gap: 24px; flex-wrap: wrap;
+    }
+    .page-meta strong { color: #FFFFFF; font-weight: 600; }
+
+    /* Main layout */
+    .page-main {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 32px 32px 48px;
+    }
+
+    /* Section headings */
+    .section-head {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 16px;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: -8px 0 16px;
+    }
+    .section-sub code {
+      background: var(--gray-lighter);
+      border: 1px solid var(--gray-light);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 12px;
+      color: var(--navy);
+    }
+
+    /* Hero */
+    .hero {
+      margin-bottom: 48px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .hero-eyebrow {
+      color: var(--teal-dark);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      margin-bottom: 14px;
+    }
+    .hero-title {
+      color: var(--navy);
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin: 0 0 12px;
+    }
+    .hero-tagline {
+      color: var(--teal-dark);
+      font-size: 22px;
+      font-style: italic;
+      font-weight: 500;
+      margin: 0 0 16px;
+      line-height: 1.35;
+    }
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 17px;
+      line-height: 1.5;
+      max-width: 880px;
+      margin: 0;
+    }
+    .hero-phase-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .phase-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 13px;
+    }
+    .phase-pill-label {
+      color: var(--text-soft);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .phase-pill-value {
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .phase-pill-date {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 4px;
+    }
+    .phase-pill-milestone {
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+    .phase-pill-milestone .phase-pill-label { color: var(--teal); }
+    .phase-pill-milestone .phase-pill-value { color: #FFFFFF; }
+    .phase-pill-milestone .phase-pill-date { color: #CADCFC; }
+
+    /* Goals */
+    .goals { margin-bottom: 40px; }
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .goal-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 24px;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .goal-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .goal-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .goal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .goal-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Phases */
+    .phases { margin-bottom: 40px; }
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .phase-card {
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .phase-card:hover {
+      box-shadow: 0 6px 20px rgba(15, 30, 61, 0.08);
+      transform: translateY(-2px);
+    }
+    .phase-card.phase-done       { border-top: 4px solid var(--green); }
+    .phase-card.phase-in-progress{ border-top: 4px solid var(--amber); }
+    .phase-card.phase-planned    { border-top: 4px solid var(--blue); }
+    .phase-card.phase-future     { border-top: 4px solid var(--gray); opacity: 0.88; }
+    .phase-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .phase-marker {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .phase-card.phase-done .phase-marker        { background: var(--green); }
+    .phase-card.phase-in-progress .phase-marker { background: var(--amber); }
+    .phase-status-pill {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .phase-status-done        { background: var(--green-light); color: #065F46; }
+    .phase-status-in-progress { background: var(--amber-light); color: #B45309; }
+    .phase-status-planned     { background: var(--blue-light); color: #1D4ED8; }
+    .phase-status-future      { background: var(--gray-light); color: var(--gray); }
+    .phase-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 2px;
+      letter-spacing: -0.01em;
+    }
+    .phase-subtitle {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+    .phase-window {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+    .phase-desc {
+      font-size: 12.5px;
+      color: var(--text);
+      line-height: 1.5;
+      margin: 0 0 12px;
+    }
+    .phase-deliverables {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-top: 1px solid var(--gray-light);
+      padding-top: 10px;
+    }
+    .phase-deliverables li {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      padding: 3px 0 3px 14px;
+      position: relative;
+    }
+    .phase-deliverables li::before {
+      content: "•";
+      position: absolute;
+      left: 4px;
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    /* Status strip */
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 20px 8px;
+    }
+    .status-stat {
+      text-align: center;
+      padding: 8px 12px;
+      border-right: 1px solid var(--gray-light);
+    }
+    .status-stat:last-child { border-right: none; }
+    .status-num {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+    .status-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-top: 8px;
+    }
+    .status-done .status-num        { color: var(--green); }
+    .status-in-progress .status-num { color: var(--amber); }
+    .status-blocked .status-num     { color: var(--red); }
+    .status-this-week .status-num   { color: var(--blue); }
+    .status-backlog .status-num     { color: var(--gray); }
+
+    /* Links */
+    .links { margin-bottom: 40px; }
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+    }
+    .link-card:hover {
+      box-shadow: 0 4px 14px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+      border-color: var(--teal);
+    }
+    .link-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .link-text { flex: 1; }
+    .link-title {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+    .link-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .link-arrow {
+      color: var(--teal);
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Roles */
+    .roles { margin-bottom: 40px; }
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .role-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+    .role-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .role-text { flex: 1; }
+    .role-name {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .role-person {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 6px;
+      font-size: 13px;
+    }
+    .role-verbs {
+      font-size: 12px;
+      color: var(--text-soft);
+      font-weight: 500;
+    }
+
+    /* Recently shipped */
+    .recent { margin-bottom: 40px; }
+    .recent-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 16px;
+      background: var(--card);
+      border: 1px solid var(--gray-light);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+    .recent-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+    }
+    .recent-check {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .recent-text { flex: 1; min-width: 0; }
+    .recent-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+    .recent-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    /* Board section */
+    .board-section { margin-top: 8px; }
+
+    /* Kanban board */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(280px, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .column {
+      background: var(--gray-lighter);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--gray-light);
+    }
+    .col-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 4px 4px 12px;
+      border-bottom: 2px solid transparent;
+    }
+    .col-head h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.02em;
+    }
+    .col-count {
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--gray-light);
+    }
+
+    /* Column accents */
+    .col-done .col-head        { border-bottom-color: var(--green); }
+    .col-in-progress .col-head { border-bottom-color: var(--amber); }
+    .col-blocked .col-head     { border-bottom-color: var(--red); }
+    .col-this-week .col-head   { border-bottom-color: var(--blue); }
+    .col-backlog .col-head     { border-bottom-color: var(--gray); }
+
+    .col-done .col-count        { color: var(--green); border-color: var(--green-light); }
+    .col-in-progress .col-count { color: #B45309; border-color: var(--amber-light); }
+    .col-blocked .col-count     { color: var(--red); border-color: var(--red-light); }
+    .col-this-week .col-count   { color: #1D4ED8; border-color: var(--blue-light); }
+    .col-backlog .col-count     { color: var(--gray); border-color: var(--gray-light); }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 12px 14px;
+      border: 1px solid var(--gray-light);
+      box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04);
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(15, 30, 61, 0.08);
+      transform: translateY(-1px);
+    }
+    .card-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13.5px;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 4px 0;
+    }
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 12.5px;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+    .empty {
+      color: var(--text-soft);
+      font-size: 12px;
+      text-align: center;
+      padding: 16px 0;
+      font-style: italic;
+    }
+
+    /* Tags */
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .tag-shipped     { background: var(--green-light); color: #065F46; }
+    .tag-phase-0     { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-phase-1     { background: var(--blue-light); color: #1D4ED8; }
+    .tag-phase-2     { background: var(--purple-light); color: #6D28D9; }
+    .tag-phase-4     { background: var(--pink-light); color: #BE185D; }
+    .tag-phase-3     { background: var(--indigo-light); color: #4338CA; }
+    .tag-deliverable { background: var(--green-light); color: #047857; }
+    .tag-playbook    { background: var(--teal-light); color: var(--teal-dark); }
+    .tag-milestone   { background: #FEE2E2; color: #991B1B; }
+    .tag-infra       { background: var(--amber-light); color: #B45309; }
+    .tag-ops         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-recurring   { background: var(--gray-light); color: var(--gray); }
+    .tag-blocked     { background: var(--red-light); color: var(--red); }
+    .tag-est         { background: var(--gray-light); color: var(--text-muted); }
+    .tag-neutral     { background: var(--gray-light); color: var(--text-muted); }
+
+    /* Footer */
+    footer.page-foot {
+      padding: 16px 32px 32px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+    footer.page-foot a {
+      color: var(--teal-dark);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(13, 148, 136, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .board { grid-template-columns: repeat(3, minmax(280px, 1fr)); }
+      .links-grid { grid-template-columns: 1fr; }
+      .recent-list { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 1300px) {
+      .phases-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 1100px) {
+      .goals-grid { grid-template-columns: 1fr; }
+      .roles-grid { grid-template-columns: 1fr; }
+      .phases-grid { grid-template-columns: repeat(2, 1fr); }
+      .status-strip { grid-template-columns: repeat(2, 1fr); }
+      .status-stat { border-right: none; border-bottom: 1px solid var(--gray-light); }
+      .status-stat:nth-last-child(-n+2) { border-bottom: none; }
+    }
+    @media (max-width: 700px) {
+      .phases-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .page-main { padding: 24px 16px 32px; }
+      .board { grid-template-columns: 1fr; }
+      header.page-head { padding: 16px; }
+      .hero-title { font-size: 32px; }
+      .hero-tagline { font-size: 17px; }
+      .hero-desc { font-size: 15px; }
+    }
+
+    /* Print */
+    @media print {
+      header.page-head { background: var(--card); color: var(--navy); border-bottom: 2px solid var(--gray-light); position: static; }
+      .brand-mark { background: var(--navy); color: #FFFFFF; }
+      .brand-title, .page-meta strong { color: var(--navy); }
+      .page-meta, .brand-sub { color: var(--text-muted); }
+      .board { grid-template-columns: repeat(2, 1fr); padding: 16px; }
+      .column { break-inside: avoid; background: var(--card); border: 1px solid var(--gray-light); }
+      .card:hover { transform: none; box-shadow: 0 1px 2px rgba(15, 30, 61, 0.04); }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="page-head-inner">
+      <div class="page-brand">
+        <div class="brand-mark">🛡</div>
+        <div>
+          <div class="brand-title">Engine Optimization</div>
+          <div class="brand-sub">Operations Dashboard</div>
+        </div>
+      </div>
+      <div class="page-meta">
+        <div><strong>28%</strong> complete</div>
+        <div><strong>8</strong>/29 cards done</div>
+        <div>Updated <strong>2026-08-12 22:51 UTC</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-main">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">INTERNAL · LIVE OPS DASHBOARD</div>
+      <h1 class="hero-title">Engine Optimization</h1>
+      <p class="hero-tagline">The internal tool Growth Partners&#39; SEO specialists run their clients on — audit, plan, do, measure, report, re-plan.</p>
+      <p class="hero-desc">A web app for managing SEO/AEO/GEO clients on a monthly cycle. Everything that can run unattended does: crawls, Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off before anything touches a client site or reaches a client. The thing that makes it different from every tool we surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.</p>
+      <div class="hero-phase-row">
+        <div class="phase-pill">
+          <span class="phase-pill-label">Current phase</span>
+          <span class="phase-pill-value">M1 · Data spine</span>
+        </div>
+        <div class="phase-pill phase-pill-milestone">
+          <span class="phase-pill-label">Next milestone</span>
+          <span class="phase-pill-value">One client&#39;s GSC + GA4 data visible in the app <span class="phase-pill-date">Q3 2026</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOALS -->
+    <section class="goals">
+      <h2 class="section-head">The Three Goals</h2>
+      <div class="goals-grid">
+        
+        <div class="goal-card">
+          <div class="goal-icon">🎯</div>
+          <div class="goal-title">Specialists, not engineers</div>
+          <div class="goal-desc">A team of SEO specialists runs the whole monthly cycle in a web app. Nobody opens a terminal.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">🔁</div>
+          <div class="goal-title">Close the assumption loop</div>
+          <div class="goal-desc">Record what we expect a change to do, then verify it against an untouched control set next month. No prior art does this.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">📈</div>
+          <div class="goal-title">Built for 10, designed for 100</div>
+          <div class="goal-desc">Ten clients today. Multi-client scheduling, per-client history and zero-touch Google access from day one.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASES -->
+    <section class="phases">
+      <h2 class="section-head">Development & Production Phases</h2>
+      <p class="section-sub">Where the project has been, where it is now, and where it's going. Each phase delivers value on its own — no big-bang.</p>
+      <div class="phases-grid">
+        
+        <div class="phase-card phase-in-progress">
+          <div class="phase-card-head">
+            <div class="phase-marker">0</div>
+            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+          </div>
+          <div class="phase-title">Phase 0 <span class="phase-subtitle">Foundation</span></div>
+          <div class="phase-window">In progress · research complete, schema drafted</div>
+          <p class="phase-desc">Get data flowing and prove the measurement is trustworthy before any surface is built on it. The Google service account is the hard blocker — nothing downstream produces a defensible number until it exists.</p>
+          <ul class="phase-deliverables">
+            <li>Google service account + domain-wide delegation via access@growthpartners.co.nz</li><li>Supabase schema applied — clients, properties, audits, findings, work, predictions, reports</li><li>GSC + GA4 ingestion on a calendar-month cadence, with &#39;couldn&#39;t measure&#39; distinct from &#39;measured zero&#39;</li><li>Access preflight that verifies property access rather than trusting a tickbox</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">1</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">Phase 1 <span class="phase-subtitle">Measure</span></div>
+          <div class="phase-window">M2–M3 · after the data spine</div>
+          <p class="phase-desc">Everything that observes a client site. Deterministic where it matters — a score that drifts on an unchanged site destroys the month-over-month report.</p>
+          <ul class="phase-deliverables">
+            <li>Crawler + SEO/GEO/AEO scoring, per-page snapshots retained for page-level diffs</li><li>CORE-EEAT (80 items) and CITE (40 items) frameworks ported under Apache-2.0</li><li>DataForSEO backlink ingestion — without a link index CITE cannot score at all</li><li>Our own multi-engine AI-citation panel, storing raw answers so &#39;cited&#39; can be redefined later</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">2</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">Phase 2 <span class="phase-subtitle">Plan and do</span></div>
+          <div class="phase-window">M4 · after measurement is trusted</div>
+          <p class="phase-desc">Turn six separate priority lists into one ranked month of work that fits the retainer. The aggregator is the piece no surveyed repo has.</p>
+          <ul class="phase-deliverables">
+            <li>Cross-source finding merge + dedupe (a missing H1 appears in three audits)</li><li>Single priority function, effort estimates, owners, capacity fit</li><li>Work items carry a required rationale — it becomes the report&#39;s &#39;why&#39;</li><li>Human approval gate before anything touches a client site</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">3</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">Phase 3 <span class="phase-subtitle">Close the loop</span></div>
+          <div class="phase-window">M5–M6 · the differentiator</div>
+          <p class="phase-desc">Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.</p>
+          <ul class="phase-deliverables">
+            <li>Readback windows fixed before a change, not chosen after</li><li>Matched control-set constructor — demanded by every repo, built by none</li><li>Delta-vs-control, with algorithm updates auto-flagged as confounders</li><li>Monthly report: what we did, why, what we expected, what happened</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-future">
+          <div class="phase-card-head">
+            <div class="phase-marker">4</div>
+            <div class="phase-status-pill phase-status-future">Future</div>
+          </div>
+          <div class="phase-title">Phase 4 <span class="phase-subtitle">Hand to the team</span></div>
+          <div class="phase-window">M7 · the real test</div>
+          <p class="phase-desc">The tool is finished when a specialist who didn&#39;t build it runs a client month unaided. Until then it&#39;s Ricky&#39;s tool, not the team&#39;s.</p>
+          <ul class="phase-deliverables">
+            <li>Specialist-facing onboarding flow with access checklist</li><li>Role-based access and per-client assignment</li><li>Scheduled cycles firing unattended, with actionable failure alerts</li><li>One specialist completes a full cycle end to end without help</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATUS STRIP -->
+    <section class="status-strip">
+      <div class="status-stat status-done">
+        <div class="status-num">8</div>
+        <div class="status-label">Done</div>
+      </div>
+      <div class="status-stat status-in-progress">
+        <div class="status-num">1</div>
+        <div class="status-label">In Progress</div>
+      </div>
+      <div class="status-stat status-blocked">
+        <div class="status-num">1</div>
+        <div class="status-label">Blocked</div>
+      </div>
+      <div class="status-stat status-this-week">
+        <div class="status-num">4</div>
+        <div class="status-label">This Week</div>
+      </div>
+      <div class="status-stat status-backlog">
+        <div class="status-num">6</div>
+        <div class="status-label">Backlog</div>
+      </div>
+    </section>
+
+    <!-- KEY ARTIFACTS / QUICK LINKS -->
+    <section class="links">
+      <h2 class="section-head">Key Artifacts</h2>
+      <div class="links-grid">
+        
+        <a class="link-card" href="https://github.com/aaron-he-zhu/aaron-marketing-skills" target="_blank" rel="noopener">
+          <div class="link-icon">📚</div>
+          <div class="link-text">
+            <div class="link-title">Method source (Apache-2.0)</div>
+            <div class="link-desc">aaron-marketing-skills — CORE-EEAT + CITE frameworks we&#39;re adopting</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ROLES -->
+    <section class="roles">
+      <h2 class="section-head">Who's Involved</h2>
+      <div class="roles-grid">
+        
+        <div class="role-card">
+          <div class="role-avatar">R</div>
+          <div class="role-text">
+            <div class="role-name">Owner <span class="role-person">Ricky</span></div>
+            <div class="role-verbs">Decide · prioritise · review</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-avatar">S</div>
+          <div class="role-text">
+            <div class="role-name">Specialists <span class="role-person">Growth Partners SEO team</span></div>
+            <div class="role-verbs">Run cycles · sign off · deliver</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-avatar">T</div>
+          <div class="role-text">
+            <div class="role-name">The Tools <span class="role-person">Claude Agent SDK · GSC/GA4 · DataForSEO</span></div>
+            <div class="role-verbs">Crawl · probe · draft · measure</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECENTLY SHIPPED -->
+    
+    <section class="recent">
+      <h2 class="section-head">Recently Shipped</h2>
+      <div class="recent-list">
+        
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Reference research: seven codebases surveyed</div>
+            <div class="recent-desc">Read in full: `coreyhaines31/marketingskills`, `AgriciDaniel/claude-seo`, `AgriciDaniel/claude-blog`, `zubair-trabzada/geo-seo-claude`, `aaron-he-zhu/aaron-marketing-skills` (contract layer + 16 SEO/GEO skills), and Coreshift&#39;s own `leanseo`. Verdict: they collectively supply ~60% of an agency SOP and 0% of the system. Best material is Apache-2.0 — fork, adapt, use commercially, strip the trademarks</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Key finding: nobody closes the assumption loop</div>
+            <div class="recent-desc">Grepping every surveyed codebase for prediction/assumption/expectation logic returns essentially nothing. LeanSEO&#39;s only hit is the string `&quot;expected impact&quot;` inside a prompt, written to an untyped blob and never read back. Recording what we expect and checking it is entirely net-new, and it&#39;s the product</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Key finding: no tool measures AI visibility</div>
+            <div class="recent-desc">Every repo measures GEO/AEO *readiness* and calls it AI visibility. Not one queries ChatGPT, Perplexity, or AI Overviews to check whether a client is actually cited. The single keyless probe available measures Tavily, not the engines clients care about</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Correction: CORE-EEAT 80 / CITE 40 are item counts, not pass marks</div>
+            <div class="recent-desc">LeanSEO&#39;s quality-gate doc treats them as thresholds. They&#39;re dimension counts (8×10 and 4×10). Real pass mark is 75, with one verified veto capping the score at 59 and two vetoes blocking outright with no score emitted</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Architecture decided</div>
+            <div class="recent-desc">Web app on Railway + Supabase, since specialists won&#39;t use a terminal. Agent work runs server-side via the Claude Agent SDK. The method lives in versioned, portable skill files the server loads at runtime and we can also run in Claude Code while building. Schema first, before any screen</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Automation posture decided</div>
+            <div class="recent-desc">Everything unattended: crawls, GSC/GA4 pulls, AI probes, snapshots, delta analysis, plan and report drafting. Human gate before any site change and before anything reaches a client</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KANBAN BOARD -->
+    <section class="board-section">
+      <h2 class="section-head">Live Rollout Board</h2>
+      <p class="section-sub">Every task across every phase. Updated by editing <code>KANBAN.md</code> and running <code>update-kanban.cmd</code>.</p>
+      <div class="board">
+        
+    <section class="column col-in-progress">
+      <header class="col-head">
+        <h2>🟡 In Progress</h2>
+        <span class="col-count">1</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">M1: Supabase project + schema</div>
+        <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">docs/schema.md</span></div>
+        <div class="card-desc">Apply the reviewed data model from `docs/schema.md`. Clients, properties, access state, versioned client context, immutable audit runs, per-page snapshots, findings with falsifiability fields, work items, predictions, control sets, cycles, metric snapshots, tracked keywords, AI probes, reports with a real review-check table, and the algorithm-update ledger</div>
+      </div></div>
+    </section>
+    <section class="column col-blocked">
+      <header class="col-head">
+        <h2>🚫 Blocked</h2>
+        <span class="col-count">1</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Everything downstream of measurement</div>
+        <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-blocked">blocked-by:google-access</span><span class="tag tag-neutral">docs/google-access-setup.md</span></div>
+        <div class="card-desc">No GSC or GA4 data flows until the Google service account exists and domain-wide delegation is authorised. Audits produce crawl scores without it, but no traffic, ranking, or delta figure is possible. Steps written up in `docs/google-access-setup.md`</div>
+      </div></div>
+    </section>
+    <section class="column col-neutral">
+      <header class="col-head">
+        <h2>👉 On Ricky</h2>
+        <span class="col-count">3</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Create the Google service account + authorise delegation</div>
+        <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-blocked">blocked-by:access</span><span class="tag tag-neutral">growthpartners.co.nz</span><span class="tag tag-neutral">docs/google-access-setup.md</span><span class="tag tag-neutral">aspmx.l.google.com</span></div>
+        <div class="card-desc">Needs Google Cloud console and Workspace super-admin on `growthpartners.co.nz`. Full steps in `docs/google-access-setup.md` §3–5. Verified the domain is on Workspace (MX → `aspmx.l.google.com`), so delegation is available — this is what makes 10 clients and 100 clients the same amount of setup work: none</div>
+      </div>
+      <div class="card">
+        <div class="card-title">DataForSEO account + API credentials</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">decision-made</span></div>
+        <div class="card-desc">Approved 2026-08-13. Needed before CITE can emit a score at all; nine of its forty items require a link index and the framework demands 100% coverage</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Confirm the milestone set</div>
+        <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-neutral">decision</span></div>
+        <div class="card-desc">Seven milestones drafted below and on the board. Reshape any before M2 starts; they&#39;re the scope arbiter for the next several months</div>
+      </div></div>
+    </section>
+    <section class="column col-done">
+      <header class="col-head">
+        <h2>✅ Done</h2>
+        <span class="col-count">8</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Reference research: seven codebases surveyed</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">research</span><span class="tag tag-neutral">coreyhaines31/marketingskills</span><span class="tag tag-neutral">AgriciDaniel/claude-seo</span><span class="tag tag-neutral">AgriciDaniel/claude-blog</span><span class="tag tag-neutral">zubair-trabzada/geo-seo-claude</span><span class="tag tag-neutral">aaron-he-zhu/aaron-marketing-skills</span><span class="tag tag-neutral">leanseo</span></div>
+        <div class="card-desc">Read in full: `coreyhaines31/marketingskills`, `AgriciDaniel/claude-seo`, `AgriciDaniel/claude-blog`, `zubair-trabzada/geo-seo-claude`, `aaron-he-zhu/aaron-marketing-skills` (contract layer + 16 SEO/GEO skills), and Coreshift&#39;s own `leanseo`. Verdict: they collectively supply ~60% of an agency SOP and 0% of the system. Best material is Apache-2.0 — fork, adapt, use commercially, strip the trademarks</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Key finding: nobody closes the assumption loop</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">research</span><span class="tag tag-neutral">&quot;expected impact&quot;</span></div>
+        <div class="card-desc">Grepping every surveyed codebase for prediction/assumption/expectation logic returns essentially nothing. LeanSEO&#39;s only hit is the string `&quot;expected impact&quot;` inside a prompt, written to an untyped blob and never read back. Recording what we expect and checking it is entirely net-new, and it&#39;s the product</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Key finding: no tool measures AI visibility</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">research</span></div>
+        <div class="card-desc">Every repo measures GEO/AEO *readiness* and calls it AI visibility. Not one queries ChatGPT, Perplexity, or AI Overviews to check whether a client is actually cited. The single keyless probe available measures Tavily, not the engines clients care about</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Correction: CORE-EEAT 80 / CITE 40 are item counts, not pass marks</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">research</span></div>
+        <div class="card-desc">LeanSEO&#39;s quality-gate doc treats them as thresholds. They&#39;re dimension counts (8×10 and 4×10). Real pass mark is 75, with one verified veto capping the score at 59 and two vetoes blocking outright with no score emitted</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Architecture decided</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-milestone">milestone</span></div>
+        <div class="card-desc">Web app on Railway + Supabase, since specialists won&#39;t use a terminal. Agent work runs server-side via the Claude Agent SDK. The method lives in versioned, portable skill files the server loads at runtime and we can also run in Claude Code while building. Schema first, before any screen</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Automation posture decided</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">decision</span></div>
+        <div class="card-desc">Everything unattended: crawls, GSC/GA4 pulls, AI probes, snapshots, delta analysis, plan and report drafting. Human gate before any site change and before anything reaches a client</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Google access path solved</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">access@growthpartners.co.nz</span></div>
+        <div class="card-desc">`access@growthpartners.co.nz` already holds access to every client asset, and the domain is on Google Workspace. A service account with domain-wide delegation impersonates it and inherits everything, so onboarding a client needs zero Google-side work from us. Avoids the user-OAuth refresh token that died twice on LeanSEO</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Data sources chosen</div>
+        <div class="card-tags"><span class="tag tag-phase-0">phase-0</span><span class="tag tag-neutral">decision</span></div>
+        <div class="card-desc">DataForSEO for backlinks (cheapest per-call, right at 10 clients; revisit at 100). Build our own multi-engine AI-citation panel rather than buying a monitor — it&#39;s the differentiated asset and it feeds the history corpus</div>
+      </div></div>
+    </section>
+    <section class="column col-this-week">
+      <header class="col-head">
+        <h2>🔵 This Week</h2>
+        <span class="col-count">4</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Apply the schema to a Supabase project</div>
+        <div class="card-tags"><span class="tag tag-neutral">M1</span></div>
+        <div class="card-desc">Create the project in the CoreShift org, apply the migration, generate types</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Write the GSC + GA4 ingestion</div>
+        <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-neutral">today − 2</span><span class="tag tag-neutral">sc-domain:</span></div>
+        <div class="card-desc">Calendar-month windows ending `today − 2` (Search Console lags ~2 days). Try both `sc-domain:` and URL-prefix property forms. Classify a 403 as revoked access, not a transient failure</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Build the access preflight</div>
+        <div class="card-tags"><span class="tag tag-neutral">M1</span></div>
+        <div class="card-desc">Verify each property programmatically rather than trusting a tickbox; paginate the GA4 account-summaries call properly</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Scaffold the app</div>
+        <div class="card-tags"><span class="tag tag-neutral">M1</span></div>
+        <div class="card-desc">Repo, Railway staging, dev → staging → main. Minimal client list and a client detail view, so there&#39;s somewhere for M1&#39;s data to land</div>
+      </div></div>
+    </section>
+    <section class="column col-backlog">
+      <header class="col-head">
+        <h2>⚪ Backlog</h2>
+        <span class="col-count">6</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Port CORE-EEAT (80 items, 9 content-type profiles)</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">method</span></div>
+        <div class="card-desc">Apache-2.0. Includes per-item pass/partial/fail bands and calibration examples; expensive to reproduce, free to take</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Port CITE (40 items, 7 domain profiles)</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">method</span></div>
+        <div class="card-desc">Peer-relative by design; each client needs a locked 3–5 domain peer cohort declared at onboarding. That&#39;s a human step, budget for it</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Composite content-decay score</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">method</span></div>
+        <div class="card-desc">Traffic 30 / position 25 / CTR 15 / freshness 15 / competitive displacement 15, with action bands and a refresh-vs-rewrite rule. Drops straight into the monthly cycle</div>
+      </div>
+      <div class="card">
+        <div class="card-title">AI Overview recovery playbook</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-deliverable">deliverable</span></div>
+        <div class="card-desc">Four-phase incident SOP with a genuine diagnostic fingerprint: impressions flat while clicks fall. Productisable as a standalone audit</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Report generator + branded output</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span></div>
+        <div class="card-desc">Bind report templates to the metrics store, pull the month&#39;s applied work with its originating findings, and surface last month&#39;s predictions with their verdicts</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Algorithm update ledger</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span></div>
+        <div class="card-desc">Google-owned sources only, verified entries only. Auto-flags confounders on predictions whose window overlaps an update</div>
+      </div></div>
+    </section>
+    <section class="column col-neutral">
+      <header class="col-head">
+        <h2>🅿️ Parking Lot</h2>
+        <span class="col-count">6</span>
+      </header>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Content production pipeline</div>
+        
+        <div class="card-desc">Briefs, drafts and publishing are a separate concern. Work items can reference them by URL until we know we need more</div>
+      </div>
+      <div class="card">
+        <div class="card-title">CMS write adapters</div>
+        
+        <div class="card-desc">Applying changes directly to client sites (WordPress, Shopify, Webflow, git PR). Approval-gated, and not needed before M7</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Multi-agency tenancy</div>
+        
+        <div class="card-desc">Built for Growth Partners as a single agency. If Coreshift needs an isolated instance, that&#39;s a column plus RLS. Cheap to add later, premature now</div>
+      </div>
+      <div class="card">
+        <div class="card-title">API cost accounting</div>
+        
+        <div class="card-desc">At 100 clients, per-client API spend becomes real and billable. Worth a table before we get there</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Local SEO / Google Business Profile</div>
+        
+        <div class="card-desc">Not in scope until a client needs it</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Calibration study</div>
+        
+        <div class="card-desc">After ~12 months we&#39;ll have change/prediction/outcome data across every client. That corpus is the moat: it lets us answer &quot;do refreshes on position 8–15 pages actually beat control?&quot; from our own evidence rather than quoting unsourced blog percentages</div>
+      </div></div>
+    </section>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="page-foot">
+    Edit <code>KANBAN.md</code> and run <code>update-kanban.cmd</code> to refresh this view.
+    &nbsp;·&nbsp;
+    Companion to <a href="ops-playbook.html">ops-playbook.html</a> &amp; <a href="ROADMAP.md">ROADMAP.md</a>.
+  </footer>
+</body>
+</html>
