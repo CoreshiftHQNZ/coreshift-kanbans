@@ -17,9 +17,9 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M3 · AI visibility panel",
+  phase: "M4 · Work plan",
   nextMilestone: {
-    name: "A real AI citation, recorded with its raw answer",
+    name: "One ranked work plan, approved by a specialist in the app",
     date: "Q3 2026",
   },
 
@@ -100,19 +100,19 @@ module.exports = {
       id: "M3",
       name: "AI visibility panel",
       doneWhen: "A prompt set runs across every engine for one client and a citation is recorded with its raw answer",
-      status: "current",
+      status: "done",
     },
     {
       id: "M4",
       name: "Work plan",
       doneWhen: "One ranked work plan, merged from every finding source, is approved by a specialist in the app",
-      status: "next",
+      status: "current",
     },
     {
       id: "M5",
       name: "The loop",
       doneWhen: "A prediction made in one cycle is verified in the next and reports a delta against its control set",
-      status: "planned",
+      status: "next",
     },
     {
       id: "M6",
