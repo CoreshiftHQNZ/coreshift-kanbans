@@ -17,10 +17,10 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M5 · The loop",
+  phase: "M5 · The prediction machinery",
   nextMilestone: {
-    name: "A prediction verified against a control set — shape being decided",
-    date: "Q3–Q4 2026",
+    name: "One prediction recorded against a control, readback window fixed",
+    date: "Q3 2026",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -116,16 +116,21 @@ module.exports = {
     },
     {
       id: "M5",
-      name: "The loop",
-      // ⚠️ Opened 2026-08-13 and flagged on the same day. This doneWhen cannot be
-      // satisfied inside a session, and not for a build reason: verifying a
-      // prediction "in the next cycle" needs the next cycle's data, which for a
-      // prediction recorded in August means Search Console in early October.
-      // Recording the prediction retroactively against a month already on file is
-      // what the method exists to forbid. Same defect class as M4's original
-      // doneWhen — a clause testing something outside the milestone's control.
-      // A decision session settles the shape before building starts.
-      doneWhen: "A prediction made in one cycle is verified in the next and reports a delta against its control set",
+      name: "The prediction machinery",
+      // Reshaped 2026-08-13, same day it opened, on Ricky's call.
+      //
+      // It read "a prediction made in one cycle is verified in the next and
+      // reports a delta against its control set" — which cannot be satisfied in a
+      // session for a calendar reason, not a build one. Verifying against the next
+      // cycle needs the next cycle's data: a prediction recorded in August reads
+      // back against September, which lands in Search Console in early October.
+      // Back-dating it against a month already on file is exactly what the
+      // readback protocol exists to forbid.
+      //
+      // The verification did not need a milestone of its own — M6 already
+      // requires it ("what we expected, and what happened"), so it lands there,
+      // on the calendar, and the arc stays at seven.
+      doneWhen: "A prediction for a real client is recorded against a matched control set, with its readback window fixed before the change and visible in the app",
       status: "current",
     },
     {
@@ -194,7 +199,7 @@ module.exports = {
       status: "in-progress",
       title: "Phase 3",
       subtitle: "Close the loop",
-      window: "In progress · M5 open, its doneWhen under review",
+      window: "In progress · M5 building the machinery, M6 reads it back in October",
       desc: "Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.",
       deliverables: [
         "Readback windows fixed before a change, not chosen after",
