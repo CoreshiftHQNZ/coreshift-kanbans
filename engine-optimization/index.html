@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>58%</strong> complete</div>
-        <div><strong>31</strong>/53 cards done</div>
-        <div>Updated <strong>2026-08-13 03:00 UTC</strong></div>
+        <div><strong>51%</strong> complete</div>
+        <div><strong>31</strong>/61 cards done</div>
+        <div>Updated <strong>2026-08-13 03:51 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -825,7 +825,7 @@
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">1</div>
+        <div class="status-num">2</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">3</div>
+        <div class="status-num">5</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -947,13 +947,18 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">M4: Work plan — the cross-source aggregator</div>
-        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-phase-2">phase-2</span><span class="tag tag-milestone">milestone</span></div>
-        <div class="card-desc">Merge every finding source into one ranked month of work that fits the retainer, each item carrying a required rationale and its originating source, behind a human approval gate. ⚠️ **M4&#39;s doneWhen was revised on 2026-08-13 before a line was written.** It read &quot;…approved **by a specialist** in the app&quot;, which tested two different things at once: that the gate exists (M4&#39;s job) and that someone other than Ricky can drive the tool — which is M7&#39;s doneWhen almost verbatim. That duplication made M4 unclosable on a mail-provider setting with no bearing on the aggregator. The specialist test now lives in M7 and only in M7; **the SMTP card moved with it.**</div>
+        <div class="card-title">M4: Work plan — built, deployed, one click from done</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-phase-2">phase-2</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">6854acd</span><span class="tag tag-neutral">docs/planning.md</span></div>
+        <div class="card-desc">The cross-source aggregator no surveyed repo has. **Built and on staging** (`6854acd`): audit findings, AI-probe citation gaps and Search Console anomalies merge into one ordered month of work, each item carrying the rationale that reaches the client and the score terms that put it where it is. Storepro&#39;s plan: **15 items, 234.1h, 3 within a 12h line, 12 below it and still listed.** Ranked on value per hour — score impact × the client&#39;s own demand × confidence, ÷ estimated hours — with prerequisites enforced as a topological ordering rather than a weight, so schema markup can&#39;t be scheduled before the content it describes exists in the raw HTML. **Verified by:** 33 ranker tests + 12 detector tests passing, typecheck clean, audit determinism unchanged (91.50 / 93.44 / 45.45 identical across 23 checks), the panel rendering rationale and score terms in a browser, staging serving the new bundle and returning 401 unauthenticated, and the approval gate proved end to end — approve → 200 with the approver stamped on the plan and all 15 items, re-approve → 409, superseded → 409, unattributable identity → 403. Method and every constant in `docs/planning.md`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Three bugs the first live run caught</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">writePlan</span></div>
+        <div class="card-desc">None of these were findable by reasoning; all three needed real client data. **(1)** Partial audit runs were excluded, so no audit finding could *ever* enter a plan for a site bigger than the crawl budget — Storepro is 147 of 202 pages, partial is the normal case, and the scoring method is built for it. **(2)** Demand was keyed off &quot;does this item name any URLs&quot;, so a probe about one search query inherited all 77,496 of the property&#39;s impressions and three two-sweep coin-flip observations outranked every audit finding. Scope is now declared by the source. **(3)** `writePlan` inserted before superseding — the opposite of its own comment — and hit the unique index on the second run. All three now have regression tests named after them</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -966,9 +971,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Sign in to staging once and approve Storepro&#39;s plan</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">blocked-on-ricky</span><span class="tag tag-neutral">auth.users</span></div>
+        <div class="card-desc">**This is the last step in M4 and it has to be a human.** https://engine-optimization-staging.up.railway.app → magic link to your address → open Storepro → Work plan → Approve. ⚠️ `auth.users` is **empty**: nobody has ever completed a sign-in, so the earlier claim that &quot;the staging login works for you&quot; was never actually exercised. If the link doesn&#39;t arrive, that is the SMTP item below and it has just become an M4 blocker after all. The gate itself is proved — I ran the full approve path against a temporary fixture user and deleted it afterwards, so there is no approval on record and the doneWhen is honestly not met yet</div>
+      </div>
       <div class="card">
         <div class="card-title">Email delivery for sign-in</div>
         <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">blocked-on-ricky</span><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">SUPABASE_ACCESS_TOKEN</span></div>
@@ -1155,7 +1165,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1172,6 +1182,16 @@
         <div class="card-title">CITE port + per-client competitor cohorts</div>
         <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">method</span></div>
         <div class="card-desc">Now unblocked: DataForSEO is live and Backlinks is entitled (Storepro: **91 referring domains, 280 backlinks, rank 172**). The manual part still doesn&#39;t automate away — each client needs a locked 3–5 competitor cohort declared by an analyst, and until Storepro has one the panel correctly reports competitor presence as *not measured* rather than guessing</div>
+      </div>
+      <div class="card">
+        <div class="card-title">The M3 &quot;citation flipped&quot; data point may be a detector artefact</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">risk</span><span class="tag tag-neutral">2026-08-a</span><span class="tag tag-neutral">engine_sources</span><span class="tag tag-neutral">2026-08-b</span><span class="tag tag-neutral">rejudge</span></div>
+        <div class="card-desc">Found while wiring the probe source into the plan. M3&#39;s two sweeps straddled a detector change: the first 10 answered runs are `2026-08-a` with an **empty** `engine_sources` array, every later run is `2026-08-b` with 8–14 structured sources. The AI-Overview-appeared-or-vanished changes (3 of the 5) are presence changes and stand regardless. But &quot;one citation flipped&quot; could be the detector rather than Google, and it cannot be settled by re-judging — `rejudge` correctly refuses those runs because re-reading prose alone would drop references the engine returned. **This does not overturn the M3 finding; it weakens one of its five data points.** A clean n≥3 sweep under one detector version settles it, and the M5 sampling design produces that anyway</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Effort estimates have never been calibrated</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">server/plan/rank.ts</span><span class="tag tag-neutral">work_items.shipped_at</span></div>
+        <div class="card-desc">The plan&#39;s hours are declared constants in `server/plan/rank.ts`, labelled as estimates everywhere they appear. Nothing has checked them against how long the work actually took. `work_items.shipped_at` makes it answerable after two or three cycles — worth doing before hours are ever quoted to a client</div>
       </div></div>
     </section>
     <section class="column col-backlog">
@@ -1214,9 +1234,29 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>🅿️ Parking Lot</h2>
-        <span class="col-count">8</span>
+        <span class="col-count">12</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Work item owners</div>
+        <div class="card-tags"><span class="tag tag-neutral">work_items.owner_id</span></div>
+        <div class="card-desc">`work_items.owner_id` exists and nothing sets it. With one specialist it isn&#39;t a real question yet; it becomes one at M7 alongside per-client assignment</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Capacity derived from the retainer</div>
+        <div class="card-tags"><span class="tag tag-neutral">clients.monthly_retainer_nzd</span></div>
+        <div class="card-desc">`clients.monthly_retainer_nzd` is on file, but hours-per-dollar is a pricing decision and not the ranker&#39;s to invent. Capacity stays an explicit input until Ricky sets a rate</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cross-source fix detection</div>
+        
+        <div class="card-desc">An AI-probe observation and an audit finding may share a fix. Deciding that automatically means guessing, and a wrong guess deletes real work from the month, so the merge only collapses declared overlaps. If a pattern emerges across clients it could be worth revisiting with a declared mapping rather than fuzzy matching</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Restoring the strict supersede constraint</div>
+        <div class="card-tags"><span class="tag tag-neutral">0007</span><span class="tag tag-neutral">writePlan</span></div>
+        <div class="card-desc">`0007` weakened &quot;every superseded plan names its successor&quot; to &quot;a successor pointer may only appear on a superseded plan&quot;, because the strict pair was unsatisfiable in either order and Postgres cannot defer a CHECK. The forward guarantee now lives in `writePlan`, which is weaker. A single SQL function doing the whole supersede would put it back in the database</div>
+      </div>
       <div class="card">
         <div class="card-title">Performance / Core Web Vitals as a fourth pillar</div>
         
