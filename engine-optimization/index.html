@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>58%</strong> complete</div>
         <div><strong>31</strong>/53 cards done</div>
-        <div>Updated <strong>2026-08-13 02:52 UTC</strong></div>
+        <div>Updated <strong>2026-08-13 03:00 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -721,7 +721,7 @@
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">One ranked work plan, approved by a specialist in the app <span class="phase-pill-date">Q3 2026</span></span>
+          <span class="phase-pill-value">One ranked work plan, merged from every finding source, approved in the app <span class="phase-pill-date">Q3 2026</span></span>
         </div>
       </div>
     </section>
@@ -825,7 +825,7 @@
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
+        <div class="status-num">1</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -947,9 +947,14 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">0</span>
+        <span class="col-count">1</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">M4: Work plan — the cross-source aggregator</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-phase-2">phase-2</span><span class="tag tag-milestone">milestone</span></div>
+        <div class="card-desc">Merge every finding source into one ranked month of work that fits the retainer, each item carrying a required rationale and its originating source, behind a human approval gate. ⚠️ **M4&#39;s doneWhen was revised on 2026-08-13 before a line was written.** It read &quot;…approved **by a specialist** in the app&quot;, which tested two different things at once: that the gate exists (M4&#39;s job) and that someone other than Ricky can drive the tool — which is M7&#39;s doneWhen almost verbatim. That duplication made M4 unclosable on a mail-provider setting with no bearing on the aggregator. The specialist test now lives in M7 and only in M7; **the SMTP card moved with it.**</div>
+      </div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -966,8 +971,8 @@
       <div class="cards">
       <div class="card">
         <div class="card-title">Email delivery for sign-in</div>
-        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">blocked-on-ricky</span></div>
-        <div class="card-desc">Staging login works for you and **not for anyone else**. The Supabase project has no custom SMTP, so the built-in sender is capped at 2 emails/hour and only delivers to Supabase org members. Any provider fixes it (Postmark, Resend, SES) under Authentication → Emails. **This blocks M7 outright** — &quot;a specialist other than Ricky runs a full cycle unaided&quot; is impossible until a specialist can log in</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">blocked-on-ricky</span><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">SUPABASE_ACCESS_TOKEN</span></div>
+        <div class="card-desc">Staging login works for you and **not for anyone else**. The Supabase project has no custom SMTP, so the built-in sender is capped at 2 emails/hour and only delivers to Supabase org members. Any provider fixes it (Postmark, Resend, SES) under Authentication → Emails. **Retagged from `M4` to `M7` on 2026-08-13** — it never blocked the aggregator, it blocks *a second human using the tool*, which is M7&#39;s whole doneWhen. Still the item with the longest tail: nothing in M6 or M7 is demonstrable to anyone but you until it exists. 🔑 I can&#39;t do this one for you — the Supabase MCP exposes projects, SQL and branches but not Auth email config; a `SUPABASE_ACCESS_TOKEN` in the project env would let me wire a provider via the Management API myself</div>
       </div>
       <div class="card">
         <div class="card-title">10–15 real buying-intent questions for Storepro</div>
@@ -1155,8 +1160,8 @@
       <div class="cards">
       <div class="card">
         <div class="card-title">One sweep is not a measurement — needs a sampling design</div>
-        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">risk</span></div>
-        <div class="card-desc">The biggest thing M3 found, and it is a limitation. Two full sweeps of the same 15 prompts **minutes apart** disagreed on **5 of 15**: three where the AI Overview appeared or vanished entirely, one where a citation flipped, one where the rank moved from 2 to 4. This is the same threat the audit scoring was designed backwards from — a number that moves on its own makes every month-over-month claim fiction — except **the audit&#39;s drift sources were ours and could be closed, and this one is Google&#39;s and cannot be.** Until a sampling design exists (n sweeps over a window, reported as a rate with its sample size), no citation delta may be shown to a client. Belongs in M5 with predictions and controls, because the answer is a confidence interval, not a bug fix</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">risk</span><span class="tag tag-neutral">rationale</span></div>
+        <div class="card-desc">The biggest thing M3 found, and it is a limitation. Two full sweeps of the same 15 prompts **minutes apart** disagreed on **5 of 15**: three where the AI Overview appeared or vanished entirely, one where a citation flipped, one where the rank moved from 2 to 4. This is the same threat the audit scoring was designed backwards from — a number that moves on its own makes every month-over-month claim fiction — except **the audit&#39;s drift sources were ours and could be closed, and this one is Google&#39;s and cannot be.** Until a sampling design exists (n sweeps over a window, reported as a rate with its sample size), no citation delta may be shown to a client. Belongs in M5 with predictions and controls, because the answer is a confidence interval, not a bug fix. ⚠️ **One piece of it ships inside M4, though.** M4 stamps a mandatory `rationale` on every work item and that field becomes the report&#39;s &quot;why&quot; — so a work item derived from a single sweep would put a rationale on a coin flip, which is precisely what this product exists to prevent. In M4 a probe-sourced work item must carry its sample size, and n=1 cannot be ranked. The sampling *design* stays here</div>
       </div>
       <div class="card">
         <div class="card-title">The other four engines</div>
@@ -1209,7 +1214,7 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>🅿️ Parking Lot</h2>
-        <span class="col-count">9</span>
+        <span class="col-count">8</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1246,11 +1251,6 @@
         <div class="card-title">Local SEO / Google Business Profile</div>
         
         <div class="card-desc">Not in scope until a client needs it</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Auth for the app</div>
-        
-        <div class="card-desc">No login yet; the client view is unauthenticated on localhost. Needed before Railway staging is reachable by anyone else</div>
       </div>
       <div class="card">
         <div class="card-title">Calibration study</div>

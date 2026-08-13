@@ -19,7 +19,7 @@ module.exports = {
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
   phase: "M4 · Work plan",
   nextMilestone: {
-    name: "One ranked work plan, approved by a specialist in the app",
+    name: "One ranked work plan, merged from every finding source, approved in the app",
     date: "Q3 2026",
   },
 
@@ -105,7 +105,13 @@ module.exports = {
     {
       id: "M4",
       name: "Work plan",
-      doneWhen: "One ranked work plan, merged from every finding source, is approved by a specialist in the app",
+      // Revised 2026-08-13. The original doneWhen read "…is approved by a
+      // specialist in the app", which tested two different things: that the
+      // approval gate exists (M4's job) and that someone other than Ricky can
+      // operate the tool — M7's doneWhen almost verbatim. The duplication made
+      // M4 unclosable on a mail-provider config that has nothing to do with the
+      // aggregator. The specialist test lives in M7 and only in M7.
+      doneWhen: "A ranked work plan for one real client, merged from every finding source, moves to approved in the app — every item carrying its rationale and its originating source",
       status: "current",
     },
     {
@@ -123,6 +129,9 @@ module.exports = {
     {
       id: "M7",
       name: "Handover to the team",
+      // Hard prerequisite: a mail provider on the Supabase project. The built-in
+      // sender delivers only to Supabase org members at 2 emails/hour, so no
+      // specialist can sign in. This dependency was previously mis-filed on M4.
       doneWhen: "A specialist other than Ricky runs a full monthly cycle end to end without help",
       status: "planned",
     },
