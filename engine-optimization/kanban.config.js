@@ -17,10 +17,10 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M4 · Work plan",
+  phase: "M5 · The loop",
   nextMilestone: {
-    name: "One ranked work plan, merged from every finding source, approved in the app",
-    date: "Q3 2026",
+    name: "A prediction verified against a control set — shape being decided",
+    date: "Q3–Q4 2026",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -112,13 +112,21 @@ module.exports = {
       // M4 unclosable on a mail-provider config that has nothing to do with the
       // aggregator. The specialist test lives in M7 and only in M7.
       doneWhen: "A ranked work plan for one real client, merged from every finding source, moves to approved in the app — every item carrying its rationale and its originating source",
-      status: "current",
+      status: "done",
     },
     {
       id: "M5",
       name: "The loop",
+      // ⚠️ Opened 2026-08-13 and flagged on the same day. This doneWhen cannot be
+      // satisfied inside a session, and not for a build reason: verifying a
+      // prediction "in the next cycle" needs the next cycle's data, which for a
+      // prediction recorded in August means Search Console in early October.
+      // Recording the prediction retroactively against a month already on file is
+      // what the method exists to forbid. Same defect class as M4's original
+      // doneWhen — a clause testing something outside the milestone's control.
+      // A decision session settles the shape before building starts.
       doneWhen: "A prediction made in one cycle is verified in the next and reports a delta against its control set",
-      status: "next",
+      status: "current",
     },
     {
       id: "M6",
@@ -155,10 +163,10 @@ module.exports = {
     },
     {
       key: "phase-1",
-      status: "in-progress",
+      status: "done",
       title: "Phase 1",
       subtitle: "Measure",
-      window: "In progress · M2 building on the live data spine",
+      window: "Done · M2 and M3 landed 2026-08-13",
       desc: "Everything that observes a client site. Deterministic where it matters — a score that drifts on an unchanged site destroys the month-over-month report.",
       deliverables: [
         "Crawler + SEO/GEO/AEO scoring, per-page snapshots retained for page-level diffs",
@@ -169,10 +177,10 @@ module.exports = {
     },
     {
       key: "phase-2",
-      status: "planned",
+      status: "done",
       title: "Phase 2",
       subtitle: "Plan and do",
-      window: "M4 · after measurement is trusted",
+      window: "Done · M4 landed 2026-08-13 — first plan approved by a specialist",
       desc: "Turn six separate priority lists into one ranked month of work that fits the retainer. The aggregator is the piece no surveyed repo has.",
       deliverables: [
         "Cross-source finding merge + dedupe (a missing H1 appears in three audits)",
@@ -183,10 +191,10 @@ module.exports = {
     },
     {
       key: "phase-3",
-      status: "planned",
+      status: "in-progress",
       title: "Phase 3",
       subtitle: "Close the loop",
-      window: "M5–M6 · the differentiator",
+      window: "In progress · M5 open, its doneWhen under review",
       desc: "Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.",
       deliverables: [
         "Readback windows fixed before a change, not chosen after",
