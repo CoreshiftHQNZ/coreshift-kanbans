@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>49%</strong> complete</div>
-        <div><strong>21</strong>/43 cards done</div>
-        <div>Updated <strong>2026-08-13 01:16 UTC</strong></div>
+        <div><strong>52%</strong> complete</div>
+        <div><strong>26</strong>/50 cards done</div>
+        <div>Updated <strong>2026-08-13 02:18 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,11 +821,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">21</div>
+        <div class="status-num">26</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">1</div>
+        <div class="status-num">2</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">3</div>
+        <div class="status-num">2</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -896,43 +896,43 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">The tool is finally on the internet — behind a login</div>
+            <div class="recent-desc">Flagged at M1, carried through M2, and now done. **https://engine-optimization-staging.up.railway.app** auto-deploys on every push to the `staging` branch. The gate landed *before* the deploy rather than after it, because the tool holds four months of a real client&#39;s Search Console and analytics data and a public URL changes what &quot;unauthenticated&quot; costs. Sign-in is a Supabase magic link restricted to `growthpartners.co.nz` and `coreshifthq.com` — **no password is set, stored or handled by the app at all**. The service-account key moved to a Railway secret at the same time. **Verified by:** `/health` 200, `/api/clients` 401 unauthenticated, 401 on a forged token, the sign-in screen rendering on the live URL, and a push to `staging` triggering a build that deployed clean. *(Identity is a real user row, not a shared password, because `reports.reviewed_by`, `work_items.approved_by` and `ai_probes.reviewed_by` are all foreign keys to it — a shared secret would make every human gate in the system anonymous.)*</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Found: the probe table could not record a failed probe without lying</div>
+            <div class="recent-desc">Caught before a single probe ran. `ai_probe_runs` shipped in M1 with `raw_answer` and `cited` both mandatory, sitting next to an optional `error` field. Those cannot all be true at once — an engine that times out, rate-limits or has no key has no answer and no verdict, so the *only* way to store it was `cited = false`. That is the one rule this whole schema is built around, broken by accident: **&quot;couldn&#39;t measure&quot; becoming &quot;measured zero&quot;**. An unreachable engine would have been indistinguishable from an engine that answered and ignored the client, and every citation rate built on top would have counted vendor outages as client losses. Now three explicit states, enforced by a database constraint rather than by whichever code path happens to write the row. *(Same failure this project has now hit three times — it was broken twice in M2&#39;s first run too. It is the most easily broken rule we have.)*</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">The AI visibility pipeline — five engines, and a citation detector that can be re-run on history</div>
+            <div class="recent-desc">Adapters for ChatGPT, Perplexity, Gemini, Claude and Google AI Overviews, each queried **with web search on** and each pinned to a specific model — because &quot;ChatGPT&quot; in September is not the same system as &quot;ChatGPT&quot; in October, and without recording which model answered, a citation drop may be entirely a vendor swap. **The detector separates two things every competitor conflates:** an engine writing &quot;Storepro supply racking&quot; has *mentioned* the client; an engine offering storepro.co.nz as a source has *cited* it. Only the second sends traffic and only the second is verifiable from the answer — a brand name in prose may have come from the model&#39;s weights. The detector is versioned like the audit&#39;s method version, so improving it doesn&#39;t look like a client losing citations, and because the engine&#39;s full answer is stored, a better detector **improves the whole history rather than only the future**. **Verified by:** 10 offline unit tests covering lookalike domains, prose-only links, brand word boundaries and the no-cohort-declared case; `tsc` clean; the panel live on staging</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Storepro&#39;s prompt set — 15 questions, taken from what buyers actually searched</div>
+            <div class="recent-desc">Derived deterministically from Storepro&#39;s own July Search Console queries, brand terms excluded (an engine asked &quot;Storepro&quot; will find Storepro — that measures nothing). Search queries are rewritten into the shape a buyer would actually type into an assistant, using fixed templates rather than a model, because a set that reshuffles monthly makes a *lost* citation structurally invisible — the exact flaw in the rank tracker we surveyed. **Stored as unreviewed**, with the review gate as a real column the report reads, not a note. *(Worth knowing: the derived set is visibly mediocre — 15 near-identical &quot;what should I know about X&quot; prompts. That is the review gate earning its place on day one, not a bug. Ricky&#39;s list of real buyer questions replaces it.)*</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Caught in our own code: a threshold that manufactured a signal</div>
+            <div class="recent-desc">The filter picking which queries to probe first originally flagged anything at position 5–20 holding impressions with no clicks. That surfaced a query averaging position 17.7 as &quot;anomalous&quot; — but zero clicks at position 17 is arithmetic, not a mystery, and treating it as one invents a finding out of ordinary page-two behaviour. Tightened to page one only. **The tightening is what surfaced the real result**: with the loose threshold the standout was position 8.5; with the tight one it is position **1.5 and 2.3 with zero clicks**, which is a far harder thing to explain away</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">M2: Audit engine — a real client site, crawled, scored and explained</div>
             <div class="recent-desc">Storepro&#39;s site is now crawled, scored on three pillars, and the result is on screen with every page and every finding behind it. The audit reads pages the way an AI crawler does — fetching the raw HTML without running any JavaScript — because the gap between what a browser renders and what arrives in the response *is* the problem we&#39;re selling the fix to. **Real numbers:** SEO **91.50**, GEO **93.44**, AEO **45.45**, from 147 pages crawled of 202 discovered, producing 150 page snapshots and 12 findings. **Verified by:** two audit runs queried straight out of Postgres, both under method `2026-08-a`, both scoring identically to the hundredth; `GET /api/audits/…` returning 200 with 12 findings and 150 pages; screenshots of all three screens (findings, checks, pages); `tsc` clean; Supabase security advisors clean; commit `68a5737` on `origin/dev`. *(Same trap as M1 and still open: &quot;in the app&quot; means the local build. There is no deployed environment, so nobody outside this laptop can see any of it.)*</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Scores that don&#39;t drift — and a command that proves it rather than claiming it</div>
-            <div class="recent-desc">The risk carried into this milestone was that two of the tools we surveyed produce audit scores that wander ±10 points on a site nobody touched, which would make every month-over-month claim we build on top fiction. So the scoring was designed backwards from that threat: enumerate every way an unchanged site could score differently twice, then close each one. The ones that mattered — the page set is decided from the sitemap and sorted the same way every time rather than by whichever page answers first; **no rule is allowed to look at today&#39;s date**, because a &quot;content updated in the last 90 days&quot; check makes an untouched site score lower every month and the report would call that a regression; a page we couldn&#39;t read is dropped from the calculation instead of counted as a failure; and the ruleset is stamped with a version, so if we ever change the weights the app refuses to draw a comparison across the change rather than letting a methodology tweak look like a client result. **Verified by:** `npm run audit -- --client storepro --verify` crawling the site twice and reporting identical results across all 23 checks, plus two separately stored runs both recording 91.50 / 93.44 / 45.45. Reasoning for every rule is written up in `docs/scoring.md`</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Found: the audit was confidently wrong twice on its first real run</div>
-            <div class="recent-desc">Both caught and fixed, and both worth knowing because they produced *wrong* answers rather than missing ones, which is the more dangerous failure. **First:** three Storepro URLs return HTTP 200 with a completely empty body. The engine treated them as real pages failing every single check — inventing a shortfall out of an absence, and dragging the scores down with it. A page now only counts as content if an actual HTML document came back and parsed. **Second:** Storepro&#39;s team page has an empty `&lt;main&gt;` container with the real content rendered outside it, so the audit read the page as having zero words and reported a perfectly normal page as invisible to AI crawlers. The audit now checks that the section it&#39;s reading actually contains text before trusting it. *(The general lesson, and the reason both are recorded: a tool that says nothing is recoverable; a tool that says something false with a number attached is not.)*</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Storepro&#39;s audit baseline — strong technically, weak as an answer source</div>
-            <div class="recent-desc">SEO 91.5 and GEO 93.4 are genuinely good: the sitemap is clean, structured data is present, an `llms.txt` exists, and **no AI crawler is blocked** — all 15 tracked agents including Google-Extended can read the site. AEO at 45.5 is the gap, and it&#39;s specific: **not one page** carries FAQ or How-To markup, only half the pages have a heading phrased as a question, and only a third have a list or table an answer engine could lift. **Why that matters here:** it is exactly the profile of a site that gets *read* by AI engines but not *quoted* by them — which is consistent with the M1 finding that Storepro&#39;s informational queries hold impressions at position 7–9 while returning zero clicks. Still a hypothesis, and M3&#39;s probe panel is what settles it, but the audit and the traffic data now point the same way. **Verified by:** 12 findings stored against run `54b3758e`, each with its evidence and its falsifiability contract</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Found: nothing had been loading the local env file since M1</div>
-            <div class="recent-desc">Every command in the repo used a loader that reads `.env`, a file that doesn&#39;t exist here — the secrets live in `.env.local`. M1&#39;s commands only ever worked because they were being launched with an explicit flag pointing at the right file, which meant the documented `npm run ingest` failed for anyone following the README from a clean shell. Fixed centrally so every command loads the same way, with real environment variables still winning over files for when this eventually runs on Railway. *(Also found and killed a server left running from a previous session — it was still holding the port and serving old code, which is how this surfaced.)*</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Near miss: the DataForSEO check would have reported a false all-clear</div>
-            <div class="recent-desc">The first version of the credential verifier pinged a cheap liveness endpoint before trying anything real. DataForSEO validates the shape of a request *before* it checks who you are, so that ping returned a success response on credentials that were completely invalid — and the verifier would have printed &quot;credentials accepted&quot; while nothing worked. It now makes exactly one probe: the real backlinks call we actually depend on. It also separates &quot;your login is wrong&quot; from &quot;your login is fine but you haven&#39;t bought the Backlinks API&quot;, because those are different problems with different fixes and DataForSEO sells each API separately. *(Same shape as the M1 trap where Search Console properties list fine and then 403 on every data call. Worth assuming this pattern exists in any vendor API until disproven.)*</div>
           </div>
         </div>
       </div>
@@ -947,9 +947,14 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">M3: AI visibility panel — pipeline built, waiting on one engine key</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-phase-1">phase-1</span><span class="tag tag-neutral">40100</span><span class="tag tag-neutral">npm run verify:engines</span></div>
+        <div class="card-desc">Everything from prompt set to recorded citation is built, typechecked and unit-tested. What it cannot do is record a real citation: **0 of 5 engines are reachable** — four have no API key set and DataForSEO still returns `40100`. No probe run has been stored, because a fabricated one is worse than none. `npm run verify:engines` proves the state in one command rather than asserting it</div>
+      </div>
       <div class="card">
         <div class="card-title">M3: AI visibility panel</div>
         <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-phase-1">phase-1</span></div>
@@ -966,31 +971,66 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">DataForSEO credentials are being rejected</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">blocked-on-ricky</span><span class="tag tag-neutral">.env.local</span><span class="tag tag-neutral">40100 — not authorized</span><span class="tag tag-neutral">mal@growthpartners.co.nz</span><span class="tag tag-neutral">npm run verify:dataforseo</span></div>
-        <div class="card-desc">The account exists and the login/password pair is in `.env.local`, but every API call returns `40100 — not authorized`. Three usual causes: the API password isn&#39;t the website sign-in password; the login may be an account email other than `mal@growthpartners.co.nz`; or IP whitelisting is on and this machine isn&#39;t listed. All of it is on one page — https://app.dataforseo.com/api-access — and `npm run verify:dataforseo` tells you which of the three it is in one command. **Default if no answer:** CITE (domain authority) stays unbuilt and M3 ships the citation panel only</div>
+        <div class="card-title">One AI engine credential — M3 cannot close without it</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">blocked-on-ricky</span><span class="tag tag-neutral">npm run verify:engines</span><span class="tag tag-neutral">mal@growthpartners.co.nz</span><span class="tag tag-neutral">npm run verify:dataforseo</span></div>
+        <div class="card-desc">Everything is built and proved; `npm run verify:engines` reports **0 of 5 engines reachable**. You chose to fix **DataForSEO** (account exists, no new spend, unlocks Google AI Overviews *and* CITE): https://app.dataforseo.com/api-access — the API password is a separate credential from the website sign-in, the login may be an account email other than `mal@growthpartners.co.nz`, or IP whitelisting is on. `npm run verify:dataforseo` says which. **Any one key closes the milestone**; the adapters for OpenAI, Perplexity, Gemini and Anthropic are written and switch on the moment their key appears in the env</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Email delivery for sign-in</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">blocked-on-ricky</span></div>
+        <div class="card-desc">The staging login works, but the project has **no custom SMTP**: Supabase&#39;s built-in sender is capped at **2 emails per hour** and only delivers to Supabase org members. So you can sign in and a Growth Partners specialist cannot. Any SMTP provider fixes it (Postmark, Resend, SES) — set it under Authentication → Emails. **This blocks M7 outright**, which is &quot;a specialist other than Ricky runs a full cycle unaided&quot;</div>
+      </div>
+      <div class="card">
+        <div class="card-title">10–15 real buying-intent questions for Storepro</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span></div>
+        <div class="card-desc">The panel is only as good as its questions. The 15 currently loaded were derived from Search Console and are stored **unreviewed**; they are visibly generic and you&#39;ll want to cut most of them. **Default if no answer:** the derived set runs and the first report is stamped unreviewed</div>
       </div>
       <div class="card">
         <div class="card-title">The client list</div>
         <div class="card-tags"><span class="tag tag-neutral">M3</span></div>
-        <div class="card-desc">Still only Storepro. There are 47 hosts with usable Search Console access across the Growth Partners estate and no way to tell a retainer client from an old access grant. A list of names is enough; the property mapping is automated. **Default if no answer:** everything stays Storepro-only, which is fine for building but not for a real monthly cycle</div>
+        <div class="card-desc">Still only Storepro. 47 hosts have working Search Console access across the estate and no way to tell a retainer client from an old access grant. Names are enough; the property mapping is automated. **Default if no answer:** everything stays Storepro-only — fine for building, useless for a real monthly cycle</div>
       </div>
       <div class="card">
-        <div class="card-title">Which prompts count as buying intent for Storepro</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span></div>
-        <div class="card-desc">The citation panel is only as good as the questions it asks. 10–15 real questions a buyer would type into ChatGPT before choosing a racking supplier is enough; we can draft them and have you cut the wrong ones. **Default if no answer:** we generate the prompt set from Storepro&#39;s own Search Console queries and flag it as unreviewed in the first report</div>
+        <div class="card-title">Competitor cohorts, per client</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">method</span></div>
+        <div class="card-desc">Competitor displacement is only measurable against a 3–5 domain cohort declared by an analyst. The tool deliberately refuses to guess one, and records competitor presence as **not measured** until it exists. For Storepro: who are the 3–5 racking suppliers you&#39;d actually benchmark against? Genuine manual work per client that does not automate away</div>
       </div></div>
     </section>
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">21</span>
+        <span class="col-count">26</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">The tool is finally on the internet — behind a login</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">staging</span><span class="tag tag-neutral">growthpartners.co.nz</span><span class="tag tag-neutral">coreshifthq.com</span><span class="tag tag-neutral">/health</span><span class="tag tag-neutral">/api/clients</span><span class="tag tag-neutral">staging</span><span class="tag tag-neutral">reports.reviewed_by</span><span class="tag tag-neutral">work_items.approved_by</span><span class="tag tag-neutral">ai_probes.reviewed_by</span></div>
+        <div class="card-desc">Flagged at M1, carried through M2, and now done. **https://engine-optimization-staging.up.railway.app** auto-deploys on every push to the `staging` branch. The gate landed *before* the deploy rather than after it, because the tool holds four months of a real client&#39;s Search Console and analytics data and a public URL changes what &quot;unauthenticated&quot; costs. Sign-in is a Supabase magic link restricted to `growthpartners.co.nz` and `coreshifthq.com` — **no password is set, stored or handled by the app at all**. The service-account key moved to a Railway secret at the same time. **Verified by:** `/health` 200, `/api/clients` 401 unauthenticated, 401 on a forged token, the sign-in screen rendering on the live URL, and a push to `staging` triggering a build that deployed clean. *(Identity is a real user row, not a shared password, because `reports.reviewed_by`, `work_items.approved_by` and `ai_probes.reviewed_by` are all foreign keys to it — a shared secret would make every human gate in the system anonymous.)*</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Found: the probe table could not record a failed probe without lying</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">ai_probe_runs</span><span class="tag tag-neutral">raw_answer</span><span class="tag tag-neutral">cited</span><span class="tag tag-neutral">error</span><span class="tag tag-neutral">cited = false</span></div>
+        <div class="card-desc">Caught before a single probe ran. `ai_probe_runs` shipped in M1 with `raw_answer` and `cited` both mandatory, sitting next to an optional `error` field. Those cannot all be true at once — an engine that times out, rate-limits or has no key has no answer and no verdict, so the *only* way to store it was `cited = false`. That is the one rule this whole schema is built around, broken by accident: **&quot;couldn&#39;t measure&quot; becoming &quot;measured zero&quot;**. An unreachable engine would have been indistinguishable from an engine that answered and ignored the client, and every citation rate built on top would have counted vendor outages as client losses. Now three explicit states, enforced by a database constraint rather than by whichever code path happens to write the row. *(Same failure this project has now hit three times — it was broken twice in M2&#39;s first run too. It is the most easily broken rule we have.)*</div>
+      </div>
+      <div class="card">
+        <div class="card-title">The AI visibility pipeline — five engines, and a citation detector that can be re-run on history</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-phase-1">phase-1</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">tsc</span></div>
+        <div class="card-desc">Adapters for ChatGPT, Perplexity, Gemini, Claude and Google AI Overviews, each queried **with web search on** and each pinned to a specific model — because &quot;ChatGPT&quot; in September is not the same system as &quot;ChatGPT&quot; in October, and without recording which model answered, a citation drop may be entirely a vendor swap. **The detector separates two things every competitor conflates:** an engine writing &quot;Storepro supply racking&quot; has *mentioned* the client; an engine offering storepro.co.nz as a source has *cited* it. Only the second sends traffic and only the second is verifiable from the answer — a brand name in prose may have come from the model&#39;s weights. The detector is versioned like the audit&#39;s method version, so improving it doesn&#39;t look like a client losing citations, and because the engine&#39;s full answer is stored, a better detector **improves the whole history rather than only the future**. **Verified by:** 10 offline unit tests covering lookalike domains, prose-only links, brand word boundaries and the no-cohort-declared case; `tsc` clean; the panel live on staging</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Storepro&#39;s prompt set — 15 questions, taken from what buyers actually searched</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-shipped">shipped</span></div>
+        <div class="card-desc">Derived deterministically from Storepro&#39;s own July Search Console queries, brand terms excluded (an engine asked &quot;Storepro&quot; will find Storepro — that measures nothing). Search queries are rewritten into the shape a buyer would actually type into an assistant, using fixed templates rather than a model, because a set that reshuffles monthly makes a *lost* citation structurally invisible — the exact flaw in the rank tracker we surveyed. **Stored as unreviewed**, with the review gate as a real column the report reads, not a note. *(Worth knowing: the derived set is visibly mediocre — 15 near-identical &quot;what should I know about X&quot; prompts. That is the review gate earning its place on day one, not a bug. Ricky&#39;s list of real buyer questions replaces it.)*</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Caught in our own code: a threshold that manufactured a signal</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">finding</span></div>
+        <div class="card-desc">The filter picking which queries to probe first originally flagged anything at position 5–20 holding impressions with no clicks. That surfaced a query averaging position 17.7 as &quot;anomalous&quot; — but zero clicks at position 17 is arithmetic, not a mystery, and treating it as one invents a finding out of ordinary page-two behaviour. Tightened to page one only. **The tightening is what surfaced the real result**: with the loose threshold the standout was position 8.5; with the tight one it is position **1.5 and 2.3 with zero clicks**, which is a far harder thing to explain away</div>
+      </div>
       <div class="card">
         <div class="card-title">M2: Audit engine — a real client site, crawled, scored and explained</div>
         <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-phase-1">phase-1</span><span class="tag tag-milestone">milestone</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">2026-08-a</span><span class="tag tag-neutral">GET /api/audits/…</span><span class="tag tag-neutral">tsc</span><span class="tag tag-neutral">68a5737</span><span class="tag tag-neutral">origin/dev</span></div>
@@ -1100,18 +1140,13 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">Test the AI Overview hypothesis on Storepro first</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span></div>
-        <div class="card-desc">The single highest-value probe we can run. Two independent signals now point the same way: informational queries holding impressions at position 7–9 with zero clicks, and an AEO score of 45 driven by content that is readable but not quotable. One prompt set against the engines settles whether AI Overviews are absorbing the traffic, and the answer changes what we&#39;d recommend</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Railway staging</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Carried over from M2, still not done. Nobody outside this laptop can see the tool: no deployed environment, no login screen. Two milestones&#39; worth of work is now invisible to the specialists it&#39;s being built for. The service-account key moves to a Railway secret at the same time</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">blocked-on-credential</span></div>
+        <div class="card-desc">Prompt set is loaded and the pipeline is built; it runs the moment one engine credential lands. The case got considerably stronger this session: pulling July&#39;s Search Console queries directly shows **16 non-brand queries on page one with 0.00% CTR**, including position **1.5** on &quot;mezzanine area&quot; (197 impressions) and **2.3** on &quot;long span racking system&quot; (225 impressions). The same property in the same month returns **35% CTR** on the brand query &quot;storepro&quot; at position 6.1 — so it is not tracking, not a filter and not a broken property. Something is taking every non-brand page-one click. The probe is what names it</div>
       </div>
       <div class="card">
         <div class="card-title">CITE port + per-client competitor cohorts</div>
