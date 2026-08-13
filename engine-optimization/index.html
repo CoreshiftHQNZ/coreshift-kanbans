@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>43%</strong> complete</div>
-        <div><strong>15</strong>/35 cards done</div>
-        <div>Updated <strong>2026-08-13 00:23 UTC</strong></div>
+        <div><strong>49%</strong> complete</div>
+        <div><strong>21</strong>/43 cards done</div>
+        <div>Updated <strong>2026-08-13 01:16 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">M2 · Audit engine</span>
+          <span class="phase-pill-value">M3 · AI visibility panel</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">A scored audit with per-page findings <span class="phase-pill-date">Q3 2026</span></span>
+          <span class="phase-pill-value">A real AI citation, recorded with its raw answer <span class="phase-pill-date">Q3 2026</span></span>
         </div>
       </div>
     </section>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">15</div>
+        <div class="status-num">21</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">4</div>
+        <div class="status-num">3</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -896,43 +896,43 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
-            <div class="recent-title">M1: Data spine — Storepro&#39;s data is in the app</div>
-            <div class="recent-desc">The whole spine, end to end: a Supabase project (`xslwvntwrlvqccdupmni`), a 20-table schema, Google access, ingestion, and a client view. **Verified by:** four calendar months of Storepro data (Apr–Jul 2026) queried straight out of Postgres — 8 snapshot rows, 2 sources × 4 months; `GET /api/clients/storepro` returning 200 with 4 months and correct deltas; a screenshot of the client view; `tsc` clean; commit `bd7cbe5` on `origin/dev`. **Real numbers:** July 815 clicks / 77,496 impressions / 1,264 organic sessions. *(Trap worth knowing: the app runs locally only — there is no Railway environment yet, so &quot;in the app&quot; means the local build, not a deployed URL.)*</div>
+            <div class="recent-title">M2: Audit engine — a real client site, crawled, scored and explained</div>
+            <div class="recent-desc">Storepro&#39;s site is now crawled, scored on three pillars, and the result is on screen with every page and every finding behind it. The audit reads pages the way an AI crawler does — fetching the raw HTML without running any JavaScript — because the gap between what a browser renders and what arrives in the response *is* the problem we&#39;re selling the fix to. **Real numbers:** SEO **91.50**, GEO **93.44**, AEO **45.45**, from 147 pages crawled of 202 discovered, producing 150 page snapshots and 12 findings. **Verified by:** two audit runs queried straight out of Postgres, both under method `2026-08-a`, both scoring identically to the hundredth; `GET /api/audits/…` returning 200 with 12 findings and 150 pages; screenshots of all three screens (findings, checks, pages); `tsc` clean; Supabase security advisors clean; commit `68a5737` on `origin/dev`. *(Same trap as M1 and still open: &quot;in the app&quot; means the local build. There is no deployed environment, so nobody outside this laptop can see any of it.)*</div>
           </div>
         </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
-            <div class="recent-title">Google access solved permanently — 65 properties, zero per-client setup</div>
-            <div class="recent-desc">The blocker that had been open in the enablement log since the GHS Law build in July. Ricky created a service account (`seo-data-reader@gp-seo-data.iam.gserviceaccount.com`) and authorised **domain-wide delegation** so it impersonates `access@growthpartners.co.nz` — the account that already holds access to every client asset. **The consequence is the important bit: onboarding a client now needs nothing at all on the Google side.** Ten clients and a hundred clients are the same amount of setup work: none. **Verified by:** `scripts/verify-google-access.mjs` minting a token and enumerating **65 Search Console and 98 GA4 properties**, plus live Search Analytics queries returning real data. Deliberately *not* user OAuth — LeanSEO&#39;s refresh token died twice with `invalid_grant` and took its own re-mint script with it</div>
+            <div class="recent-title">Scores that don&#39;t drift — and a command that proves it rather than claiming it</div>
+            <div class="recent-desc">The risk carried into this milestone was that two of the tools we surveyed produce audit scores that wander ±10 points on a site nobody touched, which would make every month-over-month claim we build on top fiction. So the scoring was designed backwards from that threat: enumerate every way an unchanged site could score differently twice, then close each one. The ones that mattered — the page set is decided from the sitemap and sorted the same way every time rather than by whichever page answers first; **no rule is allowed to look at today&#39;s date**, because a &quot;content updated in the last 90 days&quot; check makes an untouched site score lower every month and the report would call that a regression; a page we couldn&#39;t read is dropped from the calculation instead of counted as a failure; and the ruleset is stamped with a version, so if we ever change the weights the app refuses to draw a comparison across the change rather than letting a methodology tweak look like a client result. **Verified by:** `npm run audit -- --client storepro --verify` crawling the site twice and reporting identical results across all 23 checks, plus two separately stored runs both recording 91.50 / 93.44 / 45.45. Reasoning for every rule is written up in `docs/scoring.md`</div>
           </div>
         </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
-            <div class="recent-title">Found: 11 properties look like access and deliver nothing</div>
-            <div class="recent-desc">Of the 65 Search Console properties, 11 are `siteUnverifiedUser` — `access@` is listed on them but verification was never completed. They appear in the property list exactly like working ones, so a naive &quot;is it in the list?&quot; check passes and then every data call 403s. **Tested rather than assumed:** `siteOwner` and `siteFullUser` both returned 200 with real data; `siteUnverifiedUser` returned 403. Onboarding now checks the permission *level* and records it, and a 403 during ingestion is written as **revoked access** rather than dissolving into a generic failure note nobody reads</div>
+            <div class="recent-title">Found: the audit was confidently wrong twice on its first real run</div>
+            <div class="recent-desc">Both caught and fixed, and both worth knowing because they produced *wrong* answers rather than missing ones, which is the more dangerous failure. **First:** three Storepro URLs return HTTP 200 with a completely empty body. The engine treated them as real pages failing every single check — inventing a shortfall out of an absence, and dragging the scores down with it. A page now only counts as content if an actual HTML document came back and parsed. **Second:** Storepro&#39;s team page has an empty `&lt;main&gt;` container with the real content rendered outside it, so the audit read the page as having zero words and reported a perfectly normal page as invisible to AI crawlers. The audit now checks that the section it&#39;s reading actually contains text before trusting it. *(The general lesson, and the reason both are recorded: a tool that says nothing is recoverable; a tool that says something false with a number attached is not.)*</div>
           </div>
         </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
-            <div class="recent-title">Found: GA4 property IDs cannot be auto-matched</div>
-            <div class="recent-desc">98 GA4 properties against roughly 10 SEO clients, including 22 matched Test/Filtered pairs. A name-matching experiment paired `hotspring.com.au` with the *Hawkes Bay* property and `unistor.com.au` with a lead-page property — both wrong, and picking a Test stream yields near-zero sessions that read as a traffic collapse. Decision: **the GA4 property ID is supplied explicitly at onboarding and never inferred**, and the onboarding script warns if the chosen property is named &quot;Test&quot;</div>
+            <div class="recent-title">Storepro&#39;s audit baseline — strong technically, weak as an answer source</div>
+            <div class="recent-desc">SEO 91.5 and GEO 93.4 are genuinely good: the sitemap is clean, structured data is present, an `llms.txt` exists, and **no AI crawler is blocked** — all 15 tracked agents including Google-Extended can read the site. AEO at 45.5 is the gap, and it&#39;s specific: **not one page** carries FAQ or How-To markup, only half the pages have a heading phrased as a question, and only a third have a list or table an answer engine could lift. **Why that matters here:** it is exactly the profile of a site that gets *read* by AI engines but not *quoted* by them — which is consistent with the M1 finding that Storepro&#39;s informational queries hold impressions at position 7–9 while returning zero clicks. Still a hypothesis, and M3&#39;s probe panel is what settles it, but the audit and the traffic data now point the same way. **Verified by:** 12 findings stored against run `54b3758e`, each with its evidence and its falsifiability contract</div>
           </div>
         </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
-            <div class="recent-title">Storepro&#39;s baseline — and a hypothesis worth testing</div>
-            <div class="recent-desc">First client onboarded and measured. Non-brand share **31.8%** (the warning threshold is 30%), non-brand CTR **0.13%**, and **114 queries sitting at position 5–20** with 50+ impressions. The odd part: several informational queries rank at position 7–9 with 500+ impressions and **zero clicks** — *&quot;automated racking solutions&quot;* at 7.0 with 521 impressions, *&quot;what is a mezzanine floor&quot;* at 9.8 with 509. Position 7 should return 10–15 clicks. **Impressions holding while clicks go to zero is the diagnostic fingerprint for AI Overview absorption**, and GA4 corroborates that AI engines read this site — AI-assistant sessions went 0 → 0 → 31 → 43 across the four months. ⚠️ **Explicitly unverified as a cause** — average position is an average and a SERP feature could do the same thing. It&#39;s the first thing M3&#39;s probe panel should test</div>
+            <div class="recent-title">Found: nothing had been loading the local env file since M1</div>
+            <div class="recent-desc">Every command in the repo used a loader that reads `.env`, a file that doesn&#39;t exist here — the secrets live in `.env.local`. M1&#39;s commands only ever worked because they were being launched with an explicit flag pointing at the right file, which meant the documented `npm run ingest` failed for anyone following the README from a clean shell. Fixed centrally so every command loads the same way, with real environment variables still winning over files for when this eventually runs on Railway. *(Also found and killed a server left running from a previous session — it was still holding the port and serving old code, which is how this surfaced.)*</div>
           </div>
         </div>
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
-            <div class="recent-title">Schema applied — 20 tables, and the loop nobody else has</div>
-            <div class="recent-desc">The reviewed data model from `docs/schema.md` is live: clients, properties, access state, versioned client context, immutable audit runs, per-page snapshots, findings carrying a falsifiability contract, work items with a mandatory rationale, **predictions and control sets**, cycles, metric snapshots, tracked keywords, AI probes storing raw answers, reports with a real review-check table, and the algorithm-update ledger. RLS enabled on every table with staff-only policies; Supabase security advisors return **clean** (one warning fixed on the way — the `updated_at` trigger function was callable over the REST API and had its execute grant revoked)</div>
+            <div class="recent-title">Near miss: the DataForSEO check would have reported a false all-clear</div>
+            <div class="recent-desc">The first version of the credential verifier pinged a cheap liveness endpoint before trying anything real. DataForSEO validates the shape of a request *before* it checks who you are, so that ping returned a success response on credentials that were completely invalid — and the verifier would have printed &quot;credentials accepted&quot; while nothing worked. It now makes exactly one probe: the real backlinks call we actually depend on. It also separates &quot;your login is wrong&quot; from &quot;your login is fine but you haven&#39;t bought the Backlinks API&quot;, because those are different problems with different fixes and DataForSEO sells each API separately. *(Same shape as the M1 trap where Search Console properties list fine and then 403 on every data call. Worth assuming this pattern exists in any vendor API until disproven.)*</div>
           </div>
         </div>
       </div>
@@ -951,9 +951,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">M2: Audit engine</div>
-        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-phase-1">phase-1</span><span class="tag tag-neutral">audit_runs</span><span class="tag tag-neutral">page_snapshots</span><span class="tag tag-neutral">findings</span></div>
-        <div class="card-desc">Crawl a real client site and produce a scored audit run with per-page snapshots and findings, viewable in the app. The tables are already built and waiting (`audit_runs`, `page_snapshots`, `findings`) — this milestone fills them. Scoring must be deterministic: two runs against an unchanged site have to produce the same number, or every month-over-month claim built on top is fiction</div>
+        <div class="card-title">M3: AI visibility panel</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-phase-1">phase-1</span></div>
+        <div class="card-desc">Run a set of real buying-intent prompts across every AI engine for one client and record whether the client was cited, storing the raw answer each time. This is the part no surveyed tool has: they all measure GEO/AEO *readiness* and call it AI visibility. It also settles the open Storepro question — whether those position 7–9 queries with 500+ impressions and zero clicks are being absorbed by AI Overviews</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -966,26 +966,61 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">DataForSEO account + API credentials</div>
-        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">decision-made</span><span class="tag tag-neutral">UNDECIDED</span></div>
-        <div class="card-desc">Approved 2026-08-13, not yet created. Doesn&#39;t block M2&#39;s crawl-and-score work, but CITE (the domain-authority framework) needs a backlink index and requires 100% item coverage, so without it CITE returns `UNDECIDED` forever rather than a low score. **Default if no answer:** M2 ships with SEO/GEO/AEO scoring only and CITE waits</div>
+        <div class="card-title">DataForSEO credentials are being rejected</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">blocked-on-ricky</span><span class="tag tag-neutral">.env.local</span><span class="tag tag-neutral">40100 — not authorized</span><span class="tag tag-neutral">mal@growthpartners.co.nz</span><span class="tag tag-neutral">npm run verify:dataforseo</span></div>
+        <div class="card-desc">The account exists and the login/password pair is in `.env.local`, but every API call returns `40100 — not authorized`. Three usual causes: the API password isn&#39;t the website sign-in password; the login may be an account email other than `mal@growthpartners.co.nz`; or IP whitelisting is on and this machine isn&#39;t listed. All of it is on one page — https://app.dataforseo.com/api-access — and `npm run verify:dataforseo` tells you which of the three it is in one command. **Default if no answer:** CITE (domain authority) stays unbuilt and M3 ships the citation panel only</div>
       </div>
       <div class="card">
         <div class="card-title">The client list</div>
-        <div class="card-tags"><span class="tag tag-neutral">M2</span></div>
-        <div class="card-desc">Only Storepro is onboarded. There are 47 hosts with usable Search Console access across the Growth Partners estate and no way to tell a retainer client from an old access grant. A list of names is enough; the property mapping is automated. **Default if no answer:** everything stays Storepro-only, which is fine for building but not for a real monthly cycle</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span></div>
+        <div class="card-desc">Still only Storepro. There are 47 hosts with usable Search Console access across the Growth Partners estate and no way to tell a retainer client from an old access grant. A list of names is enough; the property mapping is automated. **Default if no answer:** everything stays Storepro-only, which is fine for building but not for a real monthly cycle</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Which prompts count as buying intent for Storepro</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span></div>
+        <div class="card-desc">The citation panel is only as good as the questions it asks. 10–15 real questions a buyer would type into ChatGPT before choosing a racking supplier is enough; we can draft them and have you cut the wrong ones. **Default if no answer:** we generate the prompt set from Storepro&#39;s own Search Console queries and flag it as unreviewed in the first report</div>
       </div></div>
     </section>
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">15</span>
+        <span class="col-count">21</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">M2: Audit engine — a real client site, crawled, scored and explained</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-phase-1">phase-1</span><span class="tag tag-milestone">milestone</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">2026-08-a</span><span class="tag tag-neutral">GET /api/audits/…</span><span class="tag tag-neutral">tsc</span><span class="tag tag-neutral">68a5737</span><span class="tag tag-neutral">origin/dev</span></div>
+        <div class="card-desc">Storepro&#39;s site is now crawled, scored on three pillars, and the result is on screen with every page and every finding behind it. The audit reads pages the way an AI crawler does — fetching the raw HTML without running any JavaScript — because the gap between what a browser renders and what arrives in the response *is* the problem we&#39;re selling the fix to. **Real numbers:** SEO **91.50**, GEO **93.44**, AEO **45.45**, from 147 pages crawled of 202 discovered, producing 150 page snapshots and 12 findings. **Verified by:** two audit runs queried straight out of Postgres, both under method `2026-08-a`, both scoring identically to the hundredth; `GET /api/audits/…` returning 200 with 12 findings and 150 pages; screenshots of all three screens (findings, checks, pages); `tsc` clean; Supabase security advisors clean; commit `68a5737` on `origin/dev`. *(Same trap as M1 and still open: &quot;in the app&quot; means the local build. There is no deployed environment, so nobody outside this laptop can see any of it.)*</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Scores that don&#39;t drift — and a command that proves it rather than claiming it</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">method</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">npm run audit -- --client storepro --verify</span><span class="tag tag-neutral">docs/scoring.md</span></div>
+        <div class="card-desc">The risk carried into this milestone was that two of the tools we surveyed produce audit scores that wander ±10 points on a site nobody touched, which would make every month-over-month claim we build on top fiction. So the scoring was designed backwards from that threat: enumerate every way an unchanged site could score differently twice, then close each one. The ones that mattered — the page set is decided from the sitemap and sorted the same way every time rather than by whichever page answers first; **no rule is allowed to look at today&#39;s date**, because a &quot;content updated in the last 90 days&quot; check makes an untouched site score lower every month and the report would call that a regression; a page we couldn&#39;t read is dropped from the calculation instead of counted as a failure; and the ruleset is stamped with a version, so if we ever change the weights the app refuses to draw a comparison across the change rather than letting a methodology tweak look like a client result. **Verified by:** `npm run audit -- --client storepro --verify` crawling the site twice and reporting identical results across all 23 checks, plus two separately stored runs both recording 91.50 / 93.44 / 45.45. Reasoning for every rule is written up in `docs/scoring.md`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Found: the audit was confidently wrong twice on its first real run</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">&lt;main&gt;</span></div>
+        <div class="card-desc">Both caught and fixed, and both worth knowing because they produced *wrong* answers rather than missing ones, which is the more dangerous failure. **First:** three Storepro URLs return HTTP 200 with a completely empty body. The engine treated them as real pages failing every single check — inventing a shortfall out of an absence, and dragging the scores down with it. A page now only counts as content if an actual HTML document came back and parsed. **Second:** Storepro&#39;s team page has an empty `&lt;main&gt;` container with the real content rendered outside it, so the audit read the page as having zero words and reported a perfectly normal page as invisible to AI crawlers. The audit now checks that the section it&#39;s reading actually contains text before trusting it. *(The general lesson, and the reason both are recorded: a tool that says nothing is recoverable; a tool that says something false with a number attached is not.)*</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Storepro&#39;s audit baseline — strong technically, weak as an answer source</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">llms.txt</span><span class="tag tag-neutral">54b3758e</span></div>
+        <div class="card-desc">SEO 91.5 and GEO 93.4 are genuinely good: the sitemap is clean, structured data is present, an `llms.txt` exists, and **no AI crawler is blocked** — all 15 tracked agents including Google-Extended can read the site. AEO at 45.5 is the gap, and it&#39;s specific: **not one page** carries FAQ or How-To markup, only half the pages have a heading phrased as a question, and only a third have a list or table an answer engine could lift. **Why that matters here:** it is exactly the profile of a site that gets *read* by AI engines but not *quoted* by them — which is consistent with the M1 finding that Storepro&#39;s informational queries hold impressions at position 7–9 while returning zero clicks. Still a hypothesis, and M3&#39;s probe panel is what settles it, but the audit and the traffic data now point the same way. **Verified by:** 12 findings stored against run `54b3758e`, each with its evidence and its falsifiability contract</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Found: nothing had been loading the local env file since M1</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">.env</span><span class="tag tag-neutral">.env.local</span><span class="tag tag-neutral">npm run ingest</span></div>
+        <div class="card-desc">Every command in the repo used a loader that reads `.env`, a file that doesn&#39;t exist here — the secrets live in `.env.local`. M1&#39;s commands only ever worked because they were being launched with an explicit flag pointing at the right file, which meant the documented `npm run ingest` failed for anyone following the README from a clean shell. Fixed centrally so every command loads the same way, with real environment variables still winning over files for when this eventually runs on Railway. *(Also found and killed a server left running from a previous session — it was still holding the port and serving old code, which is how this surfaced.)*</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Near miss: the DataForSEO check would have reported a false all-clear</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">finding</span></div>
+        <div class="card-desc">The first version of the credential verifier pinged a cheap liveness endpoint before trying anything real. DataForSEO validates the shape of a request *before* it checks who you are, so that ping returned a success response on credentials that were completely invalid — and the verifier would have printed &quot;credentials accepted&quot; while nothing worked. It now makes exactly one probe: the real backlinks call we actually depend on. It also separates &quot;your login is wrong&quot; from &quot;your login is fine but you haven&#39;t bought the Backlinks API&quot;, because those are different problems with different fixes and DataForSEO sells each API separately. *(Same shape as the M1 trap where Search Console properties list fine and then 403 on every data call. Worth assuming this pattern exists in any vendor API until disproven.)*</div>
+      </div>
       <div class="card">
         <div class="card-title">M1: Data spine — Storepro&#39;s data is in the app</div>
         <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-phase-0">phase-0</span><span class="tag tag-milestone">milestone</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">xslwvntwrlvqccdupmni</span><span class="tag tag-neutral">GET /api/clients/storepro</span><span class="tag tag-neutral">tsc</span><span class="tag tag-neutral">bd7cbe5</span><span class="tag tag-neutral">origin/dev</span></div>
@@ -1065,28 +1100,23 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Build the crawler</div>
-        <div class="card-tags"><span class="tag tag-neutral">M2</span></div>
-        <div class="card-desc">Fetch and parse pages without JS execution, because that is exactly what an AI crawler sees. Retain per-page signals; discarding them makes page-level month-over-month diffs impossible, which is the mistake LeanSEO made</div>
-      </div>
-      <div class="card">
-        <div class="card-title">SEO / GEO / AEO scoring</div>
-        <div class="card-tags"><span class="tag tag-neutral">M2</span></div>
-        <div class="card-desc">Deterministic and stored at full precision. Rounding to integers 0–10 makes a real improvement show as zero delta</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Findings with the falsifiability contract</div>
-        <div class="card-tags"><span class="tag tag-neutral">M2</span></div>
-        <div class="card-desc">Every finding carries its evidence, the first principle it rests on, what would prove it wrong, and a leading indicator. The columns already exist</div>
+        <div class="card-title">Test the AI Overview hypothesis on Storepro first</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span></div>
+        <div class="card-desc">The single highest-value probe we can run. Two independent signals now point the same way: informational queries holding impressions at position 7–9 with zero clicks, and an AEO score of 45 driven by content that is readable but not quotable. One prompt set against the engines settles whether AI Overviews are absorbing the traffic, and the answer changes what we&#39;d recommend</div>
       </div>
       <div class="card">
         <div class="card-title">Railway staging</div>
-        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Not needed to close M1 but needed before anyone else can look at this. The service-account key moves to a Railway secret at the same time</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">Carried over from M2, still not done. Nobody outside this laptop can see the tool: no deployed environment, no login screen. Two milestones&#39; worth of work is now invisible to the specialists it&#39;s being built for. The service-account key moves to a Railway secret at the same time</div>
+      </div>
+      <div class="card">
+        <div class="card-title">CITE port + per-client competitor cohorts</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">method</span></div>
+        <div class="card-desc">Blocked on the DataForSEO credentials above. Worth knowing the manual part doesn&#39;t automate away: CITE is peer-relative by design, so each client needs a locked 3–5 competitor cohort declared by an analyst at onboarding</div>
       </div></div>
     </section>
     <section class="column col-backlog">
@@ -1097,8 +1127,8 @@
       <div class="cards">
       <div class="card">
         <div class="card-title">Port CORE-EEAT (80 items, 9 content-type profiles)</div>
-        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">method</span></div>
-        <div class="card-desc">Apache-2.0. Includes per-item pass/partial/fail bands and calibration examples; expensive to reproduce, free to take</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">method</span></div>
+        <div class="card-desc">Apache-2.0, with per-item pass/partial/fail bands and calibration examples; expensive to reproduce, free to take. **Explicitly not what M2 built** — M2&#39;s 23 checks are a smaller, determinism-first ruleset designed so two runs of an unchanged site produce the same number. CORE-EEAT is a content-quality assessment and a different job; when it lands it should sit alongside the audit score, not inside it, because a judgement-based rubric will not be reproducible in the same way</div>
       </div>
       <div class="card">
         <div class="card-title">Port CITE (40 items, 7 domain profiles)</div>
@@ -1129,9 +1159,19 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>🅿️ Parking Lot</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">9</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Performance / Core Web Vitals as a fourth pillar</div>
+        
+        <div class="card-desc">Deliberately left out of the audit score in M2. Measuring it properly needs a rendering engine and real-user field data, and both would put a number that moves on its own into a client-facing score — the exact failure the scoring method was built to prevent. If we want it, it belongs in its own pillar with its own comparability rules</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Rendered-DOM comparison</div>
+        
+        <div class="card-desc">Right now we infer that a page needs JavaScript from what&#39;s missing in the raw HTML. Running a headless browser would measure the raw-versus-rendered gap directly and would be a genuinely better diagnosis. It stays out of the *score* even then: a headless browser is the least reproducible thing we could put in one</div>
+      </div>
       <div class="card">
         <div class="card-title">Content production pipeline</div>
         

@@ -17,9 +17,9 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M2 · Audit engine",
+  phase: "M3 · AI visibility panel",
   nextMilestone: {
-    name: "A scored audit with per-page findings",
+    name: "A real AI citation, recorded with its raw answer",
     date: "Q3 2026",
   },
 
@@ -59,6 +59,13 @@ module.exports = {
       internal: true,
     },
     {
+      icon: "📐",
+      title: "Audit method",
+      desc: "docs/scoring.md — the 23 checks, and what makes a score reproducible",
+      url: "https://github.com/CoreshiftHQNZ/engine-optimization/blob/main/docs/scoring.md",
+      internal: true,
+    },
+    {
       icon: "📚",
       title: "Method source (Apache-2.0)",
       desc: "aaron-marketing-skills — CORE-EEAT + CITE frameworks we're adopting",
@@ -87,19 +94,19 @@ module.exports = {
       id: "M2",
       name: "Audit engine",
       doneWhen: "A crawl of a real client site produces a scored audit run with per-page snapshots and findings, viewable in the app",
-      status: "current",
+      status: "done",
     },
     {
       id: "M3",
       name: "AI visibility panel",
       doneWhen: "A prompt set runs across every engine for one client and a citation is recorded with its raw answer",
-      status: "next",
+      status: "current",
     },
     {
       id: "M4",
       name: "Work plan",
       doneWhen: "One ranked work plan, merged from every finding source, is approved by a specialist in the app",
-      status: "planned",
+      status: "next",
     },
     {
       id: "M5",
