@@ -17,9 +17,9 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M1 · Data spine",
+  phase: "M2 · Audit engine",
   nextMilestone: {
-    name: "One client's GSC + GA4 data visible in the app",
+    name: "A scored audit with per-page findings",
     date: "Q3 2026",
   },
 
@@ -81,19 +81,19 @@ module.exports = {
       id: "M1",
       name: "Data spine",
       doneWhen: "One real client's GSC and GA4 data for a calendar month is visible in the app",
-      status: "current",
+      status: "done",
     },
     {
       id: "M2",
       name: "Audit engine",
       doneWhen: "A crawl of a real client site produces a scored audit run with per-page snapshots and findings, viewable in the app",
-      status: "next",
+      status: "current",
     },
     {
       id: "M3",
       name: "AI visibility panel",
       doneWhen: "A prompt set runs across every engine for one client and a citation is recorded with its raw answer",
-      status: "planned",
+      status: "next",
     },
     {
       id: "M4",
@@ -125,10 +125,10 @@ module.exports = {
   phases: [
     {
       key: "phase-0",
-      status: "in-progress",
+      status: "done",
       title: "Phase 0",
       subtitle: "Foundation",
-      window: "In progress · research complete, schema drafted",
+      window: "Done · M1 landed 2026-08-13",
       desc: "Get data flowing and prove the measurement is trustworthy before any surface is built on it. The Google service account is the hard blocker — nothing downstream produces a defensible number until it exists.",
       deliverables: [
         "Google service account + domain-wide delegation via access@growthpartners.co.nz",
@@ -139,10 +139,10 @@ module.exports = {
     },
     {
       key: "phase-1",
-      status: "planned",
+      status: "in-progress",
       title: "Phase 1",
       subtitle: "Measure",
-      window: "M2–M3 · after the data spine",
+      window: "In progress · M2 building on the live data spine",
       desc: "Everything that observes a client site. Deterministic where it matters — a score that drifts on an unchanged site destroys the month-over-month report.",
       deliverables: [
         "Crawler + SEO/GEO/AEO scoring, per-page snapshots retained for page-level diffs",

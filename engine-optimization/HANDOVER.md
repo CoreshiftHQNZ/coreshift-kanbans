@@ -1,41 +1,42 @@
 # Engine Optimization — Handover
-_2026-08-13 · opens M1 · project registered_
+_2026-08-13 · closes M1 · opens M2_
 
 ## ▶️ Paste this into a new session
 
-    Engine Optimization M1 — Data spine
+    Engine Optimization M2 — Audit engine
 
     Read coreshift-kanbans/engine-optimization/HANDOVER.md and the repo docs it points at,
     then give me the 5-line orientation and your first move, and proceed.
 
 ## Where we are — for Ricky
 
-- **Just closed:** nothing — this is the first session. Research and architecture only.
-- **In plain terms:** we surveyed seven SEO tools built on Claude, took the best of their method for free, and found that none of them does the one thing you actually asked for — checking whether last month's assumptions came true. That gap is the product. The data model is drafted and reviewed; nothing is built yet.
-- **Verified by:** seven full codebase reads; `growthpartners.co.nz` confirmed on Google Workspace via MX lookup; licence confirmed Apache-2.0 on the material we're lifting.
-- **Next:** M1 — Data spine. Ends when one real client's Search Console and GA4 data for a calendar month is visible in the app.
+- **Just closed:** M1 — Data spine.
+- **In plain terms:** the tool can now see a client's real numbers. Storepro's Search Console and Google Analytics data for the last four months is loading automatically and showing month-on-month movement. The Google access you set up works for the whole client estate at once — 65 Search Console properties and 98 Analytics properties — so adding the next client needs nothing from Google at all. That was the piece that had been stuck since July.
+- **Verified by:** four months of Storepro data read straight out of the database (8 rows, two sources × four months); the client screen returning real figures — July: 815 clicks, 77,496 impressions, 1,264 organic visits; a screenshot of it; typecheck clean; commit `bd7cbe5` pushed.
+- **Next:** M2 — Audit engine. Ends when a crawl of a real client site produces a scored audit with per-page detail and findings, visible in the app.
 
-## 👉 On you before M1 can close
+## 👉 On you before M2 can close
 
-1. **Create the Google service account and authorise domain-wide delegation.** Needs Google Cloud console plus Workspace super-admin on `growthpartners.co.nz`. Exact steps in `docs/google-access-setup.md` §3–5. **This is the hard blocker** — no traffic, ranking or delta figure exists without it, and it's been open in `~/.claude/ENABLEMENT.md` since the GHS Law build in July.
-2. **DataForSEO account + API credentials.** Approved 2026-08-13. Not needed to close M1, but needed before M2's CITE scoring can emit a number at all.
-3. **Confirm or reshape the seven milestones.** They're the scope arbiter for the next several months. Cheap to change now.
+1. **DataForSEO account + API credentials.** You approved this on 13 Aug; it hasn't been created yet. It doesn't block the crawling and scoring work, but the domain-authority framework needs backlink data and refuses to produce a score without full coverage — so without it that half stays blank rather than showing a low number. **Default if you don't answer:** M2 ships with the crawl-based scores only and the authority score waits for M3.
+2. **The client list.** Only Storepro is set up. There are 47 domains with working Search Console access across the estate and no way for me to tell a paying retainer client from an old access grant someone was given years ago. Names are enough — the rest is automated. **Default if you don't answer:** everything stays Storepro-only, which is fine for building and useless for a real monthly cycle.
 
 ## 🔴 Risks you're carrying
 
-- **A user-OAuth token will break again.** LeanSEO's died twice (`invalid_grant`, verified 2026-07-07), and its re-mint helper script was described in a handover and never committed — so the recovery procedure was itself lost. The service-account path avoids this. Don't let a shortcut reintroduce it.
-- **Domain-wide delegation is specified but not yet tested against this domain.** Written from the standard flow, not a live run. Test on one client property before relying on it. The per-property fallback works unchanged if delegation is refused.
-- **Scores that drift destroy the report.** Two surveyed tools produce audit scores that move ±10 points on an unchanged site, and one rounds to integers so real improvement shows as zero delta. If a client-facing number isn't deterministic, the month-over-month claim is fiction. Hold the line: no client-facing number until its underlying check is reproducible.
-- **CITE cannot score without a link index.** Nine of its forty items need backlink data and the framework requires 100% coverage — so without DataForSEO it returns `UNDECIDED` forever, not a low score. Budget for it or fork the framework and mark those items conditionally inapplicable.
-- **Peer cohorts are a human onboarding step.** CITE is peer-relative by design; each client needs a locked 3–5 domain cohort with inclusion rules declared by an analyst. That's per-client manual work at onboarding and it doesn't automate away.
+- **Storepro may be losing traffic to Google's AI Overviews, and we can't yet prove it.** Several informational searches rank at position 7–9 with 500+ impressions and **zero clicks** — position 7 should return 10–15. Impressions holding while clicks vanish is the known fingerprint for it, and Analytics confirms AI engines are reading the site (AI-referred visits went 0 → 31 → 43 over three months). This is a hypothesis, not a finding: average position is an average, and a different search feature could cause the same pattern. M3's probe panel is what settles it. Flagged because if it's true, an audit that only scores on-page factors would recommend work that doesn't address the actual problem.
+- **Scores that drift would destroy the monthly report.** Two of the tools surveyed produce audit scores that move ±10 points on an unchanged site, and one rounds so hard that real improvement shows as zero change. M2 is where this risk lands. If a client-facing number isn't reproducible, every month-over-month claim built on it is fiction.
+- **Nobody but us can see the tool.** It runs on a laptop. There's no deployed environment and no login screen, so the SEO specialists it's being built for can't use it yet. Not a problem this week; it becomes one before M7.
+- **The domain-authority framework is peer-relative by design.** Each client needs a locked 3–5 competitor cohort declared by an analyst at onboarding. That's genuine manual work per client and it does not automate away.
 
 ## For the next Claude
 
-- **Project dir** `/Users/Ricky/Documents/Claude/Projects/Engine Optimization`. Read `docs/schema.md` first — it's the reviewed data model and the reasoning behind each design rule. Then `docs/google-access-setup.md`.
-- **No code exists yet.** No repo, no Supabase project, no app. M1 starts from zero: create `CoreshiftHQNZ/engine-optimization`, a Supabase project in the CoreShift org, and a Railway staging environment on the standard dev → staging → main flow.
-- **Architecture is settled, don't relitigate it.** Web app on Railway + Supabase because the users are SEO specialists who won't touch a terminal. Agent work runs server-side via the Claude Agent SDK. The method lives in versioned portable skill files the server loads at runtime, which we can also run in Claude Code while building — that's how we avoid choosing between the two form factors.
-- **Schema before screens.** The prediction→verification loop is a set of tables; every surface is a view over them. A flaw there is inherited everywhere.
-- **The seven design rules in `docs/schema.md` each come from a specific observed failure**, not from taste. Read the reasoning before changing one.
-- **Research artifacts are in the scratchpad**, not the repo: seven cloned reference repos under this session's scratchpad `repos/`. If they're gone, the reusable conclusions are all captured in `docs/schema.md` and the board's Done cards. The two frameworks worth re-cloning are `aaron-he-zhu/aaron-marketing-skills` (Apache-2.0) and `AgriciDaniel/claude-seo` (MIT).
-- **Don't** build the audit engine before the data spine works. Crawl scores without Search Console data produce an audit nobody can act on, and it's the trap LeanSEO fell into — a shipped Phase 2 audit engine feeding plans that silently degraded to crawl-only for months.
-- **Ignore LeanSEO as a codebase.** Ricky's call, 2026-08-13: start from scratch. It's a $489/mo self-serve consumer product whose auth, onboarding and data model would fight an internal agency tool. Its method logic was surveyed and the useful conclusions are already in `docs/schema.md`.
+- **Repo** `CoreshiftHQNZ/engine-optimization`, branch `dev`, working dir `/Users/Ricky/Documents/Claude/Projects/Engine Optimization`. Supabase project `xslwvntwrlvqccdupmni`.
+- **Read first:** `docs/schema.md` — the data model and the reasoning behind each rule. Every rule traces to a specific observed failure in a surveyed tool, so read the reasoning before changing one. Then `README.md` for commands.
+- **State:** 20 tables live with RLS and clean security advisors. Google delegation working (`npm run verify:access` proves it in one command). Storepro onboarded with four months ingested. Express API on :3000, React client, `tsc` clean, working tree clean.
+- **M2 fills tables that already exist** — `audit_runs`, `page_snapshots`, `findings`. Don't redesign them; the columns including the falsifiability contract (`first_principle`, `depends_on`, `failure_check`, `leading_indicator`) are deliberate.
+- **Crawl without executing JavaScript.** That is exactly what an AI crawler sees, and the gap between rendered and raw HTML *is* the GEO problem being measured. Keep every per-page signal — discarding them is what made LeanSEO unable to diff pages month to month.
+- **Don't** round scores to integers. Store full precision, round only at render.
+- **Don't** assume a property works because it appears in the Search Console list — 11 of 65 are `siteUnverifiedUser` and 403 on every data call. `gsc.permissionGrantsData()` already encodes this.
+- **Don't** sum Search Console query rows to get a total. Google anonymises low-volume queries; for Storepro's July that's 536 of 815 clicks missing. Totals come from the dimensionless call.
+- **Don't** infer a GA4 property ID from a name. 22 Test/Filtered pairs exist and a matcher tried during M1 got two clients wrong.
+- **Don't** build the audit engine's client-facing scores before deciding what makes them reproducible. That's the live risk above.
+- **Useful:** `npm run probe -- <domain> [ga4Id]` checks a client's data before onboarding; `npm run ingest -- --client <slug> --month YYYY-MM` backfills a month.
