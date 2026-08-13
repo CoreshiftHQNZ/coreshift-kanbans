@@ -1,5 +1,5 @@
 # Engine Optimization — Handover
-_2026-08-13 · closes M4 · opens M5_
+_2026-08-13 · M4 landed · opens M5_
 
 ## ▶️ Paste this into a new session
 
