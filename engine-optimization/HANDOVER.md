@@ -1,48 +1,58 @@
 # Engine Optimization — Handover
-_2026-08-13 · closes M2 · opens M3_
+_2026-08-13 · closes M3 · opens M4_
 
 ## ▶️ Paste this into a new session
 
 ```
-Engine Optimization M3 — AI visibility panel
+Engine Optimization — decide what's next after M3
 
-Read coreshift-kanbans/engine-optimization/HANDOVER.md and the repo docs it points at,
-then give me the 5-line orientation and your first move, and proceed.
+Read coreshift-kanbans/engine-optimization/HANDOVER.md and the repo docs it points at.
+M4 is currently "Work plan", but its doneWhen has a hard dependency that isn't met and
+M3 surfaced a finding with a real claim on priority. Give me the 5-line orientation,
+then your recommendation and the two alternatives, and update milestones[] once I pick.
 ```
 
 ## Where we are — for Ricky
 
-- **Just closed:** M2 — Audit engine.
-- **In plain terms:** the tool now crawls a client's whole site and scores it, and you can click into any page or any problem it found. Storepro came out at **SEO 91.5, GEO 93.4, AEO 45.5** across 147 pages. The first two are genuinely good. The third is the story: Storepro's site is easy for AI engines to *read* and hard for them to *quote* — no FAQ markup anywhere, only half the pages ask a question in a heading, only a third have a list or table an answer engine could lift. That lines up uncomfortably well with the M1 finding about queries holding impressions and losing all their clicks.
-- **The bit worth caring about:** the scores don't move on their own. That was the live risk going in — two of the tools we surveyed produce audit scores that drift ±10 points on a site nobody touched, which would make every month-over-month claim we build on top worthless. Running the audit twice on the same site now produces identical numbers to the second decimal place, and there's a one-line command that proves it rather than us asserting it.
-- **Verified by:** two audit runs read straight out of the database, both scoring 91.50 / 93.44 / 45.45 to the hundredth, each with 150 page records and 12 findings; the audit screens returning real data; screenshots of all three; typecheck clean; database security checks clean; commits `68a5737` and `d0491f0` pushed.
-- **Next:** M3 — AI visibility panel. Ends when a set of prompts runs across every AI engine for one client and a citation is recorded with the engine's raw answer saved.
+- **Just closed:** M3 — AI visibility panel.
+- **In plain terms:** the tool now asks a real AI engine a real buying question and records whether Storepro was cited, keeping the engine's whole answer. Nothing we surveyed does this — they all measure whether a site is *ready* to be quoted and call that AI visibility.
+- **The headline, and it isn't what we predicted:** back in M1 we guessed that AI Overviews were swallowing Storepro's clicks. Half right. Of the **seven page-one queries carrying 3,005 impressions and exactly zero clicks**, six have an AI Overview — **and Storepro is cited in four of them, usually as the first or second source.** So Storepro isn't being left out of the AI answer. It's *inside* it and still getting nothing, because the overview answers the question and the searcher never clicks through. "Get us cited in AI Overviews" is not the fix. They already are.
+- **The thing that should worry you more:** we ran the same fifteen questions twice, minutes apart, and got different answers on five of them — the AI Overview appeared or vanished entirely on three, one citation flipped, one moved from second to fourth. **One sweep is not a measurement.** This is the same problem the audit scoring was built to defeat, except that time the wobble was ours and we could remove it. This one is Google's. Until we sample properly, no month-over-month citation number goes anywhere near a client.
+- **Also landed:** the tool is finally on the internet, behind a login — https://engine-optimization-staging.up.railway.app. That had slipped through M1 and M2.
+- **Verified by:** 90 probe records read straight out of the database — 19 with the engine's full answer stored (1,991–3,794 characters), 11 recorded as "engine failed", 60 as "no credential", and **zero** rows in an illegal state; six citations each pointing at a real Storepro product page; 12 detector tests passing; typecheck clean; the deployed site returning 200 and its API returning 401 to anyone not signed in; commit `f170cfc`.
+- **Next:** a decision. See the paste-block above.
 
-## 👉 On you before M3 can close
+## 👉 On you before M4 can close
 
-1. **The DataForSEO credentials are being rejected.** The account exists and the pair is saved in the local env file, but every call comes back `40100 — not authorized`. Three usual causes: the API password is a separate credential from the website sign-in password; the login may be an account email other than `mal@growthpartners.co.nz`; or IP whitelisting is switched on and this machine isn't listed. Everything you need is on one page — https://app.dataforseo.com/api-access — and running `npm run verify:dataforseo` tells you which of the three it is. **Default if you don't answer:** M3 ships the citation panel only and the domain-authority score stays unbuilt.
-2. **The client list.** Still only Storepro. 47 domains have working Search Console access across the estate and there's no way to tell a paying retainer client from an access grant someone was given years ago. Names are enough. **Default if you don't answer:** everything stays Storepro-only — fine for building, useless for a real monthly cycle.
-3. **Which questions count as buying intent for Storepro.** The citation panel is only as good as the questions it asks. 10–15 things a buyer would actually type into ChatGPT before choosing a racking supplier. **Default if you don't answer:** we generate the prompt set from Storepro's own Search Console queries and mark it unreviewed in the first report.
+1. **Email delivery for sign-in.** The staging login works for you and for nobody else — the Supabase project has no mail provider, so it uses the built-in sender, which is capped at **2 emails an hour and only delivers to Supabase org members**. Any provider fixes it (Postmark, Resend, SES) under Authentication → Emails. **This is the blocker that matters**: M4's finish line is "a specialist approves the plan in the app", and no specialist can get in. It also makes M7 impossible by definition. **Default if you don't answer:** M4 gets built but cannot close, and I'll land it renamed to what was actually achieved.
+2. **10–15 real buying-intent questions for Storepro.** The fifteen loaded now came from Storepro's own Search Console and are stored **unreviewed** — they're visibly generic ("What should I know about X…"). **Default if you don't answer:** they run as-is and every report says the set is unreviewed.
+3. **Storepro's competitor cohort — 3–5 names.** Competitor displacement can't be measured without it and the tool refuses to guess. Seen citing alongside Storepro in the live overviews: `dexion.co.nz`, `palletrackingsolutions.co.nz`, `shelvingshopgroup.co.nz`, `stackit.co.nz`. **Default if you don't answer:** competitor presence stays recorded as *not measured*, which is honest but empty.
+4. **The other four engine keys** — `OPENAI_API_KEY`, `PERPLEXITY_API_KEY`, `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`. All four adapters are written and switch on the moment a key appears. One engine is a data point; ChatGPT is the one a client will ask about by name. Roughly $5–10/month at this volume. **Default if you don't answer:** the panel stays a one-engine panel and says so.
+5. **The client list.** Still only Storepro. 47 hosts have working Search Console access and no way to tell a retainer client from an old access grant. Names are enough. **Default if you don't answer:** Storepro-only.
 
 ## 🔴 Risks you're carrying
 
-- **Two milestones of work are invisible to everyone but us.** The tool runs on a laptop. No deployed environment, no login screen. The specialists it's being built for still cannot open it. This was flagged at M1 and is now a milestone older — it should land in M3 rather than drifting again.
-- **The Storepro AI Overview question is still open, and the audit made it sharper rather than settling it.** Informational queries sit at position 7–9 with 500+ impressions and zero clicks; AI-referred visits went 0 → 31 → 43 over three months; and the audit now independently says the content is readable but not quotable. Three signals agreeing is not proof — position is an average and another SERP feature could produce the same pattern. M3's probe panel is what settles it, and it should be the first thing pointed at Storepro.
-- **The domain-authority framework is peer-relative by design.** Each client needs a locked 3–5 competitor cohort declared by an analyst at onboarding. Genuine manual work per client; it does not automate away.
-- **We have no independent check that the audit's judgements are right.** Reproducibility was proved this milestone — the same site scores the same twice. Whether a score of 45.5 correctly describes Storepro's answer-engine readiness is a separate question and nothing has tested it. The falsifiability contract on each finding exists precisely so this becomes checkable once predictions start being verified in M5.
+- **A single probe is a coin flip, and everything downstream inherits that.** Five of fifteen changed between two sweeps minutes apart. Any citation-based claim — share of voice, "we lost a citation this month", competitor displacement — is currently unsafe to put in front of a client. The fix is a sampling design (n sweeps across a window, reported as a rate with its sample size), not a bug fix, which is why it belongs with predictions and controls rather than being patched now.
+- **The AI Overview finding is a correlation across two moments, not a controlled test.** The traffic data is July; the overview snapshot is August. And it doesn't explain everything — `heavy duty shelving` sits at position 9.0 with 473 impressions, zero clicks, and **no AI Overview at all**. Something else is also taking clicks.
+- **One engine is not a panel.** Only Google AI Overviews can answer today. Every conclusion above is about one surface, and it's the surface that behaves least like the assistants.
+- **We still have no independent check that the audit's judgements are right.** Unchanged from M2. Reproducibility was proved; correctness has not been tested, and the falsifiability contract on each finding is what makes it checkable once predictions get verified in M5.
+- **The domain-authority framework is peer-relative by design.** Unblocked now that DataForSEO works, but each client still needs an analyst-declared cohort at onboarding. It does not automate away.
+- **Nobody but Ricky can open the tool.** Deployed, gated, and effectively single-user until SMTP exists.
 
 ## For the next Claude
 
-- **Repo** `CoreshiftHQNZ/engine-optimization`, branch `dev`, working dir `/Users/Ricky/Documents/Claude/Projects/Engine Optimization`. Supabase project `xslwvntwrlvqccdupmni`.
-- **Read first:** `docs/schema.md` — the data model and the reasoning behind every rule. Then `docs/scoring.md` — the audit method and the determinism contract; read it before touching a weight, a threshold or the crawl budget. Then `README.md` for commands.
-- **State:** 20 tables, RLS on, security advisors clean. Google delegation working. Storepro onboarded with 4 months ingested and 2 audit runs stored. Express API on :3000 serving the built React client, `tsc` clean, tree clean, `d0491f0` on `origin/dev`.
-- **M3 fills tables that already exist** — `ai_probes` and `ai_probe_runs`. `raw_answer` is `not null` on purpose: storing the engine's actual text is what makes share-of-voice, competitor displacement and "we were cited in September and lost it in October" answerable later, rather than being frozen into a boolean computed under whatever rules we had that month.
-- **Citability is not surfacing.** M2 measures whether content is extractable and quotable — testable in minutes. M3 measures whether an engine actually cites us unprompted — week-scale and heavily confounded. Report them as separate numbers and never promise fast surfacing.
-- **Don't** let any scored rule read the current time. A check that does makes an untouched site score lower next month and the report calls it a regression. Freshness is captured as a signal and reported as a finding, never scored.
-- **Don't** change a weight, a threshold or the crawl budget without bumping `method_version`. The app deliberately refuses to draw a delta across two different method versions.
-- **Don't** trust a 200. Storepro returns HTTP 200 with an empty body on three URLs, and DataForSEO returns a success-shaped response to an unauthenticated request because it validates the payload before the credentials. Both were caught as near-misses this milestone; assume the pattern exists in any vendor API until disproven.
-- **Don't** treat "couldn't measure" as "measured zero" anywhere. It is the rule the schema is built around and the one most easily broken by accident — it was broken twice in M2's first run.
+- **Repo** `CoreshiftHQNZ/engine-optimization`, branches `dev` and `staging` both at `f170cfc`, working dir `/Users/Ricky/Documents/Claude/Projects/Engine Optimization`. Supabase project `xslwvntwrlvqccdupmni`. Railway project `engine-optimization`, staging environment auto-deploys on push to `staging`.
+- **Read first:** `docs/ai-visibility.md` — what "cited" means and what it doesn't; read "One sweep is not a measurement" before quoting any citation number. Then `docs/scoring.md` for the audit determinism contract, then `docs/schema.md` for the data model. `README.md` has the commands.
+- **State:** 22 tables, RLS on, advisors clean. Storepro onboarded, 4 months ingested, 2 audit runs, 15 probes (all unreviewed), 90 probe runs. DataForSEO live and Backlinks entitled (91 referring domains, 280 backlinks, rank 172). Auth is Supabase magic link, domain-restricted, verified server-side on every request.
+- **M4 fills `work_items`**, which already exists with a mandatory `rationale` — that field becomes the report's "why", so it is required at creation time on purpose.
+- **Don't** treat "couldn't measure" as "measured zero". This project has now broken that rule three times — twice in M2's first crawl, once in the M1 probe schema. `ai_probe_runs` enforces it with a check constraint; keep it that way.
+- **Don't** trust a 200. DataForSEO validates payload shape *before* credentials, so an unauthenticated call returns success-shaped; and its SERP responses carry a per-task `status_code` that can fail inside a 20000 envelope.
+- **Don't** re-judge a probe run from `raw_answer` alone. An engine's structured source list is separate data — `engine_sources` holds it untouched, `sources` is our derived output. Confusing them deletes real citations; this was caught by a dry run and would have been applied otherwise.
+- **Don't** send a SERP surface a conversational prompt. `ai_probes.search_query` exists because Google AI Overviews returns the overview for whatever string it gets, and the assistant-shaped prompt measures a SERP nobody searches.
+- **Don't** change the detector without bumping `DETECTOR_VERSION`. The panel refuses a delta across two versions, exactly as the audit refuses one across two method versions.
+- **Don't** let any scored rule read the current time. Freshness is a finding, never a score component.
 - **Don't** assume a Search Console property works because it appears in the list — 11 of 65 are `siteUnverifiedUser` and 403 on every data call.
 - **Don't** sum Search Console query rows to get a total; Google anonymises low-volume queries. Totals come from the dimensionless call.
 - **Don't** infer a GA4 property ID from a name. 22 Test/Filtered pairs exist and a matcher tried in M1 got two clients wrong.
-- **Useful:** `npm run audit -- --client storepro` runs an audit; `--verify` crawls twice and proves the scores match without writing anything; `npm run verify:access` proves Google delegation; `npm run verify:dataforseo` proves the DataForSEO pair and its Backlinks entitlement separately; `npm run ingest -- --client <slug> --month YYYY-MM` backfills a month.
+- **Don't** enable IP whitelisting on DataForSEO. Railway's outbound address isn't fixed, so a whitelist that fixes a laptop breaks production intermittently and looks like a vendor outage.
+- **Useful:** `npm run verify:engines` proves which engines can be measured right now; `npm run ai-probe -- --client storepro` runs the sweep (`--dry-run` writes nothing); `npm run rejudge -- --client storepro` re-reads stored answers under the current detector and writes nothing without `--write`; `npm run probes -- --client storepro --from-gsc` proposes a prompt set; `npm run test:detector` proves the citation rules offline; `npm run audit -- --client storepro --verify` proves audit reproducibility; `npm run verify:access` proves Google delegation; `npm run fix:dataforseo` tests and saves a DataForSEO pair.

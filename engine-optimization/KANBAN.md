@@ -82,8 +82,8 @@ _None._
 ## ⚪ Backlog
 
 - **Port CORE-EEAT (80 items, 9 content-type profiles)** `M4` `method` — Apache-2.0, with per-item pass/partial/fail bands and calibration examples; expensive to reproduce, free to take. **Explicitly not what M2 built** — M2's 23 checks are a smaller, determinism-first ruleset designed so two runs of an unchanged site produce the same number. CORE-EEAT is a content-quality assessment and a different job; when it lands it should sit alongside the audit score, not inside it, because a judgement-based rubric will not be reproducible in the same way.
-- **Port CITE (40 items, 7 domain profiles)** `M3` `method` — Peer-relative by design; each client needs a locked 3–5 domain peer cohort declared at onboarding. That's a human step, budget for it.
-- **AI Overview recovery playbook** `M3` `deliverable` — Four-phase incident SOP. Storepro may already be a live case — see the baseline finding above.
+- **Port CITE (40 items, 7 domain profiles)** `M4` `method` — Peer-relative by design; each client needs a locked 3–5 domain peer cohort declared at onboarding. That's a human step, budget for it.
+- **AI Overview recovery playbook** `M4` `deliverable` — Four-phase incident SOP. ⚠️ **M3 changed what this playbook has to say.** It was drafted assuming the problem is *absence* from the AI Overview; Storepro is the opposite case — cited at source 1–2 and still getting zero clicks. A playbook whose advice is "get cited" is useless to a client who already is. The real question it must answer is what a supplier does when the overview satisfies the buyer without them ever leaving the SERP.
 - **Composite content-decay score** `M4` `method` — Traffic 30 / position 25 / CTR 15 / freshness 15 / competitive displacement 15, with action bands and a refresh-vs-rewrite rule.
 - **Report generator + branded output** `M6` — Bind report templates to the metrics store, pull the month's applied work with its originating findings, and surface last month's predictions with their verdicts.
 - **Algorithm update ledger** `M5` — Google-owned sources only, verified entries only. Auto-flags confounders on predictions whose window overlaps an update.
