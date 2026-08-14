@@ -1,7 +1,9 @@
 # Engine Optimization — Handover
-_2026-08-14 · M7 built, not landed · arc unchanged at 9_
+_2026-08-14, amended 2026-08-15 · M7 built, not landed · arc grew to 10_
 
-## ▶️ Paste this into a new session
+## ▶️ Two sessions are queued. Start with whichever matches where Ricky is.
+
+### If M7 is still unpublished — finish it first
 
 ```
 Engine Optimization M7 — Monthly report (finishing)
@@ -26,6 +28,41 @@ server/report/compose.ts; nothing there is generated.
 
 Do not mark an item shipped to make the report read better. Do not loosen a
 publication check. Do not publish it as anybody.
+```
+
+### Once M7 has landed — M8, the shipping record
+
+```
+Engine Optimization M8 — The shipping record
+
+Read coreshift-kanbans/engine-optimization/HANDOVER.md and the repo docs it points at.
+
+M8 was inserted on 2026-08-15, on Ricky's call, from his question at the end of the
+M7 session: "we need some way of telling the system the work is done so that it can
+police the assumptions and see if it worked." The arc grew 9 → 10; the readback
+verdict is now M9 and handover M10.
+
+He was right, and the gap is wider than the board had recorded. `work_items.shipped_at`
+has existed since 0001 and nothing anywhere in the system writes it — not a CLI, not
+an endpoint, not the app. Same for `owner_id` and `evidence_url`. M7's report reads
+that column to decide "delivered", which is why it correctly reports 0 of 13, and it
+will keep reporting 0 until a writer exists.
+
+Two halves. The writer: a specialist marks an approved item shipped, with evidence,
+attributed to a session, with real refusals — no shipment without evidence, none
+dated before the plan was approved, no silent un-shipping. Plus the readback's
+"the audit agrees, mark it shipped" one-click, which the Parking Lot has wanted since
+M6. The policing: re-derive the readback window from `shipped_at` using the existing
+pure `readbackWindow` and compare it to the window the prediction recorded. No new
+judgement — for plan 70337c95 the boundary is 3 September, verified by running the
+function. Ship by then and the recorded October window stands; ship on the 4th and
+the honest window was November, so October reads as `confounded` rather than failed.
+
+Do not mark anything shipped that has not been done. The doneWhen ends on a real
+specialist act, like M7's publish — build it, prove every refusal, and let a human
+close it.
+
+Give me the 5-line orientation, then get on with it.
 ```
 
 ## Where we are — for Ricky
@@ -104,18 +141,23 @@ publication check. Do not publish it as anybody.
 
 2. **Does the FAQ item get the hours?** Not blocking the report. It decides whether
    November's first verified prediction is an answer or a `confounded`. **Default:**
-   nothing changes, and the report already says the risk out loud.
+   nothing changes, and the report already says the risk out loud. ⚠️ **Now dated:**
+   M8's drift check puts the boundary at **3 September** — ship the FAQ work on or
+   before it and the recorded October window stands. That is the decision's deadline.
 
 3. **A second client, when you're ready.** Unchanged and still not blocking. Every
    matching threshold has exactly one property behind it. **Default:**
    Storepro-only until you name one.
 
-**Decided and closed:** M7 split, verification moved to M8 (2026-08-14). No
-deliberate holdouts. Ahrefs Brand Radar declined. Prompt generation in-house.
-Competitor cohort settled at eight domains. **New this session:** no report is
-emailed or exported — the format a client receives is a positioning decision and
+**Decided and closed:** M7 split, verification moved to M8 → renumbered M9
+(2026-08-14). No deliberate holdouts. Ahrefs Brand Radar declined. Prompt generation
+in-house. Competitor cohort settled at eight domains. **New this session:** no report
+is emailed or exported — the format a client receives is a positioning decision and
 was left unbuilt on purpose; one published report per cycle, so a correction is a
-designed re-issue rather than a re-run.
+designed re-issue rather than a re-run. **2026-08-15:** the shipping record becomes
+its own milestone at M8 rather than folding into the readback, because the readback
+cannot start before 5 November and August's shipping cannot wait that long to be
+recorded. Arc 9 → 10.
 
 ## 🔴 Risks you're carrying
 
@@ -142,10 +184,15 @@ designed re-issue rather than a re-run.
 - **A single probe is still a sample.** The citation sampling design does not
   exist, the report says so as one of its twelve refusals, and it is still what a
   client will ask about by name.
+- **Nothing records that work was done.** `shipped_at`, `owner_id` and `evidence_url`
+  have existed since `0001` with **no writer anywhere in the system**. This is now
+  **M8** rather than a loose risk, because until it exists the report says 0 of 13
+  delivered forever and November cannot tell `failed` from `confounded`. **The clock
+  on it is real: 3 September.**
 - **In-app prompt sign-off still does not exist.** Carried from M6 and *not* closed
   here — M7 built the in-app publish gate, which was the other half of the same
   complaint. A specialist who cannot sign off a prompt set in the app cannot run a
-  cycle unaided, which is M9's whole test. Should be built in M8.
+  cycle unaided, which is M10's whole test. Should be built alongside M8 or M9.
 - **A published report has no correction path.** One per cycle, frozen, undeletable.
   The right default and not a usable one if a report goes out wrong. In the Parking
   Lot with the shape of the fix.
@@ -160,7 +207,10 @@ designed re-issue rather than a re-run.
   `/Users/Ricky/Documents/Claude/Projects/Engine Optimization`. Supabase
   `xslwvntwrlvqccdupmni`. Railway `engine-optimization`, staging auto-deploys on
   push to `staging`. `main` does not exist.
-- **Read first:** `docs/reports.md` — all of M7, and the part that matters most is
+- **Read first for M8:** `server/predict/windows.ts` — `readbackWindow` is the whole
+  policing check and it is already pure, total and tested; the drift check is a
+  comparison, not new logic. Then `docs/predictions.md` on why the window is anchored
+  to approval. **Read first for M7:** `docs/reports.md` — all of it, and the part that matters most is
   *"Part three — why publishing is a human act"*. Then `docs/predictions.md` for
   what the report renders as pending, and `docs/planning.md` for where a rationale
   comes from. `README.md` has every command.
@@ -171,9 +221,11 @@ designed re-issue rather than a re-run.
   hold one row each, both immutable. **`reports` holds one row: draft `079c69d1`
   on cycle `017fe91f`, unpublished, with 9 passing `review_checks`.** Cycle
   `017fe91f` is `drafted`; the other three are `measuring`.
-- **All 13 items have `shipped_at` null.** Nothing has been done to the site. If
-  that changes, re-running `npm run report` moves those items into the delivered
-  section on its own — no code change needed.
+- **All 13 items have `shipped_at` null, and nothing can set it yet.** Nothing has
+  been done to the site. Once M8 gives the column a writer, re-running
+  `npm run report` moves those items into the delivered section on its own — the
+  report side needs no change, which is why M8 is a writer and a check rather than a
+  rewrite.
 
 ### What M7 built, and where
 

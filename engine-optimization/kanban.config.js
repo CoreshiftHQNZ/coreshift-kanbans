@@ -20,7 +20,7 @@ module.exports = {
   phase: "M7 · Monthly report",
   nextMilestone: {
     name: "A report that states what we did, why, and what we expected",
-    date: "Q3 2026 · the verdict follows in M8, from 5 November",
+    date: "Q3 2026 · one click from done; the shipping record is M8, the verdict M9 from 5 November",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -110,7 +110,9 @@ module.exports = {
       // approval gate exists (M4's job) and that someone other than Ricky can
       // operate the tool — the handover milestone's doneWhen almost verbatim. The
       // duplication made M4 unclosable on a mail-provider config that has nothing
-      // to do with the aggregator. The specialist test lives in M8 and only there.
+      // to do with the aggregator. The specialist test lives in the handover
+      // milestone and only there — M8 when this was written, M10 after two
+      // insertions since. The number moves; the rule does not.
       doneWhen: "A ranked work plan for one real client, merged from every finding source, moves to approved in the app — every item carrying its rationale and its originating source",
       status: "done",
     },
@@ -198,8 +200,44 @@ module.exports = {
     },
     {
       id: "M8",
+      name: "The shipping record",
+      // Inserted 2026-08-15, on Ricky's call, from his question at the end of the
+      // M7 session: "we need some way of telling the system the work is done so
+      // that it can police the assumptions and see if it worked."
+      //
+      // He was right, and the gap is wider than the Parking Lot recorded.
+      // `work_items.shipped_at` has existed since 0001 and **nothing anywhere in
+      // the system writes it** — not a CLI, not an endpoint, not the app. Same for
+      // `owner_id` and `evidence_url`. M7's report reads that column to decide
+      // "delivered", which is why it correctly reports 0 of 13 and why it will keep
+      // reporting 0 for as long as no writer exists.
+      //
+      // Why it is not part of the readback milestone, which is where the Parking
+      // Lot had it: the readback cannot begin before 5 November. Recording August's
+      // shipping in November means reconstructing from memory the one field that
+      // decides whether the prediction is readable at all. Same reasoning that
+      // split M7 — work that must happen now, trapped in a milestone that cannot
+      // move for eleven weeks.
+      //
+      // The policing half needs no new judgement, which is what makes this small
+      // enough to land quickly: re-derive the window from `shipped_at` with the
+      // existing pure `readbackWindow` and compare it to the window the prediction
+      // recorded. For plan 70337c95 the boundary is **3 September** — verified by
+      // running the function, not reasoned. Ship on or before it and the recorded
+      // October window stands; ship on the 4th and the honest window was November,
+      // so the October reading is `confounded` rather than `failed`.
+      //
+      // ⚠️ Ends on a human act, like M7's publish. Marking an item shipped when it
+      // has not been done is forging the record, so the close waits on the team
+      // doing a piece of August's work. Item 1 is 2.8 hours across 3 URLs.
+      doneWhen: "A specialist marks an approved item shipped, with its evidence, and every prediction states whether the work it is about shipped inside the window it assumed",
+      status: "planned",
+    },
+    {
+      id: "M9",
       name: "The readback",
-      // Added 2026-08-14 when M7 was split. This is the half of the loop that
+      // Added 2026-08-14 when M7 was split; renumbered from M8 on 2026-08-15 when
+      // the shipping record was inserted ahead of it. This is the half of the loop that
       // cannot be hurried: prediction a3e5a8a7 reads back over October 2026 and
       // those figures are final on 5 November. Everything it needs can be built
       // before then — the verification writer, the algorithm-update ledger that
@@ -210,11 +248,14 @@ module.exports = {
       // the outcome it was built to be able to survive: `failed` + `keep_testing`
       // is a legitimate pair, and `confounded` is a real outcome rather than a
       // euphemism.
+      // ⚠️ It now has a hard input it did not have before: `confounded` is only
+      // decidable if something recorded when the work shipped. That is M8, and it
+      // has to land before the window closes rather than alongside the verdict.
       doneWhen: "A recorded prediction is verified against its matched control and the report states what actually happened, including when the answer is that we were wrong",
       status: "planned",
     },
     {
-      id: "M9",
+      id: "M10",
       name: "Handover to the team",
       // ✅ The hard prerequisite is now met. Postmark was wired on 2026-08-14
       // (smtp.postmarkapp.com, sender hello@growthpartners.co.nz) and the send
@@ -276,12 +317,13 @@ module.exports = {
       status: "in-progress",
       title: "Phase 3",
       subtitle: "Close the loop",
-      window: "In progress · M7's report is built and passing 9 of 9 checks, waiting on a specialist to publish it; the verdict follows in M8, from 5 November",
+      window: "In progress · M7's report is built and passing 9 of 9 checks, waiting on a specialist to publish it; the shipping record is M8, the verdict M9 from 5 November",
       desc: "Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.",
       deliverables: [
         "✅ Readback windows fixed before a change, not chosen after — derived from the approval timestamp, immutable by trigger",
         "✅ Matched control-set constructor — demanded by every repo, built by none. It refuses twelve of thirteen items and says why",
         "✅ Monthly report: what we did, why, and what we expected — predictions shown pending with their readback windows, behind a nine-check publication gate",
+        "The shipping record: a specialist marks work done, and the system says whether it landed inside the window its prediction assumed",
         "Delta-vs-control, with algorithm updates auto-flagged as confounders",
         "The verdict: what actually happened, including when the answer is that we were wrong",
       ],
