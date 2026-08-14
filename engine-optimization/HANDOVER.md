@@ -1,64 +1,84 @@
 # Engine Optimization — Handover
-_2026-08-13 · M4 landed · opens M5_
+_2026-08-14 · M4 landed · M5 open_
 
 ## ▶️ Paste this into a new session
 
 ```
-Engine Optimization — decide what's next after M4
+Engine Optimization M5 — Actionable work
 
 Read coreshift-kanbans/engine-optimization/HANDOVER.md and the repo docs it points at.
-M5 is "The loop", but its doneWhen cannot be satisfied inside a session for a calendar
-reason: verifying a prediction "in the next cycle" needs next cycle's data, and making
-the prediction retroactively against a month already on file is what the method forbids.
-Give me the 5-line orientation, then your recommendation and the two alternatives, and
-update milestones[] once I pick.
+
+M4 produces a ranked, approved plan, but its items are findings restated —
+"Question content is marked up as such · 14.5h". Nobody on the team can pick that
+up and start. M5 makes every item an instruction: what to do, which specific pages
+or assets to do it to, and how a specialist knows it is finished.
+
+Give me the 5-line orientation, then get on with it.
 ```
 
 ## Where we are — for Ricky
 
-- **Just closed:** M4 — the work plan.
-- **In plain terms:** the tool used to produce three separate lists — one from the site audit, one from the AI-citation panel, one from the traffic data — each sorted by its own idea of what mattered. Somebody had to merge them by hand every month, which meant the merge was never written down and never the same twice. Now one ranked list comes out, and every item on it carries the sentence that will appear in the client's report plus the arithmetic that put it in that position. **This is the piece none of the seven tools we surveyed has.**
-- **Storepro's first plan:** 15 items, 234 hours of work identified, **3 of them inside a 12-hour retainer**. The other 12 stay on the list rather than being cut, because a plan trimmed to fit reads as though it were everything that mattered.
-- **How it decides:** how much of the audit score is at stake × how much of *this client's own traffic* the fix touches × how much the observation can be trusted, divided by estimated hours. Prerequisites are a hard ordering, not a weight — the tool will not schedule structured data for content that isn't in the page's HTML yet, no matter how well that work scores.
-- **The thing that surprised us, and it's good news:** **a specialist who isn't you signed in and approved it.** `mal@growthpartners.co.nz` is the only account that has ever existed on this tool — created 03:53, signed in 03:54, approved at 03:55. Your own address has never created one. That also corrects the last handover, which said the staging login "works for you": nobody had actually tried it. It means M7's "a specialist other than Ricky" is closer than we thought.
-- **What it refuses to do, and this is the point:** three of Storepro's citation items are discounted because they rest on only two observations, and an item resting on *one* cannot be ranked at all — the database rejects it. That rule exists because the rationale reaches the client word-for-word, so an item built on one sweep would put a confident explanation on top of a coin flip.
-- **Verified by:** plan `62ff1c2c` read straight out of Postgres — approved, timestamped, attributed to a real signed-in user, **15 of 15 items approved, 0 with a blank rationale, 0 without a recorded source**; the only code that can mark anything approved is the login-protected endpoint, so no command-line shortcut could have produced this; 33 ranker tests and 12 detector tests passing; the audit still scoring 91.50 / 93.44 / 45.45 identically across 23 checks, so nothing in M4 disturbed M2; staging serving the new build and refusing both new endpoints to anyone not signed in. Commit `6854acd`.
-- **Next:** a decision, not a build. See the paste-block.
+- **Just closed:** M4 — the work plan. **Now open:** M5 — making that plan executable.
+- **In plain terms:** the tool can already work out what matters most this month and put it in order. What it cannot do is tell anyone *what to actually do*. An item currently reads "Question content is marked up as such, 14.5 hours" — that is a restatement of the problem, not a job. M5 turns each one into "add FAQ schema to these 14 product pages, here they are, and here is how you know it's done."
+- **Why this went ahead of the prediction work:** a prediction is *"we expected X because we did Y"*. Y has to be a specific, dated, finished action. Until the plan produces those, there is nothing real to predict about. This is why the arc grew from seven milestones to eight.
+- **Also landed since the last handover, without being the milestone:**
+  - **All five AI engines are live.** A full sweep put Storepro at Perplexity 14/15, Claude 14/15, Gemini 7/8, ChatGPT 13/15, Google AI Overviews 7/10. Eleven of fifteen prompts are cited by *every* engine that answered. The M3 finding now generalises: Storepro is cited nearly everywhere a buyer might ask, and still gets no clicks.
+  - **The prompt set was measuring one product line six times** and has been rebuilt. 26 raw queries now pool into 15 distinct concepts, covering awareness / consideration / commercial instead of asking "What should I know about X" fifteen times.
+  - **Postmark is wired.** The old ceiling of 2 sign-in emails an hour to Supabase members only is gone; it is 100/hour from `hello@growthpartners.co.nz`, and you have signed in for real.
+- **Verified by:** 73 tests passing across three suites (23 prompt, 38 plan, 12 detector), typecheck and build clean, the prompt set written live (15 active, 14 retired, **240 probe runs intact — nothing deleted**), Postmark proved by an SMTP handshake that authenticated and had the sender accepted without sending anything, and all five engines answering a real question with Storepro cited. Commit `5fe7a23`.
+- **Next:** M5, and the paste-block above starts it.
 
-## 👉 On you before M5 can close
+## 👉 On you
 
-1. **Decide M5's shape.** Its doneWhen — *"a prediction made in one cycle is verified in the next"* — needs the next cycle's data. A prediction recorded today reads back against September, which arrives in Search Console in early October. Recording it retroactively against a month already on file is precisely what the method exists to prevent. So M5 as written stays open for about seven weeks regardless of how fast the code goes. **This is the same defect M4 had** and worth fixing the same way. My recommendation and two alternatives are in the paste-block. **Default if you don't answer:** I build the prediction and control-set machinery, record one real prediction with its readback window fixed, and land a milestone renamed to what was actually achieved — leaving the verification itself to happen on the calendar.
-2. **Storepro's competitor cohort — 3–5 names.** Now has a concrete cost rather than being tidy-up: without it `competitors_cited` stays `null`, so competitor displacement cannot be a prediction subject in M5 at all. Seen citing alongside Storepro in live overviews: `dexion.co.nz`, `palletrackingsolutions.co.nz`, `shelvingshopgroup.co.nz`, `stackit.co.nz`. **Default if you don't answer:** M5 predicts on traffic and citation presence only, and every report records competitor displacement as *not measured*.
-3. **The 15 prompts are still unreviewed, and this has grown teeth.** Three of them now carry *approved* work items in Storepro's plan, so the citation half of that plan is ranked off a set nobody has signed off. They are visibly generic ("What should I know about X…"). **Default if you don't answer:** the set runs as-is and the plan keeps flagging it on every screen and in every report.
-4. **The other four engine keys** — `OPENAI_API_KEY`, `PERPLEXITY_API_KEY`, `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, ~$5–10/month. There is now a second argument for them beyond coverage: four engines answering the same prompt is four independent observations per sweep, which is the cheapest route out of the two-observation problem below. **Default if you don't answer:** single-engine, and the panel and plan both say so.
-5. **Did you wire a mail provider?** Mal's magic link arrived, which the documented limits (2/hour, Supabase org members only) say should not reliably happen. I cannot read the Auth email config from here to check. It matters because M7 depends on it and I would rather not record "solved" on the strength of one delivery. **Default if you don't answer:** treated as unresolved and still listed as M7's prerequisite.
+1. **Review the 15 prompts and sign them off.** They are stored **unreviewed**, and every report will say so until an analyst signs them. The mix is 6 awareness / 5 consideration / 4 commercial. Read them in the app and cut or reword anything that is not how a buyer would ask. **Default if you don't answer:** the set runs as-is and the panel keeps flagging it on every screen.
+2. **Declare Storepro's competitor cohort in the app.** The panel is built and waiting — you add the domains and it records who declared them and why. Without a cohort, competitor presence stays *not measured* and displacement cannot become a prediction subject in M6. Seen citing alongside Storepro across four engines: `dexion.co.nz`, `palletrackingsolutions.co.nz`, `shelvingshopgroup.co.nz`, `stackit.co.nz`. **Default if you don't answer:** predictions run on traffic and citation presence only.
+3. **The client list.** Still only Storepro. 47 hosts have working Search Console access with no way to tell a retainer client from an old access grant. Names are enough. **Default if you don't answer:** Storepro-only, which is fine until M8.
+
+**Decided and closed:** Ahrefs Brand Radar ($129/mo) — declined as too expensive, not revisiting. Prompt generation is built in-house rather than bought, which the research supported: no vendor sells NZ conversational buying prompts, and the vendor keyword data carried the same near-duplicate problem worse than Search Console did.
 
 ## 🔴 Risks you're carrying
 
-- **A single probe is still a coin flip, and the plan now depends on it.** Unchanged from M3 and no longer abstract: three approved items in Storepro's plan rest on two observations each and are discounted to 0.4 confidence for it. The guard works — nothing on one observation can be ranked — but the fix is a sampling design and it belongs to M5.
-- **One of M3's five volatility data points may have been our own bug.** M3's two sweeps straddled a detector change: the first ten answered runs are `2026-08-a` with an **empty** `engine_sources` array, every later run is `2026-08-b` with 8–14 structured sources. The three "AI Overview appeared or vanished" changes are presence changes and stand regardless. But "one citation flipped" could be the detector rather than Google, and it cannot be settled by re-judging — the tool correctly refuses those runs. **This weakens one of the finding's five data points; it does not overturn the finding.** A clean three-sweep run under one detector version settles it, and M5's sampling design produces that anyway.
-- **The plan's hours have never been calibrated.** They are declared constants, labelled as estimates everywhere they appear, and nothing has checked them against how long the work actually took. `work_items.shipped_at` makes it answerable after two or three cycles. Don't quote hours to a client yet.
-- **Audit findings are trusted at full confidence, and that means reproducible, not correct.** M2 proved two runs of an unchanged site produce the same number; nothing has tested whether the judgements are right. It applies uniformly, so it doesn't distort the audit items' order relative to each other — but the whole audit block could be sitting too high and we would not currently know. Unchanged since M2.
-- **One database guarantee moved into application code.** `0007` weakened "every superseded plan names its successor" to "a successor pointer may only appear on a superseded plan", because the strict pair was unsatisfiable in either order and Postgres cannot defer a CHECK constraint. A dangling pointer is still impossible; the forward guarantee is now enforced by `writePlan`, which is weaker. In the Parking Lot.
-- **The demand signal is truncated and biased toward the head.** Per-page and per-query demand come from the top rows Search Console returns — for Storepro, 50 pages carrying 57,456 of 77,496 impressions. Work on anything outside those rows ranks with no demand signal at all. Reported per item and counted on the plan, but it does systematically under-rank the long tail.
-- **Nobody but Mal can open the tool.** One account exists. Everything in M6 and M7 needs more than one.
+- **The plan's hours have never been calibrated.** Declared estimates, labelled as estimates everywhere they appear, never checked against how long the work took. `work_items.shipped_at` makes it answerable after two or three cycles. **Don't quote hours to a client yet** — and note M5 makes this more pressing, because an actionable item invites someone to schedule against the number.
+- **A single probe is still a sample.** Much improved — every prompt now has n≥3 and most n≥6 across engines, so nothing in the plan rests on a coin flip any more. But the sampling *design* (n sweeps across a window, reported as a rate with its sample size) still does not exist, and month-over-month citation deltas remain unsafe to show a client.
+- **One of M3's five volatility data points may have been our own bug.** The two M3 sweeps straddled a detector change. The three "AI Overview appeared or vanished" changes stand regardless; "one citation flipped" may be the detector rather than Google. It weakens one data point of five; it does not overturn the finding.
+- **Audit findings are trusted at full confidence, and that means reproducible, not correct.** M2 proved two runs of an unchanged site agree; nothing has tested whether the judgements are right. Uniform across all audit findings, so it does not distort their relative order — but the whole block could sit too high and we would not know.
+- **The demand signal is truncated toward the head.** Per-page and per-query demand come from the top rows Search Console returns — 50 pages carrying 57,456 of 77,496 impressions for Storepro. Work outside those rows ranks with no demand signal. Reported per item and counted on the plan, but it under-ranks the long tail.
+- **`intent` on a prompt is cosmetic.** All 15 classify `informational` because the regex cannot see commercial intent. `funnel_stage` does the real work now. DataForSEO's `search_intent` would fix it for ~$0.013/client.
+- **One database guarantee lives in application code.** `0007` weakened "every superseded plan names its successor" to "a successor pointer may only appear on a superseded plan", because the strict pair was unsatisfiable in either order and Postgres cannot defer a CHECK. `writePlan` enforces the rest, which is weaker.
 
 ## For the next Claude
 
-- **Repo** `CoreshiftHQNZ/engine-optimization`, branches `dev` and `staging` both at `6854acd`, working dir `/Users/Ricky/Documents/Claude/Projects/Engine Optimization`. Supabase project `xslwvntwrlvqccdupmni`. Railway project `engine-optimization`, staging auto-deploys on push to `staging`. `main` still does not exist.
-- **Read first:** `docs/planning.md` — the ranking method, every constant, and what the plan refuses to do. Then `docs/ai-visibility.md` ("One sweep is not a measurement" before quoting any citation number), then `docs/scoring.md` for the audit determinism contract, then `docs/schema.md` for the data model. `README.md` has the commands.
-- **State:** 21 tables, RLS on. One client (Storepro), 4 months ingested (Apr–Jul), 2 audit runs (both `partial` at 147/202 pages — that is normal), 15 probes all unreviewed, 105 probe runs, 1 approved work plan with 15 items. DataForSEO live, Backlinks entitled. `predictions` and `control_sets` exist and are **empty** — that is M5's job.
-- **M5 fills `predictions` and `control_sets`.** Both were designed in M1 from the `aaron-marketing-skills` readback protocol: a prediction is only evidence if it beats a control over a window fixed *before* the change. Read the `docs/schema.md` predictions section before designing anything.
-- **Don't** treat "couldn't measure" as "measured zero". Broken four times in this project now — twice in M2's first crawl, once in the M1 probe schema, and once in M4 where a probe about one query inherited the whole property's traffic. Check constraints enforce it on `ai_probe_runs` and `work_items`; keep it that way.
-- **Don't** exclude `partial` audit runs. Partial is the normal outcome for any site over the crawl budget, and excluding them meant no audit finding could enter a plan at all. Excluded statuses are `queued`, `running`, `failed` — where pages were not *assessed*, not merely not reached.
-- **Don't** infer scope from an empty list. A candidate with no affected URLs is not automatically site-wide; that assumption let three coin-flip observations outrank every audit finding. Scope is declared by the source (`site` / `pages` / `query`).
-- **Don't** treat a query's absence from the latest month's rows as a fix. Search Console returns top-N, so a query leaves by improving *or* by being crowded out. Schema rule 4, and the exact flaw that made losses invisible in the surveyed rank tracker.
-- **Don't** re-judge a probe run from `raw_answer` alone — `engine_sources` is separate data, and a run with an empty `engine_sources` array predates the column being populated and must be re-probed, not re-judged. `rejudge` already refuses these; don't "fix" it.
-- **Don't** send a SERP surface a conversational prompt. `ai_probes.search_query` exists for exactly this.
-- **Don't** change the detector without bumping `DETECTOR_VERSION`, or the ranker without bumping `RANK_METHOD_VERSION`. Both refuse to compare across versions, deliberately.
-- **Don't** let any scored or ranked term read the current time. Freshness is a finding, never a score component, and never a priority term.
-- **Don't** trust a 200 from DataForSEO — it validates payload shape before credentials, and SERP responses carry a per-task `status_code` inside a 20000 envelope.
-- **Don't** assume a Search Console property works because it is listed — 11 of 65 are `siteUnverifiedUser` and 403 on every data call. And don't sum query rows for a total; Google anonymises low-volume queries.
-- **Don't** enable IP whitelisting on DataForSEO — Railway's outbound address isn't fixed.
-- **Useful:** `npm run plan -- --client storepro --capacity 12` builds and prints a plan with every score term and writes nothing; add `--verbose` for the full rationales, `--write` to store it as the draft. `npm run test:plan` proves the ranker offline (33 tests). `npm run ai-probe -- --client storepro` runs a sweep; `npm run rejudge` re-reads stored answers; `npm run audit -- --client storepro --verify` proves audit reproducibility; `npm run verify:engines` shows which engines can be measured right now; `npm run verify:access` proves Google delegation.
-- **Local human gates:** `AUTH_DISABLED=true` skips the login, and its default identity is deliberately *not* a real `auth.users` row so every gate rejects it on the foreign key. Set `AUTH_DISABLED_USER_ID` to a real user id to exercise an approval locally.
+- **Repo** `CoreshiftHQNZ/engine-optimization`, `dev` and `staging` both at `5fe7a23`, working dir `/Users/Ricky/Documents/Claude/Projects/Engine Optimization`. Supabase `xslwvntwrlvqccdupmni`. Railway `engine-optimization`, staging auto-deploys on push to `staging`. `main` does not exist.
+- **Read first:** `docs/planning.md` — the ranking method and what the plan refuses to do; M5 extends exactly this. Then `docs/ai-visibility.md`, `docs/scoring.md`, `docs/schema.md`. `README.md` has the commands.
+- **State:** 21 tables, RLS on. Storepro only. 4 months ingested (Apr–Jul), 2 audit runs (both `partial` at 147/202 pages — normal), **15 active prompts** (6 awareness / 5 consideration / 4 commercial, all unreviewed) plus 14 retired, **240 probe runs**, **1 approved work plan** (`62ff1c2c`, 15 items) — and `predictions` / `control_sets` still empty, which is M6.
+- **Two auth users** exist: `mal@growthpartners.co.nz` and Ricky. Postmark is live at 100 emails/hour.
+
+### What M5 actually has to produce
+
+Each work item needs three things it does not have today:
+
+1. **An action** — a verb and a deliverable, not the finding's title. "Add FAQ schema to 14 product pages", not "Question content is marked up as such".
+2. **The specific targets** — which pages, which images, which URLs. Mostly already stored.
+3. **Acceptance criteria** — how a specialist knows they are done, ideally checkable by re-running the audit.
+
+- **The data is already there.** `findings.affected_urls`, `findings.evidence` (per-check counts, failing URLs, pass rates), `findings.failure_check` and `findings.leading_indicator`. This is mostly a transformation, not a collection problem.
+- **Author the actions per `rule_key`, in code, the way `EFFORT` in `server/plan/rank.ts` is authored.** Same reasoning as the effort model and the prompt templates: a model-generated action would read differently every month, so an unfinished item would look like new work. The audit has 23 checks plus 6 observational rules — a bounded, writable set.
+- ⚠️ **`affected_urls` is capped at 25 in `findings.ts`.** A finding affecting 60 pages lists 25. An action that says "fix these pages" and lists 25 of 60 is wrong in a way nobody will notice. The real count is in `evidence` (`pagesFailing`, `pagesApplicable`), and the full list is recoverable from `page_snapshots` for that `audit_run_id`. Say "14 of 60, first 25 listed" or re-derive; do not silently truncate.
+- **Acceptance criteria should be the audit itself where possible.** "This item is done when `aeo.faq_schema` passes on all 14 pages in the next audit run" is checkable by machine, and it sets up M6's readback for free.
+
+### Don't
+
+- **Don't** treat "couldn't measure" as "measured zero". Broken four times in this project. Check constraints enforce it on `ai_probe_runs` and `work_items`; keep it that way.
+- **Don't** exclude `partial` audit runs — partial is the normal outcome above the crawl budget, and excluding them once meant no audit finding could enter a plan at all.
+- **Don't** infer scope from an empty list. A candidate with no affected URLs is not automatically site-wide; that assumption let three coin-flip observations outrank every audit finding. Scope is declared (`site` / `pages` / `query`).
+- **Don't** group probe work per engine. It was `(probe, engine)` until four engines existed, and then a 0-of-6 signal fragmented into four unrankable singletons. Work is grouped per prompt; the panel keeps the per-engine view. Five tests guard this.
+- **Don't** treat a query's absence from the latest month's rows as a fix — Search Console returns top-N, so a query leaves by improving *or* by being crowded out.
+- **Don't** re-judge a probe run from `raw_answer` alone, and don't "fix" `rejudge` refusing runs with an empty `engine_sources` — those predate the column and must be re-probed.
+- **Don't** let the prompt writer stop retiring. `ignoreDuplicates: true` means it only ever appends unless superseded prompts are deactivated; without that, 15 prompts silently becomes 30 and a five-engine sweep costs double.
+- **Don't** retire a reviewed prompt. A signed-off prompt outranks a regenerated set.
+- **Don't** change the detector without bumping `DETECTOR_VERSION`, or the ranker without `RANK_METHOD_VERSION`. Both refuse to compare across versions.
+- **Don't** let any scored or ranked term read the current time.
+- **Don't** trust a 200 from DataForSEO, and don't trust `ListModels` from Gemini — it advertised a model that 404s on a real call. Only a real call is evidence.
+- **Don't** assume a Search Console property works because it is listed — 11 of 65 are `siteUnverifiedUser`. And don't sum query rows for a total.
+- **Useful:** `npm run plan -- --client storepro --capacity 12` builds and prints a plan with every score term, writes nothing (`--verbose` for full rationales, `--write` to store a draft). `npm run probes -- --client storepro --from-gsc` proposes a prompt set, `--write` stores it and retires what it replaces. `npm run ai-probe -- --client storepro` runs a sweep across all five engines. `npm run test:plan` / `test:prompts` / `test:detector` prove the logic offline. `npm run verify:engines` makes real calls. `npm run audit -- --client storepro --verify` proves audit reproducibility.
+- **Local human gates:** `AUTH_DISABLED=true` skips login and its default identity is deliberately not a real `auth.users` row, so every gate rejects it. Set `AUTH_DISABLED_USER_ID` to a real user id to exercise an approval locally.
