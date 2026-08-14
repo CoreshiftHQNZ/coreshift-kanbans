@@ -185,6 +185,15 @@ module.exports = {
       // it is also the thing M9's "a specialist runs a cycle unaided" is tested
       // against, so splitting unblocks more than it defers.
       doneWhen: "A specialist publishes a report for a real client stating what we did, why, and what we expected — with last cycle's predictions shown as pending and their readback windows visible",
+      // Built 2026-08-14, commit b758643, and deliberately not closed. The report
+      // is composed and stored as Storepro's 2026-07 draft with 9 of 9 publication
+      // checks passing; the cycle moved measuring → drafted. The last word of the
+      // doneWhen is "publishes", and that is a human act by construction: the
+      // publisher is resolved to a real auth.users row and, in the app, taken from
+      // the verified session. Publishing it as Ricky would have forged a human
+      // gate, which is the failure this whole product exists to make impossible.
+      // So it waits on one click. 162 tests across six suites; nine database
+      // guarantees exercised live and rolled back. Method in docs/reports.md.
       status: "current",
     },
     {
@@ -267,13 +276,14 @@ module.exports = {
       status: "in-progress",
       title: "Phase 3",
       subtitle: "Close the loop",
-      window: "In progress · M6 landed 2026-08-14 — the first prediction is recorded and frozen; M7 reads it back from 5 November",
+      window: "In progress · M7's report is built and passing 9 of 9 checks, waiting on a specialist to publish it; the verdict follows in M8, from 5 November",
       desc: "Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.",
       deliverables: [
         "✅ Readback windows fixed before a change, not chosen after — derived from the approval timestamp, immutable by trigger",
         "✅ Matched control-set constructor — demanded by every repo, built by none. It refuses twelve of thirteen items and says why",
+        "✅ Monthly report: what we did, why, and what we expected — predictions shown pending with their readback windows, behind a nine-check publication gate",
         "Delta-vs-control, with algorithm updates auto-flagged as confounders",
-        "Monthly report: what we did, why, what we expected, what happened",
+        "The verdict: what actually happened, including when the answer is that we were wrong",
       ],
     },
     {

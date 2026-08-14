@@ -1,117 +1,227 @@
 # Engine Optimization — Handover
-_2026-08-14 · closes M6 · opens M7 · arc grew to 9_
+_2026-08-14 · M7 built, not landed · arc unchanged at 9_
 
 ## ▶️ Paste this into a new session
 
 ```
-Engine Optimization M7 — Monthly report
+Engine Optimization M7 — Monthly report (finishing)
 
 Read coreshift-kanbans/engine-optimization/HANDOVER.md and the repo docs it points at.
 
-M6 landed: one prediction is recorded for Storepro against twelve matched untouched
-pages, with the readback window fixed before the change and frozen by the database.
-Twelve of the thirteen approved items were refused, each with a reason.
+M7 is built and verified and it is not landed. The report is composed, stored as
+Storepro's 2026-07 draft, and passing 9 of 9 publication checks. The doneWhen says
+"a specialist publishes" it, and that is a human act by construction — the publisher
+must resolve to a real auth.users row and, in the app, comes from the verified
+session. Publishing it as Ricky would have forged a human gate, so it waits on him.
 
-M7 is the report a client actually reads. It was split on 2026-08-14 — the old
-version demanded "what happened", which needs October data that is final on
-5 November, and a milestone nobody can move for eleven weeks is exactly the quiet
-expansion a doneWhen exists to prevent. The verdict is now M8. What is left is
-buildable today: bind the month's applied work to its originating findings, carry
-each item's rationale verbatim, and show last cycle's predictions as PENDING with
-their readback windows visible.
+If Ricky has published it: verify the row (published_at, published_by, the cycle on
+`published`, the body and its checks frozen), then offer /land immediately. Nothing
+else is outstanding.
 
-That last part is the whole point. Every SEO report on the market states what was
-done. This one states what we expected before we did it, what we are comparing it
-against, and the date we will know — including the twelve items we refused to
-predict on and why.
+If he has not: he may have read it and wanted the wording changed. The report is
+unusually blunt — its second sentence says nothing has shipped, because shipped_at is
+null on all 13 items. That is true and it is his call whether it reads as rigour or as
+a thin month. Changes to the wording are authored constants in
+server/report/compose.ts; nothing there is generated.
 
-The report has to survive its own honesty: one prediction, low confidence,
-direction only, covering 12 of 147 pages. If that reads as thin rather than as
-rigorous, the fix is in the writing, not in loosening a threshold.
-
-Give me the 5-line orientation, then get on with it.
+Do not mark an item shipped to make the report read better. Do not loosen a
+publication check. Do not publish it as anybody.
 ```
 
 ## Where we are — for Ricky
 
-- **Just closed:** M6 — the prediction machinery. **Now open:** M7 — the monthly report. **The arc grew from 8 to 9**, on your call: the verification half became its own milestone (M8) because it cannot happen before November, and handover moved to M9.
-- **What M6 means in plain terms:** the tool now writes down, before any work is done, what it expects that work to achieve — against a set of pages we deliberately left alone, over a month chosen in advance. It cannot change its mind afterwards: the database refuses to let a recorded prediction be edited. **Nothing else on the market does this.**
-- **The prediction, in one sentence:** the pages getting FAQ markup should show more Search Console impressions in **October** than twelve comparable pages we are not touching — direction only, no percentage, and we have said out loud that our confidence is low.
-- **The finding worth reading if you read one:** the obvious control set is "every page we didn't touch", and it would have been wrong. Those pages grew **25%** over the four months before the change while the pages we're fixing sat **flat** — they're product category pages and ours are blog posts. A report built on that control would have called a successful month a failure. Membership is now *matched* page-to-page on how each one moved beforehand, and the matcher **refused twelve of the thirteen items** because it could not find a good enough control. That refusal rate is the product, not a shortfall.
-- **You signed the prompts off, and doing it found a bug.** The sign-off gate took a free-text name and left `reviewed_by` empty — it recorded that *somebody* approved the set and made it impossible to say who. Now fixed: it takes an email that must resolve to a real user, and refuses one that doesn't. Your sign-off is on the record properly.
-- **The date that matters:** the first answer arrives **5 November**. Not sooner, and the system won't let anyone pretend otherwise.
-- **Verified by:** prediction `a3e5a8a7` read straight out of Postgres — `expected_magnitude` null, control set `d7de6e64` with 12 matched pages at 8.5 points of pre-period divergence, window `[2026-10-01,2026-11-01)` recorded 01:54:33Z against a plan approved 01:01:46Z; **15 active prompts reviewed and attributed to `ricky@coreshifthq.com`** with the 14 retired ones untouched, and an unknown reviewer refused by name; **133 tests across five suites** (13 detector, 38 plan, 24 action, 23 prompt, 35 prediction), typecheck and build clean; working tree clean at `c33c617` on `dev` and `staging`; staging serving `index-Ye_0f7Ex.js` with `/health` 200 and both new endpoints 401 unauthenticated; all five database guarantees fired at the live database and refused by name.
-- **Not verified:** the two new panels were seen rendering against a **local** server running the production bundle, not against staging — that needs a magic link. Staging is proved to be serving that exact bundle and to have both endpoints gated, which is one step short of watching them draw.
+- **M7 is built, tested, deployed and one click from done.** The report exists, it
+  passes its own nine checks, and the only thing between it and landing is you
+  pressing publish. That is not an oversight — see below.
+- **What the report does that nothing else does.** It states what we expected
+  **before** the work, what we are comparing it against, and **the date we will
+  know** — 5 November, on the face of it, with the readback window `2026-10`
+  visible. Plus the twelve items we refused to predict on, each with its reason in
+  full. Every competitor's report states what was done. This one states what it
+  would not claim.
+- **Why I did not publish it.** `--publish` takes an email that must resolve to a
+  real `auth.users` row, and in the app the publisher is taken from the verified
+  session and cannot be typed into a field. Your address resolves. Publishing as
+  you would have put your signature on a client document you had never read, in a
+  table that then freezes it. That is the exact failure this product exists to
+  replace, and the repo's own rules say don't forge a human gate. So it waits.
+- ⚠️ **Read it before you publish it, because it is blunt.** Its second sentence
+  is *"Nothing is marked delivered yet: 13 items were approved and the work runs
+  from there."* That is true — `shipped_at` is null on all thirteen — and on the
+  morning after approval it is the only honest thing to say. Whether that reads as
+  rigour or as a thin month is a positioning question and it is yours. The fix, if
+  you want one, is in the writing.
+- **The finding worth reading if you read one.** The one prediction is attached to
+  an **18-hour item in a 12-hour month** — ranked third, marked below the capacity
+  line by the plan itself. It is the most likely thing on the plan to slip, and the
+  readback window is anchored to the approval date rather than the ship date on
+  purpose. If it slips out of August, October stops being a clean month and the
+  honest outcome in November is `confounded` rather than negative. Either that item
+  gets the hours or the first verified prediction probably comes back inconclusive.
+- **Two rules collided and the collision was real.** The milestone said carry each
+  rationale verbatim; the standing rule says never quote effort hours to a client.
+  `work_items.rationale` contains `Estimated 18h.` So the rationale is now split
+  into the labelled clauses the ranker actually builds, every clause is carried word
+  for word, and exactly one is withheld — with the omission stated in the report
+  rather than left as a gap. The splitter refuses rather than paraphrases: it only
+  accepts a split that rejoins into the stored text byte for byte.
+- **Verified by:** the composed report read out of Postgres — draft `079c69d1`,
+  method `2026-08-a`, 13 committed / 0 delivered, 1 pending prediction carrying
+  `{month: 2026-10, period: [2026-10-01,2026-11-01), finalFrom: 2026-11-05}`, 12
+  refusals, 8 limits, 9 of 9 checks stored and passing, cycle `017fe91f` moved
+  `measuring → drafted`; **162 tests across six suites** (13 detector, 38 plan, 24
+  action, 23 prompt, 35 prediction, **29 report**); typecheck and build clean;
+  `dev` and `staging` both at `b758643`; staging `/health` 200; the publisher gate
+  refusing `nobody@growthpartners.co.nz` by name; **nine database guarantees
+  exercised against the live database inside a block that was rolled back**, each
+  refusing by name, `reports` and `review_checks` confirmed empty afterwards; and
+  the whole report seen rendering in the panel against a local server on the
+  production bundle.
+- **Not verified:** the panel was seen against a **local** server, not staging —
+  same gap as M6, and it needs a magic link. The publish *button* was not clicked
+  (the local identity is deliberately not a real user, and clicking it as you was
+  not mine to do), so the in-app publish path is proved by its code and by the CLI
+  running the identical `publishBuiltReport`, not by a click. The failing-check
+  branch that hides the publish button is proved by the composer tests, not by
+  seeing it on screen.
 
 ## 👉 On you
 
-**Nothing.** All four open questions were answered on 2026-08-14 — M7 split, prompts signed off, no holdouts, Storepro-only. One standing note rather than a request:
+1. **Publish Storepro's 2026-07 report.** This is the whole of what is left.
 
-1. **A second client, when you're ready.** Not blocking M7 or M8. It matters more than it looks because every threshold M6 declared — 5 pairs, 40% concentration, 10 points of divergence, 5× magnitude band — has exactly one property behind it, and finding out one is wrong *after* the report format is fixed costs more than finding out before. **Default:** Storepro-only until you name one.
+   ```bash
+   npm run report -- --client storepro --publish ricky@coreshifthq.com
+   ```
 
-**Decided and closed:** M7 split, verification moved to M8 (2026-08-14). No deliberate holdouts — matched controls only, revisit once a prediction has actually verified. Ahrefs Brand Radar declined, not revisiting. Prompt generation in-house. Competitor cohort settled at eight domains.
+   Or open Storepro in the app and press **Publish this report**. Read it first —
+   `npm run report -- --client storepro --verbose` prints the lot. Publishing marks
+   it final and moves the cycle to `published`. **Nothing is emailed or sent
+   anywhere**; there is no delivery mechanism, deliberately.
+
+   Then say `/land` and M7 closes.
+
+2. **Does the FAQ item get the hours?** Not blocking the report. It decides whether
+   November's first verified prediction is an answer or a `confounded`. **Default:**
+   nothing changes, and the report already says the risk out loud.
+
+3. **A second client, when you're ready.** Unchanged and still not blocking. Every
+   matching threshold has exactly one property behind it. **Default:**
+   Storepro-only until you name one.
+
+**Decided and closed:** M7 split, verification moved to M8 (2026-08-14). No
+deliberate holdouts. Ahrefs Brand Radar declined. Prompt generation in-house.
+Competitor cohort settled at eight domains. **New this session:** no report is
+emailed or exported — the format a client receives is a positioning decision and
+was left unbuilt on purpose; one published report per cycle, so a correction is a
+designed re-issue rather than a re-run.
 
 ## 🔴 Risks you're carrying
 
-- **The loop measures the head of the site and says nothing about the tail.** Search Console returns per-page rows for **50** of Storepro's 202 crawled pages, and only **31** appear in all four months — so the prediction covers **12 of 147 target pages**. Stated in words on the prediction rather than hidden, but a client could be told "the work we measured moved" about 8% of the work they paid for. Paging the Search Console API further is possible and has not been costed. **This is the single most likely thing to embarrass the first report.**
-- **Four matching thresholds, one property.** Each declared with a written reason and each exercised against exactly one client. They produced one prediction from thirteen items, which is right for Storepro and may be wrong for a bigger site.
-- **The hours are still uncalibrated.** Declared constants in `server/plan/rank.ts`, never checked against how long work took, and M5's target recovery moved several by 25%+ in one release. **Do not quote these hours to a client.**
-- **Audit findings are trusted at full confidence, which means reproducible, not correct.** M2 proved two runs of an unchanged site agree; nothing has tested whether the judgements are right. ⚠️ **M6 propagated this a step further** — the readback now decides "finished" from those same checks, so a wrong check is a wrong definition of done being read back automatically.
-- **A single probe is still a sample.** The citation sampling design does not exist and M6 responded by **refusing to predict a citation rate at all** rather than guessing. That refusal has to be revisited, not forgotten — it is the largest thing the loop currently cannot see, and it is what a client will ask about by name.
-- **The prediction assumes the work ships inside August.** The window is anchored to the plan's approval because `shipped_at` is unknown when the prediction is written. If the work slips, the honest outcome is `confounded`. Nothing checks this yet — it belongs with M8's verification writer.
-- **There is no in-app prompt sign-off.** The gate is a CLI flag. Fine while Ricky is the only reviewer; it is a real gap for M9's "a specialist runs a cycle unaided", and it should be a surface in M7 or M8 rather than a discovery in M9.
-- **Two database guarantees still live partly in application code.** `0007`'s supersede weakening and `0009`'s insert-only directive trigger. Both deliberate, both written down, neither has a writer that would break them today.
-- **One of M3's five volatility data points may have been our own bug.** Unchanged. Weakens one data point of five; does not overturn the finding.
+- **The report's first sentence about work is that there is none delivered.** Not a
+  bug — `shipped_at` is null on all thirteen items and the report refuses to call a
+  commitment a completion. But it means the first document a client sees leads with
+  an absence, and how that lands is a writing problem nobody has solved yet.
+- **The prediction is on work below the capacity line.** 18 hours against 12,
+  ranked third. Most likely thing to slip; slipping makes November `confounded`.
+  Stated in the report's limits rather than hidden.
+- **The loop still measures the head of the site.** Search Console returns per-page
+  rows for 50 of Storepro's 202 crawled pages, so the prediction covers **12 of 147
+  target pages** — 8%. Stated in the report in words, twice. Paging the Search
+  Console API further is possible and has not been costed. **Still the single most
+  likely thing to embarrass the first report.**
+- **Four matching thresholds, one property.** Unchanged.
+- **The hours are still uncalibrated** — and now they are *withheld from the
+  client* rather than merely labelled, which is stronger but does not calibrate
+  them. **Do not quote them.**
+- **Audit findings are trusted at full confidence, which means reproducible, not
+  correct.** ⚠️ M7 propagated this one step further again: the report now carries
+  each finding's own evidence and first principle to a client, so a wrong judgement
+  is now a wrong statement in a client document rather than an internal one.
+- **A single probe is still a sample.** The citation sampling design does not
+  exist, the report says so as one of its twelve refusals, and it is still what a
+  client will ask about by name.
+- **In-app prompt sign-off still does not exist.** Carried from M6 and *not* closed
+  here — M7 built the in-app publish gate, which was the other half of the same
+  complaint. A specialist who cannot sign off a prompt set in the app cannot run a
+  cycle unaided, which is M9's whole test. Should be built in M8.
+- **A published report has no correction path.** One per cycle, frozen, undeletable.
+  The right default and not a usable one if a report goes out wrong. In the Parking
+  Lot with the shape of the fix.
+- **Two database guarantees still live partly in application code.** `0007`'s
+  supersede weakening and `0009`'s insert-only directive trigger. Unchanged.
+- **One of M3's five volatility data points may have been our own bug.** Unchanged.
 
 ## For the next Claude
 
-- **Repo** `CoreshiftHQNZ/engine-optimization`, `dev` and `staging` both at `c33c617`, working tree clean apart from an untracked `.claude/` that predates this session. Working dir `/Users/Ricky/Documents/Claude/Projects/Engine Optimization`. Supabase `xslwvntwrlvqccdupmni`. Railway `engine-optimization`, staging auto-deploys on push to `staging`. `main` does not exist.
-- **Read first:** `docs/predictions.md` — all of M6. The sections M7 builds on are *"Coverage is stated, never blended into confidence"* and *"What this does not cover"*. Then `docs/planning.md` (an item's rationale is the report's "why"), `docs/schema.md` for `reports` / `cycles` / `predictions`, `docs/ai-visibility.md` for what "cited" means. `README.md` has every command.
-- **State:** 21 tables, RLS on. Storepro only. 4 months ingested (Apr–Jul, all complete), 2 audit runs (both `partial` at 147/202 — normal), **15 active prompts, all reviewed and attributed**, plus 14 retired and untouched, 240 probe runs. Plans: `62ff1c2c` approved (M4, history, leave it), `101a4531` superseded, `70337c95` approved (M5, 13 items with directives). `predictions` and `control_sets` hold one row each, both written 2026-08-14, both immutable. `reports` is empty — that is M7.
-- **The prediction M7 has to render:** `a3e5a8a7` · `aeo.faq_schema` → `gsc_impressions` · up · no magnitude · confidence low · baseline 16,184 over 2026-07 · readback `[2026-10-01,2026-11-01)` · final 2026-11-05 · control `d7de6e64`, 12 pairs, divergence 0.085. Plus the **twelve refusals**, which belong in the report and not in a footnote.
+- **Repo** `CoreshiftHQNZ/engine-optimization`, `dev` and `staging` both at
+  `b758643`, working tree clean apart from an untracked `.claude/`. Working dir
+  `/Users/Ricky/Documents/Claude/Projects/Engine Optimization`. Supabase
+  `xslwvntwrlvqccdupmni`. Railway `engine-optimization`, staging auto-deploys on
+  push to `staging`. `main` does not exist.
+- **Read first:** `docs/reports.md` — all of M7, and the part that matters most is
+  *"Part three — why publishing is a human act"*. Then `docs/predictions.md` for
+  what the report renders as pending, and `docs/planning.md` for where a rationale
+  comes from. `README.md` has every command.
+- **State:** 21 tables, RLS on. Storepro only. 4 months ingested (Apr–Jul), 2 audit
+  runs (both `partial` at 147/202 — normal), 15 active prompts all reviewed, 240
+  probe runs. Plans: `62ff1c2c` approved (M4 history, leave it), `101a4531`
+  superseded, `70337c95` approved (M5, 13 items). `predictions` and `control_sets`
+  hold one row each, both immutable. **`reports` holds one row: draft `079c69d1`
+  on cycle `017fe91f`, unpublished, with 9 passing `review_checks`.** Cycle
+  `017fe91f` is `drafted`; the other three are `measuring`.
+- **All 13 items have `shipped_at` null.** Nothing has been done to the site. If
+  that changes, re-running `npm run report` moves those items into the delivered
+  section on its own — no code change needed.
 
-### What M6 built, and where
+### What M7 built, and where
 
 | File | What it does |
 |---|---|
-| `server/predict/control.ts` | The matcher and its four declared thresholds. **The refusals are the interface** — read `ControlRefusal` before changing anything. Pure. |
-| `server/predict/windows.ts` | `READBACK` latency table + `CHANGE_TYPE` per rule. Pure and clock-free: the window is a function of `work_plans.approved_at` and nothing else. |
-| `server/predict/predict.ts` | `MECHANISM` — an authored reason to expect a metric to move, per rule, or an authored reason there is none. `FORBIDDEN_METRICS` is the permanent refusal list. |
-| `server/predict/readback.ts` | Acceptance criteria against an audit run. Four verdicts, not two. Dispatches on `mode`, never on `scope`. |
-| `db/migrations/0010_predictions.sql` | Control set NOT NULL, terms frozen by trigger, back-dating rejected, window ordering, outcome-carries-control. |
-| `server/predict/predict.test.ts` | 35 tests, each named after a way a prediction can be a lie that still looks like a measurement. |
-| `server/cli/probes.ts` | The sign-off gate, now identity-bearing. `--review <email>` must resolve to a real `auth.users` row. |
+| `server/report/compose.ts` | Pure. The whole report, the rationale segmenter and the nine publication checks. **Every client-facing sentence is authored here or carried verbatim** — nothing is generated. Read `segmentRationale` before touching the rationale. |
+| `server/report/sources.ts` | Every database read and write. The cycle is the **plan's** cycle, never today's month. |
+| `server/report/build.ts` | Orchestration. Refusals are re-derived, recorded predictions are read back. Decides nothing. |
+| `server/cli/report.ts` | `--write` stores the draft, `--publish <email>` publishes as a resolvable person. Nothing written without a flag. |
+| `db/migrations/0011_reports.sql` | Nine guarantees: attribution, checks present, checks passing, published body frozen, undeletable, checks frozen, one draft, one published, body non-empty. |
+| `server/report/report.test.ts` | 29 tests, each named after a way a report can be a lie that still reads professionally. |
+| `client/src/App.tsx` → `MonthlyReport` | The panel, at the top of the client view. No publish button when a check fails. |
 
 ### Don't
 
-- **Don't** let the report state a raw before/after. Delta-vs-control or nothing — a raw delta is the claim this whole product replaces, and it will be the easiest thing to accidentally write.
-- **Don't** hide the twelve refusals in the report. What we refuse to claim is the only reason to believe what we do claim, and a report showing one confident prediction and no refusals is indistinguishable from every competitor's.
-- **Don't** quote effort hours to a client. Uncalibrated, and M5 moved several by 25% in one release.
-- **Don't** loosen a matching threshold to get more predictions. One honest prediction and twelve stated refusals is the product.
-- **Don't** predict an audit score — it rises by construction when its own check is fixed. On `FORBIDDEN_METRICS` permanently.
-- **Don't** predict a citation rate until the sampling design exists.
-- **Don't** put a magnitude on a prediction. Nothing has been verified against an outcome, so any percentage is invented.
-- **Don't** let anything in `windows.ts` read the clock, and **don't** back-date a window. The trigger refuses it by name, and it is refusing the correct thing.
-- **Don't** treat a target page the crawl did not reach as a page that passed. Fifth appearance of "couldn't measure = measured zero" in this project.
-- **Don't** mark an item shipped from the readback. It reports; a specialist decides.
-- **Don't** use a control page any *other* item on the plan targets — it is a treated page with a delay on it.
-- **Don't** dispatch an acceptance criterion on `scope`. Every observational rule is authored `{mode: "finding_absent", scope: "site"}`.
-- **Don't** generate an action, rationale, prompt or mechanism with a model. Authored per key throughout, so an unfinished item never looks like new work.
-- **Don't** rewrite plan `62ff1c2c`'s items, or the `inputs` on `70337c95` — its "15 of 15 prompts unreviewed" note records what was true when it was built, and a fresh plan run already says zero.
-- **Don't** forge a human gate, mark a retired prompt reviewed, or retire a reviewed one.
-- **Don't** exclude `partial` audit runs, infer scope from an empty list, or sum Search Console query rows for a total.
-- **Don't** change the detector without bumping `DETECTOR_VERSION`, the ranker without `RANK_METHOD_VERSION`, the actions without `ACTION_METHOD_VERSION`, or the mechanisms / matching rules without `PREDICTION_METHOD_VERSION`.
-- **Don't** trust a claim in a handover you cannot check. It cost thirty seconds to find that two documents were wrong about who had signed in.
+- **Don't** publish a report as anybody. The gate is the feature.
+- **Don't** mark an item shipped to make the report read better. `shipped_at` is a
+  specialist saying so, and the readback reports rather than decides.
+- **Don't** loosen or delete a publication check to get a report out. The database
+  holds its own copy of the required list and a test fails if the two disagree.
+- **Don't** let the report state a raw before/after. The month's totals are the
+  *starting position*; a delta only exists against a control after a window closes.
+- **Don't** quote an effort estimate. It lives inside the verbatim rationale, so the
+  guard is the segmenter plus a prose scan, and both have to keep working.
+- **Don't** paraphrase a rationale. A split that does not rejoin byte for byte fails
+  the gate, and that is the correct outcome.
+- **Don't** put a magnitude on a prediction, or predict an audit score or a citation
+  rate. Unchanged from M6, and the report repeats each refusal.
+- **Don't** hide the twelve refusals, shorten them, or move them into a footnote.
+- **Don't** generate a report sentence with a model, for the same reason actions and
+  mechanisms are authored: a sentence that changes every month makes an unchanged
+  situation look like news.
+- **Don't** anchor a report to the current calendar month. It is the plan's cycle.
+- **Don't** treat a target page the crawl did not reach as a page that passed.
+- **Don't** change the composer or a check without bumping `REPORT_METHOD_VERSION`.
+- **Don't** trust a claim in a handover you cannot check.
 
 ### Useful
 
 ```bash
-npm run predict  -- --client storepro --verbose    # every matched pair, every refusal in full
-npm run readback -- --client storepro              # acceptance criteria against the latest audit run
-npm run plan     -- --client storepro --capacity 12 --verbose
-npm run probes   -- --client storepro              # the reviewed set, with ✓ per prompt
-npm run audit    -- --client storepro              # a run that can say whether anything changed
-npm run test:predict                               # 35 tests, offline
+npm run report   -- --client storepro                       # compose and print; writes nothing
+npm run report   -- --client storepro --verbose             # every item's reasoning, criteria and caveats
+npm run report   -- --client storepro --write               # store as the cycle's draft
+npm run report   -- --client storepro --publish <email>     # publish as a named person; frozen afterwards
+npm run test:report                                         # 29 tests, offline
+npm run predict  -- --client storepro --verbose             # every matched pair, every refusal
+npm run readback -- --client storepro                       # acceptance criteria against the latest audit run
 ```
 
-**Local human gates:** `AUTH_DISABLED=true` skips login and its default identity is deliberately not a real `auth.users` row, so every gate rejects it. `AUTH_DISABLED_USER_ID` set to a real id exercises an approval locally — the record is still attributed to that human, so it is not a substitute for them approving it themselves.
+**Local human gates:** `AUTH_DISABLED=true` skips login and its default identity
+(`local@localhost`) is deliberately not a real `auth.users` row, so every gate —
+including the new publish gate — rejects it. That is the correct default and it is
+why the publish button was not clicked locally.

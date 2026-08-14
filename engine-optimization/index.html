@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>60%</strong> complete</div>
-        <div><strong>54</strong>/90 cards done</div>
-        <div>Updated <strong>2026-08-14 03:40 UTC</strong></div>
+        <div><strong>59</strong>/99 cards done</div>
+        <div>Updated <strong>2026-08-14 05:43 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -797,10 +797,10 @@
             <div class="phase-status-pill phase-status-in-progress">In progress</div>
           </div>
           <div class="phase-title">Phase 3 <span class="phase-subtitle">Close the loop</span></div>
-          <div class="phase-window">In progress · M6 landed 2026-08-14 — the first prediction is recorded and frozen; M7 reads it back from 5 November</div>
+          <div class="phase-window">In progress · M7&#39;s report is built and passing 9 of 9 checks, waiting on a specialist to publish it; the verdict follows in M8, from 5 November</div>
           <p class="phase-desc">Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.</p>
           <ul class="phase-deliverables">
-            <li>✅ Readback windows fixed before a change, not chosen after — derived from the approval timestamp, immutable by trigger</li><li>✅ Matched control-set constructor — demanded by every repo, built by none. It refuses twelve of thirteen items and says why</li><li>Delta-vs-control, with algorithm updates auto-flagged as confounders</li><li>Monthly report: what we did, why, what we expected, what happened</li>
+            <li>✅ Readback windows fixed before a change, not chosen after — derived from the approval timestamp, immutable by trigger</li><li>✅ Matched control-set constructor — demanded by every repo, built by none. It refuses twelve of thirteen items and says why</li><li>✅ Monthly report: what we did, why, and what we expected — predictions shown pending with their readback windows, behind a nine-check publication gate</li><li>Delta-vs-control, with algorithm updates auto-flagged as confounders</li><li>The verdict: what actually happened, including when the answer is that we were wrong</li>
           </ul>
         </div>
         <div class="phase-card phase-future">
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">54</div>
+        <div class="status-num">59</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -896,43 +896,43 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">The report says what we expected before we did it — the thing no competitor&#39;s report says</div>
+            <div class="recent-desc">Every SEO report on the market states what was done, and several add a traffic chart. Storepro&#39;s states what we **expected before the work**, what we are comparing it against, **the date we will know**, and the twelve items we would not put a claim behind at all. Last cycle&#39;s prediction appears as **PENDING**, with its readback window `[2026-10-01, 2026-11-01)` and the date it becomes answerable — **5 November** — on the face of it. Each of the 13 items names the finding, the audit run, the rule and the severity that produced it; each carries **its own rationale word for word** from the record. **Verified by:** the composed report read out of Postgres — 13 committed, 0 delivered, 1 pending prediction with its window, **12 refusals in full**, 8 stated limits, 9 of 9 checks passing, cycle moved `measuring → drafted`; **162 tests across six suites** (13 detector, 38 plan, 24 action, 23 prompt, 35 prediction, **29 new report**); typecheck and build clean; the panel seen rendering the whole report against a local server on the production bundle. Commit `b758643`. Method in `docs/reports.md`</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">The report refuses to call approved work delivered — and Storepro&#39;s first one therefore opens by saying nothing shipped</div>
+            <div class="recent-desc">An item is delivered when `work_items.shipped_at` is set, which is a specialist saying so. It is **not** delivered because the acceptance readback says the audit rule now passes: the readback reports, a person decides, and reading a verdict as a delivery would have the report claim work nobody has done. On the facts as they stand, all 13 items are `approved` with `shipped_at` **null** on every one — so the report&#39;s second sentence reads *&quot;Nothing is marked delivered yet: 13 items were approved and the work runs from there.&quot;* ⚠️ **That is the honesty the milestone was warned about, arriving in the first paragraph rather than the footnotes.** It is true, and on the morning after approval it is the only true thing to say — but whether it reads as rigour or as a thin month is a writing-and-positioning question, and it is Ricky&#39;s. Fifth appearance of this project&#39;s most persistent failure — *&quot;couldn&#39;t measure&quot; read as &quot;measured zero&quot;* — in its first client-facing form</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">An uncalibrated effort estimate was hiding inside the rationale we promised to carry verbatim</div>
+            <div class="recent-desc">Two rules collided and only one could win as written. The milestone says *carry each item&#39;s rationale verbatim*; the standing rule says *never quote effort hours to a client, they have never been calibrated and one release moved several by more than 25%*. `work_items.rationale` contains the clause **`Estimated 18h.`** — so reproducing it verbatim would have put an uncalibrated guess in front of a client as a commitment, and stripping it silently would have made &quot;verbatim&quot; untrue. **Resolved by segmenting the rationale into the labelled clauses the ranker actually builds** (`observation` / `Why now` / `Estimated Nh` / `First principle` / `If this is wrong`), carrying every clause word for word, and **withholding exactly one — with the omission stated in the report&#39;s own limits section rather than left as a gap.** The segmenter never paraphrases: `exact` is true only when the clauses rejoin into the stored string **byte for byte**, and a rationale that does not reconstruct **fails the publication gate by name** instead of being quietly tidied. Guarded by a test that builds its input through `buildRationale` itself, so a change to the clause format fails the suite rather than dropping a clause out of every future report</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">The publication gate is nine checks derived from the report, not nine questions asked of a person</div>
+            <div class="recent-desc">`review_checks` has carried a comment since `0001` saying that a gate with no storage is a convention rather than a control. It is now a control. Nine checks are **derived from the composed body** — work bound to its origin, rationale verbatim, nothing claimed as delivered, predictions pending with their windows, refusals carried, no unattributed movement, coverage stated, no magnitude, no effort hours — stored as rows with **what the inspection found next to the boolean**, and re-read by the database at publication. A failing check does not grey out a button with a tooltip: the publish path is **gone**, and Postgres refuses independently. ⚠️ **The required-key list is duplicated into the migration on purpose**, so the enforcement survives an edit to the composer — and a test reads the SQL and fails if the two lists ever disagree, which is what keeps the duplication a safeguard rather than a bug waiting to happen. **Verified by:** all nine database guarantees exercised against the live database inside a block that was **rolled back so nothing landed on a real cycle** — publishing with no checks refused, publishing with one failing check refused by name, `published_at` with no publisher refused by CHECK, the published body refused to change, the checks refused to change, the row refused to delete, and both unique indexes fired. `review_notes` stayed writable, which is correct: an annotation is not the document</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">The one prediction is attached to work the month does not have the hours for</div>
+            <div class="recent-desc">Found while composing the report, and it changes what November will mean. The FAQ-schema item that carries Storepro&#39;s only prediction is ranked **third at 18 hours against a declared capacity of 12**, behind two items that consume 5.8 of those hours — so the plan itself marks it **below the capacity line**. The item is approved and its reasoning stands, but the month cannot pay for it, which makes it **the most likely thing on the plan to slip**. And the readback window is anchored to the plan&#39;s *approval* rather than to when the work ships, deliberately, because waiting for the ship date would mean choosing the comparison window after the change. So if it slips out of August, October stops being a clean month and the honest outcome is **`confounded`** rather than negative. The report states this in its limits section rather than leaving it to be discovered on 5 November. 🤔 **Worth a decision before the work starts:** either the FAQ item gets the hours, or the first verified prediction is likely to come back inconclusive</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">The prompt sign-off gate could not record who signed</div>
             <div class="recent-desc">Found by trying to use it. Ricky signed the 15 active prompts off on 2026-08-14, and recording that exposed that `npm run probes --review` took a **free-text name**, set `reviewed_at` and left `reviewed_by` **null** — with a comment explaining that `auth.users` had no rows to point at. True when it was written, and it stopped being true the moment two real users signed in. A timestamp with no attributable identity is the unenforced checklist this product exists to replace, arriving through yet another door: it records that *somebody* approved the prompt set and makes it impossible to say who. The reviewer is now an email that must resolve to a real `auth.users` row, and an unknown one is **refused** rather than recorded — the same refusal, for the same reason, as the plan approval gate. (Second bug in the same seven lines: it marked *every* unreviewed prompt on the client, including the 14 retired ones. `--from-gsc` refuses to retire a reviewed prompt, so a retired prompt marked reviewed would have become permanently un-retireable, and &quot;prompts an analyst signed off&quot; would have stopped describing the set actually being probed.) **Verified by:** `nobody@example.com` refused with the reason in words; then **15 active prompts reviewed and attributed to `ricky@coreshifthq.com`, 14 retired prompts untouched, one distinct reviewer** read back out of Postgres; a fresh plan run no longer carries the unreviewed caveat, while approved plan `70337c95` keeps it because its inputs record what was true when it was built. Commit `c33c617`</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Four decisions, taken 2026-08-14</div>
-            <div class="recent-desc">All four open questions closed in one pass, and each changes what the next session does. **(1) M7 is split.** The verdict half needs data that is final on 5 November, so it became M8 and the report became buildable today; handover moved to M9. **(2) The 15 prompts are signed off** — see the card above, which is what trying to record it turned up. **(3) No holdouts, not yet.** A true holdout — deliberately leaving comparable pages broken for a month — would support a stronger causal claim and would cost the client real traffic, and it is the kind of thing that has to be said to them out loud. Revisit once one prediction has actually verified and we know the signal is even visible. **(4) Storepro only, for now**, with a second client to come later. ⚠️ That last one is worth carrying as a known limit rather than as a closed question: every threshold M6 declared has exactly one property behind it</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">M6: The prediction machinery — we now write down what we expect, against a cohort we deliberately left alone, before the change</div>
-            <div class="recent-desc">The reason this product exists, and the thing none of the seven surveyed repos does. Every tool recommends work; none of them records what it expected the work to achieve, against a control, over a window fixed in advance, and then goes back and checks. **Storepro&#39;s first prediction is recorded and frozen:** the FAQ-schema item&#39;s target pages will show **more Search Console impressions than a matched set of untouched pages over October 2026**, direction only with no magnitude claimed, confidence **low**, baseline 16,184 impressions in July, readback window `[2026-10-01, 2026-11-01)` and final from **5 November**. Against **twelve untouched pages matched one-to-one** on the shape of their four-month history, tracking the treated pages within **8.5 percentage points** across the whole pre-period. **Twelve of the thirteen items were refused, each with a reason a client could read** — and that ratio is the product, not a shortfall. **Verified by:** the prediction read straight out of Postgres (`a3e5a8a7`, control set `d7de6e64`, 12 members, `expected_magnitude` null, `method_version 2026-08-a`); **133 tests across five suites** (13 detector, 38 plan, 24 action, 23 prompt, **35 new prediction**); typecheck and build clean; staging serving the new bundle `index-Ye_0f7Ex.js` with `/health` 200 and both new endpoints 401 unauthenticated; and all five database guarantees exercised against the live database and refused by name. Commit `994f604`. Method in `docs/predictions.md`</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">&quot;Every page we didn&#39;t touch&quot; is not a control — and it took real data to prove it</div>
-            <div class="recent-desc">The single most important thing found this milestone, and it would have shipped as a bug in any tool that reasoned about it instead of measuring. The obvious control set is *the pages no item on the plan targets*. On Storepro those are the product category pages; the pages the plan targets are the homepage, the blog and the about/contact set. Over the four months before the change the untouched group grew **25%** while the targeted group sat **flat** — they are different kinds of page with different trajectories. A difference-in-differences against that &quot;control&quot; **would have required the treated pages to grow 25% just to score as no effect**, and the November report would have described a successful month as a failure with a completely straight face. So membership is *matched*, not merely complementary: one-to-one on the shape of the pre-period series (each page indexed to its own mean), baselines within 5×, no page used twice, and both sides needing a complete history across every month. **Then it checks itself and refuses**: under five pairs, one page carrying over 40% of a group, or more than ten points of pre-period divergence, and there is no prediction. Every surveyed repo demands a control. Building one turns out to be much harder than demanding one</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Twelve of thirteen items were refused, and the refusals are the argument for the one</div>
-            <div class="recent-desc">What a tool refuses to claim is the only reason to believe what it does claim. **5 items** had too few target pages with a matched control (`aeo.answer_proximity` could match 2, `obs.stale_content` 1). **2 items** had a treated group where the homepage alone carried 57% of the baseline — one page&#39;s result wearing a cohort&#39;s clothes. **2 items** had a control that was already diverging before the change. **2 items** have an authored reason they cannot be predicted on at all: `obs.images_missing_alt`, because alt text is an accessibility and image-search signal and neither surfaces in the web-search impressions we collect; and `obs.empty_responses`, whose two correct outcomes pull in opposite directions. **1 item** is the probe, refused because the citation sampling design still does not exist. ⚠️ **Two metrics are refused permanently or indefinitely.** The three audit scores, because fixing a check raises its own pillar score by construction — predicting it is arithmetic wearing a prediction&#39;s clothes, and it would make the loop appear to work every single month. And `ai_citation_rate`, until the sampling design lands: it is the number a client would most want to believe, and it currently rests on a sample nobody has bounded. That was M6&#39;s first decision and it was made deliberately</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">&quot;Finished&quot; is now a fact — and the answer that mattered was neither pass nor fail</div>
-            <div class="recent-desc">M5 authored the acceptance criteria, stored them structurally and indexed them; nothing read them. `npm run readback` now re-runs **the audit&#39;s own predicate** over a later run&#39;s page snapshots and decides each item. The verdict M5 had no place for is the important one: **a target page the crawl did not reach has not passed.** Storepro&#39;s runs are `partial` at 147 of 202 pages — the normal outcome above the crawl budget — so an item naming 147 pages can have 90 assessed, and scoring the other 57 as passing is *&quot;couldn&#39;t measure&quot; read as &quot;measured zero&quot;*, which this project has now hit five times. There are four verdicts: `passed` (all assessed, rate met), `failed` (a definite no), `incomplete` (met on what was assessed, and here is what was not), `not_assessed`. Two further guards: a run that pre-dates the plan&#39;s approval is labelled `baseline` and can never mark anything finished, and a changed audit method blocks a finished verdict because the named check is no longer the same check. **It reports and marks nothing** — a specialist still decides that work is done. (Bug found and fixed on the way: criteria were being dispatched on `scope` rather than `mode`, so all six observational rules — authored `{mode: &quot;finding_absent&quot;, scope: &quot;site&quot;}` — were looked up in the scored-check table and reported as *&quot;no result&quot;*, which reads as *we do not know* when the run had said something perfectly clear.)</div>
           </div>
         </div>
       </div>
@@ -951,9 +951,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">M7: Monthly report — what we did, why, and what we expected</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">doneWhen</span></div>
-        <div class="card-desc">Split out of the old M7 on 2026-08-14, on Ricky&#39;s call, the day M6 landed. The original read *&quot;…and what happened&quot;*, and that half needs October&#39;s Search Console figures, which are final on **5 November** — back-dating is refused by a database trigger on purpose. A milestone nobody can move for eleven weeks is exactly the quiet expansion a `doneWhen` exists to prevent, so the verdict moved to its own milestone with its own date and **what is left here is buildable today**. The report binds the month&#39;s applied work to its originating findings, states the rationale each item already carries, and shows last cycle&#39;s predictions as **pending with their readback windows visible** — which is itself the most unusual thing a client will have seen in an SEO report. ⚠️ **It has to survive its own honesty.** The first one says: one prediction, low confidence, direction only, covering 12 of 147 pages, plus twelve items we would not predict on. If that reads as thin rather than as rigorous, the fix is in the writing, not in loosening the thresholds</div>
+        <div class="card-title">M7: Monthly report — built, verified, and one human act short of done</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">2026-07</span><span class="tag tag-neutral">doneWhen</span><span class="tag tag-neutral">--publish</span><span class="tag tag-neutral">auth.users</span></div>
+        <div class="card-desc">The report is composed, stored as Storepro&#39;s `2026-07` draft, and passing **9 of 9 publication checks**. The `doneWhen` says *a specialist publishes* it, and that is deliberately not something the system can do for itself: `--publish` takes an email that must resolve to a real `auth.users` row, and in the app the publisher comes from the verified session and cannot be typed into a field. Publishing it as Ricky would have been forging a human gate — the one thing this whole product exists to make impossible — so the draft sits unpublished and the last step is one click. See the card in **👉 On Ricky**. Everything else in the milestone is landed and verified; the cards are in Done</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -966,9 +966,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Publish Storepro&#39;s 2026-07 report — one click, and M7 lands</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">doneWhen</span><span class="tag tag-neutral">npm run report -- --client storepro --publish ricky@coreshifthq.com</span><span class="tag tag-neutral">shipped_at</span><span class="tag tag-neutral">published</span></div>
+        <div class="card-desc">Everything is built and verified; the report is stored as the cycle&#39;s draft with all nine publication checks passing. **Open Storepro in the app and press &quot;Publish this report&quot;, or run `npm run report -- --client storepro --publish ricky@coreshifthq.com`.** Two minutes of reading first is worth it — the report is unusually blunt and you should see it before a client would. It says, in its second sentence, that **nothing has shipped yet**: all 13 items are approved and none is marked delivered, because `shipped_at` is empty on every one of them and the report will not call a commitment a completion. That is true and it is the right thing to say on the morning after approval, but it is not what a client expects a monthly report to open with, and how it reads is your call not mine. Publishing marks the report final and moves the cycle to `published` — **nothing is emailed or sent anywhere**, because there is no delivery mechanism and the format a client receives is a positioning decision</div>
+      </div>
       <div class="card">
         <div class="card-title">A second client, when you&#39;re ready</div>
         <div class="card-tags"><span class="tag tag-neutral">M9</span></div>
@@ -978,9 +983,34 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">54</span>
+        <span class="col-count">59</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">The report says what we expected before we did it — the thing no competitor&#39;s report says</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-neutral">method</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">[2026-10-01, 2026-11-01)</span><span class="tag tag-neutral">measuring → drafted</span><span class="tag tag-neutral">b758643</span><span class="tag tag-neutral">docs/reports.md</span></div>
+        <div class="card-desc">Every SEO report on the market states what was done, and several add a traffic chart. Storepro&#39;s states what we **expected before the work**, what we are comparing it against, **the date we will know**, and the twelve items we would not put a claim behind at all. Last cycle&#39;s prediction appears as **PENDING**, with its readback window `[2026-10-01, 2026-11-01)` and the date it becomes answerable — **5 November** — on the face of it. Each of the 13 items names the finding, the audit run, the rule and the severity that produced it; each carries **its own rationale word for word** from the record. **Verified by:** the composed report read out of Postgres — 13 committed, 0 delivered, 1 pending prediction with its window, **12 refusals in full**, 8 stated limits, 9 of 9 checks passing, cycle moved `measuring → drafted`; **162 tests across six suites** (13 detector, 38 plan, 24 action, 23 prompt, 35 prediction, **29 new report**); typecheck and build clean; the panel seen rendering the whole report against a local server on the production bundle. Commit `b758643`. Method in `docs/reports.md`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">The report refuses to call approved work delivered — and Storepro&#39;s first one therefore opens by saying nothing shipped</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">work_items.shipped_at</span><span class="tag tag-neutral">approved</span><span class="tag tag-neutral">shipped_at</span></div>
+        <div class="card-desc">An item is delivered when `work_items.shipped_at` is set, which is a specialist saying so. It is **not** delivered because the acceptance readback says the audit rule now passes: the readback reports, a person decides, and reading a verdict as a delivery would have the report claim work nobody has done. On the facts as they stand, all 13 items are `approved` with `shipped_at` **null** on every one — so the report&#39;s second sentence reads *&quot;Nothing is marked delivered yet: 13 items were approved and the work runs from there.&quot;* ⚠️ **That is the honesty the milestone was warned about, arriving in the first paragraph rather than the footnotes.** It is true, and on the morning after approval it is the only true thing to say — but whether it reads as rigour or as a thin month is a writing-and-positioning question, and it is Ricky&#39;s. Fifth appearance of this project&#39;s most persistent failure — *&quot;couldn&#39;t measure&quot; read as &quot;measured zero&quot;* — in its first client-facing form</div>
+      </div>
+      <div class="card">
+        <div class="card-title">An uncalibrated effort estimate was hiding inside the rationale we promised to carry verbatim</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">work_items.rationale</span><span class="tag tag-neutral">Estimated 18h.</span><span class="tag tag-neutral">observation</span><span class="tag tag-neutral">Why now</span><span class="tag tag-neutral">Estimated Nh</span><span class="tag tag-neutral">First principle</span><span class="tag tag-neutral">If this is wrong</span><span class="tag tag-neutral">exact</span><span class="tag tag-neutral">buildRationale</span></div>
+        <div class="card-desc">Two rules collided and only one could win as written. The milestone says *carry each item&#39;s rationale verbatim*; the standing rule says *never quote effort hours to a client, they have never been calibrated and one release moved several by more than 25%*. `work_items.rationale` contains the clause **`Estimated 18h.`** — so reproducing it verbatim would have put an uncalibrated guess in front of a client as a commitment, and stripping it silently would have made &quot;verbatim&quot; untrue. **Resolved by segmenting the rationale into the labelled clauses the ranker actually builds** (`observation` / `Why now` / `Estimated Nh` / `First principle` / `If this is wrong`), carrying every clause word for word, and **withholding exactly one — with the omission stated in the report&#39;s own limits section rather than left as a gap.** The segmenter never paraphrases: `exact` is true only when the clauses rejoin into the stored string **byte for byte**, and a rationale that does not reconstruct **fails the publication gate by name** instead of being quietly tidied. Guarded by a test that builds its input through `buildRationale` itself, so a change to the clause format fails the suite rather than dropping a clause out of every future report</div>
+      </div>
+      <div class="card">
+        <div class="card-title">The publication gate is nine checks derived from the report, not nine questions asked of a person</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">review_checks</span><span class="tag tag-neutral">0001</span><span class="tag tag-neutral">published_at</span><span class="tag tag-neutral">review_notes</span></div>
+        <div class="card-desc">`review_checks` has carried a comment since `0001` saying that a gate with no storage is a convention rather than a control. It is now a control. Nine checks are **derived from the composed body** — work bound to its origin, rationale verbatim, nothing claimed as delivered, predictions pending with their windows, refusals carried, no unattributed movement, coverage stated, no magnitude, no effort hours — stored as rows with **what the inspection found next to the boolean**, and re-read by the database at publication. A failing check does not grey out a button with a tooltip: the publish path is **gone**, and Postgres refuses independently. ⚠️ **The required-key list is duplicated into the migration on purpose**, so the enforcement survives an edit to the composer — and a test reads the SQL and fails if the two lists ever disagree, which is what keeps the duplication a safeguard rather than a bug waiting to happen. **Verified by:** all nine database guarantees exercised against the live database inside a block that was **rolled back so nothing landed on a real cycle** — publishing with no checks refused, publishing with one failing check refused by name, `published_at` with no publisher refused by CHECK, the published body refused to change, the checks refused to change, the row refused to delete, and both unique indexes fired. `review_notes` stayed writable, which is correct: an annotation is not the document</div>
+      </div>
+      <div class="card">
+        <div class="card-title">The one prediction is attached to work the month does not have the hours for</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">risk</span><span class="tag tag-neutral">confounded</span></div>
+        <div class="card-desc">Found while composing the report, and it changes what November will mean. The FAQ-schema item that carries Storepro&#39;s only prediction is ranked **third at 18 hours against a declared capacity of 12**, behind two items that consume 5.8 of those hours — so the plan itself marks it **below the capacity line**. The item is approved and its reasoning stands, but the month cannot pay for it, which makes it **the most likely thing on the plan to slip**. And the readback window is anchored to the plan&#39;s *approval* rather than to when the work ships, deliberately, because waiting for the ship date would mean choosing the comparison window after the change. So if it slips out of August, October stops being a clean month and the honest outcome is **`confounded`** rather than negative. The report states this in its limits section rather than leaving it to be discovered on 5 November. 🤔 **Worth a decision before the work starts:** either the FAQ item gets the hours, or the first verified prediction is likely to come back inconclusive</div>
+      </div>
       <div class="card">
         <div class="card-title">The prompt sign-off gate could not record who signed</div>
         <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">npm run probes --review</span><span class="tag tag-neutral">reviewed_at</span><span class="tag tag-neutral">reviewed_by</span><span class="tag tag-neutral">auth.users</span><span class="tag tag-neutral">auth.users</span><span class="tag tag-neutral">--from-gsc</span><span class="tag tag-neutral">nobody@example.com</span><span class="tag tag-neutral">ricky@coreshifthq.com</span><span class="tag tag-neutral">70337c95</span><span class="tag tag-neutral">c33c617</span></div>
@@ -1331,9 +1361,9 @@
         <div class="card-desc">Traffic 30 / position 25 / CTR 15 / freshness 15 / competitive displacement 15, with action bands and a refresh-vs-rewrite rule</div>
       </div>
       <div class="card">
-        <div class="card-title">Report generator + branded output</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span></div>
-        <div class="card-desc">Bind report templates to the metrics store, pull the month&#39;s applied work with its originating findings, and surface last month&#39;s predictions with their verdicts</div>
+        <div class="card-title">A client-facing format for the report</div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-deliverable">deliverable</span></div>
+        <div class="card-desc">The generator landed in M7: the report is composed from the records, bound to its originating findings, and published behind a gate. What is *not* built is anything that leaves the app — no PDF, no branded template, no email. That was deliberate rather than deferred by accident: the format a client receives is a positioning decision, and the report&#39;s own wording is still being read for the first time. Worth doing once one report has been published and read</div>
       </div>
       <div class="card">
         <div class="card-title">Algorithm update ledger</div>
@@ -1344,18 +1374,18 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>🅿️ Parking Lot</h2>
-        <span class="col-count">19</span>
+        <span class="col-count">22</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">The prediction window assumes the work ships inside the approval month</div>
         <div class="card-tags"><span class="tag tag-neutral">work_plans.approved_at</span><span class="tag tag-neutral">work_items.shipped_at</span><span class="tag tag-neutral">confounded</span><span class="tag tag-neutral">failed</span></div>
-        <div class="card-desc">Anchored to `work_plans.approved_at`, because `work_items.shipped_at` is unknown when the prediction is written and waiting for it would mean choosing the window *after* the change, which is the one thing forbidden. If the work slips past August, October is no longer a clean month and the honest outcome is `confounded` rather than `failed`. The field exists, the check does not — it belongs with the verification writer in M7</div>
+        <div class="card-desc">Anchored to `work_plans.approved_at`, because `work_items.shipped_at` is unknown when the prediction is written and waiting for it would mean choosing the window *after* the change, which is the one thing forbidden. If the work slips past August, October is no longer a clean month and the honest outcome is `confounded` rather than `failed`. The field exists, the check does not — it belongs with the verification writer in M8. ⚠️ **M7 raised the odds this fires**: the predicted item is 18 hours against a 12-hour month and the plan marks it below the capacity line, so slipping is the likely case rather than the edge case</div>
       </div>
       <div class="card">
         <div class="card-title">`predictions.confounders` has no writer</div>
         <div class="card-tags"><span class="tag tag-neutral">algorithm_updates</span><span class="tag tag-neutral">0001</span></div>
-        <div class="card-desc">`algorithm_updates` has existed since `0001` and nothing writes to it, so a core update landing inside a readback window will not flag itself. Until the ledger exists, confounders are a hand-typed array in M7. Google-owned sources only, verified entries only</div>
+        <div class="card-desc">`algorithm_updates` has existed since `0001` and nothing writes to it, so a core update landing inside a readback window will not flag itself. Until the ledger exists, confounders are a hand-typed array in M8. M7&#39;s report cannot say “traffic moved during a core update” because it does not know. Google-owned sources only, verified entries only</div>
       </div>
       <div class="card">
         <div class="card-title">The readback does not mark an item shipped</div>
@@ -1385,7 +1415,7 @@
       <div class="card">
         <div class="card-title">Work item owners</div>
         <div class="card-tags"><span class="tag tag-neutral">work_items.owner_id</span></div>
-        <div class="card-desc">`work_items.owner_id` exists and nothing sets it. With one specialist it isn&#39;t a real question yet; it becomes one at M7 alongside per-client assignment</div>
+        <div class="card-desc">`work_items.owner_id` exists and nothing sets it. With one specialist it isn&#39;t a real question yet; it becomes one at M9 alongside per-client assignment. M7&#39;s report attributes work to the finding that produced it, never to a person</div>
       </div>
       <div class="card">
         <div class="card-title">Capacity derived from the retainer</div>
@@ -1441,6 +1471,21 @@
         <div class="card-title">Calibration study</div>
         
         <div class="card-desc">After ~12 months we&#39;ll have change/prediction/outcome data across every client. That corpus is the moat: it lets us answer &quot;do refreshes on position 8–15 pages actually beat control?&quot; from our own evidence rather than quoting unsourced blog percentages</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Re-issuing a published report</div>
+        <div class="card-tags"><span class="tag tag-neutral">work_plans.superseded_by</span></div>
+        <div class="card-desc">One published report per cycle, enforced by a partial unique index, and a published report cannot be edited or deleted. That is the right default: two documents both claiming to be the account of the same month is worse than either being wrong. But it means a genuine correction to a report a client has already seen has **no path** — the database refuses, which is the safe failure and not a usable one. Needs a designed re-issue that supersedes rather than overwrites, the same shape as `work_plans.superseded_by`. Not urgent until a report has actually gone out and been wrong</div>
+      </div>
+      <div class="card">
+        <div class="card-title">In-app prompt sign-off is still a CLI flag</div>
+        <div class="card-tags"><span class="tag tag-neutral">npm run probes --review &lt;email&gt;</span></div>
+        <div class="card-desc">Carried from M6 and *not* closed in M7. `npm run probes --review &lt;email&gt;` is the only way to sign a prompt set off, and it now requires a real identity, so it is correct — it is just not a surface. M7 added the in-app publish gate, which was the other half of the same complaint, so this is the half that is left. It matters for M9&#39;s “a specialist other than Ricky runs a cycle unaided”: a specialist who cannot sign off a prompt set in the app cannot run a cycle unaided. Should be built in M8 rather than discovered in M9</div>
+      </div>
+      <div class="card">
+        <div class="card-title">The report is composed fresh on every request, refusals included</div>
+        
+        <div class="card-desc">The panel and the CLI re-derive twelve refusals by re-running the whole control matcher. That is the right call — a stored refusal could claim one the method no longer makes — and it is noticeably the slowest endpoint in the app. Fine at one client and one plan; it will not be fine at ten, and the fix is caching keyed on the plan and the method version rather than storing the refusals</div>
       </div></div>
     </section>
       </div>
