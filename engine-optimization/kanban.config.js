@@ -17,10 +17,10 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M7 · Monthly report",
+  phase: "M8 · The shipping record",
   nextMilestone: {
-    name: "A report that states what we did, why, and what we expected",
-    date: "Q3 2026 · one click from done; the shipping record is M8, the verdict M9 from 5 November",
+    name: "Telling the system the work is done, so it can police what we assumed",
+    date: "Q3 2026 · the FAQ work must ship by 3 September or October reads as confounded",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -194,9 +194,14 @@ module.exports = {
       // publisher is resolved to a real auth.users row and, in the app, taken from
       // the verified session. Publishing it as Ricky would have forged a human
       // gate, which is the failure this whole product exists to make impossible.
-      // So it waits on one click. 162 tests across six suites; nine database
-      // guarantees exercised live and rolled back. Method in docs/reports.md.
-      status: "current",
+      // Landed 2026-08-14 21:44:15Z. Ricky published it himself — report 079c69d1
+      // on cycle 017fe91f, published_by ricky@coreshifthq.com, cycle moved to
+      // `published`, 9 of 9 review_checks passing and frozen with it. Every freeze
+      // was then exercised against that real row and refused by name: body edit,
+      // publication revoke, check flip, delete, and a second published report for
+      // the cycle. review_notes stayed writable, which is correct. 192 tests across
+      // six suites. Commits b758643 and 15a0f23. Method in docs/reports.md.
+      status: "done",
     },
     {
       id: "M8",
@@ -231,7 +236,7 @@ module.exports = {
       // has not been done is forging the record, so the close waits on the team
       // doing a piece of August's work. Item 1 is 2.8 hours across 3 URLs.
       doneWhen: "A specialist marks an approved item shipped, with its evidence, and every prediction states whether the work it is about shipped inside the window it assumed",
-      status: "planned",
+      status: "current",
     },
     {
       id: "M9",
@@ -317,13 +322,13 @@ module.exports = {
       status: "in-progress",
       title: "Phase 3",
       subtitle: "Close the loop",
-      window: "In progress · M7's report is built and passing 9 of 9 checks, waiting on a specialist to publish it; the shipping record is M8, the verdict M9 from 5 November",
+      window: "In progress · M7 landed 2026-08-14 — the first report is published and frozen; M8 gives the system a way to be told the work is done, and the verdict follows in M9 from 5 November",
       desc: "Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.",
       deliverables: [
         "✅ Readback windows fixed before a change, not chosen after — derived from the approval timestamp, immutable by trigger",
         "✅ Matched control-set constructor — demanded by every repo, built by none. It refuses twelve of thirteen items and says why",
         "✅ Monthly report: what we did, why, and what we expected — predictions shown pending with their readback windows, behind a nine-check publication gate",
-        "The shipping record: a specialist marks work done, and the system says whether it landed inside the window its prediction assumed",
+        "→ The shipping record: a specialist marks work done, and the system says whether it landed inside the window its prediction assumed",
         "Delta-vs-control, with algorithm updates auto-flagged as confounders",
         "The verdict: what actually happened, including when the answer is that we were wrong",
       ],
