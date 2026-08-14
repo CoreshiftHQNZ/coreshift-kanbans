@@ -57,7 +57,7 @@ Give me the 5-line orientation, then get on with it.
 - **Repo** `CoreshiftHQNZ/engine-optimization`, `dev` and `staging` both at `754e70d`, working dir `/Users/Ricky/Documents/Claude/Projects/Engine Optimization`. Supabase `xslwvntwrlvqccdupmni`. Railway `engine-optimization`, staging auto-deploys on push to `staging`. `main` does not exist.
 - **Read first:** `docs/planning.md` — now covers both the ranking (M4) and the instruction (M5); the section *"From a ranked finding to a job"* is the one M6 builds on. Then `docs/ai-visibility.md`, `docs/scoring.md`, `docs/schema.md`. `README.md` has the commands.
 - **State:** 21 tables, RLS on. Storepro only. 4 months ingested (Apr–Jul), 2 audit runs (both `partial` at 147/202 — normal), 15 active prompts (all unreviewed) plus 14 retired, 240 probe runs, **2 work plans: `62ff1c2c` approved (M4, 15 items, no directives) and `70337c95` draft (M5, 13 items, all with directives)**. `predictions` / `control_sets` still empty — that is M6.
-- **Two auth users:** `mal@growthpartners.co.nz` and Ricky. Postmark live at 100 emails/hour.
+- **One auth user: `mal@growthpartners.co.nz`** (`ac3e0ebb-…`), created 2026-08-13, last signed in 2026-08-13 23:49Z. ⚠️ **Ricky still has no row.** The M4 handover said the staging login "works for you" and the M5 draft of this document said two users exist — both wrong, and checked against `auth.users` on 2026-08-14. Postmark is live at 100 emails/hour, so a sign-in creates one; nothing has exercised it. This matters because every human gate in the system is a foreign key to `auth.users`.
 
 ### What M5 built, and where
 

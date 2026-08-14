@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>57%</strong> complete</div>
         <div><strong>43</strong>/75 cards done</div>
-        <div>Updated <strong>2026-08-14 00:44 UTC</strong></div>
+        <div>Updated <strong>2026-08-14 00:56 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1028,8 +1028,8 @@
       </div>
       <div class="card">
         <div class="card-title">Postmark wired — the tool is no longer single-user</div>
-        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">smtp.postmarkapp.com:587</span><span class="tag tag-neutral">hello@growthpartners.co.nz</span><span class="tag tag-neutral">250 2.1.0 Ok</span></div>
-        <div class="card-desc">The Supabase project had no SMTP and a send limit of **2 emails per hour to org members only**, which was the hard blocker on handing the tool to the team. Postmark is now configured (`smtp.postmarkapp.com:587`, sender `hello@growthpartners.co.nz`) and the limit raised to **100/hour**. **Verified by:** an SMTP handshake that authenticated and had the sender accepted (`250 2.1.0 Ok`) without sending anything, then a real magic-link sign-in by Ricky. Configured through the Management API touching only the SMTP fields, so nothing else in the auth config moved</div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">smtp.postmarkapp.com:587</span><span class="tag tag-neutral">hello@growthpartners.co.nz</span><span class="tag tag-neutral">250 2.1.0 Ok</span><span class="tag tag-neutral">mal@growthpartners.co.nz</span><span class="tag tag-neutral">auth.users</span></div>
+        <div class="card-desc">The Supabase project had no SMTP and a send limit of **2 emails per hour to org members only**, which was the hard blocker on handing the tool to the team. Postmark is now configured (`smtp.postmarkapp.com:587`, sender `hello@growthpartners.co.nz`) and the limit raised to **100/hour**. **Verified by:** an SMTP handshake that authenticated and had the sender accepted (`250 2.1.0 Ok`) without sending anything, then a real magic-link sign-in — on `mal@growthpartners.co.nz` at 2026-08-13 23:49:48Z. ⚠️ **Corrected 2026-08-14:** this card previously said the sign-in was Ricky&#39;s. `auth.users` holds exactly one row and it is Mal&#39;s; Ricky has never created one. The delivery claim stands — a magic link was sent and completed — but not the identity, and the M4 card two rows down was right all along that Ricky&#39;s address has never signed in. Configured through the Management API touching only the SMTP fields, so nothing else in the auth config moved</div>
       </div>
       <div class="card">
         <div class="card-title">M4: Work plan — six lists became one ranked month, and a specialist signed it off</div>
