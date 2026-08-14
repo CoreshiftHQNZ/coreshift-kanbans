@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>57%</strong> complete</div>
-        <div><strong>52</strong>/91 cards done</div>
-        <div>Updated <strong>2026-08-14 03:30 UTC</strong></div>
+        <div><strong>60%</strong> complete</div>
+        <div><strong>54</strong>/90 cards done</div>
+        <div>Updated <strong>2026-08-14 03:40 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -721,7 +721,7 @@
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">A report that states what we expected — and what happened <span class="phase-pill-date">Nov 2026 · the first readback window closes 5 November</span></span>
+          <span class="phase-pill-value">A report that states what we did, why, and what we expected <span class="phase-pill-date">Q3 2026 · the verdict follows in M8, from 5 November</span></span>
         </div>
       </div>
     </section>
@@ -809,7 +809,7 @@
             <div class="phase-status-pill phase-status-future">Future</div>
           </div>
           <div class="phase-title">Phase 4 <span class="phase-subtitle">Hand to the team</span></div>
-          <div class="phase-window">M7 · the real test</div>
+          <div class="phase-window">M9 · the real test</div>
           <p class="phase-desc">The tool is finished when a specialist who didn&#39;t build it runs a client month unaided. Until then it&#39;s Ricky&#39;s tool, not the team&#39;s.</p>
           <ul class="phase-deliverables">
             <li>Specialist-facing onboarding flow with access checklist</li><li>Role-based access and per-client assignment</li><li>Scheduled cycles firing unattended, with actionable failure alerts</li><li>One specialist completes a full cycle end to end without help</li>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">52</div>
+        <div class="status-num">54</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -896,6 +896,20 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">The prompt sign-off gate could not record who signed</div>
+            <div class="recent-desc">Found by trying to use it. Ricky signed the 15 active prompts off on 2026-08-14, and recording that exposed that `npm run probes --review` took a **free-text name**, set `reviewed_at` and left `reviewed_by` **null** — with a comment explaining that `auth.users` had no rows to point at. True when it was written, and it stopped being true the moment two real users signed in. A timestamp with no attributable identity is the unenforced checklist this product exists to replace, arriving through yet another door: it records that *somebody* approved the prompt set and makes it impossible to say who. The reviewer is now an email that must resolve to a real `auth.users` row, and an unknown one is **refused** rather than recorded — the same refusal, for the same reason, as the plan approval gate. (Second bug in the same seven lines: it marked *every* unreviewed prompt on the client, including the 14 retired ones. `--from-gsc` refuses to retire a reviewed prompt, so a retired prompt marked reviewed would have become permanently un-retireable, and &quot;prompts an analyst signed off&quot; would have stopped describing the set actually being probed.) **Verified by:** `nobody@example.com` refused with the reason in words; then **15 active prompts reviewed and attributed to `ricky@coreshifthq.com`, 14 retired prompts untouched, one distinct reviewer** read back out of Postgres; a fresh plan run no longer carries the unreviewed caveat, while approved plan `70337c95` keeps it because its inputs record what was true when it was built. Commit `c33c617`</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Four decisions, taken 2026-08-14</div>
+            <div class="recent-desc">All four open questions closed in one pass, and each changes what the next session does. **(1) M7 is split.** The verdict half needs data that is final on 5 November, so it became M8 and the report became buildable today; handover moved to M9. **(2) The 15 prompts are signed off** — see the card above, which is what trying to record it turned up. **(3) No holdouts, not yet.** A true holdout — deliberately leaving comparable pages broken for a month — would support a stronger causal claim and would cost the client real traffic, and it is the kind of thing that has to be said to them out loud. Revisit once one prediction has actually verified and we know the signal is even visible. **(4) Storepro only, for now**, with a second client to come later. ⚠️ That last one is worth carrying as a known limit rather than as a closed question: every threshold M6 declared has exactly one property behind it</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">M6: The prediction machinery — we now write down what we expect, against a cohort we deliberately left alone, before the change</div>
             <div class="recent-desc">The reason this product exists, and the thing none of the seven surveyed repos does. Every tool recommends work; none of them records what it expected the work to achieve, against a control, over a window fixed in advance, and then goes back and checks. **Storepro&#39;s first prediction is recorded and frozen:** the FAQ-schema item&#39;s target pages will show **more Search Console impressions than a matched set of untouched pages over October 2026**, direction only with no magnitude claimed, confidence **low**, baseline 16,184 impressions in July, readback window `[2026-10-01, 2026-11-01)` and final from **5 November**. Against **twelve untouched pages matched one-to-one** on the shape of their four-month history, tracking the treated pages within **8.5 percentage points** across the whole pre-period. **Twelve of the thirteen items were refused, each with a reason a client could read** — and that ratio is the product, not a shortfall. **Verified by:** the prediction read straight out of Postgres (`a3e5a8a7`, control set `d7de6e64`, 12 members, `expected_magnitude` null, `method_version 2026-08-a`); **133 tests across five suites** (13 detector, 38 plan, 24 action, 23 prompt, **35 new prediction**); typecheck and build clean; staging serving the new bundle `index-Ye_0f7Ex.js` with `/health` 200 and both new endpoints 401 unauthenticated; and all five database guarantees exercised against the live database and refused by name. Commit `994f604`. Method in `docs/predictions.md`</div>
           </div>
@@ -921,20 +935,6 @@
             <div class="recent-desc">M5 authored the acceptance criteria, stored them structurally and indexed them; nothing read them. `npm run readback` now re-runs **the audit&#39;s own predicate** over a later run&#39;s page snapshots and decides each item. The verdict M5 had no place for is the important one: **a target page the crawl did not reach has not passed.** Storepro&#39;s runs are `partial` at 147 of 202 pages — the normal outcome above the crawl budget — so an item naming 147 pages can have 90 assessed, and scoring the other 57 as passing is *&quot;couldn&#39;t measure&quot; read as &quot;measured zero&quot;*, which this project has now hit five times. There are four verdicts: `passed` (all assessed, rate met), `failed` (a definite no), `incomplete` (met on what was assessed, and here is what was not), `not_assessed`. Two further guards: a run that pre-dates the plan&#39;s approval is labelled `baseline` and can never mark anything finished, and a changed audit method blocks a finished verdict because the named check is no longer the same check. **It reports and marks nothing** — a specialist still decides that work is done. (Bug found and fixed on the way: criteria were being dispatched on `scope` rather than `mode`, so all six observational rules — authored `{mode: &quot;finding_absent&quot;, scope: &quot;site&quot;}` — were looked up in the scored-check table and reported as *&quot;no result&quot;*, which reads as *we do not know* when the run had said something perfectly clear.)</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">The readback window is derived from the approval timestamp, and the database will not let it move</div>
-            <div class="recent-desc">What makes &quot;we fixed the window before the change&quot; checkable rather than claimed. `Date.now()` does not appear in `windows.ts`: the window is a pure function of `work_plans.approved_at`, so re-deriving it in November produces the same dates. **The readback month is October, not September**, and that is not conservatism — the metric is a calendar month, a month that is half pre-change and half post-change measures a blend, and a blend that comes in flat cannot be told apart from no effect. Approved 14 August + 28 days of latency = 11 September, so October is the first month measured entirely with the change in place. **Five guarantees now live in Postgres rather than in whichever code writes the row, and all five were exercised against the live database:** the terms of a recorded prediction cannot be edited (17 columns frozen by trigger — only the verification fields are writable); a prediction cannot exist without a control set (NOT NULL, and the FK moved to `on delete restrict`); a readback window cannot begin inside a month already ingested for that client (rejected by name, with the reason in the error); the baseline must end before the readback begins; and no outcome may be recorded without a `control_value` beside its `actual_value`. A writer-enforced version of any of these would be one careless `UPDATE` away from a prediction that always turns out to have been right, with nothing in the row to show it</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">No prediction carries a number, on purpose</div>
-            <div class="recent-desc">`expected_magnitude` is null on every prediction and will stay that way until something here has been verified against an outcome. *&quot;Impressions on these pages should rise relative to a matched control, and we do not know by how much&quot;* is a falsifiable claim. *&quot;+15%&quot;* is a fabricated one that looks more professional, and the first time it is wrong it costs more than the whole feature is worth. Coverage is recorded separately from confidence for the same reason: the FAQ prediction covers **12 of the item&#39;s 147 target pages**, because Search Console returns only its top 50 pages and only 12 targets have both a complete four-month history and an admissible partner. That makes it a *narrower* prediction, not a less confident one, and blending the two would hide both. Magnitude becomes answerable after a few cycles of verified predictions — the same shape as the effort estimates waiting on `shipped_at`</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -951,9 +951,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">M7: Monthly report — the one that says what we expected *and* what happened</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">a3e5a8a7</span><span class="tag tag-neutral">actual_value</span><span class="tag tag-neutral">control_value</span><span class="tag tag-neutral">outcome</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">confounders</span></div>
-        <div class="card-desc">The half of the loop M6 could not build, because it is gated by a calendar rather than by a build. Prediction `a3e5a8a7` reads back over **October 2026** and Search Console&#39;s October figures are final on **5 November** — nothing brings that forward, and back-dating it is refused by a database trigger on purpose. So everything except the verdict can be built now: the verification writer (`actual_value`, `control_value`, `outcome`, `decision`), the algorithm-update ledger that populates `confounders`, and the report itself. ⚠️ **The report has to survive its own honesty.** The first month&#39;s report will say: one prediction, low confidence, direction only, covering 12 of 147 pages, plus twelve items we would not predict on. If that reads as thin rather than as rigorous, the fix is in how it is written, not in loosening the thresholds</div>
+        <div class="card-title">M7: Monthly report — what we did, why, and what we expected</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">doneWhen</span></div>
+        <div class="card-desc">Split out of the old M7 on 2026-08-14, on Ricky&#39;s call, the day M6 landed. The original read *&quot;…and what happened&quot;*, and that half needs October&#39;s Search Console figures, which are final on **5 November** — back-dating is refused by a database trigger on purpose. A milestone nobody can move for eleven weeks is exactly the quiet expansion a `doneWhen` exists to prevent, so the verdict moved to its own milestone with its own date and **what is left here is buildable today**. The report binds the month&#39;s applied work to its originating findings, states the rationale each item already carries, and shows last cycle&#39;s predictions as **pending with their readback windows visible** — which is itself the most unusual thing a client will have seen in an SEO report. ⚠️ **It has to survive its own honesty.** The first one says: one prediction, low confidence, direction only, covering 12 of 147 pages, plus twelve items we would not predict on. If that reads as thin rather than as rigorous, the fix is in the writing, not in loosening the thresholds</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -966,36 +966,31 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">1</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Review the 15 new prompts and sign them off</div>
-        <div class="card-tags"><span class="tag tag-neutral">M6</span></div>
-        <div class="card-desc">Regenerated 2026-08-14 with the funnel mix you asked for: **6 awareness, 5 consideration, 4 commercial.** They&#39;re stored **unreviewed**, and every report will say so until an analyst signs them off. Read them in the app; cut or reword anything that isn&#39;t how a buyer would actually ask. **Default if you don&#39;t answer:** the set runs as-is and the panel keeps flagging it</div>
-      </div>
-      <div class="card">
-        <div class="card-title">M7 cannot close until 5 November — so what does the next session build?</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">doneWhen</span><span class="tag tag-neutral">doneWhen</span></div>
-        <div class="card-desc">M7&#39;s `doneWhen` is *&quot;a report stating what we did, why, what we expected, **and what happened**&quot;*. The &quot;what happened&quot; half needs October&#39;s Search Console figures, which are final on **5 November**, and back-dating is refused by a database trigger on purpose. So M7 as written is calendar-locked for eleven weeks. Three ways forward and I&#39;d take the first: **(1) split it** — build the report now against a `doneWhen` that is closable (&quot;what we did, why, and what we expected, with last month&#39;s predictions shown as pending&quot;), and add a separate calendar-locked milestone for the verification itself; **(2) leave it whole** and let the session build the report and the verification writer, then sit open until November; **(3) do something else first** — a second client, which is the only thing that would test M6&#39;s four matching thresholds, all of which have exactly one data point behind them. **Default if you don&#39;t answer:** option 1, split it</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Do we ever hold a page back on purpose?</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span></div>
-        <div class="card-desc">A real methodology decision with a client cost, so it is yours. Today&#39;s control set is *pages the plan happens not to target* — it controls for seasonality, core updates and site-wide movement, which is most of what confounds a retainer report. It does **not** control for the pages being different: they were never broken in the way the treated pages were. A true holdout — picking, say, 15 of the 147 FAQ-schema pages and deliberately **not** fixing them for one month — would support a much stronger claim: *the pages we fixed beat the pages we knowingly left broken*. It costs the client a month of whatever those 15 pages would have gained, and it is the kind of thing that has to be said out loud to them rather than done quietly. **Recommendation: not yet.** The matched control is honest and it is already better than anything on the market; revisit once one prediction has actually been verified and we know whether the signal is even visible. **Default if you don&#39;t answer:** matched controls only, no page is ever deliberately left broken</div>
-      </div>
-      <div class="card">
-        <div class="card-title">The client list</div>
-        <div class="card-tags"><span class="tag tag-neutral">M8</span></div>
-        <div class="card-desc">Still only Storepro. 47 hosts have working Search Console access and no way to tell a retainer client from an old access grant. Names are enough; property mapping is automated. **Default if you don&#39;t answer:** Storepro-only</div>
+        <div class="card-title">A second client, when you&#39;re ready</div>
+        <div class="card-tags"><span class="tag tag-neutral">M9</span></div>
+        <div class="card-desc">Not blocking anything, and parked here rather than dropped because it is the only thing that tests M6&#39;s four matching thresholds, all of which have exactly one property behind them. You said you&#39;d add one later; this is the note that says why it matters more than it looks. **Default:** Storepro-only until you name one</div>
       </div></div>
     </section>
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">52</span>
+        <span class="col-count">54</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">The prompt sign-off gate could not record who signed</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">npm run probes --review</span><span class="tag tag-neutral">reviewed_at</span><span class="tag tag-neutral">reviewed_by</span><span class="tag tag-neutral">auth.users</span><span class="tag tag-neutral">auth.users</span><span class="tag tag-neutral">--from-gsc</span><span class="tag tag-neutral">nobody@example.com</span><span class="tag tag-neutral">ricky@coreshifthq.com</span><span class="tag tag-neutral">70337c95</span><span class="tag tag-neutral">c33c617</span></div>
+        <div class="card-desc">Found by trying to use it. Ricky signed the 15 active prompts off on 2026-08-14, and recording that exposed that `npm run probes --review` took a **free-text name**, set `reviewed_at` and left `reviewed_by` **null** — with a comment explaining that `auth.users` had no rows to point at. True when it was written, and it stopped being true the moment two real users signed in. A timestamp with no attributable identity is the unenforced checklist this product exists to replace, arriving through yet another door: it records that *somebody* approved the prompt set and makes it impossible to say who. The reviewer is now an email that must resolve to a real `auth.users` row, and an unknown one is **refused** rather than recorded — the same refusal, for the same reason, as the plan approval gate. (Second bug in the same seven lines: it marked *every* unreviewed prompt on the client, including the 14 retired ones. `--from-gsc` refuses to retire a reviewed prompt, so a retired prompt marked reviewed would have become permanently un-retireable, and &quot;prompts an analyst signed off&quot; would have stopped describing the set actually being probed.) **Verified by:** `nobody@example.com` refused with the reason in words; then **15 active prompts reviewed and attributed to `ricky@coreshifthq.com`, 14 retired prompts untouched, one distinct reviewer** read back out of Postgres; a fresh plan run no longer carries the unreviewed caveat, while approved plan `70337c95` keeps it because its inputs record what was true when it was built. Commit `c33c617`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Four decisions, taken 2026-08-14</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">decision</span></div>
+        <div class="card-desc">All four open questions closed in one pass, and each changes what the next session does. **(1) M7 is split.** The verdict half needs data that is final on 5 November, so it became M8 and the report became buildable today; handover moved to M9. **(2) The 15 prompts are signed off** — see the card above, which is what trying to record it turned up. **(3) No holdouts, not yet.** A true holdout — deliberately leaving comparable pages broken for a month — would support a stronger causal claim and would cost the client real traffic, and it is the kind of thing that has to be said to them out loud. Revisit once one prediction has actually verified and we know the signal is even visible. **(4) Storepro only, for now**, with a second client to come later. ⚠️ That last one is worth carrying as a known limit rather than as a closed question: every threshold M6 declared has exactly one property behind it</div>
+      </div>
       <div class="card">
         <div class="card-title">M6: The prediction machinery — we now write down what we expect, against a cohort we deliberately left alone, before the change</div>
         <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-milestone">milestone</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">[2026-10-01, 2026-11-01)</span><span class="tag tag-neutral">a3e5a8a7</span><span class="tag tag-neutral">d7de6e64</span><span class="tag tag-neutral">expected_magnitude</span><span class="tag tag-neutral">method_version 2026-08-a</span><span class="tag tag-neutral">index-Ye_0f7Ex.js</span><span class="tag tag-neutral">/health</span><span class="tag tag-neutral">994f604</span><span class="tag tag-neutral">docs/predictions.md</span></div>
@@ -1295,12 +1290,12 @@
       </div>
       <div class="card">
         <div class="card-title">The crawl budget now caps what can be called finished</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">incomplete</span></div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">incomplete</span></div>
         <div class="card-desc">Surfaced by the readback. An item naming 147 pages can only be marked finished when a run assesses all 147, and the crawl stops at 147 of Storepro&#39;s 202 discovered pages. Today that is moot — nothing has been fixed yet, so every item fails on its merits. It stops being moot the first time real work is done and the readback reports `incomplete` on an item that is genuinely finished. Two ways out and neither is free: raise the crawl budget for a readback run, or accept a pass rate below 1 on large items and say so on the criterion. Decide before the first month of work lands, not after</div>
       </div>
       <div class="card">
         <div class="card-title">A second client is the first real test of the matching thresholds</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">risk</span></div>
+        <div class="card-tags"><span class="tag tag-neutral">M9</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">risk</span></div>
         <div class="card-desc">Five pairs, 40% concentration, ten points of divergence, five-times magnitude band. All four are *declared* constants with a written reason, and all four have been exercised against exactly one property with 50 measurable pages. They produced one prediction from thirteen items, which is the honest answer for Storepro and might be the wrong answer for a site with 500 pages in Search Console. Nothing to change yet; worth knowing that the numbers have one data point behind them</div>
       </div>
       <div class="card">
@@ -1337,12 +1332,12 @@
       </div>
       <div class="card">
         <div class="card-title">Report generator + branded output</div>
-        <div class="card-tags"><span class="tag tag-neutral">M6</span></div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span></div>
         <div class="card-desc">Bind report templates to the metrics store, pull the month&#39;s applied work with its originating findings, and surface last month&#39;s predictions with their verdicts</div>
       </div>
       <div class="card">
         <div class="card-title">Algorithm update ledger</div>
-        <div class="card-tags"><span class="tag tag-neutral">M5</span></div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span></div>
         <div class="card-desc">Google-owned sources only, verified entries only. Auto-flags confounders on predictions whose window overlaps an update</div>
       </div></div>
     </section>

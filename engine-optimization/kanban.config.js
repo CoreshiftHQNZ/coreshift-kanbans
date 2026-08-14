@@ -19,8 +19,8 @@ module.exports = {
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
   phase: "M7 · Monthly report",
   nextMilestone: {
-    name: "A report that states what we expected — and what happened",
-    date: "Nov 2026 · the first readback window closes 5 November",
+    name: "A report that states what we did, why, and what we expected",
+    date: "Q3 2026 · the verdict follows in M8, from 5 November",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -171,18 +171,41 @@ module.exports = {
     {
       id: "M7",
       name: "Monthly report",
-      // ⚠️ This milestone is the one that carries the verification half of the
-      // loop, and it is gated by a calendar rather than by a build. The first
-      // recorded prediction reads back over October 2026 and its figures are
-      // final on 5 November. Nothing brings that forward, and back-dating it is
-      // refused by a database trigger on purpose — so the report writer, the
-      // verification writer and the confounder ledger can all be built before
-      // then, and the milestone still cannot close until the month exists.
-      doneWhen: "A specialist publishes a report for a real client stating what we did, why, what we expected, and what happened",
+      // ⚠️ Split on 2026-08-14, on Ricky's call, the day M6 landed.
+      //
+      // It read "…what we did, why, what we expected, AND what happened" — and
+      // "what happened" needs October's Search Console figures, which are final
+      // on 5 November. Back-dating is refused by a database trigger on purpose.
+      // So the milestone as written was calendar-locked for eleven weeks, which
+      // is exactly the quiet expansion a doneWhen exists to prevent: a board
+      // carrying an open milestone with nothing able to move.
+      //
+      // The verification did not get smaller by being split off — it got its own
+      // finish line and its own date. What is left here is buildable today, and
+      // it is also the thing M9's "a specialist runs a cycle unaided" is tested
+      // against, so splitting unblocks more than it defers.
+      doneWhen: "A specialist publishes a report for a real client stating what we did, why, and what we expected — with last cycle's predictions shown as pending and their readback windows visible",
       status: "current",
     },
     {
       id: "M8",
+      name: "The readback",
+      // Added 2026-08-14 when M7 was split. This is the half of the loop that
+      // cannot be hurried: prediction a3e5a8a7 reads back over October 2026 and
+      // those figures are final on 5 November. Everything it needs can be built
+      // before then — the verification writer, the algorithm-update ledger that
+      // populates `confounders` — and the milestone still cannot close until the
+      // month exists. That is the point of it, not a defect.
+      //
+      // It is also the first time this system will be told it was wrong, which is
+      // the outcome it was built to be able to survive: `failed` + `keep_testing`
+      // is a legitimate pair, and `confounded` is a real outcome rather than a
+      // euphemism.
+      doneWhen: "A recorded prediction is verified against its matched control and the report states what actually happened, including when the answer is that we were wrong",
+      status: "planned",
+    },
+    {
+      id: "M9",
       name: "Handover to the team",
       // ✅ The hard prerequisite is now met. Postmark was wired on 2026-08-14
       // (smtp.postmarkapp.com, sender hello@growthpartners.co.nz) and the send
@@ -258,7 +281,7 @@ module.exports = {
       status: "future",
       title: "Phase 4",
       subtitle: "Hand to the team",
-      window: "M7 · the real test",
+      window: "M9 · the real test",
       desc: "The tool is finished when a specialist who didn't build it runs a client month unaided. Until then it's Ricky's tool, not the team's.",
       deliverables: [
         "Specialist-facing onboarding flow with access checklist",
