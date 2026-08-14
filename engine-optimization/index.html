@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>59%</strong> complete</div>
-        <div><strong>39</strong>/66 cards done</div>
-        <div>Updated <strong>2026-08-14 00:17 UTC</strong></div>
+        <div><strong>57%</strong> complete</div>
+        <div><strong>43</strong>/75 cards done</div>
+        <div>Updated <strong>2026-08-14 00:44 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">39</div>
+        <div class="status-num">43</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">5</div>
+        <div class="status-num">6</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -896,6 +896,34 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">The plan was quoting 147 pages of work as 25 — and nothing in it could have shown you</div>
+            <div class="recent-desc">The single most dangerous thing found this milestone, and it was invisible by construction. `findings.affected_urls` is capped at 25 URLs, which is correct for an evidence blob and wrong the moment that list becomes an instruction. Effort is `base + perPage × affected pages`, so **every page-level finding in Storepro&#39;s plan was being estimated and ranked as though it affected 25 pages.** The real numbers are 35, 39, 41, 55, 62, 70, 91, 94, 107 and **147**. `aeo.faq_schema` moved from 14.5h to 18h on that correction alone and the plan&#39;s total went from 234.1h to 268.5h **with no new work found**. An item that said &quot;fix these pages&quot; and listed 25 of 147 would have been short by 122 in the one way the person picking it up cannot detect. **The fix is not a bigger cap.** `page_snapshots` already retains every field of the crawl — the named columns hold most of them and a `signals` blob holds the rest, stored in M2 precisely so a question asked later could be answered without a re-crawl. So the crawl is reconstructable, and the full failing set is recovered by running **the audit&#39;s own predicate over it** — the same function object the scoring pass uses, not a second copy that could drift. **Verified by:** the recovery independently reproducing the audit&#39;s own `pagesFailing` count on all nine recoverable rules, and a self-check that discards any recovery not containing every URL the audit already recorded — a recovery that disagrees with the run it claims to expand loses to the run. ⚠️ **This bumped the ranking method to `2026-08-b`**: positions from M4&#39;s plan are not comparable with these, and the panel says so</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Where the full list cannot be recovered, the item says so instead of guessing</div>
+            <div class="recent-desc">The counterpart to the recovery, and the reason it is trustworthy. `obs.stale_content` is derived from sitemap `lastmod`, which is run-level data and is not retained per page snapshot — so there is no honest way to expand its list. Its item reads **&quot;Review all 126 affected pages (25 listed on this item)&quot;**, names the reason in the same breath, and the plan&#39;s own totals carry the count of items in that state. Same rule the rest of this system runs on: *couldn&#39;t measure* is never *measured zero*, and a caveat on the item beats a confident wrong number. One of thirteen items is in this state today</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">&quot;Done&quot; is now something a machine decides, not an opinion</div>
+            <div class="recent-desc">Wherever an item fixes a rule the audit already runs, its acceptance criterion is **that rule passing on the target pages in the next audit run** — stored structurally as `{ruleKey, mode, scope, passRate}` rather than as prose, and indexed. Twelve of Storepro&#39;s thirteen items are checkable this way with no human judgement at all. This settles arguments, but that is not why it was built: **M6 needs it.** A prediction is &quot;we expected X because we did Y&quot;, and Y has to be a *finished* action — an acceptance criterion a machine can evaluate is what makes &quot;finished&quot; a fact rather than a claim. Where nothing can check it the criterion says `manual` and means it; a manual check labelled as a machine one would be the unenforced checklist this whole product exists to replace, arriving through a different door</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">The actions are authored in code, for the same reason the effort estimates are</div>
+            <div class="recent-desc">29 instructions written by hand — one per scored check and one per observational rule — rather than generated per run. A model-written action would read differently every month, so **an item nobody had finished would look like new work**, which destroys the one thing a stable `source_key` exists to make answerable: *we proposed this in July and it is still not done*. A rule with no authored action gets a default that says so on the item and in the plan totals, exactly as an uncalibrated effort estimate is labelled `default estimate` — a silent generic sentence would let a gap pass for an instruction. `npm run test:actions` fails if any rule the audit can emit has no action. **Three refusals worth knowing:** an under-sampled probe is told to *measure*, never to write content, because a confident content instruction on one sweep is a confident action on a coin flip; a rankable probe item **names no page**, because the probe records that the client was absent from an answer and not which page should have been there, so &quot;name the page first&quot; is step one; and the traffic anomaly is an **investigation with a written deliverable** rather than a fix, because M3 measured Storepro being cited at source 1–2 in four of those AI Overviews and still getting no clicks — the obvious answer is known to be wrong there at least some of the time</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">All five AI engines are live, and Storepro is cited on nearly all of them</div>
             <div class="recent-desc">ChatGPT, Perplexity, Gemini, Claude and Google AI Overviews all answering. A full 15-prompt sweep across every engine: **Perplexity 14/15, Claude 14/15, Gemini 7/8, ChatGPT 13/15, Google AI Overviews 7/10.** Eleven of the fifteen prompts are cited by *every* engine that answered. **This generalises the M3 finding well beyond AI Overviews** — Storepro is cited nearly everywhere a buyer might ask, and still gets no clicks. 🤔 **Google AI Overviews is the outlier**: it misses Storepro most often *and* it is the surface that keeps the searcher on the SERP. The assistants cite them more readily and send traffic. (Trap found on the way: Gemini&#39;s pinned model was retired with a `404 no longer available to new users`, while `ListModels` still advertised it — &quot;the API says it exists&quot; is not evidence a key can call it, which is why `verify:engines` makes a real call.)</div>
           </div>
@@ -905,34 +933,6 @@
           <div class="recent-text">
             <div class="recent-title">The prompt set was measuring one product line six times</div>
             <div class="recent-desc">The generator deduped on the *templated prompt* rather than the query, so `amr in warehouse`, `warehouse amr` and `amr warehouse` became three prompts; `automated racking system / systems / solutions` became three more. **6 of 15 were near-duplicates.** Rebuilt to canonicalise the query first and pool impressions per concept: **26 raw queries now collapse to 15 distinct concepts**, and the freed slots surfaced product lines that had never been tested at all — cantilever racking, warehouse racking, pallet racking, adjustable racking. The `amr` concept alone pooled four variants carrying **3,952 impressions**, which had been invisible while split three ways. Also fixed: the set now covers **awareness / consideration / commercial** rather than asking &quot;What should I know about X&quot; fifteen times, and a query that is already a question is no longer re-templated into *&quot;What is what is a mezzanine floor&quot;*. **Verified by:** 23 offline tests, each named after a real failure in the live set, plus a dry run against Storepro&#39;s own Search Console data. 14 superseded prompts were **deactivated, never deleted** — all 240 probe runs stay valid, including the six behind the mezzanine finding</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Postmark wired — the tool is no longer single-user</div>
-            <div class="recent-desc">The Supabase project had no SMTP and a send limit of **2 emails per hour to org members only**, which was the hard blocker on handing the tool to the team. Postmark is now configured (`smtp.postmarkapp.com:587`, sender `hello@growthpartners.co.nz`) and the limit raised to **100/hour**. **Verified by:** an SMTP handshake that authenticated and had the sender accepted (`250 2.1.0 Ok`) without sending anything, then a real magic-link sign-in by Ricky. Configured through the Management API touching only the SMTP fields, so nothing else in the auth config moved</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">M4: Work plan — six lists became one ranked month, and a specialist signed it off</div>
-            <div class="recent-desc">The piece none of the seven surveyed repos has. The audit, the AI-citation panel and the Search Console data spine each produced their own list sorted by their own idea of severity; a specialist holding all three had to merge them by hand every month, so the merge was never written down and never the same twice. Now one ordered list comes out, each item carrying the sentence that will appear in the client&#39;s report and the arithmetic that put it where it is. **Storepro&#39;s first plan: 15 items, 234.1 hours, 3 of them inside a 12-hour retainer and 12 below the line and still listed** — because a plan cut off at the capacity line reads as though it were everything that mattered. Ranking is value per hour: how much of the audit score is at stake, multiplied by how much of *this client&#39;s own traffic* the fix touches, discounted by how much the observation can be trusted, divided by declared effort. Prerequisites are a hard ordering rather than a weight, so structured data can never be scheduled before the content it describes exists in the HTML — a big enough score cannot override it. **Verified by:** plan `62ff1c2c` read straight out of Postgres — `status=approved`, approved 2026-08-13 03:55:08Z by `mal@growthpartners.co.nz` (session opened 03:54:31Z), 15 of 15 items approved and attributed, **0 with a blank rationale, 0 without a source**; the only code that can write `approved` is the gated HTTP endpoint at `api.ts:548/567`, so no CLI could have produced this; 33 ranker tests and 12 detector tests passing; audit determinism unchanged (91.50 / 93.44 / 45.45, identical across 23 checks); staging serving `index-DGbLikr7.js` and returning 401 to both new endpoints unauthenticated. Commit `6854acd`. Method and every constant in `docs/planning.md`</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">A specialist who is not Ricky signed in and passed a human gate — the first time that has happened</div>
-            <div class="recent-desc">Not a planned outcome of M4, and it moves M7. The **only** row in `auth.users` is `mal@growthpartners.co.nz`, created 03:53:40, signed in 03:54:31, approved at 03:55:08. Ricky&#39;s own address never created a row, which also corrects the M3 handover&#39;s claim that &quot;the staging login works for you&quot; — it had never actually been exercised by anyone. ⚠️ **This is one observed delivery, not a solved problem.** The documented ceiling on the built-in Supabase sender (2 emails/hour, org members only) has not been shown to have changed, and the Auth email config is not readable through the Supabase MCP, so whether a provider was wired is unknown from here. It does mean M7&#39;s &quot;a specialist other than Ricky&quot; is closer than the M3 handover assumed</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Four guards put in the database rather than in whichever code path writes the row</div>
-            <div class="recent-desc">Each one is a specific way the plan could have started lying, and each was proved by *attempting the illegal write* and watching Postgres refuse it (nine attempts, all rolled back, nothing left behind). **(1)** `unique (plan_id, source_key)` — the audit deliberately reports a missing-content problem twice, once as the scored check that counts it and once as the observational finding that names the cause. Both are right as findings; as *work* they are one job, and billing a month for both is how a retainer gets double-spent on a single fix. A merge bug is now a write failure instead of a duplicate nobody notices. **(2)** A probe-derived item must carry the sample size it rests on, and **fewer than two answered sweeps cannot be ranked** — because `rationale` is `not null` and reaches the client verbatim, so an item built on one sweep would put an authored, confident &quot;why&quot; on top of a coin flip. It is still *recorded and shown*, because a citation gap is worth a specialist&#39;s attention before it is actionable. **(3)** An approved plan must name its approver and its time. **(4)** One draft per client, and re-ranking supersedes rather than edits — the plan a specialist approved has to stay recoverable for the report that cites it</div>
           </div>
         </div>
       </div>
@@ -951,9 +951,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">M5: Actionable work — turn findings into instructions a specialist can execute</div>
-        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">findings.affected_urls</span><span class="tag tag-neutral">evidence</span><span class="tag tag-neutral">failure_check</span></div>
-        <div class="card-desc">Ricky&#39;s question, and it reordered the arc: *&quot;we will need a list of work to be done with actual actionable items.&quot;* M4&#39;s plan says **&quot;Question content is marked up as such · 14.5h&quot;** — a finding restated, not a job anyone can pick up. M5 makes every item state **what to do, which specific pages to do it to, and how you know it&#39;s finished.** ⚠️ **This is a prerequisite, not a nicety.** A prediction is &quot;we expect X because we did Y&quot;, and Y has to be a specific dated action — so the prediction machinery has nothing real to attach to until this exists. The data is already stored (`findings.affected_urls`, `evidence`, `failure_check`); this is mostly turning what we hold into an instruction. **The arc grew from 7 milestones to 8, deliberately.**</div>
+        <div class="card-title">M5: Actionable work — built and verified, waiting on one approval click</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">aeo.faq_schema</span><span class="tag tag-neutral">70337c95</span><span class="tag tag-neutral">doneWhen</span></div>
+        <div class="card-desc">Ricky&#39;s question, and it reordered the arc: *&quot;we will need a list of work to be done with actual actionable items.&quot;* M4&#39;s plan said **&quot;Question content is marked up as such · 14.5h&quot;** — a finding restated, not a job. It now says **&quot;Add FAQPage, QAPage or HowTo JSON-LD to the 147 pages listed on this item, mirroring question-and-answer content that is already visible on each page&quot;**, lists all 147 URLs, and is accepted when the next audit run reports `aeo.faq_schema` passing on all of them. **All 13 items on Storepro&#39;s new draft carry an action, their targets and their acceptance criteria; 12 of the 13 are checkable by a machine with no human judgement.** **Verified by:** 97 tests across four suites (12 detector, 38 plan, 23 prompt, **24 new action**), typecheck and build clean, draft plan `70337c95` read straight out of Postgres — 13 of 13 with an action and at least one acceptance criterion, 0 unauthored, 12 with a machine-checkable criterion — and the database refusing an item written into a plan without one (attempted, rejected, nothing left behind). 👉 **What is left is not code.** The `doneWhen` says *approved* plan, and approval is a human gate that takes the approver&#39;s identity from the verified session — forging it is precisely what the gate exists to prevent. One sign-in and one click closes M5</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -966,9 +966,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Approve the draft work plan — it is the last thing standing between M5 and landed</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">blocked-on-ricky</span><span class="tag tag-neutral">70337c95</span><span class="tag tag-neutral">POST /plans/:id/approve</span></div>
+        <div class="card-desc">Draft `70337c95` is in the app: 13 items, 268.5 hours, 2 inside a 12-hour line. Every item now opens to *what to do*, *which pages* and *how it is checked*. Read the top two and approve. **Nobody else can do this step** — `POST /plans/:id/approve` takes the approver from the verified session and never from the request body, so an approval that is not a real signed-in human is the exact failure the gate exists to prevent. Mal can do it instead; it does not have to be you. **Default if you don&#39;t answer:** M5 stays open on a click, the code sits finished behind it, and M6 cannot start — a prediction attaches to a *committed* action, and nothing is committed until a plan is approved</div>
+      </div>
       <div class="card">
         <div class="card-title">Review the 15 new prompts and sign them off</div>
         <div class="card-tags"><span class="tag tag-neutral">M5</span></div>
@@ -988,9 +993,29 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">39</span>
+        <span class="col-count">43</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">The plan was quoting 147 pages of work as 25 — and nothing in it could have shown you</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">findings.affected_urls</span><span class="tag tag-neutral">base + perPage × affected pages</span><span class="tag tag-neutral">aeo.faq_schema</span><span class="tag tag-neutral">page_snapshots</span><span class="tag tag-neutral">signals</span><span class="tag tag-neutral">pagesFailing</span><span class="tag tag-neutral">2026-08-b</span></div>
+        <div class="card-desc">The single most dangerous thing found this milestone, and it was invisible by construction. `findings.affected_urls` is capped at 25 URLs, which is correct for an evidence blob and wrong the moment that list becomes an instruction. Effort is `base + perPage × affected pages`, so **every page-level finding in Storepro&#39;s plan was being estimated and ranked as though it affected 25 pages.** The real numbers are 35, 39, 41, 55, 62, 70, 91, 94, 107 and **147**. `aeo.faq_schema` moved from 14.5h to 18h on that correction alone and the plan&#39;s total went from 234.1h to 268.5h **with no new work found**. An item that said &quot;fix these pages&quot; and listed 25 of 147 would have been short by 122 in the one way the person picking it up cannot detect. **The fix is not a bigger cap.** `page_snapshots` already retains every field of the crawl — the named columns hold most of them and a `signals` blob holds the rest, stored in M2 precisely so a question asked later could be answered without a re-crawl. So the crawl is reconstructable, and the full failing set is recovered by running **the audit&#39;s own predicate over it** — the same function object the scoring pass uses, not a second copy that could drift. **Verified by:** the recovery independently reproducing the audit&#39;s own `pagesFailing` count on all nine recoverable rules, and a self-check that discards any recovery not containing every URL the audit already recorded — a recovery that disagrees with the run it claims to expand loses to the run. ⚠️ **This bumped the ranking method to `2026-08-b`**: positions from M4&#39;s plan are not comparable with these, and the panel says so</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Where the full list cannot be recovered, the item says so instead of guessing</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">obs.stale_content</span><span class="tag tag-neutral">lastmod</span></div>
+        <div class="card-desc">The counterpart to the recovery, and the reason it is trustworthy. `obs.stale_content` is derived from sitemap `lastmod`, which is run-level data and is not retained per page snapshot — so there is no honest way to expand its list. Its item reads **&quot;Review all 126 affected pages (25 listed on this item)&quot;**, names the reason in the same breath, and the plan&#39;s own totals carry the count of items in that state. Same rule the rest of this system runs on: *couldn&#39;t measure* is never *measured zero*, and a caveat on the item beats a confident wrong number. One of thirteen items is in this state today</div>
+      </div>
+      <div class="card">
+        <div class="card-title">&quot;Done&quot; is now something a machine decides, not an opinion</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">{ruleKey, mode, scope, passRate}</span><span class="tag tag-neutral">manual</span></div>
+        <div class="card-desc">Wherever an item fixes a rule the audit already runs, its acceptance criterion is **that rule passing on the target pages in the next audit run** — stored structurally as `{ruleKey, mode, scope, passRate}` rather than as prose, and indexed. Twelve of Storepro&#39;s thirteen items are checkable this way with no human judgement at all. This settles arguments, but that is not why it was built: **M6 needs it.** A prediction is &quot;we expected X because we did Y&quot;, and Y has to be a *finished* action — an acceptance criterion a machine can evaluate is what makes &quot;finished&quot; a fact rather than a claim. Where nothing can check it the criterion says `manual` and means it; a manual check labelled as a machine one would be the unenforced checklist this whole product exists to replace, arriving through a different door</div>
+      </div>
+      <div class="card">
+        <div class="card-title">The actions are authored in code, for the same reason the effort estimates are</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">source_key</span><span class="tag tag-neutral">default estimate</span><span class="tag tag-neutral">npm run test:actions</span></div>
+        <div class="card-desc">29 instructions written by hand — one per scored check and one per observational rule — rather than generated per run. A model-written action would read differently every month, so **an item nobody had finished would look like new work**, which destroys the one thing a stable `source_key` exists to make answerable: *we proposed this in July and it is still not done*. A rule with no authored action gets a default that says so on the item and in the plan totals, exactly as an uncalibrated effort estimate is labelled `default estimate` — a silent generic sentence would let a gap pass for an instruction. `npm run test:actions` fails if any rule the audit can emit has no action. **Three refusals worth knowing:** an under-sampled probe is told to *measure*, never to write content, because a confident content instruction on one sweep is a confident action on a coin flip; a rankable probe item **names no page**, because the probe records that the client was absent from an answer and not which page should have been there, so &quot;name the page first&quot; is step one; and the traffic anomaly is an **investigation with a written deliverable** rather than a fix, because M3 measured Storepro being cited at source 1–2 in four of those AI Overviews and still getting no clicks — the obvious answer is known to be wrong there at least some of the time</div>
+      </div>
       <div class="card">
         <div class="card-title">All five AI engines are live, and Storepro is cited on nearly all of them</div>
         <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">404 no longer available to new users</span><span class="tag tag-neutral">ListModels</span><span class="tag tag-neutral">verify:engines</span></div>
@@ -1190,7 +1215,7 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1214,9 +1239,14 @@
         <div class="card-desc">Found while wiring the probe source into the plan. M3&#39;s two sweeps straddled a detector change: the first 10 answered runs are `2026-08-a` with an **empty** `engine_sources` array, every later run is `2026-08-b` with 8–14 structured sources. The AI-Overview-appeared-or-vanished changes (3 of the 5) are presence changes and stand regardless. But &quot;one citation flipped&quot; could be the detector rather than Google, and it cannot be settled by re-judging — `rejudge` correctly refuses those runs because re-reading prose alone would drop references the engine returned. **This does not overturn the M3 finding; it weakens one of its five data points.** A clean n≥3 sweep under one detector version settles it, and the M5 sampling design produces that anyway</div>
       </div>
       <div class="card">
-        <div class="card-title">Effort estimates have never been calibrated</div>
-        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">server/plan/rank.ts</span><span class="tag tag-neutral">work_items.shipped_at</span></div>
-        <div class="card-desc">The plan&#39;s hours are declared constants in `server/plan/rank.ts`, labelled as estimates everywhere they appear. Nothing has checked them against how long the work actually took. `work_items.shipped_at` makes it answerable after two or three cycles — worth doing before hours are ever quoted to a client</div>
+        <div class="card-title">Effort estimates have never been calibrated — and M5 raised the stakes</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">risk</span><span class="tag tag-neutral">server/plan/rank.ts</span><span class="tag tag-neutral">work_items.shipped_at</span></div>
+        <div class="card-desc">The plan&#39;s hours are declared constants in `server/plan/rank.ts`, labelled as estimates everywhere they appear. Nothing has checked them against how long the work actually took. `work_items.shipped_at` makes it answerable after two or three cycles. ⚠️ **M5 made this more pressing rather than less.** An item that names 147 specific pages and an 18-hour figure invites somebody to schedule against the number, and the target-recovery correction moved several estimates by 25% or more in a single release — which is itself evidence the constants were never load-bearing before. **Do not quote these hours to a client.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Nothing reads an acceptance criterion back yet</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">{ruleKey, mode, scope, passRate}</span></div>
+        <div class="card-desc">M5 authored them, stored them structurally and indexed them; no code re-runs an audit and marks an item passed. That is M6&#39;s first move and the reason the criteria are `{ruleKey, mode, scope, passRate}` rather than prose. Until it exists, &quot;done&quot; is still a specialist ticking a box — the box just now says something checkable</div>
       </div></div>
     </section>
     <section class="column col-backlog">
@@ -1259,9 +1289,24 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>🅿️ Parking Lot</h2>
-        <span class="col-count">12</span>
+        <span class="col-count">15</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">The directive constraint has an UPDATE-shaped hole</div>
+        <div class="card-tags"><span class="tag tag-neutral">0009</span><span class="tag tag-neutral">before insert</span><span class="tag tag-neutral">62ff1c2c</span><span class="tag tag-neutral">{}</span><span class="tag tag-neutral">0007</span></div>
+        <div class="card-desc">`0009` requires a complete directive on every item *inserted* into a plan, enforced by a `before insert` trigger. It cannot be an unconditional NOT NULL, because the approved M4 plan `62ff1c2c` has none and rewriting an approved plan&#39;s items to satisfy a constraint added afterwards would be editing history to make the present tidy. The consequence: an UPDATE could still blank a directive to `{}` and the CHECK would allow it, because the CHECK has to allow the pre-M5 rows to exist at all. Nothing writes such an update today. Closable when no unapproved pre-M5 items remain — same shape as the `0007` supersede weakening, and parked next to it</div>
+      </div>
+      <div class="card">
+        <div class="card-title">An action does not check its prerequisite&#39;s targets overlap</div>
+        <div class="card-tags"><span class="tag tag-neutral">aeo.faq_schema</span><span class="tag tag-neutral">geo.structured_data</span></div>
+        <div class="card-desc">The plan orders `aeo.faq_schema` behind `geo.structured_data`, and the FAQ item&#39;s steps tell the specialist to check each page has visible Q&amp;A first. Nothing verifies the two items&#39; *page sets* actually intersect. On Storepro they largely do; on a client where they did not, the ordering would be conservative rather than wrong, which is the safe direction to be imprecise in. Worth doing when a second client makes it observable</div>
+      </div>
+      <div class="card">
+        <div class="card-title">`obs.stale_content` targets could be recovered by storing sitemap lastmod per page</div>
+        <div class="card-tags"><span class="tag tag-neutral">lastmod</span><span class="tag tag-neutral">page_snapshots</span></div>
+        <div class="card-desc">It is the one rule whose full affected list cannot be re-derived, because `lastmod` is sitemap data and page snapshots hold page data. One column on `page_snapshots` fixes it at the next audit run. Not worth a migration on its own; fold it into whatever next touches the crawl</div>
+      </div>
       <div class="card">
         <div class="card-title">Work item owners</div>
         <div class="card-tags"><span class="tag tag-neutral">work_items.owner_id</span></div>
