@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>56%</strong> complete</div>
-        <div><strong>36</strong>/64 cards done</div>
-        <div>Updated <strong>2026-08-13 23:38 UTC</strong></div>
+        <div><strong>59%</strong> complete</div>
+        <div><strong>39</strong>/66 cards done</div>
+        <div>Updated <strong>2026-08-14 00:14 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">M5 · The prediction machinery</span>
+          <span class="phase-pill-value">M5 · Actionable work</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">One prediction recorded against a control, readback window fixed <span class="phase-pill-date">Q3 2026</span></span>
+          <span class="phase-pill-value">Work items a specialist can pick up and execute <span class="phase-pill-date">Q3 2026</span></span>
         </div>
       </div>
     </section>
@@ -797,7 +797,7 @@
             <div class="phase-status-pill phase-status-in-progress">In progress</div>
           </div>
           <div class="phase-title">Phase 3 <span class="phase-subtitle">Close the loop</span></div>
-          <div class="phase-window">In progress · M5 building the machinery, M6 reads it back in October</div>
+          <div class="phase-window">In progress · M5 makes the work executable, M6 predicts, M7 reads it back in October</div>
           <p class="phase-desc">Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.</p>
           <ul class="phase-deliverables">
             <li>Readback windows fixed before a change, not chosen after</li><li>Matched control-set constructor — demanded by every repo, built by none</li><li>Delta-vs-control, with algorithm updates auto-flagged as confounders</li><li>Monthly report: what we did, why, what we expected, what happened</li>
@@ -821,11 +821,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">36</div>
+        <div class="status-num">39</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
+        <div class="status-num">1</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -896,6 +896,27 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">All five AI engines are live, and Storepro is cited on nearly all of them</div>
+            <div class="recent-desc">ChatGPT, Perplexity, Gemini, Claude and Google AI Overviews all answering. A full 15-prompt sweep across every engine: **Perplexity 14/15, Claude 14/15, Gemini 7/8, ChatGPT 13/15, Google AI Overviews 7/10.** Eleven of the fifteen prompts are cited by *every* engine that answered. **This generalises the M3 finding well beyond AI Overviews** — Storepro is cited nearly everywhere a buyer might ask, and still gets no clicks. 🤔 **Google AI Overviews is the outlier**: it misses Storepro most often *and* it is the surface that keeps the searcher on the SERP. The assistants cite them more readily and send traffic. (Trap found on the way: Gemini&#39;s pinned model was retired with a `404 no longer available to new users`, while `ListModels` still advertised it — &quot;the API says it exists&quot; is not evidence a key can call it, which is why `verify:engines` makes a real call.)</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">The prompt set was measuring one product line six times</div>
+            <div class="recent-desc">The generator deduped on the *templated prompt* rather than the query, so `amr in warehouse`, `warehouse amr` and `amr warehouse` became three prompts; `automated racking system / systems / solutions` became three more. **6 of 15 were near-duplicates.** Rebuilt to canonicalise the query first and pool impressions per concept: **26 raw queries now collapse to 15 distinct concepts**, and the freed slots surfaced product lines that had never been tested at all — cantilever racking, warehouse racking, pallet racking, adjustable racking. The `amr` concept alone pooled four variants carrying **3,952 impressions**, which had been invisible while split three ways. Also fixed: the set now covers **awareness / consideration / commercial** rather than asking &quot;What should I know about X&quot; fifteen times, and a query that is already a question is no longer re-templated into *&quot;What is what is a mezzanine floor&quot;*. **Verified by:** 23 offline tests, each named after a real failure in the live set, plus a dry run against Storepro&#39;s own Search Console data. 14 superseded prompts were **deactivated, never deleted** — all 240 probe runs stay valid, including the six behind the mezzanine finding</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Postmark wired — the tool is no longer single-user</div>
+            <div class="recent-desc">The Supabase project had no SMTP and a send limit of **2 emails per hour to org members only**, which was the hard blocker on handing the tool to the team. Postmark is now configured (`smtp.postmarkapp.com:587`, sender `hello@growthpartners.co.nz`) and the limit raised to **100/hour**. **Verified by:** an SMTP handshake that authenticated and had the sender accepted (`250 2.1.0 Ok`) without sending anything, then a real magic-link sign-in by Ricky. Configured through the Management API touching only the SMTP fields, so nothing else in the auth config moved</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">M4: Work plan — six lists became one ranked month, and a specialist signed it off</div>
             <div class="recent-desc">The piece none of the seven surveyed repos has. The audit, the AI-citation panel and the Search Console data spine each produced their own list sorted by their own idea of severity; a specialist holding all three had to merge them by hand every month, so the merge was never written down and never the same twice. Now one ordered list comes out, each item carrying the sentence that will appear in the client&#39;s report and the arithmetic that put it where it is. **Storepro&#39;s first plan: 15 items, 234.1 hours, 3 of them inside a 12-hour retainer and 12 below the line and still listed** — because a plan cut off at the capacity line reads as though it were everything that mattered. Ranking is value per hour: how much of the audit score is at stake, multiplied by how much of *this client&#39;s own traffic* the fix touches, discounted by how much the observation can be trusted, divided by declared effort. Prerequisites are a hard ordering rather than a weight, so structured data can never be scheduled before the content it describes exists in the HTML — a big enough score cannot override it. **Verified by:** plan `62ff1c2c` read straight out of Postgres — `status=approved`, approved 2026-08-13 03:55:08Z by `mal@growthpartners.co.nz` (session opened 03:54:31Z), 15 of 15 items approved and attributed, **0 with a blank rationale, 0 without a source**; the only code that can write `approved` is the gated HTTP endpoint at `api.ts:548/567`, so no CLI could have produced this; 33 ranker tests and 12 detector tests passing; audit determinism unchanged (91.50 / 93.44 / 45.45, identical across 23 checks); staging serving `index-DGbLikr7.js` and returning 401 to both new endpoints unauthenticated. Commit `6854acd`. Method and every constant in `docs/planning.md`</div>
           </div>
@@ -914,27 +935,6 @@
             <div class="recent-desc">Each one is a specific way the plan could have started lying, and each was proved by *attempting the illegal write* and watching Postgres refuse it (nine attempts, all rolled back, nothing left behind). **(1)** `unique (plan_id, source_key)` — the audit deliberately reports a missing-content problem twice, once as the scored check that counts it and once as the observational finding that names the cause. Both are right as findings; as *work* they are one job, and billing a month for both is how a retainer gets double-spent on a single fix. A merge bug is now a write failure instead of a duplicate nobody notices. **(2)** A probe-derived item must carry the sample size it rests on, and **fewer than two answered sweeps cannot be ranked** — because `rationale` is `not null` and reaches the client verbatim, so an item built on one sweep would put an authored, confident &quot;why&quot; on top of a coin flip. It is still *recorded and shown*, because a citation gap is worth a specialist&#39;s attention before it is actionable. **(3)** An approved plan must name its approver and its time. **(4)** One draft per client, and re-ranking supersedes rather than edits — the plan a specialist approved has to stay recoverable for the report that cites it</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Three bugs that only a live client could have surfaced</div>
-            <div class="recent-desc">All three were invisible to reasoning and to the unit tests, and all three now have regression tests named after them. **(1) Partial audit runs were excluded**, so no audit finding could *ever* have entered a plan for a site larger than the crawl budget. Storepro is 147 of 202 pages; partial is the *normal* outcome and the scoring method was built for it. The first run of the ranker returned &quot;no usable audit run&quot; against a client with two good audits. **(2) A probe about a single search query inherited the entire property&#39;s traffic** — demand was keyed off &quot;does this item name any URLs&quot;, and a probe names none, so three two-sweep coin flips outranked every audit finding. Scope is now declared by the source (site / pages / query) instead of inferred. **(3) `writePlan` inserted before superseding**, the opposite of what its own comment claimed, and hit the unique index on the second run — which then exposed that 0006&#39;s two constraints were mutually unsatisfiable in either order (see the Parking Lot)</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">&quot;Absent from the latest month&quot; is not &quot;fixed&quot;</div>
-            <div class="recent-desc">Storepro&#39;s page-one-no-clicks pattern is in **June**, not July, and two of those queries are missing from July&#39;s rows *entirely* rather than present-and-improved. Search Console returns top-N query rows, so a query can leave the list by improving or by being crowded out, and treating the second as a fix is schema rule 4 broken — the exact flaw that made every ranking loss structurally invisible in the surveyed rank tracker. The plan now reports those queries as unmeasured and names them. (This is also why the metrics source contributed **0** items to an otherwise 15-item plan: it ran, found nothing in the latest complete month, and said so. Flagged to Ricky as a judgement call on &quot;merged from every finding source&quot; before he approved.)</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">M3: AI visibility panel — Storepro is cited in Google&#39;s AI Overviews, and we can prove it</div>
-            <div class="recent-desc">The thing no surveyed competitor does: we now ask a real AI engine a real buying question and record whether the client was cited, with the engine&#39;s full answer stored. **Storepro is cited in 6 of the 9 AI Overviews that rendered — usually as source 1 or 2.** **Verified by:** 75 probe rows queried straight out of Postgres (10 answered with raw answers 1,991–3,595 characters, 5 `engine_error`, 60 `not_configured`), cited URLs pointing at real Storepro product pages, 12 detector unit tests, `tsc` clean, the panel rendering all five cell states, and staging redeployed and gated. Commit `f170cfc`</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -947,9 +947,14 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">0</span>
+        <span class="col-count">1</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">M5: Actionable work — turn findings into instructions a specialist can execute</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">findings.affected_urls</span><span class="tag tag-neutral">evidence</span><span class="tag tag-neutral">failure_check</span></div>
+        <div class="card-desc">Ricky&#39;s question, and it reordered the arc: *&quot;we will need a list of work to be done with actual actionable items.&quot;* M4&#39;s plan says **&quot;Question content is marked up as such · 14.5h&quot;** — a finding restated, not a job anyone can pick up. M5 makes every item state **what to do, which specific pages to do it to, and how you know it&#39;s finished.** ⚠️ **This is a prerequisite, not a nicety.** A prediction is &quot;we expect X because we did Y&quot;, and Y has to be a specific dated action — so the prediction machinery has nothing real to attach to until this exists. The data is already stored (`findings.affected_urls`, `evidence`, `failure_check`); this is mostly turning what we hold into an instruction. **The arc grew from 7 milestones to 8, deliberately.**</div>
+      </div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -961,41 +966,46 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Decide M5&#39;s shape before it starts</div>
-        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">decision</span></div>
-        <div class="card-desc">M5 reads *&quot;a prediction made in one cycle is verified in the next and reports a delta against its control set&quot;*. **That cannot close in one session, and not for a build reason.** Verifying a prediction in the following cycle needs the following cycle&#39;s data: a prediction recorded today reads back against September, which lands in Search Console in early October. Making the prediction retroactively against a month already on file is precisely what the method forbids — a window has to be fixed *before* the change. So M5 as written stays open for roughly seven weeks no matter how fast the code goes. This is the same defect M4 carried (a doneWhen testing something outside the milestone&#39;s control) and it is worth fixing the same way. Three options with a recommendation are in the paste-block; a decision session settles it and emits the work prompt</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Does Storepro&#39;s competitor cohort still block anything?</div>
-        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">competitors_cited</span><span class="tag tag-neutral">null</span><span class="tag tag-neutral">dexion.co.nz</span><span class="tag tag-neutral">palletrackingsolutions.co.nz</span><span class="tag tag-neutral">shelvingshopgroup.co.nz</span><span class="tag tag-neutral">stackit.co.nz</span></div>
-        <div class="card-desc">Unchanged ask, but now with a concrete cost: without a declared 3–5 cohort, `competitors_cited` stays `null`, so competitor displacement cannot be a prediction subject in M5 and the plan cannot rank citation work against a peer set. Candidates seen in live AI Overviews: `dexion.co.nz`, `palletrackingsolutions.co.nz`, `shelvingshopgroup.co.nz`, `stackit.co.nz`. **Default if you don&#39;t answer:** M5 predicts on traffic and citation presence only, and the report records competitor displacement as *not measured*</div>
-      </div>
-      <div class="card">
-        <div class="card-title">10–15 real buying-intent questions for Storepro</div>
+        <div class="card-title">Review the 15 new prompts and sign them off</div>
         <div class="card-tags"><span class="tag tag-neutral">M5</span></div>
-        <div class="card-desc">The 15 loaded are Search-Console-derived and stored **unreviewed**, and three of them are now carrying approved work items in Storepro&#39;s plan. They are visibly generic (&quot;What should I know about X…&quot;). **This has grown teeth:** the plan&#39;s citation work is ranked off an unreviewed set, and every report will say so until someone signs it off. **Default if you don&#39;t answer:** the set runs as-is and the plan keeps flagging it</div>
+        <div class="card-desc">Regenerated 2026-08-14 with the funnel mix you asked for: **6 awareness, 5 consideration, 4 commercial.** They&#39;re stored **unreviewed**, and every report will say so until an analyst signs them off. Read them in the app; cut or reword anything that isn&#39;t how a buyer would actually ask. **Default if you don&#39;t answer:** the set runs as-is and the panel keeps flagging it</div>
       </div>
       <div class="card">
-        <div class="card-title">The other four engine keys</div>
-        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">OPENAI_API_KEY</span><span class="tag tag-neutral">PERPLEXITY_API_KEY</span><span class="tag tag-neutral">GEMINI_API_KEY</span><span class="tag tag-neutral">ANTHROPIC_API_KEY</span></div>
-        <div class="card-desc">`OPENAI_API_KEY`, `PERPLEXITY_API_KEY`, `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`. All four adapters are written and switch on the moment a key appears; ~$5–10/month at this volume. Now also a **sampling** argument, not just a coverage one: four engines answering the same prompt is four independent observations per sweep, which is the cheapest available route out of the n=2 problem. **Default if you don&#39;t answer:** the panel and the plan stay single-engine and say so</div>
+        <div class="card-title">Declare Storepro&#39;s competitor cohort in the app</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">competitors_cited</span><span class="tag tag-neutral">null</span><span class="tag tag-neutral">dexion.co.nz</span><span class="tag tag-neutral">palletrackingsolutions.co.nz</span><span class="tag tag-neutral">shelvingshopgroup.co.nz</span><span class="tag tag-neutral">stackit.co.nz</span></div>
+        <div class="card-desc">The panel is built and waiting; you add the domains yourself and it records who declared them and why. Without a cohort, `competitors_cited` stays `null` and competitor displacement cannot be a prediction subject. Seen citing alongside Storepro across four engines: `dexion.co.nz`, `palletrackingsolutions.co.nz`, `shelvingshopgroup.co.nz`, `stackit.co.nz`. **Default if you don&#39;t answer:** predictions run on traffic and citation presence only, and the report records displacement as *not measured*</div>
       </div>
       <div class="card">
         <div class="card-title">The client list</div>
-        <div class="card-tags"><span class="tag tag-neutral">M5</span></div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span></div>
         <div class="card-desc">Still only Storepro. 47 hosts have working Search Console access and no way to tell a retainer client from an old access grant. Names are enough; property mapping is automated. **Default if you don&#39;t answer:** Storepro-only</div>
       </div></div>
     </section>
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">36</span>
+        <span class="col-count">39</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">All five AI engines are live, and Storepro is cited on nearly all of them</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">404 no longer available to new users</span><span class="tag tag-neutral">ListModels</span><span class="tag tag-neutral">verify:engines</span></div>
+        <div class="card-desc">ChatGPT, Perplexity, Gemini, Claude and Google AI Overviews all answering. A full 15-prompt sweep across every engine: **Perplexity 14/15, Claude 14/15, Gemini 7/8, ChatGPT 13/15, Google AI Overviews 7/10.** Eleven of the fifteen prompts are cited by *every* engine that answered. **This generalises the M3 finding well beyond AI Overviews** — Storepro is cited nearly everywhere a buyer might ask, and still gets no clicks. 🤔 **Google AI Overviews is the outlier**: it misses Storepro most often *and* it is the surface that keeps the searcher on the SERP. The assistants cite them more readily and send traffic. (Trap found on the way: Gemini&#39;s pinned model was retired with a `404 no longer available to new users`, while `ListModels` still advertised it — &quot;the API says it exists&quot; is not evidence a key can call it, which is why `verify:engines` makes a real call.)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">The prompt set was measuring one product line six times</div>
+        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">amr in warehouse</span><span class="tag tag-neutral">warehouse amr</span><span class="tag tag-neutral">amr warehouse</span><span class="tag tag-neutral">automated racking system / systems / solutions</span><span class="tag tag-neutral">amr</span></div>
+        <div class="card-desc">The generator deduped on the *templated prompt* rather than the query, so `amr in warehouse`, `warehouse amr` and `amr warehouse` became three prompts; `automated racking system / systems / solutions` became three more. **6 of 15 were near-duplicates.** Rebuilt to canonicalise the query first and pool impressions per concept: **26 raw queries now collapse to 15 distinct concepts**, and the freed slots surfaced product lines that had never been tested at all — cantilever racking, warehouse racking, pallet racking, adjustable racking. The `amr` concept alone pooled four variants carrying **3,952 impressions**, which had been invisible while split three ways. Also fixed: the set now covers **awareness / consideration / commercial** rather than asking &quot;What should I know about X&quot; fifteen times, and a query that is already a question is no longer re-templated into *&quot;What is what is a mezzanine floor&quot;*. **Verified by:** 23 offline tests, each named after a real failure in the live set, plus a dry run against Storepro&#39;s own Search Console data. 14 superseded prompts were **deactivated, never deleted** — all 240 probe runs stay valid, including the six behind the mezzanine finding</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Postmark wired — the tool is no longer single-user</div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">smtp.postmarkapp.com:587</span><span class="tag tag-neutral">hello@growthpartners.co.nz</span><span class="tag tag-neutral">250 2.1.0 Ok</span></div>
+        <div class="card-desc">The Supabase project had no SMTP and a send limit of **2 emails per hour to org members only**, which was the hard blocker on handing the tool to the team. Postmark is now configured (`smtp.postmarkapp.com:587`, sender `hello@growthpartners.co.nz`) and the limit raised to **100/hour**. **Verified by:** an SMTP handshake that authenticated and had the sender accepted (`250 2.1.0 Ok`) without sending anything, then a real magic-link sign-in by Ricky. Configured through the Management API touching only the SMTP fields, so nothing else in the auth config moved</div>
+      </div>
       <div class="card">
         <div class="card-title">M4: Work plan — six lists became one ranked month, and a specialist signed it off</div>
         <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-phase-2">phase-2</span><span class="tag tag-milestone">milestone</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">62ff1c2c</span><span class="tag tag-neutral">status=approved</span><span class="tag tag-neutral">mal@growthpartners.co.nz</span><span class="tag tag-neutral">approved</span><span class="tag tag-neutral">api.ts:548/567</span><span class="tag tag-neutral">index-DGbLikr7.js</span><span class="tag tag-neutral">6854acd</span><span class="tag tag-neutral">docs/planning.md</span></div>

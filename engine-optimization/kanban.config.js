@@ -17,9 +17,9 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M5 · The prediction machinery",
+  phase: "M5 · Actionable work",
   nextMilestone: {
-    name: "One prediction recorded against a control, readback window fixed",
+    name: "Work items a specialist can pick up and execute",
     date: "Q3 2026",
   },
 
@@ -108,14 +108,35 @@ module.exports = {
       // Revised 2026-08-13. The original doneWhen read "…is approved by a
       // specialist in the app", which tested two different things: that the
       // approval gate exists (M4's job) and that someone other than Ricky can
-      // operate the tool — M7's doneWhen almost verbatim. The duplication made
-      // M4 unclosable on a mail-provider config that has nothing to do with the
-      // aggregator. The specialist test lives in M7 and only in M7.
+      // operate the tool — the handover milestone's doneWhen almost verbatim. The
+      // duplication made M4 unclosable on a mail-provider config that has nothing
+      // to do with the aggregator. The specialist test lives in M8 and only there.
       doneWhen: "A ranked work plan for one real client, merged from every finding source, moves to approved in the app — every item carrying its rationale and its originating source",
       status: "done",
     },
     {
       id: "M5",
+      name: "Actionable work",
+      // Added 2026-08-14 on Ricky's call, and it reorders everything after it.
+      //
+      // He asked the right question: "we will need a list of work to be done with
+      // actual actionable items". M4 produces "Question content is marked up as
+      // such · 14.5h" — a finding restated, not an instruction. Nobody on the team
+      // can pick that up and start.
+      //
+      // It is a prerequisite rather than a nicety: a prediction is "we expect X
+      // because we did Y", and Y has to be a specific, dated, completed action.
+      // Without actionable items the prediction machinery has nothing real to
+      // attach to, so this has to come first.
+      //
+      // The data is already stored — findings.affected_urls, evidence,
+      // failure_check — so this is mostly turning what we hold into an
+      // instruction, not gathering anything new.
+      doneWhen: "Every item in an approved plan states what to do, which specific pages or assets to do it to, and how a specialist will know it is finished",
+      status: "current",
+    },
+    {
+      id: "M6",
       name: "The prediction machinery",
       // Reshaped 2026-08-13, same day it opened, on Ricky's call.
       //
@@ -127,24 +148,31 @@ module.exports = {
       // Back-dating it against a month already on file is exactly what the
       // readback protocol exists to forbid.
       //
-      // The verification did not need a milestone of its own — M6 already
-      // requires it ("what we expected, and what happened"), so it lands there,
-      // on the calendar, and the arc stays at seven.
+      // The verification did not need a milestone of its own — the report
+      // milestone already requires it ("what we expected, and what happened"), so
+      // it lands there, on the calendar.
+      //
+      // ⚠️ Renumbered M5 → M6 on 2026-08-14 when actionable work was inserted
+      // ahead of it. The arc grew from seven to eight, deliberately: a prediction
+      // needs a concrete action to be about.
       doneWhen: "A prediction for a real client is recorded against a matched control set, with its readback window fixed before the change and visible in the app",
-      status: "current",
+      status: "next",
     },
     {
-      id: "M6",
+      id: "M7",
       name: "Monthly report",
       doneWhen: "A specialist publishes a report for a real client stating what we did, why, what we expected, and what happened",
       status: "planned",
     },
     {
-      id: "M7",
+      id: "M8",
       name: "Handover to the team",
-      // Hard prerequisite: a mail provider on the Supabase project. The built-in
-      // sender delivers only to Supabase org members at 2 emails/hour, so no
-      // specialist can sign in. This dependency was previously mis-filed on M4.
+      // ✅ The hard prerequisite is now met. Postmark was wired on 2026-08-14
+      // (smtp.postmarkapp.com, sender hello@growthpartners.co.nz) and the send
+      // rate limit raised from 2/hour to 100/hour. mal@growthpartners.co.nz — a
+      // specialist who is not Ricky — has signed in and approved a plan, so the
+      // "can a second human use this at all" question is answered. What remains is
+      // the real test: a full cycle, end to end, unaided.
       doneWhen: "A specialist other than Ricky runs a full monthly cycle end to end without help",
       status: "planned",
     },
@@ -199,7 +227,7 @@ module.exports = {
       status: "in-progress",
       title: "Phase 3",
       subtitle: "Close the loop",
-      window: "In progress · M5 building the machinery, M6 reads it back in October",
+      window: "In progress · M5 makes the work executable, M6 predicts, M7 reads it back in October",
       desc: "Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.",
       deliverables: [
         "Readback windows fixed before a change, not chosen after",
