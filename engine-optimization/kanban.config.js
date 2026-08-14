@@ -17,10 +17,10 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M6 · The prediction machinery",
+  phase: "M7 · Monthly report",
   nextMilestone: {
-    name: "A prediction recorded against a control, before the change",
-    date: "Q3 2026",
+    name: "A report that states what we expected — and what happened",
+    date: "Nov 2026 · the first readback window closes 5 November",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -160,17 +160,26 @@ module.exports = {
       // ahead of it. The arc grew from seven to eight, deliberately: a prediction
       // needs a concrete action to be about.
       doneWhen: "A prediction for a real client is recorded against a matched control set, with its readback window fixed before the change and visible in the app",
-      // Opened 2026-08-14. Re-read against what M5 shipped and left unchanged:
-      // the prediction now has something concrete to be about — an approved item
-      // naming specific pages with a machine-checkable definition of finished —
-      // which is exactly the dependency that pushed this milestone back a place.
-      status: "current",
+      // Landed 2026-08-14. Prediction a3e5a8a7 on plan 70337c95's top item —
+      // gsc_impressions, expected up, no magnitude, over 2026-10, final from
+      // 2026-11-05 — against control set d7de6e64, twelve matched untouched
+      // pages at 8.5 points of pre-period divergence. Twelve of the thirteen
+      // items were refused with a named reason, which is the part that took the
+      // milestone. Commit 994f604, method in docs/predictions.md.
+      status: "done",
     },
     {
       id: "M7",
       name: "Monthly report",
+      // ⚠️ This milestone is the one that carries the verification half of the
+      // loop, and it is gated by a calendar rather than by a build. The first
+      // recorded prediction reads back over October 2026 and its figures are
+      // final on 5 November. Nothing brings that forward, and back-dating it is
+      // refused by a database trigger on purpose — so the report writer, the
+      // verification writer and the confounder ledger can all be built before
+      // then, and the milestone still cannot close until the month exists.
       doneWhen: "A specialist publishes a report for a real client stating what we did, why, what we expected, and what happened",
-      status: "planned",
+      status: "current",
     },
     {
       id: "M8",
@@ -235,11 +244,11 @@ module.exports = {
       status: "in-progress",
       title: "Phase 3",
       subtitle: "Close the loop",
-      window: "In progress · M5 landed 2026-08-14 — the work is executable; M6 predicts, M7 reads it back in October",
+      window: "In progress · M6 landed 2026-08-14 — the first prediction is recorded and frozen; M7 reads it back from 5 November",
       desc: "Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.",
       deliverables: [
-        "Readback windows fixed before a change, not chosen after",
-        "Matched control-set constructor — demanded by every repo, built by none",
+        "✅ Readback windows fixed before a change, not chosen after — derived from the approval timestamp, immutable by trigger",
+        "✅ Matched control-set constructor — demanded by every repo, built by none. It refuses twelve of thirteen items and says why",
         "Delta-vs-control, with algorithm updates auto-flagged as confounders",
         "Monthly report: what we did, why, what we expected, what happened",
       ],
