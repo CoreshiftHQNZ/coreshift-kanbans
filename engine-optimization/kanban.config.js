@@ -17,9 +17,9 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M5 · Actionable work",
+  phase: "M6 · The prediction machinery",
   nextMilestone: {
-    name: "Work items a specialist can pick up and execute",
+    name: "A prediction recorded against a control, before the change",
     date: "Q3 2026",
   },
 
@@ -133,7 +133,11 @@ module.exports = {
       // failure_check — so this is mostly turning what we hold into an
       // instruction, not gathering anything new.
       doneWhen: "Every item in an approved plan states what to do, which specific pages or assets to do it to, and how a specialist will know it is finished",
-      status: "current",
+      // Landed 2026-08-14. Plan 70337c95, approved 01:01:46Z by
+      // ricky@coreshifthq.com — 13 of 13 items carrying an action, their complete
+      // target list and their acceptance criteria; 12 of the 13 decidable by
+      // re-running the audit. Commit 754e70d.
+      status: "done",
     },
     {
       id: "M6",
@@ -156,7 +160,11 @@ module.exports = {
       // ahead of it. The arc grew from seven to eight, deliberately: a prediction
       // needs a concrete action to be about.
       doneWhen: "A prediction for a real client is recorded against a matched control set, with its readback window fixed before the change and visible in the app",
-      status: "next",
+      // Opened 2026-08-14. Re-read against what M5 shipped and left unchanged:
+      // the prediction now has something concrete to be about — an approved item
+      // naming specific pages with a machine-checkable definition of finished —
+      // which is exactly the dependency that pushed this milestone back a place.
+      status: "current",
     },
     {
       id: "M7",
@@ -227,7 +235,7 @@ module.exports = {
       status: "in-progress",
       title: "Phase 3",
       subtitle: "Close the loop",
-      window: "In progress · M5 makes the work executable, M6 predicts, M7 reads it back in October",
+      window: "In progress · M5 landed 2026-08-14 — the work is executable; M6 predicts, M7 reads it back in October",
       desc: "Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.",
       deliverables: [
         "Readback windows fixed before a change, not chosen after",
