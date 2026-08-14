@@ -71,7 +71,9 @@ publication check. Do not publish it as anybody.
   refusals, 8 limits, 9 of 9 checks stored and passing, cycle `017fe91f` moved
   `measuring → drafted`; **162 tests across six suites** (13 detector, 38 plan, 24
   action, 23 prompt, 35 prediction, **29 report**); typecheck and build clean;
-  `dev` and `staging` both at `b758643`; staging `/health` 200; the publisher gate
+  `dev` and `staging` both at `b758643`; staging serving the exact bundle built
+  here, `index-CaMsYLOr.js`, with `/health` 200 and all three new endpoints 401
+  unauthenticated; the publisher gate
   refusing `nobody@growthpartners.co.nz` by name; **nine database guarantees
   exercised against the live database inside a block that was rolled back**, each
   refusing by name, `reports` and `review_checks` confirmed empty afterwards; and
