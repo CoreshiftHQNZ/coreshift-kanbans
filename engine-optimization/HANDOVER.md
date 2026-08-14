@@ -53,7 +53,7 @@ Give me the 5-line orientation, then get on with it.
 - **What M8 does, in one line:** gives the system a way to be told the work is done —
   and then checks that it happened early enough for the prediction to still mean
   anything.
-- **The number to remember: 3 September.** That is the last day the FAGQ-schema work
+- **The number to remember: 3 September.** That is the last day the FAQ-schema work
   can ship and still have October be a clean month. Miss it and November's answer is
   "we can't tell", which costs a whole cycle. It is not a guess — it comes out of the
   same function that fixed the window in the first place.
@@ -69,10 +69,10 @@ Give me the 5-line orientation, then get on with it.
   pending / 12 refused. Every freeze then exercised **against that real row**: body
   edit refused, publication revoke refused, check flip refused, delete refused, second
   published report refused — and `body_tampered` still false afterwards, so nothing
-  leaked through. **192 tests across six suites**, typecheck clean, `dev` and
+  leaked through. **162 tests across six suites**, typecheck clean, `dev` and
   `staging` at `06d6b20`.
-- **Not verified:** see the mandatory section at the bottom of this file. Two items,
-  both named.
+- **Not verified:** three things, named in **⚠️ Not verified** below. None of them
+  affects the published report.
 
 ## 👉 On you
 
@@ -129,6 +129,25 @@ One published report per cycle, so a correction is a designed re-issue, not a re
 - **Two database guarantees still live partly in application code.** `0007`'s
   supersede weakening and `0009`'s insert-only directive trigger. Unchanged.
 - **One of M3's five volatility data points may have been our own bug.** Unchanged.
+
+## ⚠️ Not verified
+
+Everything claimed above has named evidence except these three, stated so they are
+decisions rather than omissions.
+
+1. **Nobody has pressed the in-app publish button on a deployed environment.** The
+   publication went through the CLI, which runs the identical `publishBuiltReport`.
+   Staging demonstrably carries the code — the live bundle was downloaded and grepped,
+   and all three new strings are in it — and the endpoint is gated (401
+   unauthenticated). But the click itself is unexercised, and now cannot be: there is
+   one published report per cycle and it is frozen. It will be exercised the first
+   time a second cycle is reported on.
+2. **The "no publish button because a check is failing" branch has never been seen on
+   screen.** All nine checks pass, so the branch is unreachable without breaking the
+   report on purpose. It is covered by the composer tests, not by observation.
+3. **Who set `NODE_ENV=production` on Railway, and when, is unknown.** The CLI does not
+   expose variable history. It is what broke the staging build, and the fix does not
+   depend on knowing — but nobody should claim it was one of us or wasn't.
 
 ## For the next Claude
 

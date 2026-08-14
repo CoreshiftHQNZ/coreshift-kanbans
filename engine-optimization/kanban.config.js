@@ -199,7 +199,7 @@ module.exports = {
       // `published`, 9 of 9 review_checks passing and frozen with it. Every freeze
       // was then exercised against that real row and refused by name: body edit,
       // publication revoke, check flip, delete, and a second published report for
-      // the cycle. review_notes stayed writable, which is correct. 192 tests across
+      // the cycle. review_notes stayed writable, which is correct. 162 tests across
       // six suites. Commits b758643 and 15a0f23. Method in docs/reports.md.
       status: "done",
     },
