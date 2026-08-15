@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>62%</strong> complete</div>
-        <div><strong>61</strong>/99 cards done</div>
-        <div>Updated <strong>2026-08-14 21:58 UTC</strong></div>
+        <div><strong>61%</strong> complete</div>
+        <div><strong>63</strong>/104 cards done</div>
+        <div>Updated <strong>2026-08-15 01:05 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">61</div>
+        <div class="status-num">63</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -896,6 +896,20 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Bumping the composer&#39;s method version made the report panel tell a small lie</div>
+            <div class="recent-desc">Adding the shipping statement to pending predictions moved `REPORT_METHOD_VERSION` to `2026-08-b`, which is correct and required. What was not correct was the panel: it prints `Method &lt;version&gt;` from the **composed** body, directly under a green *published* pill — so the frozen July report appeared to carry a method it was not published under. The version stamp exists precisely so a reader can tell which document they are holding, and printing the wrong one under a publication badge defeats the whole point of stamping it. Both the panel and the CLI now say when the two differ and which is which. Found only because the bump was the first time in this project&#39;s life that a published report and a composed one had different method versions — everything before this had exactly one version to print. ⚠️ The published report `079c69d1` also now shows *the records have moved since* permanently, which is honest and unavoidable: any change to the composer, or the first shipment recorded, makes today&#39;s composition differ from what was sent</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">The one-click had to be built as a click plus a link, not as a click</div>
+            <div class="recent-desc">The readback&#39;s *&quot;the audit agrees, mark it shipped&quot;* was wanted since M6, and the obvious build — one button, no fields — collides head-on with M8&#39;s own first guarantee: **no shipment without evidence**. A button that ships with no evidence is a tick in a box wearing an audit verdict. So the button opens a row with the evidence field **pre-filled with the audit run that agreed**, and *Record it as shipped* stays disabled until there is a link. What the click removes is leaving the panel to construct a CLI call; it does not remove the judgement, because *&quot;this named check passes on these pages&quot;* and *&quot;this work is done&quot;* are different claims and only the first is one a crawl can make. ⚠️ Marking an item shipped while the audit **disagrees** is still allowed and says so on screen in as many words — the criterion may be unmeasurable, or the evidence may be somewhere the crawl cannot see, and it is also how work that was never done reaches a client&#39;s report as delivered. **Verified by:** the panel offering no button at all under the default local identity (`local@localhost` has no `auth.users` row, so the gate would refuse it — M7&#39;s rule, applied without being asked), and offering the disabled-until-evidence form under a session that resolves</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Staging stopped deploying and every check we had said it was fine</div>
             <div class="recent-desc">The most useful thing found this session, and it was found only because landing the milestone required proving staging served the commit rather than assuming it. **Railway keeps serving the last good build when a build fails.** So `/health` returned 200, the site loaded, the push was green, `origin/staging` was at the right SHA — and the newest code had never been live. `railway deployment list` was the only thing that said otherwise: **two FAILED deployments** sitting above the last SUCCESS. **The cause:** `NODE_ENV=production` is set on the Railway environment, so the default `npm ci` omits devDependencies — and `npm run build` is `tsc --noEmit &amp;&amp; vite build`, both of which are devDependencies. `tsc: not found`, exit 127. **It had been latent for about a day**: Docker was reusing a `node_modules` layer built before that variable existed, so builds kept passing on cache and broke the first time the cache expired — which is the worst shape a break can have, because nothing in the commit that exposed it was wrong. (Who set `NODE_ENV` and when is not recoverable from here, and is recorded as unknown rather than guessed at.) **The first fix traded one silent failure for another:** moving `npm ci --include=dev` into `railway.json`&#39;s `buildCommand` died with `EBUSY: rmdir &#39;/app/node_modules/.cache&#39;`, exit 240 — the build phase mounts a cache *inside* `node_modules`, and `npm ci` wipes `node_modules` before installing, so it cannot remove its own mount point. `npm ci` can only run in the **install** phase, whose cache lives at `/root/.npm`, outside the tree it deletes. Pinned in **`nixpacks.toml`** rather than as a Railway dashboard variable, on the grounds that a build which only works because of invisible dashboard state is the bug and not the cure — and the file reads as a bug report, deliberately, so the next session inherits the reasoning. **Verified by:** deployment `6edd08f1` SUCCESS after two FAILED; staging serving `index-BfTTALVZ.js`; and the live bundle downloaded and grepped — all three new strings present (`has no user record, so a publication could not be attributed`, `connection problem, not a refusal`, `Publish this report`), which is stronger than a matching hash. Commits `45d235e` and `06d6b20`. ⚠️ **The shape of this failure outlives the fix:** never take a green push as a deploy</div>
           </div>
@@ -921,20 +935,6 @@
             <div class="recent-desc">An item is delivered when `work_items.shipped_at` is set, which is a specialist saying so. It is **not** delivered because the acceptance readback says the audit rule now passes: the readback reports, a person decides, and reading a verdict as a delivery would have the report claim work nobody has done. On the facts as they stand, all 13 items are `approved` with `shipped_at` **null** on every one — so the report&#39;s second sentence reads *&quot;Nothing is marked delivered yet: 13 items were approved and the work runs from there.&quot;* ⚠️ **That is the honesty the milestone was warned about, arriving in the first paragraph rather than the footnotes.** It is true, and on the morning after approval it is the only true thing to say — but whether it reads as rigour or as a thin month is a writing-and-positioning question, and it is Ricky&#39;s. Fifth appearance of this project&#39;s most persistent failure — *&quot;couldn&#39;t measure&quot; read as &quot;measured zero&quot;* — in its first client-facing form</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">An uncalibrated effort estimate was hiding inside the rationale we promised to carry verbatim</div>
-            <div class="recent-desc">Two rules collided and only one could win as written. The milestone says *carry each item&#39;s rationale verbatim*; the standing rule says *never quote effort hours to a client, they have never been calibrated and one release moved several by more than 25%*. `work_items.rationale` contains the clause **`Estimated 18h.`** — so reproducing it verbatim would have put an uncalibrated guess in front of a client as a commitment, and stripping it silently would have made &quot;verbatim&quot; untrue. **Resolved by segmenting the rationale into the labelled clauses the ranker actually builds** (`observation` / `Why now` / `Estimated Nh` / `First principle` / `If this is wrong`), carrying every clause word for word, and **withholding exactly one — with the omission stated in the report&#39;s own limits section rather than left as a gap.** The segmenter never paraphrases: `exact` is true only when the clauses rejoin into the stored string **byte for byte**, and a rationale that does not reconstruct **fails the publication gate by name** instead of being quietly tidied. Guarded by a test that builds its input through `buildRationale` itself, so a change to the clause format fails the suite rather than dropping a clause out of every future report</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">The publication gate is nine checks derived from the report, not nine questions asked of a person</div>
-            <div class="recent-desc">`review_checks` has carried a comment since `0001` saying that a gate with no storage is a convention rather than a control. It is now a control. Nine checks are **derived from the composed body** — work bound to its origin, rationale verbatim, nothing claimed as delivered, predictions pending with their windows, refusals carried, no unattributed movement, coverage stated, no magnitude, no effort hours — stored as rows with **what the inspection found next to the boolean**, and re-read by the database at publication. A failing check does not grey out a button with a tooltip: the publish path is **gone**, and Postgres refuses independently. ⚠️ **The required-key list is duplicated into the migration on purpose**, so the enforcement survives an edit to the composer — and a test reads the SQL and fails if the two lists ever disagree, which is what keeps the duplication a safeguard rather than a bug waiting to happen. **Verified by:** all nine database guarantees exercised against the live database inside a block that was **rolled back so nothing landed on a real cycle** — publishing with no checks refused, publishing with one failing check refused by name, `published_at` with no publisher refused by CHECK, the published body refused to change, the checks refused to change, the row refused to delete, and both unique indexes fired. `review_notes` stayed writable, which is correct: an annotation is not the document</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -951,9 +951,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">M8: The shipping record — telling the system the work is done, so it can police what we assumed</div>
-        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">work_items.shipped_at</span><span class="tag tag-neutral">0001</span><span class="tag tag-neutral">owner_id</span><span class="tag tag-neutral">evidence_url</span><span class="tag tag-neutral">shipped_at</span><span class="tag tag-neutral">readbackWindow</span><span class="tag tag-neutral">70337c95</span><span class="tag tag-neutral">confounded</span></div>
-        <div class="card-desc">Opened 2026-08-15 when M7 landed. Ricky&#39;s question at the end of the M7 session, and he was right: *&quot;we need some way of telling the system the work is done so that it can police the assumptions and see if it worked.&quot;* `work_items.shipped_at` has existed since `0001` and **nothing anywhere in the system writes it** — not a CLI, not an endpoint, not the app. Same for `owner_id` and `evidence_url`. The published report reads that column to decide *delivered*, which is why it says **0 of 13**, and it will keep saying 0 until a writer exists. **Why it is not part of the readback milestone:** the readback cannot begin before 5 November, and recording August&#39;s shipping in November means reconstructing from memory the one field that decides whether the prediction is readable at all. Same reasoning that split M7. **The policing half needs no new judgement**, which is what makes this small: re-derive the window from `shipped_at` using the existing pure `readbackWindow` and compare it to the window the prediction recorded. For plan `70337c95` the boundary is **3 September** — verified by running the function, not reasoned. Ship on or before it and the recorded October window stands; ship on the 4th and October reads as **`confounded`** rather than failed. Scope: a writer with real refusals (no shipment without evidence, none before the plan was approved, no silent un-shipping, attributed to a session), an in-app per-item surface, the readback&#39;s *&quot;the audit agrees, mark it shipped&quot;* one-click, and the drift check. ⚠️ **Ends on a human act, like M7&#39;s publish** — marking an item shipped that has not been done is forging the record, so the close waits on the team doing a piece of August&#39;s work. Item 1 is 3 URLs. Arc grew 9 → 10 on Ricky&#39;s call</div>
+        <div class="card-title">M8: The shipping record — built, proven, and waiting on somebody to do a piece of the work</div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">work_items.shipped_at</span><span class="tag tag-neutral">owner_id</span><span class="tag tag-neutral">evidence_url</span><span class="tag tag-neutral">0001</span><span class="tag tag-neutral">server/ship/drift.ts</span><span class="tag tag-neutral">readbackWindow</span><span class="tag tag-neutral">3d14835</span><span class="tag tag-neutral">docs/shipping.md</span></div>
+        <div class="card-desc">Opened 2026-08-15 when M7 landed, out of Ricky&#39;s question at the end of that session: *&quot;we need some way of telling the system the work is done so that it can police the assumptions and see if it worked.&quot;* **The writer exists and every refusal is proven. Nothing is marked shipped, because nothing has been done.** `work_items.shipped_at`, `owner_id` and `evidence_url` have existed since `0001` with nothing writing any of them; there is now a CLI, an endpoint and a one-click in the readback panel, and a shipment records a date, a link and a person together or not at all. It refuses: no evidence, evidence that is not a link, an identity resolving to nobody, an unapproved or unranked item, a date before the plan was approved, a date in the future, and a second shipment on the same item — then freezes all three columns. **The policing introduces no new judgement**, exactly as scoped: `server/ship/drift.ts` re-runs the existing pure `readbackWindow` against the date the work shipped and compares the month it earns to the month the prediction recorded. The recorded window never moves; what changes is that the report says out loud when the work did not arrive in time for it. **The number this produces is 3 September** — found by walking the boundary with the function itself rather than by subtracting the latency, and asserted for every change type across several months. The client&#39;s report now states, on every pending prediction, whether the work shipped inside the window it assumed and by when it has to, gated by a tenth publication check. ⚠️ **The doneWhen ends on a real specialist act and is deliberately still open.** Marking an item shipped that has not been done is forging the record — the same reason M7 waited for Ricky to press publish. Item 1 (*Some URLs return 200 with no content*) is 2.8 hours across 3 URLs and is the cheapest way to close this. **Verified by:** all eight database guarantees exercised against the real Storepro FAQ item and refused by name inside a rolled-back block; the accept path run end to end through the real writer against a scratch client that was then deleted, leaving the database byte-identical (1 client, 41 work items, 0 shipped rows); every endpoint refusal exercised over HTTP; **188 tests across seven suites** (13 detector, 38 plan, 24 action, 23 prompt, 35 prediction, 33 report, 22 shipping); typecheck clean. Commit `3d14835`. Method in `docs/shipping.md`</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -966,9 +966,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Press the button once a piece of August&#39;s work is actually done — this is what closes M8</div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">npm run audit -- --client storepro</span></div>
+        <div class="card-desc">The writer is built and every refusal is proven, and it is deliberately still open, because a shipping record for work nobody did is the one thing it exists to prevent. **The cheapest close:** item 1, *Some URLs return 200 with no content* — 2.8 hours across 3 URLs, above the capacity line, no dependencies. Do it, then open Storepro → Acceptance readback and press **Mark shipped** on that row with the pull request as the evidence. The shipment is attributed to your session and frozen the moment it is written; there is no un-shipping, so press it once and press it on the right row. ⚠️ The panel currently offers *Mark shipped anyway* on every item rather than *The audit agrees* — the only audit run on file is the baseline the plan was built from, so the audit cannot yet agree with anything. Running `npm run audit -- --client storepro` after the work lands is what turns that into the one-click</div>
+      </div>
       <div class="card">
         <div class="card-title">Does the FAQ item get the hours? Decide by 3 September</div>
         <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">confounded</span></div>
@@ -983,9 +988,19 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">61</span>
+        <span class="col-count">63</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Bumping the composer&#39;s method version made the report panel tell a small lie</div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">REPORT_METHOD_VERSION</span><span class="tag tag-neutral">2026-08-b</span><span class="tag tag-neutral">Method &lt;version&gt;</span><span class="tag tag-neutral">079c69d1</span></div>
+        <div class="card-desc">Adding the shipping statement to pending predictions moved `REPORT_METHOD_VERSION` to `2026-08-b`, which is correct and required. What was not correct was the panel: it prints `Method &lt;version&gt;` from the **composed** body, directly under a green *published* pill — so the frozen July report appeared to carry a method it was not published under. The version stamp exists precisely so a reader can tell which document they are holding, and printing the wrong one under a publication badge defeats the whole point of stamping it. Both the panel and the CLI now say when the two differ and which is which. Found only because the bump was the first time in this project&#39;s life that a published report and a composed one had different method versions — everything before this had exactly one version to print. ⚠️ The published report `079c69d1` also now shows *the records have moved since* permanently, which is honest and unavoidable: any change to the composer, or the first shipment recorded, makes today&#39;s composition differ from what was sent</div>
+      </div>
+      <div class="card">
+        <div class="card-title">The one-click had to be built as a click plus a link, not as a click</div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">local@localhost</span><span class="tag tag-neutral">auth.users</span></div>
+        <div class="card-desc">The readback&#39;s *&quot;the audit agrees, mark it shipped&quot;* was wanted since M6, and the obvious build — one button, no fields — collides head-on with M8&#39;s own first guarantee: **no shipment without evidence**. A button that ships with no evidence is a tick in a box wearing an audit verdict. So the button opens a row with the evidence field **pre-filled with the audit run that agreed**, and *Record it as shipped* stays disabled until there is a link. What the click removes is leaving the panel to construct a CLI call; it does not remove the judgement, because *&quot;this named check passes on these pages&quot;* and *&quot;this work is done&quot;* are different claims and only the first is one a crawl can make. ⚠️ Marking an item shipped while the audit **disagrees** is still allowed and says so on screen in as many words — the criterion may be unmeasurable, or the evidence may be somewhere the crawl cannot see, and it is also how work that was never done reaches a client&#39;s report as delivered. **Verified by:** the panel offering no button at all under the default local identity (`local@localhost` has no `auth.users` row, so the gate would refuse it — M7&#39;s rule, applied without being asked), and offering the disabled-until-evidence form under a session that resolves</div>
+      </div>
       <div class="card">
         <div class="card-title">Staging stopped deploying and every check we had said it was fine</div>
         <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">finding</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">/health</span><span class="tag tag-neutral">origin/staging</span><span class="tag tag-neutral">railway deployment list</span><span class="tag tag-neutral">NODE_ENV=production</span><span class="tag tag-neutral">npm ci</span><span class="tag tag-neutral">npm run build</span><span class="tag tag-neutral">tsc --noEmit &amp;&amp; vite build</span><span class="tag tag-neutral">tsc: not found</span><span class="tag tag-neutral">node_modules</span><span class="tag tag-neutral">NODE_ENV</span><span class="tag tag-neutral">npm ci --include=dev</span><span class="tag tag-neutral">railway.json</span><span class="tag tag-neutral">buildCommand</span><span class="tag tag-neutral">EBUSY: rmdir &#39;/app/node_modules/.cache&#39;</span><span class="tag tag-neutral">node_modules</span><span class="tag tag-neutral">npm ci</span><span class="tag tag-neutral">node_modules</span><span class="tag tag-neutral">npm ci</span><span class="tag tag-neutral">/root/.npm</span><span class="tag tag-neutral">nixpacks.toml</span><span class="tag tag-neutral">6edd08f1</span><span class="tag tag-neutral">index-BfTTALVZ.js</span><span class="tag tag-neutral">has no user record, so a publication could not be attributed</span><span class="tag tag-neutral">connection problem, not a refusal</span><span class="tag tag-neutral">Publish this report</span><span class="tag tag-neutral">45d235e</span><span class="tag tag-neutral">06d6b20</span></div>
@@ -1326,7 +1341,7 @@
       <div class="card">
         <div class="card-title">Effort estimates have never been calibrated — and M5 raised the stakes</div>
         <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">risk</span><span class="tag tag-neutral">server/plan/rank.ts</span><span class="tag tag-neutral">work_items.shipped_at</span></div>
-        <div class="card-desc">The plan&#39;s hours are declared constants in `server/plan/rank.ts`, labelled as estimates everywhere they appear. Nothing has checked them against how long the work actually took. `work_items.shipped_at` makes it answerable after two or three cycles. ⚠️ **M5 made this more pressing rather than less.** An item that names 147 specific pages and an 18-hour figure invites somebody to schedule against the number, and the target-recovery correction moved several estimates by 25% or more in a single release — which is itself evidence the constants were never load-bearing before. **Do not quote these hours to a client.**</div>
+        <div class="card-desc">The plan&#39;s hours are declared constants in `server/plan/rank.ts`, labelled as estimates everywhere they appear. Nothing has checked them against how long the work actually took. `work_items.shipped_at` makes it answerable after two or three cycles — and as of M8 it can actually be written, so the clock on that starts with the first real shipment rather than never. ⚠️ **M5 made this more pressing rather than less.** An item that names 147 specific pages and an 18-hour figure invites somebody to schedule against the number, and the target-recovery correction moved several estimates by 25% or more in a single release — which is itself evidence the constants were never load-bearing before. **Do not quote these hours to a client.**</div>
       </div>
       <div class="card">
         <div class="card-title">The crawl budget now caps what can be called finished</div>
@@ -1384,9 +1399,19 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>🅿️ Parking Lot</h2>
-        <span class="col-count">20</span>
+        <span class="col-count">22</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">A recorded shipment has no correction path</div>
+        <div class="card-tags"><span class="tag tag-neutral">shipped_at</span><span class="tag tag-neutral">evidence_url</span><span class="tag tag-neutral">owner_id</span><span class="tag tag-neutral">work_item_corrections</span></div>
+        <div class="card-desc">Same shape as the published report&#39;s, and taken deliberately for the same reason: `shipped_at`, `evidence_url` and `owner_id` are frozen the moment they are written, because the date is what every prediction about the work is measured against and a date that can move is a window that can be made to have been met. The cost is that an item shipped by mistake stays shipped and a mistyped evidence link stays mistyped. **The shape of the fix, when it is wanted:** a `work_item_corrections` row that supersedes rather than edits — the original stays on the record, the correction names who made it and why, and the report reads the latest — which is the same answer the report&#39;s correction path needs, so build them together rather than twice</div>
+      </div>
+      <div class="card">
+        <div class="card-title">The per-item shipping deadline reads the first recorded prediction</div>
+        
+        <div class="card-desc">The schema allows one prediction per work item *per metric*, and the shipping panel&#39;s per-item *ship by* date takes the first recorded window for that item. With one metric in use that is exact. It stops being exact the day a second metric is predicted on, and the honest surface then is a deadline per prediction rather than per item. Nothing to change until that happens; noted so it is a decision rather than a discovery</div>
+      </div>
       <div class="card">
         <div class="card-title">`predictions.confounders` has no writer</div>
         <div class="card-tags"><span class="tag tag-neutral">algorithm_updates</span><span class="tag tag-neutral">0001</span></div>
@@ -1413,9 +1438,9 @@
         <div class="card-desc">It is the one rule whose full affected list cannot be re-derived, because `lastmod` is sitemap data and page snapshots hold page data. One column on `page_snapshots` fixes it at the next audit run. Not worth a migration on its own; fold it into whatever next touches the crawl</div>
       </div>
       <div class="card">
-        <div class="card-title">Work item owners</div>
-        <div class="card-tags"><span class="tag tag-neutral">work_items.owner_id</span><span class="tag tag-neutral">shipped_at</span></div>
-        <div class="card-desc">`work_items.owner_id` exists and nothing sets it. With one specialist it isn&#39;t a real question yet; it becomes one at M10 alongside per-client assignment. ⚠️ M8 writes `shipped_at` and is the natural place to also set an owner, so this may close as a side effect. M7&#39;s report attributes work to the finding that produced it, never to a person</div>
+        <div class="card-title">Work item owners — half closed by M8</div>
+        <div class="card-tags"><span class="tag tag-neutral">owner_id</span></div>
+        <div class="card-desc">nobody can be given an item in advance, which is the M10 question alongside per-client scheduling. M7&#39;s report attributes work to the finding that produced it and never to a person, and that stays true</div>
       </div>
       <div class="card">
         <div class="card-title">Capacity derived from the retainer</div>

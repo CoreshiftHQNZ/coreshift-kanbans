@@ -1,235 +1,249 @@
 # Engine Optimization — Handover
-_2026-08-15 · closes M7 · opens M8 · arc 10_
+_2026-08-15 · M8 built, deliberately not closed · opens the same M8 · arc 10_
 
 ## ▶️ Paste this into a new session
 
 ```
-Engine Optimization M8 — The shipping record
+Engine Optimization M8 — close the shipping record
 
-Read coreshift-kanbans/engine-optimization/HANDOVER.md and the repo docs it points at.
+Read coreshift-kanbans/engine-optimization/HANDOVER.md and docs/shipping.md.
 
-M7 landed: Storepro's 2026-07 report is published, frozen, and attributed to Ricky.
-It states what we expected before the work, against a matched control, with the date
-we will know — 5 November — plus the twelve items we refused to predict on.
+M8 is built and proven and deliberately still open. The writer exists — CLI,
+endpoint, and a one-click in the readback panel — and every refusal was exercised
+against the live database: no shipment without evidence, none with evidence that
+is not a link, none from a session that resolves to nobody, none on an unapproved
+or unranked item, none dated before the plan was approved, none dated in the
+future, no second shipment, and no un-shipping. The accept path was run end to
+end against a scratch client that was then deleted.
 
-M8 exists because of the question that closed the M7 session: "we need some way of
-telling the system the work is done so that it can police the assumptions and see if
-it worked." work_items.shipped_at has existed since 0001 and nothing anywhere writes
-it — not a CLI, not an endpoint, not the app. Same for owner_id and evidence_url. The
-published report reads that column to decide "delivered", which is why it says 0 of 13.
+Nothing of Storepro's is marked shipped, because none of Storepro's work has been
+done. The doneWhen ends on a real specialist act and it is not Claude's to
+perform.
 
-Two halves. The writer: a specialist marks an approved item shipped, with evidence,
-attributed to a session, and it refuses what it should — no shipment without evidence,
-none dated before the plan was approved, no silent un-shipping. Plus the readback's
-"the audit agrees, mark it shipped" one-click, wanted since M6. The policing:
-re-derive the readback window from shipped_at with the existing pure readbackWindow
-and compare it to the window the prediction recorded. No new judgement. For plan
-70337c95 the boundary is 3 September, verified by running the function — ship by then
-and the recorded October window stands; ship on the 4th and October is confounded.
+The policing is done and needs nothing further: server/ship/drift.ts re-runs the
+existing pure readbackWindow against the shipping date and compares. The recorded
+window never moves. For plan 70337c95 the boundary is 3 September, found by
+walking it with the function.
 
-Do not mark anything shipped that has not been done. Like M7's publish, the doneWhen
-ends on a real specialist act: build it, prove every refusal, hand back one click.
+What closes this milestone: somebody does a piece of August's work and records
+it. Item 1 — "Some URLs return 200 with no content", 2.8 hours across 3 URLs,
+above the capacity line, no dependencies — is the cheapest close. If that has
+happened, run `npm run audit -- --client storepro` first so the readback can
+agree, then the one-click. If it has not, say so and do not manufacture one.
 
-Check the staging deploy before you trust it. A failed build is silent — Railway keeps
-serving the last good one, so /health stays 200 while the newest commit was never live.
-`railway deployment list` and look for FAILED, not just the newest row.
+Check the staging deploy before you trust it. `railway deployment list` and look
+for FAILED, not just the newest row.
 
 Give me the 5-line orientation, then get on with it.
 ```
 
 ## Where we are — for Ricky
 
-- **M7 is done. You published it.** Storepro's July report went out on the record at
-  **21:44 on 14 August**, attributed to you, and it is now frozen — the database
-  refuses to change it, delete it, or un-publish it.
-- **What that report says that nobody else's does.** Not just what was done and why.
-  It states **what we expected before we did it**, the set of pages we are comparing
-  against, and **the exact date we will know** — 5 November. Plus the twelve things we
-  refused to put a claim behind, each with its reason in full. A client can check us.
-- **What is actually in it:** 13 items, each traceable to the finding that produced it
-  and carrying the reason it was chosen, word for word from when it was chosen. One
-  prediction, marked **pending**. Twelve refusals. Eight stated limits, including that
-  the prediction covers 12 of 147 pages and that nothing has shipped yet.
-- **What M8 does, in one line:** gives the system a way to be told the work is done —
-  and then checks that it happened early enough for the prediction to still mean
-  anything.
-- **The number to remember: 3 September.** That is the last day the FAQ-schema work
-  can ship and still have October be a clean month. Miss it and November's answer is
-  "we can't tell", which costs a whole cycle. It is not a guess — it comes out of the
-  same function that fixed the window in the first place.
-- **Two things went wrong this session and both are worth knowing.** You pressed
-  publish and got "Failed to fetch" — that was a dev server I had shut down under a
-  button I had left on screen, and the panel should never have offered you that
-  button in local mode anyway. Both fixed. And **staging quietly stopped deploying a
-  day ago**: the site kept answering, `/health` kept returning 200, and the newest
-  code was never live. Also fixed, and now written down.
-- **Verified by:** the published row read out of Postgres — `079c69d1`, `published_at`
-  2026-08-14 21:44:15Z, `published_by` `ricky@coreshifthq.com`, cycle `2026-07` on
-  `published`, 9 of 9 checks passing, body carrying 13 committed / 0 delivered / 1
-  pending / 12 refused. Every freeze then exercised **against that real row**: body
-  edit refused, publication revoke refused, check flip refused, delete refused, second
-  published report refused — and `body_tampered` still false afterwards, so nothing
-  leaked through. **162 tests across six suites**, typecheck clean, `dev` and
-  `staging` at `06d6b20`.
-- **Not verified:** three things, named in **⚠️ Not verified** below. None of them
-  affects the published report.
+- **M8 is built. It is not closed, and that is on purpose.** The system can now be
+  told the work is done — and nothing has been told, because nothing has been
+  done. Marking an item shipped that has not shipped is forging the record, which
+  is the single thing this milestone exists to prevent.
+- **What you can do now that you could not yesterday.** Record a piece of work as
+  delivered, with the pull request attached and your name on it, from the app.
+  The report stops saying *0 of 13* the moment you do.
+- **What the system now polices.** Every prediction says whether the work it is
+  about shipped early enough for its window to mean anything — and, while it has
+  not, **the exact date it has to by**. That date is knowable months ahead and
+  until today it was buried in a source file.
+- **The number, again: 3 September.** Ship the FAQ item on or before it and the
+  recorded October window stands. Ship on the 4th and October measures a blend,
+  so November's answer is *"we cannot tell"* rather than yes or no. It comes out
+  of the same function that fixed the window, and this session verified it by
+  running that function rather than by reasoning about it.
+- **One thing worth knowing.** Adding the shipping statement to the report moved
+  the composer to `2026-08-b`, which surfaced that the report panel printed the
+  *composed* method version under a green **published** badge — so your frozen
+  July report appeared to carry a version it was not published under. Fixed in
+  both the panel and the CLI. The panel will also now say permanently that the
+  records have moved since publication, which is true and unavoidable.
+- **Verified by:** all eight database guarantees exercised against the real
+  Storepro FAQ item `1ec62ed8` and refused **by name**, inside a block that rolled
+  back; the accept path run through the real writer against a scratch client,
+  which recorded a date, a link and `ricky@coreshifthq.com`, then refused every
+  attempt to un-ship, re-date, swap the evidence or reassign the owner — while
+  still allowing a move to `verified`, so M9 is not blocked; the scratch client
+  deleted and the database confirmed byte-identical (1 client, 41 work items, 0
+  shipped rows, 0 with evidence, 0 with an owner). Every endpoint refusal
+  exercised over HTTP. **188 tests across seven suites**, typecheck clean.
+  Staging deployment `dc8236cd` **SUCCESS** with no FAILED above it, serving
+  `index-DH96ZgZx.js` — downloaded and grepped, all six new strings present — and
+  all three new endpoints 401 unauthenticated. `dev` and `staging` at `3d14835`.
+- **Not verified:** two things, named in **⚠️ Not verified** below.
 
 ## 👉 On you
 
-1. **Does the FAQ item get the hours? Decide by 3 September.** It is an 18-hour item
-   in a 12-hour month, ranked third and marked below the capacity line by the plan
-   itself, so it slips by default. Ship on or before 3 September and the October
-   window stands; ship on the 4th and October comes back `confounded` — a wasted
-   cycle rather than a wrong answer. **Default if you say nothing:** nothing changes,
-   and November's first verified prediction probably comes back inconclusive.
+1. **Do a piece of August's work, then press the button. That closes M8.** The
+   cheapest is item 1, *Some URLs return 200 with no content* — **2.8 hours
+   across 3 URLs**, above the capacity line, nothing depends on it. Then open
+   Storepro → Acceptance readback and press **Mark shipped** on that row with the
+   pull request as the evidence. ⚠️ **It is frozen the instant it is written** —
+   no un-shipping, no re-dating, no swapping the evidence. Press it once and on
+   the right row. **Default if you say nothing:** M8 stays open and the report
+   keeps saying 0 of 13, correctly.
 
-2. **A second client, when you're ready.** Still not blocking. It is the only thing
-   that tests M6's four matching thresholds, every one of which has exactly one
-   property behind it. **Default:** Storepro-only until you name one.
+2. **Does the FAQ item get the hours? Decide by 3 September.** Unchanged from the
+   last handover and now enforced by something that will say so: an 18-hour item
+   in a 12-hour month, ranked third, marked below the capacity line by the plan
+   itself, so it slips by default. **Default:** nothing changes, and November's
+   first verified prediction comes back `confounded`.
 
-**Decided and closed:** M7 split from the verdict, and the shipping record inserted as
-its own M8 rather than folded into the readback — both on the grounds that work which
-must be *recorded now* cannot live in a milestone that cannot move until November. Arc
-8 → 9 → 10. No deliberate holdouts. Ahrefs Brand Radar declined. Prompt generation
-in-house. Competitor cohort at eight domains. No report is emailed or exported — the
-format a client receives is a positioning decision and was left unbuilt on purpose.
-One published report per cycle, so a correction is a designed re-issue, not a re-run.
+3. **A second client, when you're ready.** Still not blocking. Still the only
+   thing that tests M6's four matching thresholds. **Default:** Storepro-only.
+
+**Decided and closed:** the shipping record is frozen once written, on the same
+grounds as a published report and a recorded prediction — the date is what every
+prediction is measured against, so a date that can move is a window that can be
+made to have been met. The correction path for both is one Parking Lot card, to
+be built once rather than twice. The drift check states the position and does not
+write `predictions.outcome`; verification is M9's. `REPORT_METHOD_VERSION` moved
+to `2026-08-b`. Everything else from the last handover stands: no report is
+emailed or exported, one published report per cycle, competitor cohort at eight,
+prompt generation in-house, Ahrefs Brand Radar declined.
 
 ## 🔴 Risks you're carrying
 
-- **Nothing records that work was done.** This is M8, and the clock on it is real:
-  **3 September**. Until it exists the report says 0 of 13 delivered forever, and
-  November cannot tell `failed` from `confounded`.
-- **A failed deploy is silent.** Railway keeps serving the last good build, so
-  `/health` returns 200 and the site looks fine while the newest commit is not live.
-  It hid a broken build for about a day. The build is fixed and the check is written
-  down, but the shape of the failure remains: **never take a green push as a deploy.**
-- **The loop measures the head of the site.** Search Console returns per-page rows for
-  50 of Storepro's 202 crawled pages, so the published prediction covers **12 of 147
-  target pages** — 8%. Stated in the report twice, in words. Paging the API further is
-  possible and has not been costed. Still the most likely thing to embarrass us.
-- **The prediction is on work below the capacity line.** 18 hours against 12. See
-  item 1 above.
+- **A recorded shipment cannot be corrected.** New this session, and it is the
+  deliberate half of the freeze. An item shipped by mistake stays shipped; a
+  mistyped evidence link stays mistyped. Same gap the published report has, and
+  in the Parking Lot with the shape of the fix.
+- **The panel will offer *Mark shipped anyway* on every item until a fresh audit
+  runs.** The only audit run on file is the baseline the plan was built from, so
+  the audit cannot agree with anything and the true one-click never appears. That
+  is correct behaviour and it is also a foot-gun: the warning text is there, but
+  the button next to it is one click from a frozen record. **Run
+  `npm run audit -- --client storepro` after the work lands.**
+- **A failed deploy is silent.** Unchanged. Railway keeps serving the last good
+  build. Never take a green push as a deploy.
+- **The loop measures the head of the site.** Unchanged — the published
+  prediction covers 12 of 147 target pages, 8%. Still the most likely thing to
+  embarrass us.
+- **The prediction is on work below the capacity line.** Unchanged. See item 2.
 - **Four matching thresholds, one property.** Unchanged.
-- **The hours are uncalibrated** — now withheld from the client rather than merely
-  labelled, which is stronger but does not calibrate them. **Do not quote them.**
-- **Audit findings are trusted at full confidence, which means reproducible, not
-  correct.** ⚠️ Now client-facing: the published report carries each finding's own
-  evidence and first principle, so a wrong judgement is a wrong statement in a
-  document a client has.
-- **A single probe is still a sample.** The citation sampling design does not exist;
-  it is one of the twelve published refusals, and it is what a client asks about by
-  name.
-- **In-app prompt sign-off still does not exist.** M7 built the in-app publish gate,
-  which was the other half of the same complaint. A specialist who cannot sign a
-  prompt set off in the app cannot run a cycle unaided — which is M10's whole test.
-- **A published report has no correction path.** One per cycle, frozen, undeletable.
-  The right default and not a usable one if a report goes out wrong. In the Parking
-  Lot with the shape of the fix.
+- **The hours are uncalibrated.** Unchanged, and now *closer* to answerable:
+  `shipped_at` can finally be written, so the clock on calibration starts with
+  the first real shipment. **Do not quote them.**
+- **Audit findings are trusted at full confidence** — reproducible, not correct,
+  and client-facing since M7. Unchanged.
+- **A single probe is still a sample.** Unchanged. The citation sampling design
+  does not exist and is one of the twelve published refusals.
+- **In-app prompt sign-off still does not exist.** Unchanged, and it is M10's
+  whole test.
+- **A published report has no correction path.** Unchanged, and now it has a
+  sibling — see the first risk.
 - **Two database guarantees still live partly in application code.** `0007`'s
   supersede weakening and `0009`'s insert-only directive trigger. Unchanged.
-- **One of M3's five volatility data points may have been our own bug.** Unchanged.
+- **One of M3's five volatility data points may have been our own bug.**
+  Unchanged.
 
 ## ⚠️ Not verified
 
-Everything claimed above has named evidence except these three, stated so they are
-decisions rather than omissions.
-
-1. **Nobody has pressed the in-app publish button on a deployed environment.** The
-   publication went through the CLI, which runs the identical `publishBuiltReport`.
-   Staging demonstrably carries the code — the live bundle was downloaded and grepped,
-   and all three new strings are in it — and the endpoint is gated (401
-   unauthenticated). But the click itself is unexercised, and now cannot be: there is
-   one published report per cycle and it is frozen. It will be exercised the first
-   time a second cycle is reported on.
-2. **The "no publish button because a check is failing" branch has never been seen on
-   screen.** All nine checks pass, so the branch is unreachable without breaking the
-   report on purpose. It is covered by the composer tests, not by observation.
-3. **Who set `NODE_ENV=production` on Railway, and when, is unknown.** The CLI does not
-   expose variable history. It is what broke the staging build, and the fix does not
-   depend on knowing — but nobody should claim it was one of us or wasn't.
+1. **Nobody has recorded a shipment on a deployed environment.** The accept path
+   was run through the real writer — `judgeShipment`, `recordShipment`, the owner
+   resolution and the drift — against a scratch client, and every endpoint
+   refusal was exercised over HTTP against a local server on the production
+   bundle. The *click itself*, on staging, signed in as a real person, has not
+   happened. It cannot be rehearsed on Storepro without writing a frozen record
+   about work nobody did.
+2. **The readback panel's shipping controls were verified by reading the DOM, not
+   by screenshot.** The browser pane returned blank images throughout this
+   session while reporting a 1280×720 viewport with the elements in view, so the
+   evidence is the rendered text and element state read out of the live page:
+   warning copy present, evidence field empty, *Record it as shipped* disabled
+   until a link is typed, attribution line naming the signed-in specialist. That
+   is stronger than a screenshot for what it asserts and weaker for layout.
 
 ## For the next Claude
 
 - **Repo** `CoreshiftHQNZ/engine-optimization`, `dev` and `staging` both at
-  `06d6b20`, working tree clean apart from an untracked `.claude/`. Working dir
-  `/Users/Ricky/Documents/Claude/Projects/Engine Optimization`. Supabase
-  `xslwvntwrlvqccdupmni`. Railway project `engine-optimization`, staging auto-deploys
-  on push to `staging`. `main` does not exist.
-- **Read first for M8:** `server/predict/windows.ts` — `readbackWindow` *is* the
-  policing check and it is already pure, total, clock-free and tested; the drift check
-  is a comparison, not new logic. Then `docs/predictions.md` on why the window is
-  anchored to the plan's approval rather than to shipping. Then
-  `server/predict/readback.ts` for the four verdicts the one-click has to respect.
-  `docs/reports.md` for what M7 built and how the publish gate works. `README.md` has
-  every command.
-- **State:** 21 tables, RLS on. Storepro only. 4 months ingested (Apr–Jul), 2 audit
-  runs (both `partial` at 147/202 — normal), 15 active prompts all reviewed, 240 probe
-  runs. Plans: `62ff1c2c` approved (M4 history, leave it), `101a4531` superseded,
-  `70337c95` approved (M5, 13 items). `predictions` and `control_sets` hold one row
-  each, both immutable. **`reports` holds one row: `079c69d1`, published and frozen,
-  with 9 passing `review_checks` that are frozen with it.** Cycle `017fe91f` is
-  `published`; the other three are `measuring`.
-- **All 13 items have `shipped_at` null and nothing can set it.** That is M8. When it
-  can, re-running `npm run report` moves them into the delivered section on its own —
-  the report side needs no change, which is why M8 is a writer and a check rather than
-  a rewrite.
-- **The build is pinned in `nixpacks.toml`, and the comment in it explains two
-  failures.** Do not move the install override into `railway.json`'s `buildCommand` —
-  that was tried and fails with `EBUSY` on the cache mounted inside `node_modules`.
+  `3d14835`. Working dir `/Users/Ricky/Documents/Claude/Projects/Engine Optimization`.
+  Supabase `xslwvntwrlvqccdupmni`. Railway project `engine-optimization`, staging
+  auto-deploys on push to `staging`. `main` does not exist. `.claude/` is now
+  gitignored — it holds local launch configs, including `app-as-me`, which starts
+  a local server signed in as a real `auth.users` row so the human gates can be
+  *looked at*. Use it to look, not to press.
+- **Read first:** `docs/shipping.md` — the whole milestone, both halves, and the
+  list of what it does not cover. Then `server/ship/drift.ts`, whose header
+  explains why re-deriving the window from `shipped_at` and storing it would have
+  destroyed the guarantee. `docs/predictions.md` for why the window is anchored to
+  approval. `README.md` has every command.
+- **State:** 21 tables, RLS on. Storepro only. **41 work items, 0 shipped, 0 with
+  evidence, 0 with an owner.** 4 months ingested (Apr–Jul), 2 audit runs (both
+  `partial` at 147/202 — normal), 15 active prompts all reviewed, 240 probe runs.
+  Plans: `62ff1c2c` approved (M4 history, leave it), `101a4531` superseded,
+  `70337c95` approved (M5, 13 items). One prediction `a3e5a8a7`, immutable, window
+  `2026-10`, answerable 2026-11-05. One report `079c69d1`, published and frozen at
+  method `2026-08-a` while the composer is now `2026-08-b`.
+- **The one-click's evidence defaults to the audit run that agreed**, as
+  `${origin}/api/audits/<runId>`. That is an authenticated artefact, not something
+  a client opens. Evidence is what a colleague can check the claim against; if a
+  client-facing report format is ever built, look at this again.
+- **`latestShipDate` must keep deriving its answer by running `readbackWindow`.**
+  The latency subtraction is only a seed for where to start looking. A test
+  asserts, for every change type across four months, that the day after the answer
+  earns a different month — that test is the guarantee, not the function's
+  arithmetic.
 
-### What M7 built, and where
+### What M8 built, and where
 
 | File | What it does |
 |---|---|
-| `server/report/compose.ts` | Pure. The whole report, the rationale segmenter and the nine publication checks. Every client-facing sentence is authored here or carried verbatim — nothing is generated. Read `segmentRationale` before touching a rationale. |
-| `server/report/sources.ts` | Every database read and write. The cycle is the **plan's** cycle, never today's month. |
-| `server/report/build.ts` | Orchestration. Refusals re-derived, recorded predictions read back. Decides nothing. |
-| `server/cli/report.ts` | `--write` stores the draft, `--publish <email>` publishes as a resolvable person. Nothing written without a flag. |
-| `db/migrations/0011_reports.sql` | Nine guarantees: attribution, checks present, checks passing, body frozen, undeletable, checks frozen, one draft, one published, body non-empty. |
-| `server/report/report.test.ts` | 29 tests, each named after a way a report can be a lie that still reads professionally. |
-| `client/src/App.tsx` → `MonthlyReport` | The panel. No publish button when a check fails **or** when the session cannot be attributed — two different reasons, said differently. |
-| `nixpacks.toml` | The install phase, pinned. Reads as a bug report because it is one. |
+| `db/migrations/0012_shipping_record.sql` | Eight guarantees: evidence and an owner, evidence is a link, only approved work ships, `status` and `shipped_at` agree, not before the plan's approval, not in the future, frozen once written, and `shipping_stated` added to the report's required-check array. |
+| `server/ship/ship.ts` | Pure. Every refusal, with `now` passed in. `itemBlocker` is split out so the panel can ask "would the gate refuse this?" without inventing an identity to ask with. |
+| `server/ship/drift.ts` | Pure. `latestShipDate` and `windowDrift`. Authors the sentence the report and the panel both carry, the same way `windows.ts` does. |
+| `server/ship/sources.ts` | Every database read and write. The `recordShipment` update is guarded on `shipped_at is null` so two presses cannot both win. |
+| `server/ship/build.ts` | Orchestration. Decides nothing. |
+| `server/cli/ship.ts` | `npm run ship` prints the record and every deadline; `--item --evidence --by` records one. `--by` resolves an email to a real user or refuses. |
+| `server/ship/ship.test.ts` | 22 tests, each named after a way a shipping record can be a lie that still reads like a record. |
+| `client/src/App.tsx` → `ShippingRecord` | Read-only panel, leading with the binding date. |
+| `client/src/App.tsx` → `Readback` | The one-click, and no button wherever the gate would refuse. |
+| `server/report/compose.ts` | Pending predictions carry the shipping statement; tenth publication check; `REPORT_METHOD_VERSION` → `2026-08-b`. |
 
 ### Don't
 
-- **Don't** publish, approve or sign anything as a person. The gates are the product.
-- **Don't** mark an item shipped that has not been done, and don't infer shipping from
-  the readback. It reports; a specialist decides.
-- **Don't** loosen or delete a publication check. The database holds its own copy of
-  the required list and a test fails if the two disagree.
-- **Don't** try to edit, delete or re-publish report `079c69d1`. Every one of those is
-  refused, by name, and the refusal is correct.
-- **Don't** let a report state a raw before/after. The month's totals are the starting
-  position; a result exists only against a control after its window closes.
-- **Don't** quote an effort estimate. It lives inside the verbatim rationale, so the
-  guard is the segmenter plus a prose scan, and both have to keep working.
-- **Don't** paraphrase a rationale. A split that does not rejoin byte for byte fails
-  the gate, and that is the correct outcome.
-- **Don't** put a magnitude on a prediction, or predict an audit score or a citation
-  rate.
-- **Don't** anchor a report to the current calendar month. It is the plan's cycle.
-- **Don't** let anything in `windows.ts` read the clock, and don't back-date a window.
-- **Don't** treat a target page the crawl did not reach as a page that passed.
-- **Don't** offer an action in the UI that the gate behind it will refuse. That is a
-  control which looks passable and is not, and it cost a confused publish attempt.
-- **Don't** take a green push as a deploy. `railway deployment list`, look for FAILED,
-  and check which bundle is actually being served.
-- **Don't** change the composer or a check without bumping `REPORT_METHOD_VERSION`.
-- **Don't** trust a claim in a handover you cannot check.
+- **Don't mark anything shipped that has not been done.** This is the whole
+  milestone. It is also now one click away, which makes it easier to get wrong
+  than it was yesterday.
+- **Don't publish, approve or sign anything as a person.** The gates are the
+  product.
+- **Don't infer shipping from the readback.** It reports; a specialist decides.
+- **Don't re-derive a prediction's readback window from `shipped_at` and store
+  it.** That would make every prediction retroactively correct about its own
+  timing, which is exactly the story-with-the-flattering-dates `windows.ts`
+  exists to refuse.
+- **Don't write `predictions.outcome` from a late shipment.** `confounded` is a
+  verdict; M8 states the position and M9 decides.
+- **Don't let anything in `windows.ts` read the clock, and don't back-date a
+  window.**
+- **Don't add a publication check to `compose.ts` without adding it to the
+  required-check array in the newest migration.** A test reads the *last*
+  migration that declares that array and fails if the two disagree.
+- **Don't change the composer or a check without bumping
+  `REPORT_METHOD_VERSION`** — and check that nothing prints the composed version
+  where a published one belongs.
+- **Don't offer an action in the UI that the gate behind it will refuse.**
+- **Don't take a green push as a deploy.** `railway deployment list`, look for
+  FAILED, download the served bundle and grep it.
+- **Don't trust a claim in a handover you cannot check.**
 
 ### Useful
 
 ```bash
+npm run ship     -- --client storepro                       # the record, every deadline, every drift
+npm run ship     -- --client storepro --item <id> --evidence <url> --by <email>
+npm run test:ship                                           # 22 tests, offline
 npm run report   -- --client storepro                       # compose and print; writes nothing
-npm run report   -- --client storepro --verbose             # every item's reasoning and criteria
-npm run test:report                                         # 29 tests, offline
-npm run predict  -- --client storepro --verbose             # every matched pair, every refusal
 npm run readback -- --client storepro                       # acceptance criteria vs the latest audit run
+npm run audit    -- --client storepro                       # needed before the readback can agree with anything
 railway deployment list                                     # FAILED is silent — look for it
-railway logs --build <deployment-id>                        # why a build failed
 ```
 
 **Local human gates:** `AUTH_DISABLED=true` skips login and its default identity
-(`local@localhost`) is deliberately not a real `auth.users` row, so every gate rejects
-it — including the publish gate. The panel now says so instead of offering a button.
+(`local@localhost`) is deliberately not a real `auth.users` row, so every gate —
+publish, approve, and now ship — rejects it. The panels say so instead of offering
+a button. `.claude/launch.json`'s `app-as-me` config supplies a real identity so
+those branches can be inspected; it is for looking at, not for pressing.
