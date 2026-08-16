@@ -974,9 +974,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Kill or keep the test-gem@heygem.co.nz account — and know that Gem access can&#39;t currently be revoked</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">ensure_gem()</span></div>
+        <div class="card-desc">Two things the `is_gem()` sweep turned up on 2026-07-31 that are Ricky&#39;s call, not Claude&#39;s — both involve destroying or disabling an account, so nothing was changed. **(1)** `test-gem@heygem.co.nz` (seeded UUID `6666…`) is an active Gem with a password set, last signed in 23 June. It is a live credentialed login with read access to every customer&#39;s jobs, messages, quotes, charges and card metadata. If it is not being used, it should go before a real customer&#39;s data is behind it. **(2) The handover&#39;s note that &quot;offboarding an email is the only revocation&quot; is close but understates it — there is currently *no* revocation at all.** `is_gem()` reads `gems.active`, so setting `active = false` does revoke — but `ensure_gem()` is called on every staff sign-in and does `on conflict (id) do update set active = true`, so the next login turns it straight back on. Genuinely removing a Gem today means deleting or banning the `auth.users` row, or changing the address off the domain. Worth an explicit `revoked` flag that `ensure_gem()` respects, if Gems are ever going to be people who leave</div>
+      </div>
       <div class="card">
         <div class="card-title">Get the first paying customer through the live loop</div>
         <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">decision</span></div>
@@ -996,9 +1001,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">23</span>
+        <span class="col-count">24</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">is_gem() sweep: every customer-side read now scoped on business_id (verified)</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">is_gem()</span><span class="tag tag-neutral">business_id</span></div>
+        <div class="card-desc">The handover said to assume the job-list leak fixed on 2026-07-29 was not the only one. It was not. Every customer-facing policy reads `business_id = current_business_id() OR is_gem()`, so **any** unfiltered customer-side select returns every customer&#39;s rows to a `@heygem.co.nz` address — the earlier fix scoped `jobs` and nothing else. Audited all 24 data-access calls across the 17 customer-app source files, plus every RLS policy in `public` and `storage`, plus the two customer-callable Stripe edge functions. **Four more live leaks, all reachable from the Account screen:** `listReceipts()` read `charges` unscoped — every succeeded charge in the system with job number and title, i.e. a full revenue ledger for every customer; `getMyBusinessName()` was `select name limit 1` with **no filter at all**, so for a team address the policy returned every business and `limit(1)` silently picked an arbitrary one with no error to notice — and that name is stamped onto the downloadable **GST tax invoice** as the buyer, so the failure mode was another company&#39;s name on a tax document; `getDefaultCard()` and `hasCardOnFile()` read `payment_methods` unscoped, giving another business&#39;s card brand/last4 and a card-on-file gate answered from someone else&#39;s card. Home&#39;s `ratings` fetch was also unscoped — inert in practice since the ids are only tested against the already-scoped job list, but it still returned every rating we hold; now scoped through an inner join on the owning job. Fixed by making `businessId` a **required parameter** on each helper rather than a filter to remember, so a new call site cannot compile without deciding whose data it wants. **Came back clean:** `stripe-setup-intent` and `stripe-attach-pm` both derive the business from the caller&#39;s own profile and never from a request parameter; `JobThread`&#39;s reads are keyed by a job id that only ever comes from the scoped list. Verified: PostgREST accepts the ratings embed (HTTP 200 `[]` against the live API, versus PGRST200 for a deliberately broken join, so the pass is real, not a silent empty); all three apps build clean; and all four scoped queries confirmed **in the deployed bundle on app.heygem.co.nz**, read back out of the minified JS rather than assumed from the hash — the customer bundle hash legitimately differs from a local build because it inlines the live Stripe publishable key. Two findings out of scope and carded rather than fixed: the public storage buckets (This Week) and the test-gem account plus the missing revocation path (On Ricky)</div>
+      </div>
       <div class="card">
         <div class="card-title">The Gem queue now tells a human when a customer is waiting (verified)</div>
         <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">queue_alerts</span><span class="tag tag-neutral">notify-gem-queue</span><span class="tag tag-neutral">LEAD_NOTIFY_TO</span></div>
@@ -1137,9 +1147,14 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">0</span>
+        <span class="col-count">1</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">Both storage buckets are public — customer documents sit on open URLs</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">security</span><span class="tag tag-neutral">chat-images</span><span class="tag tag-neutral">rating-photos</span></div>
+        <div class="card-desc">Found in the `is_gem()` sweep on 2026-07-31, though it is not an `is_gem()` bug — it is worse in one way and better in another. `chat-images` and `rating-photos` are both `public: true`. **Proven, not inferred:** fetching an existing chat-image URL with no apikey and no Authorization header returns HTTP 200 and the file. `chat-images` is where a Gem puts documents into a customer&#39;s thread — supplier invoices, statements, job paperwork — and those objects are readable by anyone who ever gets the URL, permanently, with no account. What keeps this off the &quot;stop everything&quot; list: paths are `&lt;uuid&gt;/&lt;uuid&gt;.&lt;ext&gt;`, so they are not guessable, and an anon list call on the bucket returns `[]` (there is no SELECT policy on `storage.objects`, so the bucket cannot be enumerated). So the exposure is &quot;anyone with the URL&quot;, not &quot;open directory&quot;. Deliberately **not** fixed inside M6: the doneWhen does not need it, and the fix is a real change — flip both buckets private, add owner-scoped SELECT policies, move both apps to signed URLs, and deal with the URLs already persisted in `messages` and `ratings.photo_url`</div>
+      </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
