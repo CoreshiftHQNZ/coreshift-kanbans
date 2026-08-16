@@ -79,9 +79,15 @@ Give me the 5-line orientation, then get on with it.
 
 1. **Do a piece of August's work, then press the button. That closes M8.** The
    cheapest is item 1, *Some URLs return 200 with no content* — **2.8 hours
-   across 3 URLs**, above the capacity line, nothing depends on it. Then open
-   Storepro → Acceptance readback and press **Mark shipped** on that row with the
-   pull request as the evidence. ⚠️ **It is frozen the instant it is written** —
+   across 3 URLs**, above the capacity line, nothing depends on it. The audit
+   re-run on 2026-08-15 still names the same three:
+   `storepro.co.nz/blocks/contact-form/`, `/blocks/footer/`,
+   `/blocks/join-our-team/`. ⚠️ **Give them real content and the next audit marks
+   the item finished on its own, which is what turns *Mark shipped anyway* into
+   the one-click. 404 them and the readback correctly reports `not_assessed`
+   forever, and you record it with *Mark shipped anyway*.** Then open Storepro →
+   Acceptance readback and press it on that row with the pull request as the
+   evidence. ⚠️ **It is frozen the instant it is written** —
    no un-shipping, no re-dating, no swapping the evidence. Press it once and on
    the right row. **Default if you say nothing:** M8 stays open and the report
    keeps saying 0 of 13, correctly.
@@ -111,12 +117,18 @@ prompt generation in-house, Ahrefs Brand Radar declined.
   deliberate half of the freeze. An item shipped by mistake stays shipped; a
   mistyped evidence link stays mistyped. Same gap the published report has, and
   in the Parking Lot with the shape of the fix.
-- **The panel will offer *Mark shipped anyway* on every item until a fresh audit
-  runs.** The only audit run on file is the baseline the plan was built from, so
-  the audit cannot agree with anything and the true one-click never appears. That
-  is correct behaviour and it is also a foot-gun: the warning text is there, but
-  the button next to it is one click from a frozen record. **Run
-  `npm run audit -- --client storepro` after the work lands.**
+- **The panel offers *Mark shipped anyway* on every item, and will keep doing so
+  until real work is done.** ✅ The audit has been re-run (`d853a778`,
+  2026-08-15), so the readback is a readback rather than a baseline and *can*
+  mark things finished. It still reports 0 finished / 12 failing / 1 needs a
+  person, because nothing has been fixed. The foot-gun stands: the warning text
+  is there, but the button next to it is one click from a frozen record.
+- **An authored action can offer a fix its own acceptance criterion cannot
+  observe.** New, and it is on the path to closing M8. Item 1 permits either
+  giving three pages content or 404-ing them and removing them from the sitemap.
+  Only the first can ever read back as `passed` — a page nobody crawls is
+  `not_assessed`, which is the honest verdict and not a bug. Nothing checks for
+  this class of mismatch. Card in This Week.
 - **A failed deploy is silent.** Unchanged. Railway keeps serving the last good
   build. Never take a green push as a deploy.
 - **The loop measures the head of the site.** Unchanged — the published
@@ -174,6 +186,9 @@ prompt generation in-house, Ahrefs Brand Radar declined.
 - **State:** 21 tables, RLS on. Storepro only. **41 work items, 0 shipped, 0 with
   evidence, 0 with an owner.** 4 months ingested (Apr–Jul), 2 audit runs (both
   `partial` at 147/202 — normal), 15 active prompts all reviewed, 240 probe runs.
+  ⚠️ There are now **3 audit runs**: `54b3758e` (the plan's baseline),
+  `d853a778` (2026-08-15, the first that post-dates approval, so the first the
+  readback can mark anything finished from), and one earlier run.
   Plans: `62ff1c2c` approved (M4 history, leave it), `101a4531` superseded,
   `70337c95` approved (M5, 13 items). One prediction `a3e5a8a7`, immutable, window
   `2026-10`, answerable 2026-11-05. One report `079c69d1`, published and frozen at

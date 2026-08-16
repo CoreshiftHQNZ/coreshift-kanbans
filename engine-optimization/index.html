@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>61%</strong> complete</div>
-        <div><strong>63</strong>/104 cards done</div>
-        <div>Updated <strong>2026-08-15 01:05 UTC</strong></div>
+        <div><strong>65</strong>/107 cards done</div>
+        <div>Updated <strong>2026-08-16 21:04 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">63</div>
+        <div class="status-num">65</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">9</div>
+        <div class="status-num">10</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -896,6 +896,20 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">The cheapest item&#39;s own instruction offers a fix its acceptance criterion cannot see</div>
+            <div class="recent-desc">Found by re-running the audit to make the one-click reachable, which is the sort of thing only running it turns up. Item 1&#39;s authored action is *&quot;make the 3 pages either return real content **or** return 404/410, and remove them from sitemap.xml either way&quot;*, and its acceptance criterion is *&quot;the next audit run emits no `obs.empty_responses` finding&quot;*. **Those two branches are not equivalent to the readback.** `obs.empty_responses` has a per-page predicate, so `server/predict/readback.ts` refuses to call the criterion passed unless the run actually *assessed* the named pages. Remove them from the sitemap and they are never discovered, never crawled, never assessed — and the verdict is **`not_assessed`**, with the entirely correct message *&quot;a finding cannot be raised about pages nobody crawled, so its absence says nothing here&quot;*. Only the *give them content* branch can ever produce `passed`. ⚠️ **This is not a bug in the readback** — it is the project&#39;s most persistent rule working exactly as designed, one layer further out than it has appeared before: the honest verdict on a page that no longer exists is *unknown*, not *fixed*. What is wrong is that `server/plan/actions.ts` authored an action whose cheaper branch makes its own acceptance criterion unverifiable, and nothing notices. **The consequence today is small and specific:** the one-click cannot appear for item 1 if the 404 route is taken, and the shipment has to go through *Mark shipped anyway*. **The consequence at scale is the thing to fix:** an action with a branch its criterion cannot observe will keep producing items that read as unfinished forever. The check that would catch it — does every branch of an authored action leave the acceptance criterion decidable — does not exist and belongs next to the existing action-coverage tests in `npm run test:actions`</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Re-running the audit made the readback a readback rather than a baseline</div>
+            <div class="recent-desc">Run `d853a778` (147 of 202 pages, method `2026-08-a`, SEO 91.50 / GEO 93.44 / AEO 45.45, 12 findings) post-dates the plan&#39;s approval, so `server/predict/readback.ts` will now mark things finished when they are. Before this the only run on file was `54b3758e` — the run the plan was *built from* — which is labelled `baseline` and may never mark anything finished, correctly. **It did not make the one-click appear, and could not have:** the one-click is gated on the audit agreeing, and the audit can only agree once the work is done. 0 finished, 12 failing, 1 needs a person — unchanged, and right. The shipping record is untouched: 0 of 13 shipped, binding date still 2026-09-03</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Bumping the composer&#39;s method version made the report panel tell a small lie</div>
             <div class="recent-desc">Adding the shipping statement to pending predictions moved `REPORT_METHOD_VERSION` to `2026-08-b`, which is correct and required. What was not correct was the panel: it prints `Method &lt;version&gt;` from the **composed** body, directly under a green *published* pill — so the frozen July report appeared to carry a method it was not published under. The version stamp exists precisely so a reader can tell which document they are holding, and printing the wrong one under a publication badge defeats the whole point of stamping it. Both the panel and the CLI now say when the two differ and which is which. Found only because the bump was the first time in this project&#39;s life that a published report and a composed one had different method versions — everything before this had exactly one version to print. ⚠️ The published report `079c69d1` also now shows *the records have moved since* permanently, which is honest and unavoidable: any change to the composer, or the first shipment recorded, makes today&#39;s composition differ from what was sent</div>
           </div>
@@ -919,20 +933,6 @@
           <div class="recent-text">
             <div class="recent-title">M7: The monthly report — published, frozen, and it states what we expected before we did it</div>
             <div class="recent-desc">**Storepro&#39;s 2026-07 report is published.** Ricky published it himself on **2026-08-14 21:44:15Z**, which is the whole point of the milestone: `--publish` takes an email that must resolve to a real `auth.users` row, and in the app the publisher comes from the verified session and cannot be typed into a field. Claude built it, proved every refusal, and left the last act to a person — publishing it as Ricky would have forged a human gate, which is the failure this product exists to make impossible. The report a client reads now says, on the record and unable to be edited: **13 items** each bound to the finding, audit run, rule and severity that produced it, each carrying its own reasoning word for word; **one prediction, PENDING**, with its readback window `2026-10` and the date it can be answered — **5 November** — on the face of it; **twelve refusals in full**; and **eight stated limits**. **Verified by:** the published row read straight out of Postgres — `079c69d1`, `published_at` 2026-08-14 21:44:15Z, `published_by` `ricky@coreshifthq.com`, cycle `2026-07` moved to `published`, 9 of 9 `review_checks` passing. Then **every freeze exercised against that real row**: editing the body refused (and `body_tampered` still false afterwards), revoking the publication refused, flipping a check to failing refused, deleting the report refused, a second published report for the cycle refused by the unique index — while `review_notes` stayed writable, which is correct, because an annotation is not the document. **162 tests across six suites** (13 detector, 38 plan, 24 action, 23 prompt, 35 prediction, 29 report) and typecheck clean. Commits `b758643` and `15a0f23`. Method in `docs/reports.md`</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">The panel offered a publish button that could never work — and the error made it look like a rejection</div>
-            <div class="recent-desc">Found the way these things should be found: Ricky pressed publish and got **&quot;Failed to fetch&quot;**. Two faults, and the second is the real one. The proximate cause was a stopped dev server — Claude had opened a local preview panel to verify the report rendering and then shut the server down at the end of the turn, leaving a live publish button on screen pointing at nothing. Nothing was attempted and nothing was published, but `fetch` rejecting rendered its raw message straight into the error line directly beneath the button, which reads as *the report was rejected*. **A transport failure and a refusal are materially different** and the panel now says which one it was, and that the draft is untouched. **The worse fault underneath:** that button should never have been offered at all. Local mode signs in as `local@localhost`, which deliberately has no `auth.users` row, so the gate would have refused it by design. **A control that looks passable and is not is the unenforced checklist inverted** — arriving through the exact surface built to prevent it. The server now reports whether *this session* can be attributed, which is a different question from whether the report is publishable, and the panel distinguishes the two reasons there may be no button. **Verified by:** the endpoint returning `{email: &quot;local@localhost&quot;, attributable: false}` with `publishable: true`, and the panel rendering the reason with no publish button, seen against a local server on the production bundle. Railway&#39;s logs confirmed no publish request ever reached staging, which is how the diagnosis was settled rather than guessed. Commit `15a0f23`</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">The report refuses to call approved work delivered — and Storepro&#39;s first one therefore opens by saying nothing shipped</div>
-            <div class="recent-desc">An item is delivered when `work_items.shipped_at` is set, which is a specialist saying so. It is **not** delivered because the acceptance readback says the audit rule now passes: the readback reports, a person decides, and reading a verdict as a delivery would have the report claim work nobody has done. On the facts as they stand, all 13 items are `approved` with `shipped_at` **null** on every one — so the report&#39;s second sentence reads *&quot;Nothing is marked delivered yet: 13 items were approved and the work runs from there.&quot;* ⚠️ **That is the honesty the milestone was warned about, arriving in the first paragraph rather than the footnotes.** It is true, and on the morning after approval it is the only true thing to say — but whether it reads as rigour or as a thin month is a writing-and-positioning question, and it is Ricky&#39;s. Fifth appearance of this project&#39;s most persistent failure — *&quot;couldn&#39;t measure&quot; read as &quot;measured zero&quot;* — in its first client-facing form</div>
           </div>
         </div>
       </div>
@@ -970,9 +970,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Press the button once a piece of August&#39;s work is actually done — this is what closes M8</div>
-        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">npm run audit -- --client storepro</span></div>
-        <div class="card-desc">The writer is built and every refusal is proven, and it is deliberately still open, because a shipping record for work nobody did is the one thing it exists to prevent. **The cheapest close:** item 1, *Some URLs return 200 with no content* — 2.8 hours across 3 URLs, above the capacity line, no dependencies. Do it, then open Storepro → Acceptance readback and press **Mark shipped** on that row with the pull request as the evidence. The shipment is attributed to your session and frozen the moment it is written; there is no un-shipping, so press it once and press it on the right row. ⚠️ The panel currently offers *Mark shipped anyway* on every item rather than *The audit agrees* — the only audit run on file is the baseline the plan was built from, so the audit cannot yet agree with anything. Running `npm run audit -- --client storepro` after the work lands is what turns that into the one-click</div>
+        <div class="card-title">Do item 1, then press the button — this is what closes M8</div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">d853a778</span></div>
+        <div class="card-desc">The writer is built and every refusal proven, and M8 is deliberately still open, because a shipping record for work nobody did is the one thing it exists to prevent. **Item 1 — *Some URLs return 200 with no content*, 2.8 hours, above the capacity line, nothing depends on it.** The audit was re-run on 2026-08-15 (`d853a778`) and still names the same three URLs:</div>
       </div>
       <div class="card">
         <div class="card-title">Does the FAQ item get the hours? Decide by 3 September</div>
@@ -988,9 +988,19 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">63</span>
+        <span class="col-count">65</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">The cheapest item&#39;s own instruction offers a fix its acceptance criterion cannot see</div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">obs.empty_responses</span><span class="tag tag-neutral">obs.empty_responses</span><span class="tag tag-neutral">server/predict/readback.ts</span><span class="tag tag-neutral">not_assessed</span><span class="tag tag-neutral">passed</span><span class="tag tag-neutral">server/plan/actions.ts</span><span class="tag tag-neutral">npm run test:actions</span></div>
+        <div class="card-desc">Found by re-running the audit to make the one-click reachable, which is the sort of thing only running it turns up. Item 1&#39;s authored action is *&quot;make the 3 pages either return real content **or** return 404/410, and remove them from sitemap.xml either way&quot;*, and its acceptance criterion is *&quot;the next audit run emits no `obs.empty_responses` finding&quot;*. **Those two branches are not equivalent to the readback.** `obs.empty_responses` has a per-page predicate, so `server/predict/readback.ts` refuses to call the criterion passed unless the run actually *assessed* the named pages. Remove them from the sitemap and they are never discovered, never crawled, never assessed — and the verdict is **`not_assessed`**, with the entirely correct message *&quot;a finding cannot be raised about pages nobody crawled, so its absence says nothing here&quot;*. Only the *give them content* branch can ever produce `passed`. ⚠️ **This is not a bug in the readback** — it is the project&#39;s most persistent rule working exactly as designed, one layer further out than it has appeared before: the honest verdict on a page that no longer exists is *unknown*, not *fixed*. What is wrong is that `server/plan/actions.ts` authored an action whose cheaper branch makes its own acceptance criterion unverifiable, and nothing notices. **The consequence today is small and specific:** the one-click cannot appear for item 1 if the 404 route is taken, and the shipment has to go through *Mark shipped anyway*. **The consequence at scale is the thing to fix:** an action with a branch its criterion cannot observe will keep producing items that read as unfinished forever. The check that would catch it — does every branch of an authored action leave the acceptance criterion decidable — does not exist and belongs next to the existing action-coverage tests in `npm run test:actions`</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Re-running the audit made the readback a readback rather than a baseline</div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">d853a778</span><span class="tag tag-neutral">2026-08-a</span><span class="tag tag-neutral">server/predict/readback.ts</span><span class="tag tag-neutral">54b3758e</span><span class="tag tag-neutral">baseline</span></div>
+        <div class="card-desc">Run `d853a778` (147 of 202 pages, method `2026-08-a`, SEO 91.50 / GEO 93.44 / AEO 45.45, 12 findings) post-dates the plan&#39;s approval, so `server/predict/readback.ts` will now mark things finished when they are. Before this the only run on file was `54b3758e` — the run the plan was *built from* — which is labelled `baseline` and may never mark anything finished, correctly. **It did not make the one-click appear, and could not have:** the one-click is gated on the audit agreeing, and the audit can only agree once the work is done. 0 finished, 12 failing, 1 needs a person — unchanged, and right. The shipping record is untouched: 0 of 13 shipped, binding date still 2026-09-03</div>
+      </div>
       <div class="card">
         <div class="card-title">Bumping the composer&#39;s method version made the report panel tell a small lie</div>
         <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">REPORT_METHOD_VERSION</span><span class="tag tag-neutral">2026-08-b</span><span class="tag tag-neutral">Method &lt;version&gt;</span><span class="tag tag-neutral">079c69d1</span></div>
@@ -1310,9 +1320,14 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">9</span>
+        <span class="col-count">10</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Nothing checks that an authored action&#39;s branches leave its acceptance criterion decidable</div>
+        <div class="card-tags"><span class="tag tag-neutral">M9</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">npm run test:actions</span><span class="tag tag-neutral">not_assessed</span></div>
+        <div class="card-desc">The general form of the item-1 finding above. `npm run test:actions` already proves every rule the audit can emit has an authored action and an acceptance criterion; it does not prove the two are *compatible*. Item 1&#39;s action permits removing pages from the sitemap, which makes its own criterion return `not_assessed` forever. The check is cheap where it belongs — alongside the existing action-coverage tests — and the rule it would encode is one sentence: **an action must not offer a fix that makes its own acceptance criterion unobservable.** Worth doing before a second client multiplies the authored actions, not after</div>
+      </div>
       <div class="card">
         <div class="card-title">Subdomains split one competitor into two rows</div>
         <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">automate-x.nz</span><span class="tag tag-neutral">offer.automate-x.nz</span></div>
