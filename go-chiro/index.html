@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>39%</strong> complete</div>
         <div><strong>24</strong>/61 cards done</div>
-        <div>Updated <strong>2026-08-01 02:46 UTC</strong></div>
+        <div>Updated <strong>2026-08-17 22:31 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1005,7 +1005,7 @@
       <div class="card">
         <div class="card-title">Still missing: Luke&#39;s ACC Vendor ID + GST number</div>
         <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">blocked</span></div>
-        <div class="card-desc">Updated 2026-08-01: two of the five fields are now in the app. Luke&#39;s ACC provider number sits on his practitioner record, and the second number Ricky supplied has been stored as the Contract ID (his read; first logged as a practice number, so worth a glance at the Splose screen — nothing in the code reads Contract ID either way). Still missing: the Vendor ID, which is the single field the Submit to ACC button is gated on, and which prints on the invoice PDF and in the ACC email subject; the GST number, currently null while the practice is flagged GST-registered, so tax invoices are not yet compliant; and Luke&#39;s ACC provider type. None are exposed by the Splose API (checked) — read them off Splose → Settings → ACC by hand. Identifiers are deliberately not written on this board: it is a public site. They belong in the app&#39;s Practice settings</div>
+        <div class="card-desc">Updated 2026-08-01: two of the five fields are now in the app. Luke&#39;s ACC provider number sits on his practitioner record, and the second number Ricky supplied has been stored as the Contract ID (his read; first logged as a practice number, so worth a glance at the Splose screen — nothing in the code reads Contract ID either way). Still missing: the **Vendor ID**, which is the single field the Submit to ACC button is gated on, and which prints on the invoice PDF and in the ACC email subject; the **GST number**, currently null while the practice is flagged GST-registered, so tax invoices are not yet compliant; and Luke&#39;s **ACC provider type**. None are exposed by the Splose API (checked) — read them off Splose → Settings → ACC by hand. Identifiers are deliberately not written on this board: it is a public site. They belong in the app&#39;s Practice settings</div>
       </div>
       <div class="card">
         <div class="card-title">Pick Luke&#39;s switch morning</div>
@@ -1167,9 +1167,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Phase 2 — storefront + checkout</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span><span class="tag tag-neutral">checkout.session.completed</span><span class="tag tag-neutral">awaiting_stock</span></div>
-        <div class="card-desc">**Built and live on staging** at /shop, awaiting Ricky&#39;s test purchase. Public grid, product page with gallery and size picker, localStorage cart, guest checkout via hosted Stripe Checkout, and the `checkout.session.completed` webhook branch that decrements stock and parks short lines in `awaiting_stock`. Prices are never taken from the client — verified by placing an order that claimed 1c and was written at $55.00. Stock counts are not exposed publicly; the storefront gets a state, not a number. Remaining: a real card payment through the hosted page, which only Ricky can do</div>
+        <div class="card-title">Phase 3 — fulfilment + notifications</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span><span class="tag tag-neutral">paid_at</span><span class="tag tag-neutral">collected</span><span class="tag tag-neutral">ready</span><span class="tag tag-neutral">total × 3/23</span><span class="tag tag-neutral">sendNotification()</span><span class="tag tag-neutral">notificationLogs.userId</span></div>
+        <div class="card-desc">Orders page and the fulfilment state machine are **built and proven on staging**; the emails are the remainder. Verified 2026-08-18 against the staging database: two real orders taken end to end through hosted Stripe Checkout, both carrying a payment intent and a `paid_at`, one driven to `collected` and one to `ready`. GST correct on both — 717c on a 5500c tax-inclusive total (`total × 3/23`). **Remaining, and it is the last M7 code:** the five retail email templates are written and reviewed but not wired to a send path. `sendNotification()` keys on a user id and writes `notificationLogs.userId`, while shop buyers are guests with no user row — so retail needs its own guest send path, not a one-line hookup</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1185,8 +1185,8 @@
       </div>
       <div class="card">
         <div class="card-title">Re-orient on the project after the July pause</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-ops">ops</span></div>
-        <div class="card-desc">Nothing moved between 2026-07-21 and 2026-08-01. **Supabase half done 2026-08-01:** the live database was checked before migration 0027 and matched the board — head was 0026_intake_forms, 28 public tables, buckets avatars / exercise-videos / session-clips, and Luke is the only non-patient user. **Railway still unchecked** — no one has confirmed what the staging and production services are actually running, or that the env vars match what&#39;s recorded. Do that before the rehearsal is scripted, so it isn&#39;t written against a remembered system</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">go-chiro</span><span class="tag tag-neutral">go-chiro-api</span><span class="tag tag-neutral">go-chiro-api-staging.up.railway.app</span><span class="tag tag-neutral">SHOP_PUBLIC_ENABLED=true</span><span class="tag tag-neutral">SPLOSE_CUTOVER=true</span><span class="tag tag-neutral">go-chiro.com</span><span class="tag tag-neutral">SHOP_PUBLIC_ENABLED=false</span><span class="tag tag-neutral">SPLOSE_CUTOVER=false</span><span class="tag tag-neutral">NOTIFICATIONS_PAUSED=true</span><span class="tag tag-neutral">khcuxlkhjscmlmasmwuw</span></div>
+        <div class="card-desc">Nothing moved between 2026-07-21 and 2026-08-01. **Supabase half done 2026-08-01:** the live database was checked before migration 0027 and matched the board — head was 0026_intake_forms, 28 public tables, buckets avatars / exercise-videos / session-clips, and Luke is the only non-patient user. **Railway checked 2026-08-18** — project `go-chiro`, service `go-chiro-api`, both environments Online. Staging is `go-chiro-api-staging.up.railway.app` with `SHOP_PUBLIC_ENABLED=true`, `SPLOSE_CUTOVER=true`, a test Stripe secret key; production is `go-chiro.com` with `SHOP_PUBLIC_ENABLED=false`, `SPLOSE_CUTOVER=false`, a live Stripe secret key. `NOTIFICATIONS_PAUSED=true` on both, as recorded. **One correction to the record:** the two environments do *not* share a database. Staging points at its own Supabase preview branch (`khcuxlkhjscmlmasmwuw`, child of the go-chiro project, created 2026-08-01), which is why staging carries test products and orders while production has none. The branch is non-persistent, so treat anything in it as disposable</div>
       </div>
       <div class="card">
         <div class="card-title">Script the full-day rehearsal</div>
@@ -1216,14 +1216,14 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Phase 2 — storefront + checkout</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span></div>
-        <div class="card-desc">Public Shop and product pages on the existing marketing site (wouter, root paths, alongside /about and /services), a localStorage cart with no server-side cart table, and guest checkout through Stripe Checkout. Webhook gains a checkout.session.completed branch beside the existing payment_intent handlers. Stock decrements on payment and is allowed to go negative — a sale is never refused</div>
+        <div class="card-title">Promote M7 retail to production</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">staging</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">SHOP_PUBLIC_ENABLED=false</span></div>
+        <div class="card-desc">PR #100, `staging` → `main`. Production has no shop code at all while its database is already at migration 0028, so Luke cannot load his catalogue there until this merges. Safe to merge before launch: production has `SHOP_PUBLIC_ENABLED=false`, so the public routes 404 until that flag flips. Merging it is a production deploy, so it is Ricky&#39;s call</div>
       </div>
       <div class="card">
-        <div class="card-title">Phase 3 — fulfilment + notifications</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span></div>
-        <div class="card-desc">Orders page for staff: the awaiting-stock queue for backordered and pre-order lines, then collect-at-clinic (ready → collected) or ship-within-NZ (packed → shipped, with a tracking number). Four emails on the existing Postmark stack: order confirmation, awaiting stock, ready to collect, shipped</div>
+        <div class="card-title">Luke loads the real catalogue</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-blocked">blocked-by-luke</span></div>
+        <div class="card-desc">One pass of data entry, in production, after PR #100 merges. Doing it on staging instead would have to be redone, and the staging database is a non-persistent Supabase branch that can be reaped</div>
       </div>
       <div class="card">
         <div class="card-title">The `Deploy` workflow is broken</div>
