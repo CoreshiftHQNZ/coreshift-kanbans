@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>41%</strong> complete</div>
-        <div><strong>26</strong>/64 cards done</div>
-        <div>Updated <strong>2026-08-18 02:51 UTC</strong></div>
+        <div><strong>39%</strong> complete</div>
+        <div><strong>26</strong>/66 cards done</div>
+        <div>Updated <strong>2026-08-18 03:00 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -857,7 +857,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">11</div>
+        <div class="status-num">13</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -1217,9 +1217,19 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">11</span>
+        <span class="col-count">13</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Weekly ACC billing run, not per-patient clicks</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">build</span><span class="tag tag-neutral">Submit to ACC</span><span class="tag tag-neutral">PaymentsPage.tsx</span><span class="tag tag-neutral">docs/ROADMAP.md</span><span class="tag tag-neutral">Submit week to ACC</span><span class="tag tag-neutral">not_submitted</span><span class="tag tag-neutral">not_submitted</span></div>
+        <div class="card-desc">Luke bills ACC **weekly in a batch**, not one patient at a time (Ricky, 2026-08-18). What is built is a per-row `Submit to ACC` button on each invoice in `PaymentsPage.tsx`, so his weekly run would be N separate clicks with no record of which he had already done — workable but wrong, and easy to double-send or miss one. **Constraint that shapes the fix:** the 2026-07-21 spike recorded in `docs/ROADMAP.md` says ACC&#39;s email channel requires *one invoice per PDF, one PDF per email* — so a week&#39;s billing cannot be collapsed into a single email on the channel M3 ships. Splose batches because it uses the eBusiness gateway (channel 3), which does take schedules. So the fix is a batch **action**, not a batch document: one `Submit week to ACC` button that selects every invoice with an ACC portion still at `not_submitted`, shows the count and total first, then sends them one email each, reporting per-invoice success or failure and marking each one as it goes. Idempotent by construction — it only ever picks up `not_submitted`, so a retry after a partial failure cannot double-send. Needed before M3.5 go-live: a 30-click first billing run is a bad first day. Not needed for M7</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Ask Luke what &quot;weekly&quot; means at ACC&#39;s end</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">question</span></div>
+        <div class="card-desc">He is in on 2026-08-18. Worth settling while he is there: does Splose send ACC **one submission containing the week**, or a weekly run of individual submissions? It decides whether the app can stay on the email channel for his real workflow or whether the M5 eBusiness-gateway upgrade moves forward in the plan. He is the only person who has actually watched this happen for the last few years</div>
+      </div>
       <div class="card">
         <div class="card-title">Guard ACC submission on the GST number</div>
         <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">hardening</span><span class="tag tag-neutral">server/routes/invoices.ts</span></div>
