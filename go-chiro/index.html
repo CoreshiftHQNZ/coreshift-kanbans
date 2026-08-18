@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>42%</strong> complete</div>
-        <div><strong>30</strong>/72 cards done</div>
-        <div>Updated <strong>2026-08-18 03:38 UTC</strong></div>
+        <div><strong>41%</strong> complete</div>
+        <div><strong>30</strong>/73 cards done</div>
+        <div>Updated <strong>2026-08-18 03:45 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -857,7 +857,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">14</div>
+        <div class="status-num">15</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -944,7 +944,7 @@
           <div class="recent-check">✓</div>
           <div class="recent-text">
             <div class="recent-title">Splose sync no longer loses patients to shared emails</div>
-            <div class="recent-desc">PR #101, migration 0030. Two defects found 2026-08-18 by chasing one name that did not match between Splose&#39;s diary and the Today screen. (1) `public.users` carried a blanket `UNIQUE (email)`; four Concord Rest Home residents share the home&#39;s admin address, so only the first could exist — production was missing **11 Splose patients** and **165 appointments** from 2026-03-01, the latter because the appointment sync skips any appointment whose patient it cannot resolve. Replaced with a partial unique index over login-capable rows only, which is what Supabase&#39;s `auth.users` already guarantees. (2) The worse one: the sync matched an existing user **by email alone** and overwrote its `splose_patient_id`, so on a shared address each new patient took the previous one&#39;s row and it ended up pointing at whoever the API returned last. Only an unclaimed row can be adopted now. (3) Both loops used to `continue` past anything unresolvable while counting nothing, so every run logged success while dropping records — each skip is now tallied against a reason into `splose_sync_logs.records_skipped` / `skip_reasons`. **Verified** on staging, 5 assertions passing, including that the exact drizzle query the fixed sync runs returns no stealable candidate; both databases pre-checked for login-capable duplicate emails before the constraint was dropped (zero on each); migration applied to staging and production and asserted; `tsc` clean and build passing</div>
+            <div class="recent-desc">PR #102 (split out of #101 so it reviews alone), migration 0030. Two defects found 2026-08-18 by chasing one name that did not match between Splose&#39;s diary and the Today screen. (1) `public.users` carried a blanket `UNIQUE (email)`; four Concord Rest Home residents share the home&#39;s admin address, so only the first could exist — production was missing **11 Splose patients** and **165 appointments** from 2026-03-01, the latter because the appointment sync skips any appointment whose patient it cannot resolve. Replaced with a partial unique index over login-capable rows only, which is what Supabase&#39;s `auth.users` already guarantees. (2) The worse one: the sync matched an existing user **by email alone** and overwrote its `splose_patient_id`, so on a shared address each new patient took the previous one&#39;s row and it ended up pointing at whoever the API returned last. Only an unclaimed row can be adopted now. (3) Both loops used to `continue` past anything unresolvable while counting nothing, so every run logged success while dropping records — each skip is now tallied against a reason into `splose_sync_logs.records_skipped` / `skip_reasons`. **Verified** on staging, 5 assertions passing, including that the exact drizzle query the fixed sync runs returns no stealable candidate; both databases pre-checked for login-capable duplicate emails before the constraint was dropped (zero on each); migration applied to staging and production and asserted; `tsc` clean and build passing</div>
           </div>
         </div>
         <div class="recent-item">
@@ -1000,7 +1000,7 @@
       <div class="card">
         <div class="card-title">🔴 The 11 patients and 165 appointments are still missing until the sync re-runs</div>
         <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">SPLOSE_CUTOVER</span><span class="tag tag-neutral">splose_sync_logs.skip_reasons</span></div>
-        <div class="card-desc">The fix is on PR #101 but nothing is repaired until it is deployed and a sync runs. **Still do not flip `SPLOSE_CUTOVER`.** Two things needed: merge #101 and promote it, and then decide how to prove the repair. Re-running the sync against staging would mean copying 310 real patients into an environment deliberately emptied of patient data — that is a privacy call, not a side effect of a bug fix, so it was not done. The alternative is to let the production sync run on its normal schedule after promotion and assert the counts against Splose afterwards, which is what I would do. Once it has run, the breakdown of what the 165 actually resolve to becomes readable straight off `splose_sync_logs.skip_reasons` instead of needing the Splose API</div>
+        <div class="card-desc">The fix is on PR #102 but nothing is repaired until it is deployed and a sync runs. **Still do not flip `SPLOSE_CUTOVER`.** Two things needed: merge #102 and promote it, and then decide how to prove the repair. Re-running the sync against staging would mean copying 310 real patients into an environment deliberately emptied of patient data — that is a privacy call, not a side effect of a bug fix, so it was not done. The alternative is to let the production sync run on its normal schedule after promotion and assert the counts against Splose afterwards, which is what I would do. Once it has run, the breakdown of what the 165 actually resolve to becomes readable straight off `splose_sync_logs.skip_reasons` instead of needing the Splose API</div>
       </div>
       <div class="card">
         <div class="card-title">🔑 Fix the staging Supabase Site URL — 30 seconds, unblocks all staging testing</div>
@@ -1047,7 +1047,7 @@
       <div class="card">
         <div class="card-title">Splose sync no longer loses patients to shared emails</div>
         <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">fixed</span><span class="tag tag-neutral">public.users</span><span class="tag tag-neutral">UNIQUE (email)</span><span class="tag tag-neutral">auth.users</span><span class="tag tag-neutral">splose_patient_id</span><span class="tag tag-neutral">continue</span><span class="tag tag-neutral">splose_sync_logs.records_skipped</span><span class="tag tag-neutral">skip_reasons</span><span class="tag tag-neutral">tsc</span></div>
-        <div class="card-desc">PR #101, migration 0030. Two defects found 2026-08-18 by chasing one name that did not match between Splose&#39;s diary and the Today screen. (1) `public.users` carried a blanket `UNIQUE (email)`; four Concord Rest Home residents share the home&#39;s admin address, so only the first could exist — production was missing **11 Splose patients** and **165 appointments** from 2026-03-01, the latter because the appointment sync skips any appointment whose patient it cannot resolve. Replaced with a partial unique index over login-capable rows only, which is what Supabase&#39;s `auth.users` already guarantees. (2) The worse one: the sync matched an existing user **by email alone** and overwrote its `splose_patient_id`, so on a shared address each new patient took the previous one&#39;s row and it ended up pointing at whoever the API returned last. Only an unclaimed row can be adopted now. (3) Both loops used to `continue` past anything unresolvable while counting nothing, so every run logged success while dropping records — each skip is now tallied against a reason into `splose_sync_logs.records_skipped` / `skip_reasons`. **Verified** on staging, 5 assertions passing, including that the exact drizzle query the fixed sync runs returns no stealable candidate; both databases pre-checked for login-capable duplicate emails before the constraint was dropped (zero on each); migration applied to staging and production and asserted; `tsc` clean and build passing</div>
+        <div class="card-desc">PR #102 (split out of #101 so it reviews alone), migration 0030. Two defects found 2026-08-18 by chasing one name that did not match between Splose&#39;s diary and the Today screen. (1) `public.users` carried a blanket `UNIQUE (email)`; four Concord Rest Home residents share the home&#39;s admin address, so only the first could exist — production was missing **11 Splose patients** and **165 appointments** from 2026-03-01, the latter because the appointment sync skips any appointment whose patient it cannot resolve. Replaced with a partial unique index over login-capable rows only, which is what Supabase&#39;s `auth.users` already guarantees. (2) The worse one: the sync matched an existing user **by email alone** and overwrote its `splose_patient_id`, so on a shared address each new patient took the previous one&#39;s row and it ended up pointing at whoever the API returned last. Only an unclaimed row can be adopted now. (3) Both loops used to `continue` past anything unresolvable while counting nothing, so every run logged success while dropping records — each skip is now tallied against a reason into `splose_sync_logs.records_skipped` / `skip_reasons`. **Verified** on staging, 5 assertions passing, including that the exact drizzle query the fixed sync runs returns no stealable candidate; both databases pre-checked for login-capable duplicate emails before the constraint was dropped (zero on each); migration applied to staging and production and asserted; `tsc` clean and build passing</div>
       </div>
       <div class="card">
         <div class="card-title">Practice contact details, GST number and ACC identifiers all correct</div>
@@ -1242,18 +1242,13 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">16</span>
+        <span class="col-count">15</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Finish the email deliverability check</div>
-        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">email</span><span class="tag tag-neutral">DKIM</span><span class="tag tag-neutral">DMARC</span><span class="tag tag-neutral">Postmark</span></div>
-        <div class="card-desc">The email tidy-up on 2026-08-18 fixed how mail is *built and sent*; this is whether it *lands*. Confirmed good: SPF includes `spf.mtasv.net`, and the custom return-path `pm-bounces.go-chiro.com` points at `pm.mtasv.net`. Three things left. **DKIM is unverified** — 12 common selectors were probed over DNS and none resolved, but a Postmark *server* token cannot read a domain&#39;s DKIM state, so this is genuinely unknown rather than known-bad. Needs a Postmark **Account** API token. **DMARC is `p=none`** — monitoring only, nothing is quarantined or rejected. Correct as a starting point; worth moving to `p=quarantine` once DKIM is confirmed. **No bounce webhook** — `BounceHookUrl` is empty on the Postmark server, so a hard bounce to a patient address is invisible to the app. Total volume is 3 emails / 30 days with 0 bounces, so nothing is on fire</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Drop the duplicate `POSTMARK_SENDER` env var</div>
-        <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-neutral">email</span><span class="tag tag-neutral">POSTMARK_SENDER</span><span class="tag tag-neutral">NOTIFICATION_FROM_EMAIL</span><span class="tag tag-neutral">server/services/email/send.ts</span></div>
-        <div class="card-desc">Two env vars held the sender address and different code paths read different ones — `NOTIFICATION_FROM_EMAIL` in the notification services, `POSTMARK_SENDER` in the raw-fetch paths. Both are set to `contact@go-chiro.com` on staging and production, so nothing was actually misaddressed, but it was one typo away from mail going out as an unverified sender. `sendEmail()` now reads `NOTIFICATION_FROM_EMAIL` first and falls back to `POSTMARK_SENDER` only because both still exist on Railway. Delete `POSTMARK_SENDER` from both environments, then remove the fallback branch in `server/services/email/send.ts` and the deprecation note in `.env.example`</div>
+        <div class="card-title">🔴 Parallel sessions share one checkout — `git add -A` is unsafe here</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">follow-up</span><span class="tag tag-neutral">git add -A</span><span class="tag tag-neutral">Repo/go-chiro</span><span class="tag tag-neutral">-A</span></div>
+        <div class="card-desc">2026-08-18: a commit made with `git add -A` in `Repo/go-chiro` swept up 33 paths of an in-progress email-templating refactor belonging to a **different session working in the same directory**, and pushed it under a message describing only the Splose sync fix. Caught and unwound the same session — the work was restored to uncommitted and nothing was lost, and the branch was force-pushed to drop the polluted commit. The underlying hazard remains: several sessions run against one working tree, so any blanket stage can capture another session&#39;s half-finished work, and one session&#39;s branch switch could clobber it outright. **Options:** give each session its own git worktree (the repo already supports it — this split was done in one), or make it a standing rule that commits stage explicit paths and never `-A`. Recommend the worktree route: a rule only holds until somebody forgets. Meanwhile the email refactor is sitting uncommitted in the shared tree and would be safer committed to its own branch soon</div>
       </div>
       <div class="card">
         <div class="card-title">Audit the `${date}T00:00:00Z` pattern on the server</div>
