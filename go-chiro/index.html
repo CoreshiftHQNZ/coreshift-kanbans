@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>40%</strong> complete</div>
-        <div><strong>27</strong>/67 cards done</div>
-        <div>Updated <strong>2026-08-18 03:06 UTC</strong></div>
+        <div><strong>41%</strong> complete</div>
+        <div><strong>29</strong>/70 cards done</div>
+        <div>Updated <strong>2026-08-18 03:14 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -845,7 +845,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">27</div>
+        <div class="status-num">29</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -857,7 +857,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">13</div>
+        <div class="status-num">14</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -943,6 +943,20 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Practice contact details, GST number and ACC identifiers all correct</div>
+            <div class="recent-desc">Set 2026-08-18 on both environments. Phone was the placeholder `+64 9 000 0000` and email was `admin@go-chiro.co.nz` on a domain the practice does not use; `server/services/pdf/invoice.ts:48` prints both in the header of **every** invoice, so that fake number was going out on all of them — and ACC submission had just been unblocked. Now `contact@go-chiro.com` and `+6421 133 1127`, which Ricky confirmed are the only contact details the practice uses. The email is also where the new shop-order alert lands, so that now reaches a mailbox somebody reads</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">Today screen showed the wrong day&#39;s appointments</div>
+            <div class="recent-desc">PR #101. `toApiDayRange` in `DashboardPage.tsx` built the range from the local calendar date then appended a literal `Z`, so in NZ the screen asked for noon today through noon tomorrow. **Proven against production for 2026-08-18:** the buggy range returned 9 appointments where the real NZ day has 8 — it dropped the 11:30am appointment, the first of the day, and appended two from tomorrow morning, which is what Ricky spotted against the diary. Fixed by deriving the boundaries as real instants from the existing local-time helpers; verified the window is now `2026-08-17T12:00:00Z → 2026-08-18T11:59:59.999Z` and that a January date yields `11:00Z`, so daylight saving is handled rather than hardcoded</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Phase 3 — fulfilment + notifications</div>
             <div class="recent-desc">Orders page, the fulfilment state machine and the five retail emails. Verified 2026-08-18: two real orders taken end to end through hosted Stripe Checkout on staging, both with a payment intent and a `paid_at`, one driven to `collected` and one to `ready`; GST correct on both (717c on a 5500c inclusive total). The emails were wired on PR #101 — retail needed its own send path because `sendNotification()` starts from a user id and shop buyers are guests with no user row. Migration 0029 makes `notification_logs.user_id` nullable and adds `recipient_email`, so a guest send is still logged in the same table as clinical mail. Exercised against the staging database with Postmark deliberately unconfigured so nothing sent: paused wrote zero rows, unpaused rendered all five templates with zero failures and logged five guest rows. **Not verified: an actually delivered email** — `NOTIFICATIONS_PAUSED` is true on both environments</div>
           </div>
@@ -968,20 +982,6 @@
             <div class="recent-desc">Staging existed but shared production&#39;s database and held live Stripe keys — a second front door onto live data and live money, not an environment. Now on its own Supabase branch (`khcuxlkhjscmlmasmwuw`, ~$0.32/day), verified an exact schema match for production (identical fingerprint `bd37241…`, 425 columns, 32 tables) and empty of patient data. Railway repointed server *and* client: the `VITE_` vars mattered because `client/src/lib/supabase.ts` falls back to hardcoded production values when unset, so staging&#39;s login had been silently authenticating against the production auth server. Stripe now a matched **test** pair (account `51TzRyLH`), verified baked into the served bundle. Seeded with a practice and a practitioner login. **Verified end to end against the deployed app:** product created with sizes, stock driven to −3 without clamping, duplicate size 409, unknown id 404, and production still reads 0 products / 0 orders with its 338 users and 3,751 appointments intact. Getting here also required repairing the migration ledger and force-aligning the diverged `staging` branch (content proven byte-identical to `main` first)</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Phase 1 — schema + product admin</div>
-            <div class="recent-desc">Migration 0027 plus the Products page: CRUD, sizes with stock steppers that don&#39;t clamp at zero, publish toggle, pre-order + expected date, flat shipping rate. Extended the same day with migration 0028 (product_images) so a garment can carry front, back and detail shots, and fixed a Tailwind width collision that had collapsed the size-label field to nothing. Verified end to end against the deployed staging app</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Shop spec</div>
-            <div class="recent-desc">docs/SHOP.md: the data model, the backorder and pre-order rules, order state machine, GST treatment, and what is deliberately out of scope. Written and scope-locked before any code, so the three build phases have something to be checked against. Merged to dev on 2026-08-01 via PR #98, on its own so it stays reviewable independently of the build</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -998,9 +998,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">🔴 Production invoices print a placeholder phone number</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">practices.phone</span><span class="tag tag-neutral">+64 9 000 0000</span><span class="tag tag-neutral">server/services/pdf/invoice.ts:48</span><span class="tag tag-neutral">practices.email</span><span class="tag tag-neutral">admin@go-chiro.co.nz</span><span class="tag tag-neutral">go-chiro.com</span><span class="tag tag-neutral">contact@go-chiro.com</span></div>
-        <div class="card-desc">Found 2026-08-18. `practices.phone` in production is `+64 9 000 0000`. `server/services/pdf/invoice.ts:48` prints the practice address, phone and email in the invoice header, so that fake number is on **every invoice the app issues** — and ACC submission is now unblocked, so it would go to ACC too. `practices.email` is `admin@go-chiro.co.nz`, on a different domain from the app&#39;s `go-chiro.com` and from the Postmark sender `contact@go-chiro.com`; it is also where the new shop-order alert lands, so if nobody reads that mailbox Luke never learns an order came in. Both are one-field data fixes, not code. Get the real numbers off Luke and confirm which mailbox he actually watches</div>
+        <div class="card-title">🔑 Fix the staging Supabase Site URL — 30 seconds, unblocks all staging testing</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-blocked">blocked-by-access</span><span class="tag tag-neutral">khcuxlkhjscmlmasmwuw</span><span class="tag tag-neutral">https://go-chiro.com</span><span class="tag tag-neutral">GET /auth/v1/verify?redirect_to=…</span><span class="tag tag-neutral">location: https://go-chiro.com</span><span class="tag tag-neutral">https://go-chiro-api-staging.up.railway.app</span><span class="tag tag-neutral">https://go-chiro-api-staging.up.railway.app/**</span><span class="tag tag-neutral">SUPABASE_ACCESS_TOKEN</span><span class="tag tag-neutral">~/.claude/ENABLEMENT.md</span></div>
+        <div class="card-desc">Ricky could not log in to staging: every attempt bounced him to the live app, so the testing he thought he was doing on staging was happening in production. **Cause proven 2026-08-18:** the staging Supabase branch `khcuxlkhjscmlmasmwuw` has Site URL `https://go-chiro.com` and does not allow the staging origin, so Supabase falls back to Site URL. Confirmed with `GET /auth/v1/verify?redirect_to=…`, which returned `location: https://go-chiro.com` for both a bogus redirect *and* the staging origin. The client bundle is innocent — it correctly targets the staging project. **Fix:** https://supabase.com/dashboard/project/khcuxlkhjscmlmasmwuw/auth/url-configuration → Site URL `https://go-chiro-api-staging.up.railway.app`, and add `https://go-chiro-api-staging.up.railway.app/**` to the redirect allow-list. Claude cannot do this: the Supabase MCP covers SQL, migrations and branches but not auth config, and there is no `SUPABASE_ACCESS_TOKEN` on the machine — logged in `~/.claude/ENABLEMENT.md`</div>
       </div>
       <div class="card">
         <div class="card-title">Run the full-day rehearsal as a real patient</div>
@@ -1036,9 +1036,19 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">27</span>
+        <span class="col-count">29</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Practice contact details, GST number and ACC identifiers all correct</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">config</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">+64 9 000 0000</span><span class="tag tag-neutral">admin@go-chiro.co.nz</span><span class="tag tag-neutral">server/services/pdf/invoice.ts:48</span><span class="tag tag-neutral">contact@go-chiro.com</span><span class="tag tag-neutral">+6421 133 1127</span></div>
+        <div class="card-desc">Set 2026-08-18 on both environments. Phone was the placeholder `+64 9 000 0000` and email was `admin@go-chiro.co.nz` on a domain the practice does not use; `server/services/pdf/invoice.ts:48` prints both in the header of **every** invoice, so that fake number was going out on all of them — and ACC submission had just been unblocked. Now `contact@go-chiro.com` and `+6421 133 1127`, which Ricky confirmed are the only contact details the practice uses. The email is also where the new shop-order alert lands, so that now reaches a mailbox somebody reads</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Today screen showed the wrong day&#39;s appointments</div>
+        <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">fixed</span><span class="tag tag-neutral">toApiDayRange</span><span class="tag tag-neutral">DashboardPage.tsx</span><span class="tag tag-neutral">Z</span><span class="tag tag-neutral">2026-08-17T12:00:00Z → 2026-08-18T11:59:59.999Z</span><span class="tag tag-neutral">11:00Z</span></div>
+        <div class="card-desc">PR #101. `toApiDayRange` in `DashboardPage.tsx` built the range from the local calendar date then appended a literal `Z`, so in NZ the screen asked for noon today through noon tomorrow. **Proven against production for 2026-08-18:** the buggy range returned 9 appointments where the real NZ day has 8 — it dropped the 11:30am appointment, the first of the day, and appended two from tomorrow morning, which is what Ricky spotted against the diary. Fixed by deriving the boundaries as real instants from the existing local-time helpers; verified the window is now `2026-08-17T12:00:00Z → 2026-08-18T11:59:59.999Z` and that a January date yields `11:00Z`, so daylight saving is handled rather than hardcoded</div>
+      </div>
       <div class="card">
         <div class="card-title">Phase 3 — fulfilment + notifications</div>
         <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">paid_at</span><span class="tag tag-neutral">collected</span><span class="tag tag-neutral">ready</span><span class="tag tag-neutral">sendNotification()</span><span class="tag tag-neutral">notification_logs.user_id</span><span class="tag tag-neutral">recipient_email</span><span class="tag tag-neutral">NOTIFICATIONS_PAUSED</span></div>
@@ -1222,9 +1232,14 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">13</span>
+        <span class="col-count">14</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Audit the `${date}T00:00:00Z` pattern on the server</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">Z</span><span class="tag tag-neutral">server/routes/booking-config.ts:632</span><span class="tag tag-neutral">server/services/routing.ts:182</span><span class="tag tag-neutral">server/routes/booking-bookings.ts:88</span><span class="tag tag-neutral">server/routes/reports.ts:59</span></div>
+        <div class="card-desc">The Today screen bug fixed on PR #101 was a local calendar date with a literal `Z` stapled on, which in NZ shifted the window 12 hours. The identical pattern is still in `server/routes/booking-config.ts:632`, `server/services/routing.ts:182`, `server/routes/booking-bookings.ts:88` and `server/routes/reports.ts:59`. Those receive a date string from a caller rather than reading a local clock, so the semantics genuinely differ and they may be correct — but the same 12-hour shift on **booking availability** would offer patients the wrong slots, and on **reports** would put takings in the wrong day. Not changed on PR #101 because rewriting booking-critical date logic untested is worse than the bug. Wants a test per call site, then a fix where it is actually wrong</div>
+      </div>
       <div class="card">
         <div class="card-title">Weekly ACC billing run, not per-patient clicks</div>
         <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">build</span><span class="tag tag-neutral">Submit to ACC</span><span class="tag tag-neutral">PaymentsPage.tsx</span><span class="tag tag-neutral">docs/ROADMAP.md</span><span class="tag tag-neutral">Submit week to ACC</span><span class="tag tag-neutral">not_submitted</span><span class="tag tag-neutral">not_submitted</span></div>
