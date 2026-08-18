@@ -17,10 +17,10 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M8 · The shipping record",
+  phase: "M9 · The readback",
   nextMilestone: {
-    name: "Telling the system the work is done, so it can police what we assumed",
-    date: "Q3 2026 · one click on staging closes it · the FAQ work still has until 3 September",
+    name: "Verifying a prediction against its control — and saying so when we were wrong",
+    date: "Q4 2026 · October's Search Console figures are final 5 November · nothing brings that forward",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -253,7 +253,7 @@ module.exports = {
       // true. What still has to happen is the thing M7 left undone as well — a
       // person pressing the control on a deployed environment.
       doneWhen: "A specialist records a shipment in the app on a deployed environment, with evidence, and the shipping record and every prediction change accordingly",
-      status: "current",
+      status: "done",
     },
     {
       id: "M9",
@@ -274,7 +274,7 @@ module.exports = {
       // decidable if something recorded when the work shipped. That is M8, and it
       // has to land before the window closes rather than alongside the verdict.
       doneWhen: "A recorded prediction is verified against its matched control and the report states what actually happened, including when the answer is that we were wrong",
-      status: "planned",
+      status: "current",
     },
     {
       id: "M10",
@@ -339,14 +339,14 @@ module.exports = {
       status: "in-progress",
       title: "Phase 3",
       subtitle: "Close the loop",
-      window: "In progress · M7 landed 2026-08-14 — the first report is published and frozen; M8 gives the system a way to be told the work is done, and the verdict follows in M9 from 5 November",
+      window: "In progress · M8 landed 2026-08-19 — the first shipment is on the record and the drift check reads it; M9 is the verdict and October's figures are final 5 November",
       desc: "Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.",
       deliverables: [
         "✅ Readback windows fixed before a change, not chosen after — derived from the approval timestamp, immutable by trigger",
         "✅ Matched control-set constructor — demanded by every repo, built by none. It refuses twelve of thirteen items and says why",
-        "✅ Monthly report: what we did, why, and what we expected — predictions shown pending with their readback windows, behind a nine-check publication gate",
-        "→ The shipping record: a specialist marks work done, and the system says whether it landed inside the window its prediction assumed",
-        "Delta-vs-control, with algorithm updates auto-flagged as confounders",
+        "✅ Monthly report: what we did, why, and what we expected — predictions shown pending with their readback windows, behind a ten-check publication gate",
+        "✅ The shipping record: a specialist marks work done — with evidence, attributed, frozen — and the system re-derives the readback window from that date and says whether it landed in time",
+        "→ Delta-vs-control, with algorithm updates auto-flagged as confounders",
         "The verdict: what actually happened, including when the answer is that we were wrong",
       ],
     },
@@ -355,7 +355,7 @@ module.exports = {
       status: "future",
       title: "Phase 4",
       subtitle: "Hand to the team",
-      window: "M9 · the real test",
+      window: "M10 · the real test",
       desc: "The tool is finished when a specialist who didn't build it runs a client month unaided. Until then it's Ricky's tool, not the team's.",
       deliverables: [
         "Specialist-facing onboarding flow with access checklist",
