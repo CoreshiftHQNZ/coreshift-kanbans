@@ -855,11 +855,11 @@
 
     <!-- STATUS STRIP -->
     <section class="status-strip">
-      <div class="status-stat status-done"><div class="status-num">8</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-done"><div class="status-num">9</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">0</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked</div></div>
-      <div class="status-stat status-this-week"><div class="status-num">6</div><div class="status-label">This Week</div></div>
-      <div class="status-stat status-backlog"><div class="status-num">10</div><div class="status-label">Backlog</div></div>
+      <div class="status-stat status-this-week"><div class="status-num">5</div><div class="status-label">This Week</div></div>
+      <div class="status-stat status-backlog"><div class="status-num">11</div><div class="status-label">Backlog</div></div>
     </section>
 
     <!-- KEY ARTIFACTS / QUICK LINKS -->
@@ -983,9 +983,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">8</span>
+        <span class="col-count">9</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Patients can pay again</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span><span class="tag tag-neutral">PR #115</span></div>
+        <div class="card-desc">Both payment modals mounted Stripe <code>&lt;Elements&gt;</code> with no usable client secret and then fetched the real one into child state. Stripe.js reads <code>clientSecret</code> at construction and never again, so nothing could ever confirm &mdash; patients could not pay an invoice or save a card. Fixed by ordering: fetch the intent first, mount <code>&lt;Elements&gt;</code> only once a real secret exists. Also removed a setState-during-render, corrected a pre-<code>/a/</code> return URL, and fixed <code>throwIfResNotOk</code>, which read only <code>body.message</code> while <strong>402 of 446 routes return <code>{ error }</code></strong> &mdash; every server error message in the app was being discarded. <strong>Not yet verified with a real card</strong> &mdash; needs a login; staging is on Stripe test keys.</div>
+      </div>
       <div class="card">
         <div class="card-title">The patient record page</div>
         <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">PR #114</span></div>
@@ -1049,14 +1054,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Patients cannot pay an invoice</div>
-        <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span></div>
-        <div class="card-desc">The pay modal mounts Stripe Elements with <code>clientSecret: ""</code> and only stores the real secret in child state, so <code>confirmPayment</code> can never succeed. The server side is correct and ACC-aware; it is purely the wiring.</div>
-      </div>
       <div class="card">
         <div class="card-title">Auto-drafted invoices bill the patient 100%</div>
         <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span></div>
@@ -1087,9 +1087,14 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">10</span>
+        <span class="col-count">11</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Saving a card is not an invoice operation</div>
+        <div class="card-tags"><span class="tag tag-neutral">R2+</span><span class="tag tag-neutral">follow-up</span></div>
+        <div class="card-desc">The auto-pay SetupIntent is created via <code>POST /api/invoices/:id/setup-auto-charge</code>, but it belongs to the <em>user</em> and the handler ignores <code>:id</code> entirely &mdash; so the client sends a placeholder. It works, and it is commented at the call site, but the route is mis-shaped and should move to the patients router. Left alone because <code>routes/invoices.ts</code> is money-critical and flagged do-not-touch.</div>
+      </div>
       <div class="card">
         <div class="card-title">The 16-session ACC entitlement</div>
         <div class="card-tags"><span class="tag tag-neutral">R5</span><span class="tag tag-neutral">the hard one</span></div>
