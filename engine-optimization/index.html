@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>62%</strong> complete</div>
-        <div><strong>69</strong>/111 cards done</div>
-        <div>Updated <strong>2026-08-18 22:07 UTC</strong></div>
+        <div><strong>63%</strong> complete</div>
+        <div><strong>70</strong>/112 cards done</div>
+        <div>Updated <strong>2026-08-18 22:13 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">M9 · The readback</span>
+          <span class="phase-pill-value">M9 · The verdict machinery</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">Verifying a prediction against its control — and saying so when we were wrong <span class="phase-pill-date">Q4 2026 · October&#39;s Search Console figures are final 5 November · nothing brings that forward</span></span>
+          <span class="phase-pill-value">Everything the verdict needs, built before the month it reads exists <span class="phase-pill-date">This week · the verdict itself is M10 and waits for 5 November · nothing brings that forward</span></span>
         </div>
       </div>
     </section>
@@ -797,10 +797,10 @@
             <div class="phase-status-pill phase-status-in-progress">In progress</div>
           </div>
           <div class="phase-title">Phase 3 <span class="phase-subtitle">Close the loop</span></div>
-          <div class="phase-window">In progress · M8 landed 2026-08-19 — the first shipment is on the record and the drift check reads it; M9 is the verdict and October&#39;s figures are final 5 November</div>
+          <div class="phase-window">In progress · M8 landed 2026-08-19 — the first shipment is on the record and the drift check reads it; M9 builds everything the verdict needs, M10 reads it once October&#39;s figures are final on 5 November</div>
           <p class="phase-desc">Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.</p>
           <ul class="phase-deliverables">
-            <li>✅ Readback windows fixed before a change, not chosen after — derived from the approval timestamp, immutable by trigger</li><li>✅ Matched control-set constructor — demanded by every repo, built by none. It refuses twelve of thirteen items and says why</li><li>✅ Monthly report: what we did, why, and what we expected — predictions shown pending with their readback windows, behind a ten-check publication gate</li><li>✅ The shipping record: a specialist marks work done — with evidence, attributed, frozen — and the system re-derives the readback window from that date and says whether it landed in time</li><li>→ Delta-vs-control, with algorithm updates auto-flagged as confounders</li><li>The verdict: what actually happened, including when the answer is that we were wrong</li>
+            <li>✅ Readback windows fixed before a change, not chosen after — derived from the approval timestamp, immutable by trigger</li><li>✅ Matched control-set constructor — demanded by every repo, built by none. It refuses twelve of thirteen items and says why</li><li>✅ Monthly report: what we did, why, and what we expected — predictions shown pending with their readback windows, behind a ten-check publication gate</li><li>✅ The shipping record: a specialist marks work done — with evidence, attributed, frozen — and the system re-derives the readback window from that date and says whether it landed in time</li><li>→ M9 · Delta-vs-control arithmetic, the verification writer, and an algorithm-update ledger that flags confounders before the window it judges is readable</li><li>M10 · The verdict: what actually happened, including when the answer is that we were wrong — final 5 November</li>
           </ul>
         </div>
         <div class="phase-card phase-future">
@@ -809,7 +809,7 @@
             <div class="phase-status-pill phase-status-future">Future</div>
           </div>
           <div class="phase-title">Phase 4 <span class="phase-subtitle">Hand to the team</span></div>
-          <div class="phase-window">M10 · the real test</div>
+          <div class="phase-window">M11 · the real test</div>
           <p class="phase-desc">The tool is finished when a specialist who didn&#39;t build it runs a client month unaided. Until then it&#39;s Ricky&#39;s tool, not the team&#39;s.</p>
           <ul class="phase-deliverables">
             <li>Specialist-facing onboarding flow with access checklist</li><li>Role-based access and per-client assignment</li><li>Scheduled cycles firing unattended, with actionable failure alerts</li><li>One specialist completes a full cycle end to end without help</li>
@@ -821,11 +821,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">69</div>
+        <div class="status-num">70</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
+        <div class="status-num">1</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -837,7 +837,7 @@
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
-        <div class="status-num">6</div>
+        <div class="status-num">5</div>
         <div class="status-label">Backlog</div>
       </div>
     </section>
@@ -896,6 +896,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">M9 was split from the verdict, for the third time and for the same reason</div>
+            <div class="recent-desc">Ricky&#39;s call on 2026-08-19, immediately after M8 landed. The readback&#39;s doneWhen cannot be met before **5 November**: prediction `a3e5a8a7` reads back over October 2026, those figures settle then, and back-dating is refused by a trigger on purpose. Eleven weeks of an open milestone with nothing able to move is the quiet expansion a doneWhen exists to prevent. So the milestone was cut where the calendar cuts it: **M9 is everything the verdict needs and can close this week**, **M10 is the verdict and waits for the month**. The standing rule from the two previous cuts is unchanged and now applies a third time — *work that must be recorded before the verdict date is its own milestone ahead of the verdict* — and the ledger is the clearest case of it yet, because a confounder decided while the answer is visible is not a confounder. **The two options not taken, and why:** M10-then (now M11) the handover is real work with a closable doneWhen, but it is blocked on in-app prompt sign-off and it would leave the November verdict&#39;s inputs unbuilt with the window already open; the three small fixes (UTC labelling, the undecidable acceptance criterion, the flaky staging deploy) are all cards in This Week and none of them is a milestone. **Arc grew 10 → 11.** M11 is the handover; M4&#39;s comment naming the handover milestone was renumbered with it</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Proving the gate by walking through it would have been the failure the gate exists to prevent</div>
             <div class="recent-desc">The most important call of the session and it was Ricky&#39;s. M8&#39;s doneWhen originally required a specialist to mark one of **Storepro&#39;s** approved items shipped, which assumed August&#39;s work would be done. It is not being done — the exercise was a test of the app, not a commitment to the site — and the obvious shortcut was to press the button on Storepro anyway to see whether it worked. **That shortcut costs a permanent false statement about a real client&#39;s work.** `shipped_at` is frozen on write with no correction path, and the composer reads it to tell a client an item was *delivered*. The record would have sat in their document forever, and the motive being *testing* does not change what the record says. So the human act stayed and its subject moved: **`npm run fixture -- --seed`** creates `app-check`, unmistakably not a client — status `prospect`, domain `app-check.invalid` (RFC 2606, can never resolve, so no crawl can reach a real site), and a name that says so wherever a client name appears. One approved plan, three approved ranked items across three change types so the *ship by* column is visibly derived rather than constant, and one recorded prediction — that last one added deliberately, because a client with no predictions satisfies *&quot;every prediction changes accordingly&quot;* vacuously rather than demonstrating it. **New doneWhen:** *A specialist records a shipment in the app on a deployed environment, with evidence, and the shipping record and every prediction change accordingly.* The old wording and the reasoning are kept in `kanban.config.js` rather than overwritten. ⚠️ The fixture writes to the same Supabase project staging reads — that is the point, and it is why the teardown is a command (`npm run fixture -- --drop`) documented in the README rather than a note in somebody&#39;s head</div>
           </div>
@@ -928,13 +935,6 @@
             <div class="recent-desc">Found by re-running the audit to make the one-click reachable, which is the sort of thing only running it turns up. Item 1&#39;s authored action is *&quot;make the 3 pages either return real content **or** return 404/410, and remove them from sitemap.xml either way&quot;*, and its acceptance criterion is *&quot;the next audit run emits no `obs.empty_responses` finding&quot;*. **Those two branches are not equivalent to the readback.** `obs.empty_responses` has a per-page predicate, so `server/predict/readback.ts` refuses to call the criterion passed unless the run actually *assessed* the named pages. Remove them from the sitemap and they are never discovered, never crawled, never assessed — and the verdict is **`not_assessed`**, with the entirely correct message *&quot;a finding cannot be raised about pages nobody crawled, so its absence says nothing here&quot;*. Only the *give them content* branch can ever produce `passed`. ⚠️ **This is not a bug in the readback** — it is the project&#39;s most persistent rule working exactly as designed, one layer further out than it has appeared before: the honest verdict on a page that no longer exists is *unknown*, not *fixed*. What is wrong is that `server/plan/actions.ts` authored an action whose cheaper branch makes its own acceptance criterion unverifiable, and nothing notices. **The consequence today is small and specific:** the one-click cannot appear for item 1 if the 404 route is taken, and the shipment has to go through *Mark shipped anyway*. **The consequence at scale is the thing to fix:** an action with a branch its criterion cannot observe will keep producing items that read as unfinished forever. The check that would catch it — does every branch of an authored action leave the acceptance criterion decidable — does not exist and belongs next to the existing action-coverage tests in `npm run test:actions`</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Re-running the audit made the readback a readback rather than a baseline</div>
-            <div class="recent-desc">Run `d853a778` (147 of 202 pages, method `2026-08-a`, SEO 91.50 / GEO 93.44 / AEO 45.45, 12 findings) post-dates the plan&#39;s approval, so `server/predict/readback.ts` will now mark things finished when they are. Before this the only run on file was `54b3758e` — the run the plan was *built from* — which is labelled `baseline` and may never mark anything finished, correctly. **It did not make the one-click appear, and could not have:** the one-click is gated on the audit agreeing, and the audit can only agree once the work is done. 0 finished, 12 failing, 1 needs a person — unchanged, and right. The shipping record is untouched: 0 of 13 shipped, binding date still 2026-09-03</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -947,9 +947,14 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">0</span>
+        <span class="col-count">1</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="card">
+        <div class="card-title">M9: The verdict machinery — everything the readback needs, built before the month it reads exists</div>
+        <div class="card-tags"><span class="tag tag-neutral">M9</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">d7de6e64</span><span class="tag tag-neutral">outcome</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">actual_value</span><span class="tag tag-neutral">control_value</span><span class="tag tag-neutral">outcome_notes</span><span class="tag tag-neutral">predictions_outcome_carries_control</span><span class="tag tag-neutral">too_early</span><span class="tag tag-neutral">confounded</span><span class="tag tag-neutral">algorithm_updates</span><span class="tag tag-neutral">0001</span><span class="tag tag-neutral">shipped_at</span><span class="tag tag-neutral">predictions.confounders</span><span class="tag tag-neutral">a3e5a8a7</span><span class="tag tag-neutral">too_early</span><span class="tag tag-neutral">outcome is null</span></div>
+        <div class="card-desc">Three pieces, all buildable today, none of them the verdict. **(1) The delta-vs-control arithmetic** — what a prediction&#39;s treated pages did against the twelve matched untouched pages in control set `d7de6e64`, reported as a delta against the control rather than a raw delta, which is the difference between a measurement and a story. **(2) The verification writer** — records `outcome`, `decision`, `actual_value`, `control_value` and `outcome_notes` against terms the database has already frozen, and honours `predictions_outcome_carries_control`: only `too_early` and `confounded` may be written without numbers. **(3) The algorithm-update ledger** — `algorithm_updates` has existed since `0001` and **nothing has ever written to it**, the same shape of gap M8 found in `shipped_at`. Google-owned sources only, verified entries only; it auto-flags `predictions.confounders` on any prediction whose window overlaps an update. ⚠️ **Ledger before verdict, and that ordering is the whole argument for doing this now.** Deciding in November whether a core update overlapped October, with October&#39;s numbers already on screen, lets the answer choose its own confounder. 🔴 **Nothing here writes a verdict for `a3e5a8a7`** — not even `too_early`, which would be honest and would still empty the work queue the `outcome is null` index exists to keep</div>
+      </div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
@@ -971,16 +976,21 @@
       </div>
       <div class="card">
         <div class="card-title">A second client, when you&#39;re ready</div>
-        <div class="card-tags"><span class="tag tag-neutral">M10</span></div>
+        <div class="card-tags"><span class="tag tag-neutral">M11</span></div>
         <div class="card-desc">Not blocking anything, and parked here rather than dropped because it is the only thing that tests M6&#39;s four matching thresholds, all of which have exactly one property behind them. You said you&#39;d add one later; this is the note that says why it matters more than it looks. **Default:** Storepro-only until you name one</div>
       </div></div>
     </section>
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">69</span>
+        <span class="col-count">70</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">M9 was split from the verdict, for the third time and for the same reason</div>
+        <div class="card-tags"><span class="tag tag-neutral">M9</span><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">a3e5a8a7</span></div>
+        <div class="card-desc">Ricky&#39;s call on 2026-08-19, immediately after M8 landed. The readback&#39;s doneWhen cannot be met before **5 November**: prediction `a3e5a8a7` reads back over October 2026, those figures settle then, and back-dating is refused by a trigger on purpose. Eleven weeks of an open milestone with nothing able to move is the quiet expansion a doneWhen exists to prevent. So the milestone was cut where the calendar cuts it: **M9 is everything the verdict needs and can close this week**, **M10 is the verdict and waits for the month**. The standing rule from the two previous cuts is unchanged and now applies a third time — *work that must be recorded before the verdict date is its own milestone ahead of the verdict* — and the ledger is the clearest case of it yet, because a confounder decided while the answer is visible is not a confounder. **The two options not taken, and why:** M10-then (now M11) the handover is real work with a closable doneWhen, but it is blocked on in-app prompt sign-off and it would leave the November verdict&#39;s inputs unbuilt with the window already open; the three small fixes (UTC labelling, the undecidable acceptance criterion, the flaky staging deploy) are all cards in This Week and none of them is a milestone. **Arc grew 10 → 11.** M11 is the handover; M4&#39;s comment naming the handover milestone was renumbered with it</div>
+      </div>
       <div class="card">
         <div class="card-title">Proving the gate by walking through it would have been the failure the gate exists to prevent</div>
         <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">shipped_at</span><span class="tag tag-neutral">npm run fixture -- --seed</span><span class="tag tag-neutral">app-check</span><span class="tag tag-neutral">prospect</span><span class="tag tag-neutral">app-check.invalid</span><span class="tag tag-neutral">kanban.config.js</span><span class="tag tag-neutral">npm run fixture -- --drop</span></div>
@@ -1335,12 +1345,12 @@
       <div class="cards">
       <div class="card">
         <div class="card-title">A shipping date is recorded and displayed in UTC, which reads a day behind in New Zealand</div>
-        <div class="card-tags"><span class="tag tag-neutral">M9</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">server/predict/windows.ts</span></div>
-        <div class="card-desc">Surfaced the moment a real person pressed the button: Ricky recorded a shipment on the morning of **19 August** NZ time and the record reads **2026-08-18**, because everything downstream of it is UTC. That is not a bug to convert away. `server/predict/windows.ts` is UTC and clock-free by design, and the drift check compares a UTC shipping date against a UTC deadline — showing the NZ date in the panel while comparing the UTC one would put two dates from one row on the same screen, which is worse. **The fix is to label it, not to shift it.** ⚠️ **There is a real bounded edge underneath the display issue.** A shipment made at 1am NZ on 4 September is 13:00 UTC on 3 September, so it lands inside the deadline by UTC and outside it by local reckoning — up to twelve hours of slack in the wrong direction, at the boundary only. It cannot mis-order anything else, and it only ever matters for a shipment landing within half a day of a deadline. 🤔 **And the deeper question it opens, which is not this card&#39;s:** the readback month is a Search Console calendar month, and Search Console reports in the property&#39;s own timezone rather than UTC. That has been true since M1 and nothing has ever depended on it to the day. It starts mattering the first time a window boundary is argued about. Worth costing before M9 verifies anything</div>
+        <div class="card-tags"><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">server/predict/windows.ts</span></div>
+        <div class="card-desc">Surfaced the moment a real person pressed the button: Ricky recorded a shipment on the morning of **19 August** NZ time and the record reads **2026-08-18**, because everything downstream of it is UTC. That is not a bug to convert away. `server/predict/windows.ts` is UTC and clock-free by design, and the drift check compares a UTC shipping date against a UTC deadline — showing the NZ date in the panel while comparing the UTC one would put two dates from one row on the same screen, which is worse. **The fix is to label it, not to shift it.** ⚠️ **There is a real bounded edge underneath the display issue.** A shipment made at 1am NZ on 4 September is 13:00 UTC on 3 September, so it lands inside the deadline by UTC and outside it by local reckoning — up to twelve hours of slack in the wrong direction, at the boundary only. It cannot mis-order anything else, and it only ever matters for a shipment landing within half a day of a deadline. 🤔 **And the deeper question it opens, which is not this card&#39;s:** the readback month is a Search Console calendar month, and Search Console reports in the property&#39;s own timezone rather than UTC. That has been true since M1 and nothing has ever depended on it to the day. It starts mattering the first time a window boundary is argued about. Worth costing before M10 verifies anything</div>
       </div>
       <div class="card">
         <div class="card-title">Nothing checks that an authored action&#39;s branches leave its acceptance criterion decidable</div>
-        <div class="card-tags"><span class="tag tag-neutral">M9</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">npm run test:actions</span><span class="tag tag-neutral">not_assessed</span></div>
+        <div class="card-tags"><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">npm run test:actions</span><span class="tag tag-neutral">not_assessed</span></div>
         <div class="card-desc">The general form of the item-1 finding above. `npm run test:actions` already proves every rule the audit can emit has an authored action and an acceptance criterion; it does not prove the two are *compatible*. Item 1&#39;s action permits removing pages from the sitemap, which makes its own criterion return `not_assessed` forever. The check is cheap where it belongs — alongside the existing action-coverage tests — and the rule it would encode is one sentence: **an action must not offer a fix that makes its own acceptance criterion unobservable.** Worth doing before a second client multiplies the authored actions, not after</div>
       </div>
       <div class="card">
@@ -1375,12 +1385,12 @@
       </div>
       <div class="card">
         <div class="card-title">The crawl budget now caps what can be called finished</div>
-        <div class="card-tags"><span class="tag tag-neutral">M9</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">incomplete</span></div>
+        <div class="card-tags"><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">incomplete</span></div>
         <div class="card-desc">Surfaced by the readback. An item naming 147 pages can only be marked finished when a run assesses all 147, and the crawl stops at 147 of Storepro&#39;s 202 discovered pages. Today that is moot — nothing has been fixed yet, so every item fails on its merits. It stops being moot the first time real work is done and the readback reports `incomplete` on an item that is genuinely finished. Two ways out and neither is free: raise the crawl budget for a readback run, or accept a pass rate below 1 on large items and say so on the criterion. Decide before the first month of work lands, not after</div>
       </div>
       <div class="card">
         <div class="card-title">A second client is the first real test of the matching thresholds</div>
-        <div class="card-tags"><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">risk</span></div>
+        <div class="card-tags"><span class="tag tag-neutral">M11</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">risk</span></div>
         <div class="card-desc">Five pairs, 40% concentration, ten points of divergence, five-times magnitude band. All four are *declared* constants with a written reason, and all four have been exercised against exactly one property with 50 measurable pages. They produced one prediction from thirteen items, which is the honest answer for Storepro and might be the wrong answer for a site with 500 pages in Search Console. Nothing to change yet; worth knowing that the numbers have one data point behind them</div>
       </div>
       <div class="card">
@@ -1392,7 +1402,7 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -1417,13 +1427,8 @@
       </div>
       <div class="card">
         <div class="card-title">A client-facing format for the report</div>
-        <div class="card-tags"><span class="tag tag-neutral">M9</span><span class="tag tag-deliverable">deliverable</span></div>
+        <div class="card-tags"><span class="tag tag-neutral">M10</span><span class="tag tag-deliverable">deliverable</span></div>
         <div class="card-desc">The generator landed in M7: the report is composed from the records, bound to its originating findings, and published behind a gate. What is *not* built is anything that leaves the app — no PDF, no branded template, no email. That was deliberate rather than deferred by accident: the format a client receives is a positioning decision, and the report&#39;s own wording is still being read for the first time. Worth doing once one report has been published and read</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Algorithm update ledger</div>
-        <div class="card-tags"><span class="tag tag-neutral">M9</span></div>
-        <div class="card-desc">Google-owned sources only, verified entries only. Auto-flags confounders on predictions whose window overlaps an update</div>
       </div></div>
     </section>
     <section class="column col-neutral">

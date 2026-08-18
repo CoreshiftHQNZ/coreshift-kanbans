@@ -1,55 +1,75 @@
 # Engine Optimization — Handover
-_2026-08-19 · closes M8 · opens a decision before M9 · arc 10_
+_2026-08-19 · closes M8 · splits M9 from the verdict · opens M9 · arc 11_
 
 ## ▶️ Paste this into a new session
 
 ```
-Engine Optimization — decide what's next after M8
+Engine Optimization — M9: The verdict machinery
 
-Read coreshift-kanbans/engine-optimization/HANDOVER.md and docs/shipping.md.
+Read coreshift-kanbans/engine-optimization/HANDOVER.md, then docs/predictions.md
+and docs/shipping.md. `server/predict/windows.ts` and `server/ship/drift.ts` are
+the two files whose headers explain why this milestone is shaped the way it is.
 
-M8 landed on 2026-08-19. Ricky recorded the first shipment this system has ever
-held, in the app on staging, attributed to him and frozen. The drift check reads
-that date and re-derives the readback window from it with the existing pure
-readbackWindow, and the report now states on every pending prediction whether the
-work shipped inside the window it assumed. 188 tests across seven suites.
+The decision after M8 was made on 2026-08-19: M9 was split from the verdict for
+the third time and for the same reason. M9 is everything the readback needs and
+it can close this week. M10 is the verdict and it waits for 5 November, when
+October's Search Console figures settle. Nothing brings that forward.
 
-M9 is "The readback" — verify a recorded prediction against its matched control
-and say what actually happened, including when the answer is that we were wrong.
-Its doneWhen cannot be met until 5 November, when October's Search Console
-figures settle. That is eleven weeks away and it is not shortenable.
+M9 closes when: the verification arithmetic produces a complete verdict from real
+data on a closed month — the delta against a matched control, with every
+algorithm update overlapping the window named from the ledger — while a3e5a8a7's
+own verdict is refused by name as unanswerable until 2026-11-05 and nothing is
+written to its outcome.
 
-So the next step is a judgement call, not a task. Do not start building until it
-is made. Three real options, with the recommendation first:
+Three pieces, none of them the verdict:
 
-1. RECOMMENDED — split M9 the way M7 was split. Everything the verdict needs can
-   be built now: the verification writer, the delta-vs-control arithmetic, the
-   algorithm-update ledger that populates predictions.confounders. Make that its
-   own milestone that CAN close this week, and leave the verdict itself as a
-   milestone whose doneWhen is the 5 November reading. This is the same call
-   Ricky already made twice — M7 split from the verdict, M8 inserted ahead of it —
-   and the standing rule from those sessions is that work which must be recorded
-   before the verdict date is its own milestone ahead of the verdict.
+1. The delta-vs-control arithmetic. What the treated pages did against the twelve
+   matched untouched pages in control set d7de6e64, reported as a delta against
+   the control and never as a raw delta. Pure, clock-free, `now` passed in, the
+   way windows.ts and drift.ts are — it has to be exercisable on a month that has
+   already closed without back-dating anything.
 
-2. Go to M10 instead and leave M9 whole until November. M10 is "a specialist
-   other than Ricky runs a full monthly cycle end to end without help", and its
-   named blocker is that in-app prompt sign-off still does not exist — a
-   specialist who cannot sign a prompt set off in the app cannot run a cycle
-   unaided. That is real, buildable work with a doneWhen that can close.
+2. The verification writer. Writes verified_at, verified_in_cycle, actual_value,
+   control_value, actual_period, outcome, decision, outcome_notes and
+   confounders, and nothing else — the terms are frozen by
+   predictions_terms_immutable and that trigger is the point. Honour
+   predictions_outcome_carries_control: only `too_early` and `confounded` may be
+   written without numbers. Decide, and write down, whether a verdict is itself
+   frozen once written; a published report and a recorded shipment both are, and
+   a verdict that can be revised after the client has read it is worth nothing.
 
-3. Fix what this session surfaced first. Three things, all small, all with a
-   written card: staging deploys fail roughly every other time with no runtime
-   logs and need a manual retry; an authored action can offer a fix its own
-   acceptance criterion cannot observe; a shipping date is recorded and displayed
-   in UTC, which reads a day behind in New Zealand and carries a bounded
-   twelve-hour edge at a deadline boundary.
+3. The algorithm-update ledger. `algorithm_updates` has existed since 0001 and
+   nothing has ever written to it — the same shape of gap M8 found in
+   `shipped_at`. Google-owned source URLs only, `verified` false is a research
+   lead and not evidence. It auto-flags predictions.confounders when an update's
+   date range overlaps a prediction's window.
 
-Decide, update milestones[] in kanban.config.js, then emit the work prompt for
-whatever wins. Do not build anything before the decision is recorded on the board.
+Ledger before verdict, and that ordering is the entire argument for building this
+now rather than in November: deciding whether a core update overlapped October
+while October's numbers are already on screen lets the answer choose its own
+confounder.
 
-Check the staging deploy before you trust it — and expect to retry it. See the
-board card; three deployments failed today and every one succeeded on retry of
-the identical commit.
+Do not write a verdict for prediction a3e5a8a7. Not `failed`, not `confounded`,
+and not `too_early` — `too_early` would be honest and would still empty the work
+queue that the `outcome is null` index exists to keep. The refusal is a feature of
+this milestone and should be visible in the app and in the CLI, with the date.
+
+Do not re-derive or move a readback window. Do not let anything in windows.ts read
+the clock. Do not add a publication check to compose.ts without adding it to the
+required-check array in the newest migration, and do not change the composer or a
+check without bumping REPORT_METHOD_VERSION.
+
+Also on the board this week, all small, all optional for the doneWhen: a shipping
+date recorded and displayed in UTC that reads a day behind in NZ and carries a
+bounded twelve-hour edge at a deadline boundary; nothing checking that an authored
+action's branches leave its own acceptance criterion decidable; and staging
+deploys failing roughly every other time with no runtime logs.
+
+Check the staging deploy before you trust it — and expect to retry it. The last
+deployment before this session, b7ee3997, succeeded at 10:01 NZ on 19 August, but
+two of the four before it failed and both succeeded on retry of the identical
+commit. `railway deployment list`, look for FAILED, then download the served
+bundle and grep it.
 
 Give me the 5-line orientation, then get on with it.
 ```
@@ -95,11 +115,12 @@ Give me the 5-line orientation, then get on with it.
 
 ## 👉 On you
 
-1. **Decide what comes next, and it is a real choice.** M9's answer does not
-   exist until 5 November — eleven weeks. The paste-block above lays out three
-   options with a recommendation. **Default if you say nothing:** the next session
-   takes option 1 and splits M9, because that is the call you have already made
-   twice for the same reason.
+1. ~~Decide what comes next.~~ **Decided 2026-08-19: M9 is split.** The verdict
+   machinery — delta-vs-control, the verification writer, the algorithm-update
+   ledger — is **M9** and can close this week. The verdict itself is **M10** and
+   waits for October's figures on **5 November**. The handover milestone moved to
+   **M11**; the arc is 11. Board updated, work prompt above. **Nothing on you
+   here** unless you want it cut differently.
 
 2. **Does the FAQ item get the hours? By 3 September.** Unchanged, and now the
    system will say so out loud in the report either way. 18-hour item in a

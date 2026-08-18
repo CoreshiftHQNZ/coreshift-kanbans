@@ -17,10 +17,10 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M9 · The readback",
+  phase: "M9 · The verdict machinery",
   nextMilestone: {
-    name: "Verifying a prediction against its control — and saying so when we were wrong",
-    date: "Q4 2026 · October's Search Console figures are final 5 November · nothing brings that forward",
+    name: "Everything the verdict needs, built before the month it reads exists",
+    date: "This week · the verdict itself is M10 and waits for 5 November · nothing brings that forward",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -257,9 +257,46 @@ module.exports = {
     },
     {
       id: "M9",
+      name: "The verdict machinery",
+      // Split from the readback on 2026-08-19, on Ricky's call, the day M8
+      // landed. Third time this call has been made and the third time for the
+      // same reason: M7 was split from its verification, M8 was inserted ahead of
+      // it because `shipped_at` had to be written while the work was being done
+      // rather than reconstructed from memory in November, and this is the rest of
+      // that same argument.
+      //
+      // The readback as written cannot close before 5 November — prediction
+      // a3e5a8a7 reads back over October 2026 and those figures are not final
+      // until then, and back-dating is refused by a trigger on purpose. Eleven
+      // weeks of an open milestone with nothing able to move is precisely the
+      // quiet expansion a doneWhen exists to prevent.
+      //
+      // What the verdict needs, though, all exists now and is all buildable now:
+      // the delta-vs-control arithmetic, the writer that records an outcome
+      // against terms the database has frozen, and the algorithm-update ledger
+      // that populates `predictions.confounders`. `algorithm_updates` has existed
+      // since `0001` and **nothing has ever written to it** — the same shape of
+      // gap M8 found in `shipped_at`, and worth more here: deciding in November
+      // whether a core update overlapped an October window, while October's
+      // numbers are already on screen, is the order that lets the answer pick its
+      // own confounder. Ledger first, verdict second.
+      //
+      // ⚠️ The verdict itself is deliberately not in here. Nothing in this
+      // milestone may write `outcome`, `actual_value` or `control_value` for
+      // a3e5a8a7 — including `too_early`, which would be honest and would still
+      // empty the work queue that the `outcome is null` index exists to keep.
+      doneWhen: "The verification arithmetic produces a complete verdict from real data on a closed month — the delta against a matched control, with every algorithm update overlapping the window named from the ledger — while a3e5a8a7's own verdict is refused by name as unanswerable until 2026-11-05 and nothing is written to its outcome",
+      status: "current",
+    },
+    {
+      id: "M10",
       name: "The readback",
       // Added 2026-08-14 when M7 was split; renumbered from M8 on 2026-08-15 when
-      // the shipping record was inserted ahead of it. This is the half of the loop that
+      // the shipping record was inserted ahead of it, and from M9 on 2026-08-19
+      // when the verdict machinery was split out ahead of it. What is left here is
+      // the verdict and only the verdict — every input it reads is M9's, so this
+      // milestone spends eleven weeks waiting on a calendar and nothing else.
+      // This is the half of the loop that
       // cannot be hurried: prediction a3e5a8a7 reads back over October 2026 and
       // those figures are final on 5 November. Everything it needs can be built
       // before then — the verification writer, the algorithm-update ledger that
@@ -274,10 +311,10 @@ module.exports = {
       // decidable if something recorded when the work shipped. That is M8, and it
       // has to land before the window closes rather than alongside the verdict.
       doneWhen: "A recorded prediction is verified against its matched control and the report states what actually happened, including when the answer is that we were wrong",
-      status: "current",
+      status: "planned",
     },
     {
-      id: "M10",
+      id: "M11",
       name: "Handover to the team",
       // ✅ The hard prerequisite is now met. Postmark was wired on 2026-08-14
       // (smtp.postmarkapp.com, sender hello@growthpartners.co.nz) and the send
@@ -339,15 +376,15 @@ module.exports = {
       status: "in-progress",
       title: "Phase 3",
       subtitle: "Close the loop",
-      window: "In progress · M8 landed 2026-08-19 — the first shipment is on the record and the drift check reads it; M9 is the verdict and October's figures are final 5 November",
+      window: "In progress · M8 landed 2026-08-19 — the first shipment is on the record and the drift check reads it; M9 builds everything the verdict needs, M10 reads it once October's figures are final on 5 November",
       desc: "Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.",
       deliverables: [
         "✅ Readback windows fixed before a change, not chosen after — derived from the approval timestamp, immutable by trigger",
         "✅ Matched control-set constructor — demanded by every repo, built by none. It refuses twelve of thirteen items and says why",
         "✅ Monthly report: what we did, why, and what we expected — predictions shown pending with their readback windows, behind a ten-check publication gate",
         "✅ The shipping record: a specialist marks work done — with evidence, attributed, frozen — and the system re-derives the readback window from that date and says whether it landed in time",
-        "→ Delta-vs-control, with algorithm updates auto-flagged as confounders",
-        "The verdict: what actually happened, including when the answer is that we were wrong",
+        "→ M9 · Delta-vs-control arithmetic, the verification writer, and an algorithm-update ledger that flags confounders before the window it judges is readable",
+        "M10 · The verdict: what actually happened, including when the answer is that we were wrong — final 5 November",
       ],
     },
     {
@@ -355,7 +392,7 @@ module.exports = {
       status: "future",
       title: "Phase 4",
       subtitle: "Hand to the team",
-      window: "M10 · the real test",
+      window: "M11 · the real test",
       desc: "The tool is finished when a specialist who didn't build it runs a client month unaided. Until then it's Ricky's tool, not the team's.",
       deliverables: [
         "Specialist-facing onboarding flow with access checklist",
