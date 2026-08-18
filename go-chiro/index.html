@@ -855,10 +855,10 @@
 
     <!-- STATUS STRIP -->
     <section class="status-strip">
-      <div class="status-stat status-done"><div class="status-num">7</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-done"><div class="status-num">8</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">0</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked</div></div>
-      <div class="status-stat status-this-week"><div class="status-num">8</div><div class="status-label">This Week</div></div>
+      <div class="status-stat status-this-week"><div class="status-num">6</div><div class="status-label">This Week</div></div>
       <div class="status-stat status-backlog"><div class="status-num">10</div><div class="status-label">Backlog</div></div>
     </section>
 
@@ -983,9 +983,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">8</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">The patient record page</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">PR #114</span></div>
+        <div class="card-desc">The missing PMS primitive, now at <code>/a/practitioner/patients/:id</code>. One aggregate endpoint returns profile, sessions with their note and summary state, invoices, ACC claims, appointments, homework and intake in a single pass; the clients list now navigates. Sessions show whether the write-up was published and whether the client read it &mdash; which no screen surfaced before. <strong>Also closed a security hole:</strong> <code>/api/patients/:id/history</code> had no auth middleware at all; it is now staff-only and practice-scoped. <strong>Verified on staging:</strong> the endpoint went 501 &rarr; 401, and the aggregate SQL was run against the live database first. Not yet rendered against real data &mdash; that needs a login.</div>
+      </div>
       <div class="card">
         <div class="card-title">The app is out of production</div>
         <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R1</span><span class="tag tag-neutral">PR #107 / #110</span></div>
@@ -1044,19 +1049,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">8</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">A patient record page</div>
-        <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">the big one</span></div>
-        <div class="card-desc">There is <strong>no patient detail page at all</strong>. <code>/a/practitioner/patients</code> is a flat searchable list whose rows are non-navigable divs, and <code>GET /api/patients/:id/history</code> is a literal <code>501 TODO</code>. Notes, invoices, claims and appointments each live on their own practice-wide screen; nothing joins them per patient. This is the main reason anyone opens a PMS, and R3 is not runnable without it.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Add the auth guard to the history endpoint &mdash; before implementing it</div>
-        <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">security</span></div>
-        <div class="card-desc"><code>patientsRouter.get("/:id/history")</code> has <strong>no <code>isAuthenticated</code> middleware</strong>, unlike every sibling route. It returns 501 today so nothing leaks &mdash; but it is exactly the endpoint the record page needs, and whoever implements it inherits an unauthenticated patient-history route.</div>
-      </div>
       <div class="card">
         <div class="card-title">Patients cannot pay an invoice</div>
         <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span></div>
