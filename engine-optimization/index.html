@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>61%</strong> complete</div>
-        <div><strong>67</strong>/110 cards done</div>
-        <div>Updated <strong>2026-08-18 21:43 UTC</strong></div>
+        <div><strong>60%</strong> complete</div>
+        <div><strong>67</strong>/111 cards done</div>
+        <div>Updated <strong>2026-08-18 21:51 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">10</div>
+        <div class="status-num">11</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -1330,9 +1330,14 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">10</span>
+        <span class="col-count">11</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">A shipping date is recorded and displayed in UTC, which reads a day behind in New Zealand</div>
+        <div class="card-tags"><span class="tag tag-neutral">M9</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">server/predict/windows.ts</span></div>
+        <div class="card-desc">Surfaced the moment a real person pressed the button: Ricky recorded a shipment on the morning of **19 August** NZ time and the record reads **2026-08-18**, because everything downstream of it is UTC. That is not a bug to convert away. `server/predict/windows.ts` is UTC and clock-free by design, and the drift check compares a UTC shipping date against a UTC deadline — showing the NZ date in the panel while comparing the UTC one would put two dates from one row on the same screen, which is worse. **The fix is to label it, not to shift it.** ⚠️ **There is a real bounded edge underneath the display issue.** A shipment made at 1am NZ on 4 September is 13:00 UTC on 3 September, so it lands inside the deadline by UTC and outside it by local reckoning — up to twelve hours of slack in the wrong direction, at the boundary only. It cannot mis-order anything else, and it only ever matters for a shipment landing within half a day of a deadline. 🤔 **And the deeper question it opens, which is not this card&#39;s:** the readback month is a Search Console calendar month, and Search Console reports in the property&#39;s own timezone rather than UTC. That has been true since M1 and nothing has ever depended on it to the day. It starts mattering the first time a window boundary is argued about. Worth costing before M9 verifies anything</div>
+      </div>
       <div class="card">
         <div class="card-title">Nothing checks that an authored action&#39;s branches leave its acceptance criterion decidable</div>
         <div class="card-tags"><span class="tag tag-neutral">M9</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">npm run test:actions</span><span class="tag tag-neutral">not_assessed</span></div>
