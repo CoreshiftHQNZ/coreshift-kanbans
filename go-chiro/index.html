@@ -1242,9 +1242,19 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">14</span>
+        <span class="col-count">16</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Finish the email deliverability check</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">email</span><span class="tag tag-neutral">DKIM</span><span class="tag tag-neutral">DMARC</span><span class="tag tag-neutral">Postmark</span></div>
+        <div class="card-desc">The email tidy-up on 2026-08-18 fixed how mail is *built and sent*; this is whether it *lands*. Confirmed good: SPF includes `spf.mtasv.net`, and the custom return-path `pm-bounces.go-chiro.com` points at `pm.mtasv.net`. Three things left. **DKIM is unverified** — 12 common selectors were probed over DNS and none resolved, but a Postmark *server* token cannot read a domain&#39;s DKIM state, so this is genuinely unknown rather than known-bad. Needs a Postmark **Account** API token. **DMARC is `p=none`** — monitoring only, nothing is quarantined or rejected. Correct as a starting point; worth moving to `p=quarantine` once DKIM is confirmed. **No bounce webhook** — `BounceHookUrl` is empty on the Postmark server, so a hard bounce to a patient address is invisible to the app. Total volume is 3 emails / 30 days with 0 bounces, so nothing is on fire</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Drop the duplicate `POSTMARK_SENDER` env var</div>
+        <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-neutral">email</span><span class="tag tag-neutral">POSTMARK_SENDER</span><span class="tag tag-neutral">NOTIFICATION_FROM_EMAIL</span><span class="tag tag-neutral">server/services/email/send.ts</span></div>
+        <div class="card-desc">Two env vars held the sender address and different code paths read different ones — `NOTIFICATION_FROM_EMAIL` in the notification services, `POSTMARK_SENDER` in the raw-fetch paths. Both are set to `contact@go-chiro.com` on staging and production, so nothing was actually misaddressed, but it was one typo away from mail going out as an unverified sender. `sendEmail()` now reads `NOTIFICATION_FROM_EMAIL` first and falls back to `POSTMARK_SENDER` only because both still exist on Railway. Delete `POSTMARK_SENDER` from both environments, then remove the fallback branch in `server/services/email/send.ts` and the deprecation note in `.env.example`</div>
+      </div>
       <div class="card">
         <div class="card-title">Audit the `${date}T00:00:00Z` pattern on the server</div>
         <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">Z</span><span class="tag tag-neutral">server/routes/booking-config.ts:632</span><span class="tag tag-neutral">server/services/routing.ts:182</span><span class="tag tag-neutral">server/routes/booking-bookings.ts:88</span><span class="tag tag-neutral">server/routes/reports.ts:59</span></div>
