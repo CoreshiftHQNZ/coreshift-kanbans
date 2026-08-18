@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>41%</strong> complete</div>
-        <div><strong>30</strong>/73 cards done</div>
-        <div>Updated <strong>2026-08-18 03:45 UTC</strong></div>
+        <div><strong>R1</strong> of 7 · reset landed</div>
+        <div><strong>Production:</strong> website only</div>
+        <div>Updated <strong>2026-08-18</strong></div>
       </div>
     </div>
   </header>
@@ -712,16 +712,16 @@
     <section class="hero">
       <div class="hero-eyebrow">INTERNAL · LIVE OPS DASHBOARD</div>
       <h1 class="hero-title">Go-Chiro</h1>
-      <p class="hero-tagline">Full NZ practice management system, built for 1–5 person practices. Lighter than Splose, with the efficiency layer that makes the 1 → 3 staff jump painless.</p>
-      <p class="hero-desc">Direction change 2026-07-21: Go-Chiro stopped being a layer on top of Splose and became a complete, standalone practice management system — our own diary, records, invoicing and reporting. The product thesis is the 1 → 3 staff jump: automate everything a solo operator does by hand (reminders, recalls, intake, payments, forms) so hires #2 and #3 are clinicians, not admin. Built for Go Chiro first, kept SaaS-ready (every table is already practice-scoped). Node/Express + React + Drizzle on Supabase, deployed to Railway. Full plan: docs/ROADMAP.md in the repo.</p>
+      <p class="hero-tagline">Full NZ practice management system, built to <strong>replace Splose</strong> at a 1&ndash;5 person practice.</p>
+      <p class="hero-desc"><strong>Reset 2026-08-18.</strong> An audit of the code against the live database found roughly 80% of the product built and <strong>none of it ever used</strong> &mdash; 0 invoices, 0 ACC claims, 2 completed sessions and 4 activated accounts, ever. The 3,816 appointments in the database are Splose history the sync pulled in, not work done here. So the bottleneck was never the build; it was that nobody ever ran a day on it, and five milestones were stacked on an unproven base. The app has been taken out of production, the Splose integration deleted (1,478 lines), and the milestones renumbered R1&ndash;R7 around one sentence: <strong>Luke runs a full clinic day in Go-Chiro with Splose closed.</strong> Full plan: <code>docs/ROADMAP.md</code>.</p>
       <div class="hero-phase-row">
         <div class="phase-pill">
-          <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">M3 blocked on Luke · building M7 retail</span>
+          <div class="phase-pill-label">Current phase</div>
+          <div class="phase-pill-value">R1 reset landed &middot; R2 next</div>
         </div>
-        <div class="phase-pill phase-pill-milestone">
-          <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">M7 — Retail: the clinic shop, sellable with backorder and pre-order <span class="phase-pill-date">M7</span></span>
+        <div class="phase-pill">
+          <div class="phase-pill-label">Next milestone</div>
+          <div class="phase-pill-value">R2 &mdash; the patient record, and money that is correct <span class="tag tag-milestone">R2</span></div>
         </div>
       </div>
     </section>
@@ -751,92 +751,103 @@
 
     <!-- PHASES -->
     <section class="phases">
-      <h2 class="section-head">Development & Production Phases</h2>
-      <p class="section-sub">Where the project has been, where it is now, and where it's going. Each phase delivers value on its own — no big-bang.</p>
+      <h2 class="section-head">Milestones</h2>
+      <p class="section-sub">Ordered by how directly each one serves the goal: Luke runs a full clinic day in Go-Chiro with Splose closed. Nothing else is a milestone.</p>
       <div class="phases-grid">
-        
         <div class="phase-card phase-done">
           <div class="phase-card-head">
             <div class="phase-marker">v0</div>
             <div class="phase-status-pill phase-status-done">Done</div>
           </div>
-          <div class="phase-title">v0 <span class="phase-subtitle">Splose era — the differentiated layer</span></div>
-          <div class="phase-window">Done · in production</div>
-          <p class="phase-desc">Everything Splose does not do, built first: patient self-booking (mobile vs clinic, route days), Stripe payments with auto-pay, the clinical loop (session → AI SOAP → publish), ACC45 claims and PDFs, exercise homework with streaks, messaging, notifications, and the patient portal — all riding a two-way Splose sync.</p>
+          <div class="phase-title">v0 <span class="phase-subtitle">Built, deployed, never used</span></div>
+          <div class="phase-window">Shipped &middot; unproven</div>
+          <p class="phase-desc">Everything Splose does not do, built first and pushed to production: patient self-booking with venues and route days, Stripe payments, the clinical loop (session &rarr; AI SOAP &rarr; publish), ACC45 capture and PDFs, exercise homework with streaks, intake forms, recalls, waitlist, notifications and the patient portal. All of it real code. None of it exercised on a real patient &mdash; which is the whole reason for the reset.</p>
           <ul class="phase-deliverables">
-            <li>Clinical loop: session → AI SOAP → publish</li><li>Booking wizard + venues + route days + optimization</li><li>Stripe payments + auto-pay (live keys verified in prod)</li><li>Patient portal, homework, messaging, notifications</li>
+            <li>Clinical loop: session &rarr; typed notes &rarr; Claude SOAP &rarr; publish</li><li>Booking with venues, route days and route optimisation</li><li>Native invoicing: GST maths, sequential numbering, ACC split, PDF</li><li>Patient portal, homework, intake, recalls, waitlist, push</li>
           </ul>
         </div>
         <div class="phase-card phase-done">
           <div class="phase-card-head">
-            <div class="phase-marker">M1–M2</div>
+            <div class="phase-marker">R1</div>
             <div class="phase-status-pill phase-status-done">Done</div>
           </div>
-          <div class="phase-title">M1–M2 <span class="phase-subtitle">Diary + native invoicing</span></div>
-          <div class="phase-window">Done · in production</div>
-          <p class="phase-desc">The commodity PMS core that Splose still owned. Appointments and invoices now originate in Go-Chiro rather than being imported: the diary the practice lives in all day, and a GST-correct, ACC-aware invoice engine feeding the existing Stripe rails.</p>
+          <div class="phase-title">R1 <span class="phase-subtitle">Reset</span></div>
+          <div class="phase-window">Landed 2026-08-18</div>
+          <p class="phase-desc">Stop pretending and get the ground truth. The app is out of production behind an <code>APP_ENABLED</code> switch that closes it in the server <em>and</em> the client router; the Splose integration is deleted; the roadmap and this board are rewritten against what the code actually does rather than what the old plan claimed.</p>
           <ul class="phase-deliverables">
-            <li>Day + week diary, per-practitioner columns, drag-to-reschedule</li><li>Practitioner appointment CRUD + quick-create patient</li><li>Native invoice origination, GST maths, sequential numbering, PDF</li><li>ACC portion vs patient co-pay split from day one</li>
-          </ul>
-        </div>
-        <div class="phase-card phase-planned">
-          <div class="phase-card-head">
-            <div class="phase-marker">M3</div>
-            <div class="phase-status-pill phase-status-planned">Planned</div>
-          </div>
-          <div class="phase-title">M3 <span class="phase-subtitle">Prove the day — blocked on Luke</span></div>
-          <div class="phase-window">Blocked</div>
-          <p class="phase-desc">The clinical and money loop, rehearsed end to end with Ricky as the patient: book, attend, note published with summary and reports on both sides, homework live in the patient&#39;s app, invoice raised automatically and auto-charged to the saved card. The code is all in production and none of it has ever been run as one continuous flow. Blocked because it needs Luke, and because ACC submission cannot be exercised until his Vendor ID exists — so ACC moved to M3.5.</p>
-          <ul class="phase-deliverables">
-            <li>A scripted full-day rehearsal, evidenced step by step</li><li>Notes → summary → reports visible in both views</li><li>Homework auto-created and live in the patient app</li><li>Invoice auto-raised and auto-charged to a saved card</li>
-          </ul>
-        </div>
-        <div class="phase-card phase-planned">
-          <div class="phase-card-head">
-            <div class="phase-marker">M3.5</div>
-            <div class="phase-status-pill phase-status-planned">Planned</div>
-          </div>
-          <div class="phase-title">M3.5 <span class="phase-subtitle">Go-live cutover</span></div>
-          <div class="phase-window">Next</div>
-          <p class="phase-desc">The switch morning. Luke stops booking in Splose, the flag flips, notifications un-pause, and Go-Chiro becomes sole source of truth — with the system-of-record hardening (backups/PITR, audit trail, Privacy Act + HIPC review) done before the data has nowhere else to live.</p>
-          <ul class="phase-deliverables">
-            <li>System-of-record hardening: PITR, audit trail, HIPC review</li><li>Full history migration + final Splose import</li><li>SPLOSE_CUTOVER=true · NOTIFICATIONS_PAUSED=false</li><li>Splose export taken, then subscription cancelled</li>
-          </ul>
-        </div>
-        <div class="phase-card phase-done">
-          <div class="phase-card-head">
-            <div class="phase-marker">M4</div>
-            <div class="phase-status-pill phase-status-done">Done</div>
-          </div>
-          <div class="phase-title">M4 <span class="phase-subtitle">Front desk without a front desk</span></div>
-          <div class="phase-window">Done · in production</div>
-          <p class="phase-desc">The efficiency thesis, shipped ahead of go-live: automated recalls, a waitlist for cancellations, online new-patient intake forms, and staff accounts with practitioner/admin roles. All live in production, all silent until notifications un-pause.</p>
-          <ul class="phase-deliverables">
-            <li>Automated recalls — the revenue-recovery lever</li><li>Waitlist — fill cancellations instead of losing them</li><li>Online intake forms — reception-less onboarding</li><li>Staff accounts + roles — the 1→3 hire enabler</li>
+            <li><code>APP_ENABLED</code> kill switch &mdash; production serves the website only</li><li>Splose integration removed: 1,478 lines, 6 sync endpoints, the 10-minute cron</li><li>Dead <code>deploy.yml</code> deleted; 37 merged branches pruned</li><li>Roadmap + board rewritten; docs correction still outstanding</li>
           </ul>
         </div>
         <div class="phase-card phase-in-progress">
           <div class="phase-card-head">
-            <div class="phase-marker">M7</div>
-            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+            <div class="phase-marker">R2</div>
+            <div class="phase-status-pill phase-status-in-progress">Next</div>
           </div>
-          <div class="phase-title">M7 <span class="phase-subtitle">Retail — the clinic shop</span></div>
-          <div class="phase-window">Now</div>
-          <p class="phase-desc">Luke sells a few pieces of clothing. A lean public storefront on the existing marketing site: browse, pick a size, pay by card via Stripe Checkout, then either collect at the clinic or have it shipped flat-rate anywhere in NZ. Stock is counted but never blocks a sale — running out puts the line on backorder rather than turning the customer away, and products can be listed for pre-order before stock lands. Luke runs the catalogue himself.</p>
+          <div class="phase-title">R2 <span class="phase-subtitle">The patient record, and money that is correct</span></div>
+          <div class="phase-window">Next</div>
+          <p class="phase-desc">The two things that make a real day possible, and neither is new scope &mdash; both are gaps in work already called done. There is <strong>no patient record page</strong>: the patients screen is a flat list whose rows do not open, and the aggregate endpoint returns <code>501 TODO</code>. And patients <strong>cannot pay</strong>: the pay modal mounts Stripe with an empty client secret, so it can never confirm.</p>
           <ul class="phase-deliverables">
-            <li>Products + variants + orders schema, Luke-managed catalogue</li><li>Public storefront, cart, guest checkout via Stripe Checkout</li><li>Backorder + pre-order: stock counts, never blocks a sale</li><li>Fulfilment queue: collect at clinic or flat-rate NZ shipping</li>
+            <li>A patient record page joining notes, invoices, claims, appointments</li><li>Add the missing auth guard to <code>/api/patients/:id/history</code> first</li><li>Fix the Stripe <code>clientSecret</code> bug so patients can pay</li><li>Set the ACC portion on auto-drafted invoices &mdash; today they bill 100%</li><li>Guard the paid &rarr; sent webhook downgrade; cut pay-at-booking</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">R3</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">R3 <span class="phase-subtitle">Rehearse a day, with Splose still open</span></div>
+          <div class="phase-window">The de-risking step</div>
+          <p class="phase-desc">Luke runs a full day in Go-Chiro <strong>alongside</strong> Splose, which stays the system of record. Nothing is at stake, and it tells us what is actually missing before we spend R4 and R5 replacing the hard parts. The old roadmap kept deferring this, which is exactly how five milestones came to sit on an unproven base.</p>
+          <ul class="phase-deliverables">
+            <li>One full day: book &rarr; arrive &rarr; notes &rarr; SOAP &rarr; publish &rarr; homework &rarr; invoice &rarr; payment</li><li>Decide the notifications question, or accept a silent day</li><li>Write down every gap the day exposes &mdash; that list drives R4 onward</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">R4</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">R4 <span class="phase-subtitle">Own the booking</span></div>
+          <div class="phase-window">Kills Splose dependency #1</div>
+          <p class="phase-desc">The public site&rsquo;s only booking path is still an outbound link to Splose&rsquo;s online booking &mdash; that is how real patients book today, which is why it was deliberately left in place. Native booking already exists for invited patients and honours real availability, venues and route-day capacity. This is about exposing it to people who do not have an account yet.</p>
+          <ul class="phase-deliverables">
+            <li>Public booking on the marketing site, replacing the Splose link</li><li>Intake before an account exists &mdash; today it needs an authenticated patient, so reception is still required</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-planned">
+          <div class="phase-card-head">
+            <div class="phase-marker">R5</div>
+            <div class="phase-status-pill phase-status-planned">Planned</div>
+          </div>
+          <div class="phase-title">R5 <span class="phase-subtitle">Own ACC</span></div>
+          <div class="phase-window">The true cutover gate</div>
+          <p class="phase-desc">Electronic lodgement genuinely still happens in Splose/HealthLink. Splose cannot close until Luke can bill ACC without it. And the <strong>16-session entitlement does not exist in any form</strong> &mdash; no counter, no cap, no record &mdash; while three boxes on the practitioner flow depend on it.</p>
+          <ul class="phase-deliverables">
+            <li>The 16-session entitlement, and sessions-remaining visible so Luke can re-claim</li><li>A lodgeable ACC45, or the electronic channel &mdash; the current PDF is stamped &ldquo;not itself an ACC submission&rdquo;</li><li>Weekly/batch ACC invoicing; today it is one invoice at a time, by hand</li><li>Set <code>ACC_INVOICE_EMAIL</code> deliberately &mdash; unset, it falls back to ACC&rsquo;s real address</li>
           </ul>
         </div>
         <div class="phase-card phase-future">
           <div class="phase-card-head">
-            <div class="phase-marker">M5–M6</div>
-            <div class="phase-status-pill phase-status-future">Future</div>
+            <div class="phase-marker">R6</div>
+            <div class="phase-status-pill phase-status-future">Planned</div>
           </div>
-          <div class="phase-title">M5–M6 <span class="phase-subtitle">Money, insight, and maybe SaaS</span></div>
-          <div class="phase-window">Later</div>
-          <p class="phase-desc">Reporting and Xero export so the money is legible, the ACC electronic-channel upgrade (straight-through processing, ~8-day payment, auto-reconciliation), and — only if the system proves itself in Go Chiro&#39;s daily use — tenant onboarding and plan billing for other practices.</p>
+          <div class="phase-title">R6 <span class="phase-subtitle">Migrate and cut over</span></div>
+          <div class="phase-window">After R5</div>
+          <p class="phase-desc">The fresh import, then Splose goes read-only and the subscription is cancelled. Every <code>splose_*</code> id column is being kept until this lands &mdash; they are the join keys, and dropping them early would duplicate all 338 patients.</p>
           <ul class="phase-deliverables">
-            <li>Reporting pack: revenue, appointments, no-shows, per-practitioner</li><li>Xero export (CSV first)</li><li>ACC eBusiness gateway / Invoicing API upgrade</li><li>Tenant signup + plan billing (parked)</li>
+            <li>Full history export &mdash; historic notes, files, ACC claim and invoice history</li><li>Fresh import that handles <strong>multiple patients sharing one email</strong> (couples, parents and children) or it collapses families into one record</li><li>Drop the <code>splose_*</code> columns and the two frozen sync tables</li><li>Backups/PITR confirmed, audit trail, NZ Privacy Act + HIPC 2020 review</li>
+          </ul>
+        </div>
+        <div class="phase-card phase-future">
+          <div class="phase-card-head">
+            <div class="phase-marker">R7</div>
+            <div class="phase-status-pill phase-status-future">Planned</div>
+          </div>
+          <div class="phase-title">R7 <span class="phase-subtitle">Retail</span></div>
+          <div class="phase-window">Built and parked</div>
+          <p class="phase-desc">Phases 1 and 2 shipped; retail needs finishing, not designing. Two open PRs have to land in the right order and be reconciled &mdash; PR #101 adds a hand-rolled Postmark call that undoes PR #103&rsquo;s single send path.</p>
+          <ul class="phase-deliverables">
+            <li>Land PR #103, then PR #101 rebased onto it, using the reconciled commit</li><li>Luke loads the real catalogue; then <code>SHOP_PUBLIC_ENABLED=true</code></li><li>Carried risk, deliberate: stock never gates a sale &mdash; do not add a stock gate without asking Ricky</li>
           </ul>
         </div>
       </div>
@@ -844,26 +855,11 @@
 
     <!-- STATUS STRIP -->
     <section class="status-strip">
-      <div class="status-stat status-done">
-        <div class="status-num">30</div>
-        <div class="status-label">Done</div>
-      </div>
-      <div class="status-stat status-in-progress">
-        <div class="status-num">0</div>
-        <div class="status-label">In Progress</div>
-      </div>
-      <div class="status-stat status-blocked">
-        <div class="status-num">6</div>
-        <div class="status-label">Blocked</div>
-      </div>
-      <div class="status-stat status-this-week">
-        <div class="status-num">15</div>
-        <div class="status-label">This Week</div>
-      </div>
-      <div class="status-stat status-backlog">
-        <div class="status-num">10</div>
-        <div class="status-label">Backlog</div>
-      </div>
+      <div class="status-stat status-done"><div class="status-num">7</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-in-progress"><div class="status-num">0</div><div class="status-label">In Progress</div></div>
+      <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked</div></div>
+      <div class="status-stat status-this-week"><div class="status-num">8</div><div class="status-label">This Week</div></div>
+      <div class="status-stat status-backlog"><div class="status-num">10</div><div class="status-label">Backlog</div></div>
     </section>
 
     <!-- KEY ARTIFACTS / QUICK LINKS -->
@@ -935,401 +931,163 @@
     </section>
 
     <!-- RECENTLY SHIPPED -->
-    
     <section class="recent">
       <h2 class="section-head">Recently Shipped</h2>
       <div class="recent-list">
-        
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Splose sync no longer loses patients to shared emails</div>
-            <div class="recent-desc">PR #102 (split out of #101 so it reviews alone), migration 0030. Two defects found 2026-08-18 by chasing one name that did not match between Splose&#39;s diary and the Today screen. (1) `public.users` carried a blanket `UNIQUE (email)`; four Concord Rest Home residents share the home&#39;s admin address, so only the first could exist — production was missing **11 Splose patients** and **165 appointments** from 2026-03-01, the latter because the appointment sync skips any appointment whose patient it cannot resolve. Replaced with a partial unique index over login-capable rows only, which is what Supabase&#39;s `auth.users` already guarantees. (2) The worse one: the sync matched an existing user **by email alone** and overwrote its `splose_patient_id`, so on a shared address each new patient took the previous one&#39;s row and it ended up pointing at whoever the API returned last. Only an unclaimed row can be adopted now. (3) Both loops used to `continue` past anything unresolvable while counting nothing, so every run logged success while dropping records — each skip is now tallied against a reason into `splose_sync_logs.records_skipped` / `skip_reasons`. **Verified** on staging, 5 assertions passing, including that the exact drizzle query the fixed sync runs returns no stealable candidate; both databases pre-checked for login-capable duplicate emails before the constraint was dropped (zero on each); migration applied to staging and production and asserted; `tsc` clean and build passing</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Practice contact details, GST number and ACC identifiers all correct</div>
-            <div class="recent-desc">Set 2026-08-18 on both environments. Phone was the placeholder `+64 9 000 0000` and email was `admin@go-chiro.co.nz` on a domain the practice does not use; `server/services/pdf/invoice.ts:48` prints both in the header of **every** invoice, so that fake number was going out on all of them — and ACC submission had just been unblocked. Now `contact@go-chiro.com` and `+6421 133 1127`, which Ricky confirmed are the only contact details the practice uses. The email is also where the new shop-order alert lands, so that now reaches a mailbox somebody reads</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Today screen showed the wrong day&#39;s appointments</div>
-            <div class="recent-desc">PR #101. `toApiDayRange` in `DashboardPage.tsx` built the range from the local calendar date then appended a literal `Z`, so in NZ the screen asked for noon today through noon tomorrow. **Proven against production for 2026-08-18:** the buggy range returned 9 appointments where the real NZ day has 8 — it dropped the 11:30am appointment, the first of the day, and appended two from tomorrow morning, which is what Ricky spotted against the diary. Fixed by deriving the boundaries as real instants from the existing local-time helpers; verified the window is now `2026-08-17T12:00:00Z → 2026-08-18T11:59:59.999Z` and that a January date yields `11:00Z`, so daylight saving is handled rather than hardcoded</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Phase 3 — fulfilment + notifications</div>
-            <div class="recent-desc">Orders page, the fulfilment state machine and the five retail emails. Verified 2026-08-18: two real orders taken end to end through hosted Stripe Checkout on staging, both with a payment intent and a `paid_at`, one driven to `collected` and one to `ready`; GST correct on both (717c on a 5500c inclusive total). The emails were wired on PR #101 — retail needed its own send path because `sendNotification()` starts from a user id and shop buyers are guests with no user row. Migration 0029 makes `notification_logs.user_id` nullable and adds `recipient_email`, so a guest send is still logged in the same table as clinical mail. Exercised against the staging database with Postmark deliberately unconfigured so nothing sent: paused wrote zero rows, unpaused rendered all five templates with zero failures and logged five guest rows. **Not verified: an actually delivered email** — `NOTIFICATIONS_PAUSED` is true on both environments</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">ACC billing identifiers complete</div>
-            <div class="recent-desc">Settled 2026-08-18. Vendor ID `G0M661` on the practice, Luke&#39;s ACC provider number on his practitioner record, and the GST number on the practice — the last of which was validated against the NZ IRD check-digit algorithm before being written (9 digits, in range, primary weighting, check digit matched). Also set on staging so the rehearsal produces a realistic document. Contract ID is deliberately empty: Ricky&#39;s earlier recollection put `G0M661` there, it turned out to be the Vendor ID, and no code reads Contract ID. **Verified by rendering an actual invoice PDF** — it carries `TAX INVOICE`, `GST no: 141-567-543`, the GST (15%) breakdown, and the ACC block with Provider no. / Vendor ID / Claim no. Identifiers are on this board only where they already appear on every invoice Luke issues</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Tax invoices were missing the GST number</div>
-            <div class="recent-desc">Found and closed 2026-08-18. `practices.gst_number` was null while `gst_registered` was true. `server/services/pdf/invoice.ts:52` prints the number only `if (gstRegistered &amp;&amp; practice.gstNumber)`, so the line vanished silently while line 58 still stamped the document **TAX INVOICE** and line 145 still printed the GST breakdown — a document headed TAX INVOICE, showing GST, with no registration number. It affected every invoice the app issued, not only ACC ones. Fixed by data, not code. **Still worth a guard** refusing ACC submission while the number is null, so a future practice onboarding to Go-Chiro cannot repeat it — logged in This Week</div>
-          </div>
-        </div>
+        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">The app is out of production</div><div class="recent-desc">Verified live: <code>/a/*</code> redirects, every app API 404s, the public site is untouched.</div></div></div>
+        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">Client-side navigation hole closed</div><div class="recent-desc">Caught by Ricky on production. The server gate alone was not enough — wouter never asked it.</div></div></div>
+        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">Splose integration deleted</div><div class="recent-desc">1,478 lines. The booking link and ACC lodgement copy stay — those are real dependencies, not plumbing.</div></div></div>
+        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">New homepage hero live</div><div class="recent-desc">Plus caps headings across the public site and the clinic clip in the about section.</div></div></div>
+        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">Milestones reset to R1–R7</div><div class="recent-desc">Ordered around one sentence, with R3 (rehearse a day) deliberately before the hard replacements.</div></div></div>
       </div>
     </section>
 
     <!-- KANBAN BOARD -->
     <section class="board-section">
       <h2 class="section-head">Live Rollout Board</h2>
-      <p class="section-sub">Every task across every phase. Updated by editing <code>KANBAN.md</code> and running <code>update-kanban.cmd</code>.</p>
+      <p class="section-sub">Reset 2026-08-18 against the code, the live database and both Railway environments. Every claim here was verified or is marked as a recommendation.</p>
       <div class="board">
-        
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">8</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">🔴 The 11 patients and 165 appointments are still missing until the sync re-runs</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">SPLOSE_CUTOVER</span><span class="tag tag-neutral">splose_sync_logs.skip_reasons</span></div>
-        <div class="card-desc">The fix is on PR #102 but nothing is repaired until it is deployed and a sync runs. **Still do not flip `SPLOSE_CUTOVER`.** Two things needed: merge #102 and promote it, and then decide how to prove the repair. Re-running the sync against staging would mean copying 310 real patients into an environment deliberately emptied of patient data — that is a privacy call, not a side effect of a bug fix, so it was not done. The alternative is to let the production sync run on its normal schedule after promotion and assert the counts against Splose afterwards, which is what I would do. Once it has run, the breakdown of what the 165 actually resolve to becomes readable straight off `splose_sync_logs.skip_reasons` instead of needing the Splose API</div>
+        <div class="card-title">Decide: voice notes &mdash; build, or redraw the diagram?</div>
+        <div class="card-tags"><span class="tag tag-neutral">R5?</span><span class="tag tag-neutral">decision</span></div>
+        <div class="card-desc">The practitioner flow shows voice recordings transcribed during the session. That was <strong>deleted from the code</strong> in migrations 0004/0005 &mdash; the practitioner types and Claude does the SOAP rewrite. <strong>Recommendation: redraw the diagram.</strong> Re-adding audio buys transcription cost, storage, consent and clinical-accuracy risk on health records. Revisit only if Luke says typing during a session is what slows him down.</div>
       </div>
       <div class="card">
-        <div class="card-title">🔑 Fix the staging Supabase Site URL — 30 seconds, unblocks all staging testing</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-blocked">blocked-by-access</span><span class="tag tag-neutral">khcuxlkhjscmlmasmwuw</span><span class="tag tag-neutral">https://go-chiro.com</span><span class="tag tag-neutral">GET /auth/v1/verify?redirect_to=…</span><span class="tag tag-neutral">location: https://go-chiro.com</span><span class="tag tag-neutral">https://go-chiro-api-staging.up.railway.app</span><span class="tag tag-neutral">https://go-chiro-api-staging.up.railway.app/**</span><span class="tag tag-neutral">SUPABASE_ACCESS_TOKEN</span><span class="tag tag-neutral">~/.claude/ENABLEMENT.md</span></div>
-        <div class="card-desc">Ricky could not log in to staging: every attempt bounced him to the live app, so the testing he thought he was doing on staging was happening in production. **Cause proven 2026-08-18:** the staging Supabase branch `khcuxlkhjscmlmasmwuw` has Site URL `https://go-chiro.com` and does not allow the staging origin, so Supabase falls back to Site URL. Confirmed with `GET /auth/v1/verify?redirect_to=…`, which returned `location: https://go-chiro.com` for both a bogus redirect *and* the staging origin. The client bundle is innocent — it correctly targets the staging project. **Fix:** https://supabase.com/dashboard/project/khcuxlkhjscmlmasmwuw/auth/url-configuration → Site URL `https://go-chiro-api-staging.up.railway.app`, and add `https://go-chiro-api-staging.up.railway.app/**` to the redirect allow-list. Claude cannot do this: the Supabase MCP covers SQL, migrations and branches but not auth config, and there is no `SUPABASE_ACCESS_TOKEN` on the machine — logged in `~/.claude/ENABLEMENT.md`</div>
+        <div class="card-title">Get Luke&rsquo;s ACC Contract ID</div>
+        <div class="card-tags"><span class="tag tag-neutral">R5</span><span class="tag tag-blocked">blocked-by-luke</span></div>
+        <div class="card-desc">Splose &rarr; Settings &rarr; ACC. Vendor ID, GST number and provider number are already in production; <strong>Contract ID is the one still missing</strong> (verified against the database 2026-08-18). Needed before ACC invoicing can be exercised for real.</div>
       </div>
       <div class="card">
-        <div class="card-title">Run the full-day rehearsal as a real patient</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">decision</span></div>
-        <div class="card-desc">This is the M3 gate and it is on you, because you are an actual customer of Luke&#39;s and the only person who can play the patient without touching a real one. Book, attend, have the note published with summary and reports, check homework lands in the patient app, and let the invoice auto-raise and auto-charge your saved card. Nothing else in M3 can be proved without it. Deferred 2026-08-01 — Luke was not working, so M7 was pulled forward instead</div>
+        <div class="card-title">Schedule the R3 rehearsal day with Luke</div>
+        <div class="card-tags"><span class="tag tag-neutral">R3</span><span class="tag tag-blocked">blocked-by-luke</span></div>
+        <div class="card-desc">The single highest-value thing left. Everything after R3 is shaped by what that day exposes, and it cannot be done without him. Splose stays the system of record, so nothing is at risk.</div>
       </div>
       <div class="card">
-        <div class="card-title">Pick Luke&#39;s switch morning</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">decision</span></div>
-        <div class="card-desc">Audit done 2026-07-21. On the agreed morning Luke stops booking in Splose, we flip SPLOSE_CUTOVER=true and NOTIFICATIONS_PAUSED=false, and he logs in on his phone and adds Go-Chiro to his home screen. 79 future appointments, 332 clients and the booking config are already in the app. Not to be picked until the rehearsal passes</div>
+        <div class="card-title">Decide: prefers-reduced-motion on the homepage clip</div>
+        <div class="card-tags"><span class="tag tag-neutral">R1</span><span class="tag tag-neutral">decision</span></div>
+        <div class="card-desc">The new about-section video autoplays and loops. Users with reduced-motion enabled would normally get the still frame instead. Not implemented, because it changes the behaviour you asked for &mdash; say the word either way.</div>
       </div>
       <div class="card">
-        <div class="card-title">Say when notifications go live</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">decision</span></div>
-        <div class="card-desc">Reminders, confirmations and recalls stay silent on staging and prod until NOTIFICATIONS_PAUSED=false on both envs. That flip is the moment patients start receiving mail from Go-Chiro rather than Splose, so it is your call and nobody else&#39;s</div>
+        <div class="card-title">Leaked identifiers in the public kanbans repo</div>
+        <div class="card-tags"><span class="tag tag-neutral">security</span><span class="tag tag-neutral">follow-up</span></div>
+        <div class="card-desc">Luke&rsquo;s provider and practice numbers were briefly committed to the <em>public</em> kanbans repo (commit <code>0017a9c</code>). Removed from the files and the live page, still in git history. <strong>Recommendation: leave it</strong> &mdash; they appear on every ACC invoice Luke issues. The alternative is rewriting history and force-pushing <code>main</code>.</div>
       </div>
-      <div class="card">
-        <div class="card-title">Two-minute staging tidy-up</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">STRIPE_SECRET_KEY</span><span class="tag tag-neutral">STRIPE_PUBLISHABLE_KEY</span><span class="tag tag-neutral">51TEKvRH</span></div>
-        <div class="card-desc">Both are small and neither blocks phase 2. (1) Roll the staging Stripe **test** secret key — it was exposed in a session transcript on 2026-08-01 by a bad redaction regex. Test-mode only, so no real money or data is reachable, but roll it and re-set `STRIPE_SECRET_KEY`. (2) Delete the leftover `STRIPE_PUBLISHABLE_KEY` var from staging — it still holds an old **live** key from a third Stripe account (`51TEKvRH`) and nothing in the codebase reads it. Worth deleting from production too, for the same reason</div>
       </div>
-      <div class="card">
-        <div class="card-title">Decide on the identifiers left in this repo&#39;s git history</div>
-        <div class="card-tags"><span class="tag tag-ops">ops</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">0017a9c</span></div>
-        <div class="card-desc">Luke&#39;s provider and practice numbers were briefly committed to this public repo on 2026-08-01 (commit `0017a9c`). They are gone from the files and the live page but remain in the history. Leave it, or rewrite history and force-push main? Recommendation: leave it — those numbers appear on every ACC invoice Luke issues, so they are not secret. Your call either way, and it stays open until you make it</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Grab a full Splose export before cancelling the subscription</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-ops">ops</span></div>
-        <div class="card-desc">Splose is month-to-month. Once the cord is cut it becomes a read-only archive for a period, but the export has to be taken while the account is still live</div>
-      </div></div>
     </section>
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">30</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Deleted the dead `Deploy` workflow</div>
-        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">PR #106</span><span class="tag tag-neutral">.github/workflows/deploy.yml</span></div>
-        <div class="card-desc">Removed 2026-08-18 via PR #106 into `dev`. `deploy.yml` had never deployed anything — its Railway steps failed with `railway: not found` on every run — and it was fully redundant: the build check, dev→staging and staging→main are all handled by `deploy-staging.yml` and `deploy-production.yml`, and the real deploys come from Railway&#39;s own branch-watch. Its only live effect was a permanent red X on every PR, including PR #100. **Verified:** PR #100&#39;s checks went from `Build &amp; Deploy=FAILURE` to all-green; it is now blocked only on review</div>
+        <div class="card-title">The app is out of production</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R1</span><span class="tag tag-neutral">PR #107 / #110</span></div>
+        <div class="card-desc"><code>APP_ENABLED</code> must be the literal <code>"true"</code> to serve <code>/a/*</code> and the app API; anything else serves the public site only. Fails closed. <strong>Verified live on go-chiro.com:</strong> <code>/a/*</code> &rarr; 302 to <code>/</code>, every app <code>/api/*</code> &rarr; 404 JSON, scheduler not started, public pages 200.</div>
       </div>
       <div class="card">
-        <div class="card-title">Splose sync no longer loses patients to shared emails</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">fixed</span><span class="tag tag-neutral">public.users</span><span class="tag tag-neutral">UNIQUE (email)</span><span class="tag tag-neutral">auth.users</span><span class="tag tag-neutral">splose_patient_id</span><span class="tag tag-neutral">continue</span><span class="tag tag-neutral">splose_sync_logs.records_skipped</span><span class="tag tag-neutral">skip_reasons</span><span class="tag tag-neutral">tsc</span></div>
-        <div class="card-desc">PR #102 (split out of #101 so it reviews alone), migration 0030. Two defects found 2026-08-18 by chasing one name that did not match between Splose&#39;s diary and the Today screen. (1) `public.users` carried a blanket `UNIQUE (email)`; four Concord Rest Home residents share the home&#39;s admin address, so only the first could exist — production was missing **11 Splose patients** and **165 appointments** from 2026-03-01, the latter because the appointment sync skips any appointment whose patient it cannot resolve. Replaced with a partial unique index over login-capable rows only, which is what Supabase&#39;s `auth.users` already guarantees. (2) The worse one: the sync matched an existing user **by email alone** and overwrote its `splose_patient_id`, so on a shared address each new patient took the previous one&#39;s row and it ended up pointing at whoever the API returned last. Only an unclaimed row can be adopted now. (3) Both loops used to `continue` past anything unresolvable while counting nothing, so every run logged success while dropping records — each skip is now tallied against a reason into `splose_sync_logs.records_skipped` / `skip_reasons`. **Verified** on staging, 5 assertions passing, including that the exact drizzle query the fixed sync runs returns no stealable candidate; both databases pre-checked for login-capable duplicate emails before the constraint was dropped (zero on each); migration applied to staging and production and asserted; `tsc` clean and build passing</div>
+        <div class="card-title">Closed the client-side navigation hole</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R1</span><span class="tag tag-neutral">PR #109</span></div>
+        <div class="card-desc">The first version gated only the server, so clicking <em>Patient Portal</em> from a loaded page still rendered the app shell &mdash; wouter navigates client-side and never asks Express. <strong>Caught by Ricky on production.</strong> Fixed with a public <code>/api/config</code>, a client-router redirect, and hiding the portal entrances. Verified in a real browser: 0 portal links, and a client-side push to <code>/a/login</code> returns to <code>/</code> with no login form.</div>
       </div>
       <div class="card">
-        <div class="card-title">Practice contact details, GST number and ACC identifiers all correct</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">config</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">+64 9 000 0000</span><span class="tag tag-neutral">admin@go-chiro.co.nz</span><span class="tag tag-neutral">server/services/pdf/invoice.ts:48</span><span class="tag tag-neutral">contact@go-chiro.com</span><span class="tag tag-neutral">+6421 133 1127</span></div>
-        <div class="card-desc">Set 2026-08-18 on both environments. Phone was the placeholder `+64 9 000 0000` and email was `admin@go-chiro.co.nz` on a domain the practice does not use; `server/services/pdf/invoice.ts:48` prints both in the header of **every** invoice, so that fake number was going out on all of them — and ACC submission had just been unblocked. Now `contact@go-chiro.com` and `+6421 133 1127`, which Ricky confirmed are the only contact details the practice uses. The email is also where the new shop-order alert lands, so that now reaches a mailbox somebody reads</div>
+        <div class="card-title">Splose integration removed</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R1</span><span class="tag tag-neutral">PR #108</span></div>
+        <div class="card-desc">1,478 lines: the incremental pull (521), the write-back outbox (160), the write-back service (271), six manual sync endpoints (144), the cron router, and the workflow that hit production every 10 minutes. Scheduler rewritten around reminders and recalls. <code>SPLOSE_*</code> env vars deleted from both environments. Behaviour-preserving &mdash; every write path was already a no-op under <code>SPLOSE_CUTOVER=true</code>.</div>
       </div>
       <div class="card">
-        <div class="card-title">Today screen showed the wrong day&#39;s appointments</div>
-        <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">fixed</span><span class="tag tag-neutral">toApiDayRange</span><span class="tag tag-neutral">DashboardPage.tsx</span><span class="tag tag-neutral">Z</span><span class="tag tag-neutral">2026-08-17T12:00:00Z → 2026-08-18T11:59:59.999Z</span><span class="tag tag-neutral">11:00Z</span></div>
-        <div class="card-desc">PR #101. `toApiDayRange` in `DashboardPage.tsx` built the range from the local calendar date then appended a literal `Z`, so in NZ the screen asked for noon today through noon tomorrow. **Proven against production for 2026-08-18:** the buggy range returned 9 appointments where the real NZ day has 8 — it dropped the 11:30am appointment, the first of the day, and appended two from tomorrow morning, which is what Ricky spotted against the diary. Fixed by deriving the boundaries as real instants from the existing local-time helpers; verified the window is now `2026-08-17T12:00:00Z → 2026-08-18T11:59:59.999Z` and that a January date yields `11:00Z`, so daylight saving is handled rather than hardcoded</div>
+        <div class="card-title">Deleted the dead <code>Deploy</code> workflow</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">PR #106</span></div>
+        <div class="card-desc"><code>deploy.yml</code> had never deployed anything &mdash; it failed with <code>railway: not found</code> on every run &mdash; and was fully redundant. Its only live effect was a permanent red X on every PR, including the production promotion. Verified: PR #100&rsquo;s checks went green.</div>
       </div>
       <div class="card">
-        <div class="card-title">Phase 3 — fulfilment + notifications</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">paid_at</span><span class="tag tag-neutral">collected</span><span class="tag tag-neutral">ready</span><span class="tag tag-neutral">sendNotification()</span><span class="tag tag-neutral">notification_logs.user_id</span><span class="tag tag-neutral">recipient_email</span><span class="tag tag-neutral">NOTIFICATIONS_PAUSED</span></div>
-        <div class="card-desc">Orders page, the fulfilment state machine and the five retail emails. Verified 2026-08-18: two real orders taken end to end through hosted Stripe Checkout on staging, both with a payment intent and a `paid_at`, one driven to `collected` and one to `ready`; GST correct on both (717c on a 5500c inclusive total). The emails were wired on PR #101 — retail needed its own send path because `sendNotification()` starts from a user id and shop buyers are guests with no user row. Migration 0029 makes `notification_logs.user_id` nullable and adds `recipient_email`, so a guest send is still logged in the same table as clinical mail. Exercised against the staging database with Postmark deliberately unconfigured so nothing sent: paused wrote zero rows, unpaused rendered all five templates with zero failures and logged five guest rows. **Not verified: an actually delivered email** — `NOTIFICATIONS_PAUSED` is true on both environments</div>
+        <div class="card-title">Marketing hotfix: caps headings + clinic clip</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R1</span><span class="tag tag-neutral">PR #111</span></div>
+        <div class="card-desc">All eighteen public headings set in caps via one rule on the layout wrapper, with a tracking correction because caps at negative letter-spacing collide. The about-section photo replaced by a silent looping clip &mdash; 9MB of HEVC transcoded to a 664KB H.264 mp4, audio stripped, autoplay + muted + loop + playsInline, no controls.</div>
       </div>
       <div class="card">
-        <div class="card-title">ACC billing identifiers complete</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">config</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">G0M661</span><span class="tag tag-neutral">G0M661</span><span class="tag tag-neutral">TAX INVOICE</span><span class="tag tag-neutral">GST no: 141-567-543</span></div>
-        <div class="card-desc">Settled 2026-08-18. Vendor ID `G0M661` on the practice, Luke&#39;s ACC provider number on his practitioner record, and the GST number on the practice — the last of which was validated against the NZ IRD check-digit algorithm before being written (9 digits, in range, primary weighting, check digit matched). Also set on staging so the rehearsal produces a realistic document. Contract ID is deliberately empty: Ricky&#39;s earlier recollection put `G0M661` there, it turned out to be the Vendor ID, and no code reads Contract ID. **Verified by rendering an actual invoice PDF** — it carries `TAX INVOICE`, `GST no: 141-567-543`, the GST (15%) breakdown, and the ACC block with Provider no. / Vendor ID / Claim no. Identifiers are on this board only where they already appear on every invoice Luke issues</div>
+        <div class="card-title">Branch and PR hygiene</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-infra">infra</span></div>
+        <div class="card-desc">37 merged remote branches pruned (43 &rarr; 6), 42 local branches &rarr; 5, four dead worktrees removed, and four four-month-old stale git lock files cleared. PR #102 closed &mdash; it patched a file that no longer exists.</div>
       </div>
       <div class="card">
-        <div class="card-title">Tax invoices were missing the GST number</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">fixed</span><span class="tag tag-neutral">practices.gst_number</span><span class="tag tag-neutral">gst_registered</span><span class="tag tag-neutral">server/services/pdf/invoice.ts:52</span><span class="tag tag-neutral">if (gstRegistered &amp;&amp; practice.gstNumber)</span></div>
-        <div class="card-desc">Found and closed 2026-08-18. `practices.gst_number` was null while `gst_registered` was true. `server/services/pdf/invoice.ts:52` prints the number only `if (gstRegistered &amp;&amp; practice.gstNumber)`, so the line vanished silently while line 58 still stamped the document **TAX INVOICE** and line 145 still printed the GST breakdown — a document headed TAX INVOICE, showing GST, with no registration number. It affected every invoice the app issued, not only ACC ones. Fixed by data, not code. **Still worth a guard** refusing ACC submission while the number is null, so a future practice onboarding to Go-Chiro cannot repeat it — logged in This Week</div>
+        <div class="card-title">Audited what is actually built</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R1</span></div>
+        <div class="card-desc">Every box of the practitioner and client flow diagrams checked against the code, the live database and both Railway environments. The finding that drove this whole reset: <strong>0 invoices, 0 ACC claims, 2 completed sessions, 4 activated accounts &mdash; ever.</strong></div>
       </div>
-      <div class="card">
-        <div class="card-title">Real staging environment</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-infra">infra</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">khcuxlkhjscmlmasmwuw</span><span class="tag tag-neutral">bd37241…</span><span class="tag tag-neutral">VITE_</span><span class="tag tag-neutral">client/src/lib/supabase.ts</span><span class="tag tag-neutral">51TzRyLH</span><span class="tag tag-neutral">staging</span><span class="tag tag-neutral">main</span></div>
-        <div class="card-desc">Staging existed but shared production&#39;s database and held live Stripe keys — a second front door onto live data and live money, not an environment. Now on its own Supabase branch (`khcuxlkhjscmlmasmwuw`, ~$0.32/day), verified an exact schema match for production (identical fingerprint `bd37241…`, 425 columns, 32 tables) and empty of patient data. Railway repointed server *and* client: the `VITE_` vars mattered because `client/src/lib/supabase.ts` falls back to hardcoded production values when unset, so staging&#39;s login had been silently authenticating against the production auth server. Stripe now a matched **test** pair (account `51TzRyLH`), verified baked into the served bundle. Seeded with a practice and a practitioner login. **Verified end to end against the deployed app:** product created with sizes, stock driven to −3 without clamping, duplicate size 409, unknown id 404, and production still reads 0 products / 0 orders with its 338 users and 3,751 appointments intact. Getting here also required repairing the migration ledger and force-aligning the diverged `staging` branch (content proven byte-identical to `main` first)</div>
       </div>
-      <div class="card">
-        <div class="card-title">Phase 1 — schema + product admin</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Migration 0027 plus the Products page: CRUD, sizes with stock steppers that don&#39;t clamp at zero, publish toggle, pre-order + expected date, flat shipping rate. Extended the same day with migration 0028 (product_images) so a garment can carry front, back and detail shots, and fixed a Tailwind width collision that had collapsed the size-label field to nothing. Verified end to end against the deployed staging app</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Shop spec</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">spec</span><span class="tag tag-neutral">merged</span></div>
-        <div class="card-desc">docs/SHOP.md: the data model, the backorder and pre-order rules, order state machine, GST treatment, and what is deliberately out of scope. Written and scope-locked before any code, so the three build phases have something to be checked against. Merged to dev on 2026-08-01 via PR #98, on its own so it stays reviewable independently of the build</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Automated recalls</div>
-        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Live in prod. Nudges patients whose last visit was ≥ the practice&#39;s recall interval ago with nothing booked; throttled one-per-interval. Off by default (per-practice toggle + interval in Practice settings); rides the notification stack so it&#39;s silent until launch. &quot;Clients due for a recall&quot; card on the Today dashboard. PR #80, promoted to production 2026-07-21</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Waitlist</div>
-        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Live in prod. Add clients wanting an earlier/any slot (with optional preferred practitioner + note) from the Today dashboard; reception sees who to call when a gap opens. Auto-offer-by-notification is a later add-on (rides the notification stack once un-paused). PR #89, promoted to production 2026-07-21</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Online intake forms</div>
-        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Live in prod. Standard NZ-chiro new-patient form patients fill in their portal (details, GP, presenting complaint, medical-history checklist, injury/ACC, consent-to-treat); prompt on the patient home until submitted. Practitioner reads it per-client from the Clients list with flagged conditions surfaced. PR #92, promoted to production 2026-07-21</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Staff accounts &amp; roles</div>
-        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Live in prod. Add team members in-app from the new Team page: invite as practitioner (gets a diary column) or admin (reception/billing login, no column), with role change + activate/deactivate. Portal invite emailed via Supabase. Migration 0024 (native practitioners). Fine-grained per-role permission enforcement is a follow-up. PR #86, promoted to production 2026-07-21</div>
-      </div>
-      <div class="card">
-        <div class="card-title">ACC invoicing via email channel — cutover gate</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">inert</span></div>
-        <div class="card-desc">Built and in production. One-click &quot;Submit to ACC&quot; emails a compliant invoice PDF (ACC billing block: provider no., vendor ID, claim no., NHI + service codes + GST) to providerinvoices@acc.co.nz, subject vendorId INV-n, one per email. Status tracking (submitted/paid/declined from ProviderHub). Billing &amp; ACC settings screen for the IDs. Inert until Luke&#39;s Vendor ID is entered — see On Ricky. Electronic channel (8-day, auto-reconciliation) is the M5 upgrade. PR #78</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Splose cutover — built; sync resumed pending switch day</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">The reversible SPLOSE_CUTOVER flag is built and proven, but the audit showed Luke hasn&#39;t switched off Splose yet — so the sync is back ON to prevent silent divergence (anything he books in Splose keeps flowing in). On the agreed switch morning: Luke stops using Splose → flip the flag → app is sole source of truth. One env var, 30 seconds. PR #83</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Native invoice engine (ACC-aware)</div>
-        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Live in prod. Invoices born in-app (auto-drafted on note publish + manual), GST-inclusive maths, per-practice sequential numbering, GST-compliant PDF (practitioner + patient), ACC-portion vs patient co-pay split. Patient pays only their co-pay via Stripe. sploseInvoiceId now nullable (migration 0021). PR #75</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Day + week calendar views</div>
-        <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">The screen the practice lives in all day. Per-practitioner columns, venue/route-day awareness, mobile-first like the rest of the app. Splose&#39;s core job, replaced. PR #73</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Practitioner appointment CRUD</div>
-        <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Create/edit/delete appointments for any patient, service, venue from the practitioner side. Before M1 the API only had confirm/cancel/reschedule — appointments were born in Splose or the patient wizard</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Drag-to-reschedule + conflicts</div>
-        <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Drag appointments between slots/days with the existing overlap detection guarding double-bookings</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Quick-create patient from diary</div>
-        <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Phone rings, new patient, book them in one flow — name + contact, full record filled in later (or by the M4 intake form)</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Native booking source default</div>
-        <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Flip appointments.bookingSource default &#39;splose&#39; → &#39;native&#39;. From M1 on, appointments are born here</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Security authz hardening</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Authorization hardening across sessions, appointments and prompts, promoted straight through dev → staging → production on 2026-07-21. PRs #95/#96/#97, the last thing merged before the project went quiet</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Clinical loop — session → AI SOAP → publish</div>
-        <div class="card-tags"><span class="tag tag-neutral">v0</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Freeform notes with auto-save, AI formatting into SOAP, editable note + patient-facing summary, publish completes the appointment and notifies the patient. The core differentiated flow</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Booking wizard + config + venues + routes</div>
-        <div class="card-tags"><span class="tag tag-neutral">v0</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Patient self-booking (mobile vs clinic first, route days with capacity, NZ address autocomplete), appointment types, venues, weekly/fortnightly schedules, Route Today run sheet with optimization</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Stripe payments + auto-pay (live)</div>
-        <div class="card-tags"><span class="tag tag-neutral">v0</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Pay Now, saved-card auto-charge, revenue dashboard. Live keys, webhook + signing secret verified in prod 2026-06-27</div>
-      </div>
-      <div class="card">
-        <div class="card-title">ACC claims — capture, lodge, history</div>
-        <div class="card-tags"><span class="tag tag-neutral">v0</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Point-of-care ACC45 capture, lodge tracking + claim numbers, ACC45/ACC18 PDFs, patient-facing claim history + download</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Homework + exercise library + messaging</div>
-        <div class="card-tags"><span class="tag tag-neutral">v0</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Library CRUD, per-session assignment, patient do-the-work UI with real streaks, two-way messaging with practitioner replies</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Notifications — email + PWA push (paused)</div>
-        <div class="card-tags"><span class="tag tag-neutral">v0</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">paused</span></div>
-        <div class="card-desc">Postmark email + VAPID web push across all templates, per-user prefs, reminders on 48h/2h cycle. Globally paused until launch. SMS is a graceful no-op by choice</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Patient portal + UX tiers 1–3</div>
-        <div class="card-tags"><span class="tag tag-neutral">v0</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Auth (invite, magic link, reset), patient settings, cancel/reschedule, add-to-calendar, dark theme, design-system reskin, mobile-first with bottom nav</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Splose two-way sync (to be retired at M3.5)</div>
-        <div class="card-tags"><span class="tag tag-neutral">v0</span><span class="tag tag-shipped">shipped</span></div>
-        <div class="card-desc">Polling sync + durable write outbox with retries. Served its purpose in the Splose era — scheduled for deletion after cutover. Currently back ON deliberately, because Luke has not switched yet</div>
-      </div></div>
     </section>
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
         <span class="col-count">0</span>
       </header>
-      <div class="cards"><div class="empty">No items</div></div>
+      <div class="cards">
+      <div class="empty">Nothing here.</div>
+      </div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">0</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">🔴 ACC submission is not covered by the pause switch</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">risk</span><span class="tag tag-neutral">NOTIFICATIONS_PAUSED</span><span class="tag tag-neutral">sendNotification()</span><span class="tag tag-neutral">server/routes/invoices.ts</span><span class="tag tag-neutral">ACC_INVOICE_EMAIL</span><span class="tag tag-neutral">providerinvoices@acc.co.nz</span><span class="tag tag-neutral">ACC_INVOICE_EMAIL=ricky@coreshifthq.com</span></div>
-        <div class="card-desc">Found 2026-08-18. `NOTIFICATIONS_PAUSED` only gags things routed through `sendNotification()`; the ACC path in `server/routes/invoices.ts` calls the Postmark API directly, so it sends regardless. `ACC_INVOICE_EMAIL` was unset on both environments, meaning it fell back to ACC&#39;s real `providerinvoices@acc.co.nz` inbox. Staging has now been given `ACC_INVOICE_EMAIL=ricky@coreshifthq.com` so the rehearsal cannot mail ACC; staging&#39;s Vendor ID is also still null, so it is doubly inert. Production is deliberately left pointing at the real address — that is the feature. The consequence to understand: there is no dry run in production. The first click is a real submission</div>
+      <div class="empty">Nothing here.</div>
       </div>
-      <div class="card">
-        <div class="card-title">Run the full-day rehearsal</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-blocked">blocked-by-luke</span></div>
-        <div class="card-desc">The M3 gate. Needs Luke working and needs Ricky playing the patient. Deferred 2026-08-01 because Luke was not in. Nothing else in M3 can be proved without it</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Re-orient on the project after the July pause</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">go-chiro</span><span class="tag tag-neutral">go-chiro-api</span><span class="tag tag-neutral">go-chiro-api-staging.up.railway.app</span><span class="tag tag-neutral">SHOP_PUBLIC_ENABLED=true</span><span class="tag tag-neutral">SPLOSE_CUTOVER=true</span><span class="tag tag-neutral">go-chiro.com</span><span class="tag tag-neutral">SHOP_PUBLIC_ENABLED=false</span><span class="tag tag-neutral">SPLOSE_CUTOVER=false</span><span class="tag tag-neutral">NOTIFICATIONS_PAUSED=true</span><span class="tag tag-neutral">khcuxlkhjscmlmasmwuw</span></div>
-        <div class="card-desc">Nothing moved between 2026-07-21 and 2026-08-01. **Supabase half done 2026-08-01:** the live database was checked before migration 0027 and matched the board — head was 0026_intake_forms, 28 public tables, buckets avatars / exercise-videos / session-clips, and Luke is the only non-patient user. **Railway checked 2026-08-18** — project `go-chiro`, service `go-chiro-api`, both environments Online. Staging is `go-chiro-api-staging.up.railway.app` with `SHOP_PUBLIC_ENABLED=true`, `SPLOSE_CUTOVER=true`, a test Stripe secret key; production is `go-chiro.com` with `SHOP_PUBLIC_ENABLED=false`, `SPLOSE_CUTOVER=false`, a live Stripe secret key. `NOTIFICATIONS_PAUSED=true` on both, as recorded. **One correction to the record:** the two environments do *not* share a database. Staging points at its own Supabase preview branch (`khcuxlkhjscmlmasmwuw`, child of the go-chiro project, created 2026-08-01), which is why staging carries test products and orders while production has none. The branch is non-persistent, so treat anything in it as disposable</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Script the full-day rehearsal</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">test</span></div>
-        <div class="card-desc">The step-by-step run sheet with an evidence slot per step: book, practitioner sees it in the diary, session note published with AI SOAP, summary and reports visible in both the client record and the patient view, homework created and live in the patient app, invoice auto-raised, saved card auto-charged. Named evidence per step, not &quot;looked fine&quot;</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Fix whatever the rehearsal breaks</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span></div>
-        <div class="card-desc">The point of a rehearsal is that it fails somewhere. Whatever it surfaces is M3 work, not a new milestone — it is needed for M3&#39;s doneWhen to be true</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Un-pause notifications (launch)</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-blocked">blocked-by-ricky</span></div>
-        <div class="card-desc">Flip NOTIFICATIONS_PAUSED off on both envs — reminders, confirmations, recalls go live. Gated on Ricky&#39;s say-so. Note this also gags every shop email, so retail launching before this flip means buyers get Stripe&#39;s receipt and nothing from Go-Chiro</div>
-      </div></div>
     </section>
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">16</span>
+        <span class="col-count">8</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">PR #101 and PR #103 cancel each other out</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">PR #101</span><span class="tag tag-neutral">PR #103</span><span class="tag tag-neutral">server/services/shop-notifications.ts</span></div>
-        <div class="card-desc">PR #103&#39;s whole point is one Postmark path for every email. PR #101 adds `server/services/shop-notifications.ts` with its own hand-rolled `new ServerClient(token)` — a 5th call site. Both are `MERGEABLE/CLEAN`, so **nothing will warn you**: whichever lands second, retail email silently stays off the consolidated path. **The fix already exists and was never pushed** — local commit `f7d7be7` is the consolidation applied on top of #101 and does convert the file to `sendEmail()/fromAddress()`. Preserved as tag `keep/email-consolidation-over-101` and branch `backup/f7d7be7-email-over-101`. Recommended order: merge #103, rebase #101 onto it, restore the `f7d7be7` version of that one file</div>
+        <div class="card-title">A patient record page</div>
+        <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">the big one</span></div>
+        <div class="card-desc">There is <strong>no patient detail page at all</strong>. <code>/a/practitioner/patients</code> is a flat searchable list whose rows are non-navigable divs, and <code>GET /api/patients/:id/history</code> is a literal <code>501 TODO</code>. Notes, invoices, claims and appointments each live on their own practice-wide screen; nothing joins them per patient. This is the main reason anyone opens a PMS, and R3 is not runnable without it.</div>
       </div>
       <div class="card">
-        <div class="card-title">Interactive halftone hero on the marketing homepage</div>
-        <div class="card-tags"><span class="tag tag-neutral">marketing</span><span class="tag tag-neutral">design</span><span class="tag tag-neutral">PR #104</span><span class="tag tag-neutral">client/src/components/HalftoneHero.tsx</span></div>
-        <div class="card-desc">PR #104 into `dev`, branched off `dev`, three files all under `client/`. Replaces the homepage photo hero with a dot-matrix radial burst that tracks the cursor, to a reference Ricky supplied; headline, subcopy and both CTAs stay. **Design signed off by Ricky 2026-08-18** — he asked for the whole hero replaced and confirmed no photo, so Luke&#39;s face now first appears in the About section a scroll down. That is a deliberate trade of a trust signal for craft, worth watching if booking conversion moves. Built in **raw WebGL, no GSAP and no Three.js** — the effect is one full-screen quad plus a cursor lerp, so a scene graph and a tween engine would have added ~670KB to do nothing; measured cost is **+3.4KB gzipped**, A/B build with the hero stubbed out. **Two-pass by design and it must stay that way:** a halftone needs one field sample per *dot cell*, not per pixel, so pass 1 bakes the burst into a 158×91 texture and pass 2 draws the dots at full res — ~14k noise evaluations a frame instead of ~4.6M, a 320× difference for an identical picture. Three defects were found and fixed while verifying, none of which `tsc` or the build catches: a 0-wide canvas before first layout made the framebuffer INCOMPLETE (blank hero on a slow paint), `atan()` wrapping at ±π against a non-wrapping noise lattice left a seam down the left of the burst, and `prefers-reduced-motion` cancelled the render loop so a resize left a stale canvas. **Now verified on staging** (2026-08-18): merged via PR #104, promoted, and Railway staging deployed. Checked on the live page at 1440×880 and at 375×812 — canvas backing store 2832×1584 rather than the 300×150 default (so the zero-width guard and the ResizeObserver both fire in the real app), WebGL context alive and not lost, no console errors, the burst visibly follows the cursor, and portrait shows consistent density with no dead middle. Live at `https://go-chiro-api-staging.up.railway.app/`. **Not yet in production** — that is a separate `staging` → `main` promotion and Ricky&#39;s call</div>
+        <div class="card-title">Add the auth guard to the history endpoint &mdash; before implementing it</div>
+        <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">security</span></div>
+        <div class="card-desc"><code>patientsRouter.get("/:id/history")</code> has <strong>no <code>isAuthenticated</code> middleware</strong>, unlike every sibling route. It returns 501 today so nothing leaks &mdash; but it is exactly the endpoint the record page needs, and whoever implements it inherits an unauthenticated patient-history route.</div>
       </div>
       <div class="card">
-        <div class="card-title">🔴 Parallel sessions share one checkout — `git add -A` is unsafe here</div>
-        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">follow-up</span><span class="tag tag-neutral">git add -A</span><span class="tag tag-neutral">Repo/go-chiro</span><span class="tag tag-neutral">-A</span></div>
-        <div class="card-desc">2026-08-18: a commit made with `git add -A` in `Repo/go-chiro` swept up 33 paths of an in-progress email-templating refactor belonging to a **different session working in the same directory**, and pushed it under a message describing only the Splose sync fix. Caught and unwound the same session — the work was restored to uncommitted and nothing was lost, and the branch was force-pushed to drop the polluted commit. The underlying hazard remains: several sessions run against one working tree, so any blanket stage can capture another session&#39;s half-finished work, and one session&#39;s branch switch could clobber it outright. **Options:** give each session its own git worktree (the repo already supports it — this split was done in one), or make it a standing rule that commits stage explicit paths and never `-A`. Recommend the worktree route: a rule only holds until somebody forgets. **Recurred 2026-08-18:** a second blanket stage swept an in-progress `HalftoneHero.tsx` from another session into commit `b52617a`, described only as the Splose sync fix. Nothing was lost either time — the email refactor landed as `f7d7be7` and the Splose fix as PR #102, both cleanly scoped — but that is two occurrences in one day, and both were recovered by hand rather than prevented. The marketing-hero session (PR #104) took the worktree route instead and never touched the shared tree, which is the working proof the fix is cheap. Meanwhile the email refactor is now committed, so the shared tree is clean</div>
+        <div class="card-title">Patients cannot pay an invoice</div>
+        <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span></div>
+        <div class="card-desc">The pay modal mounts Stripe Elements with <code>clientSecret: ""</code> and only stores the real secret in child state, so <code>confirmPayment</code> can never succeed. The server side is correct and ACC-aware; it is purely the wiring.</div>
       </div>
       <div class="card">
-        <div class="card-title">Audit the `${date}T00:00:00Z` pattern on the server</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">Z</span><span class="tag tag-neutral">server/routes/booking-config.ts:632</span><span class="tag tag-neutral">server/services/routing.ts:182</span><span class="tag tag-neutral">server/routes/booking-bookings.ts:88</span><span class="tag tag-neutral">server/routes/reports.ts:59</span></div>
-        <div class="card-desc">The Today screen bug fixed on PR #101 was a local calendar date with a literal `Z` stapled on, which in NZ shifted the window 12 hours. The identical pattern is still in `server/routes/booking-config.ts:632`, `server/services/routing.ts:182`, `server/routes/booking-bookings.ts:88` and `server/routes/reports.ts:59`. Those receive a date string from a caller rather than reading a local clock, so the semantics genuinely differ and they may be correct — but the same 12-hour shift on **booking availability** would offer patients the wrong slots, and on **reports** would put takings in the wrong day. Not changed on PR #101 because rewriting booking-critical date logic untested is worse than the bug. Wants a test per call site, then a fix where it is actually wrong</div>
+        <div class="card-title">Auto-drafted invoices bill the patient 100%</div>
+        <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span></div>
+        <div class="card-desc">Publishing notes auto-drafts an invoice, but the ACC portion is never populated &mdash; it can only be typed by hand in the invoice modal. For an ACC practice the default is wrong on every single visit.</div>
       </div>
       <div class="card">
-        <div class="card-title">Weekly ACC billing run, not per-patient clicks</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">build</span><span class="tag tag-neutral">Submit to ACC</span><span class="tag tag-neutral">PaymentsPage.tsx</span><span class="tag tag-neutral">docs/ROADMAP.md</span><span class="tag tag-neutral">Submit week to ACC</span><span class="tag tag-neutral">not_submitted</span><span class="tag tag-neutral">not_submitted</span></div>
-        <div class="card-desc">Luke bills ACC **weekly in a batch**, not one patient at a time (Ricky, 2026-08-18). What is built is a per-row `Submit to ACC` button on each invoice in `PaymentsPage.tsx`, so his weekly run would be N separate clicks with no record of which he had already done — workable but wrong, and easy to double-send or miss one. **Constraint that shapes the fix:** the 2026-07-21 spike recorded in `docs/ROADMAP.md` says ACC&#39;s email channel requires *one invoice per PDF, one PDF per email* — so a week&#39;s billing cannot be collapsed into a single email on the channel M3 ships. Splose batches because it uses the eBusiness gateway (channel 3), which does take schedules. So the fix is a batch **action**, not a batch document: one `Submit week to ACC` button that selects every invoice with an ACC portion still at `not_submitted`, shows the count and total first, then sends them one email each, reporting per-invoice success or failure and marking each one as it goes. Idempotent by construction — it only ever picks up `not_submitted`, so a retry after a partial failure cannot double-send. Needed before M3.5 go-live: a 30-click first billing run is a bad first day. Not needed for M7</div>
+        <div class="card-title">A paid invoice can flip back to unpaid</div>
+        <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span></div>
+        <div class="card-desc">The <code>payment_intent.payment_failed</code> branch writes the invoice to <code>sent</code> without checking it is not already <code>paid</code>. A late retry or an out-of-order webhook can un-pay a collected invoice and present it for payment again.</div>
       </div>
       <div class="card">
-        <div class="card-title">Ask Luke what &quot;weekly&quot; means at ACC&#39;s end</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">question</span></div>
-        <div class="card-desc">He is in on 2026-08-18. Worth settling while he is there: does Splose send ACC **one submission containing the week**, or a weekly run of individual submissions? It decides whether the app can stay on the email channel for his real workflow or whether the M5 eBusiness-gateway upgrade moves forward in the plan. He is the only person who has actually watched this happen for the last few years</div>
+        <div class="card-title">Cut pay-at-booking</div>
+        <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span></div>
+        <div class="card-desc">Booking creates a payment intent that <strong>no client code ever confirms</strong>, so it has never worked and nobody has missed it. If it were fixed it would double-charge: the invoice auto-draft only checks for an existing invoice, not an existing booking payment. Recommendation: delete it.</div>
       </div>
       <div class="card">
-        <div class="card-title">Guard ACC submission on the GST number</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">hardening</span><span class="tag tag-neutral">server/routes/invoices.ts</span></div>
-        <div class="card-desc">Three lines in `server/routes/invoices.ts` beside the existing Vendor ID check: refuse to submit when the practice is GST-registered but has no GST number, the same way it already refuses without a Vendor ID. Luke&#39;s data is now correct so nothing is currently exposed, but the app is meant to be sold to other practices and the failure was silent — an omitted line on a document still headed TAX INVOICE. Money-critical file, so it wants a test alongside it</div>
+        <div class="card-title">Correct the documentation</div>
+        <div class="card-tags"><span class="tag tag-neutral">R1</span><span class="tag tag-neutral">docs</span></div>
+        <div class="card-desc">The README advertises Whisper audio transcription that was deleted. <code>.env.example</code> documents <code>GEMINI_API_KEY</code> for note generation while the code uses <strong>Anthropic</strong> and reads <code>ANTHROPIC_API_KEY</code>. Eight env vars the server actually reads are undocumented, including <code>SPLOSE_CUTOVER</code> and <code>ACC_INVOICE_EMAIL</code>. Cheapest item on the board, and it is what made the audit necessary.</div>
       </div>
       <div class="card">
-        <div class="card-title">First real ACC submission</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">test</span><span class="tag tag-neutral">ACC_INVOICE_EMAIL</span></div>
-        <div class="card-desc">**No longer blocked** as of 2026-08-18: Vendor ID, provider number and GST number are all in production, and the claim number comes per-claim off the ACC45. Needs an actual ACC invoice to exist and someone to click Submit. Rehearse on staging first — it now points `ACC_INVOICE_EMAIL` at Ricky&#39;s inbox, and its Vendor ID is null, so it cannot reach ACC. In production there is no dry run: the first click is a real submission</div>
+        <div class="card-title">Nothing ages an invoice to overdue</div>
+        <div class="card-tags"><span class="tag tag-neutral">R2</span></div>
+        <div class="card-desc">No job ever transitions <code>sent</code> &rarr; <code>overdue</code>, so the Outstanding figure on the payments screen never ages. Draft invoices also sit forever if nobody clicks Send &mdash; no reminder, no aging.</div>
       </div>
-      <div class="card">
-        <div class="card-title">Promote M7 retail to production</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-ops">ops</span><span class="tag tag-neutral">staging</span><span class="tag tag-neutral">main</span><span class="tag tag-neutral">SHOP_PUBLIC_ENABLED=false</span></div>
-        <div class="card-desc">PR #100, `staging` → `main`. Production has no shop code at all while its database is already at migration 0028, so Luke cannot load his catalogue there until this merges. Safe to merge before launch: production has `SHOP_PUBLIC_ENABLED=false`, so the public routes 404 until that flag flips. Merging it is a production deploy, so it is Ricky&#39;s call</div>
       </div>
-      <div class="card">
-        <div class="card-title">Luke loads the real catalogue</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-blocked">blocked-by-luke</span></div>
-        <div class="card-desc">One pass of data entry, in production, after PR #100 merges. Doing it on staging instead would have to be redone, and the staging database is a non-persistent Supabase branch that can be reaped</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Migration ledger drift — watch for a repeat</div>
-        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">follow-up</span><span class="tag tag-neutral">supabase_migrations.schema_migrations</span><span class="tag tag-neutral">001_initial_schema</span><span class="tag tag-neutral">apply_migration</span><span class="tag tag-neutral">apply_migration</span></div>
-        <div class="card-desc">`supabase_migrations.schema_migrations` was missing its first four migrations, including `001_initial_schema`, because the earliest ones were applied by drizzle push or the dashboard rather than `apply_migration`. Repaired 2026-08-01 (23 → 27 rows), which is what made the staging branch buildable. Anything applied outside `apply_migration` from here re-opens the same hole and silently breaks the next branch, clone or restore</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Clinical Stripe calls pin an API version a new account rejects</div>
-        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">follow-up</span><span class="tag tag-neutral">routes/invoices.ts</span><span class="tag tag-neutral">patients.ts</span><span class="tag tag-neutral">booking-bookings.ts</span><span class="tag tag-neutral">stripe-webhook.ts</span><span class="tag tag-neutral">2024-11-20</span></div>
-        <div class="card-desc">`routes/invoices.ts`, `patients.ts`, `booking-bookings.ts` and `stripe-webhook.ts` all pin apiVersion `2024-11-20`. The live account accepts it because it predates that version, but a newly created account rejects it outright — which is exactly how every shop checkout failed on the staging test account until retail was switched to the SDK&#39;s own version. Nothing is broken in production and those files are money-critical, so they were left alone. This will bite the moment M6 onboards a practice on a fresh Stripe account</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Pending orders accumulate from abandoned checkouts</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">follow-up</span><span class="tag tag-neutral">pending</span></div>
-        <div class="card-desc">The order row is written before Stripe is called, deliberately, so a completed session always has a row to match on. The cost is that abandoning the hosted page (or any Stripe error) leaves a `pending` order behind. Harmless — they never paid — but the phase 3 Orders page must filter them out by default, and a sweep that expires pending orders after a day or two would keep the table honest</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Drag-to-reorder the catalogue</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">follow-up</span><span class="tag tag-neutral">sort_order</span></div>
-        <div class="card-desc">The phase 1 plan said &quot;drag-order&quot; and it was not built. The `sort_order` column exists and both the API and the page honour it, so ordering works — there is just no drag UI, and nothing sets it away from 0 today. Not needed for the milestone&#39;s doneWhen (Luke can load and sell a catalogue without reordering it), so it is a card rather than a blocker. Cheapest version: up/down arrows on each row, not a drag library</div>
-      </div>
-      <div class="card">
-        <div class="card-title">System-of-record hardening (remaining)</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-infra">infra</span></div>
-        <div class="card-desc">Now the source of truth for health data: confirm Supabase backups/PITR, add a basic audit trail, review against NZ Privacy Act + Health Information Privacy Code 2020. Must be done before the cord is cut, not after</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Full history migration audit</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span></div>
-        <div class="card-desc">Audit what Splose holds that the sync doesn&#39;t pull today (historic treatment notes, patient files/attachments, ACC claim + invoice history) and migrate it, then run the final full import via the existing sync — its last job</div>
-      </div></div>
     </section>
     <section class="column col-backlog">
       <header class="col-head">
@@ -1338,82 +1096,89 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Reporting pack</div>
-        <div class="card-tags"><span class="tag tag-neutral">M5</span></div>
-        <div class="card-desc">Revenue, appointments, no-shows, per-practitioner — simple and glanceable, not enterprise BI</div>
+        <div class="card-title">The 16-session ACC entitlement</div>
+        <div class="card-tags"><span class="tag tag-neutral">R5</span><span class="tag tag-neutral">the hard one</span></div>
+        <div class="card-desc"><strong>Does not exist in any form</strong> &mdash; no counter, no cap, no entitlement record anywhere in the codebase. Three boxes on the practitioner flow depend on it: the countdown, the weekly ACC invoice, and telling Luke how many sessions are left so he can re-claim. The ACC/patient split itself is real and correct.</div>
       </div>
       <div class="card">
-        <div class="card-title">Xero export</div>
-        <div class="card-tags"><span class="tag tag-neutral">M5</span></div>
-        <div class="card-desc">NZ small business runs on Xero. CSV export first — buys enormous goodwill for little work; API integration later if it earns it</div>
+        <div class="card-title">Public booking, replacing the Splose link</div>
+        <div class="card-tags"><span class="tag tag-neutral">R4</span></div>
+        <div class="card-desc"><code>/book</code> and the marketing footer link out to <code>go-chiro-1.splose.com</code>. Native booking already exists for invited patients and honours real availability, venues and route-day capacity &mdash; this is about exposing it to people without an account.</div>
       </div>
       <div class="card">
-        <div class="card-title">ACC electronic channel upgrade</div>
-        <div class="card-tags"><span class="tag tag-neutral">M5</span></div>
-        <div class="card-desc">Move from emailed PDFs (M3) to ACC&#39;s eBusiness gateway / Invoicing API: straight-through processing, ~8-day payment, electronic remittance + auto-reconciliation. Prereqs: Luke&#39;s HealthSecure .pfx + passphrase (likely already held — Splose required uploading the practice&#39;s own HealthLink certificate, so this is a config exercise, not a registration slog) and vendor onboarding with ACC digital operations. Plus declined-invoice rework flow</div>
+        <div class="card-title">Intake before an account exists</div>
+        <div class="card-tags"><span class="tag tag-neutral">R4</span></div>
+        <div class="card-desc">Every intake endpoint requires an authenticated patient with <code>role === "patient"</code>, so a genuinely new patient still needs reception to create them first. That defeats the point of &ldquo;reception-less onboarding&rdquo;.</div>
       </div>
       <div class="card">
-        <div class="card-title">Tenant onboarding + billing (parked)</div>
-        <div class="card-tags"><span class="tag tag-neutral">M6</span></div>
-        <div class="card-desc">Signup/onboarding for other practices, plan billing, product marketing site. Name locked: Go-Chiro. Parked until the system is proven in Go Chiro&#39;s daily use</div>
+        <div class="card-title">A lodgeable ACC45, or the electronic channel</div>
+        <div class="card-tags"><span class="tag tag-neutral">R5</span></div>
+        <div class="card-desc">The current PDF is stamped &ldquo;this PDF is not itself an ACC submission&rdquo; and is missing NHI, employer, ethnicity and patient signature capture. The electronic route needs Luke&rsquo;s HealthSecure <code>.pfx</code> &mdash; which his practice almost certainly already holds, since Splose required it.</div>
       </div>
       <div class="card">
-        <div class="card-title">ACC18 work-capacity capture form</div>
-        <div class="card-tags"><span class="tag tag-neutral">backlog</span></div>
-        <div class="card-desc">Carried over: ACC18 generator exists but work-capacity + work-modification sections are placeholders. Needs capture form + schema + PDF wiring. Own workstream</div>
+        <div class="card-title">Weekly/batch ACC invoicing</div>
+        <div class="card-tags"><span class="tag tag-neutral">R5</span></div>
+        <div class="card-desc">Only one-invoice-at-a-time manual submit exists. No batch job, no countdown, and remittance is hand-entered from ProviderHub.</div>
       </div>
       <div class="card">
-        <div class="card-title">Exercise videos via YouTube link</div>
-        <div class="card-tags"><span class="tag tag-neutral">backlog</span></div>
-        <div class="card-desc">Decided: URL field + embedded player. Carried from the v0 backlog, never scheduled</div>
+        <div class="card-title">The fresh import must handle shared email addresses</div>
+        <div class="card-tags"><span class="tag tag-neutral">R6</span><span class="tag tag-neutral">was PR #102</span></div>
+        <div class="card-desc">Multiple patients legitimately share one email &mdash; couples, parents and children. An import that keys on email collapses family members into one record. This was the substance of closed PR #102; migration <code>0030_sync_shared_emails.sql</code> is a starting point.</div>
       </div>
       <div class="card">
-        <div class="card-title">Retail revenue in the reporting pack</div>
-        <div class="card-tags"><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">M7</span></div>
-        <div class="card-desc">Shop orders are a separate table from clinical invoices on purpose: different tax treatment, and ACC must never touch a hoodie. Both need to land in the M5 reporting pack as separate revenue lines</div>
+        <div class="card-title">Exercise videos are scaffolding only</div>
+        <div class="card-tags"><span class="tag tag-neutral">R2+</span></div>
+        <div class="card-desc"><code>videoUrl</code> columns, a public bucket and a signed-upload endpoint all exist, but <code>ExercisesPage</code> declares the upload state and never uses it &mdash; there is no file input, and the patient card renders no player. Unreachable from the app in both directions.</div>
       </div>
       <div class="card">
-        <div class="card-title">Shop discount codes</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">follow-up</span></div>
-        <div class="card-desc">Deliberately out of v1. Stripe Checkout supports promotion codes natively, so this is a config flag plus a UI toggle later, not a build</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Fine-grained per-role permission enforcement</div>
-        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">follow-up</span><span class="tag tag-neutral">routes/exercises.ts</span><span class="tag tag-neutral">practitioner</span></div>
-        <div class="card-desc">Staff accounts ship with practitioner/admin roles and a diary column distinction, but per-role permission enforcement was explicitly left as a follow-up when roles shipped in PR #86. Two concrete inconsistencies found while building M7 phase 1: `routes/exercises.ts` gates exercise *creation* on the role being exactly `practitioner`, so a practice_admin cannot add an exercise (while the PUT/DELETE on the same file accept both) — meaning promoting anyone to admin silently costs them a capability. And there is no &quot;owner&quot; role at all, which is why the shop had to gate on the practitioner/admin/super_admin trio rather than the owner-only gate the spec asked for</div>
+        <div class="card-title">Homework has no real per-session reset</div>
+        <div class="card-tags"><span class="tag tag-neutral">R2+</span></div>
+        <div class="card-desc">A new assignment simply hides the old one: the patient query is capped at the newest row. Nothing is expired or deactivated, and <code>expiresAt</code> is accepted but never set or filtered on. The UI copy describes display behaviour, not a data operation.</div>
       </div>
       <div class="card">
         <div class="card-title">A real owner role</div>
-        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">follow-up</span><span class="tag tag-neutral">practitioner</span></div>
-        <div class="card-desc">docs/SHOP.md wanted the shop restricted to &quot;owner and admin&quot;; the role enum has no owner, and Luke — who owns the practice — is a `practitioner`. So the shop uses the same trio as every other practitioner surface. The distinction only starts to matter with a second practitioner who should not manage retail or see revenue, which is a M6 (SaaS-ready) concern. Doing it properly means an owner role plus a permissions matrix, not another special case</div>
-      </div></div>
+        <div class="card-tags"><span class="tag tag-neutral">R6</span></div>
+        <div class="card-desc"><code>practice_admin</code> is not actually restricted server-side &mdash; every practitioner-area check uses the same three-role set, so the only real distinction is whether a <code>practitioners</code> row exists. The shop deviates from its spec for exactly this reason.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Railway staging database is non-persistent</div>
+        <div class="card-tags"><span class="tag tag-infra">infra</span><span class="tag tag-neutral">R6</span></div>
+        <div class="card-desc">Staging is correctly isolated on its own Supabase project (<code>khcuxlkhjscmlmasmwuw</code>, verified 2026-08-18, both at migration 0028) &mdash; but the branch is <code>persistent: false</code>, so it can be reaped. Do not put anything in staging you need to keep.</div>
+      </div>
+      </div>
     </section>
     <section class="column col-neutral">
       <header class="col-head">
         <h2>🅿️ Parking Lot</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Delete the Splose sync code</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">deferred</span></div>
-        <div class="card-desc">Roughly 1k lines of polling sync, outbox and write-backs become dead the day the flag flips. Deliberately kept for a safe archive period after cutover rather than deleted at the switch, so a rollback is still possible. The unverified Splose cancel/reschedule write-back payload follow-up dies here too</div>
+        <div class="card-title">SaaS / multi-tenant</div>
+        <div class="card-tags"><span class="tag tag-neutral">R6+</span><span class="tag tag-neutral">parked</span></div>
+        <div class="card-desc">Every table is already practice-scoped, so this stays cheap to add later. Parked until the product is proven in daily use at one practice.</div>
       </div>
       <div class="card">
-        <div class="card-title">Make all splose_* columns nullable</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">deferred</span></div>
-        <div class="card-desc">Schema cleanup that belongs with the sync deletion, not before it</div>
+        <div class="card-title">Xero export</div>
+        <div class="card-tags"><span class="tag tag-neutral">parked</span></div>
+        <div class="card-desc">CSV first &mdash; NZ small business runs on Xero. Wanted eventually, needed by nobody yet.</div>
       </div>
       <div class="card">
-        <div class="card-title">SMS notifications</div>
-        <div class="card-tags"><span class="tag tag-neutral">deferred</span></div>
-        <div class="card-desc">SMS is a deliberate graceful no-op; the notification stack is email + PWA push only. Revisit only if patients demonstrably miss reminders after go-live</div>
+        <div class="card-title">Practice reporting and analytics</div>
+        <div class="card-tags"><span class="tag tag-neutral">parked</span></div>
+        <div class="card-desc">Revenue, appointments, no-shows, per-practitioner. Today the only report endpoint generates ACC45/ACC18 PDFs, and revenue figures are computed ad hoc in the browser.</div>
       </div>
       <div class="card">
-        <div class="card-title">Rebranding the codebase</div>
-        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">deferred</span></div>
-        <div class="card-desc">The repo evolves rather than being restarted (21k lines of prod-proven code with the right architecture). A rebrand happens if and when it becomes a product, not before</div>
-      </div></div>
+        <div class="card-title">ACC18 work-capacity form</div>
+        <div class="card-tags"><span class="tag tag-neutral">parked</span></div>
+        <div class="card-desc">Its own workstream. The enum already carries <code>acc18</code>; nothing else exists.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Voice notes and transcription</div>
+        <div class="card-tags"><span class="tag tag-neutral">not doing</span><span class="tag tag-neutral">decision</span></div>
+        <div class="card-desc">On the practitioner flow diagram; deleted from the code in migrations 0004/0005. The orphaned <code>session-clips</code> bucket still exists, empty. <strong>Recommendation: redraw the diagram rather than rebuild this.</strong></div>
+      </div>
+      </div>
     </section>
       </div>
     </section>
