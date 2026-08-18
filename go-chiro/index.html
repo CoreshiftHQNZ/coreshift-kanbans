@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>39%</strong> complete</div>
-        <div><strong>24</strong>/61 cards done</div>
-        <div>Updated <strong>2026-08-17 22:31 UTC</strong></div>
+        <div><strong>38%</strong> complete</div>
+        <div><strong>24</strong>/63 cards done</div>
+        <div>Updated <strong>2026-08-18 02:43 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -853,7 +853,7 @@
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">6</div>
+        <div class="status-num">8</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
@@ -1003,9 +1003,9 @@
         <div class="card-desc">This is the M3 gate and it is on you, because you are an actual customer of Luke&#39;s and the only person who can play the patient without touching a real one. Book, attend, have the note published with summary and reports, check homework lands in the patient app, and let the invoice auto-raise and auto-charge your saved card. Nothing else in M3 can be proved without it. Deferred 2026-08-01 — Luke was not working, so M7 was pulled forward instead</div>
       </div>
       <div class="card">
-        <div class="card-title">Still missing: Luke&#39;s ACC Vendor ID + GST number</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">blocked</span></div>
-        <div class="card-desc">Updated 2026-08-01: two of the five fields are now in the app. Luke&#39;s ACC provider number sits on his practitioner record, and the second number Ricky supplied has been stored as the Contract ID (his read; first logged as a practice number, so worth a glance at the Splose screen — nothing in the code reads Contract ID either way). Still missing: the **Vendor ID**, which is the single field the Submit to ACC button is gated on, and which prints on the invoice PDF and in the ACC email subject; the **GST number**, currently null while the practice is flagged GST-registered, so tax invoices are not yet compliant; and Luke&#39;s **ACC provider type**. None are exposed by the Splose API (checked) — read them off Splose → Settings → ACC by hand. Identifiers are deliberately not written on this board: it is a public site. They belong in the app&#39;s Practice settings</div>
+        <div class="card-title">Still missing: Luke&#39;s GST number</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-blocked">blocked-by-luke</span></div>
+        <div class="card-desc">Updated 2026-08-18. Ricky confirmed G0M661 is the **Vendor ID**, not the Contract ID — it had been stored as the latter and has been moved. Production now holds the Vendor ID on the practice and Luke&#39;s ACC provider number on his practitioner record, so **the Submit to ACC button is live in production for the first time**. The Contract ID is now unknown, but nothing in the code reads it, so it blocks nothing. Still needed from Luke: the **GST number** — see the tax-invoice card below, which is now the real blocker — and his **ACC provider type**. Identifiers are deliberately not written on this board: it is a public site</div>
       </div>
       <div class="card">
         <div class="card-title">Pick Luke&#39;s switch morning</div>
@@ -1175,9 +1175,19 @@
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">8</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🔴 A tax invoice can now go to ACC without a GST number</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">practices.gst_number</span><span class="tag tag-neutral">gst_registered</span><span class="tag tag-neutral">server/services/pdf/invoice.ts:52</span><span class="tag tag-neutral">if (gstRegistered &amp;&amp; practice.gstNumber)</span></div>
+        <div class="card-desc">Found 2026-08-18 while setting the Vendor ID. `practices.gst_number` is null while `gst_registered` is true. `server/services/pdf/invoice.ts:52` prints the GST number only `if (gstRegistered &amp;&amp; practice.gstNumber)`, so the line is silently omitted — but line 58 still stamps the document **TAX INVOICE** and line 145 still prints the GST breakdown. The result is a document headed TAX INVOICE, showing a GST amount, with no GST registration number on it. That is not compliant, and it now reaches ACC because the Vendor ID gate is open. Applies to every invoice the app issues, not only ACC ones. Fix is Luke&#39;s GST number, not code — but a guard that refuses ACC submission while the number is null would stop it happening again. **Do not submit an ACC invoice from production until the GST number is set.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔴 ACC submission is not covered by the pause switch</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">risk</span><span class="tag tag-neutral">NOTIFICATIONS_PAUSED</span><span class="tag tag-neutral">sendNotification()</span><span class="tag tag-neutral">server/routes/invoices.ts</span><span class="tag tag-neutral">ACC_INVOICE_EMAIL</span><span class="tag tag-neutral">providerinvoices@acc.co.nz</span><span class="tag tag-neutral">ACC_INVOICE_EMAIL=ricky@coreshifthq.com</span></div>
+        <div class="card-desc">Found 2026-08-18. `NOTIFICATIONS_PAUSED` only gags things routed through `sendNotification()`; the ACC path in `server/routes/invoices.ts` calls the Postmark API directly, so it sends regardless. `ACC_INVOICE_EMAIL` was unset on both environments, meaning it fell back to ACC&#39;s real `providerinvoices@acc.co.nz` inbox. Staging has now been given `ACC_INVOICE_EMAIL=ricky@coreshifthq.com` so the rehearsal cannot mail ACC; staging&#39;s Vendor ID is also still null, so it is doubly inert. Production is deliberately left pointing at the real address — that is the feature. The consequence to understand: there is no dry run in production. The first click is a real submission</div>
+      </div>
       <div class="card">
         <div class="card-title">Run the full-day rehearsal</div>
         <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-blocked">blocked-by-luke</span></div>
