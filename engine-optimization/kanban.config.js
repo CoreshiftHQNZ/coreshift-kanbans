@@ -20,7 +20,7 @@ module.exports = {
   phase: "M8 · The shipping record",
   nextMilestone: {
     name: "Telling the system the work is done, so it can police what we assumed",
-    date: "Q3 2026 · the FAQ work must ship by 3 September or October reads as confounded",
+    date: "Q3 2026 · one click on staging closes it · the FAQ work still has until 3 September",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -232,10 +232,27 @@ module.exports = {
       // October window stands; ship on the 4th and the honest window was November,
       // so the October reading is `confounded` rather than `failed`.
       //
-      // ⚠️ Ends on a human act, like M7's publish. Marking an item shipped when it
-      // has not been done is forging the record, so the close waits on the team
-      // doing a piece of August's work. Item 1 is 2.8 hours across 3 URLs.
-      doneWhen: "A specialist marks an approved item shipped, with its evidence, and every prediction states whether the work it is about shipped inside the window it assumed",
+      // ⚠️ Ends on a human act, like M7's publish.
+      //
+      // Revised 2026-08-17, on Ricky's call. The original read "A specialist marks
+      // an approved item shipped, with its evidence, and every prediction states
+      // whether the work it is about shipped inside the window it assumed" — and
+      // it assumed Storepro's August work would happen. It is not happening: the
+      // milestone was a test of the app, not a commitment to the site.
+      //
+      // That left the clause unmeetable honestly. `shipped_at` is frozen the
+      // moment it is written, there is no correction path, and the composer reads
+      // it to tell a client an item was *delivered* — so pressing the gate on
+      // Storepro to see whether it works costs a permanent false statement about a
+      // real client's work in a document they receive. Walking through a gate to
+      // prove it is shut is not a test of the gate.
+      //
+      // So the human act stays and its subject moves to the `app-check` fixture
+      // (`npm run fixture`): status `prospect`, domain `app-check.invalid`, named
+      // as not a real client in the client list. Storepro keeps 0 of 13, which is
+      // true. What still has to happen is the thing M7 left undone as well — a
+      // person pressing the control on a deployed environment.
+      doneWhen: "A specialist records a shipment in the app on a deployed environment, with evidence, and the shipping record and every prediction change accordingly",
       status: "current",
     },
     {
