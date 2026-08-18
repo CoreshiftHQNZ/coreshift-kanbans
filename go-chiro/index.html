@@ -855,11 +855,11 @@
 
     <!-- STATUS STRIP -->
     <section class="status-strip">
-      <div class="status-stat status-done"><div class="status-num">10</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-done"><div class="status-num">11</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">0</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked</div></div>
-      <div class="status-stat status-this-week"><div class="status-num">4</div><div class="status-label">This Week</div></div>
-      <div class="status-stat status-backlog"><div class="status-num">11</div><div class="status-label">Backlog</div></div>
+      <div class="status-stat status-this-week"><div class="status-num">3</div><div class="status-label">This Week</div></div>
+      <div class="status-stat status-backlog"><div class="status-num">12</div><div class="status-label">Backlog</div></div>
     </section>
 
     <!-- KEY ARTIFACTS / QUICK LINKS -->
@@ -988,9 +988,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">10</span>
+        <span class="col-count">11</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">A failed payment can no longer un-pay a collected invoice</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span><span class="tag tag-neutral">PR #117</span></div>
+        <div class="card-desc"><code>payment_intent.payment_failed</code> wrote <code>status: "sent"</code> with no check. Stripe redelivers and does not guarantee ordering, so a late or out-of-order failed event <strong>un-paid money already collected</strong> and re-presented the invoice to the patient. The guard now sits in the WHERE clause &mdash; <code>status &lt;&gt; 'paid' and paid_at is null</code> &mdash; so the check and the write are atomic; a read-then-write could still lose to a concurrent succeeded event. <code>RETURNING</code> makes a refused downgrade a logged warning rather than silence. Also stopped the success branch re-stamping <code>paidAt</code> on every redelivery. <strong>Verified</strong> by printing the compiled SQL and evaluating the predicate in Postgres across all six invoice states &mdash; read-only, nothing written.</div>
+      </div>
       <div class="card">
         <div class="card-title">ACC visits no longer draft at 100% to the patient</div>
         <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span><span class="tag tag-neutral">PR #116</span></div>
@@ -1064,14 +1069,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">A paid invoice can flip back to unpaid</div>
-        <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span></div>
-        <div class="card-desc">The <code>payment_intent.payment_failed</code> branch writes the invoice to <code>sent</code> without checking it is not already <code>paid</code>. A late retry or an out-of-order webhook can un-pay a collected invoice and present it for payment again.</div>
-      </div>
       <div class="card">
         <div class="card-title">Cut pay-at-booking</div>
         <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span></div>
@@ -1092,9 +1092,14 @@
     <section class="column col-backlog">
       <header class="col-head">
         <h2>⚪ Backlog</h2>
-        <span class="col-count">11</span>
+        <span class="col-count">12</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Webhook has no processed-event dedupe, and payment receipts never send</div>
+        <div class="card-tags"><span class="tag tag-neutral">R2+</span><span class="tag tag-neutral">money</span><span class="tag tag-neutral">follow-up</span></div>
+        <div class="card-desc">Two things surfaced while guarding the failure branch, both pre-existing. There is no processed-event table, so idempotency rests entirely on each branch being individually safe to re-run &mdash; true today, but a constraint nobody is enforcing. And <code>payment_confirmed</code> only inserts a <code>notificationLogs</code> row with <code>delivered: false</code>; <code>sendNotification</code> is never called, so a patient who pays gets Stripe&rsquo;s receipt and nothing from Go-Chiro. Also missing: <code>charge.refunded</code>, <code>charge.dispute.*</code> and <code>checkout.session.expired</code>.</div>
+      </div>
       <div class="card">
         <div class="card-title">Saving a card is not an invoice operation</div>
         <div class="card-tags"><span class="tag tag-neutral">R2+</span><span class="tag tag-neutral">follow-up</span></div>
