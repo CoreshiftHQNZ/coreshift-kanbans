@@ -855,10 +855,10 @@
 
     <!-- STATUS STRIP -->
     <section class="status-strip">
-      <div class="status-stat status-done"><div class="status-num">9</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-done"><div class="status-num">10</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">0</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked</div></div>
-      <div class="status-stat status-this-week"><div class="status-num">5</div><div class="status-label">This Week</div></div>
+      <div class="status-stat status-this-week"><div class="status-num">4</div><div class="status-label">This Week</div></div>
       <div class="status-stat status-backlog"><div class="status-num">11</div><div class="status-label">Backlog</div></div>
     </section>
 
@@ -950,9 +950,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Enter what ACC contributes per visit</div>
+        <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">one number</span><span class="tag tag-blocked">blocks the fix</span></div>
+        <div class="card-desc">The ACC split fix is shipped but <strong>inert until this figure exists</strong>. Production has exactly one ACC-eligible appointment type &mdash; <strong>ACC Appointment, $75.00, ACC contributes $0.00</strong>. Set it in Booking settings on that type and auto-drafts start splitting correctly; leave it and behaviour is unchanged. Needs Luke&rsquo;s actual ACC contribution rate. The other two types (Initial Consultation $110.08, Returning Appointment $75.00) are not ACC-eligible, so they are unaffected.</div>
+      </div>
       <div class="card">
         <div class="card-title">Decide: voice notes &mdash; build, or redraw the diagram?</div>
         <div class="card-tags"><span class="tag tag-neutral">R5?</span><span class="tag tag-neutral">decision</span></div>
@@ -983,9 +988,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">9</span>
+        <span class="col-count">10</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">ACC visits no longer draft at 100% to the patient</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span><span class="tag tag-neutral">PR #116</span></div>
+        <div class="card-desc">Auto-drafts never set an ACC portion, so every ACC visit was drafted billing the patient the full fee. The split maths was always correct &mdash; <strong>the number did not exist anywhere</strong>, it lived in Luke&rsquo;s head and was retyped per invoice. Now stored as <code>appointment_types.acc_contribution_cents</code>, beside <code>price_cents</code>, because ACC pays a fixed amount per service. Applies only when the type is ACC-eligible, a contribution is configured, and the patient has a live claim &mdash; billing ACC for a private visit is worse than the reverse. Clamped to the total. <strong>Verified</strong> against the shipped functions over six cases including the clamp and a negative input; GST stays on the full fee at 717c on 5500c. Migration 0030 applied by hand to both databases first.</div>
+      </div>
       <div class="card">
         <div class="card-title">Patients can pay again</div>
         <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span><span class="tag tag-neutral">PR #115</span></div>
@@ -1054,14 +1064,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Auto-drafted invoices bill the patient 100%</div>
-        <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span></div>
-        <div class="card-desc">Publishing notes auto-drafts an invoice, but the ACC portion is never populated &mdash; it can only be typed by hand in the invoice modal. For an ACC practice the default is wrong on every single visit.</div>
-      </div>
       <div class="card">
         <div class="card-title">A paid invoice can flip back to unpaid</div>
         <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span></div>
