@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>40%</strong> complete</div>
-        <div><strong>29</strong>/72 cards done</div>
-        <div>Updated <strong>2026-08-18 03:26 UTC</strong></div>
+        <div><strong>42%</strong> complete</div>
+        <div><strong>30</strong>/72 cards done</div>
+        <div>Updated <strong>2026-08-18 03:38 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -845,7 +845,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">29</div>
+        <div class="status-num">30</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -853,7 +853,7 @@
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">8</div>
+        <div class="status-num">6</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
@@ -943,6 +943,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Splose sync no longer loses patients to shared emails</div>
+            <div class="recent-desc">PR #101, migration 0030. Two defects found 2026-08-18 by chasing one name that did not match between Splose&#39;s diary and the Today screen. (1) `public.users` carried a blanket `UNIQUE (email)`; four Concord Rest Home residents share the home&#39;s admin address, so only the first could exist — production was missing **11 Splose patients** and **165 appointments** from 2026-03-01, the latter because the appointment sync skips any appointment whose patient it cannot resolve. Replaced with a partial unique index over login-capable rows only, which is what Supabase&#39;s `auth.users` already guarantees. (2) The worse one: the sync matched an existing user **by email alone** and overwrote its `splose_patient_id`, so on a shared address each new patient took the previous one&#39;s row and it ended up pointing at whoever the API returned last. Only an unclaimed row can be adopted now. (3) Both loops used to `continue` past anything unresolvable while counting nothing, so every run logged success while dropping records — each skip is now tallied against a reason into `splose_sync_logs.records_skipped` / `skip_reasons`. **Verified** on staging, 5 assertions passing, including that the exact drizzle query the fixed sync runs returns no stealable candidate; both databases pre-checked for login-capable duplicate emails before the constraint was dropped (zero on each); migration applied to staging and production and asserted; `tsc` clean and build passing</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">Practice contact details, GST number and ACC identifiers all correct</div>
             <div class="recent-desc">Set 2026-08-18 on both environments. Phone was the placeholder `+64 9 000 0000` and email was `admin@go-chiro.co.nz` on a domain the practice does not use; `server/services/pdf/invoice.ts:48` prints both in the header of **every** invoice, so that fake number was going out on all of them — and ACC submission had just been unblocked. Now `contact@go-chiro.com` and `+6421 133 1127`, which Ricky confirmed are the only contact details the practice uses. The email is also where the new shop-order alert lands, so that now reaches a mailbox somebody reads</div>
           </div>
@@ -975,13 +982,6 @@
             <div class="recent-desc">Found and closed 2026-08-18. `practices.gst_number` was null while `gst_registered` was true. `server/services/pdf/invoice.ts:52` prints the number only `if (gstRegistered &amp;&amp; practice.gstNumber)`, so the line vanished silently while line 58 still stamped the document **TAX INVOICE** and line 145 still printed the GST breakdown — a document headed TAX INVOICE, showing GST, with no registration number. It affected every invoice the app issued, not only ACC ones. Fixed by data, not code. **Still worth a guard** refusing ACC submission while the number is null, so a future practice onboarding to Go-Chiro cannot repeat it — logged in This Week</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Real staging environment</div>
-            <div class="recent-desc">Staging existed but shared production&#39;s database and held live Stripe keys — a second front door onto live data and live money, not an environment. Now on its own Supabase branch (`khcuxlkhjscmlmasmwuw`, ~$0.32/day), verified an exact schema match for production (identical fingerprint `bd37241…`, 425 columns, 32 tables) and empty of patient data. Railway repointed server *and* client: the `VITE_` vars mattered because `client/src/lib/supabase.ts` falls back to hardcoded production values when unset, so staging&#39;s login had been silently authenticating against the production auth server. Stripe now a matched **test** pair (account `51TzRyLH`), verified baked into the served bundle. Seeded with a practice and a practitioner login. **Verified end to end against the deployed app:** product created with sizes, stock driven to −3 without clamping, duplicate size 409, unknown id 404, and production still reads 0 products / 0 orders with its 338 users and 3,751 appointments intact. Getting here also required repairing the migration ledger and force-aligning the diverged `staging` branch (content proven byte-identical to `main` first)</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -994,9 +994,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">8</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🔴 The 11 patients and 165 appointments are still missing until the sync re-runs</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">SPLOSE_CUTOVER</span><span class="tag tag-neutral">splose_sync_logs.skip_reasons</span></div>
+        <div class="card-desc">The fix is on PR #101 but nothing is repaired until it is deployed and a sync runs. **Still do not flip `SPLOSE_CUTOVER`.** Two things needed: merge #101 and promote it, and then decide how to prove the repair. Re-running the sync against staging would mean copying 310 real patients into an environment deliberately emptied of patient data — that is a privacy call, not a side effect of a bug fix, so it was not done. The alternative is to let the production sync run on its normal schedule after promotion and assert the counts against Splose afterwards, which is what I would do. Once it has run, the breakdown of what the 165 actually resolve to becomes readable straight off `splose_sync_logs.skip_reasons` instead of needing the Splose API</div>
+      </div>
       <div class="card">
         <div class="card-title">🔑 Fix the staging Supabase Site URL — 30 seconds, unblocks all staging testing</div>
         <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-blocked">blocked-by-access</span><span class="tag tag-neutral">khcuxlkhjscmlmasmwuw</span><span class="tag tag-neutral">https://go-chiro.com</span><span class="tag tag-neutral">GET /auth/v1/verify?redirect_to=…</span><span class="tag tag-neutral">location: https://go-chiro.com</span><span class="tag tag-neutral">https://go-chiro-api-staging.up.railway.app</span><span class="tag tag-neutral">https://go-chiro-api-staging.up.railway.app/**</span><span class="tag tag-neutral">SUPABASE_ACCESS_TOKEN</span><span class="tag tag-neutral">~/.claude/ENABLEMENT.md</span></div>
@@ -1036,9 +1041,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">29</span>
+        <span class="col-count">30</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Splose sync no longer loses patients to shared emails</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">fixed</span><span class="tag tag-neutral">public.users</span><span class="tag tag-neutral">UNIQUE (email)</span><span class="tag tag-neutral">auth.users</span><span class="tag tag-neutral">splose_patient_id</span><span class="tag tag-neutral">continue</span><span class="tag tag-neutral">splose_sync_logs.records_skipped</span><span class="tag tag-neutral">skip_reasons</span><span class="tag tag-neutral">tsc</span></div>
+        <div class="card-desc">PR #101, migration 0030. Two defects found 2026-08-18 by chasing one name that did not match between Splose&#39;s diary and the Today screen. (1) `public.users` carried a blanket `UNIQUE (email)`; four Concord Rest Home residents share the home&#39;s admin address, so only the first could exist — production was missing **11 Splose patients** and **165 appointments** from 2026-03-01, the latter because the appointment sync skips any appointment whose patient it cannot resolve. Replaced with a partial unique index over login-capable rows only, which is what Supabase&#39;s `auth.users` already guarantees. (2) The worse one: the sync matched an existing user **by email alone** and overwrote its `splose_patient_id`, so on a shared address each new patient took the previous one&#39;s row and it ended up pointing at whoever the API returned last. Only an unclaimed row can be adopted now. (3) Both loops used to `continue` past anything unresolvable while counting nothing, so every run logged success while dropping records — each skip is now tallied against a reason into `splose_sync_logs.records_skipped` / `skip_reasons`. **Verified** on staging, 5 assertions passing, including that the exact drizzle query the fixed sync runs returns no stealable candidate; both databases pre-checked for login-capable duplicate emails before the constraint was dropped (zero on each); migration applied to staging and production and asserted; `tsc` clean and build passing</div>
+      </div>
       <div class="card">
         <div class="card-title">Practice contact details, GST number and ACC identifiers all correct</div>
         <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">config</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">+64 9 000 0000</span><span class="tag tag-neutral">admin@go-chiro.co.nz</span><span class="tag tag-neutral">server/services/pdf/invoice.ts:48</span><span class="tag tag-neutral">contact@go-chiro.com</span><span class="tag tag-neutral">+6421 133 1127</span></div>
@@ -1195,19 +1205,9 @@
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked</h2>
-        <span class="col-count">8</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">🔴 CUTOVER BLOCKER: the Splose sync loses patients to shared email addresses</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">SPLOSE_CUTOVER</span><span class="tag tag-neutral">concordresthome@gmail.com</span><span class="tag tag-neutral">public.users</span><span class="tag tag-neutral">users_email_key UNIQUE (email)</span></div>
-        <div class="card-desc">Found 2026-08-18 by chasing one name that did not match between Splose&#39;s calendar and the Today screen. **Do not flip `SPLOSE_CUTOVER` until this is fixed** — it would make the app sole source of truth while it is missing real patients and appointments. **Proven:** Splose has 9 appointments today, the app has 8; the missing one is Kevin Crawford at 12:00pm (Splose patient 4042301, active, not deleted). He shares `concordresthome@gmail.com` with three other Concord Rest Home residents, and `public.users` carries `users_email_key UNIQUE (email)`. Across the dataset: **11 Splose patients absent from the app**, 9 emails shared by 21 Splose patients where the app holds only 7 rows, and **165 Splose appointments from 2026-03-01 onward missing** (160 past, 5 today or later)</div>
-      </div>
-      <div class="card">
-        <div class="card-title">🔴 The sync reassigns one user row between different people</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">server/services/splose.ts:281</span><span class="tag tag-neutral">splose_patient_id</span><span class="tag tag-neutral">splose_patient_id</span><span class="tag tag-neutral">UNIQUE (email)</span></div>
-        <div class="card-desc">Same investigation, separate defect and the more serious of the two. `server/services/splose.ts:281`: when a patient is not found by `splose_patient_id`, the sync looks for a user **by email** and, if it finds one, **overwrites that user&#39;s `splose_patient_id`** and counts it an update. Two different humans on one address therefore contend for a single row, and each sync run points it at whoever the API returned last — identity reassignment, not just absence. **Mitigating, before anyone panics:** every affected row has zero session notes, zero invoices and zero ACC claims, so no clinical record or money is attached to a contaminated identity. Several of the 11 are also Splose-side duplicates of someone the app already holds (two records each for Asalemo Lilomaiava, Kevin McCormick and Sam Bryans; Donald Dunlop has two rows in the app). **At least three are genuinely distinct people entirely absent — Kevin Crawford, Lanying Zhang, Selwyn Meredith**, all on that one rest-home address; Luke can confirm in seconds they are three different residents. **Recommended fix, Ricky&#39;s call because it touches login identity:** (1) delete the match-by-email branch — matching different humans on a shared address is wrong whatever the constraint says; (2) replace the blanket `UNIQUE (email)` with a partial unique index covering only login-capable rows, so patient records may share or omit an address; (3) re-run the sync and re-assert the counts against Splose. **Not established:** the cause of each of the 165 missing appointments — some belong to the absent patients, some to patients that do exist, and some rows have no patient attached and may be skipped by design. A breakdown was cut short by a Splose API 429 and has not been completed</div>
-      </div>
       <div class="card">
         <div class="card-title">🔴 ACC submission is not covered by the pause switch</div>
         <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">risk</span><span class="tag tag-neutral">NOTIFICATIONS_PAUSED</span><span class="tag tag-neutral">sendNotification()</span><span class="tag tag-neutral">server/routes/invoices.ts</span><span class="tag tag-neutral">ACC_INVOICE_EMAIL</span><span class="tag tag-neutral">providerinvoices@acc.co.nz</span><span class="tag tag-neutral">ACC_INVOICE_EMAIL=ricky@coreshifthq.com</span></div>
