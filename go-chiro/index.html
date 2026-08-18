@@ -699,8 +699,8 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>41%</strong> complete</div>
-        <div><strong>29</strong>/70 cards done</div>
+        <div><strong>40%</strong> complete</div>
+        <div><strong>29</strong>/72 cards done</div>
         <div>Updated <strong>2026-08-18 03:26 UTC</strong></div>
       </div>
     </div>
@@ -853,7 +853,7 @@
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
-        <div class="status-num">6</div>
+        <div class="status-num">8</div>
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
@@ -1195,9 +1195,19 @@
     <section class="column col-blocked">
       <header class="col-head">
         <h2>🚫 Blocked</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">8</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🔴 CUTOVER BLOCKER: the Splose sync loses patients to shared email addresses</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">SPLOSE_CUTOVER</span><span class="tag tag-neutral">concordresthome@gmail.com</span><span class="tag tag-neutral">public.users</span><span class="tag tag-neutral">users_email_key UNIQUE (email)</span></div>
+        <div class="card-desc">Found 2026-08-18 by chasing one name that did not match between Splose&#39;s calendar and the Today screen. **Do not flip `SPLOSE_CUTOVER` until this is fixed** — it would make the app sole source of truth while it is missing real patients and appointments. **Proven:** Splose has 9 appointments today, the app has 8; the missing one is Kevin Crawford at 12:00pm (Splose patient 4042301, active, not deleted). He shares `concordresthome@gmail.com` with three other Concord Rest Home residents, and `public.users` carries `users_email_key UNIQUE (email)`. Across the dataset: **11 Splose patients absent from the app**, 9 emails shared by 21 Splose patients where the app holds only 7 rows, and **165 Splose appointments from 2026-03-01 onward missing** (160 past, 5 today or later)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔴 The sync reassigns one user row between different people</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">server/services/splose.ts:281</span><span class="tag tag-neutral">splose_patient_id</span><span class="tag tag-neutral">splose_patient_id</span><span class="tag tag-neutral">UNIQUE (email)</span></div>
+        <div class="card-desc">Same investigation, separate defect and the more serious of the two. `server/services/splose.ts:281`: when a patient is not found by `splose_patient_id`, the sync looks for a user **by email** and, if it finds one, **overwrites that user&#39;s `splose_patient_id`** and counts it an update. Two different humans on one address therefore contend for a single row, and each sync run points it at whoever the API returned last — identity reassignment, not just absence. **Mitigating, before anyone panics:** every affected row has zero session notes, zero invoices and zero ACC claims, so no clinical record or money is attached to a contaminated identity. Several of the 11 are also Splose-side duplicates of someone the app already holds (two records each for Asalemo Lilomaiava, Kevin McCormick and Sam Bryans; Donald Dunlop has two rows in the app). **At least three are genuinely distinct people entirely absent — Kevin Crawford, Lanying Zhang, Selwyn Meredith**, all on that one rest-home address; Luke can confirm in seconds they are three different residents. **Recommended fix, Ricky&#39;s call because it touches login identity:** (1) delete the match-by-email branch — matching different humans on a shared address is wrong whatever the constraint says; (2) replace the blanket `UNIQUE (email)` with a partial unique index covering only login-capable rows, so patient records may share or omit an address; (3) re-run the sync and re-assert the counts against Splose. **Not established:** the cause of each of the 165 missing appointments — some belong to the absent patients, some to patients that do exist, and some rows have no patient attached and may be skipped by design. A breakdown was cut short by a Splose API 429 and has not been completed</div>
+      </div>
       <div class="card">
         <div class="card-title">🔴 ACC submission is not covered by the pause switch</div>
         <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">risk</span><span class="tag tag-neutral">NOTIFICATIONS_PAUSED</span><span class="tag tag-neutral">sendNotification()</span><span class="tag tag-neutral">server/routes/invoices.ts</span><span class="tag tag-neutral">ACC_INVOICE_EMAIL</span><span class="tag tag-neutral">providerinvoices@acc.co.nz</span><span class="tag tag-neutral">ACC_INVOICE_EMAIL=ricky@coreshifthq.com</span></div>
