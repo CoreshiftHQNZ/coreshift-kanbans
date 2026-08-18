@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>39%</strong> complete</div>
-        <div><strong>26</strong>/66 cards done</div>
-        <div>Updated <strong>2026-08-18 03:00 UTC</strong></div>
+        <div><strong>40%</strong> complete</div>
+        <div><strong>27</strong>/67 cards done</div>
+        <div>Updated <strong>2026-08-18 03:06 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -845,11 +845,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">26</div>
+        <div class="status-num">27</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">1</div>
+        <div class="status-num">0</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -943,6 +943,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">Phase 3 — fulfilment + notifications</div>
+            <div class="recent-desc">Orders page, the fulfilment state machine and the five retail emails. Verified 2026-08-18: two real orders taken end to end through hosted Stripe Checkout on staging, both with a payment intent and a `paid_at`, one driven to `collected` and one to `ready`; GST correct on both (717c on a 5500c inclusive total). The emails were wired on PR #101 — retail needed its own send path because `sendNotification()` starts from a user id and shop buyers are guests with no user row. Migration 0029 makes `notification_logs.user_id` nullable and adds `recipient_email`, so a guest send is still logged in the same table as clinical mail. Exercised against the staging database with Postmark deliberately unconfigured so nothing sent: paused wrote zero rows, unpaused rendered all five templates with zero failures and logged five guest rows. **Not verified: an actually delivered email** — `NOTIFICATIONS_PAUSED` is true on both environments</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">ACC billing identifiers complete</div>
             <div class="recent-desc">Settled 2026-08-18. Vendor ID `G0M661` on the practice, Luke&#39;s ACC provider number on his practitioner record, and the GST number on the practice — the last of which was validated against the NZ IRD check-digit algorithm before being written (9 digits, in range, primary weighting, check digit matched). Also set on staging so the rehearsal produces a realistic document. Contract ID is deliberately empty: Ricky&#39;s earlier recollection put `G0M661` there, it turned out to be the Vendor ID, and no code reads Contract ID. **Verified by rendering an actual invoice PDF** — it carries `TAX INVOICE`, `GST no: 141-567-543`, the GST (15%) breakdown, and the ACC block with Provider no. / Vendor ID / Claim no. Identifiers are on this board only where they already appear on every invoice Luke issues</div>
           </div>
@@ -975,13 +982,6 @@
             <div class="recent-desc">docs/SHOP.md: the data model, the backorder and pre-order rules, order state machine, GST treatment, and what is deliberately out of scope. Written and scope-locked before any code, so the three build phases have something to be checked against. Merged to dev on 2026-08-01 via PR #98, on its own so it stays reviewable independently of the build</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Automated recalls</div>
-            <div class="recent-desc">Live in prod. Nudges patients whose last visit was ≥ the practice&#39;s recall interval ago with nothing booked; throttled one-per-interval. Off by default (per-practice toggle + interval in Practice settings); rides the notification stack so it&#39;s silent until launch. &quot;Clients due for a recall&quot; card on the Today dashboard. PR #80, promoted to production 2026-07-21</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -994,9 +994,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🔴 Production invoices print a placeholder phone number</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">bug</span><span class="tag tag-neutral">practices.phone</span><span class="tag tag-neutral">+64 9 000 0000</span><span class="tag tag-neutral">server/services/pdf/invoice.ts:48</span><span class="tag tag-neutral">practices.email</span><span class="tag tag-neutral">admin@go-chiro.co.nz</span><span class="tag tag-neutral">go-chiro.com</span><span class="tag tag-neutral">contact@go-chiro.com</span></div>
+        <div class="card-desc">Found 2026-08-18. `practices.phone` in production is `+64 9 000 0000`. `server/services/pdf/invoice.ts:48` prints the practice address, phone and email in the invoice header, so that fake number is on **every invoice the app issues** — and ACC submission is now unblocked, so it would go to ACC too. `practices.email` is `admin@go-chiro.co.nz`, on a different domain from the app&#39;s `go-chiro.com` and from the Postmark sender `contact@go-chiro.com`; it is also where the new shop-order alert lands, so if nobody reads that mailbox Luke never learns an order came in. Both are one-field data fixes, not code. Get the real numbers off Luke and confirm which mailbox he actually watches</div>
+      </div>
       <div class="card">
         <div class="card-title">Run the full-day rehearsal as a real patient</div>
         <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">decision</span></div>
@@ -1031,9 +1036,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">26</span>
+        <span class="col-count">27</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Phase 3 — fulfilment + notifications</div>
+        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">paid_at</span><span class="tag tag-neutral">collected</span><span class="tag tag-neutral">ready</span><span class="tag tag-neutral">sendNotification()</span><span class="tag tag-neutral">notification_logs.user_id</span><span class="tag tag-neutral">recipient_email</span><span class="tag tag-neutral">NOTIFICATIONS_PAUSED</span></div>
+        <div class="card-desc">Orders page, the fulfilment state machine and the five retail emails. Verified 2026-08-18: two real orders taken end to end through hosted Stripe Checkout on staging, both with a payment intent and a `paid_at`, one driven to `collected` and one to `ready`; GST correct on both (717c on a 5500c inclusive total). The emails were wired on PR #101 — retail needed its own send path because `sendNotification()` starts from a user id and shop buyers are guests with no user row. Migration 0029 makes `notification_logs.user_id` nullable and adds `recipient_email`, so a guest send is still logged in the same table as clinical mail. Exercised against the staging database with Postmark deliberately unconfigured so nothing sent: paused wrote zero rows, unpaused rendered all five templates with zero failures and logged five guest rows. **Not verified: an actually delivered email** — `NOTIFICATIONS_PAUSED` is true on both environments</div>
+      </div>
       <div class="card">
         <div class="card-title">ACC billing identifiers complete</div>
         <div class="card-tags"><span class="tag tag-neutral">M3.5</span><span class="tag tag-neutral">config</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">G0M661</span><span class="tag tag-neutral">G0M661</span><span class="tag tag-neutral">TAX INVOICE</span><span class="tag tag-neutral">GST no: 141-567-543</span></div>
@@ -1168,14 +1178,9 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">0</span>
       </header>
-      <div class="cards">
-      <div class="card">
-        <div class="card-title">Phase 3 — fulfilment + notifications</div>
-        <div class="card-tags"><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">build</span><span class="tag tag-neutral">paid_at</span><span class="tag tag-neutral">collected</span><span class="tag tag-neutral">ready</span><span class="tag tag-neutral">total × 3/23</span><span class="tag tag-neutral">sendNotification()</span><span class="tag tag-neutral">notificationLogs.userId</span></div>
-        <div class="card-desc">Orders page and the fulfilment state machine are **built and proven on staging**; the emails are the remainder. Verified 2026-08-18 against the staging database: two real orders taken end to end through hosted Stripe Checkout, both carrying a payment intent and a `paid_at`, one driven to `collected` and one to `ready`. GST correct on both — 717c on a 5500c tax-inclusive total (`total × 3/23`). **Remaining, and it is the last M7 code:** the five retail email templates are written and reviewed but not wired to a send path. `sendNotification()` keys on a user id and writes `notificationLogs.userId`, while shop buyers are guests with no user row — so retail needs its own guest send path, not a one-line hookup</div>
-      </div></div>
+      <div class="cards"><div class="empty">No items</div></div>
     </section>
     <section class="column col-blocked">
       <header class="col-head">
