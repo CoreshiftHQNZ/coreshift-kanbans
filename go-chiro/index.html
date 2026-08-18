@@ -699,7 +699,7 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>R2</strong> of 7 · in progress</div>
+        <div><strong>R3</strong> of 7 · current</div>
         <div><strong>Production:</strong> website only</div>
         <div>Updated <strong>2026-08-18</strong></div>
       </div>
@@ -717,7 +717,7 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <div class="phase-pill-label">Current phase</div>
-          <div class="phase-pill-value">R2 in progress &middot; 5 of 6 done</div>
+          <div class="phase-pill-value">R2 landed &middot; R3 is current</div>
         </div>
         <div class="phase-pill">
           <div class="phase-pill-label">Next milestone</div>
@@ -781,19 +781,19 @@
         <div class="phase-card phase-in-progress">
           <div class="phase-card-head">
             <div class="phase-marker">R2</div>
-            <div class="phase-status-pill phase-status-in-progress">In progress</div>
+            <div class="phase-status-pill phase-status-done">Done</div>
           </div>
           <div class="phase-title">R2 <span class="phase-subtitle">The patient record, and money that is correct</span></div>
-          <div class="phase-window">5 of 6 cards done</div>
+          <div class="phase-window">Landed 2026-08-19</div>
           <p class="phase-desc">The two things that make a real day possible, and neither is new scope &mdash; both are gaps in work already called done. There is <strong>no patient record page</strong>: the patients screen is a flat list whose rows do not open, and the aggregate endpoint returns <code>501 TODO</code>. And patients <strong>cannot pay</strong>: the pay modal mounts Stripe with an empty client secret, so it can never confirm.</p>
           <ul class="phase-deliverables">
             <li>A patient record page joining notes, invoices, claims, appointments</li><li>Add the missing auth guard to <code>/api/patients/:id/history</code> first</li><li>Fix the Stripe <code>clientSecret</code> bug so patients can pay</li><li>Set the ACC portion on auto-drafted invoices &mdash; today they bill 100%</li><li>Guard the paid &rarr; sent webhook downgrade; cut pay-at-booking</li>
           </ul>
         </div>
-        <div class="phase-card phase-planned">
+        <div class="phase-card phase-in-progress">
           <div class="phase-card-head">
             <div class="phase-marker">R3</div>
-            <div class="phase-status-pill phase-status-planned">Planned</div>
+            <div class="phase-status-pill phase-status-in-progress">Current</div>
           </div>
           <div class="phase-title">R3 <span class="phase-subtitle">Rehearse a day, with Splose still open</span></div>
           <div class="phase-window">The de-risking step</div>
@@ -855,10 +855,10 @@
 
     <!-- STATUS STRIP -->
     <section class="status-strip">
-      <div class="status-stat status-done"><div class="status-num">12</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-done"><div class="status-num">14</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">0</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked</div></div>
-      <div class="status-stat status-this-week"><div class="status-num">2</div><div class="status-label">This Week</div></div>
+      <div class="status-stat status-this-week"><div class="status-num">1</div><div class="status-label">This Week</div></div>
       <div class="status-stat status-backlog"><div class="status-num">12</div><div class="status-label">Backlog</div></div>
     </section>
 
@@ -950,14 +950,9 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Enter what ACC contributes per visit</div>
-        <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">one number</span><span class="tag tag-blocked">blocks the fix</span></div>
-        <div class="card-desc">The ACC split fix is shipped but <strong>inert until this figure exists</strong>. Production has exactly one ACC-eligible appointment type &mdash; <strong>ACC Appointment, $75.00, ACC contributes $0.00</strong>. Set it in Booking settings on that type and auto-drafts start splitting correctly; leave it and behaviour is unchanged. Needs Luke&rsquo;s actual ACC contribution rate. The other two types (Initial Consultation $110.08, Returning Appointment $75.00) are not ACC-eligible, so they are unaffected.</div>
-      </div>
       <div class="card">
         <div class="card-title">Decide: voice notes &mdash; build, or redraw the diagram?</div>
         <div class="card-tags"><span class="tag tag-neutral">R5?</span><span class="tag tag-neutral">decision</span></div>
@@ -988,9 +983,19 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">12</span>
+        <span class="col-count">14</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">ACC contribution corrected to on-top, and set to $30</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span><span class="tag tag-neutral">PR #120</span></div>
+        <div class="card-desc"><strong>The first version had the model backwards.</strong> ACC&rsquo;s contribution is paid <em>in addition</em> to the fee, not deducted from it: the client pays the full $75 and ACC pays $30 as well, so practice revenue is $105. Shipped as a deduction, a $75 visit would have billed the client $45 and lost $30 a visit &mdash; caught while the amount was still 0, so it never ran. Fixed by adding the contribution as its own line item, which lifts the total and leaves <code>patientPortion = total &minus; accPortion</code> equal to the fee. GST on the full $105 (1370c). <strong>$30 is now set on the ACC Appointment type in production</strong>, so the path is live rather than inert.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Invoices age to overdue</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span><span class="tag tag-neutral">PR #119</span></div>
+        <div class="card-desc"><code>overdue</code> had been in the enum since M2 and the payments screen already styled it red and counted it toward Outstanding &mdash; but nothing ever set it, so an invoice from three months ago looked identical to one sent this morning. Now aged on the scheduler: past <code>dueAt</code>, or 14 days from <code>issuedAt</code> when there is no due date. An invoice with neither date is never aged. One atomic UPDATE, idempotent. <strong>Verified</strong> by printing the compiled SQL and evaluating the predicate in Postgres across nine invoice shapes.</div>
+      </div>
       <div class="card">
         <div class="card-title">Pay-at-booking cut</div>
         <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span><span class="tag tag-neutral">PR #118</span></div>
@@ -1074,18 +1079,13 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">1</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">Correct the documentation</div>
         <div class="card-tags"><span class="tag tag-neutral">R1</span><span class="tag tag-neutral">docs</span></div>
         <div class="card-desc">The README advertises Whisper audio transcription that was deleted. <code>.env.example</code> documents <code>GEMINI_API_KEY</code> for note generation while the code uses <strong>Anthropic</strong> and reads <code>ANTHROPIC_API_KEY</code>. Eight env vars the server actually reads are undocumented, including <code>SPLOSE_CUTOVER</code> and <code>ACC_INVOICE_EMAIL</code>. Cheapest item on the board, and it is what made the audit necessary.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Nothing ages an invoice to overdue</div>
-        <div class="card-tags"><span class="tag tag-neutral">R2</span></div>
-        <div class="card-desc">No job ever transitions <code>sent</code> &rarr; <code>overdue</code>, so the Outstanding figure on the payments screen never ages. Draft invoices also sit forever if nobody clicks Send &mdash; no reminder, no aging.</div>
       </div>
       </div>
     </section>
