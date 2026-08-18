@@ -699,7 +699,7 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>R1</strong> of 7 · reset landed</div>
+        <div><strong>R2</strong> of 7 · in progress</div>
         <div><strong>Production:</strong> website only</div>
         <div>Updated <strong>2026-08-18</strong></div>
       </div>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <div class="phase-pill-label">Current phase</div>
-          <div class="phase-pill-value">R1 reset landed &middot; R2 next</div>
+          <div class="phase-pill-value">R2 in progress &middot; 5 of 6 done</div>
         </div>
         <div class="phase-pill">
           <div class="phase-pill-label">Next milestone</div>
-          <div class="phase-pill-value">R2 &mdash; the patient record, and money that is correct <span class="tag tag-milestone">R2</span></div>
+          <div class="phase-pill-value">R3 &mdash; rehearse a day with Splose still open <span class="tag tag-milestone">R3</span></div>
         </div>
       </div>
     </section>
@@ -781,10 +781,10 @@
         <div class="phase-card phase-in-progress">
           <div class="phase-card-head">
             <div class="phase-marker">R2</div>
-            <div class="phase-status-pill phase-status-in-progress">Next</div>
+            <div class="phase-status-pill phase-status-in-progress">In progress</div>
           </div>
           <div class="phase-title">R2 <span class="phase-subtitle">The patient record, and money that is correct</span></div>
-          <div class="phase-window">Next</div>
+          <div class="phase-window">5 of 6 cards done</div>
           <p class="phase-desc">The two things that make a real day possible, and neither is new scope &mdash; both are gaps in work already called done. There is <strong>no patient record page</strong>: the patients screen is a flat list whose rows do not open, and the aggregate endpoint returns <code>501 TODO</code>. And patients <strong>cannot pay</strong>: the pay modal mounts Stripe with an empty client secret, so it can never confirm.</p>
           <ul class="phase-deliverables">
             <li>A patient record page joining notes, invoices, claims, appointments</li><li>Add the missing auth guard to <code>/api/patients/:id/history</code> first</li><li>Fix the Stripe <code>clientSecret</code> bug so patients can pay</li><li>Set the ACC portion on auto-drafted invoices &mdash; today they bill 100%</li><li>Guard the paid &rarr; sent webhook downgrade; cut pay-at-booking</li>
@@ -855,10 +855,10 @@
 
     <!-- STATUS STRIP -->
     <section class="status-strip">
-      <div class="status-stat status-done"><div class="status-num">11</div><div class="status-label">Done</div></div>
+      <div class="status-stat status-done"><div class="status-num">12</div><div class="status-label">Done</div></div>
       <div class="status-stat status-in-progress"><div class="status-num">0</div><div class="status-label">In Progress</div></div>
       <div class="status-stat status-blocked"><div class="status-num">0</div><div class="status-label">Blocked</div></div>
-      <div class="status-stat status-this-week"><div class="status-num">3</div><div class="status-label">This Week</div></div>
+      <div class="status-stat status-this-week"><div class="status-num">2</div><div class="status-label">This Week</div></div>
       <div class="status-stat status-backlog"><div class="status-num">12</div><div class="status-label">Backlog</div></div>
     </section>
 
@@ -934,11 +934,11 @@
     <section class="recent">
       <h2 class="section-head">Recently Shipped</h2>
       <div class="recent-list">
-        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">The app is out of production</div><div class="recent-desc">Verified live: <code>/a/*</code> redirects, every app API 404s, the public site is untouched.</div></div></div>
-        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">Client-side navigation hole closed</div><div class="recent-desc">Caught by Ricky on production. The server gate alone was not enough — wouter never asked it.</div></div></div>
-        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">Splose integration deleted</div><div class="recent-desc">1,478 lines. The booking link and ACC lodgement copy stay — those are real dependencies, not plumbing.</div></div></div>
-        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">New homepage hero live</div><div class="recent-desc">Plus caps headings across the public site and the clinic clip in the about section.</div></div></div>
-        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">Milestones reset to R1–R7</div><div class="recent-desc">Ordered around one sentence, with R3 (rehearse a day) deliberately before the hard replacements.</div></div></div>
+        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">The patient record page</div><div class="recent-desc">The missing PMS primitive — one screen showing a patient whole. Also closed an unguarded patient-history endpoint.</div></div></div>
+        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">Patients can pay again</div><div class="recent-desc">Stripe Elements was built with an empty client secret, so nothing could ever confirm.</div></div></div>
+        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">ACC visits stopped billing the patient in full</div><div class="recent-desc">The split maths was right; the contribution figure did not exist anywhere. Now stored per appointment type.</div></div></div>
+        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">A failed payment can no longer un-pay a collected invoice</div><div class="recent-desc">Guarded atomically in the WHERE clause, because a read-then-write loses the race.</div></div></div>
+        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">Pay-at-booking cut</div><div class="recent-desc">Never ran once in 3,818 appointments, and it was the double-charge route. One charge per visit now.</div></div></div>
       </div>
     </section>
 
@@ -988,9 +988,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">11</span>
+        <span class="col-count">12</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Pay-at-booking cut</div>
+        <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span><span class="tag tag-neutral">PR #118</span></div>
+        <div class="card-desc">Booking created a Stripe PaymentIntent whose client secret no code ever used, so it was never confirmed. <strong>Across 3,818 production appointments: 0 with <code>paid_at</code>, 0 with an intent id</strong> &mdash; it has never once run. Left in place it was the double-charge route, since the invoice auto-draft checks for an existing invoice but not an existing booking payment. Cut rather than fixed: money now has one path per visit &mdash; session written up, invoice auto-drafted, patient pays that invoice. &minus;89 lines, including the unreachable webhook branch. The <code>paid_at</code> and intent-id columns stay; dropping columns is R6 work.</div>
+      </div>
       <div class="card">
         <div class="card-title">A failed payment can no longer un-pay a collected invoice</div>
         <div class="card-tags"><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span><span class="tag tag-neutral">PR #117</span></div>
@@ -1069,14 +1074,9 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">3</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
-      <div class="card">
-        <div class="card-title">Cut pay-at-booking</div>
-        <div class="card-tags"><span class="tag tag-neutral">R2</span><span class="tag tag-neutral">money</span></div>
-        <div class="card-desc">Booking creates a payment intent that <strong>no client code ever confirms</strong>, so it has never worked and nobody has missed it. If it were fixed it would double-charge: the invoice auto-draft only checks for an existing invoice, not an existing booking payment. Recommendation: delete it.</div>
-      </div>
       <div class="card">
         <div class="card-title">Correct the documentation</div>
         <div class="card-tags"><span class="tag tag-neutral">R1</span><span class="tag tag-neutral">docs</span></div>
