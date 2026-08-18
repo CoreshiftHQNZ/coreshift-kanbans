@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>61%</strong> complete</div>
-        <div><strong>66</strong>/109 cards done</div>
-        <div>Updated <strong>2026-08-18 21:32 UTC</strong></div>
+        <div><strong>67</strong>/110 cards done</div>
+        <div>Updated <strong>2026-08-18 21:43 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">66</div>
+        <div class="status-num">67</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -896,6 +896,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">A staging deploy failed with no logs at all, and the identical commit deployed clean on retry</div>
+            <div class="recent-desc">Caught by the standing rule rather than by anything breaking: `railway deployment list` showed `820a9f07` **FAILED** above the last SUCCESS while the site answered normally, which is the exact shape the M7 session wrote down. **The build was fine.** The build log runs to completion — `tsc --noEmit &amp;&amp; vite build` clean, 73 modules, image exported and pushed — so this was the deploy step, not nixpacks. ⚠️ **`railway logs -d` returned nothing whatsoever**, not even a startup line, and the commit in question touched only a new CLI file, one npm script and two docs — nothing on the server&#39;s import path. `railway redeploy` of the same commit went BUILDING → SUCCESS in 50 seconds. **Recorded as Railway-side rather than diagnosed**, because the evidence supports that and does not support more: same commit, same image, no code change, clean on retry. What it is *not* is another instance of the `NODE_ENV` cache break — that one always left a named error in the build log. **Verified after retry:** `2c297a62` SUCCESS, `/health` 200, serving `index-Cl4c33NA.js` downloaded and grepped for three current strings, `/api/clients` and `/api/clients/app-check/shipping` both 401 unauthenticated. 🤔 If this recurs, the thing to look at is the healthcheck: `railway.json` gives `/health` 60 seconds and `restartPolicyMaxRetries` 3, and a cold `tsx` start on a small instance is the plausible edge</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">The doneWhen assumed work that is not going to happen, so it was replaced rather than reinterpreted</div>
             <div class="recent-desc">Ricky&#39;s call on 2026-08-17. M8 read *&quot;A specialist marks an approved item shipped, with its evidence…&quot;*, which assumed Storepro&#39;s August work would be done. It is not being done: the whole exercise was a test of the app, not a commitment to the site. That made the clause unmeetable honestly — and the tempting move, pressing the button on Storepro anyway to prove the app works, is precisely the failure the milestone was built to prevent. `shipped_at` is frozen on write, has no correction path, and is read by the composer to tell a client an item was **delivered**. **Walking through a gate to prove it is shut is not a test of the gate.** So the human act stayed and its subject moved: `npm run fixture -- --seed` creates **`app-check`**, unmistakably not a client — `status` `prospect`, domain `app-check.invalid` (RFC 2606, can never resolve, so no crawl can reach a real site), and the name saying so in the client list. One approved plan, three approved ranked items, no metrics and no audit runs, because composition and readback are already proven and the only thing a fixture adds is the click. **New doneWhen:** *A specialist records a shipment in the app on a deployed environment, with evidence, and the shipping record and every prediction change accordingly.* Storepro keeps 0 of 13. ⚠️ The fixture writes to the same Supabase project staging reads — that is the point, and it is why the teardown is `npm run fixture -- --drop` in the README rather than a note in somebody&#39;s head</div>
           </div>
@@ -926,13 +933,6 @@
           <div class="recent-text">
             <div class="recent-title">The one-click had to be built as a click plus a link, not as a click</div>
             <div class="recent-desc">The readback&#39;s *&quot;the audit agrees, mark it shipped&quot;* was wanted since M6, and the obvious build — one button, no fields — collides head-on with M8&#39;s own first guarantee: **no shipment without evidence**. A button that ships with no evidence is a tick in a box wearing an audit verdict. So the button opens a row with the evidence field **pre-filled with the audit run that agreed**, and *Record it as shipped* stays disabled until there is a link. What the click removes is leaving the panel to construct a CLI call; it does not remove the judgement, because *&quot;this named check passes on these pages&quot;* and *&quot;this work is done&quot;* are different claims and only the first is one a crawl can make. ⚠️ Marking an item shipped while the audit **disagrees** is still allowed and says so on screen in as many words — the criterion may be unmeasurable, or the evidence may be somewhere the crawl cannot see, and it is also how work that was never done reaches a client&#39;s report as delivered. **Verified by:** the panel offering no button at all under the default local identity (`local@localhost` has no `auth.users` row, so the gate would refuse it — M7&#39;s rule, applied without being asked), and offering the disabled-until-evidence form under a session that resolves</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">Staging stopped deploying and every check we had said it was fine</div>
-            <div class="recent-desc">The most useful thing found this session, and it was found only because landing the milestone required proving staging served the commit rather than assuming it. **Railway keeps serving the last good build when a build fails.** So `/health` returned 200, the site loaded, the push was green, `origin/staging` was at the right SHA — and the newest code had never been live. `railway deployment list` was the only thing that said otherwise: **two FAILED deployments** sitting above the last SUCCESS. **The cause:** `NODE_ENV=production` is set on the Railway environment, so the default `npm ci` omits devDependencies — and `npm run build` is `tsc --noEmit &amp;&amp; vite build`, both of which are devDependencies. `tsc: not found`, exit 127. **It had been latent for about a day**: Docker was reusing a `node_modules` layer built before that variable existed, so builds kept passing on cache and broke the first time the cache expired — which is the worst shape a break can have, because nothing in the commit that exposed it was wrong. (Who set `NODE_ENV` and when is not recoverable from here, and is recorded as unknown rather than guessed at.) **The first fix traded one silent failure for another:** moving `npm ci --include=dev` into `railway.json`&#39;s `buildCommand` died with `EBUSY: rmdir &#39;/app/node_modules/.cache&#39;`, exit 240 — the build phase mounts a cache *inside* `node_modules`, and `npm ci` wipes `node_modules` before installing, so it cannot remove its own mount point. `npm ci` can only run in the **install** phase, whose cache lives at `/root/.npm`, outside the tree it deletes. Pinned in **`nixpacks.toml`** rather than as a Railway dashboard variable, on the grounds that a build which only works because of invisible dashboard state is the bug and not the cure — and the file reads as a bug report, deliberately, so the next session inherits the reasoning. **Verified by:** deployment `6edd08f1` SUCCESS after two FAILED; staging serving `index-BfTTALVZ.js`; and the live bundle downloaded and grepped — all three new strings present (`has no user record, so a publication could not be attributed`, `connection problem, not a refusal`, `Publish this report`), which is stronger than a matching hash. Commits `45d235e` and `06d6b20`. ⚠️ **The shape of this failure outlives the fix:** never take a green push as a deploy</div>
           </div>
         </div>
       </div>
@@ -988,9 +988,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">66</span>
+        <span class="col-count">67</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">A staging deploy failed with no logs at all, and the identical commit deployed clean on retry</div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">railway deployment list</span><span class="tag tag-neutral">820a9f07</span><span class="tag tag-neutral">tsc --noEmit &amp;&amp; vite build</span><span class="tag tag-neutral">railway logs -d</span><span class="tag tag-neutral">railway redeploy</span><span class="tag tag-neutral">NODE_ENV</span><span class="tag tag-neutral">2c297a62</span><span class="tag tag-neutral">/health</span><span class="tag tag-neutral">index-Cl4c33NA.js</span><span class="tag tag-neutral">/api/clients</span><span class="tag tag-neutral">/api/clients/app-check/shipping</span><span class="tag tag-neutral">railway.json</span><span class="tag tag-neutral">/health</span><span class="tag tag-neutral">restartPolicyMaxRetries</span><span class="tag tag-neutral">tsx</span></div>
+        <div class="card-desc">Caught by the standing rule rather than by anything breaking: `railway deployment list` showed `820a9f07` **FAILED** above the last SUCCESS while the site answered normally, which is the exact shape the M7 session wrote down. **The build was fine.** The build log runs to completion — `tsc --noEmit &amp;&amp; vite build` clean, 73 modules, image exported and pushed — so this was the deploy step, not nixpacks. ⚠️ **`railway logs -d` returned nothing whatsoever**, not even a startup line, and the commit in question touched only a new CLI file, one npm script and two docs — nothing on the server&#39;s import path. `railway redeploy` of the same commit went BUILDING → SUCCESS in 50 seconds. **Recorded as Railway-side rather than diagnosed**, because the evidence supports that and does not support more: same commit, same image, no code change, clean on retry. What it is *not* is another instance of the `NODE_ENV` cache break — that one always left a named error in the build log. **Verified after retry:** `2c297a62` SUCCESS, `/health` 200, serving `index-Cl4c33NA.js` downloaded and grepped for three current strings, `/api/clients` and `/api/clients/app-check/shipping` both 401 unauthenticated. 🤔 If this recurs, the thing to look at is the healthcheck: `railway.json` gives `/health` 60 seconds and `restartPolicyMaxRetries` 3, and a cold `tsx` start on a small instance is the plausible edge</div>
+      </div>
       <div class="card">
         <div class="card-title">The doneWhen assumed work that is not going to happen, so it was replaced rather than reinterpreted</div>
         <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">shipped_at</span><span class="tag tag-neutral">npm run fixture -- --seed</span><span class="tag tag-neutral">app-check</span><span class="tag tag-neutral">status</span><span class="tag tag-neutral">prospect</span><span class="tag tag-neutral">app-check.invalid</span><span class="tag tag-neutral">npm run fixture -- --drop</span></div>

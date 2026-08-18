@@ -1,38 +1,43 @@
 # Engine Optimization — Handover
-_2026-08-15 · M8 built, deliberately not closed · opens the same M8 · arc 10_
+_2026-08-19 · M8 built and proven · one click from closing · arc 10_
 
 ## ▶️ Paste this into a new session
 
 ```
-Engine Optimization M8 — close the shipping record
+Engine Optimization M8 — one click from closing
 
 Read coreshift-kanbans/engine-optimization/HANDOVER.md and docs/shipping.md.
 
-M8 is built and proven and deliberately still open. The writer exists — CLI,
-endpoint, and a one-click in the readback panel — and every refusal was exercised
-against the live database: no shipment without evidence, none with evidence that
-is not a link, none from a session that resolves to nobody, none on an unapproved
-or unranked item, none dated before the plan was approved, none dated in the
-future, no second shipment, and no un-shipping. The accept path was run end to
-end against a scratch client that was then deleted.
+M8 is built and proven. The writer, its eight refusals and the drift check all
+exist and were exercised against the live database; 188 tests across seven
+suites; staging live at 953a5b0.
 
-Nothing of Storepro's is marked shipped, because none of Storepro's work has been
-done. The doneWhen ends on a real specialist act and it is not Claude's to
-perform.
+The doneWhen was REVISED on 2026-08-17, on Ricky's call, and the reason matters.
+It originally required a specialist to mark one of Storepro's approved items
+shipped. Storepro's August work is not being done — the milestone was a test of
+the app, not a commitment to the site — so that clause became unmeetable
+honestly. And the shortcut is the worst option available: shipped_at is frozen on
+write with no correction path, and the composer reads it to tell a client an item
+was delivered, so pressing the gate on Storepro to prove it works writes a
+permanent false statement about a real client's work. Walking through a gate to
+prove it is shut is not a test of the gate.
 
-The policing is done and needs nothing further: server/ship/drift.ts re-runs the
-existing pure readbackWindow against the shipping date and compares. The recorded
-window never moves. For plan 70337c95 the boundary is 3 September, found by
-walking it with the function.
+So the human act stayed and its subject moved to the app-check fixture client
+(`npm run fixture -- --seed`, already seeded and live): status prospect, domain
+app-check.invalid, named as not a client in the client list.
 
-What closes this milestone: somebody does a piece of August's work and records
-it. Item 1 — "Some URLs return 200 with no content", 2.8 hours across 3 URLs,
-above the capacity line, no dependencies — is the cheapest close. If that has
-happened, run `npm run audit -- --client storepro` first so the readback can
-agree, then the one-click. If it has not, say so and do not manufacture one.
+NEW doneWhen: "A specialist records a shipment in the app on a deployed
+environment, with evidence, and the shipping record and every prediction change
+accordingly."
 
-Check the staging deploy before you trust it. `railway deployment list` and look
-for FAILED, not just the newest row.
+What remains is one click, by Ricky, on staging. If he has done it, verify the row
+out of Postgres, exercise the freeze against that real row, confirm the panel and
+the CLI agree, and offer /land. If he has not, do not press it for him and do not
+press anything on Storepro.
+
+Check the staging deploy before you trust it. A deploy FAILED on 2026-08-19 with
+no runtime logs at all and the identical commit succeeded on retry — see the board.
+`railway deployment list` and look for FAILED, not just the newest row.
 
 Give me the 5-line orientation, then get on with it.
 ```
