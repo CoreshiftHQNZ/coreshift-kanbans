@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>23%</strong> complete</div>
-        <div><strong>10</strong>/44 cards done</div>
-        <div>Updated <strong>2026-08-19 04:17 UTC</strong></div>
+        <div><strong>21%</strong> complete</div>
+        <div><strong>10</strong>/47 cards done</div>
+        <div>Updated <strong>2026-08-19 04:45 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -813,7 +813,7 @@
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">2</div>
+        <div class="status-num">3</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -942,9 +942,19 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">7</span>
+        <span class="col-count">9</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🔴 Send the Xero email TODAY — one of its six questions now decides whether the product is buildable</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">blocking</span><span class="tag tag-neutral">existential</span><span class="tag tag-neutral">prd.md</span><span class="tag tag-neutral">docs/m2-ready-to-send.md</span></div>
+        <div class="card-desc">**Re-ranked 19 Aug.** It was *&quot;decides what M4 builds&quot;*. It is now **&quot;decides whether there is a product&quot;**, because the coding engine&#39;s primary input is the **unreconciled bank statement line** — the thing that tells us a transaction needs coding at all. `prd.md` § 2 states in its own words that those are **not available from the public Accounting API**, and the workaround it named was the spike&#39;s browser extraction, which Xero&#39;s terms now **prohibit** (§5.4). 👉 **Add a question to the draft before sending: is there a restricted or premium bank-statement endpoint, and on what terms?** Draft otherwise ready at `docs/m2-ready-to-send.md` §4. **Default if you don&#39;t: I proceed on the assumption there is no legal Xero route and design around open banking instead** — see the next card</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🤔 Worth 20 minutes: can we read the bank instead of Xero?</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">architecture</span><span class="tag tag-neutral">unverified</span><span class="tag tag-neutral">BankTransactions</span></div>
+        <div class="card-desc">⚠️ **My suggestion, nothing checked yet.** If Xero will not expose unreconciled statement lines, the way out may be to stop asking Xero for them: read the client&#39;s bank feed directly through **NZ open banking (Akahu or equivalent)**, code it, then create the transaction in Xero via `BankTransactions` — which Xero reconciles against its own statement line. **It sidesteps the restriction rather than negotiating with it, and it is the only option that does.** Unknown: API surface, per-client cost, consent model, and whether Colab&#39;s clients would wear another authorisation. 👉 Worth asking Dave whether clients would tolerate a bank authorisation — he will know instantly</div>
+      </div>
       <div class="card">
         <div class="card-title">🔴 Ask Dave for the ledgers — two things in one message, and it is M3&#39;s only hard blocker</div>
         <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">blocking</span><span class="tag tag-neutral">access</span><span class="tag tag-neutral">Journals</span><span class="tag tag-neutral">xero_connections</span><span class="tag tag-neutral">docs/m3-ready-to-send.md</span></div>
@@ -1041,18 +1051,23 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">M3 — concierge cycle proven</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">current</span><span class="tag tag-neutral">docs/concierge-results.md</span></div>
-        <div class="card-desc">🟡 **Started 19 Aug.** ✅ **TASK-011 done** — ten clients selected and recorded in `docs/concierge-results.md`. 🔴 **TASK-011b now blocks TASK-012 through TASK-017**: no period ledger exists (see the On-Ricky card). ✅ The gate is secured — Dave has agreed to sign the ten. 🔴 **M3&#39;s instrumentation is load-bearing for pricing**, since TASK-004&#39;s observed timing was deleted with its gate: *minutes per return* is the retainer&#39;s only cost-of-goods input. 🟡 **Unblocked work exists meanwhile** — TASK-016&#39;s workpaper template needs no ledger, and its structure becomes the M8 UI spec</div>
+        <div class="card-title">🔴 M3 replaced — &quot;Coding accuracy proven&quot;, not &quot;Concierge cycle proven&quot;</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">current</span><span class="tag tag-neutral">pivot</span></div>
+        <div class="card-desc">**The old M3 would have proved Dave trusts our GST workpaper — for the ~10% of his job that is checking and reviewing. It would have succeeded and not mattered.** The replacement is the same shape — retrospective, by hand, **no product code** — pointed at the 85%: take the coded ledgers Dave is sending, **hide the coding, predict it**, and report accuracy **split by precedent** (payees the client has seen before vs not) because those are different products and a blended number hides which one works. 🔴 **Measure against a Xero bank rule as the baseline** — beating *no automation* proves nothing; the question is whether a learned profile beats the rule engine Dave already has. ✅ **The ask to Dave does not change** — the ten exports are *coded* ledgers, which is exactly the ground truth this needs. 👉 Ask him for **more clients and a longer window** while he is willing: same effort per client, and a long window is the only way to measure the learning curve</div>
       </div>
       <div class="card">
-        <div class="card-title">Draft the workpaper template while the ledgers are pending</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">design</span></div>
-        <div class="card-desc">TASK-016&#39;s format, which the task&#39;s own notes say *&quot;matters more than tooling&quot;* — it is the artefact Dave judges and its structure becomes M8&#39;s UI spec. Needs **no Xero data**, so it is the one substantial thing M3 can advance while TASK-011b is open. ⚠️ Best done after **one filed client&#39;s Drive folder** arrives, to avoid designing something alien to what Colab produce today</div>
+        <div class="card-title">✅ TASK-011 stands — the ten clients still work</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">research</span><span class="tag tag-neutral">Reviewed &amp; Filed</span><span class="tag tag-neutral">In Progress</span></div>
+        <div class="card-desc">Selected before the pivot, and the selection survives it: all ten are live two-monthly clients **with a coding profile already built**, which is what the coding test needs. ⚠️ **One thing changes** — the 4/6 split between `Reviewed &amp; Filed` and `In Progress` was designed so TASK-013&#39;s GST boxes had a filed return to tie against. The coding test does not need that, so the split is now harmless rather than load-bearing, and the pool can widen freely</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔴 Measure the learning curve — the central product risk nobody has touched</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">risk</span></div>
+        <div class="card-desc">The pitch is that the unknown bucket shrinks every cycle as Dave&#39;s decisions become precedent. **The spike had that loop and barely exercised it: 79 learned codings across 147 clients.** If the curve is flat, the product saves a third of the coding work once and never improves — real, but probably not retainer-worthy. If it is steep, it compounds. **Its slope is the difference between a tool and a service, and it is measurable from a long enough export window.**</div>
       </div></div>
     </section>
     <section class="column col-blocked">
