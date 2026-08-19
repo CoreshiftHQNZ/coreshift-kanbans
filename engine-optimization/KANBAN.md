@@ -10,8 +10,6 @@
 
 ## 🟡 In Progress
 
-_Nothing in progress. M11 is blocked on a calendar until 5 November; what fills the gap is a decision, and the handover carries it._
-
 ## 🚫 Blocked
 
 - **M11: The readback — the verdict itself, and it cannot happen before 5 November** `M11` `phase-3` `milestone` `blocked-by-calendar` — 🔒 **Blocked on a calendar and on nothing else**, which is why it is here rather than in progress: every input it reads was built and exercised in M8 and M9, and no work on it can move. Prediction `a3e5a8a7` reads back over **October 2026**, Search Console figures for October are treated as final from **2026-11-05**, and the machinery refuses by name until then — not `too_early`, which would be honest and would still empty the `outcome is null` work queue. Three things are open when the date arrives. **(1) October has to be ingested first** — the arithmetic refuses a month with no complete snapshot rather than reading it as zero, so `npm run ingest -- --client storepro --month 2026-10` is a prerequisite and not a detail. **(2) The verdict is run for real**, once, frozen afterwards. **(3) The report has to carry the answer**, including when the answer is that we were wrong — a new publication check, its twin in the newest migration's required-check array, and a `REPORT_METHOD_VERSION` bump. 🔴 **The verdict may well be `confounded` rather than yes or no**, and that is a real outcome: the work is below the capacity line, and if it ships after 3 September October contains days from before the change. The system will say so out loud either way, which is the point.
