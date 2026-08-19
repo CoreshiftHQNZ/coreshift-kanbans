@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>62%</strong> complete</div>
-        <div><strong>80</strong>/130 cards done</div>
-        <div>Updated <strong>2026-08-19 04:23 UTC</strong></div>
+        <div><strong>61%</strong> complete</div>
+        <div><strong>80</strong>/131 cards done</div>
+        <div>Updated <strong>2026-08-19 05:01 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">13</div>
+        <div class="status-num">14</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -1415,9 +1415,14 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">13</span>
+        <span class="col-count">14</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">✅ The fixture now carries one prediction per verdict — all six, not two</div>
+        <div class="card-tags"><span class="tag tag-neutral">M12</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">doneWhen</span><span class="tag tag-neutral">held</span><span class="tag tag-neutral">promote</span><span class="tag tag-neutral">keep_testing</span><span class="tag tag-neutral">judgeVerification</span><span class="tag tag-neutral">partial · keep_testing</span><span class="tag tag-neutral">failed · unproven</span><span class="tag tag-neutral">failed · rollback</span><span class="tag tag-neutral">confounded · unproven</span><span class="tag tag-neutral">ai_probe</span><span class="tag tag-neutral">windowDrift</span><span class="tag tag-neutral">confounded</span><span class="tag tag-neutral">confounded</span><span class="tag tag-neutral">server/cli/fixture-cases.ts</span><span class="tag tag-neutral">fixture.ts</span><span class="tag tag-neutral">await</span><span class="tag tag-neutral">failed · rollback</span><span class="tag tag-neutral">npm run test:fixture</span><span class="tag tag-neutral">measureEffect</span><span class="tag tag-neutral">judgeVerification</span><span class="tag tag-neutral">tsc</span><span class="tag tag-neutral">244365d</span><span class="tag tag-neutral">dev</span><span class="tag tag-neutral">npm run fixture -- --seed</span></div>
+        <div class="card-desc">Built 2026-08-19 on Ricky&#39;s ask, and it is the *adjacent-and-valuable* row of the working-model table rather than M12 prep: it is not needed for M12&#39;s `doneWhen`, so it is a card and not milestone scope. The fixture&#39;s two closed-window predictions both answered `held` — `promote` over a clean July, `keep_testing` over a June two updates overlap — which exercised the confounder cap and nothing else. **Every branch of `judgeVerification` that says *no* had never been written by a person pressing a control.** Four outcomes and four decisions pair into exactly six reachable combinations; four cases were added to cover the rest: `partial · keep_testing` (+9.2 points aggregate with 1 of 6 pairs moving that way — the aggregate is honest and the story it tells is wrong), `failed · unproven` (+2.0 points, inside the 5.0-point floor), `failed · rollback` (−20.0 points, materially the wrong way — the verdict this whole system exists to be able to return), and `confounded · unproven` (+28.0 points **computed and withheld**, because nothing was recorded as shipped and the 2026-06-03 deadline passed). ⚠️ **Three of them hang off `ai_probe` items deliberately** — `windowDrift` runs whenever an item has a change type, and an unshipped item with one short-circuits to `confounded` *before* the bands are reached, so audit-sourced cases would all say `confounded` and prove nothing about the arithmetic. The figures moved into `server/cli/fixture-cases.ts` because `fixture.ts` is a script with top-level `await` and a database connection, so importing it runs it — which meant the only thing standing behind *&quot;these numbers produce `failed · rollback`&quot;* was arithmetic in a comment. `npm run test:fixture` now feeds every case through the real `measureEffect` and `judgeVerification`. **Verified:** `tsc` exit 0, 260 tests across 10 suites (7 new), the four deltas printed and checked against the bands by hand. Commit `244365d` on `dev`. 👉 **Not seeded** — `npm run fixture -- --seed` drops and recreates the client, which destroys the two verdicts Ricky pressed in M10, and re-seeding is the only way to press one again because a verdict is frozen once written. His call</div>
+      </div>
       <div class="card">
         <div class="card-title">🔴 Our own concurrent work is not a confounder anywhere in this system</div>
         <div class="card-tags"><span class="tag tag-neutral">M11</span><span class="tag tag-neutral">M12</span><span class="tag tag-neutral">risk</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">server/verify/verify.ts</span><span class="tag tag-neutral">predictions.confounders</span><span class="tag tag-neutral">a3e5a8a7</span><span class="tag tag-neutral">confounded</span><span class="tag tag-neutral">work_items</span><span class="tag tag-neutral">shipped_at</span></div>
