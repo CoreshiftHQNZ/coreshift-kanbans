@@ -34,6 +34,11 @@ M12 as hard as they block M11:
    verdict. One design, three call sites: a superseding row rather than an edit,
    the original left on the record, the correction naming who made it and why,
    every reader taking the latest.
+   Scope is settled and is not yours to reopen: **in-app only, nothing is sent to
+   the client.** The published report they received stays the document of record.
+   Nothing notifies, re-issues or re-exports — a send path is a bigger change than
+   the correction and would decide the client-facing report format, which is
+   deliberately still open in the Backlog.
 
 doneWhen: On a deployed environment a specialist signs off a prompt set and
 records a verdict in the app, both attributed to their own verified session, and
@@ -114,31 +119,11 @@ Give me the 5-line orientation, then get on with it.
    blocked on a calendar and on nothing else. Handover is M12; the arc is 12.
    Say so if you want it reversed — nothing has been built yet.
 
-2. **The correction path has one decision in it that is yours, and it is
-   customer-facing.** The *shape* is settled and has been since M8: a superseding
-   row, never an edit. What is not settled is what a correction to a report a
-   client has already read actually **does** — is the corrected report re-issued
-   to them, or is it corrected in the app with the original still standing as the
-   thing they received? That is positioning, not architecture. **Default if you
-   say nothing:** in-app only, the original stays the document of record, and
-   nothing is sent — because nothing in this system emails or exports a report
-   today and adding that quietly is the bigger change.
-3. **Tell the team about 3 September.** Unchanged and still the sharpest date on
-   the board: it is the last day *"Question content is marked up as such"* can be
-   recorded as shipped and still leave October able to answer anything. Ship on
-   the 4th and November's first verdict comes back `confounded` — no answer rather
-   than a wrong one, at the cost of a full cycle. **Nothing chases it.**
-   **Default:** the work slips and November is inconclusive.
-4. **The fixture's shipment row went with the re-seed.** M9 needed a prediction
-   over a month that had already closed so the writer could be pressed at all,
-   which meant recreating the fixture client, which took `c1def139` — the shipment
-   *you* recorded on 18 August — with it. Nothing depends on it; the gate was
-   proven then and the evidence is in M8's card. It was not re-recorded because
-   that would attribute a delivery to you that you did not press. **Default:** the
-   fixture stays at 0 shipped; press it in the app if you want it back.
-5. **A second client, when you're ready.** Still not blocking, still the only
-   thing that would test M6's four matching thresholds against more than one
-   property. **Default:** Storepro-only.
+2. ~~**The correction path's client-facing clause.**~~ **Taken 2026-08-19 — in-app
+   only.** The correction supersedes internally and stops there. The published
+   report the client received stays the document of record; nothing notifies,
+   re-issues or re-exports. Written into M10's spec and into the Done column, so
+   the next session builds to it rather than re-asking.
 
 **Decided and closed:** a verdict is frozen once written, on the same grounds as a
 published report and a recorded shipment — and the missing correction path is now

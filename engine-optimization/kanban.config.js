@@ -348,6 +348,13 @@ module.exports = {
       //    and M9 added the one with the highest stakes — an algorithm update
       //    discovered after a verdict cannot be added to its confounders.
       //
+      //    Scope settled by Ricky on 2026-08-19: **in-app only, nothing is sent to
+      //    the client.** The published report a client received stays the document
+      //    of record; the correction is visible to the agency with the original
+      //    readable underneath, and nothing notifies, re-issues or re-exports. A
+      //    send path would be a bigger change than the correction and would decide
+      //    the client-facing report format, which is deliberately still open.
+      //
       // ⚠️ The doneWhen is three clauses where the rule asks for one observable
       // event, and that is a real weakening rather than an oversight. The
       // milestone is three named gaps; it is bounded by that list and by nothing

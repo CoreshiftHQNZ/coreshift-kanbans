@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>63%</strong> complete</div>
-        <div><strong>77</strong>/123 cards done</div>
-        <div>Updated <strong>2026-08-19 02:43 UTC</strong></div>
+        <div><strong>78</strong>/123 cards done</div>
+        <div>Updated <strong>2026-08-19 02:50 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">77</div>
+        <div class="status-num">78</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -896,6 +896,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">A correction never leaves the app — the client is not told twice</div>
+            <div class="recent-desc">Ricky&#39;s call on 2026-08-19, the day the correction path became M10&#39;s: *&quot;in-app only for the correction, don&#39;t send anything to the client.&quot;* So the correction path supersedes **internally** and stops there. The **original published report stays the document of record** — it is what the client received, and a corrected version arriving unasked would be a second document claiming to be the account of the same month, which is the exact failure the one-report-per-cycle index exists to prevent. What a specialist sees in the app is the correction, who made it and why, with the original still readable underneath. **What this rules out, stated so it is a decision rather than a gap:** nothing notifies the client, nothing re-exports, and a client acting on a figure that has since been corrected will not learn it from this system. That is acceptable because **nothing in this system emails or exports a report today** — adding a send path is a bigger change than the correction, and it would smuggle in the client-facing format decision that is deliberately still open in the Backlog. If a correction is material enough that the client must know, a person tells them; the app&#39;s job is to make sure the agency is never the one who has forgotten. ⚠️ **It also settles the shipment and the verdict by not applying to them** — nobody outside the agency ever sees either, so neither ever had this question</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">M9: The verdict machinery — a prediction can be answered against a control, and `a3e5a8a7` is refused by name until November</div>
             <div class="recent-desc">The half of the loop nothing on the market has: not *what did traffic do*, but *what did the pages we changed do against twelve pages we deliberately did not*. **The arithmetic reports the difference and never the raw number** — and prints the raw one beside it, labelled, so what the control bought is visible. On Storepro&#39;s real June the treated pages rose 2.7 points and the untouched control rose 8.8, so the honest answer is **−6.1 against the control** where a retainer report would have printed *+2.7, up*. **The bar a movement has to clear is read off the control set rather than declared**: the pairs drifted 8.5 points apart before anyone touched anything, so an effect smaller than that cannot be told from the matching — which makes the bar harder, not easier, and harder is the only direction a self-set bar should move. **A page Search Console did not return is dropped and named, never counted as zero** (the couldn&#39;t-measure-read-as-measured-zero trap, caught for the fifth time; and dropping is not free either, so the count travels into the notes because keeping the pages that stayed visible biases what is left towards good news). 🔴 **Nothing was written about Storepro.** `a3e5a8a7` is refused by name in the CLI and in the app — *&quot;read back over 2026-10 … not final until 2026-11-05 … there is no answer to give, which is not the same as the answer being no&quot;* — and its `outcome` is still null in the database. **Verified by:** the June rehearsal above on the prediction&#39;s own twelve frozen pairs, with the May core update and the June spam update named from the ledger; `a3e5a8a7` read straight out of Postgres afterwards with `outcome`, `decision`, `verified_at`, `actual_value`, `control_value` and `confounders` all null; **223 tests across 8 suites** (35 new), `tsc --noEmit` exit 0; staging deploy `ee298f23` SUCCESS, `/health` 200, the served bundle downloaded and grepped for every new UI string, both new endpoints 401 unauthenticated</div>
           </div>
@@ -926,13 +933,6 @@
           <div class="recent-text">
             <div class="recent-title">A prediction on a superseded plan&#39;s item would have looked like one that shipped on time</div>
             <div class="recent-desc">Found reviewing the new code rather than by anything failing. The shipping position was read through `loadShippingContext`, which only ever loads a client&#39;s **most recent approved plan** — so a prediction attached to an item on an earlier plan came back with no shipping date and no change type, the drift check produced nothing, and **a missing drift check reads exactly like a clean one**. Storepro has two approved plans (`62ff1c2c` from M4 and `70337c95`), so this was live rather than theoretical. Fixed by reading the work item by id. Same family as the `not_assessed`-versus-`failed` distinction the readback is built on: the expensive bugs in this project are all *absence rendered as a passing answer*</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">There is no verdict button in the app, and the reason is a missing column rather than caution</div>
-            <div class="recent-desc">The panel shows the verdict and leads with the refusal and its date; it does not offer to write one. `predictions` has **no `verified_by` column**, so a verdict recorded from the app could not be attributed to anybody — while every other frozen write in this system carries a name (the plan approval, the report publication, the shipment). Offering a control that records an unattributable permanent claim about a client&#39;s work would be worse than offering none, so the panel says where the verdict is written from instead. Carded for M10, where the specialist actually has to run it</div>
           </div>
         </div>
       </div>
@@ -971,18 +971,13 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">3</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">Tell the team about 3 September — nothing else will</div>
         <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">M11</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">a3e5a8a7</span><span class="tag tag-neutral">confounded</span></div>
         <div class="card-desc">Reframed 2026-08-19. The question is no longer *do we give the FAQ item the hours* — that is the team&#39;s call now, and the capacity line is coming off the plan. What does **not** become the team&#39;s call is the date, because it is not a scheduling preference: **3 September is the last day &quot;Question content is marked up as such&quot; can be recorded as shipped and still have the October readback window mean anything.** Ship on or before it and prediction `a3e5a8a7` gets a clean read; ship on the 4th and October contains days from before the change, so November&#39;s first verdict comes back `confounded` — no answer rather than a wrong one, at the cost of a full cycle. ⚠️ **Nothing chases it.** There is no scheduler in this system; the date is printed wherever the shipping record is read and that is the whole of the mechanism. It is 12 of the item&#39;s 147 target pages that the prediction actually covers, so a partial slice on those twelve is a legitimate way to make the window readable without the full item. **Default if you say nothing:** the work slips, and November&#39;s first verified prediction is inconclusive</div>
-      </div>
-      <div class="card">
-        <div class="card-title">A correction to a report the client has already read — does it reach them, or only us?</div>
-        <div class="card-tags"><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">decision</span></div>
-        <div class="card-desc">Raised 2026-08-19 when the correction path became M10&#39;s. The **shape** has been settled since M8 and is not in question: a superseding row, never an edit, the original left on the record, the correction naming who made it and why. What is not settled is what a correction to a **published report** actually does — is the corrected version re-issued to the client, or corrected in the app with the original still standing as the document they received? That is positioning rather than architecture, and it is the one clause of M10 that is yours. The shipment and the verdict have no equivalent question: nobody outside the agency ever sees either. **Default if you say nothing:** in-app only, the original stays the document of record, and nothing is sent — because nothing in this system emails or exports a report today and adding that quietly is the bigger change</div>
       </div>
       <div class="card">
         <div class="card-title">The fixture&#39;s shipment row went with the re-seed — press it again if you want it back</div>
@@ -998,9 +993,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">77</span>
+        <span class="col-count">78</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">A correction never leaves the app — the client is not told twice</div>
+        <div class="card-tags"><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">decision</span></div>
+        <div class="card-desc">Ricky&#39;s call on 2026-08-19, the day the correction path became M10&#39;s: *&quot;in-app only for the correction, don&#39;t send anything to the client.&quot;* So the correction path supersedes **internally** and stops there. The **original published report stays the document of record** — it is what the client received, and a corrected version arriving unasked would be a second document claiming to be the account of the same month, which is the exact failure the one-report-per-cycle index exists to prevent. What a specialist sees in the app is the correction, who made it and why, with the original still readable underneath. **What this rules out, stated so it is a decision rather than a gap:** nothing notifies the client, nothing re-exports, and a client acting on a figure that has since been corrected will not learn it from this system. That is acceptable because **nothing in this system emails or exports a report today** — adding a send path is a bigger change than the correction, and it would smuggle in the client-facing format decision that is deliberately still open in the Backlog. If a correction is material enough that the client must know, a person tells them; the app&#39;s job is to make sure the agency is never the one who has forgotten. ⚠️ **It also settles the shipment and the verdict by not applying to them** — nobody outside the agency ever sees either, so neither ever had this question</div>
+      </div>
       <div class="card">
         <div class="card-title">M9: The verdict machinery — a prediction can be answered against a control, and `a3e5a8a7` is refused by name until November</div>
         <div class="card-tags"><span class="tag tag-neutral">M9</span><span class="tag tag-phase-3">phase-3</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">a3e5a8a7</span><span class="tag tag-neutral">outcome</span><span class="tag tag-neutral">a3e5a8a7</span><span class="tag tag-neutral">outcome</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">verified_at</span><span class="tag tag-neutral">actual_value</span><span class="tag tag-neutral">control_value</span><span class="tag tag-neutral">confounders</span><span class="tag tag-neutral">tsc --noEmit</span><span class="tag tag-neutral">ee298f23</span><span class="tag tag-neutral">/health</span></div>
