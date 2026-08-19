@@ -17,10 +17,10 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M10 · The controls a specialist presses",
+  phase: "M11 · The readback — blocked on a calendar until 5 November",
   nextMilestone: {
-    name: "The three things a specialist still cannot do without a terminal — record a verdict, sign off a prompt set, correct a frozen write",
-    date: "Inserted 2026-08-19 ahead of the readback, which cannot close before 5 November · none of these three waits on a calendar and all three block the handover too",
+    name: "Answer Storepro's prediction against its matched control, and say so in the report even if the answer is that we were wrong",
+    date: "Cannot start before 2026-11-05 · every input is built and exercised · what fills the eleven weeks is a decision, and the handover carries it",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -371,7 +371,15 @@ module.exports = {
       // month already carries a frozen verdict. Storepro stays refused by name
       // until 2026-11-05 and its outcome stays null.
       doneWhen: "On a deployed environment a specialist signs off a prompt set and records a verdict in the app, both attributed to their own verified session, and a correction supersedes one of this system's frozen writes with the original still readable on the record",
-      status: "current",
+      // Met 2026-08-19, all three clauses, by Ricky pressing them on the
+      // `app-check` fixture against staging: 5 of 5 prompts signed off at
+      // 03:32:51; `dca82ef8` answered `held · promote` and `18c4cde3` answered
+      // `held · keep_testing` with both overlapping Google updates named on the
+      // verdict; correction `f2d8c709` superseding shipment `c266bd31` while
+      // `work_items.evidence_url` still reads what was written first. His
+      // Supabase session refreshed at 03:32 — the minute of the first press —
+      // which local no-auth mode cannot produce, because it never signs in.
+      status: "done",
     },
     {
       id: "M11",
@@ -414,7 +422,12 @@ module.exports = {
       // all, and if it ships after 2026-09-03 October contains days from before
       // the change.
       doneWhen: "A recorded prediction is verified against its matched control and the report states what actually happened, including when the answer is that we were wrong",
-      status: "planned",
+      // Current from 2026-08-19, and blocked on a calendar rather than on work:
+      // `a3e5a8a7`'s window is 2026-10 and its figures are not final until
+      // 2026-11-05. Every input exists — the arithmetic, the ledger, the writer,
+      // and now the control that records it. What it still needs is October
+      // ingested, one press, and a report that carries the answer.
+      status: "current",
     },
     {
       id: "M12",

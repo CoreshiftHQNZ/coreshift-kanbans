@@ -1,173 +1,159 @@
 # Engine Optimization — Handover
-_2026-08-19 · closes M9 · decision taken: M10 inserted ahead of the readback · arc 12_
-_Amended 2026-08-19 after the decision session. M9's record below is unchanged._
+_2026-08-19 · closes M10 · M11 is current and blocked on a calendar until 5 November · arc 12_
 
 ## ▶️ Paste this into a new session
 
 ```
-Engine Optimization — M10 · The controls a specialist presses
+Engine Optimization — decide what's next after M10
 
-Read coreshift-kanbans/engine-optimization/HANDOVER.md, then the
-"There is no button in the app" section of docs/verification.md. The Parking Lot
-cards "A recorded shipment has no correction path" and "Re-issuing a published
-report" are the correction path's specification, not a backlog note — read both
-before designing one.
+M10 landed on 2026-08-19, the day it was inserted. M11 — the readback — is now
+current and cannot start before 2026-11-05, because that is the day Storepro's
+October Search Console figures become final. Every input it needs already
+exists. So the same question M10 was created to answer has come back, with
+eleven weeks in front of it again.
 
-M10 was inserted on 2026-08-19 ahead of the readback, which cannot close before
-5 November. Three gaps, all in-app, all found by building M8 and M9, all blocking
-M12 as hard as they block M11:
+Read coreshift-kanbans/engine-optimization/HANDOVER.md first, then the three
+options below. Decide one, update `milestones[]` in kanban.config.js, and emit
+the work prompt for whichever wins. Do not build anything this session.
 
-1. A verdict cannot be recorded from the app. `predictions` has no `verified_by`,
-   so a verdict pressed in the app could not be attributed — and every other
-   frozen write here carries a name (`reports.published_by`,
-   `work_items.owner_id`, `work_plans.approved_by`). One column, written from the
-   verified session and never from a request body exactly as `owner_id` is, one
-   endpoint, and the control in the Verification panel that today says why there
-   isn't one.
+Option A — bring M12 forward: a specialist other than Ricky runs a full cycle
+unaided. RECOMMENDED. M10 was built for exactly this: the three things that
+still needed a terminal were named in M10's card as blocking M12 as hard as
+they blocked M11, and all three are now controls in the app. M12 is not
+calendar-locked, it is the last milestone in the arc, and running it now turns
+eleven idle weeks into the only test that has never been run — the tool in
+somebody else's hands. It also feeds M11: whatever a real specialist trips over
+in August is fixed before November's verdict, rather than discovered on the day
+the answer is due. Cost: needs a real specialist's calendar time, and it will
+surface work that becomes cards. Risk: it may find that a cycle cannot be run
+unaided, which is the finding, not a failure.
 
-2. Prompt sign-off is still a CLI flag. `npm run probes --review <email>` is the
-   only way to sign a prompt set off. It has demanded a real identity since M6,
-   so it is correct — it is just not a surface, and a specialist who cannot sign
-   off a prompt set in the app cannot run a cycle unaided.
+Option B — a maintenance milestone from what This Week has accumulated: the
+UTC shipping date that reads a day behind in New Zealand, the capacity line
+coming off the next plan, the acceptance-criterion decidability check, the
+subdomain split in the competitor cohort. Cheap, real, all of it already
+written up. Cost: none of it is blocking anything, and a milestone made of
+unrelated fixes has no `doneWhen` worth the name — which is the failure mode
+the working model warns about.
 
-3. There is no correction path for a published report, a recorded shipment or a
-   verdict. One design, three call sites: a superseding row rather than an edit,
-   the original left on the record, the correction naming who made it and why,
-   every reader taking the latest.
-   Scope is settled and is not yours to reopen: **in-app only, nothing is sent to
-   the client.** The published report they received stays the document of record.
-   Nothing notifies, re-issues or re-exports — a send path is a bigger change than
-   the correction and would decide the client-facing report format, which is
-   deliberately still open in the Backlog.
+Option C — stop and wait for 5 November. Honest, and it makes the board honest
+too. Cost: eleven weeks of nothing, and the 3 September shipping deadline goes
+unwatched by anybody except a person remembering it.
 
-doneWhen: On a deployed environment a specialist signs off a prompt set and
-records a verdict in the app, both attributed to their own verified session, and
-a correction supersedes one of this system's frozen writes with the original
-still readable on the record.
-
-It ends on a human act. Do not press any of the three as Ricky — build them,
-deploy to staging, and hand him the URLs. `.claude/app-as-me` runs a local server
-signed in as a real auth.users row so a gate can be *looked at* without being
-pressed. Use it to look.
-
-Prove the verdict control on the `app-check` fixture over a month that has
-already closed. That needs a THIRD fixture prediction — the fixture's only closed
-month (2026-07) already carries the frozen verdict M9 wrote. `npm run fixture --
---seed` drops and recreates the client, which is how Ricky's c1def139 shipment was
-lost last time; if you re-seed, say so in the handover.
-
-Do not write a verdict for a3e5a8a7 before 2026-11-05, and never write
-`too_early` — the database refuses it and the reason is the `outcome is null`
-work queue. Do not let anything in windows.ts read the clock. Don't add a
-publication check to compose.ts without adding it to the required-check array in
-the newest migration declaring one, and don't change the composer or a check
-without bumping REPORT_METHOD_VERSION.
-
-Check the staging deploy before you trust it. `railway deployment list --json` —
-`meta.queuedReason` names a stall the plain list hides, and it is the only place
-the commit hash appears.
-
-Give me the 5-line orientation, then get on with it.
+Ricky's default if he says nothing: Option A.
 ```
 
 ## Where we are — for Ricky
 
-- **M9 is done, and it is the half of the loop nothing on the market has.** The
-  system can now answer *"what did the pages we changed do against twelve pages we
-  deliberately did not"* — and it reports the **difference**, never the raw
-  number. On Storepro's real June the treated pages rose 2.7% and the untouched
-  control rose 8.8%, so the honest answer is **−6.1 against the control** where a
-  normal retainer report would have printed *"+2.7%, up"*. Both numbers are on
-  screen, side by side, so what the control buys is visible rather than asserted.
-- **The bar an effect has to clear is read off the data, not chosen by us.** Those
-  twelve matched pairs drifted 8.5 points apart before anybody touched anything,
-  so anything smaller than that cannot be told apart from the matching itself.
-  That makes the bar **harder**, which is the only direction a bar you set
-  yourself should ever move.
-- **Nothing was written about Storepro, deliberately.** `a3e5a8a7` is refused by
-  name, in the app and in the CLI, with the date: *"read back over 2026-10 …
-  figures are not final until 2026-11-05 … there is no answer to give, which is
-  not the same as the answer being no."* It will not even record *too early*,
-  because that would tick the prediction off the work queue while nothing had been
-  learned.
-- **The confounders are written down before the answer, not after it.** Six real
-  Google updates are now on file, each read off its own incident page on Google's
-  own status dashboard. **None of them touches October.** That is the whole
-  argument for building this in August: deciding in November whether a core update
-  overlapped October, with October's numbers already on screen, would let the
-  answer pick its own excuse.
-- **A verdict cannot be edited once written.** Same rule as a published report and
-  a recorded shipment, and for a stronger reason — it is the sentence that says
-  whether the work worked. One that could be revised after you'd read it would be
-  an opening position, not a finding.
-- **Verified by:** the June rehearsal above, run on `a3e5a8a7`'s own frozen pairs,
-  with the May core update and the June spam update named on it from the ledger;
-  `a3e5a8a7` read straight out of Postgres afterwards with every verdict field
-  null; **ten database refusals fired by name** against the live database inside a
-  transaction that was aborted so nothing was kept; the writer's accept path
-  pressed for real on the fixture client only; **223 tests across 8 suites**,
-  typecheck clean; staging deploy `ee298f23` SUCCESS, `/health` 200, the served
-  bundle downloaded and grepped for every new string, both new endpoints 401
-  unauthenticated.
+- **M10 is done, and you closed it yourself.** Four presses, all on the fixture,
+  all against staging. A specialist can now record a verdict, sign off a prompt
+  set, and correct a mistake — none of which needed a terminal by the end of the
+  day, and all three of which did at the start of it.
+- **The verdict control writes what the machine decided, not what a person
+  typed.** There is no outcome dropdown and no decision dropdown, on purpose. The
+  answer on screen came out of the matched control, the noise floor read off that
+  control's own drift, the shipping record and the ledger. What you recorded when
+  you pressed it is that you have read it and stand behind it — which is the only
+  thing a person can honestly add to a number, and it is what the new column
+  stores.
+- **You saw the confounder cap work.** Two verdicts, the same +28 points against
+  control. The one over a July with nothing announced over it came back
+  **promote**. The one over a June that two Google updates overlap came back
+  **keep_testing**, with both updates named on the verdict and linked to Google's
+  own status page. Same arithmetic, different conclusion, and the difference is
+  the ledger doing exactly what it was built in August to do.
+- **A mistake can now be undone without anything being rewritten.** You corrected
+  the shipment's evidence link, and the original still reads `https://google.com`
+  in the database — untouched. That is the whole design: nothing is edited, a new
+  row supersedes, and every reader takes the latest while still showing you what
+  it superseded. One design covering a published report, a recorded shipment and
+  a written verdict.
+- **A correction never leaves the app.** Your call, and it held: the report a
+  client received stays the document they received. The correction sits beside it
+  in the app and travels into the next report's corrections section. Nothing is
+  re-sent.
+- **Nothing of Storepro's moved.** `a3e5a8a7` is still refused by name until
+  5 November with its outcome null, still 0 shipped, still no corrections, and the
+  published report is still frozen exactly as it went out.
+- **Verified by:** your four presses, read back out of Postgres afterwards — 5 of
+  5 prompts signed off at 03:32:51, both verdicts frozen with your name on them,
+  correction `f2d8c709` superseding shipment `c266bd31` with the original evidence
+  link intact; your Supabase session refreshed at 03:32, the minute of the first
+  press, which the local no-auth mode can never produce because it never signs in;
+  **14 database refusals fired by name** against the live database inside a
+  transaction that was rolled back so nothing was kept; 253 tests across 9 suites,
+  typecheck clean; staging deploy `95386240` SUCCESS on commit `5135d6d`, `/health`
+  200, the served bundle downloaded and grepped for every new string, all five new
+  endpoints 401 unauthenticated.
 - **Not verified:** one thing, named in **⚠️ Not verified** below.
 
 ## 👉 On you
 
-1. ~~**Decide what fills the eleven weeks.**~~ **Taken 2026-08-19 — option A.** A new
-   **M10 · The controls a specialist presses** is inserted ahead of the readback,
-   which is renumbered M11 and sits under **Blocked** on the board because it is
-   blocked on a calendar and on nothing else. Handover is M12; the arc is 12.
-   Say so if you want it reversed — nothing has been built yet.
+1. **Decide what fills the eleven weeks — again.** The paste-block above is a
+   decision prompt, not a work prompt, because M11 genuinely cannot start until
+   5 November and three different things could reasonably come next.
+   **Recommendation: bring M12 forward** — a specialist other than you runs a full
+   cycle unaided. M10 was built for it, it is not calendar-locked, and what it
+   finds gets fixed before November rather than on the day the answer is due.
+   **Default if you say nothing:** Option A, M12 brought forward.
+2. **Tell the team about 3 September.** Unchanged, and now the sharpest thing on
+   the board by a distance: it is the last day *"Question content is marked up as
+   such"* can be recorded as shipped and still leave October able to answer
+   anything. Ship on the 4th and November's first verdict comes back `confounded`
+   — no answer rather than a wrong one, at the cost of a full cycle. **Nothing
+   chases it. There is no scheduler in this system.** **Default:** the work slips
+   and November is inconclusive.
+3. **Sign off a real client's next prompt set in the app.** Small. Storepro's
+   fifteen prompts were all signed off in M6, so there was nothing real to press
+   and the gate was proved on the fixture. Next time a set is generated, sign it
+   off in the panel rather than the terminal — that is the path a specialist who
+   is not you will take. **Default:** the CLI keeps working and M12 discovers it.
+4. **A second client, when you're ready.** Still not blocking, still the only
+   thing that would test M6's four matching thresholds against more than one
+   property. **Default:** Storepro-only.
 
-2. ~~**The correction path's client-facing clause.**~~ **Taken 2026-08-19 — in-app
-   only.** The correction supersedes internally and stops there. The published
-   report the client received stays the document of record; nothing notifies,
-   re-issues or re-exports. Written into M10's spec and into the Done column, so
-   the next session builds to it rather than re-asking.
-
-**Decided and closed:** a verdict is frozen once written, on the same grounds as a
-published report and a recorded shipment — and the missing correction path is now
-one card covering all three rather than two. `too_early` is never written and the
-database refuses it, because it would empty the work queue that exists to make
-sure somebody comes back. There is no verdict button in the app, because
-`predictions` has no `verified_by` column and an unattributable permanent claim is
-worse than no control at all. The ledger takes Google-owned sources only, and an
-unconfirmed entry refuses a verdict rather than being ignored. Everything else
-stands: the capacity line comes off the next plan, no report is emailed or
-exported, one published report per cycle, competitor cohort at eight, prompt
-generation in-house, Ahrefs Brand Radar declined.
+**Decided and closed:** a correction supersedes and never edits, and it never
+leaves the app — the report a client received stays the document of record. A
+correction states a corrected reading or withdraws the write, never both. What it
+may touch is bounded per kind, and a shipment correction can never re-attribute
+the delivery to somebody else. A corrected verdict is held to every rule the
+first one was. A verdict is attributed to the session that pressed it and never
+to a name typed into a form. Everything else stands: the capacity line comes off
+the next plan, no report is emailed or exported, one published report per cycle,
+competitor cohort at eight, prompt generation in-house, Ahrefs Brand Radar
+declined.
 
 ## 🔴 Risks you're carrying
 
-- **Staging deploys have two failure signatures now, not one.** The old one: fails
-  roughly every other time, build completes, image pushes, **no runtime logs at
-  all**, succeeds on retry of the identical commit. The new one, seen today: both
-  deploys sat at `QUEUED` for twelve minutes with nothing in `railway deployment
-  list` to explain it, then built and deployed cleanly first time.
-  **`railway deployment list --json` is the fix for both** — it carries a
-  `queuedReason` the plain list hides (today: *"upstream GitHub issues"*, while
-  GitHub itself reported all systems operational) and it is the only place the
-  commit hash appears at all. Every deploy still needs checking.
-- **Nobody can record a verdict except from a terminal.** M10's whole event is a
-  specialist pressing this, and today they cannot. One column and one endpoint.
-- **A verdict, a shipment and a report all have no correction path.** Three frozen
-  writes, one missing design, deliberately taken three times. Parking Lot.
-- **The ledger is filled by hand and nothing watches it.** An empty ledger reads on
-  a verdict as *no confounders* when it means *nobody looked*. The CLI and the
-  panel say when it is empty; that is the whole of the mechanism.
-- **A shipping date is recorded and displayed in UTC.** Bounded twelve-hour edge at
-  a deadline boundary, and Google publishes its update dates in US/Pacific while
-  the ledger stores calendar dates — the same edge, in a second place now.
-- **The loop measures the head of the site.** Unchanged. The published prediction
-  covers 12 of 147 target pages — 8%. Still the most likely thing to embarrass us.
-- **The prediction is on work below the capacity line.** Unchanged. See item 2.
+- **The next milestone is blocked on a calendar for eleven weeks.** M11 cannot
+  start before 5 November. This is the second time the arc has hit this and the
+  board will start overstating progress again if nothing fills it. Item 1 above.
+- **3 September is unwatched.** The binding shipping date for October to answer
+  anything, and nothing in this system chases it.
+- **Withdrawing a verdict does not put the prediction back in the work queue.**
+  Found while building M10 and written into `docs/corrections.md` rather than left
+  to be discovered. The `outcome is null` index *is* the queue and a withdrawal
+  supersedes rather than nulls, so the row stays out of it. Every reader treats a
+  withdrawn verdict as unanswered; the database index does not. Parking Lot.
+- **The ledger is filled by hand and nothing watches it.** An empty ledger reads
+  on a verdict as *no confounders* when it means *nobody looked*.
+- **Staging deploys have two failure signatures.** Silent no-runtime-logs failures
+  roughly every other time, and twelve-minute `QUEUED` stalls. `railway deployment
+  list --json` is the fix for both — `meta.queuedReason` names the stall and it is
+  the only place the commit hash appears. Both of M10's deploys were clean first
+  time; that is not a pattern yet.
+- **A shipping date is recorded and displayed in UTC.** Bounded twelve-hour edge
+  at a deadline boundary, and Google publishes update dates in US/Pacific while
+  the ledger stores calendar dates — the same edge, in a second place.
+- **The loop measures the head of the site.** Unchanged. 12 of 147 target pages —
+  8%. Still the most likely thing to embarrass us.
+- **The prediction is on work below the capacity line.** Unchanged.
 - **Four matching thresholds, one property.** Unchanged.
 - **The hours are uncalibrated.** Unchanged. **Do not quote them.**
 - **Audit findings are trusted at full confidence** — reproducible, not correct,
   and client-facing since M7. Unchanged.
 - **A single probe is still a sample.** The citation sampling design does not
   exist and is one of the twelve published refusals.
-- **In-app prompt sign-off still does not exist.** Unchanged, and it is M11's test.
 - **Two database guarantees still live partly in application code.** `0007`'s
   supersede weakening and `0009`'s insert-only directive trigger. Unchanged.
 - **One of M3's five volatility data points may have been our own bug.** Unchanged.
@@ -177,79 +163,88 @@ generation in-house, Ahrefs Brand Radar declined.
 Everything claimed above has named evidence except this.
 
 1. **Which commit staging is actually running.** Railway exposes no commit SHA at
-   runtime. What *is* verified: deployment `ee298f23` reports SUCCESS against
-   commit `2c97048`, `/health` returns 200, the served bundle is the new hash
-   (`index-D8_ejAjv.js`, not the previous `index-Cl4c33NA.js`) and greps clean for
-   every M9 string, and both new endpoints return 401 unauthenticated. That is as
-   close as this can be checked from outside, and it is closer than last time.
+   runtime. What *is* verified: deployment `95386240` reports SUCCESS against
+   commit `5135d6d`, `/health` returns 200, the served bundle is the new hash
+   (`index-B89ex2Sa.js`) and matches the local build byte-for-byte by name, it
+   greps clean for every M10 string, and all five new endpoints return 401
+   unauthenticated. That is as close as this can be checked from outside.
 
 ## For the next Claude
 
 - **Repo** `CoreshiftHQNZ/engine-optimization`, `dev` and `staging` both at
-  `2c97048`, working tree clean. Working dir
+  `5135d6d`, working tree clean. Working dir
   `/Users/Ricky/Documents/Claude/Projects/Engine Optimization`. Supabase
   `xslwvntwrlvqccdupmni` — one project, shared by local and staging. Railway
   project `engine-optimization`, staging auto-deploys on push to `staging`.
-  `main` does not exist. `.claude/` is gitignored and holds `app-as-me`, which
-  runs a local server signed in as a real `auth.users` row so the human gates can
-  be *looked at*. Use it to look.
-- **Read first:** `docs/verification.md` — the arithmetic, the eight columns a
-  verdict may write, why `too_early` is never one of them, and the ledger. Then
-  `server/verify/verify.ts`, whose header is the argument. `docs/predictions.md`
-  for why the window is anchored to approval; `docs/shipping.md` for the drift
-  check the verdict reads. `README.md` has every command.
-- **State:** 21 tables, RLS on. **Two clients: Storepro, and the `app-check`
+  `main` does not exist. `.claude/` is gitignored and holds `launch.json`, whose
+  `app-as-me` config runs a local server signed in as a real `auth.users` row so
+  the human gates can be *looked at*. Use it to look, never to press.
+- **Read first:** `docs/corrections.md` — the one design behind three frozen
+  writes, what a correction may touch and what it may never touch, and the
+  withdrawn-verdict limit. Then `docs/verification.md` for the arithmetic, the
+  nine columns a verdict may write and why the app had no button until `0014`.
+  `docs/predictions.md` for why a window is anchored to approval;
+  `docs/shipping.md` for the drift check. `README.md` has every command.
+- **State:** 22 tables, RLS on. **Two clients: Storepro, and the `app-check`
   fixture.** Storepro — 4 months ingested (Apr–Jul), 3 audit runs, 15 active
-  prompts, 240 probe runs, plan `70337c95` approved with 13 items, **0 shipped**,
-  one prediction `a3e5a8a7` (window `2026-10`, answerable 2026-11-05, drift
-  `not_shipped` with 3 September binding, **outcome null**), one report `079c69d1`
-  published and frozen at method `2026-08-a` while the composer is `2026-08-b`.
-  Fixture — 1 approved plan, 4 ranked items, **0 shipped**, two predictions: one
-  over `2026-10` for the shipping gate and one over the closed month `2026-07`
-  carrying the only verdict in the database (`held` · `promote`, frozen).
-  **`algorithm_updates` holds six verified 2026 entries.**
-- **The verdict's inputs are all present.** What **M11** still needs is October
-  ingested, one write, and a report that carries the answer — and it cannot start
-  before 5 November. **M10 is what happens in between**, and none of it is
-  calendar-locked.
+  prompts all reviewed, 240 probe runs, plan `70337c95` approved with 13 items,
+  **0 shipped**, one prediction `a3e5a8a7` (window `2026-10`, answerable
+  2026-11-05, drift `not_shipped` with 3 September binding, **outcome null**), one
+  report `079c69d1` published and frozen at method `2026-08-a` while the composer
+  is `2026-08-c`. Fixture — 1 approved plan, 5 ranked items, 5 prompts **all
+  signed off**, **1 shipped** (`c266bd31`, corrected), three predictions: one over
+  `2026-10` unanswered, and two over closed months **both now carrying frozen
+  verdicts** (`held · promote` over 2026-07, `held · keep_testing` over 2026-06
+  with two confounders). **`corrections` holds one row.** `algorithm_updates`
+  holds six verified 2026 entries.
+- **M11 needs three things and cannot start before 5 November:** October
+  ingested, one press of the verdict control that now exists, and a report that
+  carries the answer.
 
-### What M9 built, and where
+### What M10 built, and where
 
 | File | What it does |
 |---|---|
-| `db/migrations/0013_verification.sql` | Nine guarantees: a Google-owned https source, a non-empty entry, ordered rollout dates, a known category, a slug id, a verdict that is an outcome *and* a decision *and* its working, no promotion over a confounder, `too_early` never written, and the verdict frozen once written. |
-| `server/verify/effect.ts` | Pure, clock-free. The delta against the control, the raw figure named beside it, the noise floor read off the control set's own drift, and every unmeasured pair dropped and named rather than zeroed. |
-| `server/verify/verify.ts` | Pure, `now` passed in. The bands, the four refusals, and `verificationPatch` — the only place that decides which columns a verdict may touch. |
-| `server/verify/updates.ts` | Pure. The Google-source rule, the categories, the overlap test, and the confounder sentence. |
-| `server/verify/sources.ts` | Every read and write. `writeVerdict` is guarded on `outcome is null` so two answers cannot both win. |
-| `server/verify/build.ts` | Sequencing, and the rehearsal — which is marked unwritable rather than trusted not to be written. |
-| `server/cli/verify.ts` | `npm run verify` prints the verdict or the refusal; `--over` rehearses; `--prediction --write` answers one. |
-| `server/cli/updates.ts` | `npm run updates` — the ledger, and which recorded windows each entry touches. |
-| `server/verify/verify.test.ts` | 35 tests, each named after a way a verdict could be a lie that still reads like a verdict. |
-| `client/src/App.tsx` → `Verification` | Leads with the refusal and its date. No button, and it says why. |
-| `server/cli/fixture.ts` | Gains a prediction over a closed month, so the writer's accept path can be pressed at all. |
+| `db/migrations/0014_specialist_controls.sql` | `predictions.verified_by`, required the moment an outcome exists and frozen with the verdict; the `corrections` table and its nine rules; `corrections_stated` added to the required publication checks. |
+| `server/correct/correct.ts` | Pure, `now` passed in. `CORRECTABLE`, every refusal, and `readThrough` — which follows the `supersedes` chain rather than the clock. |
+| `server/correct/sources.ts` | Every read and write. ⚠️ Nothing in it updates a `reports`, `work_items` or `predictions` row, and that is the design rather than an omission. |
+| `server/correct/build.ts` | Sequencing. `correctOne` reads the subject first so "nothing to correct" and "malformed correction" are different sentences. |
+| `server/correct/correct.test.ts` | 23 tests, each named after a way a correction could be a hole in a freeze and still look like a correction. |
+| `server/ai/review.ts` | The prompt sign-off writer, shared by the CLI and the endpoint. |
+| `server/verify/verify.ts` → `verificationPatch` | Now takes an identity and refuses without one. Nine columns, not eight. |
+| `server/routes/api.ts` | `POST /predictions/:id/verify`, `POST /corrections`, `GET /clients/:slug/corrections`, `POST /clients/:slug/prompts/sign-off`. Identity from the session, never the body. |
+| `server/report/compose.ts` | `2026-08-c`. A withdrawn shipment is `committed`, not `delivered`; the corrections section; `corrections_stated`. |
+| `client/src/App.tsx` | `VerdictControl`, `SignOffControl`, `CorrectionControl` and `CorrectionTrail`. One correction component, three call sites. |
+| `server/cli/fixture.ts` | Five items, an unreviewed prompt set, three predictions, three fabricated months. ⚠️ `--seed` drops and recreates the client. |
 
 ### Don't
 
 - **Don't write a verdict for `a3e5a8a7` before 2026-11-05**, and don't write
-  `too_early` ever — the database refuses it and the reason is the work queue.
+  `too_early` ever — as a verdict or as a correction to one. The database refuses
+  both and the reason is the `outcome is null` work queue.
+- **Don't edit a frozen row to "apply" a correction.** The correction path
+  supersedes; nothing in `server/correct/` updates a `reports`, `work_items` or
+  `predictions` row, and a writer that "also updated the original for
+  convenience" would undo the whole milestone while looking like a tidy-up.
+- **Don't weaken a freeze trigger in a later migration.** A test asserts `0014`
+  drops none of them; keep that true.
+- **Don't add a field to `CORRECTABLE` without adding it to
+  `corrections_fields_are_bounded` in `0014`** — a test compares the two — and
+  remember a `CHECK` cannot carry a subquery.
 - **Don't re-derive or move a readback window**, and don't let anything in
   `windows.ts` read the clock.
-- **Don't store a number against a `confounded` window.** The arithmetic still
-  runs and the figure goes in the notes marked *"for the record only"*; a value in
-  `actual_value` will be quoted as though the window could answer.
-- **Don't treat a page Search Console did not return as a page with no
-  impressions.** Fifth time. Drop it, name it, and say how many.
-- **Don't let an unverified ledger entry pass silently.** It refuses the verdict
-  on purpose; ignoring it turns *nobody checked* into *no confounders*.
-- **Don't write a rehearsal.** `--over` picks a month for having data in it, which
-  is the one thing `windows.ts` exists to make impossible.
-- **Don't publish, approve, ship or verify as a person.** The gates are the
-  product.
+- **Don't store a number against a `confounded` window**, and don't treat a page
+  Search Console did not return as a page with no impressions. Sixth time.
+- **Don't let an unverified ledger entry pass silently.**
+- **Don't write a rehearsal.**
+- **Don't publish, approve, ship, verify or correct as a person.** The gates are
+  the product. `app-as-me` is for looking.
+- **Don't disable a control without naming every reason it is disabled.** M10's
+  own bug: a dead button with no sentence beside it cost two real presses.
 - **Don't add a publication check to `compose.ts` without adding it to the
-  required-check array in the newest migration declaring one** — a test reads the
-  last such migration (`0012` today) and fails if the two disagree — and don't
-  change the composer or a check without bumping `REPORT_METHOD_VERSION`.
+  required-check array in the newest migration declaring one** (`0014` today),
+  and don't change the composer or a check without bumping
+  `REPORT_METHOD_VERSION`.
 - **Don't take a green push as a deploy.** `railway deployment list --json`, read
   `queuedReason` and `commitHash`, then download the served bundle and grep it.
 - **Don't trust a claim in a handover you cannot check.**
