@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>63%</strong> complete</div>
-        <div><strong>70</strong>/112 cards done</div>
-        <div>Updated <strong>2026-08-18 22:13 UTC</strong></div>
+        <div><strong>62%</strong> complete</div>
+        <div><strong>71</strong>/114 cards done</div>
+        <div>Updated <strong>2026-08-19 01:33 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -821,7 +821,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">70</div>
+        <div class="status-num">71</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -833,7 +833,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">11</div>
+        <div class="status-num">12</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -896,6 +896,13 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">The capacity line comes off the plan — how much of the month&#39;s work gets done is the team&#39;s call, not the ranker&#39;s</div>
+            <div class="recent-desc">Ricky&#39;s call on 2026-08-19: *&quot;I don&#39;t think it&#39;s our call to place hours on the work — since we might use AI tools to make it more efficient — so the work list is enough and the team will decide how much work to do and what to push to another month.&quot;* He is right about the schedule and the mechanics split in two. **(1) The capacity line goes, and it costs nothing** — `--capacity` is already optional on `npm run plan`, and a plan built without it prints *&quot;No capacity declared, so nothing is marked below the line&quot;*. Storepro&#39;s `70337c95` was built with `--capacity 12` passed once, in August. **(2) The hours stay, because they are not a schedule — they are the ranking&#39;s denominator.** `rank.ts:430` scores `value / effortHours`; strip the estimates and the plan ranks by raw value, which floats the largest and most expensive items to the top. So the estimates keep doing the job they are good at (relative cost) and stop doing the one they were never calibrated for (fitting a month). ⚠️ **The AI-efficiency argument bites the ratio as well as the total**, and unevenly: AI collapses bulk mechanical work far harder than it collapses *&quot;not cited for what is a mezzanine floor&quot;*, so the denominators shrink at different rates and the order drifts. That is an argument for calibrating the constants against real `shipped_at` data — which M8 made possible for the first time — not for deleting them. 🔴 **Not applied to Storepro&#39;s live plan, deliberately.** Prediction `a3e5a8a7` is bound to work item #3 *in plan `70337c95`*; a rebuilt plan creates a fresh row for the same FAQ work and shipping the new one would not answer the prediction, which still points at the old one. **Takes effect at the next plan build, after November&#39;s readback.**</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">M9 was split from the verdict, for the third time and for the same reason</div>
             <div class="recent-desc">Ricky&#39;s call on 2026-08-19, immediately after M8 landed. The readback&#39;s doneWhen cannot be met before **5 November**: prediction `a3e5a8a7` reads back over October 2026, those figures settle then, and back-dating is refused by a trigger on purpose. Eleven weeks of an open milestone with nothing able to move is the quiet expansion a doneWhen exists to prevent. So the milestone was cut where the calendar cuts it: **M9 is everything the verdict needs and can close this week**, **M10 is the verdict and waits for the month**. The standing rule from the two previous cuts is unchanged and now applies a third time — *work that must be recorded before the verdict date is its own milestone ahead of the verdict* — and the ledger is the clearest case of it yet, because a confounder decided while the answer is visible is not a confounder. **The two options not taken, and why:** M10-then (now M11) the handover is real work with a closable doneWhen, but it is blocked on in-app prompt sign-off and it would leave the November verdict&#39;s inputs unbuilt with the window already open; the three small fixes (UTC labelling, the undecidable acceptance criterion, the flaky staging deploy) are all cards in This Week and none of them is a milestone. **Arc grew 10 → 11.** M11 is the handover; M4&#39;s comment naming the handover milestone was renumbered with it</div>
           </div>
@@ -926,13 +933,6 @@
           <div class="recent-text">
             <div class="recent-title">The doneWhen assumed work that is not going to happen, so it was replaced rather than reinterpreted</div>
             <div class="recent-desc">Ricky&#39;s call on 2026-08-17. M8 read *&quot;A specialist marks an approved item shipped, with its evidence…&quot;*, which assumed Storepro&#39;s August work would be done. It is not being done: the whole exercise was a test of the app, not a commitment to the site. That made the clause unmeetable honestly — and the tempting move, pressing the button on Storepro anyway to prove the app works, is precisely the failure the milestone was built to prevent. `shipped_at` is frozen on write, has no correction path, and is read by the composer to tell a client an item was **delivered**. **Walking through a gate to prove it is shut is not a test of the gate.** So the human act stayed and its subject moved: `npm run fixture -- --seed` creates **`app-check`**, unmistakably not a client — `status` `prospect`, domain `app-check.invalid` (RFC 2606, can never resolve, so no crawl can reach a real site), and the name saying so in the client list. One approved plan, three approved ranked items, no metrics and no audit runs, because composition and readback are already proven and the only thing a fixture adds is the click. **New doneWhen:** *A specialist records a shipment in the app on a deployed environment, with evidence, and the shipping record and every prediction change accordingly.* Storepro keeps 0 of 13. ⚠️ The fixture writes to the same Supabase project staging reads — that is the point, and it is why the teardown is `npm run fixture -- --drop` in the README rather than a note in somebody&#39;s head</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">The cheapest item&#39;s own instruction offers a fix its acceptance criterion cannot see</div>
-            <div class="recent-desc">Found by re-running the audit to make the one-click reachable, which is the sort of thing only running it turns up. Item 1&#39;s authored action is *&quot;make the 3 pages either return real content **or** return 404/410, and remove them from sitemap.xml either way&quot;*, and its acceptance criterion is *&quot;the next audit run emits no `obs.empty_responses` finding&quot;*. **Those two branches are not equivalent to the readback.** `obs.empty_responses` has a per-page predicate, so `server/predict/readback.ts` refuses to call the criterion passed unless the run actually *assessed* the named pages. Remove them from the sitemap and they are never discovered, never crawled, never assessed — and the verdict is **`not_assessed`**, with the entirely correct message *&quot;a finding cannot be raised about pages nobody crawled, so its absence says nothing here&quot;*. Only the *give them content* branch can ever produce `passed`. ⚠️ **This is not a bug in the readback** — it is the project&#39;s most persistent rule working exactly as designed, one layer further out than it has appeared before: the honest verdict on a page that no longer exists is *unknown*, not *fixed*. What is wrong is that `server/plan/actions.ts` authored an action whose cheaper branch makes its own acceptance criterion unverifiable, and nothing notices. **The consequence today is small and specific:** the one-click cannot appear for item 1 if the 404 route is taken, and the shipment has to go through *Mark shipped anyway*. **The consequence at scale is the thing to fix:** an action with a branch its criterion cannot observe will keep producing items that read as unfinished forever. The check that would catch it — does every branch of an authored action leave the acceptance criterion decidable — does not exist and belongs next to the existing action-coverage tests in `npm run test:actions`</div>
           </div>
         </div>
       </div>
@@ -970,9 +970,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Does the FAQ item get the hours? Decide by 3 September</div>
-        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">confounded</span></div>
-        <div class="card-desc">The only prediction Storepro has is attached to an **18-hour item in a 12-hour month**, ranked third and marked below the capacity line by the plan itself, so as things stand it slips by default. **3 September is not a soft target** — it is the boundary the readback function produces: ship on or before it and the recorded October window stands; ship on the 4th and the honest window was November, so October comes back `confounded`, which is a wasted cycle rather than a wrong answer. The published report states this risk in its own limits section. **Default if you say nothing:** nothing changes and November&#39;s first verified prediction probably comes back inconclusive</div>
+        <div class="card-title">Tell the team about 3 September — nothing else will</div>
+        <div class="card-tags"><span class="tag tag-neutral">M8</span><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">a3e5a8a7</span><span class="tag tag-neutral">confounded</span></div>
+        <div class="card-desc">Reframed 2026-08-19. The question is no longer *do we give the FAQ item the hours* — that is the team&#39;s call now, and the capacity line is coming off the plan. What does **not** become the team&#39;s call is the date, because it is not a scheduling preference: **3 September is the last day &quot;Question content is marked up as such&quot; can be recorded as shipped and still have the October readback window mean anything.** Ship on or before it and prediction `a3e5a8a7` gets a clean read; ship on the 4th and October contains days from before the change, so November&#39;s first verdict comes back `confounded` — no answer rather than a wrong one, at the cost of a full cycle. ⚠️ **Nothing chases it.** There is no scheduler in this system; the date is printed wherever the shipping record is read and that is the whole of the mechanism. It is 12 of the item&#39;s 147 target pages that the prediction actually covers, so a partial slice on those twelve is a legitimate way to make the window readable without the full item. **Default if you say nothing:** the work slips, and November&#39;s first verified prediction is inconclusive</div>
       </div>
       <div class="card">
         <div class="card-title">A second client, when you&#39;re ready</div>
@@ -983,9 +983,14 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">70</span>
+        <span class="col-count">71</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">The capacity line comes off the plan — how much of the month&#39;s work gets done is the team&#39;s call, not the ranker&#39;s</div>
+        <div class="card-tags"><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">--capacity</span><span class="tag tag-neutral">npm run plan</span><span class="tag tag-neutral">70337c95</span><span class="tag tag-neutral">--capacity 12</span><span class="tag tag-neutral">rank.ts:430</span><span class="tag tag-neutral">value / effortHours</span><span class="tag tag-neutral">shipped_at</span><span class="tag tag-neutral">a3e5a8a7</span><span class="tag tag-neutral">70337c95</span></div>
+        <div class="card-desc">Ricky&#39;s call on 2026-08-19: *&quot;I don&#39;t think it&#39;s our call to place hours on the work — since we might use AI tools to make it more efficient — so the work list is enough and the team will decide how much work to do and what to push to another month.&quot;* He is right about the schedule and the mechanics split in two. **(1) The capacity line goes, and it costs nothing** — `--capacity` is already optional on `npm run plan`, and a plan built without it prints *&quot;No capacity declared, so nothing is marked below the line&quot;*. Storepro&#39;s `70337c95` was built with `--capacity 12` passed once, in August. **(2) The hours stay, because they are not a schedule — they are the ranking&#39;s denominator.** `rank.ts:430` scores `value / effortHours`; strip the estimates and the plan ranks by raw value, which floats the largest and most expensive items to the top. So the estimates keep doing the job they are good at (relative cost) and stop doing the one they were never calibrated for (fitting a month). ⚠️ **The AI-efficiency argument bites the ratio as well as the total**, and unevenly: AI collapses bulk mechanical work far harder than it collapses *&quot;not cited for what is a mezzanine floor&quot;*, so the denominators shrink at different rates and the order drifts. That is an argument for calibrating the constants against real `shipped_at` data — which M8 made possible for the first time — not for deleting them. 🔴 **Not applied to Storepro&#39;s live plan, deliberately.** Prediction `a3e5a8a7` is bound to work item #3 *in plan `70337c95`*; a rebuilt plan creates a fresh row for the same FAQ work and shipping the new one would not answer the prediction, which still points at the old one. **Takes effect at the next plan build, after November&#39;s readback.**</div>
+      </div>
       <div class="card">
         <div class="card-title">M9 was split from the verdict, for the third time and for the same reason</div>
         <div class="card-tags"><span class="tag tag-neutral">M9</span><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">a3e5a8a7</span></div>
@@ -1340,9 +1345,14 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">11</span>
+        <span class="col-count">12</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Build the next plan with no declared capacity, and say why on the plan itself</div>
+        <div class="card-tags"><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">--capacity</span><span class="tag tag-neutral">70337c95</span><span class="tag tag-neutral">compose.ts:633</span><span class="tag tag-neutral">capacityDeclared</span></div>
+        <div class="card-desc">The implementation half of the decision above, and it is one omitted flag plus some wording. Today a plan built without `--capacity` simply stops marking items, which reads as *nobody told it the number* rather than *this is deliberate*. The plan should say in as many words that the ranking is a **relative-cost order** and the month&#39;s scope is the team&#39;s to draw — otherwise the next person to read it adds the flag back. **Do not apply it to `70337c95`** (see the decision card). ⚠️ `compose.ts:633` writes a limits paragraph about predictions sitting below the capacity line, gated on `capacityDeclared` — check what the report says when nothing is declared, because *no limit stated* and *no limit* are different sentences and this product exists to keep them apart</div>
+      </div>
       <div class="card">
         <div class="card-title">A shipping date is recorded and displayed in UTC, which reads a day behind in New Zealand</div>
         <div class="card-tags"><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">server/predict/windows.ts</span></div>
