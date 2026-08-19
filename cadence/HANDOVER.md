@@ -33,13 +33,14 @@ _2026-08-19 · closes M2 (Ground truth) · opens M3 (Concierge cycle proven) · 
 
 ## 👉 On you before M3 can close
 
-1. **Send the Xero email** (`docs/m2-ready-to-send.md` §4). Six questions; three decide what M4 builds.
+1. **🔴 Get Coreshift a human Xero login to Colab's client orgs.** M3 means preparing ten real returns **by
+   hand**, which needs someone here able to read those ledgers. A person logging in and reading normally is
+   fine — it's *automation* their terms prohibit, not use — so ask Dave for **practice-staff access for a
+   named human**, which reaches every client org via the org switcher. **Default if you don't: M3 stalls.
+   This is the only item on this list with no default.**
+2. **Send the Xero email** (`docs/m2-ready-to-send.md` §4). Six questions; three decide what M4 builds.
    Doesn't block M3, but M4 shouldn't start without it. **Default if you don't: I'll assume the worst case
    — no `Journals` access — and design M4's spike around rebuilding the ledger from cheaper endpoints.**
-2. **Get me Xero access to Colab's client organisations, as a person.** M3 means preparing ten real returns
-   by hand, which needs someone at Coreshift able to read the ledgers. A human logging into Xero normally is
-   fine — it's *automation* their terms prohibit, not use. **Default if you don't: M3 stalls. This is the
-   one hard blocker.**
 3. **Decide: are the 34 six-monthly clients in scope?** Two-monthly is 78.4% and the test was ~80%.
    **Default: I'll include them** — they look easier, not harder (all four *no bank feeds* notes sit on
    six-monthly clients and all four still filed).
