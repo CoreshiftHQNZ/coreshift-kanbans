@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>20%</strong> complete</div>
-        <div><strong>8</strong>/41 cards done</div>
-        <div>Updated <strong>2026-08-19 04:07 UTC</strong></div>
+        <div><strong>23%</strong> complete</div>
+        <div><strong>10</strong>/44 cards done</div>
+        <div>Updated <strong>2026-08-19 04:16 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,11 +809,11 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">8</div>
+        <div class="status-num">10</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">1</div>
+        <div class="status-num">2</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -891,6 +891,20 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">✅ TASK-011 — the ten concierge clients are chosen</div>
+            <div class="recent-desc">**Done 19 Aug, and the selection is deliberately split in two.** Pool narrowed **134** live two-monthly clients → **98** that have a coding profile in the spike database → **87** carrying no annotation on the sheet. Then split, because the original &quot;10 vanilla clients&quot; cannot satisfy both things M3 needs: **4 clients already `Reviewed &amp; Filed`** so TASK-013&#39;s boxes have a real filed return to tie to the cent against, and **6 still `In Progress`** so TASK-017 is a genuine review rather than recognition of a number Dave already knows. 🎯 **Vyne Digital is in the tie-check four on purpose** — Ricky&#39;s own entity, so it needs nobody&#39;s consent and can start before the access question resolves; it also carries the `19/8/2032` reviewed-date typo, which demonstrates the thesis. **Auto Xpert is the only refund available with a profile**, and without it §1&#39;s finding that Box 15 is a magnitude *plus a direction* never gets exercised. Sign-off six spread across the volume distribution (128 → 4,265 lines). **Kidspiration excluded and recorded, not dropped quietly** — 48,140 lines, 8.8× the next largest, a volume stress test rather than a vanilla one; carded for M6</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">✅ M3&#39;s task list rewritten against what actually exists</div>
+            <div class="recent-desc">**The original M3 assumed a live `Journals` pull and every task after TASK-011 inherited it.** Verified this session against the spike Supabase: `xero_connections` and `xero_tokens` hold **0 rows** — there has never been a Xero API connection — and the 277,595 ledger lines were **summarised into 139 `coding_profiles` with no transaction-level table retained** (`proposals`&#39; 8,420 rows are *bank statement lines*, not GST journal lines). ✅ **The profiles do survive and are enough for TASK-014&#39;s scoring** — all ten selected clients have one. Rewritten: TASK-012 normalises a human export instead of pulling an API, a new **TASK-011b** makes the data route a named blocker instead of an assumption buried in TASK-012, TASK-014 points at §6.2&#39;s observed rules rather than FR-011&#39;s hypothesised eleven, and TASK-016 is pulled forward because it needs no ledger. 🎯 **TASK-012 now also records what the export does *not* carry** — a direct input to M4&#39;s Core-tier reconstruction spike</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">📐 M1 — the idea, pressure-tested and reframed before a line of code</div>
             <div class="recent-desc">Ran the full ideation workflow. **Verdict: Strong, 25/30** — but the framing had to change to get there. The brief was &quot;end-to-end GST filing&quot;; validation established that **Xero NZ already computes the GST return and already files it to IRD**, so building that would rebuild something Colab gets free. The labour is everything that must be true *before* anyone presses the button — miscoded lines, wrong tax rates, unreconciled bank items, period-boundary strays, unexplained movement, records the client hasn&#39;t sent — and because the Google Sheet holding that checklist proves nothing, **the reviewer re-derives every return from scratch. Colab pays for the review twice.** So the product is the exception sweep + traceable workpaper + named sign-off, and filing is a feature on the end. **Three fatal flaws ranked with fast tests**, the sharpest being that the core assumption is still unverified: if the hours actually go into chasing clients rather than checking coding, the engine automates the cheap half and headcount doesn&#39;t move — which is why M2 and M3 contain no software. **Competition mapped honestly**, including the one that matters: Xero&#39;s own rebuilt Workpapers with a GST worksheet landing this year, bundled, from a vendor with far more resource than us. Six documents written: `product-idea.md`, `validation-report.md`, `VISION.md` (validated field-by-field against the skill&#39;s template by script), `product-vision.md`, `prd.md` (10 tables, 4 database-level integrity triggers, 22 endpoints, 25 functional requirements, 8 open questions each with a recommendation), and `product-roadmap.md`. **Two premises are labelled unverified throughout rather than quietly assumed:** the GST101A box map is *not* implemented from memory — it gets verified against IRD&#39;s live form first — and the 11-rule exception catalogue is explicitly a **hypothesis** to be rewritten from Colab&#39;s actual sheet in M2</div>
           </div>
@@ -916,20 +930,6 @@
             <div class="recent-desc">The honest cost of the clean break was that M5&#39;s baseline no longer came free, and it was unknown whether Colab&#39;s ledgers could even support learning one. **They can.** Measured across **277,595 real transaction lines from 139 client ledgers**: **61.9% of lines sit under a payee with a single dominant historical coding, and only 8.2% have no baseline at all.** 129 of 139 clients (93%) have five or more consistent payees; **none have zero**; median 37 per client. 🔴 **The trap worth recording: weighted by *payee key* the consistent share looks like 26.5%** — because keys are dominated by a long tail of one-off suppliers. That understates real coverage by more than 2×, and quoting it would have made M5 look far weaker than it is. So `prd.md` FR-010&#39;s *&quot;a client with no profile cannot be swept&quot;* turns out to exclude essentially nobody. 🔴 **But the provenance is the finding that matters more:** every one of the 147 client records carries a `manual-*` tenant id, and `xero_connections` and `xero_tokens` are **both empty** — **the spike never made a single Xero API connection.** The data came in through a browser extract. That means field shapes will differ after a real API pull (`tax_type` as a proper enum rather than the UI label `&quot;GST&quot;`), the numbers must be re-measured in M7 rather than carried forward — and, per the Xero email above, the extract route itself is now in question. The 29.9% of lines under `conflicted` payees isn&#39;t a failure either; it&#39;s where the precision target gets won or lost</div>
           </div>
         </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">🔎 Colab&#39;s GST workbook, found and read — and the product&#39;s core claim is now evidenced, not argued</div>
-            <div class="recent-desc">A June 2026 export of `GST Client List.xlsx` was already sitting on this machine, so M2 got a head start on two blocked tasks without waiting for anyone. Nine tabs. 🔴 **The headline is a negative result that strengthens the case: there is no per-return checklist anywhere in it.** M1&#39;s thesis was that the sheet&#39;s tick *proves nothing*; the reality is thinner still — the `Reviewed` column is a **bare date**, no reviewer name, no record of what was checked, nothing to drill into, and free-text `Notes` appears on **6 of 167 rows**. The reviewer re-deriving every return isn&#39;t a habit to be trained out of them; **it&#39;s the only rational response to a sign-off with no evidence attached.** That claim is now sourced from the artefact. **Three things came out free.** (1) **`GST Rec`** is a genuine workpaper, referenced **D.1 / D.2**: it ties the GST control account in the balance sheet to the returns filed, via arrears, timing differences on AR/AP for payments-basis clients, and an errors-and-adjustments block — ending in a **`Difference` that must be zero**. Mechanically computable, high-value, and **completely absent from `prd.md` FR-011&#39;s hypothesised catalogue.** (2) Colab&#39;s own formula is **`ROUND(gross * 3/23, 2)`** — the exact fraction verified from IRD&#39;s form, which **corroborates the box map and settles the rounding convention** rather than leaving it to preference. (3) A 21-rule supplier-coding sheet, hand-written by a Colab person, flagging each rule `auto` or **`needs attention`** — and the `needs attention` set is Bunnings/Supercheap, Woolworths/New World/Pak&#39;nSave, Warehouse/Kmart/Briscoes/Temu, Chemist Warehouse, Afterpay. **The spike independently deferred Woolworths and Kmart as `conflicted`. The machine and the human agree on the hard cases** — free validation of the confidence rule from the side that matters. Also banked: a hand-written **entertainment threshold at $57.50** (50% GST-deductible in NZ, so miscoding it produces a wrong return — ⚠️ verify the figure against IRD first), a payee **suppression** rule the catalogue has no concept for yet, and `No bank feeds` as the preparer&#39;s most-repeated real-world problem. ⚠️ **It&#39;s a June export, not the live sheet** — counts drift (167 vs 158) — so every figure is provisional</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">🎯 The live sheet, read with Dave in the room — and the exception catalogue is real now</div>
-            <div class="recent-desc">Dave handed over the live Google Sheet and answered nine questions on the spot, which closed four M2 tasks in one sitting. 🔴 **The exception vocabulary exists after all — it&#39;s a freehand note field, and 21 of 171 clients have one.** Captured verbatim: `No Xero` ×3, `No bank feeds` ×6, `Need Bank Statements`, `New 02 Account`, `Remittances` ×2, `Need Settlement Statement - Avalon Drive`, `Emailed / Called`, and the two that matter most — **`Bunch of AR - appears to have been cash coded`** and **`Loan deductions from Sales + new 03 bank account`**. Those two are real, observed, computable **Box 5** errors — the largest figure on the return and the one every derived box flows from — and **neither is in `prd.md` FR-011&#39;s hypothesised catalogue.** Banked as `AR_CASH_CODED` and `SALES_NETTED_AGAINST_LOAN`. 🔴 **The distribution is the finding that outlived the withdrawn gate: on the live August cycle, 75% of the preparer&#39;s own annotations are missing-data or chasing; 12% are coding errors.** That doesn&#39;t touch the decision to build — it reorders it. Every missing-data condition is mechanically detectable *more cheaply* than a coding exception, because it needs no learned profile, so **the data-readiness sweep and the query-send step should land ahead of the exception engine.** 🎯 And Dave got there independently, unprompted, on `Queries sent`: *&quot;this will need to be put in the workflow for the user to send if they need to.&quot;* Owner instinct and observed data agreeing is the strongest signal M2 can produce. **Also settled:** 3 clients have **no Xero at all** (→ `in_scope=false`, `out_of_scope_reason=&#39;no_xero_ledger&#39;`, the PRD field&#39;s first real use); counts final at **171** on a roster, 78.4% two-monthly; **Dave is the reviewer *and* the signer**, so the acceptance test and the liability-bearer are one person; **no Xero Workpapers exposure** — differentiation holds, downgraded to a watch item. ⚠️ **Two corrections to this morning:** `GST Rec` D.1/D.2 is *&quot;a template as a workaround, ignore this tab&quot;* — so `CONTROL_ACCOUNT_UNRECONCILED` is demoted from an observed check to a candidate rule Colab don&#39;t currently perform (still worth building — nobody doing it is an argument *for* the product), and the rounding-convention claim weakens to a standard NZ convention rather than Colab&#39;s own practice. The `Notes`/`Billing` split is data drift, not meaning</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -946,9 +946,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">🔴 Get Coreshift a human Xero login to Colab&#39;s client orgs — M3&#39;s only hard blocker</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">blocking</span><span class="tag tag-neutral">access</span></div>
-        <div class="card-desc">**Surfaced writing the handover, and it&#39;s the one thing that stops M3 dead.** M3 means preparing ten real GST returns **by hand**, which needs someone at Coreshift able to read those ledgers. 🔑 **The access route matters after §5.4:** a person logging into Xero and reading normally is completely fine — it is *automation* the Developer Terms prohibit, not use — so this must be **practice-staff access for a human**, not an API app and not a browser agent. Cheapest form: Dave adds a Coreshift login to the practice, which also reaches every client org via the org switcher. ⚠️ Note this is the same access the archived spike used, and the spike&#39;s route is now the one in question — so ask for it as a named staff user, not as a scraping route. **Default if you don&#39;t: M3 stalls.** Everything else on this list has a default I can proceed under; this one doesn&#39;t</div>
+        <div class="card-title">🔴 Ask Dave for the ledgers — two things in one message, and it is M3&#39;s only hard blocker</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">blocking</span><span class="tag tag-neutral">access</span><span class="tag tag-neutral">Journals</span><span class="tag tag-neutral">xero_connections</span></div>
+        <div class="card-desc">**Sharpened 19 Aug after checking what data actually exists.** M3 means preparing ten real GST returns by hand, and 🔴 **there is no ledger for any of the ten by any route today** — `Journals` is Advanced-tier ($1,445 AUD/mo, §5.2), `xero_connections` has **0 rows**, browser automation is prohibited (§5.4), and the spike DB kept **profiles, not transactions**. 👉 **Ask for both at once, because they are different clocks:** **(a) Dave exports the ten** — one GST/general-ledger detail export per client for Jun–Jul 2026, plus one prior filed period for TASK-015&#39;s precision check. Ten exports, no provisioning delay, **unblocks M3 inside the live cycle before 28 August**, and completely unambiguous under Xero&#39;s terms since Colab staff are using their own Xero normally. ⚠️ Confirm the report&#39;s name with him rather than guessing — he runs it every cycle. **(b) Practice-staff access for a named human at Coreshift** — slower to arrange, and needed for M4 onward regardless; a person reading Xero normally is fine, it is *automation* the terms prohibit. 🔴 **Asking only for (b) puts M3 behind a provisioning delay it does not need to be behind. Default if you don&#39;t: M3 stalls** — the only item here with no default</div>
       </div>
       <div class="card">
         <div class="card-title">🔴 Send the Xero email — six questions, three of which decide what M4 builds</div>
@@ -984,9 +984,19 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">8</span>
+        <span class="col-count">10</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">✅ TASK-011 — the ten concierge clients are chosen</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">research</span><span class="tag tag-neutral">Reviewed &amp; Filed</span><span class="tag tag-neutral">In Progress</span><span class="tag tag-neutral">19/8/2032</span></div>
+        <div class="card-desc">**Done 19 Aug, and the selection is deliberately split in two.** Pool narrowed **134** live two-monthly clients → **98** that have a coding profile in the spike database → **87** carrying no annotation on the sheet. Then split, because the original &quot;10 vanilla clients&quot; cannot satisfy both things M3 needs: **4 clients already `Reviewed &amp; Filed`** so TASK-013&#39;s boxes have a real filed return to tie to the cent against, and **6 still `In Progress`** so TASK-017 is a genuine review rather than recognition of a number Dave already knows. 🎯 **Vyne Digital is in the tie-check four on purpose** — Ricky&#39;s own entity, so it needs nobody&#39;s consent and can start before the access question resolves; it also carries the `19/8/2032` reviewed-date typo, which demonstrates the thesis. **Auto Xpert is the only refund available with a profile**, and without it §1&#39;s finding that Box 15 is a magnitude *plus a direction* never gets exercised. Sign-off six spread across the volume distribution (128 → 4,265 lines). **Kidspiration excluded and recorded, not dropped quietly** — 48,140 lines, 8.8× the next largest, a volume stress test rather than a vanilla one; carded for M6</div>
+      </div>
+      <div class="card">
+        <div class="card-title">✅ M3&#39;s task list rewritten against what actually exists</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">debt</span><span class="tag tag-neutral">Journals</span><span class="tag tag-neutral">xero_connections</span><span class="tag tag-neutral">xero_tokens</span><span class="tag tag-neutral">coding_profiles</span><span class="tag tag-neutral">proposals</span></div>
+        <div class="card-desc">**The original M3 assumed a live `Journals` pull and every task after TASK-011 inherited it.** Verified this session against the spike Supabase: `xero_connections` and `xero_tokens` hold **0 rows** — there has never been a Xero API connection — and the 277,595 ledger lines were **summarised into 139 `coding_profiles` with no transaction-level table retained** (`proposals`&#39; 8,420 rows are *bank statement lines*, not GST journal lines). ✅ **The profiles do survive and are enough for TASK-014&#39;s scoring** — all ten selected clients have one. Rewritten: TASK-012 normalises a human export instead of pulling an API, a new **TASK-011b** makes the data route a named blocker instead of an assumption buried in TASK-012, TASK-014 points at §6.2&#39;s observed rules rather than FR-011&#39;s hypothesised eleven, and TASK-016 is pulled forward because it needs no ledger. 🎯 **TASK-012 now also records what the export does *not* carry** — a direct input to M4&#39;s Core-tier reconstruction spike</div>
+      </div>
       <div class="card">
         <div class="card-title">📐 M1 — the idea, pressure-tested and reframed before a line of code</div>
         <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-neutral">planning</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">product-idea.md</span><span class="tag tag-neutral">validation-report.md</span><span class="tag tag-neutral">VISION.md</span><span class="tag tag-neutral">product-vision.md</span><span class="tag tag-neutral">prd.md</span><span class="tag tag-neutral">product-roadmap.md</span></div>
@@ -1031,13 +1041,18 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">1</span>
+        <span class="col-count">2</span>
       </header>
       <div class="cards">
       <div class="card">
         <div class="card-title">M3 — concierge cycle proven</div>
-        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">next</span><span class="tag tag-neutral">In Progress</span></div>
-        <div class="card-desc">Not started. Ten returns prepared and reviewed by hand, Coreshift-operated, with Dave signing off from hand-made workpapers. ✅ **The gate is secured** — Dave has agreed to sign the ten. 🔴 **And M3&#39;s instrumentation is now load-bearing for pricing**, since TASK-004&#39;s observed timing was deleted with its gate: *minutes per return* is the retainer&#39;s only cost-of-goods input. ✅ **Shadowing Colab&#39;s live August cycle is agreed** and it closes 28 August with 122 of 171 clients still `In Progress` — the cheapest ground truth available, and it feeds M3 directly</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">current</span><span class="tag tag-neutral">docs/concierge-results.md</span></div>
+        <div class="card-desc">🟡 **Started 19 Aug.** ✅ **TASK-011 done** — ten clients selected and recorded in `docs/concierge-results.md`. 🔴 **TASK-011b now blocks TASK-012 through TASK-017**: no period ledger exists (see the On-Ricky card). ✅ The gate is secured — Dave has agreed to sign the ten. 🔴 **M3&#39;s instrumentation is load-bearing for pricing**, since TASK-004&#39;s observed timing was deleted with its gate: *minutes per return* is the retainer&#39;s only cost-of-goods input. 🟡 **Unblocked work exists meanwhile** — TASK-016&#39;s workpaper template needs no ledger, and its structure becomes the M8 UI spec</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Draft the workpaper template while the ledgers are pending</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">design</span></div>
+        <div class="card-desc">TASK-016&#39;s format, which the task&#39;s own notes say *&quot;matters more than tooling&quot;* — it is the artefact Dave judges and its structure becomes M8&#39;s UI spec. Needs **no Xero data**, so it is the one substantial thing M3 can advance while TASK-011b is open. ⚠️ Best done after **one filed client&#39;s Drive folder** arrives, to avoid designing something alien to what Colab produce today</div>
       </div></div>
     </section>
     <section class="column col-blocked">
