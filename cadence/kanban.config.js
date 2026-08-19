@@ -18,9 +18,9 @@ module.exports = {
     "Accountants currently does in a Google Sheet across ~50 client organisations. Coreshift builds, " +
     "hosts and operates it on the practice's behalf for a retainer.",
 
-  phase: "M2 · Ground truth — evidence before code",
+  phase: "M3 · Concierge cycle proven — ten returns by hand, signed",
   nextMilestone: {
-    name: "Ground truth captured",
+    name: "Dave signs from a hand-made workpaper",
     date: "No date — milestone-based",
   },
 
@@ -30,9 +30,9 @@ module.exports = {
   milestones: [
     { id: "M1", name: "Idea locked", status: "done",
       doneWhen: "docs/validation-report.md carries a Strong verdict and docs/product-idea.md records the decided constraints (closed 2026-08-19)" },
-    { id: "M2", name: "Ground truth", status: "current",
-      doneWhen: "docs/gst-ground-truth.md § Conclusions states whether the core assumption held — that GST time goes into mechanically-checkable exceptions rather than chasing clients" },
-    { id: "M3", name: "Concierge cycle proven", status: "next",
+    { id: "M2", name: "Ground truth", status: "done",
+      doneWhen: "docs/gst-ground-truth.md § Conclusions states whether the core assumption held — that GST time goes into mechanically-checkable exceptions rather than chasing clients (closed 2026-08-19: it does NOT — 75% of the live cycle's annotations are missing-data or chasing, 12% coding errors. Build order changed, decision to build unaffected)" },
+    { id: "M3", name: "Concierge cycle proven", status: "current",
       doneWhen: "Colab's reviewer signs off from a workpaper we made by hand, without reopening the Google Sheet, on at least 7 of 10 returns" },
     { id: "M4", name: "Foundation — repo, DB, auth, Xero OAuth", status: "next",
       doneWhen: "A member logs in and one Xero organisation connects, on our own Supabase project and our own Xero token refresh" },
@@ -49,9 +49,14 @@ module.exports = {
     { id: "M10", name: "Unattended cycle + sheet retired", status: "next",
       doneWhen: "Colab stops maintaining the Google Sheet" },
     { id: "M11", name: "Xero app certification ▸‖", status: "next",
-      doneWhen: "The Xero app holds more than 25 connected organisations (parallel track, started in M2 — gates M10, because Colab has 50+ orgs)" },
-    { id: "M12", name: "IRD gateway filing ▸‖", status: "next",
-      doneWhen: "A live GST return files direct to IRD from the app under Coreshift's DSP registration (parallel track, started in M2)" },
+      doneWhen: "The Xero app holds more than 50 connected organisations (parallel track — gates M10, because Colab has 171 GST clients). NOTE 2026-08-19: the old 25-org premise was stale. Xero moved to a five-tier model on 2 Mar 2026 — uncertified tops out at 50 (Core, $35 AUD/mo, no certification); Plus is 1,000 and needs certification. A second cap also bites: an org can host only two uncertified apps." },
+    // M12 — IRD gateway filing: BACKLOGGED 2026-08-19 (Ricky). Filing through Xero is one
+    // click and Colab remain on Xero for the foreseeable future. A clean cut with no rework:
+    // FR-025 was already P2, route='ird_gateway' already returned 501 by design, and M8's
+    // magic moment needs no filing. The longest pole leaves the plan; Xero certification (M11)
+    // becomes the only external accreditation. See docs/gst-ground-truth.md §11 for what is
+    // given up — notably IRD account/return status retrieval, which is the real reason to
+    // revisit, not direct filing. Ladder is now 11 milestones.
   ],
 
   // ── Goals ─────────────────────────────────────────────────────

@@ -1,83 +1,91 @@
 # Cadence — Handover
-_2026-08-19 · closes M1 (Idea locked) · opens M2 (Ground truth) · no calendar dates: this project is scheduled by milestone_
+_2026-08-19 · closes M2 (Ground truth) · opens M3 (Concierge cycle proven) · no calendar dates: this project is scheduled by milestone_
 
 ## ▶️ Paste this into a new session
 
-    Cadence M2 — Ground truth
+    Cadence M3 — Concierge cycle proven
 
     Read coreshift-kanbans/cadence/HANDOVER.md and the docs it points at, then
     give me the 5-line orientation and your first move, and proceed.
 
 ## Where we are — for Ricky
 
-- **Just closed:** M1 — Idea locked. Verdict **Strong, 25/30**, but reframed on the way.
-- **In plain terms:** Xero already computes *and files* the NZ GST return, so we are not building
-  filing. We are building the thing that proves the return is right first — the exception sweep, the
-  traceable workpaper, and the named sign-off that Colab currently fakes with a tick in a Google
-  Sheet. Because that tick proves nothing, their reviewer re-derives every return from scratch, and
-  **Colab pays for the review twice.** That duplicated pass is the money.
-- **Verified by:** six planning docs in `Colab Accountant/docs/`; `VISION.md` validated field-by-field
-  against the skill's template by script; 87 roadmap tasks, ids sequential, each with files + notes;
-  Cadence's real state read from the repo via `gh` rather than assumed; IRD's DSP onboarding stages
-  and Xero's exclusion of published NZ GST returns from `ListAllPublishedReports` both confirmed from
-  source.
-- **Also closed:** the old `core-ricky/cadence` was a **feasibility spike, not a foundation** — 43
-  commits in one week then dormant. Renamed `cadence-spike`, archived read-only with a superseded
-  banner, lessons harvested. The clean rebuild deletes the shared-schema coupling, the CI scope
-  guard, and the two-service Xero token race in one move.
-- **Next:** M2 — Ground truth. Ends when `docs/gst-ground-truth.md` § Conclusions states whether the
-  core assumption held: that GST time goes into mechanically-checkable exceptions rather than chasing
-  clients. **M2 and M3 contain no software on purpose.**
+- **Just closed:** M2 — Ground truth. Eleven sections of evidence, and **two of the project's founding
+  premises turned out to be wrong.**
+- **In plain terms:** we went looking for the list of checks Dave performs on each GST return. There isn't
+  one. His sheet tracks *status* — amount, due date, reviewed date — and the reviewed date is a bare date
+  with no reviewer name and nothing behind it. So the thing we suspected was true is worse than we thought,
+  which is good news for the product: the sign-off genuinely proves nothing today.
+- **The two premises that broke.** First, we said Colab *pays for the review twice*, because a reviewer
+  re-derives what a preparer already did. **Dave does all of it himself** — prepares, checks, reviews and
+  signs 171 clients. There is no second pass, so that argument has to go. What replaces it is better:
+  **one person is the bottleneck on 171 GST returns, six times a year for the 134 two-monthly ones.**
+  Second, we assumed the time goes into checking miscoded transactions. **It mostly doesn't** — three
+  quarters of what Dave writes down is *"I can't do this yet, the records aren't here."* That doesn't change
+  whether we build it; it changes what we build first.
+- **Verified by:** IRD's own published GST101A, GST103B and IR375 (March 2026) PDFs, text-extracted rather
+  than remembered — the box map is now certain and `prd.md` Q4 is closed. 277,595 real ledger lines measured
+  across 139 client profiles: **62% of transaction lines are checkable, only 8% have no baseline.** Xero's
+  own developer terms and pricing pages, read directly in a browser. Colab's live sheet, exported today,
+  171 clients parsed in full. Nine answers from Dave in person.
+- **Next:** M3 — Concierge cycle proven. Ends when Dave signs off from workpapers we made by hand, on at
+  least 7 of 10 returns. **No code in M3, by design.** Dave has already agreed to sign them.
 
-## 👉 On you before M2 can close
+## 👉 On you before M3 can close
 
-1. **Get Colab's live GST Google Sheet, the client list, and 3 cycles of WIP data.** Blocks four
-   other M2 tasks. Nothing about the ruleset is real until this lands.
-2. **Email IRD's DSP team** — is an operated-on-behalf service eligible, who holds the registration,
-   how long. Longest pole in the project; costs a day to start.
-3. **Name the preparer and the reviewer, and get the reviewer's yes** to reviewing ten hand-made
-   workpapers. Without that, M3 has no gate.
-4. **Ask Colab what they have seen of Xero Workpapers' GST worksheet.**
-5. **Open Xero app partner certification** once Claude confirms the org cap (see risks).
+1. **Send the Xero email** (`docs/m2-ready-to-send.md` §4). Six questions; three decide what M4 builds.
+   Doesn't block M3, but M4 shouldn't start without it. **Default if you don't: I'll assume the worst case
+   — no `Journals` access — and design M4's spike around rebuilding the ledger from cheaper endpoints.**
+2. **Get me Xero access to Colab's client organisations, as a person.** M3 means preparing ten real returns
+   by hand, which needs someone at Coreshift able to read the ledgers. A human logging into Xero normally is
+   fine — it's *automation* their terms prohibit, not use. **Default if you don't: M3 stalls. This is the
+   one hard blocker.**
+3. **Decide: are the 34 six-monthly clients in scope?** Two-monthly is 78.4% and the test was ~80%.
+   **Default: I'll include them** — they look easier, not harder (all four *no bank feeds* notes sit on
+   six-monthly clients and all four still filed).
+4. **Rewrite the "pays twice" economics** in `product-vision.md` and `prd.md` before either is shown to
+   anyone. **Default: I'll rewrite it to the single-bottleneck version above and you review it.**
+5. **Optional:** one filed client's Drive folder, to see what a finished workpaper contains today.
 
 ## 🔴 Risks you're carrying
 
-- **The core assumption is unverified and it decides the project.** If GST hours go into chasing
-  clients rather than checking coding, the engine automates the cheap half and no headcount moves.
-  M2 task 4 settles it; if it fails, the correct move is to re-scope to the chase-and-comms layer,
-  not to build anyway.
-- **Xero is shipping a GST worksheet into Workpapers this year, bundled.** Rebuilt with BGL, beta
-  since January 2026, rolling out to all NZ partners. Its **existence is confirmed; its feature depth
-  is not** — xero.com returned 403/503 when read. If it generates exceptions from ledger history
-  rather than just organising the review, the differentiation narrows sharply.
-- **⚠️ Assumption to check, not a verified fact: the Xero 25-connected-org cap.** Taken from the
-  archived spike's own README, not from Xero's terms. Colab has 50+ orgs. **If it holds, M10 is
-  unreachable until the Xero app is certified** — a second external accreditation, gating an earlier
-  milestone than IRD does. Verifying it is the first thing Claude should do in M2.
-- **IRD may not accredit a single-customer operated service at all.** Undocumented either way on
-  ird.govt.nz. Mitigated by design — M8's magic moment needs no filing, and M9 files through Xero's
-  existing IRD connection — but it is a real unknown with no published timeline.
-- **The profile engine is newly in scope (M5).** It was assumed free from the spike's live
-  `coding_profiles`; on a clean build it does not exist. Smaller than the spike's full reconcile loop,
-  but not nothing.
+- **`Journals` is an Advanced-tier Xero endpoint — $1,445 AUD/month, plus an annual security assessment and
+  a discretionary approval.** It is the endpoint the whole traceability guarantee was designed around. Not
+  fatal; the ledger can probably be rebuilt from cheaper endpoints, but that is M4 work nobody had planned.
+- **Xero's terms prohibit browser automation.** That was the fallback way of getting data, and it is how
+  the archived spike got all 147 client ledgers. It also removes the data source for the
+  unreconciled-bank-line check. A person using Xero normally is unaffected.
+- **Xero's AI/ML clause may cover the coding-profile engine.** It forbids using their data to train
+  "predictive analytics tools", and on a literal reading a per-client coding profile is one. Asked in the
+  Xero email; the defensible answer is that it's a frequency count, not a trained model.
+- **171 clients against an uncertified ceiling of 50.** Certification is now the only external
+  accreditation left, and a second cap bites too: a client org can host only two uncertified apps at once,
+  which you can't detect before trying to connect.
+- **Xero's own GST worksheet still ships this year.** Colab have seen nothing of it, so it isn't live —
+  but it isn't gone either. Watch item, not a resolved one.
 
 ## For the next Claude
 
-- **Docs:** `Colab Accountant/docs/` — read `product-roadmap.md` **M2** first, then
-  `gst-ground-truth.md` if it exists yet. `prd.md § 14` holds the eight open questions.
-- **State:** no application code exists. No repo yet — `core-ricky/cadence` is free again (the spike
-  is `cadence-spike`, archived); creating it is M4, not now.
-- **Do first, without waiting on Ricky:** verify the GST101A box map against IRD's current published
-  form, verify the Xero org cap against Xero's own developer terms, and check coding-profile
-  feasibility plus GST-return usage across Colab's clients.
-- **🔴 Don't** implement the GST101A box map from memory — `prd.md § 3` marks it *indicative and
-  unverified* deliberately. A wrong box is a wrong tax return.
-- **🔴 Don't** implement the 11-rule exception catalogue in `prd.md` FR-011 as written — it is a
-  **hypothesis**, and TASK-010 replaces it from Colab's actual sheet. A plausible rule nobody
-  observed is noise with a confidence score attached.
-- **🔴 Don't** skip M2/M3 to start building. They are the two phases most likely to be rationalised
-  away and they exist because building the ruleset from assumptions is this project's largest
-  identified risk.
-- **Known debt:** `prd.md` still describes the abandoned shared-Supabase architecture — the
-  additive-only constraint, `verify-scope.ts`, and the shared token-refresh RPC. Reconciling it is on
-  This Week. Don't build the coupling we just decided against.
+- **Docs:** `Colab Accountant/docs/gst-ground-truth.md` is the milestone's output and the thing to read
+  first — **§5 before any M4 thinking, §6 for the observed exception vocabulary, §12 for the verdict.**
+  Then `product-roadmap.md` M3. `prd.md` §14 Q4 and Q8 are now resolved in place.
+- **State:** no application code exists and no repo yet — `core-ricky/cadence` is free (the spike is
+  `cadence-spike`, archived). Creating it is M4. Colab's live sheet is cached at
+  `docs/ground-truth/gst-client-list-LIVE-2026-08-19.xlsx`, **gitignored — client financial data.**
+- **Rules banked, all traceable to something observed:** `AR_CASH_CODED` and
+  `SALES_NETTED_AGAINST_LOAN` (both Box 5, both from Dave's own notes, neither in FR-011),
+  `IMPORT_IN_BOX_11` and `ADJUSTMENT_UNSUPPORTED` (from IRD's form), `ENTERTAINMENT_THRESHOLD` (Colab's
+  hand-written $57.50 rule — **verify against IRD before implementing**).
+- **Do first in M3:** decide the concierge cycle's shape against Colab's **live August cycle, closing
+  28 August** with 122 of 171 clients still in progress. Real returns under a real deadline beats a
+  retrospective exercise, and shadowing it is already agreed with Dave.
+- **🔴 Don't** build FR-001 as written — it pulls from `Journals`. See §5.2.
+- **🔴 Don't** implement the 11-rule catalogue in `prd.md` FR-011 — §6.2 replaces it with observed rules.
+- **🔴 Don't** treat `CONTROL_ACCOUNT_UNRECONCILED` as something Colab asked for. It came from the
+  `GST Rec` tab, which Dave says is *"a template as a workaround, ignore this tab"*. Still worth building —
+  nobody doing it is an argument for the product — but don't present it as a discovered requirement.
+- **🔴 Don't** re-add the shared-Supabase coupling. `prd.md` still describes it in places; the clean-build
+  decision killed it.
+- **🔴 Don't** implement the GST101A box map from memory even now it's verified — copy §1's table. Box 15
+  is a magnitude **plus a direction** (`refund`/`to_pay`/`nil`), never a signed number, and Boxes 9 and 13
+  are not derivable from a ledger at all.
