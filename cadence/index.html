@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>12%</strong> complete</div>
-        <div><strong>4</strong>/33 cards done</div>
-        <div>Updated <strong>2026-08-19 02:20 UTC</strong></div>
+        <div><strong>15%</strong> complete</div>
+        <div><strong>5</strong>/34 cards done</div>
+        <div>Updated <strong>2026-08-19 02:25 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">4</div>
+        <div class="status-num">5</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -916,6 +916,13 @@
             <div class="recent-desc">The honest cost of the clean break was that M5&#39;s baseline no longer came free, and it was unknown whether Colab&#39;s ledgers could even support learning one. **They can.** Measured across **277,595 real transaction lines from 139 client ledgers**: **61.9% of lines sit under a payee with a single dominant historical coding, and only 8.2% have no baseline at all.** 129 of 139 clients (93%) have five or more consistent payees; **none have zero**; median 37 per client. 🔴 **The trap worth recording: weighted by *payee key* the consistent share looks like 26.5%** — because keys are dominated by a long tail of one-off suppliers. That understates real coverage by more than 2×, and quoting it would have made M5 look far weaker than it is. So `prd.md` FR-010&#39;s *&quot;a client with no profile cannot be swept&quot;* turns out to exclude essentially nobody. 🔴 **But the provenance is the finding that matters more:** every one of the 147 client records carries a `manual-*` tenant id, and `xero_connections` and `xero_tokens` are **both empty** — **the spike never made a single Xero API connection.** The data came in through a browser extract. That means field shapes will differ after a real API pull (`tax_type` as a proper enum rather than the UI label `&quot;GST&quot;`), the numbers must be re-measured in M7 rather than carried forward — and, per the Xero email above, the extract route itself is now in question. The 29.9% of lines under `conflicted` payees isn&#39;t a failure either; it&#39;s where the precision target gets won or lost</div>
           </div>
         </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">🔎 Colab&#39;s GST workbook, found and read — and the product&#39;s core claim is now evidenced, not argued</div>
+            <div class="recent-desc">A June 2026 export of `GST Client List.xlsx` was already sitting on this machine, so M2 got a head start on two blocked tasks without waiting for anyone. Nine tabs. 🔴 **The headline is a negative result that strengthens the case: there is no per-return checklist anywhere in it.** M1&#39;s thesis was that the sheet&#39;s tick *proves nothing*; the reality is thinner still — the `Reviewed` column is a **bare date**, no reviewer name, no record of what was checked, nothing to drill into, and free-text `Notes` appears on **6 of 167 rows**. The reviewer re-deriving every return isn&#39;t a habit to be trained out of them; **it&#39;s the only rational response to a sign-off with no evidence attached.** That claim is now sourced from the artefact. **Three things came out free.** (1) **`GST Rec`** is a genuine workpaper, referenced **D.1 / D.2**: it ties the GST control account in the balance sheet to the returns filed, via arrears, timing differences on AR/AP for payments-basis clients, and an errors-and-adjustments block — ending in a **`Difference` that must be zero**. Mechanically computable, high-value, and **completely absent from `prd.md` FR-011&#39;s hypothesised catalogue.** (2) Colab&#39;s own formula is **`ROUND(gross * 3/23, 2)`** — the exact fraction verified from IRD&#39;s form, which **corroborates the box map and settles the rounding convention** rather than leaving it to preference. (3) A 21-rule supplier-coding sheet, hand-written by a Colab person, flagging each rule `auto` or **`needs attention`** — and the `needs attention` set is Bunnings/Supercheap, Woolworths/New World/Pak&#39;nSave, Warehouse/Kmart/Briscoes/Temu, Chemist Warehouse, Afterpay. **The spike independently deferred Woolworths and Kmart as `conflicted`. The machine and the human agree on the hard cases** — free validation of the confidence rule from the side that matters. Also banked: a hand-written **entertainment threshold at $57.50** (50% GST-deductible in NZ, so miscoding it produces a wrong return — ⚠️ verify the figure against IRD first), a payee **suppression** rule the catalogue has no concept for yet, and `No bank feeds` as the preparer&#39;s most-repeated real-world problem. ⚠️ **It&#39;s a June export, not the live sheet** — counts drift (167 vs 158) — so every figure is provisional</div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -970,7 +977,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">4</span>
+        <span class="col-count">5</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -992,6 +999,11 @@
         <div class="card-title">📊 The coding-profile baseline is feasible — measured, not hoped</div>
         <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">data</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">prd.md</span><span class="tag tag-neutral">manual-*</span><span class="tag tag-neutral">xero_connections</span><span class="tag tag-neutral">xero_tokens</span><span class="tag tag-neutral">tax_type</span><span class="tag tag-neutral">&quot;GST&quot;</span><span class="tag tag-neutral">conflicted</span></div>
         <div class="card-desc">The honest cost of the clean break was that M5&#39;s baseline no longer came free, and it was unknown whether Colab&#39;s ledgers could even support learning one. **They can.** Measured across **277,595 real transaction lines from 139 client ledgers**: **61.9% of lines sit under a payee with a single dominant historical coding, and only 8.2% have no baseline at all.** 129 of 139 clients (93%) have five or more consistent payees; **none have zero**; median 37 per client. 🔴 **The trap worth recording: weighted by *payee key* the consistent share looks like 26.5%** — because keys are dominated by a long tail of one-off suppliers. That understates real coverage by more than 2×, and quoting it would have made M5 look far weaker than it is. So `prd.md` FR-010&#39;s *&quot;a client with no profile cannot be swept&quot;* turns out to exclude essentially nobody. 🔴 **But the provenance is the finding that matters more:** every one of the 147 client records carries a `manual-*` tenant id, and `xero_connections` and `xero_tokens` are **both empty** — **the spike never made a single Xero API connection.** The data came in through a browser extract. That means field shapes will differ after a real API pull (`tax_type` as a proper enum rather than the UI label `&quot;GST&quot;`), the numbers must be re-measured in M7 rather than carried forward — and, per the Xero email above, the extract route itself is now in question. The 29.9% of lines under `conflicted` payees isn&#39;t a failure either; it&#39;s where the precision target gets won or lost</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔎 Colab&#39;s GST workbook, found and read — and the product&#39;s core claim is now evidenced, not argued</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">research</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">GST Client List.xlsx</span><span class="tag tag-neutral">Reviewed</span><span class="tag tag-neutral">Notes</span><span class="tag tag-neutral">GST Rec</span><span class="tag tag-neutral">Difference</span><span class="tag tag-neutral">prd.md</span><span class="tag tag-neutral">ROUND(gross * 3/23, 2)</span><span class="tag tag-neutral">auto</span><span class="tag tag-neutral">needs attention</span><span class="tag tag-neutral">needs attention</span><span class="tag tag-neutral">conflicted</span><span class="tag tag-neutral">No bank feeds</span></div>
+        <div class="card-desc">A June 2026 export of `GST Client List.xlsx` was already sitting on this machine, so M2 got a head start on two blocked tasks without waiting for anyone. Nine tabs. 🔴 **The headline is a negative result that strengthens the case: there is no per-return checklist anywhere in it.** M1&#39;s thesis was that the sheet&#39;s tick *proves nothing*; the reality is thinner still — the `Reviewed` column is a **bare date**, no reviewer name, no record of what was checked, nothing to drill into, and free-text `Notes` appears on **6 of 167 rows**. The reviewer re-deriving every return isn&#39;t a habit to be trained out of them; **it&#39;s the only rational response to a sign-off with no evidence attached.** That claim is now sourced from the artefact. **Three things came out free.** (1) **`GST Rec`** is a genuine workpaper, referenced **D.1 / D.2**: it ties the GST control account in the balance sheet to the returns filed, via arrears, timing differences on AR/AP for payments-basis clients, and an errors-and-adjustments block — ending in a **`Difference` that must be zero**. Mechanically computable, high-value, and **completely absent from `prd.md` FR-011&#39;s hypothesised catalogue.** (2) Colab&#39;s own formula is **`ROUND(gross * 3/23, 2)`** — the exact fraction verified from IRD&#39;s form, which **corroborates the box map and settles the rounding convention** rather than leaving it to preference. (3) A 21-rule supplier-coding sheet, hand-written by a Colab person, flagging each rule `auto` or **`needs attention`** — and the `needs attention` set is Bunnings/Supercheap, Woolworths/New World/Pak&#39;nSave, Warehouse/Kmart/Briscoes/Temu, Chemist Warehouse, Afterpay. **The spike independently deferred Woolworths and Kmart as `conflicted`. The machine and the human agree on the hard cases** — free validation of the confidence rule from the side that matters. Also banked: a hand-written **entertainment threshold at $57.50** (50% GST-deductible in NZ, so miscoding it produces a wrong return — ⚠️ verify the figure against IRD first), a payee **suppression** rule the catalogue has no concept for yet, and `No bank feeds` as the preparer&#39;s most-repeated real-world problem. ⚠️ **It&#39;s a June export, not the live sheet** — counts drift (167 vs 158) — so every figure is provisional</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -1013,9 +1025,9 @@
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Analyse the sheet into the real exception catalogue</div>
-        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">blocked</span><span class="tag tag-neutral">prd.md</span></div>
-        <div class="card-desc">Waiting on Ricky&#39;s first On-Ricky card. This replaces the hypothesised 11-rule table in `prd.md` FR-011 with rules traceable to a check somebody actually performs. Also produces the list of checks that are *not* automatable — which is the argument for what stays human</div>
+        <div class="card-title">🔴 Find where Colab&#39;s per-return checks actually live</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">blocked</span><span class="tag tag-neutral">research</span><span class="tag tag-neutral">Notes</span><span class="tag tag-neutral">Reviewed</span></div>
+        <div class="card-desc">**The premise changed.** A June export of the GST workbook was found on this machine and analysed, and **it contains no per-return checklist to extract from.** Nine tabs; the roster tabs track *state* — amount, reviewed date, due date, status — and `Notes` is filled on **6 of 167 rows**. The `Reviewed` column is a **bare date**: no reviewer name, no list of what was checked, nothing to drill into. **That confirms the M1 thesis from the artefact instead of by inference — the sign-off genuinely proves nothing — but it means the catalogue has to be built by *observation*, not extraction.** So the question is now: are the checks in the per-client Drive folders, in a sheet not in this file, or **only in the preparer&#39;s head?** All three are fine answers and the third would be the most valuable — a process living in one person&#39;s head is both the strongest case for the product and the reason TASK-004&#39;s observation session becomes the primary source. In the Colab email</div>
       </div>
       <div class="card">
         <div class="card-title">Time five real returns by activity</div>
@@ -1023,9 +1035,9 @@
         <div class="card-desc">Waiting on the preparer&#39;s time. **This is the task that settles whether the project is worth building**: computing vs checking vs chasing vs waiting vs reviewing vs filing, in minutes. Ask what they already do, never what they&#39;d want</div>
       </div>
       <div class="card">
-        <div class="card-title">Segment the client list vanilla vs complex</div>
-        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">blocked</span></div>
-        <div class="card-desc">Waiting on the client list. Vanilla = 2-monthly, invoice basis, no adjustments. Sets both the scope boundary and the retainer&#39;s pricing basis; if the tail is fatter than ~20% the boundary is in the wrong place</div>
+        <div class="card-title">Get accounting basis + adjustment types onto the client list</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">blocked</span><span class="tag tag-neutral">GST Rec</span></div>
+        <div class="card-desc">🟡 **One axis of three is already done.** Filing frequency came straight out of the June export&#39;s own roster tabs: **131 two-monthly (78.4%)**, 34 six-monthly, 2 one-monthly, 167 total. 🔴 **The tail is 21.6% against the ~20% test — but it&#39;s one nameable cohort of 34 six-monthly clients, not a scatter**, which makes it a clean include-or-decline decision rather than a scope problem, and it&#39;s cheaper to make now than after M7. ⬜ **Basis and adjustments aren&#39;t recorded in the sheet at all**, so the vanilla count still can&#39;t be computed — 78.4% is its ceiling, not the number. The `GST Rec` workpaper&#39;s *&quot;Is the client on the Invoice Basis&quot;* dropdown proves Colab tracks basis somewhere; the Colab email asks for it</div>
       </div></div>
     </section>
     <section class="column col-this-week">
