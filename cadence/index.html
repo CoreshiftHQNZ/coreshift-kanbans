@@ -699,8 +699,8 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>21%</strong> complete</div>
-        <div><strong>10</strong>/47 cards done</div>
+        <div><strong>20%</strong> complete</div>
+        <div><strong>10</strong>/49 cards done</div>
         <div>Updated <strong>2026-08-19 05:21 UTC</strong></div>
       </div>
     </div>
@@ -942,18 +942,28 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">9</span>
+        <span class="col-count">11</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">🔴 Send the Xero email TODAY — one of its six questions now decides whether the product is buildable</div>
-        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">blocking</span><span class="tag tag-neutral">existential</span><span class="tag tag-neutral">prd.md</span><span class="tag tag-neutral">docs/m2-ready-to-send.md</span></div>
-        <div class="card-desc">**Re-ranked 19 Aug.** It was *&quot;decides what M4 builds&quot;*. It is now **&quot;decides whether there is a product&quot;**, because the coding engine&#39;s primary input is the **unreconciled bank statement line** — the thing that tells us a transaction needs coding at all. `prd.md` § 2 states in its own words that those are **not available from the public Accounting API**, and the workaround it named was the spike&#39;s browser extraction, which Xero&#39;s terms now **prohibit** (§5.4). 👉 **Add a question to the draft before sending: is there a restricted or premium bank-statement endpoint, and on what terms?** Draft otherwise ready at `docs/m2-ready-to-send.md` §4. **Default if you don&#39;t: I proceed on the assumption there is no legal Xero route and design around open banking instead** — see the next card</div>
+        <div class="card-title">🔴 Send the Xero email — rewritten and ready, `docs/xero-email.md`</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">blocking</span><span class="tag tag-neutral">existential</span><span class="tag tag-neutral">accounting.reports.bankstatement.read</span><span class="tag tag-neutral">prd.md</span><span class="tag tag-neutral">Journals</span></div>
+        <div class="card-desc">✅ **Researched 19 Aug and the picture improved a lot.** 🎯 **Dext Precision reads unreconciled statement lines today**, via Xero&#39;s **Bank Statement Report**, using *&quot;a field in the bank statement data that states whether it&#39;s reconciled &#39;Yes/No&#39;&quot;* — so the route exists and a commercial competitor is in production on it. The mechanism is the **`accounting.reports.bankstatement.read`** scope plus a **signed security addendum** (2 April 2024). ⚠️ **But that scope is absent from the granular set Xero introduced on 2 March 2026**, and our app — created under granular scopes — doesn&#39;t hold it. 🔴 **`prd.md`&#39;s &quot;not available from the public Accounting API&quot; was wrong, and was drawn from our own scope list rather than Xero&#39;s capability.** So it reduces to one sharp question, now question 1 of the email: **is the addendum route still open to a new app, or is Dext grandfathered?** ✅ Open → sign, add scope, build. 🔴 Legacy-only → no API route to the product&#39;s primary input. **Email rewritten around the coding product; the `Journals` and browser-automation questions dropped.**</div>
       </div>
       <div class="card">
-        <div class="card-title">🤔 Worth 20 minutes: can we read the bank instead of Xero?</div>
-        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">architecture</span><span class="tag tag-neutral">unverified</span><span class="tag tag-neutral">BankTransactions</span></div>
-        <div class="card-desc">⚠️ **My suggestion, nothing checked yet.** If Xero will not expose unreconciled statement lines, the way out may be to stop asking Xero for them: read the client&#39;s bank feed directly through **NZ open banking (Akahu or equivalent)**, code it, then create the transaction in Xero via `BankTransactions` — which Xero reconciles against its own statement line. **It sidesteps the restriction rather than negotiating with it, and it is the only option that does.** Unknown: API surface, per-client cost, consent model, and whether Colab&#39;s clients would wear another authorisation. 👉 Worth asking Dave whether clients would tolerate a bank authorisation — he will know instantly</div>
+        <div class="card-title">🔴 Bank rules in the API — tested, dead, don&#39;t re-propose</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">architecture</span><span class="tag tag-neutral">closed</span></div>
+        <div class="card-desc">The elegant version of this product was **&quot;Cadence derives and maintains each client&#39;s Xero bank rules and lets Xero apply them&quot;** — which fits the diagnosis exactly, since the rule engine loses on *operations* not capability. **It is impossible: bank rules are not exposed by the Xero API and the feature requests are marked declined.** Recorded so the idea doesn&#39;t get re-invented</div>
+      </div>
+      <div class="card">
+        <div class="card-title">✅ M3 is not blocked by the statement-line problem</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">unblocked</span><span class="tag tag-neutral">Xero-Access-Setup-Runbook.md</span></div>
+        <div class="card-desc">Xero Central publishes *&quot;Export a list of uncoded bank statement lines&quot;*, and our own `Xero-Access-Setup-Runbook.md` already documents the path — *Accounting → Bank accounts → [account] → Statements → export*. **A human can pull unreconciled lines today**, which is ordinary use rather than automation. **The accuracy test can start now; only the product needs the API answer.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">⚠️ Fix the existing Xero app — an hour, not a project</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">access</span><span class="tag tag-neutral">Colab Accountant Reconciliation</span><span class="tag tag-neutral">a10ab336-5151-443c-bb66-cce665c946d2</span><span class="tag tag-neutral">Invalid redirect_uri</span><span class="tag tag-neutral">.env</span><span class="tag tag-neutral">CREDENTIALS.rtf</span></div>
+        <div class="card-desc">✅ **We already have one:** `Colab Accountant Reconciliation`, app id `a10ab336-5151-443c-bb66-cce665c946d2`, web app / auth code, granular scopes, **1 of 5 connections used** with one pilot client already connected. 🔴 It is stuck on `Invalid redirect_uri` — **a config mismatch, not a Xero decision**; the registered redirect matches the script default, so the stray value is in `.env` or the web-app HTTPS-redirect rule. ⚠️ **Also move the client secret out of `CREDENTIALS.rtf`** — it is sitting in plaintext in the project root and needs to be in Keychain before a repo exists. 🔴 **Certification is a separate axis and would not have helped here:** tier gates *which endpoints*, certification gates *how many orgs* (50 → unlimited)</div>
       </div>
       <div class="card">
         <div class="card-title">🔴 Ask Dave for the ledgers — two things in one message, and it is M3&#39;s only hard blocker</div>
