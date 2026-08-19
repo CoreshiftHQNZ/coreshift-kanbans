@@ -17,10 +17,10 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M10 · The readback",
+  phase: "M10 · The controls a specialist presses",
   nextMilestone: {
-    name: "The first verdict — a prediction answered against its control, right or wrong",
-    date: "From 5 November · October's Search Console figures settle then and the machinery refuses by name until they do",
+    name: "The three things a specialist still cannot do without a terminal — record a verdict, sign off a prompt set, correct a frozen write",
+    date: "Inserted 2026-08-19 ahead of the readback, which cannot close before 5 November · none of these three waits on a calendar and all three block the handover too",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -111,8 +111,10 @@ module.exports = {
       // operate the tool — the handover milestone's doneWhen almost verbatim. The
       // duplication made M4 unclosable on a mail-provider config that has nothing
       // to do with the aggregator. The specialist test lives in the handover
-      // milestone and only there — M8 when this was written, M10 after two
-      // insertions since. The number moves; the rule does not.
+      // milestone and only there — M8 when this was written, M12 after four
+      // insertions since (M5, M8, M9, and the in-app controls milestone). It was
+      // left reading M10 through two of those; corrected 2026-08-19. The number
+      // moves; the rule does not.
       doneWhen: "A ranked work plan for one real client, merged from every finding source, moves to approved in the app — every item carrying its rationale and its originating source",
       status: "done",
     },
@@ -306,10 +308,76 @@ module.exports = {
     },
     {
       id: "M10",
+      name: "The controls a specialist presses",
+      // Inserted 2026-08-19 on Ricky's call, the day M9 landed. Fourth time this
+      // split has been made and the fourth time for the same reason: M7 was split
+      // from its verification, M8 was inserted because `shipped_at` had to be
+      // written while the work was happening rather than reconstructed in
+      // November, M9 was split because the verdict machinery was buildable and the
+      // verdict was not — and the readback still cannot close before 5 November.
+      // That is eleven weeks. A milestone nobody can move is how a board starts
+      // overstating progress, which is the one failure it has no defence against.
+      //
+      // What fills it is not filler. All three gaps were found by building M8 and
+      // M9, all three are in-app, none waits on a calendar, and every one of them
+      // blocks the handover milestone — "a specialist other than Ricky runs a full
+      // monthly cycle unaided" — as hard as it blocks the readback:
+      //
+      // 1. A verdict cannot be recorded from the app at all. `predictions` has no
+      //    `verified_by`, so a verdict pressed in the app could not be attributed,
+      //    while every other frozen write here carries a name: `reports.
+      //    published_by`, `work_items.owner_id`, `work_plans.approved_by`. So the
+      //    single event the readback exists to produce happens at somebody's
+      //    terminal. One column — written from the verified session and never from
+      //    a request body, exactly as `owner_id` is — and one endpoint.
+      //
+      // 2. Prompt sign-off is still a CLI flag. `npm run probes --review <email>`
+      //    is the only way to sign a prompt set off. It has demanded a real
+      //    identity since M6, so it is correct; it is just not a surface, and a
+      //    specialist who cannot sign off a prompt set in the app cannot run a
+      //    cycle unaided. It has sat on the Parking Lot since M6 carrying a note
+      //    saying it should be built alongside M8 or M9 rather than discovered in
+      //    the handover. This is that, one milestone later than the note asked.
+      //
+      // 3. Three frozen writes and no correction path: a published report, a
+      //    recorded shipment, and — since M9 — a written verdict. One design and
+      //    three call sites, already specified on the Parking Lot: a superseding
+      //    row rather than an edit, the original left on the record, the
+      //    correction naming who made it and why, and every reader taking the
+      //    latest. The cost of deferring it rises with each frozen write added,
+      //    and M9 added the one with the highest stakes — an algorithm update
+      //    discovered after a verdict cannot be added to its confounders.
+      //
+      // ⚠️ The doneWhen is three clauses where the rule asks for one observable
+      // event, and that is a real weakening rather than an oversight. The
+      // milestone is three named gaps; it is bounded by that list and by nothing
+      // else, and anything found inside it that is not on that list is a card.
+      //
+      // ⚠️ Ends on a human act, like M7's publish and M8's shipment. Two of the
+      // three controls are gates, and walking through a gate as Ricky to prove it
+      // is shut is the failure this product exists to make impossible.
+      //
+      // ⚠️ Nothing in here may write a verdict for `a3e5a8a7`. The in-app verdict
+      // control is proved on the `app-check` fixture over a month that has already
+      // closed, exactly as M9 proved the writer — which needs a third fixture
+      // prediction, answerable and unanswered, because the fixture's only closed
+      // month already carries a frozen verdict. Storepro stays refused by name
+      // until 2026-11-05 and its outcome stays null.
+      doneWhen: "On a deployed environment a specialist signs off a prompt set and records a verdict in the app, both attributed to their own verified session, and a correction supersedes one of this system's frozen writes with the original still readable on the record",
+      status: "current",
+    },
+    {
+      id: "M11",
       name: "The readback",
       // Added 2026-08-14 when M7 was split; renumbered from M8 on 2026-08-15 when
-      // the shipping record was inserted ahead of it, and from M9 on 2026-08-19
-      // when the verdict machinery was split out ahead of it. What is left here is
+      // the shipping record was inserted ahead of it, from M9 on 2026-08-19 when
+      // the verdict machinery was split out ahead of it, and from M10 later the
+      // same day when the in-app controls were inserted ahead of it too.
+      //
+      // 🔒 **Blocked on a calendar and on nothing else**, which is why it is not
+      // the current milestone despite being next. It cannot open usefully before
+      // 5 November. It is on the board under Blocked rather than In Progress so
+      // that the column says what is true: no work on it can move. What is left here is
       // the verdict and only the verdict — every input it reads is M9's, so this
       // milestone spends eleven weeks waiting on a calendar and nothing else.
       // This is the half of the loop that
@@ -339,11 +407,16 @@ module.exports = {
       // all, and if it ships after 2026-09-03 October contains days from before
       // the change.
       doneWhen: "A recorded prediction is verified against its matched control and the report states what actually happened, including when the answer is that we were wrong",
-      status: "current",
+      status: "planned",
     },
     {
-      id: "M11",
+      id: "M12",
       name: "Handover to the team",
+      // ⚠️ Renumbered M11 → M12 on 2026-08-19 when the in-app controls milestone
+      // was inserted. Three of its blockers moved into that milestone with it —
+      // in-app prompt sign-off, an attributable verdict control, and a correction
+      // path — so this one got shorter rather than further away.
+      //
       // ✅ The hard prerequisite is now met. Postmark was wired on 2026-08-14
       // (smtp.postmarkapp.com, sender hello@growthpartners.co.nz) and the send
       // rate limit raised from 2/hour to 100/hour. mal@growthpartners.co.nz — a
@@ -404,15 +477,16 @@ module.exports = {
       status: "in-progress",
       title: "Phase 3",
       subtitle: "Close the loop",
-      window: "In progress · M8 landed 2026-08-19 — the first shipment is on the record and the drift check reads it; M9 builds everything the verdict needs, M10 reads it once October's figures are final on 5 November",
+      window: "In progress · M8 and M9 both landed 2026-08-19 — the shipment is on the record, the drift check reads it, and a prediction can now be answered against its control or refused by name. M10 puts the controls in the app; M11 reads the verdict back once October's figures are final on 5 November",
       desc: "Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.",
       deliverables: [
         "✅ Readback windows fixed before a change, not chosen after — derived from the approval timestamp, immutable by trigger",
         "✅ Matched control-set constructor — demanded by every repo, built by none. It refuses twelve of thirteen items and says why",
         "✅ Monthly report: what we did, why, and what we expected — predictions shown pending with their readback windows, behind a ten-check publication gate",
         "✅ The shipping record: a specialist marks work done — with evidence, attributed, frozen — and the system re-derives the readback window from that date and says whether it landed in time",
-        "→ M9 · Delta-vs-control arithmetic, the verification writer, and an algorithm-update ledger that flags confounders before the window it judges is readable",
-        "M10 · The verdict: what actually happened, including when the answer is that we were wrong — final 5 November",
+        "✅ Delta-vs-control arithmetic, the verification writer, and an algorithm-update ledger that flags confounders before the window it judges is readable — and refuses a verdict over a lead nobody has confirmed",
+        "→ M10 · The controls a specialist presses: an attributable verdict button, prompt sign-off in the app, and one correction path for all three frozen writes",
+        "M11 · The verdict: what actually happened, including when the answer is that we were wrong — final 5 November",
       ],
     },
     {
@@ -420,7 +494,7 @@ module.exports = {
       status: "future",
       title: "Phase 4",
       subtitle: "Hand to the team",
-      window: "M11 · the real test",
+      window: "M12 · the real test",
       desc: "The tool is finished when a specialist who didn't build it runs a client month unaided. Until then it's Ricky's tool, not the team's.",
       deliverables: [
         "Specialist-facing onboarding flow with access checklist",

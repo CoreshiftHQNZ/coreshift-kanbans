@@ -1,54 +1,62 @@
 # Engine Optimization — Handover
-_2026-08-19 · closes M9 · opens the decision about what fills the eleven weeks · arc 11_
+_2026-08-19 · closes M9 · decision taken: M10 inserted ahead of the readback · arc 12_
+_Amended 2026-08-19 after the decision session. M9's record below is unchanged._
 
 ## ▶️ Paste this into a new session
 
 ```
-Engine Optimization — decide what's next after M9
+Engine Optimization — M10 · The controls a specialist presses
 
-Read coreshift-kanbans/engine-optimization/HANDOVER.md, then docs/verification.md.
-`server/verify/verify.ts` and `server/predict/windows.ts` are the two file headers
-that explain why this decision exists at all.
+Read coreshift-kanbans/engine-optimization/HANDOVER.md, then the
+"There is no button in the app" section of docs/verification.md. The Parking Lot
+cards "A recorded shipment has no correction path" and "Re-issuing a published
+report" are the correction path's specification, not a backlog note — read both
+before designing one.
 
-M9 closed on 2026-08-19. The verdict machinery is built, exercised and live on
-staging: the delta-vs-control arithmetic, the verification writer, and the
-algorithm-update ledger. Storepro's prediction a3e5a8a7 is refused by name until
-2026-11-05 and nothing is written to its outcome.
+M10 was inserted on 2026-08-19 ahead of the readback, which cannot close before
+5 November. Three gaps, all in-app, all found by building M8 and M9, all blocking
+M12 as hard as they block M11:
 
-M10 is the verdict itself and it cannot close before 5 November. That is eleven
-weeks. This project has now split a milestone away from that date three times for
-exactly this reason, so do not open M10 and sit on it.
+1. A verdict cannot be recorded from the app. `predictions` has no `verified_by`,
+   so a verdict pressed in the app could not be attributed — and every other
+   frozen write here carries a name (`reports.published_by`,
+   `work_items.owner_id`, `work_plans.approved_by`). One column, written from the
+   verified session and never from a request body exactly as `owner_id` is, one
+   endpoint, and the control in the Verification panel that today says why there
+   isn't one.
 
-Decide what fills the gap, then update milestones[] in kanban.config.js and emit
-the work prompt for whatever wins. Three real options, recommendation first:
+2. Prompt sign-off is still a CLI flag. `npm run probes --review <email>` is the
+   only way to sign a prompt set off. It has demanded a real identity since M6,
+   so it is correct — it is just not a surface, and a specialist who cannot sign
+   off a prompt set in the app cannot run a cycle unaided.
 
-A. RECOMMENDED — an enablement milestone before the verdict. Three gaps, all
-   in-app, all found by building M8 and M9: a verdict cannot be recorded from the
-   app at all (predictions has no verified_by column, so it could not be
-   attributed, and every other frozen write here carries a name); prompt sign-off
-   is still a CLI flag; and there is no correction path for a published report, a
-   recorded shipment or a verdict — one design, three call sites. All three are
-   M11's blockers as well as M10's, none is calendar-locked, and the eleven weeks
-   get spent rather than idled. Cost: about a week.
+3. There is no correction path for a published report, a recorded shipment or a
+   verdict. One design, three call sites: a superseding row rather than an edit,
+   the original left on the record, the correction naming who made it and why,
+   every reader taking the latest.
 
-B. Build M10's buildable half now — make the report carry the verdict, including
-   when the answer is that we were wrong. A publication check, its twin in the
-   newest migration's required-check array, and a REPORT_METHOD_VERSION bump.
-   Real work, roughly two days, and it leaves M10 open for eleven weeks, which is
-   the exact pattern the board has refused three times.
+doneWhen: On a deployed environment a specialist signs off a prompt set and
+records a verdict in the app, both attributed to their own verified session, and
+a correction supersedes one of this system's frozen writes with the original
+still readable on the record.
 
-C. Add a second client. Storepro is the only property behind all four of M6's
-   matching thresholds. This is a commercial call, not a build one.
+It ends on a human act. Do not press any of the three as Ricky — build them,
+deploy to staging, and hand him the URLs. `.claude/app-as-me` runs a local server
+signed in as a real auth.users row so a gate can be *looked at* without being
+pressed. Use it to look.
 
-Whatever wins: October must be ingested before the verdict can run at all. The
-arithmetic refuses a month with no complete snapshot rather than reading it as
-zero, so `npm run ingest -- --client storepro --month 2026-10` on or after
-5 November is a prerequisite, not a detail.
+Prove the verdict control on the `app-check` fixture over a month that has
+already closed. That needs a THIRD fixture prediction — the fixture's only closed
+month (2026-07) already carries the frozen verdict M9 wrote. `npm run fixture --
+--seed` drops and recreates the client, which is how Ricky's c1def139 shipment was
+lost last time; if you re-seed, say so in the handover.
 
-Do not write a verdict for a3e5a8a7 before 2026-11-05. Do not let anything in
-windows.ts read the clock. Don't add a publication check to compose.ts without
-adding it to the required-check array in the newest migration declaring one, and
-don't change the composer or a check without bumping REPORT_METHOD_VERSION.
+Do not write a verdict for a3e5a8a7 before 2026-11-05, and never write
+`too_early` — the database refuses it and the reason is the `outcome is null`
+work queue. Do not let anything in windows.ts read the clock. Don't add a
+publication check to compose.ts without adding it to the required-check array in
+the newest migration declaring one, and don't change the composer or a check
+without bumping REPORT_METHOD_VERSION.
 
 Check the staging deploy before you trust it. `railway deployment list --json` —
 `meta.queuedReason` names a stall the plain list hides, and it is the only place
@@ -100,24 +108,35 @@ Give me the 5-line orientation, then get on with it.
 
 ## 👉 On you
 
-1. **Decide what fills the eleven weeks.** The paste-block above puts three real
-   options in front of a fresh session with the recommendation first. **Default if
-   you say nothing:** option A — the three in-app gaps, because they block M11 as
-   well as M10 and none of them waits on a calendar.
-2. **Tell the team about 3 September.** Unchanged and still the sharpest date on
+1. ~~**Decide what fills the eleven weeks.**~~ **Taken 2026-08-19 — option A.** A new
+   **M10 · The controls a specialist presses** is inserted ahead of the readback,
+   which is renumbered M11 and sits under **Blocked** on the board because it is
+   blocked on a calendar and on nothing else. Handover is M12; the arc is 12.
+   Say so if you want it reversed — nothing has been built yet.
+
+2. **The correction path has one decision in it that is yours, and it is
+   customer-facing.** The *shape* is settled and has been since M8: a superseding
+   row, never an edit. What is not settled is what a correction to a report a
+   client has already read actually **does** — is the corrected report re-issued
+   to them, or is it corrected in the app with the original still standing as the
+   thing they received? That is positioning, not architecture. **Default if you
+   say nothing:** in-app only, the original stays the document of record, and
+   nothing is sent — because nothing in this system emails or exports a report
+   today and adding that quietly is the bigger change.
+3. **Tell the team about 3 September.** Unchanged and still the sharpest date on
    the board: it is the last day *"Question content is marked up as such"* can be
    recorded as shipped and still leave October able to answer anything. Ship on
    the 4th and November's first verdict comes back `confounded` — no answer rather
    than a wrong one, at the cost of a full cycle. **Nothing chases it.**
    **Default:** the work slips and November is inconclusive.
-3. **The fixture's shipment row went with the re-seed.** M9 needed a prediction
+4. **The fixture's shipment row went with the re-seed.** M9 needed a prediction
    over a month that had already closed so the writer could be pressed at all,
    which meant recreating the fixture client, which took `c1def139` — the shipment
    *you* recorded on 18 August — with it. Nothing depends on it; the gate was
    proven then and the evidence is in M8's card. It was not re-recorded because
    that would attribute a delivery to you that you did not press. **Default:** the
    fixture stays at 0 shipped; press it in the app if you want it back.
-4. **A second client, when you're ready.** Still not blocking, still the only
+5. **A second client, when you're ready.** Still not blocking, still the only
    thing that would test M6's four matching thresholds against more than one
    property. **Default:** Storepro-only.
 
@@ -204,8 +223,10 @@ Everything claimed above has named evidence except this.
   over `2026-10` for the shipping gate and one over the closed month `2026-07`
   carrying the only verdict in the database (`held` · `promote`, frozen).
   **`algorithm_updates` holds six verified 2026 entries.**
-- **The verdict's inputs are all present.** What M10 still needs is October
-  ingested, one write, and a report that carries the answer.
+- **The verdict's inputs are all present.** What **M11** still needs is October
+  ingested, one write, and a report that carries the answer — and it cannot start
+  before 5 November. **M10 is what happens in between**, and none of it is
+  calendar-locked.
 
 ### What M9 built, and where
 
