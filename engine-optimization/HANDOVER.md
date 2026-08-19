@@ -1,46 +1,86 @@
 # Engine Optimization — Handover
-_2026-08-19 · closes M10 · M11 is current and blocked on a calendar until 5 November · arc 12_
+_2026-08-19 · closes M10 · **M12 is current**, brought forward ahead of M11, which stays blocked until 5 November · arc 12_
 
 ## ▶️ Paste this into a new session
 
 ```
-Engine Optimization — decide what's next after M10
+Engine Optimization — M12: a specialist other than Ricky runs a full monthly cycle unaided
 
-M10 landed on 2026-08-19, the day it was inserted. M11 — the readback — is now
-current and cannot start before 2026-11-05, because that is the day Storepro's
-October Search Console figures become final. Every input it needs already
-exists. So the same question M10 was created to answer has come back, with
-eleven weeks in front of it again.
+M12 was brought forward on 2026-08-19, ahead of M11. M11 is blocked on the
+calendar until 2026-11-05 and no work on it can move. M12 is the last milestone
+in the arc, it is not calendar-locked, and its last three blockers became in-app
+controls in M10 on the same day.
 
-Read coreshift-kanbans/engine-optimization/HANDOVER.md first, then the three
-options below. Decide one, update `milestones[]` in kanban.config.js, and emit
-the work prompt for whichever wins. Do not build anything this session.
+doneWhen: A specialist other than Ricky runs a full monthly cycle end to end
+without help.
 
-Option A — bring M12 forward: a specialist other than Ricky runs a full cycle
-unaided. RECOMMENDED. M10 was built for exactly this: the three things that
-still needed a terminal were named in M10's card as blocking M12 as hard as
-they blocked M11, and all three are now controls in the app. M12 is not
-calendar-locked, it is the last milestone in the arc, and running it now turns
-eleven idle weeks into the only test that has never been run — the tool in
-somebody else's hands. It also feeds M11: whatever a real specialist trips over
-in August is fixed before November's verdict, rather than discovered on the day
-the answer is due. Cost: needs a real specialist's calendar time, and it will
-surface work that becomes cards. Risk: it may find that a cycle cannot be run
-unaided, which is the finding, not a failure.
+FIRST — work out which half of this milestone you are in:
 
-Option B — a maintenance milestone from what This Week has accumulated: the
-UTC shipping date that reads a day behind in New Zealand, the capacity line
-coming off the next plan, the acceptance-criterion decidability check, the
-subdomain split in the competitor cohort. Cheap, real, all of it already
-written up. Cost: none of it is blocking anything, and a milestone made of
-unrelated fixes has no `doneWhen` worth the name — which is the failure mode
-the working model warns about.
+  before ~2026-09-05   you are in PREP. Do the prep list. Do not run the test.
+  on/after 2026-09-07  you are running THE TEST. Build nothing. Observe only.
 
-Option C — stop and wait for 5 November. Honest, and it makes the board honest
-too. Cost: eleven weeks of nothing, and the 3 September shipping deadline goes
-unwatched by anybody except a person remembering it.
+Read coreshift-kanbans/engine-optimization/HANDOVER.md, then README.md, then
+the board's In Progress column.
 
-Ricky's default if he says nothing: Option A.
+─── PREP: now until Storepro's August figures are final, ~5 September ─────────
+
+The test cannot run before then. A full monthly cycle needs a month to run over;
+Storepro's cycles are Apr-Jul with 2026-07 published and there is no 2026-08
+cycle. Re-running July would be a rehearsal. Do not.
+
+Four cards, and not a fifth. All four are already written up in This Week, and
+all four are things the specialist will actually touch:
+
+  1. Label the UTC shipping date, do not shift it. windows.ts is UTC and
+     clock-free by design and the drift check compares UTC to UTC; showing an NZ
+     date beside a UTC comparison puts two dates from one row on one screen.
+  2. A plan built with no --capacity must say on the plan itself that the ranking
+     is a relative-cost order and the month's scope is the team's to draw. Check
+     what compose.ts:633 emits when nothing is declared -- "no limit stated" and
+     "no limit" are different sentences and this product exists to keep them
+     apart. Do not apply it to 70337c95.
+  3. Report a competitor by the domain that was declared, not the host that was
+     found. offer.automate-x.nz and automate-x.nz are one competitor and today
+     appear as two, in a client-facing number.
+  4. Assert that an authored action never offers a fix that makes its own
+     acceptance criterion unobservable. Alongside the existing test:actions.
+
+One decision has to be made in prep, before the specialist's plan is approved:
+
+  RED. Our own concurrent work is not a confounder anywhere in this system.
+  server/verify/verify.ts assembles confounders from the prediction's own
+  shipping drift and from verified Google algorithm updates, and from nothing
+  else. If the September cycle ships anything onto a3e5a8a7's twelve
+  control-matched pages, October measures two changes and the verdict comes back
+  clean-looking and wrong -- worse than confounded. Either keep those twelve URLs
+  out of the September plan (they are readable off the prediction), or make the
+  verdict name any shipped work_item whose targets intersect the prediction's
+  scope. Decide before approval, not after the work ships.
+
+Nothing else gets pre-fixed. If it was not already a card on 2026-08-19, it is a
+finding for the specialist to hit.
+
+─── THE TEST: week of 2026-09-07 ─────────────────────────────────────────────
+
+Mal (mal@growthpartners.co.nz) runs Storepro's August cycle end to end, in the
+app: ingest August, audit, propose and sign off a prompt set, plan, predict,
+record the shipping position, publish the report. The prompt sign-off is the one
+M10 control never exercised on real data.
+
+Your job is to observe and record. It is NOT to help.
+
+  - Every point where Mal had to ask anybody anything is a finding. Write it down
+    verbatim, with what he was looking at when he asked.
+  - The doneWhen is not met if there were any. Do not round up.
+  - If a cycle turns out not to be runnable unaided, that is the finding and not
+    a failure. It becomes cards and the test re-runs.
+  - Do not press anything for him, ever. The gates are the product.
+  - Nothing in this milestone may write a verdict for a3e5a8a7. It is refused by
+    name until 2026-11-05 and its outcome stays null.
+
+Mal's writes are real and frozen: a real approved plan and real predictions on
+Storepro. Nothing leaves the app -- no PDF, no email, no export -- so a report he
+publishes is published in the app and Storepro receives nothing automatically.
 ```
 
 ## Where we are — for Ricky
@@ -89,13 +129,17 @@ Ricky's default if he says nothing: Option A.
 
 ## 👉 On you
 
-1. **Decide what fills the eleven weeks — again.** The paste-block above is a
-   decision prompt, not a work prompt, because M11 genuinely cannot start until
-   5 November and three different things could reasonably come next.
-   **Recommendation: bring M12 forward** — a specialist other than you runs a full
-   cycle unaided. M10 was built for it, it is not calendar-locked, and what it
-   finds gets fixed before November rather than on the day the answer is due.
-   **Default if you say nothing:** Option A, M12 brought forward.
+1. ✅ **Decided 2026-08-19 — M12 comes forward, which was your default.** What is
+   left on you is one thing: **book Mal for the week of 7 September.** The test
+   cannot run earlier — a full monthly cycle needs a month to run over, and
+   Storepro's August Search Console figures are not final until around
+   5 September. That is 2.5 weeks out rather than eleven, which is still the
+   argument for bringing it forward, and the weeks in between are prep on four
+   named cards. Budget most of a day; it is a full cycle, not a walkthrough, and
+   **he must not be helped during it** — that is the whole measurement.
+   **Default if you say nothing:** the week passes, October becomes the next
+   opportunity, and M12 lands after M11 rather than before it, which is the
+   outcome this decision existed to avoid.
 2. **Tell the team about 3 September.** Unchanged, and now the sharpest thing on
    the board by a distance: it is the last day *"Question content is marked up as
    such"* can be recorded as shipped and still leave October able to answer
