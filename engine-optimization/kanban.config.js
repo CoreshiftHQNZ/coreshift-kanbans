@@ -17,10 +17,10 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M11 · The readback — blocked on a calendar until 5 November",
+  phase: "M12 · Handover to the team — running ahead of M11, which is blocked until 5 November",
   nextMilestone: {
-    name: "Answer Storepro's prediction against its matched control, and say so in the report even if the answer is that we were wrong",
-    date: "Cannot start before 2026-11-05 · every input is built and exercised · what fills the eleven weeks is a decision, and the handover carries it",
+    name: "A specialist other than Ricky runs a full monthly cycle end to end without help",
+    date: "Test runs the week of 2026-09-07, when Storepro's August figures are final · until then, four named cards the specialist will actually touch · M11's verdict still waits for 2026-11-05",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -422,12 +422,14 @@ module.exports = {
       // all, and if it ships after 2026-09-03 October contains days from before
       // the change.
       doneWhen: "A recorded prediction is verified against its matched control and the report states what actually happened, including when the answer is that we were wrong",
-      // Current from 2026-08-19, and blocked on a calendar rather than on work:
-      // `a3e5a8a7`'s window is 2026-10 and its figures are not final until
-      // 2026-11-05. Every input exists — the arithmetic, the ledger, the writer,
-      // and now the control that records it. What it still needs is October
-      // ingested, one press, and a report that carries the answer.
-      status: "current",
+      // Was current from 2026-08-19; **handed the current slot to M12 later the
+      // same day** and blocked on a calendar rather than on work. `a3e5a8a7`'s
+      // window is 2026-10 and its figures are not final until 2026-11-05. Every
+      // input exists — the arithmetic, the ledger, the writer, and now the
+      // control that records it. What it still needs is October ingested, one
+      // press, and a report that carries the answer, and none of the three can
+      // be started early. It keeps its number: see the note on M12.
+      status: "planned",
     },
     {
       id: "M12",
@@ -443,8 +445,67 @@ module.exports = {
       // specialist who is not Ricky — has signed in and approved a plan, so the
       // "can a second human use this at all" question is answered. What remains is
       // the real test: a full cycle, end to end, unaided.
+      //
+      // ── Brought forward 2026-08-19, ahead of M11, on Ricky's stated default ──
+      //
+      // Fifth time the eleven-week calendar lock has forced this call, and the
+      // first time the answer is a milestone that already existed rather than a
+      // newly inserted one. M11 cannot open before 2026-11-05. M12 is the last
+      // milestone in the arc, it is not locked to November, and all three of the
+      // things that used to block it — in-app prompt sign-off, an attributable
+      // verdict control, and a correction path — became controls in M10 on
+      // 2026-08-19.
+      //
+      // ⚠️ **It cannot start today either, and the handover that recommended it
+      // did not say so.** A full monthly cycle needs a month to run over.
+      // Storepro's cycles are Apr–Jul with 2026-07 `published`; there is no
+      // 2026-08 cycle, and August's Search Console figures are not final until
+      // ~5 September on this system's own five-day convention — the same
+      // convention that makes 2026-10 answerable on 2026-11-05. Re-running the
+      // published July cycle would be a rehearsal, refused by name elsewhere in
+      // this project. **So the test runs the week of 2026-09-07** — two and a
+      // half weeks out rather than eleven, which is still the argument for
+      // bringing it forward, just not the argument as it was written.
+      //
+      // **What the gap to 7 September is for, and it is bounded:** the four
+      // already-written cards in `This Week` that a specialist running a cycle
+      // will actually touch — the UTC shipping-date label, the plan built with
+      // no declared capacity, the subdomain split in the competitor cohort, and
+      // the acceptance-criterion decidability check. Fixing a *known, written-up*
+      // finding before a usability test is not hiding it; it stops the test
+      // spending its budget rediscovering what is already on the board.
+      // ⚠️ **Nothing else gets pre-fixed.** If it was not already a card on
+      // 2026-08-19 it is a finding for the specialist to hit, and pre-empting it
+      // is how this becomes a polish milestone that answers nothing.
+      //
+      // ⚠️ **The session that runs the test must not help.** That is the one way
+      // a handover test gets laundered into a pass. Claude observes and records:
+      // every point where the specialist had to ask anybody anything is a
+      // finding, and the doneWhen is not met if there were any. If it turns out a
+      // cycle cannot be run unaided, that is the finding and not a failure — the
+      // findings become cards and the test is re-run.
+      //
+      // ✅ **It feeds M11 rather than competing with it.** Whatever a real
+      // specialist trips over in September is fixed before November's verdict,
+      // rather than discovered on the day the answer is due.
+      //
+      // 🔴 **It creates one interaction nothing currently checks.** If the cycle
+      // the specialist runs ships work on Storepro in September or October that
+      // touches any of `a3e5a8a7`'s twelve control-matched pages, October
+      // measures two changes and the verdict machinery will not say so:
+      // `server/verify/verify.ts` assembles confounders from the prediction's own
+      // shipping drift and from verified Google algorithm updates, and from
+      // nothing else. **Our own concurrent work on the same pages is not a
+      // confounder anywhere in this system.** Carded, not fixed here.
+      //
+      // 🔒 **Numbering deliberately not swapped with M11.** The M-numbers encode
+      // the order this system needed these things, and the four past renumbers
+      // were all insertions that preserved relative order. A swap would rewrite
+      // every historical reference in the docs and the board to buy a cosmetic
+      // ordering. M12 runs first, M11 keeps its number, and the phase string
+      // says so out loud.
       doneWhen: "A specialist other than Ricky runs a full monthly cycle end to end without help",
-      status: "planned",
+      status: "current",
     },
   ],
 
@@ -497,7 +558,7 @@ module.exports = {
       status: "in-progress",
       title: "Phase 3",
       subtitle: "Close the loop",
-      window: "In progress · M8 and M9 both landed 2026-08-19 — the shipment is on the record, the drift check reads it, and a prediction can now be answered against its control or refused by name. M10 puts the controls in the app; M11 reads the verdict back once October's figures are final on 5 November",
+      window: "In progress · M8, M9 and M10 all landed 2026-08-19 — the shipment is on the record, the drift check reads it, a prediction can be answered against its control or refused by name, and all three controls are in the app. M11 reads the verdict back once October's figures are final on 5 November, and nothing about it can move until then",
       desc: "Record the prediction, build the control, check it next cycle, and say so in the report. This is the part clients pay a retainer for and the part nothing else does.",
       deliverables: [
         "✅ Readback windows fixed before a change, not chosen after — derived from the approval timestamp, immutable by trigger",
@@ -505,16 +566,16 @@ module.exports = {
         "✅ Monthly report: what we did, why, and what we expected — predictions shown pending with their readback windows, behind a ten-check publication gate",
         "✅ The shipping record: a specialist marks work done — with evidence, attributed, frozen — and the system re-derives the readback window from that date and says whether it landed in time",
         "✅ Delta-vs-control arithmetic, the verification writer, and an algorithm-update ledger that flags confounders before the window it judges is readable — and refuses a verdict over a lead nobody has confirmed",
-        "→ M10 · The controls a specialist presses: an attributable verdict button, prompt sign-off in the app, and one correction path for all three frozen writes",
-        "M11 · The verdict: what actually happened, including when the answer is that we were wrong — final 5 November",
+        "✅ The controls a specialist presses: an attributable verdict button, prompt sign-off in the app, and one correction path for all three frozen writes — pressed on a deployed environment by a person, not described",
+        "🔒 M11 · The verdict: what actually happened, including when the answer is that we were wrong — blocked on the calendar until 5 November, with M12 running ahead of it",
       ],
     },
     {
       key: "phase-4",
-      status: "future",
+      status: "in-progress",
       title: "Phase 4",
       subtitle: "Hand to the team",
-      window: "M12 · the real test",
+      window: "In progress · M12 brought forward 2026-08-19 ahead of M11 · the test runs the week of 2026-09-07, when Storepro's August figures are final",
       desc: "The tool is finished when a specialist who didn't build it runs a client month unaided. Until then it's Ricky's tool, not the team's.",
       deliverables: [
         "Specialist-facing onboarding flow with access checklist",
