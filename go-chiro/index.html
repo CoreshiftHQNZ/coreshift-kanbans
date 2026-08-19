@@ -950,9 +950,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">6</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Custom SMTP on PRODUCTION — before go-live</div>
+        <div class="card-tags"><span class="tag tag-blocked">blocks go-live</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">R6</span></div>
+        <div class="card-desc"><strong>Only staging got custom SMTP.</strong> Verified 2026-08-20 by reading both projects: production <code>movfypgjqdosvacrinbq</code> has <code>smtp_host</code> <strong>unset</strong> and <code>rate_limit_email_sent = 2</code>; staging has Postmark and 30. On the built-in service production is capped at <strong>2 emails/hour</strong> and <strong>refuses delivery to anyone who is not a member of the Supabase project</strong> &mdash; so patient invites would fail at go-live, silently, exactly as they did on 19 Aug. Nothing is broken today because the production app is dark. <strong>Fix:</strong> Authentication &rarr; SMTP Settings, host <code>smtp.postmarkapp.com</code>, port 587, Postmark Server API token as both username and password, sender <code>contact@go-chiro.com</code>. Then raise Rate Limits &rarr; emails. Claude will not write a credential into infrastructure unprompted, so this one is yours unless you explicitly ask.</div>
+      </div>
       <div class="card">
         <div class="card-title">Decide: voice notes &mdash; build, or redraw the diagram?</div>
         <div class="card-tags"><span class="tag tag-neutral">R5?</span><span class="tag tag-neutral">decision</span></div>
