@@ -17,10 +17,10 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M9 · The verdict machinery",
+  phase: "M10 · The readback",
   nextMilestone: {
-    name: "Everything the verdict needs, built before the month it reads exists",
-    date: "This week · the verdict itself is M10 and waits for 5 November · nothing brings that forward",
+    name: "The first verdict — a prediction answered against its control, right or wrong",
+    date: "From 5 November · October's Search Console figures settle then and the machinery refuses by name until they do",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -285,8 +285,24 @@ module.exports = {
       // milestone may write `outcome`, `actual_value` or `control_value` for
       // a3e5a8a7 — including `too_early`, which would be honest and would still
       // empty the work queue that the `outcome is null` index exists to keep.
+      //
+      // Closed 2026-08-19. Met on all three clauses and checked mechanically
+      // rather than from recollection: the arithmetic produced a full verdict
+      // over Storepro's real June (failed · unproven, -6.1 points against the
+      // matched control) using a3e5a8a7's own frozen pairs, with the May 2026
+      // core update and the June 2026 spam update named from the ledger; and
+      // a3e5a8a7 itself was refused by name with its 2026-11-05 date in both the
+      // CLI and the app, with outcome/decision/verified_at/actual_value/
+      // control_value/confounders all read back null out of Postgres afterwards.
+      // 223 tests across 8 suites, tsc --noEmit exit 0, staging deploy ee298f23
+      // SUCCESS with the served bundle downloaded and grepped.
+      //
+      // Two decisions taken inside it and enforced in 0013, both reversible only
+      // by migration: a verdict is frozen once written (same grounds as a
+      // published report and a recorded shipment), and `too_early` is never
+      // written at all because it would empty the `outcome is null` work queue.
       doneWhen: "The verification arithmetic produces a complete verdict from real data on a closed month — the delta against a matched control, with every algorithm update overlapping the window named from the ledger — while a3e5a8a7's own verdict is refused by name as unanswerable until 2026-11-05 and nothing is written to its outcome",
-      status: "current",
+      status: "done",
     },
     {
       id: "M10",
@@ -307,11 +323,23 @@ module.exports = {
       // the outcome it was built to be able to survive: `failed` + `keep_testing`
       // is a legitimate pair, and `confounded` is a real outcome rather than a
       // euphemism.
-      // ⚠️ It now has a hard input it did not have before: `confounded` is only
-      // decidable if something recorded when the work shipped. That is M8, and it
-      // has to land before the window closes rather than alongside the verdict.
+      //
+      // ✅ Every input is now built and exercised (M8 the shipping record, M9 the
+      // arithmetic, the writer and the ledger). What is left is genuinely three
+      // things: ingest October once it settles — the arithmetic refuses a month
+      // with no complete snapshot rather than reading it as zero, so this is a
+      // prerequisite and not a detail; run the verdict once, frozen afterwards;
+      // and make the report carry the answer, which means a new publication
+      // check, its twin in the newest migration's required-check array, and a
+      // REPORT_METHOD_VERSION bump.
+      //
+      // ⚠️ Two things could still make this milestone close on `confounded`
+      // rather than on yes or no, and both are legitimate outcomes rather than
+      // failures: the FAQ item is below the capacity line and may not be done at
+      // all, and if it ships after 2026-09-03 October contains days from before
+      // the change.
       doneWhen: "A recorded prediction is verified against its matched control and the report states what actually happened, including when the answer is that we were wrong",
-      status: "planned",
+      status: "current",
     },
     {
       id: "M11",
