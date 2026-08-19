@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>6%</strong> complete</div>
-        <div><strong>2</strong>/31 cards done</div>
-        <div>Updated <strong>2026-08-19 02:02 UTC</strong></div>
+        <div><strong>12%</strong> complete</div>
+        <div><strong>4</strong>/33 cards done</div>
+        <div>Updated <strong>2026-08-19 02:20 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">2</div>
+        <div class="status-num">4</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -821,7 +821,7 @@
         <div class="status-label">Blocked</div>
       </div>
       <div class="status-stat status-this-week">
-        <div class="status-num">5</div>
+        <div class="status-num">4</div>
         <div class="status-label">This Week</div>
       </div>
       <div class="status-stat status-backlog">
@@ -902,6 +902,20 @@
             <div class="recent-desc">`core-ricky/cadence` was **a prototype built to prove a function was possible, not a foundation** — 43 commits in one week (2026-06-15 → 06-22), then dormant two months. It read like a shipped product (multi-tenant schema + RLS, a V1 dashboard with Prep → review attention → Run for real, team invites, the truth-sync reconcile loop, bulk post-back) and was initially planned as the thing GST would extend. Ricky&#39;s correction — it was a muck-around — changed the call, and **the clean rebuild is strictly better than the merge would have been.** A fresh Supabase project deletes the entire coupling problem at once: the additive-only migration constraint, the `verify-scope.ts` CI guard, the shared-schema review burden, **and** the single-use-Xero-refresh-token race between two services reading one token table. Nothing runs in parallel, so there&#39;s no half-finished port to strand. Renamed to **`cadence-spike`** and archived read-only, with a superseded banner pointing here; the *name* Cadence was kept for the product because a good name shouldn&#39;t go in the bin with the code. **Harvested as knowledge, not code:** the confidence rule (`consistent` / `conflicted` / `rare`), the payee-key normalisation, the proven result (8 of 26 lines auto-reconciled correctly, Woolworths/Kmart correctly deferred as conflicted), the schema shape as reference, and the operational lessons — truth-sync, the progress watchdog, payee grouping, Railway&#39;s `npm ci` optional-dep failure, the middleware relative-`Location` 500. **🔴 One honest cost of the clean break:** the exception engine&#39;s baseline was going to be the spike&#39;s live `coding_profiles`. It doesn&#39;t exist on a fresh build, so **the profile engine is now in scope as its own milestone (M5)** — previously assumed free. It&#39;s a fraction of the spike&#39;s scope, though: GST needs the *profile learning*, not the reconcile-and-auto-post machinery</div>
           </div>
         </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">📏 The GST101A box map, verified from IRD&#39;s own form — and four things the PRD didn&#39;t anticipate</div>
+            <div class="recent-desc">TASK-006 done, and the 🔴 &quot;do not implement from memory&quot; warning is discharged the right way: the forms were downloaded from IRD and text-extracted, then cross-checked against **IR375 (March 2026)**, the current edition of IRD&#39;s own guide. **The PRD&#39;s indicative numbering was correct** — Boxes 1–4 identification, 5–15 the return, with every derivation confirmed verbatim (`7 = 5−6`, `8 = 7×3÷23`, `10 = 8+9`, `12 = 11×3÷23`, `14 = 12+13`, `15 = |10−14|`). Four findings change the build: **(a) Boxes 9 and 13 are not ledger-derivable at all** — both read *&quot;from your calculation sheet&quot;*, i.e. manual GST adjustments — so they default to `traceable=false`, **and Boxes 10, 14 and 15 inherit non-traceability whenever either is non-zero.** The lower half of the return is only as traceable as its weakest input, and the engine has to propagate that. **(b) Imported goods are excluded from Box 11** and claimed as a Box 13 credit adjustment (IR375 p.33: *&quot;Do not include imported goods under purchases on your GST return&quot;*) — that is a real exception rule with a hard IRD citation and a likely error in a Xero-coded ledger, banked as `IMPORT_IN_BOX_11`. **(c) Box 15 is a magnitude plus a direction**, `refund`/`to_pay`/`nil` — a signed number can&#39;t render the form and silently loses the nil case. **(d) GST103B Part 1 is byte-for-byte the GST101A return**, so `return_type` decides whether Parts 2–3 apply, not which box map to use — **one engine serves both**, a real simplification to M6. Resolves `prd.md § 14 Q4`. Also recorded: **IR372 is a dead end** — the only published version is August 2010 and IRD files it under *&quot;before 1 April 2011&quot;*; IR375 Part 4 is the live authority on adjustments</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">📊 The coding-profile baseline is feasible — measured, not hoped</div>
+            <div class="recent-desc">The honest cost of the clean break was that M5&#39;s baseline no longer came free, and it was unknown whether Colab&#39;s ledgers could even support learning one. **They can.** Measured across **277,595 real transaction lines from 139 client ledgers**: **61.9% of lines sit under a payee with a single dominant historical coding, and only 8.2% have no baseline at all.** 129 of 139 clients (93%) have five or more consistent payees; **none have zero**; median 37 per client. 🔴 **The trap worth recording: weighted by *payee key* the consistent share looks like 26.5%** — because keys are dominated by a long tail of one-off suppliers. That understates real coverage by more than 2×, and quoting it would have made M5 look far weaker than it is. So `prd.md` FR-010&#39;s *&quot;a client with no profile cannot be swept&quot;* turns out to exclude essentially nobody. 🔴 **But the provenance is the finding that matters more:** every one of the 147 client records carries a `manual-*` tenant id, and `xero_connections` and `xero_tokens` are **both empty** — **the spike never made a single Xero API connection.** The data came in through a browser extract. That means field shapes will differ after a real API pull (`tax_type` as a proper enum rather than the UI label `&quot;GST&quot;`), the numbers must be re-measured in M7 rather than carried forward — and, per the Xero email above, the extract route itself is now in question. The 29.9% of lines under `conflicted` payees isn&#39;t a failure either; it&#39;s where the precision target gets won or lost</div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -914,9 +928,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">🔴 Send the Xero email — six questions, three of which decide what M4 builds</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">blocking</span><span class="tag tag-neutral">architecture</span><span class="tag tag-neutral">Journals</span><span class="tag tag-neutral">prd.md</span><span class="tag tag-neutral">gst_transactions</span><span class="tag tag-neutral">prd.md</span><span class="tag tag-neutral">UNRECONCILED_BANK_LINE</span><span class="tag tag-neutral">docs/m2-ready-to-send.md</span><span class="tag tag-neutral">docs/gst-ground-truth.md</span></div>
+        <div class="card-desc">**New, and it outranks everything else on this list.** Verifying the org cap turned up three things that matter more than the cap did. **(1) `Journals` is now an Advanced-tier premium endpoint** — $1,445 AUD/month, sized for 10,000 connections, plus an initial *and annual* security assessment and a discretionary use-case approval Xero won&#39;t publish criteria for. `prd.md` FR-001 is a P0 &quot;Xero journal pull&quot; and `gst_transactions` is literally *&quot;one row per journal line… the traceability substrate&quot;*, so the endpoint the whole sign-off guarantee rests on is behind the most expensive tier. **(2) The Developer Terms now prohibit browser automation and scraping** — which is how the spike obtained all 147 client ledgers, is the recorded fallback access route, and is the *hard dependency* `prd.md` names for `UNRECONCILED_BANK_LINE`. **(3) The AI/ML clause forbids using API data to train &quot;predictive analytics tools&quot;** — and M5&#39;s coding-profile engine is, on a literal reading, one. None is fatal; all three change M4. Draft ready at `docs/m2-ready-to-send.md` §4, exact quotes in `docs/gst-ground-truth.md` §5</div>
+      </div>
       <div class="card">
         <div class="card-title">Get Colab&#39;s live GST Google Sheet, client list, and 3 cycles of WIP data</div>
         <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">blocking</span><span class="tag tag-neutral">docs/ground-truth/</span></div>
@@ -938,9 +957,9 @@
         <div class="card-desc">🔴 The sharpest objection the practice owner will raise. Xero is rolling out a rebuilt Workpapers (built with BGL) to all NZ partners through 2026 — beta since January — and **a GST worksheet is explicitly on its 2026 roadmap.** It sits inside Xero Practice Manager, effectively bundled with a subscription Colab likely already pays for. Its existence is confirmed from Xero&#39;s own blog and product pages; **its feature depth is not** — xero.com returned 403/503 on the attempts to read it. Are Colab in the beta? What were they shown? A worksheet that merely *organises* the review leaves the differentiation intact; one that *generates* exceptions from ledger history does not</div>
       </div>
       <div class="card">
-        <div class="card-title">Open Xero app partner certification, once the org cap is verified</div>
+        <div class="card-title">Xero certification — hold, and get the live org count</div>
         <div class="card-tags"><span class="tag tag-neutral">M11</span><span class="tag tag-neutral">accreditation</span></div>
-        <div class="card-desc">🔴 Second external gate, and it bites **earlier** than IRD. The archived spike&#39;s README records that certification &quot;gates [a] 25-org cap&quot;, and Colab has **50+ client organisations**. If that holds, M10 — a full unattended cycle across every in-scope client — is unreachable no matter how good the code is. Verifying the current cap is Claude&#39;s task; *opening the application* is yours. Should run on the same parallel track as the IRD email, not after it</div>
+        <div class="card-desc">✅ **The cap is verified and the 25-org premise was stale.** Xero moved to a five-tier model on 2 March 2026: uncertified tops out at **50 connections (Core, $35 AUD/mo — a credit card, not certification, is what unlocks it)**; **Plus** is 1,000 at $245 AUD/mo and *that* is what needs certification. Colab&#39;s 50+ orgs sit exactly on Core&#39;s ceiling, so M10 is gated by the **Plus tier**, not by certification-of-25. A second cap bites too: **an org can host only two uncertified apps at once**, undetectable before you try to connect — so some share of Colab&#39;s book won&#39;t connect at all while Cadence is uncertified. 👉 **Don&#39;t open the application yet** — certification needs &quot;Sign Up with Xero&quot; plus ten live connections, and Xero&#39;s bespoke-practice-integration exemption might lift the cap entirely (question 1 in the email above). 👉 **What is needed from you now: the live connected-org count** from the Xero developer portal → My Apps. The spike&#39;s database can&#39;t answer it — it holds **zero** Xero connections</div>
       </div>
       <div class="card">
         <div class="card-title">Price the retainer — after the client segmentation lands</div>
@@ -951,7 +970,7 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
       <div class="card">
@@ -963,6 +982,16 @@
         <div class="card-title">🗄️ The feasibility spike, harvested and archived</div>
         <div class="card-tags"><span class="tag tag-neutral">M1</span><span class="tag tag-neutral">decision</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">core-ricky/cadence</span><span class="tag tag-neutral">verify-scope.ts</span><span class="tag tag-neutral">cadence-spike</span><span class="tag tag-neutral">consistent</span><span class="tag tag-neutral">conflicted</span><span class="tag tag-neutral">rare</span><span class="tag tag-neutral">npm ci</span><span class="tag tag-neutral">Location</span><span class="tag tag-neutral">coding_profiles</span></div>
         <div class="card-desc">`core-ricky/cadence` was **a prototype built to prove a function was possible, not a foundation** — 43 commits in one week (2026-06-15 → 06-22), then dormant two months. It read like a shipped product (multi-tenant schema + RLS, a V1 dashboard with Prep → review attention → Run for real, team invites, the truth-sync reconcile loop, bulk post-back) and was initially planned as the thing GST would extend. Ricky&#39;s correction — it was a muck-around — changed the call, and **the clean rebuild is strictly better than the merge would have been.** A fresh Supabase project deletes the entire coupling problem at once: the additive-only migration constraint, the `verify-scope.ts` CI guard, the shared-schema review burden, **and** the single-use-Xero-refresh-token race between two services reading one token table. Nothing runs in parallel, so there&#39;s no half-finished port to strand. Renamed to **`cadence-spike`** and archived read-only, with a superseded banner pointing here; the *name* Cadence was kept for the product because a good name shouldn&#39;t go in the bin with the code. **Harvested as knowledge, not code:** the confidence rule (`consistent` / `conflicted` / `rare`), the payee-key normalisation, the proven result (8 of 26 lines auto-reconciled correctly, Woolworths/Kmart correctly deferred as conflicted), the schema shape as reference, and the operational lessons — truth-sync, the progress watchdog, payee grouping, Railway&#39;s `npm ci` optional-dep failure, the middleware relative-`Location` 500. **🔴 One honest cost of the clean break:** the exception engine&#39;s baseline was going to be the spike&#39;s live `coding_profiles`. It doesn&#39;t exist on a fresh build, so **the profile engine is now in scope as its own milestone (M5)** — previously assumed free. It&#39;s a fraction of the spike&#39;s scope, though: GST needs the *profile learning*, not the reconcile-and-auto-post machinery</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📏 The GST101A box map, verified from IRD&#39;s own form — and four things the PRD didn&#39;t anticipate</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">compliance</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">7 = 5−6</span><span class="tag tag-neutral">8 = 7×3÷23</span><span class="tag tag-neutral">10 = 8+9</span><span class="tag tag-neutral">12 = 11×3÷23</span><span class="tag tag-neutral">14 = 12+13</span><span class="tag tag-neutral">15 = |10−14|</span><span class="tag tag-neutral">traceable=false</span><span class="tag tag-neutral">IMPORT_IN_BOX_11</span><span class="tag tag-neutral">refund</span><span class="tag tag-neutral">to_pay</span><span class="tag tag-neutral">nil</span><span class="tag tag-neutral">return_type</span><span class="tag tag-neutral">prd.md § 14 Q4</span></div>
+        <div class="card-desc">TASK-006 done, and the 🔴 &quot;do not implement from memory&quot; warning is discharged the right way: the forms were downloaded from IRD and text-extracted, then cross-checked against **IR375 (March 2026)**, the current edition of IRD&#39;s own guide. **The PRD&#39;s indicative numbering was correct** — Boxes 1–4 identification, 5–15 the return, with every derivation confirmed verbatim (`7 = 5−6`, `8 = 7×3÷23`, `10 = 8+9`, `12 = 11×3÷23`, `14 = 12+13`, `15 = |10−14|`). Four findings change the build: **(a) Boxes 9 and 13 are not ledger-derivable at all** — both read *&quot;from your calculation sheet&quot;*, i.e. manual GST adjustments — so they default to `traceable=false`, **and Boxes 10, 14 and 15 inherit non-traceability whenever either is non-zero.** The lower half of the return is only as traceable as its weakest input, and the engine has to propagate that. **(b) Imported goods are excluded from Box 11** and claimed as a Box 13 credit adjustment (IR375 p.33: *&quot;Do not include imported goods under purchases on your GST return&quot;*) — that is a real exception rule with a hard IRD citation and a likely error in a Xero-coded ledger, banked as `IMPORT_IN_BOX_11`. **(c) Box 15 is a magnitude plus a direction**, `refund`/`to_pay`/`nil` — a signed number can&#39;t render the form and silently loses the nil case. **(d) GST103B Part 1 is byte-for-byte the GST101A return**, so `return_type` decides whether Parts 2–3 apply, not which box map to use — **one engine serves both**, a real simplification to M6. Resolves `prd.md § 14 Q4`. Also recorded: **IR372 is a dead end** — the only published version is August 2010 and IRD files it under *&quot;before 1 April 2011&quot;*; IR375 Part 4 is the live authority on adjustments</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 The coding-profile baseline is feasible — measured, not hoped</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">M5</span><span class="tag tag-neutral">data</span><span class="tag tag-shipped">shipped</span><span class="tag tag-neutral">prd.md</span><span class="tag tag-neutral">manual-*</span><span class="tag tag-neutral">xero_connections</span><span class="tag tag-neutral">xero_tokens</span><span class="tag tag-neutral">tax_type</span><span class="tag tag-neutral">&quot;GST&quot;</span><span class="tag tag-neutral">conflicted</span></div>
+        <div class="card-desc">The honest cost of the clean break was that M5&#39;s baseline no longer came free, and it was unknown whether Colab&#39;s ledgers could even support learning one. **They can.** Measured across **277,595 real transaction lines from 139 client ledgers**: **61.9% of lines sit under a payee with a single dominant historical coding, and only 8.2% have no baseline at all.** 129 of 139 clients (93%) have five or more consistent payees; **none have zero**; median 37 per client. 🔴 **The trap worth recording: weighted by *payee key* the consistent share looks like 26.5%** — because keys are dominated by a long tail of one-off suppliers. That understates real coverage by more than 2×, and quoting it would have made M5 look far weaker than it is. So `prd.md` FR-010&#39;s *&quot;a client with no profile cannot be swept&quot;* turns out to exclude essentially nobody. 🔴 **But the provenance is the finding that matters more:** every one of the 147 client records carries a `manual-*` tenant id, and `xero_connections` and `xero_tokens` are **both empty** — **the spike never made a single Xero API connection.** The data came in through a browser extract. That means field shapes will differ after a real API pull (`tax_type` as a proper enum rather than the UI label `&quot;GST&quot;`), the numbers must be re-measured in M7 rather than carried forward — and, per the Xero email above, the extract route itself is now in question. The 29.9% of lines under `conflicted` payees isn&#39;t a failure either; it&#39;s where the precision target gets won or lost</div>
       </div></div>
     </section>
     <section class="column col-in-progress">
@@ -973,8 +1002,8 @@
       <div class="cards">
       <div class="card">
         <div class="card-title">M2 — ground truth: what Colab actually does, from primary sources</div>
-        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">research</span><span class="tag tag-neutral">in-progress</span><span class="tag tag-neutral">docs/gst-ground-truth.md</span></div>
-        <div class="card-desc">Eleven tasks. The ones Claude can progress without Ricky: verify the GST101A box set against IRD&#39;s current published form (**the box map must not be implemented from memory — a wrong box is a wrong return**), verify Xero&#39;s connected-organisation cap against Xero&#39;s own developer terms, and query the coding-profile coverage and Xero-GST-return usage across Colab&#39;s client base. The rest wait on the sheet and on two conversations. **Exits when `docs/gst-ground-truth.md` § Conclusions states whether the core assumption held** — and if it didn&#39;t, the correct response is to stop and re-scope to the chase-and-comms layer, not to proceed and hope</div>
+        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">research</span><span class="tag tag-neutral">in-progress</span><span class="tag tag-neutral">docs/gst-ground-truth.md</span><span class="tag tag-neutral">docs/m2-ready-to-send.md</span><span class="tag tag-neutral">docs/gst-ground-truth.md</span></div>
+        <div class="card-desc">**Every task Claude could progress without Ricky is now done.** `docs/gst-ground-truth.md` exists with 3 of 12 sections evidenced from primary sources: the **GST101A/GST103B box map** verified from IRD&#39;s own forms, the **coding-profile coverage** measured from 277,595 real ledger lines, and **Xero&#39;s platform limits and terms** read from Xero&#39;s own pages. Two PRD open questions closed (Q4, Q8) and three architectural landmines found that nobody had flagged. **What&#39;s left is all human: one email to Colab unblocks seven tasks**, one to IRD starts the longest pole, one to Xero decides what M4 builds. Drafts are written and waiting at `docs/m2-ready-to-send.md`. **Exits when `docs/gst-ground-truth.md` § Conclusions states whether the core assumption held** — and if it didn&#39;t, the correct response is to stop and re-scope to the chase-and-comms layer, not to proceed and hope</div>
       </div></div>
     </section>
     <section class="column col-blocked">
@@ -1002,23 +1031,18 @@
     <section class="column col-this-week">
       <header class="col-head">
         <h2>🔵 This Week</h2>
-        <span class="col-count">5</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">Verify the GST101A box set and arithmetic against IRD&#39;s live form</div>
-        <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">compliance</span><span class="tag tag-neutral">prd.md § 3</span><span class="tag tag-neutral">lib/gst/boxes.ts</span></div>
-        <div class="card-desc">Actionable now, no dependency. Take box numbers, labels and the derivation arithmetic straight from IRD&#39;s current published form. The map in `prd.md § 3` is marked *indicative and unverified* on purpose and must not be trusted. Becomes one tested table in `lib/gst/boxes.ts`</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Verify Xero&#39;s connected-organisation cap for an uncertified app</div>
-        <div class="card-tags"><span class="tag tag-neutral">M11</span><span class="tag tag-neutral">accreditation</span></div>
-        <div class="card-desc">Actionable now. Quote the current limit from Xero&#39;s own developer terms rather than relying on the spike&#39;s README, count Colab&#39;s live connected orgs, and if the cap is real hand Ricky the certification application to open. **Gates M10.**</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Confirm coding-profile coverage and GST-return usage across Colab&#39;s clients</div>
+        <div class="card-title">Confirm whether any client&#39;s GST is computed outside Xero</div>
         <div class="card-tags"><span class="tag tag-neutral">M2</span><span class="tag tag-neutral">data</span></div>
-        <div class="card-desc">Two checks that shape the build. How many clients have enough Xero history to learn a usable profile from, and how recent. And whether any clients&#39; GST is computed *outside* Xero entirely, which would change where the figures are read from</div>
+        <div class="card-desc">The remaining half of TASK-009; the coding-profile half is done and landed in Done. Spreadsheet, another system, anything off-ledger — even one or two clients changes where the figures are read from. Folded into the Colab email as question (b), so it arrives with everything else</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔴 Re-plan M4&#39;s spike: can the ledger be reconstructed from Core-tier endpoints?</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">architecture</span><span class="tag tag-neutral">debt</span><span class="tag tag-neutral">Journals</span><span class="tag tag-neutral">prd.md § 2</span><span class="tag tag-neutral">Journals</span><span class="tag tag-neutral">Invoices</span><span class="tag tag-neutral">offset</span><span class="tag tag-neutral">Invoices</span><span class="tag tag-neutral">BankTransactions</span><span class="tag tag-neutral">CreditNotes</span><span class="tag tag-neutral">ManualJournals</span><span class="tag tag-neutral">Payments</span></div>
+        <div class="card-desc">Follows directly from the `Journals` finding. `prd.md § 2` argues for `Journals` over `Invoices` on immutability and deterministic `offset` pagination, and both arguments still stand — they just have to be re-solved against `Invoices`, `BankTransactions`, `CreditNotes`, `ManualJournals` and `Payments`. **M4&#39;s spike was &quot;which GST report is available for a NZ tenant&quot;; it is now this.** Blocked on Xero&#39;s answer to question 3, but the reconstruction design can be sketched in the meantime and is the option that keeps M4–M8 moving at $35/month</div>
       </div>
       <div class="card">
         <div class="card-title">Write `docs/harvest.md` into the planning set</div>
