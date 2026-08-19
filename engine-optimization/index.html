@@ -701,7 +701,7 @@
       <div class="page-meta">
         <div><strong>62%</strong> complete</div>
         <div><strong>80</strong>/130 cards done</div>
-        <div>Updated <strong>2026-08-19 04:14 UTC</strong></div>
+        <div>Updated <strong>2026-08-19 04:23 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1449,9 +1449,9 @@
         <div class="card-desc">The biggest thing M3 found, and it is a limitation. Two full sweeps of the same 15 prompts **minutes apart** disagreed on **5 of 15**: three where the AI Overview appeared or vanished entirely, one where a citation flipped, one where the rank moved from 2 to 4. This is the same threat the audit scoring was designed backwards from — a number that moves on its own makes every month-over-month claim fiction — except **the audit&#39;s drift sources were ours and could be closed, and this one is Google&#39;s and cannot be.** Until a sampling design exists (n sweeps over a window, reported as a rate with its sample size), no citation delta may be shown to a client. Belongs in M5 with predictions and controls, because the answer is a confidence interval, not a bug fix. ✅ **The M4 half shipped.** M4 stamps a mandatory `rationale` on every work item and that field becomes the report&#39;s &quot;why&quot; — so a work item derived from a single sweep would put a rationale on a coin flip, which is precisely what this product exists to prevent. A probe-sourced work item now carries its sample size and n&lt;2 cannot be ranked — enforced by a check constraint, and three of Storepro&#39;s approved items are discounted to confidence 0.4 on n=2 because of it. The sampling *design* stays here, and when it raises n these items rise on their own with no re-tuning</div>
       </div>
       <div class="card">
-        <div class="card-title">The other four engines</div>
-        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">blocked-on-ricky</span></div>
-        <div class="card-desc">ChatGPT, Perplexity, Gemini and Claude adapters are written, typechecked and waiting; each switches on the moment its key appears in the env. One engine is a data point, four is a panel — and ChatGPT is the one a client will ask about by name</div>
+        <div class="card-title">✅ All five engines are live — this card was stale</div>
+        <div class="card-tags"><span class="tag tag-neutral">M4</span><span class="tag tag-neutral">method</span><span class="tag tag-neutral">chatgpt</span><span class="tag tag-neutral">claude</span><span class="tag tag-neutral">perplexity</span><span class="tag tag-neutral">gemini</span><span class="tag tag-neutral">engine_error</span><span class="tag tag-neutral">ai_overview</span><span class="tag tag-neutral">engine_error</span><span class="tag tag-neutral">not_configured</span><span class="tag tag-neutral">ai_overview</span></div>
+        <div class="card-desc">Corrected 2026-08-19 from the database, not from recollection. The card said the ChatGPT, Perplexity, Gemini and Claude adapters were &quot;written, typechecked and waiting&quot; for keys. They are not waiting: the keys landed on **2026-08-13** and by 23:56 that evening every one of them had answered — `chatgpt` 15 answered, `claude` 15, `perplexity` 15, `gemini` 8 answered and 7 `engine_error`, alongside `ai_overview` at 40 answered and 20 `engine_error`. The 30 `not_configured` rows per engine are all from **03:29** the same morning, before the keys existed, and they are the rows this card was written off. ⚠️ **Two real things survive the correction.** Gemini errors on roughly half its runs and `ai_overview` on a third, and nothing tracks that rate or alerts on it — a panel quietly running on three engines looks identical to one running on five. And a live engine still cannot produce a client-facing number, because [the sampling design does not exist](#) — five engines measured once is five data points, not a measurement</div>
       </div>
       <div class="card">
         <div class="card-title">CITE port + per-client competitor cohorts</div>
