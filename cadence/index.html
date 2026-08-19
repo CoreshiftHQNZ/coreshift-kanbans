@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>25%</strong> complete</div>
-        <div><strong>13</strong>/52 cards done</div>
-        <div>Updated <strong>2026-08-19 05:36 UTC</strong></div>
+        <div><strong>32%</strong> complete</div>
+        <div><strong>18</strong>/57 cards done</div>
+        <div>Updated <strong>2026-08-19 05:40 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -809,7 +809,7 @@
     <!-- STATUS STRIP -->
     <section class="status-strip">
       <div class="status-stat status-done">
-        <div class="status-num">13</div>
+        <div class="status-num">18</div>
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
@@ -891,43 +891,43 @@
         <div class="recent-item">
           <div class="recent-check">✓</div>
           <div class="recent-text">
+            <div class="recent-title">✅ Payee-matching tested — 47% of all error comes from 395 keys that aren&#39;t coding decisions</div>
+            <div class="recent-desc">**The caveat said matching was untested and could move the headline a long way. It was tested; it moves it much less than expected, and why is the good part.** ✅ **Under-matching is not the problem** — aggressive re-normalisation collapses only **3.6% of keys / 5.0% of lines**, so the &quot;48.9% of names seen once&quot; figure **survives; the long tail is real, not a keying artefact.** 🔴 **Over-matching is, and it has exactly two causes.** Accuracy by key length is U-shaped — **1–3 chars → 62.9%**, 7–12 → 91.7%, **21+ → 72.0%** — and inspecting the worst offenders explains both ends entirely: **junk keys** (`DF` is a key with **1,952 occurrences across 26 accounts** — a bank-line token, not a payee: 4.5% of lines, **14.6% of all error**) and **internal bank transfers** (`BANK FROM x TO y`: 9.0% of lines, **29.4% of all error**, many sitting at *exactly* 50% over exactly 2 accounts — the debit and credit legs of the same transfer, which is correct double entry, not ambiguity). 🎯 **395 keys — 2.7% of the total — carry 47.3% of the error mass and none is a coding decision. On genuine payees accuracy is 91.0%, not 83.7%.** Full working: `docs/coding-accuracy.md` §7</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">🎯 The confidence gate proved robust — the headline barely moved</div>
+            <div class="recent-desc">Re-running the curve with junk keys and transfers excluded gives **58.4% of all lines at 99.14% precision**, against 60.3% at 98.94% before: **+0.2pp precision, −1.9pp coverage.** **The dominant-share threshold was already excluding the dirty keys by itself**, because they are low-consistency by nature and never cleared the bar. **That is a validation of the design, not a null result** — the gate is robust to exactly the kind of poisoned key that would otherwise wreck an auto-coder. ✅ **The headline stands: ~58–60% of lines auto-coded at ~99% precision.**</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">🎯 Bank transfers are a separate, easy feature worth 9% of lines</div>
+            <div class="recent-desc">They are **9.0% of all transaction lines**, mechanically identifiable by pattern, and their correct coding is *determinable* rather than predicted — the other side is a known bank account. **Handling them explicitly takes Dave&#39;s residue from ~40% of lines to ~31%, for very little work.** They should never sit in the coding queue at all</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">🔴 Fix the payee normaliser before rebuilding the engine</div>
+            <div class="recent-desc">Producing `DF` as the key for **1,952 transactions across 26 accounts** is a defect that would be inherited wholesale from the spike if the code is ported rather than re-derived. ⚠️ Also note the genuinely ambiguous residue is real and *should* go to a human — contractors whose payments legitimately split across many accounts (`GRAHAM CATE CONTRACTING`, 15 accounts; `ANDREW MCALLISTER`, 18). No profiling fixes those and it should not try</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
+            <div class="recent-title">🔴 Out-of-sample matching is still untested and only Dave&#39;s exports can settle it</div>
+            <div class="recent-desc">§7 measured **keys against keys inside a profile built by one normaliser**. It cannot tell us whether a **new, unseen bank line** resolves to the right key — which remains the live failure mode and the thing that could still move the 58%. **Nothing we hold substitutes for a real period&#39;s raw narratives.**</div>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-check">✓</div>
+          <div class="recent-text">
             <div class="recent-title">✅ M3 has its first real number — 60% of lines auto-coded at 98.9% precision</div>
             <div class="recent-desc">**Run 19 Aug on data already held. No Xero access, nothing from Dave.** Leave-one-out evaluation across all **139 profiles — 29,152 payees, 277,595 lines**: predict each line&#39;s coding from that client&#39;s own history, over the **(account, tax) pair**, not the account alone. **94.9% of lines have any history at all; accuracy on those is 83.7%, or 79.4% across every line including the unpredictable tail.** Per client (119 with ≥200 predictable lines): **median 84.5%, and 71 of 119 score 80%+.** 🎯 **But accuracy is the wrong target — trust is**, and the confidence curve is what designs the product: auto-coding at **≥90% dominant share with ≥4 occurrences covers 60.3% of all transaction lines at 98.94% precision** — one error in 94. Tighten to 95% and it is one in 263 for 53.5% coverage. **Dave stops coding 100% and starts reviewing ~40%, with proposals ranked inside that 40%.** Full working: `docs/coding-accuracy.md`</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">🔴 Payee matching is untested and it is the failure mode most likely to hurt</div>
-            <div class="recent-desc">**The 60% figure assumes a new transaction is correctly recognised as belonging to a known payee.** In reality narratives vary — reference numbers, branch suffixes, truncation — and a silent match failure turns an auto-code into a miss, or worse, applies the wrong payee&#39;s coding. 🔴 **Nothing measured so far touches this**, and it could move the 60% a long way in either direction. **It is the first thing to test against Dave&#39;s exports** — and it is also the caveat that could inflate the earlier &quot;48.9% of payee names are seen once&quot; figure, since strict keying would shatter one real merchant into several one-off payees</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">🤔 Volume is not ease — the biggest payees are the least predictable</div>
-            <div class="recent-desc">Accuracy by occurrence band: **2–4 → 86.2%, 5–9 → 88.8%, 10–29 → 89.2%, but 30+ → 81.3%** despite being 63.2% of all lines. The highest-frequency payees are transfers, general suppliers and cards that legitimately split across accounts. **A threshold on dominant share handles this correctly; a threshold on occurrence count would not** — worth remembering when the engine is rebuilt in M6</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">✅ TASK-011 — the ten concierge clients are chosen</div>
-            <div class="recent-desc">**Done 19 Aug, and the selection is deliberately split in two.** Pool narrowed **134** live two-monthly clients → **98** that have a coding profile in the spike database → **87** carrying no annotation on the sheet. Then split, because the original &quot;10 vanilla clients&quot; cannot satisfy both things M3 needs: **4 clients already `Reviewed &amp; Filed`** so TASK-013&#39;s boxes have a real filed return to tie to the cent against, and **6 still `In Progress`** so TASK-017 is a genuine review rather than recognition of a number Dave already knows. 🎯 **Vyne Digital is in the tie-check four on purpose** — Ricky&#39;s own entity, so it needs nobody&#39;s consent and can start before the access question resolves; it also carries the `19/8/2032` reviewed-date typo, which demonstrates the thesis. **Auto Xpert is the only refund available with a profile**, and without it §1&#39;s finding that Box 15 is a magnitude *plus a direction* never gets exercised. Sign-off six spread across the volume distribution (128 → 4,265 lines). **Kidspiration excluded and recorded, not dropped quietly** — 48,140 lines, 8.8× the next largest, a volume stress test rather than a vanilla one; carded for M6</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">✅ M3&#39;s task list rewritten against what actually exists</div>
-            <div class="recent-desc">**The original M3 assumed a live `Journals` pull and every task after TASK-011 inherited it.** Verified this session against the spike Supabase: `xero_connections` and `xero_tokens` hold **0 rows** — there has never been a Xero API connection — and the 277,595 ledger lines were **summarised into 139 `coding_profiles` with no transaction-level table retained** (`proposals`&#39; 8,420 rows are *bank statement lines*, not GST journal lines). ✅ **The profiles do survive and are enough for TASK-014&#39;s scoring** — all ten selected clients have one. Rewritten: TASK-012 normalises a human export instead of pulling an API, a new **TASK-011b** makes the data route a named blocker instead of an assumption buried in TASK-012, TASK-014 points at §6.2&#39;s observed rules rather than FR-011&#39;s hypothesised eleven, and TASK-016 is pulled forward because it needs no ledger. 🎯 **TASK-012 now also records what the export does *not* carry** — a direct input to M4&#39;s Core-tier reconstruction spike</div>
-          </div>
-        </div>
-        <div class="recent-item">
-          <div class="recent-check">✓</div>
-          <div class="recent-text">
-            <div class="recent-title">📐 M1 — the idea, pressure-tested and reframed before a line of code</div>
-            <div class="recent-desc">Ran the full ideation workflow. **Verdict: Strong, 25/30** — but the framing had to change to get there. The brief was &quot;end-to-end GST filing&quot;; validation established that **Xero NZ already computes the GST return and already files it to IRD**, so building that would rebuild something Colab gets free. The labour is everything that must be true *before* anyone presses the button — miscoded lines, wrong tax rates, unreconciled bank items, period-boundary strays, unexplained movement, records the client hasn&#39;t sent — and because the Google Sheet holding that checklist proves nothing, **the reviewer re-derives every return from scratch. Colab pays for the review twice.** So the product is the exception sweep + traceable workpaper + named sign-off, and filing is a feature on the end. **Three fatal flaws ranked with fast tests**, the sharpest being that the core assumption is still unverified: if the hours actually go into chasing clients rather than checking coding, the engine automates the cheap half and headcount doesn&#39;t move — which is why M2 and M3 contain no software. **Competition mapped honestly**, including the one that matters: Xero&#39;s own rebuilt Workpapers with a GST worksheet landing this year, bundled, from a vendor with far more resource than us. Six documents written: `product-idea.md`, `validation-report.md`, `VISION.md` (validated field-by-field against the skill&#39;s template by script), `product-vision.md`, `prd.md` (10 tables, 4 database-level integrity triggers, 22 endpoints, 25 functional requirements, 8 open questions each with a recommendation), and `product-roadmap.md`. **Two premises are labelled unverified throughout rather than quietly assumed:** the GST101A box map is *not* implemented from memory — it gets verified against IRD&#39;s live form first — and the 11-rule exception catalogue is explicitly a **hypothesis** to be rewritten from Colab&#39;s actual sheet in M2</div>
           </div>
         </div>
       </div>
@@ -1004,9 +1004,34 @@
     <section class="column col-done">
       <header class="col-head">
         <h2>✅ Done</h2>
-        <span class="col-count">13</span>
+        <span class="col-count">18</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">✅ Payee-matching tested — 47% of all error comes from 395 keys that aren&#39;t coding decisions</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">measured</span><span class="tag tag-neutral">DF</span><span class="tag tag-neutral">BANK FROM x TO y</span><span class="tag tag-neutral">docs/coding-accuracy.md</span></div>
+        <div class="card-desc">**The caveat said matching was untested and could move the headline a long way. It was tested; it moves it much less than expected, and why is the good part.** ✅ **Under-matching is not the problem** — aggressive re-normalisation collapses only **3.6% of keys / 5.0% of lines**, so the &quot;48.9% of names seen once&quot; figure **survives; the long tail is real, not a keying artefact.** 🔴 **Over-matching is, and it has exactly two causes.** Accuracy by key length is U-shaped — **1–3 chars → 62.9%**, 7–12 → 91.7%, **21+ → 72.0%** — and inspecting the worst offenders explains both ends entirely: **junk keys** (`DF` is a key with **1,952 occurrences across 26 accounts** — a bank-line token, not a payee: 4.5% of lines, **14.6% of all error**) and **internal bank transfers** (`BANK FROM x TO y`: 9.0% of lines, **29.4% of all error**, many sitting at *exactly* 50% over exactly 2 accounts — the debit and credit legs of the same transfer, which is correct double entry, not ambiguity). 🎯 **395 keys — 2.7% of the total — carry 47.3% of the error mass and none is a coding decision. On genuine payees accuracy is 91.0%, not 83.7%.** Full working: `docs/coding-accuracy.md` §7</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🎯 The confidence gate proved robust — the headline barely moved</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">finding</span><span class="tag tag-neutral">design</span></div>
+        <div class="card-desc">Re-running the curve with junk keys and transfers excluded gives **58.4% of all lines at 99.14% precision**, against 60.3% at 98.94% before: **+0.2pp precision, −1.9pp coverage.** **The dominant-share threshold was already excluding the dirty keys by itself**, because they are low-consistency by nature and never cleared the bar. **That is a validation of the design, not a null result** — the gate is robust to exactly the kind of poisoned key that would otherwise wreck an auto-coder. ✅ **The headline stands: ~58–60% of lines auto-coded at ~99% precision.**</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🎯 Bank transfers are a separate, easy feature worth 9% of lines</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">M7</span><span class="tag tag-neutral">scope</span></div>
+        <div class="card-desc">They are **9.0% of all transaction lines**, mechanically identifiable by pattern, and their correct coding is *determinable* rather than predicted — the other side is a known bank account. **Handling them explicitly takes Dave&#39;s residue from ~40% of lines to ~31%, for very little work.** They should never sit in the coding queue at all</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔴 Fix the payee normaliser before rebuilding the engine</div>
+        <div class="card-tags"><span class="tag tag-neutral">M6</span><span class="tag tag-neutral">debt</span><span class="tag tag-neutral">DF</span><span class="tag tag-neutral">GRAHAM CATE CONTRACTING</span><span class="tag tag-neutral">ANDREW MCALLISTER</span></div>
+        <div class="card-desc">Producing `DF` as the key for **1,952 transactions across 26 accounts** is a defect that would be inherited wholesale from the spike if the code is ported rather than re-derived. ⚠️ Also note the genuinely ambiguous residue is real and *should* go to a human — contractors whose payments legitimately split across many accounts (`GRAHAM CATE CONTRACTING`, 15 accounts; `ANDREW MCALLISTER`, 18). No profiling fixes those and it should not try</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔴 Out-of-sample matching is still untested and only Dave&#39;s exports can settle it</div>
+        <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">risk</span></div>
+        <div class="card-desc">§7 measured **keys against keys inside a profile built by one normaliser**. It cannot tell us whether a **new, unseen bank line** resolves to the right key — which remains the live failure mode and the thing that could still move the 58%. **Nothing we hold substitutes for a real period&#39;s raw narratives.**</div>
+      </div>
       <div class="card">
         <div class="card-title">✅ M3 has its first real number — 60% of lines auto-coded at 98.9% precision</div>
         <div class="card-tags"><span class="tag tag-neutral">M3</span><span class="tag tag-neutral">measured</span><span class="tag tag-neutral">docs/coding-accuracy.md</span></div>
