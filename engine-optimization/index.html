@@ -700,8 +700,8 @@
       </div>
       <div class="page-meta">
         <div><strong>63%</strong> complete</div>
-        <div><strong>78</strong>/123 cards done</div>
-        <div>Updated <strong>2026-08-19 02:50 UTC</strong></div>
+        <div><strong>78</strong>/124 cards done</div>
+        <div>Updated <strong>2026-08-19 03:25 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -1489,9 +1489,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>🅿️ Parking Lot</h2>
-        <span class="col-count">23</span>
+        <span class="col-count">24</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Withdrawing a verdict does not put the prediction back in the work queue</div>
+        <div class="card-tags"><span class="tag tag-neutral">M10</span><span class="tag tag-neutral">docs/corrections.md</span><span class="tag tag-neutral">predictions (client_id, expected_by) where outcome is null</span><span class="tag tag-neutral">too_early</span><span class="tag tag-neutral">predictions.outcome</span><span class="tag tag-neutral">predictions_verdict_immutable</span><span class="tag tag-neutral">readThrough</span></div>
+        <div class="card-desc">Found while building M10&#39;s correction path and stated in `docs/corrections.md` rather than discovered in November. The index `predictions (client_id, expected_by) where outcome is null` **is** the work queue — it is the whole reason `too_early` is never written — and a withdrawal *supersedes* rather than nulls, so `predictions.outcome` still holds the original verdict and the row stays out of the queue. Every reader in this system treats a withdrawn verdict as unanswered; the database index does not. **The route back to an answer is another correction stating the corrected reading**, not a second run of the verification writer — the writer is refused by `predictions_verdict_immutable`, correctly, and nothing here weakens that. ⚠️ It matters exactly once: the day somebody withdraws a verdict and expects the prediction to reappear on the &quot;somebody has to come back to this&quot; list. **The shape of the fix, when it is wanted:** a partial index that also excludes predictions whose latest correction withdraws them, which needs the correction chain readable in SQL rather than only in `readThrough` — so it is a view or a generated column, and it is a migration rather than a patch. Not worth it before a verdict has ever been withdrawn</div>
+      </div>
       <div class="card">
         <div class="card-title">The `app-check` fixture lives in the same database as the real client</div>
         <div class="card-tags"><span class="tag tag-neutral">prospect</span><span class="tag tag-neutral">.invalid</span><span class="tag tag-neutral">status = &#39;active&#39;</span><span class="tag tag-neutral">npm run fixture -- --drop</span><span class="tag tag-neutral">clients.is_fixture</span></div>
