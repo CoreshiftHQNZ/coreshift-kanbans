@@ -934,6 +934,7 @@
     <section class="recent">
       <h2 class="section-head">Recently Shipped</h2>
       <div class="recent-list">
+        <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">The payment form now says why it failed &mdash; and stops reusing dead PaymentIntents</div><div class="recent-desc">A truncated staging publishable key broke paying an invoice, but the page swallowed Stripe&rsquo;s 401 so the symptom pointed somewhere else entirely. Both card forms now surface <code>onLoadError</code> and gate submit on the element being ready, making that error unreachable by construction. Reading the endpoint also turned up a money bug: a stored PaymentIntent was returned unchecked, so <strong>editing an invoice after the patient opened the pay modal charged the old amount</strong>. Reuse is now conditional on status, currency and amount.</div></div></div>
         <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">Patient payment unblocked again &mdash; the pinned Stripe API version was invalid</div><div class="recent-desc">Three clinical files pinned <code>2024-11-20</code>, which is not a real Stripe version string; an <code>as any</code> cast hid it from the compiler. Production tolerated it, the staging test account 500&rsquo;d every call. Every Stripe client now uses the SDK default. <strong>Needs a real payment on staging to confirm.</strong></div></div></div>
         <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">The diary and the patient no longer disagree about which day it is</div><div class="recent-desc">A local calendar date stamped <code>Z</code> shifted the day window 12 hours, so a Sunday 10am appointment was served under Saturday and shown with its local time. Same wall time, wrong day. Also fixed the route sheet opening on yesterday&rsquo;s route all NZ morning. One shared date helper now, so it cannot regrow.</div></div></div>
         <div class="recent-item"><div class="recent-check">✓</div><div class="recent-text"><div class="recent-title">The patient record page</div><div class="recent-desc">The missing PMS primitive — one screen showing a patient whole. Also closed an unguarded patient-history endpoint.</div></div></div>
@@ -952,9 +953,14 @@
     <section class="column col-neutral">
       <header class="col-head">
         <h2>👉 On Ricky</h2>
-        <span class="col-count">6</span>
+        <span class="col-count">7</span>
       </header>
       <div class="cards">
+      <div class="card">
+        <div class="card-title">Paste the staging Stripe publishable key &mdash; it is truncated</div>
+        <div class="card-tags"><span class="tag tag-blocked">blocks payment testing</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">R3</span></div>
+        <div class="card-desc"><strong>Staging&rsquo;s <code>VITE_STRIPE_PUBLISHABLE_KEY</code> is invalid</strong> &mdash; Stripe.js is rejected with a 401, so the card form never mounts and paying an invoice fails with the misleading &ldquo;elements should have a mounted Payment Element&rdquo;. Verified three ways on 2026-08-20: Stripe&rsquo;s <code>loaderror</code> event in a browser (<code>Invalid API Key provided: pk_test_…KIrM</code>), the REST API refusing the key, and the length &mdash; <strong>106 characters against the same account&rsquo;s 107-character secret key</strong>. One character was lost in a paste. Production&rsquo;s key was probed the same way and is <strong>valid</strong>, so this is staging only. <strong>Fix:</strong> copy the whole test-mode key from Stripe &rarr; Developers &rarr; API keys (account <code>51TzRyL</code>), then <code>railway variables --service go-chiro-api --environment staging --set &quot;VITE_STRIPE_PUBLISHABLE_KEY=pk_test_…&quot;</code>. It must trigger a redeploy: Vite bakes <code>VITE_*</code> in at build time, so a restart alone will not pick it up. Claude will not paste a credential into infrastructure unprompted, so this one is yours unless you ask.</div>
+      </div>
       <div class="card">
         <div class="card-title">Custom SMTP on PRODUCTION — before go-live</div>
         <div class="card-tags"><span class="tag tag-blocked">blocks go-live</span><span class="tag tag-infra">infra</span><span class="tag tag-neutral">R6</span></div>
