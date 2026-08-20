@@ -17,10 +17,10 @@ module.exports = {
     "Search Console and GA4 pulls, AI-citation probes, delta analysis, plan drafting, report drafting. A human signs off " +
     "before anything touches a client site or reaches a client. The thing that makes it different from every tool we " +
     "surveyed: it records what we predicted a change would do, then checks — against a control — whether it happened.",
-  phase: "M12 · Handover to the team — running ahead of M11, which is blocked until 5 November",
+  phase: "M12 · Client onboarding in the app — a real client whose access is not via access@growthpartners.co.nz",
   nextMilestone: {
-    name: "A specialist other than Ricky runs a full monthly cycle end to end without help",
-    date: "Test runs the week of 2026-09-07, when Storepro's August figures are final · until then, four named cards the specialist will actually touch · M11's verdict still waits for 2026-11-05",
+    name: "A specialist adds a real client through the app, choosing which account its access comes through, and the app proves that access works before saving",
+    date: "Blocking the next real client · the documented direct-grant fallback has never existed in code, access identity is process-global, and the token cache is unkeyed · M13's handover test still runs the week of 2026-09-07 on Storepro, and M11's verdict still waits for 2026-11-05",
   },
 
   // ── Goals (3 cards in a row) ──────────────────────────────────
@@ -433,9 +433,76 @@ module.exports = {
     },
     {
       id: "M12",
+      name: "Client onboarding in the app",
+      // Inserted 2026-08-20 on Ricky's call, and it is the fifth insertion in this
+      // arc. He went to add a real client and could not: it is an old client the
+      // agency manages from a different email address, so the whole premise the
+      // measurement layer was built on — `access@growthpartners.co.nz` already
+      // holds everything, so onboarding needs no Google-side work — does not hold
+      // for it.
+      //
+      // Three things were found looking at whether this was a small change. It is
+      // not, and the reason it is not is the third one.
+      //
+      // 1. **`docs/google-access-setup.md` already specifies the fix and the code
+      //    does not implement it.** The doc's "Fallback: direct per-property
+      //    grants" section says to grant the service account email directly on the
+      //    property and describes it as *"same code path — just skip the
+      //    impersonation subject"*. `server/google/auth.ts` has no such path: it
+      //    always sets `sub` in the JWT, from `process.env.GOOGLE_SUBJECT`. The
+      //    documented fallback has never existed in code.
+      //
+      // 2. **Access identity is process-global, not per-client.** `GOOGLE_SUBJECT`
+      //    is one env var for the whole deployment. There is nowhere on a client,
+      //    a property or `property_access` to record which account its access
+      //    comes through — so "specify the access account" has no column to go in.
+      //
+      // 3. 🔴 **The token cache is a single unkeyed module-level singleton**
+      //    (`auth.ts`, `let cached`), and that turns this feature into a data
+      //    integrity bug rather than a schema addition. The moment two clients
+      //    resolve to different access accounts, whichever mints a token first
+      //    lends it to the other for the rest of the hour — so client B's ingest
+      //    runs against client A's Google account and returns rows that look
+      //    exactly like client B's. Plausible numbers from the wrong source is the
+      //    worst failure this product can have, and it is the one thing every part
+      //    of the measurement layer is built to refuse. Harmless today only
+      //    because there is exactly one subject in existence.
+      //
+      // ⚠️ **What this milestone does not do: create a service account per
+      // client.** Ricky asked for it as an option and it is the wrong shape. One
+      // service account serves every client, because access is granted inside
+      // Search Console and GA4 rather than through GCP IAM — the setup doc calls
+      // that "the part people get wrong". One per client would multiply long-lived
+      // private keys for no additional reach. And minting and storing a service
+      // account private key from a web wizard is a credential path this project
+      // should not grow: the existing key already lives in a secret store with a
+      // documented rotation story, and a second source of keys would have neither.
+      //
+      // ✅ **What replaces it, and it is the more useful half anyway:** the wizard
+      // captures the access mode and account, prints the exact grant text for
+      // whoever owns the property, and then **proves the access works before the
+      // client is saved** — at the permission *level*, not merely that the
+      // property appears in a list. That distinction is not theoretical: the
+      // 2026-08-13 inventory found **11 of 65** Search Console properties present
+      // for `access@` and returning HTTP 403 as `siteUnverifiedUser`. A tickbox
+      // saying access was granted would have onboarded all eleven.
+      //
+      // ⚠️ Ends on a human act, like M7's publish, M8's shipment and M10's three
+      // controls. The specialist presses through the wizard; nothing onboards a
+      // client on their behalf.
+      doneWhen: "A specialist adds a real client through the app on a deployed environment, choosing which account its access comes through, and its Search Console and GA4 access is proved to work at the permission level the data needs before the client is saved",
+      status: "current",
+    },
+    {
+      id: "M13",
       name: "Handover to the team",
       // ⚠️ Renumbered M11 → M12 on 2026-08-19 when the in-app controls milestone
-      // was inserted. Three of its blockers moved into that milestone with it —
+      // was inserted, and M12 → M13 on 2026-08-20 when client onboarding was
+      // inserted ahead of it. It did not move further away: the onboarding
+      // milestone fills the window this one was already waiting out, and the test
+      // below runs on **Storepro**, whose access has worked since 2026-08-13 — so
+      // nothing in the new milestone is a prerequisite for it and the 7 September
+      // date is unchanged. Three of its blockers moved into that milestone with it —
       // in-app prompt sign-off, an attributable verdict control, and a correction
       // path — so this one got shorter rather than further away.
       //
@@ -505,7 +572,11 @@ module.exports = {
       // ordering. M12 runs first, M11 keeps its number, and the phase string
       // says so out loud.
       doneWhen: "A specialist other than Ricky runs a full monthly cycle end to end without help",
-      status: "current",
+      // Handed the current slot to M12 (client onboarding) on 2026-08-20 while
+      // staying scheduled for the week of 2026-09-07 — the two do not compete,
+      // because this test runs on Storepro and needs nothing the new milestone
+      // builds.
+      status: "planned",
     },
   ],
 
@@ -575,13 +646,13 @@ module.exports = {
       status: "in-progress",
       title: "Phase 4",
       subtitle: "Hand to the team",
-      window: "In progress · M12 brought forward 2026-08-19 ahead of M11 · the test runs the week of 2026-09-07, when Storepro's August figures are final",
+      window: "In progress · M12 client onboarding is current from 2026-08-20 · M13's handover test still runs the week of 2026-09-07 on Storepro, which needs nothing M12 builds",
       desc: "The tool is finished when a specialist who didn't build it runs a client month unaided. Until then it's Ricky's tool, not the team's.",
       deliverables: [
-        "Specialist-facing onboarding flow with access checklist",
+        "→ M12 · Specialist-facing onboarding flow: per-client access account, the direct-grant mode the setup doc has always specified and the code never had, and a preflight that proves the permission level rather than trusting a tickbox",
         "Role-based access and per-client assignment",
         "Scheduled cycles firing unattended, with actionable failure alerts",
-        "One specialist completes a full cycle end to end without help",
+        "M13 · One specialist completes a full cycle end to end without help — week of 2026-09-07",
       ],
     },
   ],

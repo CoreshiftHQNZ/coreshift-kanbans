@@ -699,9 +699,9 @@
         </div>
       </div>
       <div class="page-meta">
-        <div><strong>61%</strong> complete</div>
-        <div><strong>80</strong>/131 cards done</div>
-        <div>Updated <strong>2026-08-19 05:01 UTC</strong></div>
+        <div><strong>60%</strong> complete</div>
+        <div><strong>80</strong>/133 cards done</div>
+        <div>Updated <strong>2026-08-20 20:25 UTC</strong></div>
       </div>
     </div>
   </header>
@@ -717,11 +717,11 @@
       <div class="hero-phase-row">
         <div class="phase-pill">
           <span class="phase-pill-label">Current phase</span>
-          <span class="phase-pill-value">M12 · Handover to the team — running ahead of M11, which is blocked until 5 November</span>
+          <span class="phase-pill-value">M12 · Client onboarding in the app — a real client whose access is not via access@growthpartners.co.nz</span>
         </div>
         <div class="phase-pill phase-pill-milestone">
           <span class="phase-pill-label">Next milestone</span>
-          <span class="phase-pill-value">A specialist other than Ricky runs a full monthly cycle end to end without help <span class="phase-pill-date">Test runs the week of 2026-09-07, when Storepro&#39;s August figures are final · until then, four named cards the specialist will actually touch · M11&#39;s verdict still waits for 2026-11-05</span></span>
+          <span class="phase-pill-value">A specialist adds a real client through the app, choosing which account its access comes through, and the app proves that access works before saving <span class="phase-pill-date">Blocking the next real client · the documented direct-grant fallback has never existed in code, access identity is process-global, and the token cache is unkeyed · M13&#39;s handover test still runs the week of 2026-09-07 on Storepro, and M11&#39;s verdict still waits for 2026-11-05</span></span>
         </div>
       </div>
     </section>
@@ -809,10 +809,10 @@
             <div class="phase-status-pill phase-status-in-progress">In progress</div>
           </div>
           <div class="phase-title">Phase 4 <span class="phase-subtitle">Hand to the team</span></div>
-          <div class="phase-window">In progress · M12 brought forward 2026-08-19 ahead of M11 · the test runs the week of 2026-09-07, when Storepro&#39;s August figures are final</div>
+          <div class="phase-window">In progress · M12 client onboarding is current from 2026-08-20 · M13&#39;s handover test still runs the week of 2026-09-07 on Storepro, which needs nothing M12 builds</div>
           <p class="phase-desc">The tool is finished when a specialist who didn&#39;t build it runs a client month unaided. Until then it&#39;s Ricky&#39;s tool, not the team&#39;s.</p>
           <ul class="phase-deliverables">
-            <li>Specialist-facing onboarding flow with access checklist</li><li>Role-based access and per-client assignment</li><li>Scheduled cycles firing unattended, with actionable failure alerts</li><li>One specialist completes a full cycle end to end without help</li>
+            <li>→ M12 · Specialist-facing onboarding flow: per-client access account, the direct-grant mode the setup doc has always specified and the code never had, and a preflight that proves the permission level rather than trusting a tickbox</li><li>Role-based access and per-client assignment</li><li>Scheduled cycles firing unattended, with actionable failure alerts</li><li>M13 · One specialist completes a full cycle end to end without help — week of 2026-09-07</li>
           </ul>
         </div>
       </div>
@@ -825,7 +825,7 @@
         <div class="status-label">Done</div>
       </div>
       <div class="status-stat status-in-progress">
-        <div class="status-num">2</div>
+        <div class="status-num">4</div>
         <div class="status-label">In Progress</div>
       </div>
       <div class="status-stat status-blocked">
@@ -947,17 +947,27 @@
     <section class="column col-in-progress">
       <header class="col-head">
         <h2>🟡 In Progress</h2>
-        <span class="col-count">2</span>
+        <span class="col-count">4</span>
       </header>
       <div class="cards">
       <div class="card">
-        <div class="card-title">M12: Handover to the team — a specialist who is not Ricky runs a full monthly cycle unaided</div>
-        <div class="card-tags"><span class="tag tag-neutral">M12</span><span class="tag tag-phase-4">phase-4</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">published</span><span class="tag tag-neutral">mal@growthpartners.co.nz</span><span class="tag tag-neutral">a3e5a8a7</span></div>
-        <div class="card-desc">Brought forward **2026-08-19** ahead of M11, on Ricky&#39;s stated default, because M11 cannot open before 5 November and M12 is not locked to it. All three things that used to block this became controls in M10 the same day: a verdict can be recorded in the app and attributed, a prompt set can be signed off in the app, and all three frozen writes have a correction path. ⚠️ **It cannot start today either, and the handover that recommended it did not say so.** A full monthly cycle needs a month to run over — Storepro&#39;s cycles are Apr–Jul with 2026-07 `published`, there is no 2026-08 cycle, and August&#39;s Search Console figures are not final until **~5 September** on this system&#39;s own five-day convention (the same one that makes 2026-10 answerable on 2026-11-05). Re-running the published July cycle would be a rehearsal. **So the test runs the week of 2026-09-07** — two and a half weeks out instead of eleven, which is still the argument for bringing it forward, just not the argument as it was written. **The specialist is Mal** (`mal@growthpartners.co.nz`), who has already signed in and approved a plan, so *can a second human use this at all* is answered and *can they run a month* is not. **What the test is:** ingest August, audit, propose and **sign off a prompt set in the app** (the last M10 control never exercised on real data), plan, predict, record the shipping position, publish the report — every step by Mal, in the app. ⚠️ **The session running it must not help.** That is the one way a handover test gets laundered into a pass: Claude observes and records, every point where Mal had to ask anybody anything is a finding, and the doneWhen is not met if there were any. If a cycle turns out not to be runnable unaided, **that is the finding and not a failure** — it becomes cards and the test re-runs. ✅ **It feeds M11 rather than competing with it:** whatever a real specialist trips over in September is fixed before November&#39;s verdict rather than discovered on the day the answer is due. Nothing in it may write a verdict for `a3e5a8a7`, which stays refused by name until 2026-11-05</div>
+        <div class="card-title">M12: Client onboarding in the app — a real client whose access is not via `access@`</div>
+        <div class="card-tags"><span class="tag tag-neutral">M12</span><span class="tag tag-phase-4">phase-4</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">access@growthpartners.co.nz</span><span class="tag tag-neutral">docs/google-access-setup.md</span><span class="tag tag-neutral">server/google/auth.ts</span><span class="tag tag-neutral">sub</span><span class="tag tag-neutral">process.env.GOOGLE_SUBJECT</span><span class="tag tag-neutral">GOOGLE_SUBJECT</span><span class="tag tag-neutral">clients</span><span class="tag tag-neutral">properties</span><span class="tag tag-neutral">property_access</span><span class="tag tag-neutral">auth.ts</span><span class="tag tag-neutral">let cached</span></div>
+        <div class="card-desc">Inserted **2026-08-20** on Ricky&#39;s call, the fifth insertion in this arc. He went to add a real client and could not: it is an old client the agency manages from a different email address, so the premise the whole measurement layer rests on — *`access@growthpartners.co.nz` already holds everything, so onboarding needs no Google-side work* — does not hold for it. **Three findings, and the third is why this is a milestone and not a field.** **(1)** `docs/google-access-setup.md` already specifies the fix and the code never implemented it: its *&quot;Fallback: direct per-property grants&quot;* section says to grant the service account email directly on the property, *&quot;same code path — just skip the impersonation subject&quot;*. `server/google/auth.ts` has no such path — it always sets `sub` in the JWT from `process.env.GOOGLE_SUBJECT`. **(2)** Access identity is process-global. `GOOGLE_SUBJECT` is one env var for the whole deployment, and there is nowhere on `clients`, `properties` or `property_access` to record which account a client&#39;s access comes through — so *&quot;specify the access account&quot;* has no column to go in. **(3) 🔴 The token cache is a single unkeyed module-level singleton** (`auth.ts`, `let cached`), which turns this from a schema addition into a data-integrity bug: the moment two clients resolve to different access accounts, whichever mints first lends its token to the other for the rest of the hour, so client B&#39;s ingest runs against client A&#39;s Google account and returns rows that look exactly like client B&#39;s. **Plausible numbers from the wrong source** is the worst failure this product can have and the one every other part of the measurement layer exists to refuse. Harmless today only because exactly one subject exists. ⚠️ **Ends on a human act** — the specialist presses through the wizard; nothing onboards a client on their behalf</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🚫 Not building: a service account per client</div>
+        <div class="card-tags"><span class="tag tag-neutral">M12</span><span class="tag tag-neutral">decision</span><span class="tag tag-neutral">access@</span><span class="tag tag-neutral">siteUnverifiedUser</span></div>
+        <div class="card-desc">Ricky asked for it as a wizard option and it is the wrong shape, so it is written down rather than quietly dropped. **One service account serves every client**, because access is granted inside Search Console and GA4 rather than through GCP IAM — the setup doc calls that *&quot;the part people get wrong&quot;* and tells you to skip the IAM step entirely. One per client would multiply long-lived private keys for no additional reach. And minting and storing a service-account private key from a web wizard is a credential path this project should not grow: the existing key lives in a secret store with a documented rotation story, and a second source of keys would have neither. ✅ **What replaces it is the more useful half anyway** — the wizard captures the access mode and account, prints the exact grant text for whoever owns the property, and then **proves the access works before the client is saved**, at the permission *level* rather than merely that the property appears in a list. Not theoretical: the 2026-08-13 inventory found **11 of 65** Search Console properties present for `access@` and returning HTTP 403 as `siteUnverifiedUser`. A tickbox saying access was granted would have onboarded all eleven</div>
+      </div>
+      <div class="card">
+        <div class="card-title">M13: Handover to the team — a specialist who is not Ricky runs a full monthly cycle unaided</div>
+        <div class="card-tags"><span class="tag tag-neutral">M13</span><span class="tag tag-phase-4">phase-4</span><span class="tag tag-milestone">milestone</span><span class="tag tag-neutral">published</span><span class="tag tag-neutral">mal@growthpartners.co.nz</span><span class="tag tag-neutral">a3e5a8a7</span></div>
+        <div class="card-desc">Brought forward **2026-08-19** ahead of M11, renumbered M12 → M13 on **2026-08-20** when client onboarding was inserted ahead of it. ⚠️ **It did not move further away and the 7 September date is unchanged** — this test runs on **Storepro**, whose access has worked since 2026-08-13, so nothing the onboarding milestone builds is a prerequisite for it. What onboarding fills is the window this test was already waiting out., on Ricky&#39;s stated default, because M11 cannot open before 5 November and M12 is not locked to it. All three things that used to block this became controls in M10 the same day: a verdict can be recorded in the app and attributed, a prompt set can be signed off in the app, and all three frozen writes have a correction path. ⚠️ **It cannot start today either, and the handover that recommended it did not say so.** A full monthly cycle needs a month to run over — Storepro&#39;s cycles are Apr–Jul with 2026-07 `published`, there is no 2026-08 cycle, and August&#39;s Search Console figures are not final until **~5 September** on this system&#39;s own five-day convention (the same one that makes 2026-10 answerable on 2026-11-05). Re-running the published July cycle would be a rehearsal. **So the test runs the week of 2026-09-07** — two and a half weeks out instead of eleven, which is still the argument for bringing it forward, just not the argument as it was written. **The specialist is Mal** (`mal@growthpartners.co.nz`), who has already signed in and approved a plan, so *can a second human use this at all* is answered and *can they run a month* is not. **What the test is:** ingest August, audit, propose and **sign off a prompt set in the app** (the last M10 control never exercised on real data), plan, predict, record the shipping position, publish the report — every step by Mal, in the app. ⚠️ **The session running it must not help.** That is the one way a handover test gets laundered into a pass: Claude observes and records, every point where Mal had to ask anybody anything is a finding, and the doneWhen is not met if there were any. If a cycle turns out not to be runnable unaided, **that is the finding and not a failure** — it becomes cards and the test re-runs. ✅ **It feeds M11 rather than competing with it:** whatever a real specialist trips over in September is fixed before November&#39;s verdict rather than discovered on the day the answer is due. Nothing in it may write a verdict for `a3e5a8a7`, which stays refused by name until 2026-11-05</div>
       </div>
       <div class="card">
         <div class="card-title">The bounded prep list — four cards, and not a fifth</div>
-        <div class="card-tags"><span class="tag tag-neutral">M12</span><span class="tag tag-neutral">method</span></div>
+        <div class="card-tags"><span class="tag tag-neutral">M13</span><span class="tag tag-neutral">method</span></div>
         <div class="card-desc">What the gap to 7 September is for. Four cards already written in **This Week** that a specialist running a cycle will actually touch: the **UTC shipping date** that reads a day behind in New Zealand (label it, do not shift it), the **plan built with no declared capacity** saying so on the plan itself, the **subdomain split** that shows one competitor twice in a client-facing number, and the **acceptance-criterion decidability check**. Fixing a *known, written-up* finding before a usability test is not hiding it — it stops the test spending its budget rediscovering what is already on the board. ⚠️ **Nothing else gets pre-fixed.** If it was not already a card on 2026-08-19, it is a finding for Mal to hit, and pre-empting it is how this becomes a polish milestone that answers nothing</div>
       </div></div>
     </section>

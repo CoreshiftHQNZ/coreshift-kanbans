@@ -1,86 +1,106 @@
 # Engine Optimization — Handover
-_2026-08-19 · closes M10 · **M12 is current**, brought forward ahead of M11, which stays blocked until 5 November · arc 12_
+_2026-08-20 · **M12 client onboarding is current**, inserted ahead of the handover (now M13, still 7 September) · M11 stays blocked until 5 November · arc 13_
 
 ## ▶️ Paste this into a new session
 
 ```
-Engine Optimization — M12: a specialist other than Ricky runs a full monthly cycle unaided
+Engine Optimization — M12: client onboarding in the app
 
-M12 was brought forward on 2026-08-19, ahead of M11. M11 is blocked on the
-calendar until 2026-11-05 and no work on it can move. M12 is the last milestone
-in the arc, it is not calendar-locked, and its last three blockers became in-app
-controls in M10 on the same day.
+Inserted 2026-08-20. Ricky went to add a real client and could not: it is an old
+client the agency manages from a different email address, so the premise the
+measurement layer rests on -- access@growthpartners.co.nz already holds
+everything, so onboarding needs no Google-side work -- does not hold for it.
 
-doneWhen: A specialist other than Ricky runs a full monthly cycle end to end
-without help.
+doneWhen: A specialist adds a real client through the app on a deployed
+environment, choosing which account its access comes through, and its Search
+Console and GA4 access is proved to work at the permission level the data needs
+before the client is saved.
 
-FIRST — work out which half of this milestone you are in:
+Read coreshift-kanbans/engine-optimization/HANDOVER.md, then
+docs/google-access-setup.md in full, then server/google/auth.ts. In that order --
+the doc specifies a mode the code does not have, and reading the code first makes
+it look like a missing feature rather than an unimplemented decision.
 
-  before ~2026-09-05   you are in PREP. Do the prep list. Do not run the test.
-  on/after 2026-09-07  you are running THE TEST. Build nothing. Observe only.
+─── The three findings this milestone exists for ─────────────────────────────
 
-Read coreshift-kanbans/engine-optimization/HANDOVER.md, then README.md, then
-the board's In Progress column.
+1. The documented fallback has never existed in code. The setup doc's "Fallback:
+   direct per-property grants" says to grant the service account email directly
+   on the property, "same code path -- just skip the impersonation subject".
+   auth.ts always sets `sub` in the JWT, from process.env.GOOGLE_SUBJECT. There
+   is no direct path.
 
-─── PREP: now until Storepro's August figures are final, ~5 September ─────────
+2. Access identity is process-global. GOOGLE_SUBJECT is one env var for the whole
+   deployment. Nothing on clients, properties or property_access records which
+   account a client's access comes through, so "specify the access account" has
+   nowhere to be stored. property_access already carries state, permission_level,
+   verified_at and failure_reason per property per source -- it is the right home
+   and it is missing exactly one thing.
 
-The test cannot run before then. A full monthly cycle needs a month to run over;
-Storepro's cycles are Apr-Jul with 2026-07 published and there is no 2026-08
-cycle. Re-running July would be a rehearsal. Do not.
+3. RED. The token cache is one unkeyed module-level singleton (`let cached` in
+   auth.ts). Fix this FIRST and do not build anything on top of it until it is
+   keyed. With two access accounts in existence, whichever mints a token first
+   lends it to the other for the rest of the hour -- so one client's ingest runs
+   against another's Google account and returns rows that look exactly like the
+   right ones. Plausible numbers from the wrong source is the worst thing this
+   product can produce. It is harmless today only because one subject exists,
+   which means the bug arrives with the feature.
 
-Four cards, and not a fifth. All four are already written up in This Week, and
-all four are things the specialist will actually touch:
+─── Three access modes, and the one the blocked client needs ────────────────
 
-  1. Label the UTC shipping date, do not shift it. windows.ts is UTC and
-     clock-free by design and the drift check compares UTC to UTC; showing an NZ
-     date beside a UTC comparison puts two dates from one row on one screen.
-  2. A plan built with no --capacity must say on the plan itself that the ranking
-     is a relative-cost order and the month's scope is the team's to draw. Check
-     what compose.ts:633 emits when nothing is declared -- "no limit stated" and
-     "no limit" are different sentences and this product exists to keep them
-     apart. Do not apply it to 70337c95.
-  3. Report a competitor by the domain that was declared, not the host that was
-     found. offer.automate-x.nz and automate-x.nz are one competitor and today
-     appear as two, in a client-facing number.
-  4. Assert that an authored action never offers a fix that makes its own
-     acceptance criterion unobservable. Alongside the existing test:actions.
+  delegated, access@growthpartners.co.nz   every client today. Unchanged.
+  delegated, a different Workspace user    works with the existing domain-wide
+                                           delegation, no new Google-side setup,
+                                           as long as the address is inside
+                                           growthpartners.co.nz.
+  direct, no impersonation                 the service account itself is granted
+                                           on the property. The only mode that
+                                           works for an address outside the
+                                           Workspace. This is the documented
+                                           fallback that has no code.
 
-One decision has to be made in prep, before the specialist's plan is approved:
+The service account is seo-data-reader@gp-seo-data.iam.gserviceaccount.com
+(project gp-seo-data). Whoever owns the client's GSC property adds that address
+under Settings -> Users and permissions; GA4 under Property access management,
+role Viewer, notification unchecked. No Workspace admin is involved in direct
+mode, which is why it solves an old client managed from somewhere else.
 
-  RED. Our own concurrent work is not a confounder anywhere in this system.
-  server/verify/verify.ts assembles confounders from the prediction's own
-  shipping drift and from verified Google algorithm updates, and from nothing
-  else. If the September cycle ships anything onto a3e5a8a7's twelve
-  control-matched pages, October measures two changes and the verdict comes back
-  clean-looking and wrong -- worse than confounded. Either keep those twelve URLs
-  out of the September plan (they are readable off the prediction), or make the
-  verdict name any shipped work_item whose targets intersect the prediction's
-  scope. Decide before approval, not after the work ships.
+─── NOT in scope, decided ───────────────────────────────────────────────────
 
-Nothing else gets pre-fixed. If it was not already a card on 2026-08-19, it is a
-finding for the specialist to hit.
+Do not create a service account per client, and do not build anything that mints
+or stores a service-account private key. One service account serves every client
+because access is granted inside GSC and GA4 rather than through GCP IAM -- the
+setup doc calls the IAM step "the part people get wrong" and says to skip it. A
+second source of long-lived keys would have neither a secret store nor a rotation
+story. If Ricky raises it again, this is the reason, not a capability gap.
 
-─── THE TEST: week of 2026-09-07 ─────────────────────────────────────────────
+─── What the wizard is for, and the trap it must not fall into ──────────────
 
-Mal (mal@growthpartners.co.nz) runs Storepro's August cycle end to end, in the
-app: ingest August, audit, propose and sign off a prompt set, plan, predict,
-record the shipping position, publish the report. The prompt sign-off is the one
-M10 control never exercised on real data.
+Capture the access mode and account, print the exact grant text for whoever owns
+the property, then PROVE the access before the client is saved -- at the
+permission LEVEL, not merely that the property appears in a list. The 2026-08-13
+inventory found 11 of 65 Search Console properties present for access@ and
+returning HTTP 403 as siteUnverifiedUser. A tickbox saying access was granted
+would have onboarded all eleven, and every audit for them would have degraded to
+crawl-only while looking configured.
 
-Your job is to observe and record. It is NOT to help.
+GA4 has a second trap already written up: 22 properties named *Filtered* and 22
+named *Test*, usually in matched pairs for the same site. Ingesting the Test one
+yields near-zero sessions that read as a traffic collapse. The property ID must
+be chosen deliberately and recorded -- never inferred from a name match. The
+wizard should show the candidates it can see and make the human pick.
 
-  - Every point where Mal had to ask anybody anything is a finding. Write it down
-    verbatim, with what he was looking at when he asked.
-  - The doneWhen is not met if there were any. Do not round up.
-  - If a cycle turns out not to be runnable unaided, that is the finding and not
-    a failure. It becomes cards and the test re-runs.
-  - Do not press anything for him, ever. The gates are the product.
-  - Nothing in this milestone may write a verdict for a3e5a8a7. It is refused by
-    name until 2026-11-05 and its outcome stays null.
+─── Don't ──────────────────────────────────────────────────────────────────
 
-Mal's writes are real and frozen: a real approved plan and real predictions on
-Storepro. Nothing leaves the app -- no PDF, no email, no export -- so a report he
-publishes is published in the app and Storepro receives nothing automatically.
+- Don't build the wizard before the token cache is keyed by subject.
+- Don't let a client be saved on an unproven access grant, and don't collapse
+  "present in the list" into "access". Store the permission level.
+- Don't onboard a client as a person. The gates are the product; app-as-me is
+  for looking.
+- Don't put GOOGLE_SUBJECT's value in the wizard as a default the user cannot
+  see -- an inherited access account that nobody chose is how the wrong one gets
+  used for a year.
+- Don't touch Storepro's access rows. They have worked since 2026-08-13 and
+  M13's handover test on 2026-09-07 depends on them.
 ```
 
 ## Where we are — for Ricky
